@@ -12,14 +12,23 @@ Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
     * [Python](#python)
     * [C](#c)
 * [Releases](#releases)
+* [License](#license)
 
 ## Motivation
 
 ## Structure of Repository
 
+Rhino is shipped as an ANSI C shared library. The binary files for supported platforms are located under [lib](/lib)
+and header files are at [include](/include). Bindings are available at [binding](/binding) to facilitate usage from higher-level
+languages/platforms. Demo applications are at [demo](/demo). When possible, use one of the demo applications as a
+starting point for your own implementation. Finally, [resources](resources) is a placeholder for data used by various
+applications within the repository.
+
 ## Running Demo Applications
 
 ### Running Python Demo Application
+
+The demo application allows 
 
 ```bash
 python demo/python/rhino_demo.py --help
@@ -32,7 +41,12 @@ python demo/python/rhino_demo.py --rhino_context_file_path=resources/contexts/co
 
 ## Integration
 
+Below are code snippets showcasing how Rhino can be integrated into different applications.
+
 ### Python
+
+[rhino.py](/binding/python/rhino.py) provides a Python binding for Rhino library. Below is a quick demonstration of how
+to construct an instance of it.
 
 ```python
     library_path = ... # absolute path to Rhino's dynamic library
@@ -41,6 +55,10 @@ python demo/python/rhino_demo.py --rhino_context_file_path=resources/contexts/co
     
     rhino = Rhino(library_path=library_path, model_file_path=model_file_path, context_file_path=context_file_path) 
 ```
+
+When initialized, valid sample rate can be obtained using `rhino.sample_rate`. Expected frame length
+(number of audio samples in an input array) is `rhino.frame_length`. The object can be used to monitor incoming audio as
+below.
 
 ```python
     def get_next_audio_frame():
@@ -61,11 +79,18 @@ python demo/python/rhino_demo.py --rhino_context_file_path=resources/contexts/co
                 # logic to handle unsupported command
 ```
 
+Finally, when done be sure to explicitly release the resources as the binding class does not rely on the garbage
+collector.
+
 ```python
     rhino.delete()
 ```
 
 ### C
+
+Rhinos is implemented in ANSI C and therefore can be directly linked to C applications.
+[pv_rhino.h](/include/pv_rhino.h) header file contains relevant information. An instance of Rhino object can be
+constructed as follows.
 
 ```c
     const char *model_file_path = .../ available at lib/common/rhino_params.pv
@@ -77,6 +102,10 @@ python demo/python/rhino_demo.py --rhino_context_file_path=resources/contexts/co
         // error handling logic goes here
     }
 ```
+
+Now the `handle` can be used to monitor incoming audio stream. Rhino accepts single channel, 16-bit PCM audio. The
+sample rate can be retrieved using `pv_sample_rate()`. Finally, Rhino accepts input audio in consecutive chunks
+(aka frames) the length of each frame can be retrieved using `pv_rhino_frame_length()`.
 
 ```c
     extern const int16_t *get_next_audio_frame(void);
@@ -120,9 +149,13 @@ python demo/python/rhino_demo.py --rhino_context_file_path=resources/contexts/co
             else {
                 // logic to handle out of context commands
             }
+            
+            pv_rhino_reset(handle);
         }
     }
 ```
+
+When done be sure to release the resources acquired.
 
 ```c
     pv_rhino_delete(handle);
@@ -133,3 +166,7 @@ python demo/python/rhino_demo.py --rhino_context_file_path=resources/contexts/co
 ### v1.0.0 November 2nd, 2018
 
 * Initial Release
+
+## License
+
+Everything in this repository is licensed under Apache 2.0.
