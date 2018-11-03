@@ -2,6 +2,22 @@
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
+Rhino is Picovoice's Speech-to-Intent engine. It translates speech commands to structured data representing user's
+intention. For example given a speech segment *Can I have a small double-shot espresso with two sugars and no milk* it
+will infer the intent and outputs the following structured data that can be used to take on action (make the coffee!)
+
+```json
+{
+  "product": "espresso",
+  "size": "small",
+  "# shots": "double shot",
+  "sugar": "two sugars",
+  "milk": "no milk"
+}
+```
+
+Rhino is cross-platform. Currently **Android**, **iOS**, **Raspberry Pi**, **ARM Cortex-A**, **ARM Cortex-M**, and
+a growing number of embedded platforms are supported.
 
 ## Table of Contents
 * [Motivation](#motivation)
@@ -16,6 +32,18 @@ Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 ## Motivation
 
+A good number of use-cases when building voice-enabled products revolves around understanding speech commands within a
+specific (limited) domain. For example, smart home alliances, mobile applications, etc. Rhino is a tight combination of
+speech-to-text and natural-language-understanding engines that are optimized to work for a specific domain. Rhino is quite
+lean and can run on small embedded processors with very limited RAM (as low as 120 KB) making it ideal for IoT applications.
+Furthermore, it can understand potentially unlimited number of commands within a specific domain. For example for coffee maker
+example above it can correctly recognize the following commands
+
+* can I have a latte?
+* make me a single-shot espresso.
+* I want a triple-shot americano with milk.
+* may I have a large cappuccino with cream?
+
 ## Structure of Repository
 
 Rhino is shipped as an ANSI C shared library. The binary files for supported platforms are located under [lib](/lib)
@@ -28,11 +56,13 @@ applications within the repository.
 
 ### Running Python Demo Application
 
-The demo application allows 
+This demo application allows testing Rhino using computer's microphone. It opens an input audio stream, monitors it
+using [Porcupine's](https://github.com/Picovoice/Porcupine) library, and when the wake phrase is detected it will extract
+the follow up command via Rhino.
 
-```bash
-python demo/python/rhino_demo.py --help
-```
+The following would run the Rhino engine to translate speech commands to intent in the context of a coffee maker machine.
+Also, it initializes the Porcupine engine to detect the wake phrase Alfred. When the wake phrase is detected the Rhino
+starts processing the following speech command and prints out the inferred attributes and their values on the console.
 
 ```bash
 python demo/python/rhino_demo.py --rhino_context_file_path=resources/contexts/coffee_maker.pv \
@@ -169,4 +199,7 @@ When done be sure to release the resources acquired.
 
 ## License
 
-Everything in this repository is licensed under Apache 2.0.
+Everything in this repository is licensed under Apache 2.0 including the contexts available under
+[resources/contexts](/resources/contexts). Custom contexts are only provided with the purchase of the commercial license.
+In order to inquire about the commercial license send an email to contact@picovoice.ai with a brief description of your
+use case.
