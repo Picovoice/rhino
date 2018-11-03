@@ -1,3 +1,19 @@
+#
+# Copyright 2018 Picovoice Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 import argparse
 import os
 import struct
@@ -22,6 +38,12 @@ from rhino import Rhino
 
 
 class RhinoDemo(Thread):
+    """
+    Demo class for Speech to Intent (aka Rhino) library. It creates an input audio stream from a microphone, monitors
+    it, and upon detecting the specified wake phrase extracts the intent from the speech command that follows. Wake word
+    detection is done using Porcupine's wake word detection engine (https://github.com/Picovoice/Porcupine).
+    """
+
     def __init__(
             self,
             rhino_library_path,
@@ -33,6 +55,20 @@ class RhinoDemo(Thread):
             porcupine_sensitivity,
             input_device_index=None,
             output_path=None):
+        """
+        Constructor.
+
+        :param rhino_library_path: Absolute path to Rhino's dynamic library.
+        :param rhino_model_file_path: Absolute path to Rhino's model parameter file.
+        :param rhino_context_file_path: Absolute path to Rhino's context file that defines the context of commands.
+        :param porcupine_library_path: Absolute path to Porcupine's dynamic library.
+        :param porcupine_model_file_path: Absolute path to Porcupine's model parameter file.
+        :param porcupine_keyword_file_path: Absolute path to Porcupine's keyword file for wake phrase.
+        :param porcupine_sensitivity: Porcupine's detection sensitivity.
+        :param input_device_index: Optional argument. If provided, audio is recorded from this input device. Otherwise,
+        the default audio input device is used.
+        :param output_path: If provided recorded audio will be stored in this location at the end of the run.
+        """
 
         super(RhinoDemo, self).__init__()
 
@@ -52,8 +88,14 @@ class RhinoDemo(Thread):
             self._recorded_frames = []
 
     def run(self):
-        rhino = None
+        """
+         Creates an input audio stream, initializes wake word detection (Porcupine) and speech to intent (Rhino)
+         engines, and monitors the audio stream for occurrences of the wake word and then infers the intent from speech
+         command that follows.
+         """
+
         porcupine = None
+        rhino = None
         pa = None
         audio_stream = None
 
@@ -73,6 +115,7 @@ class RhinoDemo(Thread):
                 context_file_path=self._rhino_context_file_path)
 
             pa = pyaudio.PyAudio()
+
             audio_stream = pa.open(
                 rate=porcupine.sample_rate,
                 channels=1,
@@ -80,6 +123,9 @@ class RhinoDemo(Thread):
                 input=True,
                 frames_per_buffer=porcupine.frame_length,
                 input_device_index=self._input_device_index)
+
+            # NOTE: This is true now and will be correct possibly forever. If it changes the logic below need to change.
+            assert porcupine.frame_length == rhino.frame_length
 
             while True:
                 pcm = audio_stream.read(porcupine.frame_length)
@@ -94,12 +140,10 @@ class RhinoDemo(Thread):
                         print('detected wake phrase')
                 elif not intent_extraction_is_finalized:
                     intent_extraction_is_finalized = rhino.process(pcm)
-
-                if intent_extraction_is_finalized:
+                else:
                     if rhino.is_understood():
                         for attribute in rhino.get_attributes():
                             print('%s: %s' % (attribute, rhino.get_attribute_value(attribute)))
-
                     else:
                         print("didn't understand the command")
 
@@ -109,6 +153,7 @@ class RhinoDemo(Thread):
 
         except KeyboardInterrupt:
             print('stopping ...')
+
         finally:
             if porcupine is not None:
                 porcupine.delete()
@@ -124,7 +169,6 @@ class RhinoDemo(Thread):
 
             if self._output_path is not None and len(self._recorded_frames) > 0:
                 recorded_audio = np.concatenate(self._recorded_frames, axis=0).astype(np.int16)
-
                 soundfile.write(self._output_path, recorded_audio, samplerate=porcupine.sample_rate, subtype='PCM_16')
 
     _AUDIO_DEVICE_INFO_KEYS = ['index', 'name', 'defaultSampleRate', 'maxInputChannels']
