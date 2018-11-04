@@ -1,0 +1,21 @@
+*******************************************************************************
+coffee maker context info:
+
+This context is designed to ask a voice-enabled coffe maker to make you coffee.
+You can select the (1) size, (2) number of shots, (3) type of drink, and (4)
+milk or cream. Below are a few examples
+
+* Can I have an Americano
+* Can I get a large latte
+* Please may I have a single-shot espresso
+* I want a medium double-shot Cappucino
+* Make me a large Americano with cream
+* I'd like a small Mocha with milk
+
+Available sizes: Small, Medium, Large
+Available number of shots: single-shot, double shot, triple shot
+Available drinks: Americano, Cappucino, Espresso, Latte, Mocha
+Additions: Milk, Cream
+
+*******************************************************************************
+

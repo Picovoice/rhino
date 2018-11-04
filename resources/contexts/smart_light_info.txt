@@ -1,0 +1,21 @@
+*******************************************************************************
+Smart Light context info:
+
+This context is designed for controlling a voice-enabled smart light system.
+You can turn on/off, change color, or change intensity (make dimmer or brighter)
+of lights. Optionally you select to control the lights within a specific location.
+Below are a few examples.
+
+* Turn on the lights
+* Set the lights green
+* Make the lights brighter
+* Turn on the lights in the kitchen
+* Set the lights in living room lavender
+
+Available actions: Turn on, Turn off, Set, Make
+Available locations: Living room, Bedroom, Bathroom, Balcony, Kitchen, Entrance
+Available colors: Blue, Violet, Red, Green, Yellow, Lavender, Pink, Olive, Purple, Silver, White
+Available intensities: Brighter, Darker
+ 
+*******************************************************************************
+
