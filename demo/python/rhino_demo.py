@@ -124,6 +124,12 @@ class RhinoDemo(Thread):
                 frames_per_buffer=porcupine.frame_length,
                 input_device_index=self._input_device_index)
 
+            context_help_path = self._rhino_context_file_path.replace('.pv', '_info.txt')
+            if os.path.exists(context_help_path):
+                with open(context_help_path, 'r') as f:
+                    for x in f:
+                        print(x.strip('\n'))
+
             # NOTE: This is true now and will be correct possibly forever. If it changes the logic below need to change.
             assert porcupine.frame_length == rhino.frame_length
 
