@@ -26,7 +26,7 @@ a growing number of embedded platforms are supported.
 * customizable. It can be customized for any given domain (set of commands).
 
 ## Table of Contents
-* [Try It Out]()
+* [Try It Out](#try-it-out)
 * [Motivation](#motivation)
 * [Structure of Repository](#structure-of-repository)
 * [Running Demo Applications](#running-demo-applications)
