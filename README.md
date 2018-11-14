@@ -26,6 +26,7 @@ a growing number of embedded platforms are supported.
 * customizable. It can be customized for any given domain (set of commands).
 
 ## Table of Contents
+* [Try It Out]()
 * [Motivation](#motivation)
 * [Structure of Repository](#structure-of-repository)
 * [Running Demo Applications](#running-demo-applications)
@@ -35,6 +36,10 @@ a growing number of embedded platforms are supported.
     * [C](#c)
 * [Releases](#releases)
 * [License](#license)
+
+## Try It Out
+
+Try out Rhino using its [interactive web demo](https://picovoice.ai/products/#speech-to-intent-demo). You need a working microphone.
 
 ## Motivation
 
