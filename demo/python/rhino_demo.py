@@ -124,12 +124,6 @@ class RhinoDemo(Thread):
                 frames_per_buffer=porcupine.frame_length,
                 input_device_index=self._input_device_index)
 
-            context_help_path = self._rhino_context_file_path.replace('.pv', '_info.txt')
-            if os.path.exists(context_help_path):
-                with open(context_help_path, 'r') as f:
-                    for x in f:
-                        print(x.strip('\n'))
-
             # NOTE: This is true now and will be correct possibly forever. If it changes the logic below need to change.
             assert porcupine.frame_length == rhino.frame_length
 
@@ -148,8 +142,12 @@ class RhinoDemo(Thread):
                     intent_extraction_is_finalized = rhino.process(pcm)
                 else:
                     if rhino.is_understood():
-                        for attribute in rhino.get_attributes():
-                            print('%s: %s' % (attribute, rhino.get_attribute_value(attribute)))
+                        intent, slot_values = rhino.get_intent()
+                        print('intent: %s' % intent)
+                        print('---')
+                        for slot, value in slot_values.items():
+                            print('%s: %s' % (slot, value))
+                        print()
                     else:
                         print("didn't understand the command")
 

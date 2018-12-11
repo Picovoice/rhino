@@ -31,13 +31,15 @@ class Rhino(object):
         INVALID_ARGUMENT = 3
         STOP_ITERATION = 4
         KEY_ERROR = 5
+        INVALID_STATE = 6
 
     _PICOVOICE_STATUS_TO_EXCEPTION = {
         PicovoiceStatuses.OUT_OF_MEMORY: MemoryError,
         PicovoiceStatuses.IO_ERROR: IOError,
         PicovoiceStatuses.INVALID_ARGUMENT: ValueError,
         PicovoiceStatuses.STOP_ITERATION: StopIteration,
-        PicovoiceStatuses.KEY_ERROR: KeyError
+        PicovoiceStatuses.KEY_ERROR: KeyError,
+        PicovoiceStatuses.INVALID_STATE: ValueError
     }
 
     class CRhino(Structure):
@@ -85,17 +87,14 @@ class Rhino(object):
         self._is_understood_func.argtypes = [POINTER(self.CRhino), POINTER(c_bool)]
         self._is_understood_func.restype = self.PicovoiceStatuses
 
-        self._get_num_attributes_func = library.pv_rhino_get_num_attributes
-        self._get_num_attributes_func.argtypes = [POINTER(self.CRhino), POINTER(c_int)]
-        self._get_num_attributes_func.restype = self.PicovoiceStatuses
-
-        self._get_attribute_func = library.pv_rhino_get_attribute
-        self._get_attribute_func.argtypes = [POINTER(self.CRhino), c_int, POINTER(c_char_p)]
-        self._get_attribute_func.restype = self.PicovoiceStatuses
-
-        self._get_attribute_value_func = library.pv_rhino_get_attribute_value
-        self._get_attribute_value_func.argtypes = [POINTER(self.CRhino), c_char_p, POINTER(c_char_p)]
-        self._get_attribute_value_func.restype = self.PicovoiceStatuses
+        self._get_intent_func = library.pv_rhino_get_intent
+        self._get_intent_func.argtypes = [
+            POINTER(self.CRhino),
+            POINTER(c_char_p),
+            POINTER(c_int),
+            POINTER(POINTER(c_char_p)),
+            POINTER(POINTER(c_char_p))]
+        self._get_intent_func.restype = self.PicovoiceStatuses
 
         self._reset_func = library.pv_rhino_reset
         self._reset_func.argtypes = [POINTER(self.CRhino)]
@@ -105,12 +104,14 @@ class Rhino(object):
 
         self._sample_rate = library.pv_sample_rate()
 
+        self._version = library.pv_rhino_version()
+
     def process(self, pcm):
         """
         Processes a frame of audio.
 
         :param pcm: An array (or array-like) of consecutive audio samples. For more information regarding required audio
-        properties (i.e. sample rate, number of channels encoding, and number of samples per frame) please refer to
+        properties (i.e. sample rate, number of channels, encoding, and number of samples per frame) please refer to
         'include/pv_rhino.h'.
 
         :return: A flag if the engine has finalized intent extraction.
@@ -138,47 +139,31 @@ class Rhino(object):
 
         return is_understood.value
 
-    def get_attributes(self):
+    def get_intent(self):
         """
-        Retrieves the attributes within the speech command.
+        Retrieves the inferred intent.
 
-        :return: Inferred attributes.
-        """
-
-        num_attributes = c_int()
-        status = self._get_num_attributes_func(self._handle, byref(num_attributes))
-        if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('Getting number of attributes failed')
-
-        attributes = list()
-
-        for i in range(num_attributes.value):
-            attribute = c_char_p()
-            status = self._get_attribute_func(self._handle, i, byref(attribute))
-            if status is not self.PicovoiceStatuses.SUCCESS:
-                raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('Getting attribute failed')
-
-            attributes.append(attribute.value.decode('utf-8'))
-
-        return set(attributes)
-
-    def get_attribute_value(self, attribute):
-        """
-        Retrieves the value of a given attribute.
-
-        :param attribute: Attribute.
-        :return: Attribute's value.
+        :return: Tuple of intent string and list of pairs of slots and their corresponding values.
         """
 
-        attribute_value = c_char_p()
-        status = self._get_attribute_value_func(
+        intent = c_char_p()
+        num_slots = c_int()
+        slots = POINTER(c_char_p)()
+        values = POINTER(c_char_p)()
+        status = self._get_intent_func(
             self._handle,
-            create_string_buffer(attribute.encode('utf-8')),
-            byref(attribute_value))
+            byref(intent),
+            byref(num_slots),
+            byref(slots),
+            byref(values))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('Getting attribute value failed')
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('Getting intent failed')
 
-        return attribute_value.value.decode('utf-8')
+        slot_values = dict()
+        for i in range(num_slots.value):
+            slot_values[slots[i].decode('utf-8')] = values[i].decode('utf-8')
+
+        return intent.value.decode('utf-8'), slot_values
 
     def reset(self):
         """Reset's the internal state of Speech to Intent engine."""
@@ -203,3 +188,7 @@ class Rhino(object):
         """Audio sample rate accepted by Rhino library."""
 
         return self._sample_rate
+
+    @property
+    def version(self):
+        return self._version

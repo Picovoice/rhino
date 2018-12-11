@@ -11,7 +11,7 @@ class RhinoTestCase(unittest.TestCase):
         rhino = Rhino(
             library_path=self._library_path,
             model_file_path=self._abs_path('lib/common/rhino_params.pv'),
-            context_file_path=self._abs_path('resources/contexts/coffee_maker.pv'))
+            context_file_path=self._abs_path('resources/contexts/coffee_maker.rhn'))
 
         audio, sample_rate = soundfile.read(
             self._abs_path('resources/audio_samples/test_within_context.wav'),
@@ -33,7 +33,7 @@ class RhinoTestCase(unittest.TestCase):
 
         self.assertTrue(is_understood, "couldn't understand")
 
-        expected_attribute_values = dict(
+        expected_slot_values = dict(
             milk='no milk',
             sugar='two sugars',
             twist='cherry twist',
@@ -43,15 +43,10 @@ class RhinoTestCase(unittest.TestCase):
             roast='dark roast',
             size='small')
 
-        attributes = rhino.get_attributes()
+        intent, slot_values = rhino.get_intent()
 
-        self.assertEqual(expected_attribute_values.keys(), attributes, "incorrect attributes")
-
-        for attribute in attributes:
-            self.assertEqual(
-                rhino.get_attribute_value(attribute),
-                expected_attribute_values[attribute],
-                "incorrect attribute value")
+        self.assertEqual('order', intent, "incorrect intent")
+        self.assertEqual(slot_values, expected_slot_values, "incorrect slot values")
 
         rhino.delete()
 
@@ -59,7 +54,7 @@ class RhinoTestCase(unittest.TestCase):
         rhino = Rhino(
             library_path=self._library_path,
             model_file_path=self._abs_path('lib/common/rhino_params.pv'),
-            context_file_path=self._abs_path('resources/contexts/coffee_maker.pv'))
+            context_file_path=self._abs_path('resources/contexts/coffee_maker.rhn'))
 
         audio, sample_rate = soundfile.read(
             self._abs_path('resources/audio_samples/test_out_of_context.wav'),

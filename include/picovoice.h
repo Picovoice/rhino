@@ -39,6 +39,7 @@ typedef enum {
     PV_STATUS_INVALID_ARGUMENT,
     PV_STATUS_STOP_ITERATION,
     PV_STATUS_KEY_ERROR,
+    PV_STATUS_INVALID_STATE,
 } pv_status_t;
 
 #ifdef __cplusplus
