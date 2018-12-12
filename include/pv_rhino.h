@@ -128,7 +128,7 @@ PV_API pv_status_t pv_rhino_reset(pv_rhino_object_t *object);
  * (intent arguments).
  *
  * @param object Speech-to-intent object.
- * @param[out] expressions Expressions (speech commands).
+ * @param[out] expressions Expressions.
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
  */
 PV_API pv_status_t pv_rhino_context_expressions(const pv_rhino_object_t *object, const char **expressions);
