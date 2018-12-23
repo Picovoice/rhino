@@ -95,6 +95,74 @@ python demo/python/rhino_demo.py --rhino_context_file_path=resources/contexts/sm
 
 Below are code snippets showcasing how Rhino can be integrated into different applications.
 
+### C
+
+Rhino is implemented in ANSI C and therefore can be directly linked to C applications. [pv_rhino.h](/include/pv_rhino.h)
+header file contains relevant information. An instance of Rhino object can be constructed as follows.
+
+```c
+const char *model_file_path = ... // available at lib/common/rhino_params.pv
+const char *context_file_path = ... // absolute path to context file for the domain of interest
+
+pv_rhino_object_t *rhino;
+const pv_status_t status = pv_rhino_init(model_file_path, context_file_path, &rhino);
+if (status != PV_STATUS_SUCCESS) {
+    // add error handling code
+}
+```
+
+Now the handle `rhino` can be used to infer intent from incoming audio stream. Rhino accepts single channel, 16-bit PCM
+audio. The sample rate can be retrieved using `pv_sample_rate()`. Finally, Rhino accepts input audio in consecutive chunks
+(aka frames) the length of each frame can be retrieved using `pv_rhino_frame_length()`.
+
+```c
+extern const int16_t *get_next_audio_frame(void);
+
+while (true) {
+    const int16_t *pcm = get_next_audio_frame();
+
+    bool is_finalized;
+    pv_status_t status = pv_rhino_process(rhino, pcm, &is_finalized);
+    if (status != PV_STATUS_SUCCESS) {
+        // add error handling code
+    }
+
+    if (is_finalized) {
+        bool is_understood;
+        status = pv_rhino_is_understood(rhino, &is_understood);
+        if (status != PV_STATUS_SUCCESS) {
+            // add error handling code
+        }
+
+        if (is_understood) {
+            const char *intent;
+            int num_slots;
+            const char **slots;
+            const char **values;
+            status = pv_rhino_get_intent(rhino, &intent, &num_slots, &slots, &values);
+            if (status != PV_STATUS_SUCCESS) {
+                // add error handling code
+            }
+
+            // add code to take action based on inferred intent and slot values
+
+            free(slots);
+            free(values);
+        } else {
+            // add code to handle unsupported commands
+        }
+
+        pv_rhino_reset(rhino);
+    }
+}
+```
+
+When done be sure to release the resources acquired.
+
+```c
+pv_rhino_delete(rhino);
+```
+
 ### Python
 
 [rhino.py](/binding/python/rhino.py) provides a Python binding for Rhino library. Below is a quick demonstration of how
@@ -112,8 +180,8 @@ rhino = Rhino(
 ```
 
 When initialized, valid sample rate can be obtained using `rhino.sample_rate`. Expected frame length
-(number of audio samples in an input array) is `rhino.frame_length`. The object can be used to monitor incoming audio as
-below.
+(number of audio samples in an input array) is `rhino.frame_length`. The object can be used to infer intent from spoken
+commands as below.
 
 ```python
 def get_next_audio_frame():
@@ -140,76 +208,6 @@ collector.
 
 ```python
 rhino.delete()
-```
-
-### C
-
-Rhinos is implemented in ANSI C and therefore can be directly linked to C applications.
-[pv_rhino.h](/include/pv_rhino.h) header file contains relevant information. An instance of Rhino object can be
-constructed as follows.
-
-```c
-const char *model_file_path = ... // available at lib/common/rhino_params.pv
-const char *context_file_path = ... // absolute path to context file for the domain of interest
-    
-pv_rhino_object_t *rhino;
-const pv_status_t status = pv_rhino_init(model_file_path, context_file_path, &rhino);
-if (status != PV_STATUS_SUCCESS) {
-    // add error handling code
-}
-```
-
-Now the `handle` can be used to monitor incoming audio stream. Rhino accepts single channel, 16-bit PCM audio. The
-sample rate can be retrieved using `pv_sample_rate()`. Finally, Rhino accepts input audio in consecutive chunks
-(aka frames) the length of each frame can be retrieved using `pv_rhino_frame_length()`.
-
-```c
-extern const int16_t *get_next_audio_frame(void);
-
-while (true) {
-    const int16_t *pcm = get_next_audio_frame();
-
-    bool is_finalized;
-    pv_status_t status = pv_rhino_process(rhino, pcm, &is_finalized);
-    if (status != PV_STATUS_SUCCESS) {
-        // add error handling code
-    }
-
-    if (is_finalized) {
-        bool is_understood;
-        status = pv_rhino_is_understood(rhino, &is_understood);
-        if (status != PV_STATUS_SUCCESS) {
-            // add error handling code
-        }
-            
-        if (is_understood) {
-            const char *intent;
-            int num_slots;
-            const char **slots;
-            const char **values;
-            status = pv_rhino_get_intent(rhino, &intent, &num_slots, &slots, &values);
-            if (status != PV_STATUS_SUCCESS) {
-                // add error handling code
-            }
-
-            // add code to take action based on inferred intent and slot values
-
-            free(slots);
-            free(values);
-        }
-        else {
-            // add code to handle unsupported commands
-        }
-
-        pv_rhino_reset(rhino);
-    }
-}
-```
-
-When done be sure to release the resources acquired.
-
-```c
-pv_rhino_delete(rhino);
 ```
 
 ##Releases
