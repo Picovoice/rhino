@@ -3,14 +3,14 @@
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from speech commands within a given context of
-interest in real-time. For example, given a speech command *Can I have a small double-shot espresso with a lot of sugar
- and some milk* it will infers that the user wants to *order a drink* with the following specific requirements.
+interest in real-time. For example, given a speech command "*Can I have a small double-shot espresso with a lot of sugar
+ and some milk*" it infers that the user wants to *order a drink* with the following specific requirements.
 
 ```json
 {
-  "coffeeDrink": "espresso",
+  "type": "espresso",
   "size": "small",
-  "numberOfShots": "double shot",
+  "numberOfShots": "2",
   "sugar": "a lot of",
   "milk": "some"
 }
@@ -25,8 +25,8 @@ Rhino is
 **Raspberry Pi**, **Android**, **iOS**, **watchOS**, **Linux**, **Mac**, **Windows**, and **web browsers** are supported.
 * customizable. It can be customized for any given domain.
 
-NOTE: Currently open Linux and Raspberry Pi builds are available to open-source community. But we do have plans to make
-other platforms available as well in near future.
+NOTE: Currently only Linux and Raspberry Pi builds are available to the open-source community. But we do have plans to
+make other platforms available as well in upcoming releases.
 
 ## Table of Contents
 * [Try It Out](#try-it-out)
