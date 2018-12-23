@@ -113,6 +113,7 @@ class RhinoDemo(Thread):
                 library_path=self._rhino_library_path,
                 model_file_path=self._rhino_model_file_path,
                 context_file_path=self._rhino_context_file_path)
+            print(rhino.context_expressions)
 
             pa = pyaudio.PyAudio()
 
