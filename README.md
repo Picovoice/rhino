@@ -61,13 +61,42 @@ resource-constrained IoT applications.
 
 ## Terminology
 
-Context
+Below we define a set of terms that form the main ideas around how Rhino functions.
 
-Expression
+### Context
 
-Intent
+A context defines the set of spoken commands that users of the application might say. Additionally, it maps each spoken
+command to users' intent. For example, when building a smart lighting system the following are a few examples
+of spoken commands:
 
-Slot
+* Turn off the lights.
+* Make the bedroom light darker
+* Set the lights in the living room to purple.
+* ...
+
+### Expression
+
+A context is made of a collection of spoken commands mapped to the user's intent. An expression is an entity that defines a mapping between
+a (or a set of) spoken commands and its (their) corresponding intent. For example
+
+* {turnCommand} the lights. -> {turnIntent}
+* Make the {location} light {intensityChange}. -> {changeIntensityIntent}
+* Set the lights in the {location} to {color} -> {setColorIntent}
+
+The tokens within curly braces represent variables in spoken commands. They are either the user's intent (e.g. turnIntent)
+or can be intent's details (e.g. location). More on this is below.
+
+### Intent
+
+An intent represents what a user wants to accomplish with a spoken command. For example the intent of the phrase
+"*Set the lights in the living room to purple*" is to set the color of lights. Now in order to take action based on ,
+we might need to have more information such as which light or what is the desired color. More on this below.
+
+### Slot
+
+A slot represents the details of the user's intent. For example the intent of the phrase
+"*Set the lights in the living room to purple*" is to set the color of lights. and the slots are the location (living room)
+and color (purple).
 
 ## Structure of Repository
 
