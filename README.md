@@ -33,8 +33,8 @@ a growing number of embedded platforms are supported.
 * [Running Demo Applications](#running-demo-applications)
     * [Running Python Demo Application](#running-python-demo-application)
 * [Integration](#integration)
-    * [Python](#python)
     * [C](#c)
+    * [Python](#python)
 * [Releases](#releases)
 * [License](#license)
 
@@ -113,7 +113,7 @@ if (status != PV_STATUS_SUCCESS) {
 
 Now the handle `rhino` can be used to infer intent from incoming audio stream. Rhino accepts single channel, 16-bit PCM
 audio. The sample rate can be retrieved using `pv_sample_rate()`. Finally, Rhino accepts input audio in consecutive chunks
-(aka frames) the length of each frame can be retrieved using `pv_rhino_frame_length()`.
+(frames) the length of each frame can be retrieved using `pv_rhino_frame_length()`.
 
 ```c
 extern const int16_t *get_next_audio_frame(void);
@@ -210,7 +210,12 @@ collector.
 rhino.delete()
 ```
 
-##Releases
+## Releases
+
+### v1.1.0 December 23rd, 2018
+
+* Accuracy improvements.
+* Open-sourced Raspberry Pi build.
 
 ### v1.0.0 November 2nd, 2018
 
@@ -219,6 +224,7 @@ rhino.delete()
 ## License
 
 Everything in this repository is licensed under Apache 2.0 including the contexts available under
-[resources/contexts](/resources/contexts). Custom contexts are only provided with the purchase of the commercial license.
-In order to inquire about the commercial license send an email to contact@picovoice.ai with a brief description of your
-use case.
+[resources/contexts](/resources/contexts).
+
+Custom contexts are only provided with the purchase of the commercial license. In order to inquire about the commercial
+license [contact us](https://picovoice.ai/company/#contact-us).
