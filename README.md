@@ -2,17 +2,17 @@
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-Rhino is Picovoice's Speech-to-Intent engine. It translates speech commands into structured data representing user's
-intention. For example, given a speech command *Can I have a small double-shot espresso with two sugars and no milk* it
-will infer the intent and outputs the following structured data that can be used to take an action.
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from speech commands within a given context of
+interest in real-time. For example, given a speech command *Can I have a small double-shot espresso with a lot of sugar
+ and some milk* it will infers that the user wants to *order a drink* with the following specific requirements.
 
 ```json
 {
-  "product": "espresso",
+  "coffeeDrink": "espresso",
   "size": "small",
-  "# shots": "double shot",
-  "sugar": "two sugars",
-  "milk": "no milk"
+  "numberOfShots": "double shot",
+  "sugar": "a lot of",
+  "milk": "some"
 }
 ```
 
@@ -21,9 +21,12 @@ Rhino is
 * intuitive. It allows users to utter their intention in a natural and conversational fashion.
 * using deep neural networks trained in **real-world situations**.
 * compact and computationally-efficient making it suitable for **IoT** applications. It can run with as low as 100 KB of RAM.
-* cross-platform. Currently **Android**, **iOS**, **Raspberry Pi**, **ARM Cortex-A**, **ARM Cortex-M**, and
-a growing number of embedded platforms are supported.
-* customizable. It can be customized for any given domain (set of commands).
+* cross-platform. It is implemented in fixed-point ANSI C. Currently **ARM Cortex-M**, **ARM Cortex-A**,
+**Raspberry Pi**, **Android**, **iOS**, **watchOS**, **Linux**, **Mac**, **Windows**, and **web browsers** are supported.
+* customizable. It can be customized for any given domain.
+
+NOTE: Currently open Linux and Raspberry Pi builds are available to open-source community. But we do have plans to make
+other platforms available as well in near future.
 
 ## Table of Contents
 * [Try It Out](#try-it-out)
@@ -40,23 +43,31 @@ a growing number of embedded platforms are supported.
 
 ## Try It Out
 
-Try out Rhino using its [interactive web demo](https://picovoice.ai/products/#speech-to-intent-demo). You need a working microphone.
+Try out Rhino using its [interactive web demo](https://picovoice.ai/products/#speech-to-intent-demo). You need a working
+microphone.
 
 ## Motivation
 
-A good number of use-cases when building voice-enabled products revolves around understanding speech commands within a
-specific (limited) domain. For example, smart home alliances, mobile applications, etc. Rhino is a tight combination of
-speech-to-text and natural-language-understanding engines that are optimized to work for a specific domain. Rhino is quite
-lean and can run on small embedded processors with very limited RAM (as low as 100 KB) making it ideal for IoT applications.
-Furthermore, it can understand potentially unlimited number of commands within a specific domain. For example for coffee maker
-example above it can correctly recognize the following commands
+A significant number of use-cases when building voice-enabled products revolves around understanding spoken commands within a
+specific domain. Smart home, appliances, infotainment systems, command and control for mobile applications, etc are a
+few examples. The current solutions use a domain-specific natural language understanding (NLU) engine on top of a
+generic speech recognition system. This approach is computationally expensive and if not delegated to cloud services
+requires significant CPU and memory for on-device implementation.
 
-* can I have a latte?
-* make me a single-shot espresso.
-* I want a triple-shot americano with milk.
-* may I have a large cappuccino with cream?
+Rhino solves this problem by providing tightly-coupled speech recognition and NLU engine that are jointly optimized
+for a specific domain (use case). Rhino is quite lean and can even run on small embedded processors
+(think ARM Cortex-M or fixed-point DSPs) with very limited RAM (as low as 100 KB) making it ideal for
+resource-constrained IoT applications.
 
 ## Terminology
+
+Context
+
+Expression
+
+Intent
+
+Slot
 
 ## Structure of Repository
 
