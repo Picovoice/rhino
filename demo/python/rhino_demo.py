@@ -194,31 +194,15 @@ class RhinoDemo(Thread):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        '--rhino_library_path',
-        help="absolute path to Rhino's dynamic library",
-        type=str,
-        default=_abs_path('lib/linux/x86_64/libpv_rhino.so'))
+    parser.add_argument('--rhino_library_path', help="absolute path to Rhino's dynamic library")
 
-    parser.add_argument(
-        '--rhino_model_file_path',
-        help="absolute path to Rhino's model file path",
-        type=str,
-        default=_abs_path('lib/common/rhino_params.pv'))
+    parser.add_argument('--rhino_model_file_path', help="absolute path to Rhino's model file path")
 
     parser.add_argument('--rhino_context_file_path', help="absolute path to Rhino's context file", type=str)
 
-    parser.add_argument(
-        '--porcupine_library_path',
-        help="absolute path to Porcupine's dynamic library",
-        type=str,
-        default=_abs_path('resources/porcupine/lib/linux/x86_64/libpv_porcupine.so'))
+    parser.add_argument('--porcupine_library_path', help="absolute path to Porcupine's dynamic library")
 
-    parser.add_argument(
-        '--porcupine_model_file_path',
-        help="absolute path to Porcupine's model parameter file",
-        type=str,
-        default=_abs_path('resources/porcupine/lib/common/porcupine_params.pv'))
+    parser.add_argument('--porcupine_model_file_path', help="absolute path to Porcupine's model parameter file")
 
     parser.add_argument('--porcupine_keyword_file_path', help='absolute path to porcupine keyword file', type=str)
 

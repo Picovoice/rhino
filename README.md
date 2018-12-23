@@ -70,25 +70,23 @@ applications within the repository.
 
 ### Running Python Demo Application
 
-This demo application allows testing Rhino using computer's microphone. It opens an input audio stream, monitors it
-using [Porcupine's](https://github.com/Picovoice/Porcupine) library, and when the wake phrase is detected it will extract
-the intention within the follow-up command.
+This [demo application](/demo/python) allows testing Rhino using computer's microphone. It opens an input audio stream,
+monitors it using [Porcupine](https://github.com/Picovoice/Porcupine) wake word detection engine, and when the wake
+phrase is detected it will extract the intent within the follow-up spoken command using Rhino.
 
-The following runs the Rhino engine to translate speech commands in the context of a *coffee maker machine*.
-Also, it initializes the Porcupine engine to detect the wake phrase *Alfred*. When the wake phrase is detected the Rhino
-starts processing the following speech command and prints out the inferred attributes and their values on the console.
-
-```bash
-python demo/python/rhino_demo.py --rhino_context_file_path=resources/contexts/coffee_maker.pv \
---porcupine_keyword_file_path=resources/porcupine/resources/keyword_files/alfred_linux.ppn
-```
-
-The following command runs the speech to intent engine within a *smart light* domain with wake phrase set to *Rachel*.
-
+The following runs the demo application on a *Linux* machine to infer intent from spoken commands in the context of a
+*coffee maker*. It also initializes the Porcupine engine to detect the wake phrase *Hey Rachel*. When the wake
+phrase is detected the Rhino starts processing the followup spoken command and prints out the inferred intent and slot
+values on the console.
 
 ```bash
-python demo/python/rhino_demo.py --rhino_context_file_path=resources/contexts/smart_light.pv \
---porcupine_keyword_file_path=resources/porcupine/resources/keyword_files/rachel_linux.ppn
+python demo/python/rhino_demo.py \
+--rhino_library_path ./lib/linux/x86_64/libpv_rhino.so \
+--rhino_model_file_path ./lib/common/rhino_params.pv \
+--rhino_context_file_path ./resources/contexts/linux/coffee_maker_linux.rhn \
+--porcupine_library_path ./resources/porcupine/lib/linux/x86_64/libpv_porcupine.so \
+--porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
+--porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/linux/hey_alfred_linux.ppn
 ```
 
 ## Integration
