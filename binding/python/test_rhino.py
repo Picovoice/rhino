@@ -1,9 +1,9 @@
 import os
+import platform
 import unittest
 
 import soundfile
-
-from .rhino import Rhino
+from rhino import Rhino
 
 
 class RhinoTestCase(unittest.TestCase):
@@ -11,10 +11,13 @@ class RhinoTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        context_file_path = cls._abs_path(
+            'resources/contexts/%s/coffee_maker_%s.rhn' % (cls._context_file_extension(), cls._context_file_extension()))
+
         cls.rhino = Rhino(
             library_path=cls._library_path(),
             model_file_path=cls._abs_path('lib/common/rhino_params.pv'),
-            context_file_path=cls._abs_path('resources/contexts/coffee_maker_linux.rhn'))
+            context_file_path=context_file_path)
 
     @classmethod
     def tearDownClass(cls):
@@ -45,11 +48,14 @@ class RhinoTestCase(unittest.TestCase):
 
         intent, slot_values = self.rhino.get_intent()
 
-        self.assertEqual('order', intent, "incorrect intent")
-        self.assertEqual(
-            slot_values,
-            dict(sugar='some sugar', milk='lots of milk', product='americano', shot='double shot', size='medium'),
-            "incorrect slot values")
+        self.assertEqual('orderDrink', intent, "incorrect intent")
+        expected_slot_values = dict(
+                sugarAmount='some sugar',
+                milkAmount='lots of milk',
+                coffeeDrink='americano',
+                numberOfShots='double shot',
+                size='medium')
+        self.assertEqual(slot_values, expected_slot_values, "incorrect slot values")
 
     def test_out_of_context(self):
         audio, sample_rate = soundfile.read(
@@ -75,13 +81,35 @@ class RhinoTestCase(unittest.TestCase):
     def test_version(self):
         self.assertIsInstance(self.rhino.version, str)
 
-    @classmethod
-    def _library_path(cls):
-        return cls._abs_path('lib/linux/x86_64/libpv_rhino.so')
-
     @staticmethod
     def _abs_path(rel_path):
         return os.path.join(os.path.dirname(__file__), '../..', rel_path)
+
+    @classmethod
+    def _context_file_extension(cls):
+        system = platform.system()
+        machine = platform.machine()
+
+        if system == 'Linux' and machine == 'x86_64':
+            return 'linux'
+        elif system == 'Linux' and machine.startswith('arm'):
+            return 'raspberrypi'
+
+        raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
+
+    @classmethod
+    def _library_path(cls):
+        system = platform.system()
+        machine = platform.machine()
+
+        if system == 'Linux':
+            if machine == 'x86_64':
+                return cls._abs_path('lib/linux/x86_64/libpv_rhino.so')
+            elif machine.startswith('arm'):
+                # NOTE: This does not need to be fast. Use the armv6 binary.
+                return cls._abs_path('lib/raspberry-pi/arm11/libpv_rhino.so')
+
+        raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
 
 
 if __name__ == '__main__':
