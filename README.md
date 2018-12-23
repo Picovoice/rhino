@@ -28,6 +28,7 @@ a growing number of embedded platforms are supported.
 ## Table of Contents
 * [Try It Out](#try-it-out)
 * [Motivation](#motivation)
+* [Terminology](#terminology)
 * [Structure of Repository](#structure-of-repository)
 * [Running Demo Applications](#running-demo-applications)
     * [Running Python Demo Application](#running-python-demo-application)
@@ -54,6 +55,8 @@ example above it can correctly recognize the following commands
 * make me a single-shot espresso.
 * I want a triple-shot americano with milk.
 * may I have a large cappuccino with cream?
+
+## Terminology
 
 ## Structure of Repository
 
@@ -100,7 +103,7 @@ to construct an instance of it.
 ```python
 library_path = ... # absolute path to Rhino's dynamic library
 model_file_path = ... # available at lib/common/rhino_params.pv
-context_file_path = ... # absolute path to Rhino's context file for the domain of interest
+context_file_path = ... # absolute path to context file for the domain of interest
     
 rhino = Rhino(
     library_path=library_path,
@@ -114,21 +117,22 @@ below.
 
 ```python
 def get_next_audio_frame():
-    # implement the logic to get the next frame of audio
+    # add code to get the next audio frame
+    pass
 
-is_finalized = False
 
-while not is_finalized:
+while True:
     is_finalized = rhino.process(get_next_audio_frame())
-    
+
     if is_finalized:
         if rhino.is_understood():
-            for attribute in rhino.get_attributes():
-                attribute_value = rhino.get_attribute_value(attribute)
-        
-            # logic to take action based on attributes and their values
+            intent, slot_values = rhino.get_intent()
+            # add code to take action based on inferred intent and slot values
         else:
-            # logic to handle unsupported command
+            # add code to handle unsupported commands
+            pass
+
+        rhino.reset()
 ```
 
 Finally, when done be sure to explicitly release the resources as the binding class does not rely on the garbage
@@ -146,12 +150,12 @@ constructed as follows.
 
 ```c
 const char *model_file_path = ... // available at lib/common/rhino_params.pv
-const char *context_file_path = ... // absolute path to Rhino's context file for the domain of interest
+const char *context_file_path = ... // absolute path to context file for the domain of interest
     
-pv_rhino_object_t *handle;
-const pv_status_t status = pv_rhino_init(model_file_path, context_file_path, &handle);
+pv_rhino_object_t *rhino;
+const pv_status_t status = pv_rhino_init(model_file_path, context_file_path, &rhino);
 if (status != PV_STATUS_SUCCESS) {
-    // error handling logic goes here
+    // add error handling code
 }
 ```
 
@@ -161,48 +165,43 @@ sample rate can be retrieved using `pv_sample_rate()`. Finally, Rhino accepts in
 
 ```c
 extern const int16_t *get_next_audio_frame(void);
-    
+
 while (true) {
     const int16_t *pcm = get_next_audio_frame();
-        
+
     bool is_finalized;
-    pv_status_t status = pv_rhino_process(handle, pcm, &is_finalized);
+    pv_status_t status = pv_rhino_process(rhino, pcm, &is_finalized);
     if (status != PV_STATUS_SUCCESS) {
-        // error handling logic goes here
+        // add error handling code
     }
-        
+
     if (is_finalized) {
         bool is_understood;
-        status = pv_rhino_is_understood(handle, &is_understood);
+        status = pv_rhino_is_understood(rhino, &is_understood);
         if (status != PV_STATUS_SUCCESS) {
-            // error handling logic goes here
+            // add error handling code
         }
             
         if (is_understood) {
-            int num_attribtes;
-            char **attributes;
-            status = pv_rhino_get_attributes(handle, num_attributes, attributes);
+            const char *intent;
+            int num_slots;
+            const char **slots;
+            const char **values;
+            status = pv_rhino_get_intent(rhino, &intent, &num_slots, &slots, &values);
             if (status != PV_STATUS_SUCCESS) {
-                // error handling logic goes here
+                // add error handling code
             }
-                
-            for (int i = 0; i < num_attributes; i++) {
-                char *attribute_value;
-                status = pv_rhino_get_attribute_value(handle, attributes[i], &attribute_value)
-                if (status != PV_STATUS_SUCCESS) {
-                    // error handling logic goes here
-                }
-                    
-                // logic to take an action based on attribute value
-            }
-                
-            free(attributes);
+
+            // add code to take action based on inferred intent and slot values
+
+            free(slots);
+            free(values);
         }
         else {
-            // logic to handle out of context commands
+            // add code to handle unsupported commands
         }
-            
-        pv_rhino_reset(handle);
+
+        pv_rhino_reset(rhino);
     }
 }
 ```
@@ -210,10 +209,8 @@ while (true) {
 When done be sure to release the resources acquired.
 
 ```c
-pv_rhino_delete(handle);
+pv_rhino_delete(rhino);
 ```
-
-
 
 ##Releases
 
