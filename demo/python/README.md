@@ -43,6 +43,7 @@ python demo/python/rhino_demo.py \
 
 Below is an example console output
 
+```
 LIGHTING SYSTEM CONTEXT:
 
 EXPRESSIONS:
@@ -105,7 +106,6 @@ Cannot connect to server request channel
 jack server is not running or cannot be started
 JackShmReadWritePtr::~JackShmReadWritePtr - Init not done for -1, skipping unlock
 JackShmReadWritePtr::~JackShmReadWritePtr - Init not done for -1, skipping unlock
-
 ````
 
 First, the demo outputs the information regarding the context of Rhino including supported expressions, slots, and their
