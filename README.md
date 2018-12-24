@@ -137,7 +137,7 @@ The following runs the engine on a *Raspberry Pi 3* to infer intent within the c
 
 ```bash
 python demo/python/rhino_demo.py \
---rhino_library_path ./lib/linux/raspberry-pi/cortex-a53/libpv_rhino.so \
+--rhino_library_path ./lib/raspberry-pi/cortex-a53/libpv_rhino.so \
 --rhino_model_file_path ./lib/common/rhino_params.pv \
 --rhino_context_file_path ./resources/contexts/raspberrypi/coffee_maker_raspberrypi.rhn \
 --porcupine_library_path ./resources/porcupine/lib/raspberry-pi/cortex-a53/libpv_porcupine.so \
