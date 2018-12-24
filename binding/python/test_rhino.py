@@ -3,6 +3,7 @@ import platform
 import unittest
 
 import soundfile
+
 from rhino import Rhino
 
 
@@ -11,13 +12,10 @@ class RhinoTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        context_file_path = cls._abs_path(
-            'resources/contexts/%s/coffee_maker_%s.rhn' % (cls._context_file_extension(), cls._context_file_extension()))
-
         cls.rhino = Rhino(
             library_path=cls._library_path(),
             model_file_path=cls._abs_path('lib/common/rhino_params.pv'),
-            context_file_path=context_file_path)
+            context_file_path=cls._context_file_path())
 
     @classmethod
     def tearDownClass(cls):
@@ -28,9 +26,8 @@ class RhinoTestCase(unittest.TestCase):
         self.rhino.reset()
 
     def test_within_context(self):
-        audio, sample_rate = soundfile.read(
-            self._abs_path('resources/audio_samples/test_within_context.wav'),
-            dtype='int16')
+        audio, sample_rate =\
+            soundfile.read(self._abs_path('resources/audio_samples/test_within_context.wav'), dtype='int16')
         assert sample_rate == self.rhino.sample_rate
 
         num_frames = len(audio) // self.rhino.frame_length
@@ -49,18 +46,18 @@ class RhinoTestCase(unittest.TestCase):
         intent, slot_values = self.rhino.get_intent()
 
         self.assertEqual('orderDrink', intent, "incorrect intent")
+
         expected_slot_values = dict(
-                sugarAmount='some sugar',
-                milkAmount='lots of milk',
-                coffeeDrink='americano',
-                numberOfShots='double shot',
-                size='medium')
+            sugarAmount='some sugar',
+            milkAmount='lots of milk',
+            coffeeDrink='americano',
+            numberOfShots='double shot',
+            size='medium')
         self.assertEqual(slot_values, expected_slot_values, "incorrect slot values")
 
     def test_out_of_context(self):
-        audio, sample_rate = soundfile.read(
-            self._abs_path('resources/audio_samples/test_out_of_context.wav'),
-            dtype='int16')
+        audio, sample_rate =\
+            soundfile.read( self._abs_path('resources/audio_samples/test_out_of_context.wav'), dtype='int16')
         assert sample_rate == self.rhino.sample_rate
 
         num_frames = len(audio) // self.rhino.frame_length
@@ -73,6 +70,7 @@ class RhinoTestCase(unittest.TestCase):
                 break
 
         self.assertTrue(is_finalized, "couldn't finalize")
+
         self.assertFalse(self.rhino.is_understood(), "shouldn't be able to understand")
 
     def test_context_expressions(self):
@@ -86,18 +84,6 @@ class RhinoTestCase(unittest.TestCase):
         return os.path.join(os.path.dirname(__file__), '../..', rel_path)
 
     @classmethod
-    def _context_file_extension(cls):
-        system = platform.system()
-        machine = platform.machine()
-
-        if system == 'Linux' and machine == 'x86_64':
-            return 'linux'
-        elif system == 'Linux' and machine.startswith('arm'):
-            return 'raspberrypi'
-
-        raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
-
-    @classmethod
     def _library_path(cls):
         system = platform.system()
         machine = platform.machine()
@@ -106,8 +92,19 @@ class RhinoTestCase(unittest.TestCase):
             if machine == 'x86_64':
                 return cls._abs_path('lib/linux/x86_64/libpv_rhino.so')
             elif machine.startswith('arm'):
-                # NOTE: This does not need to be fast. Use the armv6 binary.
                 return cls._abs_path('lib/raspberry-pi/arm11/libpv_rhino.so')
+
+        raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
+
+    @classmethod
+    def _context_file_path(cls):
+        system = platform.system()
+        machine = platform.machine()
+
+        if system == 'Linux' and machine == 'x86_64':
+            return cls._abs_path('resources/contexts/linux/coffee_maker_linux.rhn')
+        elif system == 'Linux' and machine.startswith('arm'):
+            return cls._abs_path('resources/contexts/raspberrypi/coffee_maker_raspberrypi.rhn')
 
         raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
 
