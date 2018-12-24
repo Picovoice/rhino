@@ -11,7 +11,7 @@ interest in real-time. For example, given a speech command "*Can I have a small 
   "type": "espresso",
   "size": "small",
   "numberOfShots": "2",
-  "sugar": "a lot of",
+  "sugar": "a lot",
   "milk": "some"
 }
 ```
@@ -22,7 +22,7 @@ Rhino is
 * using deep neural networks trained in **real-world situations**.
 * compact and computationally-efficient making it suitable for **IoT** applications. It can run with as low as 100 KB of RAM.
 * cross-platform. It is implemented in fixed-point ANSI C. Currently **ARM Cortex-M**, **ARM Cortex-A**,
-**Raspberry Pi**, **Android**, **iOS**, **watchOS**, **Linux**, **Mac**, **Windows**, and **web browsers** are supported.
+**Raspberry Pi**, **Android**, **iOS**, **watchOS**, **Linux**, **Mac**, **Windows**, and **WebAssembly** are supported.
 * customizable. It can be customized for any given domain.
 
 NOTE: Currently only Linux and Raspberry Pi builds are available to the open-source community. But we do have plans to
@@ -56,9 +56,9 @@ A significant number of use-cases when building voice-enabled products revolves 
 specific domain. Smart home, appliances, infotainment systems, command and control for mobile applications, etc are a
 few examples. The current solutions use a domain-specific natural language understanding (NLU) engine on top of a
 generic speech recognition system. This approach is computationally expensive and if not delegated to cloud services
-requires significant CPU and memory for on-device implementation.
+requires significant CPU and memory for an on-device implementation.
 
-Rhino solves this problem by providing tightly-coupled speech recognition and NLU engine that are jointly optimized
+Rhino solves this problem by providing a tightly-coupled speech recognition and NLU engine that are jointly optimized
 for a specific domain (use case). Rhino is quite lean and can even run on small embedded processors
 (think ARM Cortex-M or fixed-point DSPs) with very limited RAM (as low as 100 KB) making it ideal for
 resource-constrained IoT applications.
@@ -93,7 +93,7 @@ or can be intent's details (e.g. location). More on this is below.
 ### Intent
 
 An intent represents what a user wants to accomplish with a spoken command. For example the intent of the phrase
-"*Set the lights in the living room to purple*" is to set the color of lights. Now in order to take action based on ,
+"*Set the lights in the living room to purple*" is to set the color of lights. In order to take action based on this,
 we might need to have more information such as which light or what is the desired color. More on this below.
 
 ### Slot
