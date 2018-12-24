@@ -28,141 +28,110 @@ extern "C"
 #endif
 
 /**
- * Forward declaration for Speech to Intent object (a.k.a Rhino). The object translates speech (commands) in a given
- * context into structured data (intent). It processes incoming audio in consecutive frames (chunks). The number of
- * samples per frame can be attained by calling 'pv_rhino_frame_length()'. The incoming audio needs to have a sample
- * rate equal to 'pv_sample_rate()' and be 16-bit linearly-encoded. Furthermore, Rhino operates on single channel audio.
+ * Forward declaration for speech-to-intent object (a.k.a Rhino).
+ * The object directly infers intent from speech commands within a given context of interest in real-time. It
+ * processes incoming audio in consecutive frames (chunks) and at the end of each frame indicates if the intent
+ * extraction is finalized. When finalized, the intent can be retrieved as structured data in form of an intent string
+ * and pairs of slots and values representing arguments (details) of intent. The number of samples per frame can be
+ * attained by calling 'pv_rhino_frame_length()'. The incoming audio needs to have a sample rate equal to
+ * 'pv_sample_rate()' and be 16-bit linearly-encoded. Furthermore, Rhino operates on single channel audio.
  */
 typedef struct pv_rhino_object pv_rhino_object_t;
 
-#ifdef PV_RHINO_BARE_MACHINE
-PV_API pv_status_t pv_rhino_init(const void *context, pv_rhino_object_t **object);
+#ifdef PV_RHINO_BAREMACHINE
+/**
+ * Constructor.
+ *
+ * @param context Context parameters. A context represents the set of expressions (commands), intents, and intent
+ * arguments (slots) within a domain of interest.
+ * @param context_length Length of context in bytes.
+ * @param[out] object Constructed speech-to-intent object.
+ * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY' on failure.
+ */
+PV_API pv_status_t pv_rhino_init(const void *context, int context_length, pv_rhino_object_t **object);
 #else
 /**
  * Constructor.
  *
  * @param model_file_path Absolute path to file containing model parameters.
- * @param context_file_path Absolute path to file containing context parameters.
- * @param object Constructed Speech to Intent object.
- * @return Status code. Returns 'PV_STATUS_OUT_OF_MEMORY', 'PV_STATUS_IO_ERROR', or 'PV_STATUS_INVALID_ARGUMENT' on
+ * @param context_file_path Absolute path to file containing context parameters. A context represents the set of
+ * expressions (commands), intents, and intent arguments (slots) within a domain of interest.
+ * @param[out] object Constructed speech-to-intent object.
+ * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT', 'PV_STATUS_IO_ERROR', or 'PV_STATUS_OUT_OF_MEMORY' on
  * failure.
  */
-PV_API pv_status_t pv_rhino_init(
-        const char *model_file_path,
-        const char *context_file_path,
-        pv_rhino_object_t **object);
+PV_API pv_status_t pv_rhino_init(const char *model_file_path, const char *context_file_path, pv_rhino_object_t **object);
 #endif
 
 /**
  * Destructor.
  *
- * @param object Speech to Intent object.
+ * @param object Speech-to-intent object.
  */
 PV_API void pv_rhino_delete(pv_rhino_object_t *object);
 
 /**
- * Processes a frame of audio and returns a flag weather it has finalized intent extraction.
+ * Processes a frame of audio and emits a flag indicating if the engine has finalized intent extraction. When finalized,
+ * 'pv_rhino_is_understood()' should be called to check if the command was valid (is within context of interest).
  *
- * @param object Speech to Intent object.
+ * @param object Speech-to-intent object.
  * @param pcm A frame of audio samples. The number of samples per frame can be attained by calling
  * 'pv_rhino_frame_length()'. The incoming audio needs to have a sample rate equal to 'pv_sample_rate()' and be 16-bit
  * linearly-encoded. Furthermore, Rhino operates on single channel audio.
- * @param is_finalized Flag indicating whether the engine has finalized intent extraction.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
+ * @param[out] is_finalized Flag indicating whether the engine has finalized intent extraction.
+ * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY' on failure.
  */
 PV_API pv_status_t pv_rhino_process(pv_rhino_object_t *object, const int16_t *pcm, bool *is_finalized);
 
 /**
- * Indicates weather the engine understood the intent within speech command.
+ * Indicates if the spoken command is valid, is within the domain of interest (context), and the engine understood it.
  *
- * @param object Speech to Intent object.
- * @param is_understood Flag indicating weather the engine understood the intent within the speech.
+ * @param object Speech-to-intent object.
+ * @param[out] is_understood Flag indicating if the spoken command is valid, is within the domain of interest (context),
+ * and the engine understood it.
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
  */
 PV_API pv_status_t pv_rhino_is_understood(const pv_rhino_object_t *object, bool *is_understood);
 
 /**
- * Retrieves the intent attributes after the engine has finalized the extraction and only if the command is understood.
- * i.e. this should be called only after 'is_finalized' returned by 'pv_rhino_process' is set to true and then
- * 'is_understood' returned by 'pv_rhino_is_understood' is set to true.
+ * Getter for the intent inferred from spoken command. The intent is presented as an intent string and pairs of slots
+ * and their values. It should be called only after intent extraction is finalized and it is verified that the spoken
+ * command is valid and understood via calling 'pv_rhino_is_understood()'.
  *
- * @param object Speech to Intent object.
- * @param num_attributes Number of extracts attributes within speech command.
- * @param attributes Attribute values.
- * @return Status code. Returns 'PV_STATUS_OUT_OF_MEMORY', or 'PV_STATUS_INVALID_ARGUMENT' on failure.
+ * @param object Speech-to-intent object.
+ * @param[out] intent Inferred intent.
+ * @param[out] num_slots Number of slots.
+ * @param[out] slots Array of inferred slots. Its memory needs to be freed by the caller.
+ * @param[out] values Array of inferred slot values in the same order of inferred slots. Its memory needs to be freed
+ * by the caller.
+ * @return State code. Returns 'PV_STATUS_INVALID_ARGUMENT', 'PV_STATUS_INVALID_STATE', or 'PV_STATUS_OUT_OF_MEMORY' on
+ * failure.
  */
-PV_API pv_status_t pv_rhino_get_attributes(const pv_rhino_object_t *object, int *num_attributes, const char ***attributes);
+PV_API pv_status_t pv_rhino_get_intent(
+        const pv_rhino_object_t *object,
+        const char **intent,
+        int *num_slots,
+        const char ***slots,
+        const char ***values);
 
 /**
- * Retrieves the number of intent attributes after the engine has finalized the extraction and only if the command is
- * understood. i.e. this should be called only after 'is_finalized' returned by 'pv_rhino_process' is set to true and
- * then 'is_understood' returned by 'pv_rhino_is_understood' is set to true.
+ * Resets the internal state of the engine. It should be called before the engine can be used to infer intent from a new
+ * stream of audio.
  *
- * @param object Speech to Intent object.
- * @param num_attributes Number of inferred attributes.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
- */
-PV_API pv_status_t pv_rhino_get_num_attributes(const pv_rhino_object_t *object, int *num_attributes);
-
-/**
- * Retrieves the a given attribute's value after the engine has finalized the extraction and only if the command is
- * understood. i.e. this should be called only after 'is_finalized' returned by 'pv_rhino_process' is set to true and
- * then 'is_understood' returned by 'pv_rhino_is_understood' is set to true.
- *
- * @param object Speech to Intent object.
- * @param attribute_index The index of attribute.
- * @param attribute Attribute value.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
- */
-PV_API pv_status_t pv_rhino_get_attribute(const pv_rhino_object_t *object, int attribute_index, const char **attribute);
-
-/**
- * Retrieves the a given attribute's value after the engine has finalized the extraction and only if the command is
- * understood. i.e. this should be called only after 'is_finalized' returned by 'pv_rhino_process' is set to true and
- * then 'is_understood' returned by 'pv_rhino_is_understood' is set to true.
- *
- * @param object Speech to Intent object.
- * @param attribute Attribute.
- * @param value Returned attribute value.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
- */
-PV_API pv_status_t pv_rhino_get_attribute_value(const pv_rhino_object_t *object, const char *attribute, const char **value);
-
-/**
- * Resets the internal state of the Speech to Intent engine.
- *
- * @param object Speech to Intent object.
+ * @param object Speech-to-intent object.
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
  */
 PV_API pv_status_t pv_rhino_reset(pv_rhino_object_t *object);
 
 /**
- * Getter of attributes within a context. The caller is responsible for freeing the returned array of attributes.
+ * Getter for expressions. Each expression maps a set of spoken phrases to an intent and possibly a number of slots
+ * (intent arguments).
  *
- * @param object Speech to Intent object.
- * @param num_attributes Number of attributes within current context.
- * @param attributes Context attributes.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY' on failure.
+ * @param object Speech-to-intent object.
+ * @param[out] expressions Expressions.
+ * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
  */
-PV_API pv_status_t pv_rhino_get_context_attributes(
-        const pv_rhino_object_t *object,
-        int *num_attributes,
-        const char ***attributes);
-
-/**
- * Getter for different values of a given attribute. The caller is responsible for freeing the returned array of values.
- *
- * @param object Speech to Intent object.
- * @param attribute A given attribute within current context.
- * @param num_values Number of possible values for the given attribute in current context.
- * @param values Possible values for given attribute in current context.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY' on failure.
- */
-PV_API pv_status_t pv_rhino_get_attribute_values(
-        const pv_rhino_object_t *object,
-        const char *attribute,
-        int *num_values,
-        const char ***values);
+PV_API pv_status_t pv_rhino_context_expressions(const pv_rhino_object_t *object, const char **expressions);
 
 /**
  * Getter for version string.

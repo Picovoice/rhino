@@ -1,0 +1,1 @@
+`PV_RHINO_BAREMACHINE` should be defined only when compiling for systems without filesystem support.

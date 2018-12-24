@@ -113,6 +113,7 @@ class RhinoDemo(Thread):
                 library_path=self._rhino_library_path,
                 model_file_path=self._rhino_model_file_path,
                 context_file_path=self._rhino_context_file_path)
+            print(rhino.context_expressions)
 
             pa = pyaudio.PyAudio()
 
@@ -123,12 +124,6 @@ class RhinoDemo(Thread):
                 input=True,
                 frames_per_buffer=porcupine.frame_length,
                 input_device_index=self._input_device_index)
-
-            context_help_path = self._rhino_context_file_path.replace('.pv', '_info.txt')
-            if os.path.exists(context_help_path):
-                with open(context_help_path, 'r') as f:
-                    for x in f:
-                        print(x.strip('\n'))
 
             # NOTE: This is true now and will be correct possibly forever. If it changes the logic below need to change.
             assert porcupine.frame_length == rhino.frame_length
@@ -148,8 +143,12 @@ class RhinoDemo(Thread):
                     intent_extraction_is_finalized = rhino.process(pcm)
                 else:
                     if rhino.is_understood():
-                        for attribute in rhino.get_attributes():
-                            print('%s: %s' % (attribute, rhino.get_attribute_value(attribute)))
+                        intent, slot_values = rhino.get_intent()
+                        print('intent: %s' % intent)
+                        print('---')
+                        for slot, value in slot_values.items():
+                            print('%s: %s' % (slot, value))
+                        print()
                     else:
                         print("didn't understand the command")
 
@@ -195,31 +194,15 @@ class RhinoDemo(Thread):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        '--rhino_library_path',
-        help="absolute path to Rhino's dynamic library",
-        type=str,
-        default=_abs_path('lib/linux/x86_64/libpv_rhino.so'))
+    parser.add_argument('--rhino_library_path', help="absolute path to Rhino's dynamic library")
 
-    parser.add_argument(
-        '--rhino_model_file_path',
-        help="absolute path to Rhino's model file path",
-        type=str,
-        default=_abs_path('lib/common/rhino_params.pv'))
+    parser.add_argument('--rhino_model_file_path', help="absolute path to Rhino's model file path")
 
     parser.add_argument('--rhino_context_file_path', help="absolute path to Rhino's context file", type=str)
 
-    parser.add_argument(
-        '--porcupine_library_path',
-        help="absolute path to Porcupine's dynamic library",
-        type=str,
-        default=_abs_path('resources/porcupine/lib/linux/x86_64/libpv_porcupine.so'))
+    parser.add_argument('--porcupine_library_path', help="absolute path to Porcupine's dynamic library")
 
-    parser.add_argument(
-        '--porcupine_model_file_path',
-        help="absolute path to Porcupine's model parameter file",
-        type=str,
-        default=_abs_path('resources/porcupine/lib/common/porcupine_params.pv'))
+    parser.add_argument('--porcupine_model_file_path', help="absolute path to Porcupine's model parameter file")
 
     parser.add_argument('--porcupine_keyword_file_path', help='absolute path to porcupine keyword file', type=str)
 

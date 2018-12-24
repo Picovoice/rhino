@@ -1,93 +1,113 @@
 import os
+import platform
 import unittest
 
 import soundfile
 
-from .rhino import Rhino
+from rhino import Rhino
 
 
 class RhinoTestCase(unittest.TestCase):
+    rhino = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rhino = Rhino(
+            library_path=cls._library_path(),
+            model_file_path=cls._abs_path('lib/common/rhino_params.pv'),
+            context_file_path=cls._context_file_path())
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.rhino is not None:
+            cls.rhino.delete()
+
+    def tearDown(self):
+        self.rhino.reset()
+
     def test_within_context(self):
-        rhino = Rhino(
-            library_path=self._library_path,
-            model_file_path=self._abs_path('lib/common/rhino_params.pv'),
-            context_file_path=self._abs_path('resources/contexts/coffee_maker.pv'))
+        audio, sample_rate =\
+            soundfile.read(self._abs_path('resources/audio_samples/test_within_context.wav'), dtype='int16')
+        assert sample_rate == self.rhino.sample_rate
 
-        audio, sample_rate = soundfile.read(
-            self._abs_path('resources/audio_samples/test_within_context.wav'),
-            dtype='int16')
-        assert sample_rate == rhino.sample_rate
-
-        num_frames = len(audio) // rhino.frame_length
+        num_frames = len(audio) // self.rhino.frame_length
 
         is_finalized = False
         for i in range(num_frames):
-            frame = audio[i * rhino.frame_length:(i + 1) * rhino.frame_length]
-            is_finalized = rhino.process(frame)
+            frame = audio[i * self.rhino.frame_length:(i + 1) * self.rhino.frame_length]
+            is_finalized = self.rhino.process(frame)
             if is_finalized:
                 break
 
         self.assertTrue(is_finalized, "couldn't finalize")
 
-        is_understood = rhino.is_understood()
+        self.assertTrue(self.rhino.is_understood(), "couldn't understand")
 
-        self.assertTrue(is_understood, "couldn't understand")
+        intent, slot_values = self.rhino.get_intent()
 
-        expected_attribute_values = dict(
-            milk='no milk',
-            sugar='two sugars',
-            twist='cherry twist',
-            product='espresso',
-            taste='salted caramel',
-            shots='single shot',
-            roast='dark roast',
-            size='small')
+        self.assertEqual('orderDrink', intent, "incorrect intent")
 
-        attributes = rhino.get_attributes()
-
-        self.assertEqual(expected_attribute_values.keys(), attributes, "incorrect attributes")
-
-        for attribute in attributes:
-            self.assertEqual(
-                rhino.get_attribute_value(attribute),
-                expected_attribute_values[attribute],
-                "incorrect attribute value")
-
-        rhino.delete()
+        expected_slot_values = dict(
+            sugarAmount='some sugar',
+            milkAmount='lots of milk',
+            coffeeDrink='americano',
+            numberOfShots='double shot',
+            size='medium')
+        self.assertEqual(slot_values, expected_slot_values, "incorrect slot values")
 
     def test_out_of_context(self):
-        rhino = Rhino(
-            library_path=self._library_path,
-            model_file_path=self._abs_path('lib/common/rhino_params.pv'),
-            context_file_path=self._abs_path('resources/contexts/coffee_maker.pv'))
+        audio, sample_rate =\
+            soundfile.read( self._abs_path('resources/audio_samples/test_out_of_context.wav'), dtype='int16')
+        assert sample_rate == self.rhino.sample_rate
 
-        audio, sample_rate = soundfile.read(
-            self._abs_path('resources/audio_samples/test_out_of_context.wav'),
-            dtype='int16')
-        assert sample_rate == rhino.sample_rate
-
-        num_frames = len(audio) // rhino.frame_length
+        num_frames = len(audio) // self.rhino.frame_length
 
         is_finalized = False
         for i in range(num_frames):
-            frame = audio[i * rhino.frame_length:(i + 1) * rhino.frame_length]
-            is_finalized = rhino.process(frame)
+            frame = audio[i * self.rhino.frame_length:(i + 1) * self.rhino.frame_length]
+            is_finalized = self.rhino.process(frame)
             if is_finalized:
                 break
 
         self.assertTrue(is_finalized, "couldn't finalize")
-        self.assertTrue(not rhino.is_understood(), "shouldn't be able to understand")
 
-        rhino.delete()
+        self.assertFalse(self.rhino.is_understood(), "shouldn't be able to understand")
 
-    @property
-    def _library_path(self):
-        return self._abs_path('lib/linux/x86_64/libpv_rhino.so')
+    def test_context_expressions(self):
+        self.assertIsInstance(self.rhino.context_expressions, str)
+
+    def test_version(self):
+        self.assertIsInstance(self.rhino.version, str)
 
     @staticmethod
     def _abs_path(rel_path):
         return os.path.join(os.path.dirname(__file__), '../..', rel_path)
 
+    @classmethod
+    def _library_path(cls):
+        system = platform.system()
+        machine = platform.machine()
 
-if __name__ == '__main__ ':
-    pass
+        if system == 'Linux':
+            if machine == 'x86_64':
+                return cls._abs_path('lib/linux/x86_64/libpv_rhino.so')
+            elif machine.startswith('arm'):
+                return cls._abs_path('lib/raspberry-pi/arm11/libpv_rhino.so')
+
+        raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
+
+    @classmethod
+    def _context_file_path(cls):
+        system = platform.system()
+        machine = platform.machine()
+
+        if system == 'Linux' and machine == 'x86_64':
+            return cls._abs_path('resources/contexts/linux/coffee_maker_linux.rhn')
+        elif system == 'Linux' and machine.startswith('arm'):
+            return cls._abs_path('resources/contexts/raspberrypi/coffee_maker_raspberrypi.rhn')
+
+        raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
+
+
+if __name__ == '__main__':
+    unittest.main()
