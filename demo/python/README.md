@@ -24,12 +24,25 @@ python demo/python/rhino_demo.py \
 --porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/raspberrypi/hey_alfred_raspberrypi.ppn
 ```
 
-It starts recording audio from the **default** input audio device, initializes an instance of Porcupine and Rhino
-engines, and monitors the incoming audio for the wake word **Hey Alfred**. Upon detection of the wake word the followup
- command is processed by Rhino to infer user's intent and the inferred result is writen into the console. This is an
- example console output
+It starts recording audio from the **default** input audio device, initializes instances of Porcupine and Rhino
+engines, and monitors the incoming audio for the wake phrase **Hey Alfred**. Upon detection of the wake word the followup
+ command is processed by Rhino to infer user's intent and the inferred result is writen into the console.
 
-````
+For running on a different platform you to use the corresponding platform-specific library paths, Porcupine keyword file,
+and Rhino context file. For example to run the same demo on a Linux box
+
+```bash
+python demo/python/rhino_demo.py \
+--rhino_library_path ./lib/linux/x86_64/libpv_rhino.so \
+--rhino_model_file_path ./lib/common/rhino_params.pv \
+--rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn \
+--porcupine_library_path ./resources/porcupine/lib/linux/x86_64/libpv_porcupine.so \
+--porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
+--porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/linux/hey_alfred_linux.ppn
+```
+
+Below is an example console output
+
 LIGHTING SYSTEM CONTEXT:
 
 EXPRESSIONS:
@@ -146,12 +159,12 @@ the input device which has an index of 10. After finding the correct index the d
 
 ```bash
 python demo/python/rhino_demo.py \
---rhino_library_path ./lib/raspberry-pi/cortex-a53/libpv_rhino.so \
+--rhino_library_path ./lib/linux/x86_64/libpv_rhino.so \
 --rhino_model_file_path ./lib/common/rhino_params.pv \
---rhino_context_file_path ./resources/contexts/raspberrypi/smart_lighting_raspberrypi.rhn \
---porcupine_library_path ./resources/porcupine/lib/raspberry-pi/cortex-a53/libpv_porcupine.so \
+--rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn \
+--porcupine_library_path ./resources/porcupine/lib/linux/x86_64/libpv_porcupine.so \
 --porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
---porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/raspberrypi/hey_alfred_raspberrypi.ppn \
+--porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/linux/hey_alfred_linux.ppn
 --input_audio_device_index 10
 ```
 
@@ -159,12 +172,12 @@ If the problem persists we suggest storing the recorded audio into a file for in
 
 ```bash
 python demo/python/rhino_demo.py \
---rhino_library_path ./lib/raspberry-pi/cortex-a53/libpv_rhino.so \
+--rhino_library_path ./lib/linux/x86_64/libpv_rhino.so \
 --rhino_model_file_path ./lib/common/rhino_params.pv \
---rhino_context_file_path ./resources/contexts/raspberrypi/smart_lighting_raspberrypi.rhn \
---porcupine_library_path ./resources/porcupine/lib/raspberry-pi/cortex-a53/libpv_porcupine.so \
+--rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn \
+--porcupine_library_path ./resources/porcupine/lib/linux/x86_64/libpv_porcupine.so \
 --porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
---porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/raspberrypi/hey_alfred_raspberrypi.ppn \
+--porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/linux/hey_alfred_linux.ppn
 --input_audio_device_index 10 \
 --output-path ~/test.wav
 ```
