@@ -2,3 +2,5 @@
 binding/python/__pycache__/
 binding/python/*.pyc
 resources/porcupine/binding/python/__pycache__/
+demo/c/rhino_demo
+

@@ -31,6 +31,7 @@ make other platforms available as well in upcoming releases.
 ## Table of Contents
 * [Try It Out](#try-it-out)
 * [Motivation](#motivation)
+* [Metrics](#metrics)
 * [Terminology](#terminology)
     * [Context](#context)
     * [Expression](#expression)
@@ -39,6 +40,7 @@ make other platforms available as well in upcoming releases.
 * [Structure of Repository](#structure-of-repository)
 * [Running Demo Applications](#running-demo-applications)
     * [Running Python Demo Application](#running-python-demo-application)
+    * [Running C Demo Application](#running-c-demo-application)
 * [Integration](#integration)
     * [C](#c)
     * [Python](#python)
@@ -62,6 +64,15 @@ Rhino solves this problem by providing a tightly-coupled speech recognition and 
 for a specific domain (use case). Rhino is quite lean and can even run on small embedded processors
 (think ARM Cortex-M or fixed-point DSPs) with very limited RAM (as low as 100 KB) making it ideal for
 resource-constrained IoT applications.
+
+## Metrics
+
+The table shows the average CPU usage on three different platforms (1) Raspberry Pi zero, (2) Raspberry Pi 3, and an
+Ubuntu box (i5-6500 CPU @ 3.20GHz). You can recreate this using the [C demo application](/demo/c).
+
+Raspberry Pi zero | Raspberry Pi 3 | Ubuntu Desktop (i5-6500 CPU @ 3.20GHz)
+:---: | :---: | :---:
+48.7% | 8.9% | 1.2%
 
 ## Terminology
 
@@ -144,6 +155,11 @@ python demo/python/rhino_demo.py \
 --porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
 --porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/raspberrypi/hey_alfred_raspberrypi.ppn
 ```
+
+### Running C Demo Application
+
+This [demo application](demo/c) is mainly used to show how Rhino can be integrated into an efficient C/C++ application.
+Furthermore it can be used to measure runtime metrics of the engine on various supported platforms.
 
 ## Integration
 
