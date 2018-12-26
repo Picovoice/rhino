@@ -25,6 +25,8 @@ Rhino is
 **Raspberry Pi**, **Android**, **iOS**, **watchOS**, **Linux**, **Mac**, **Windows**, and **WebAssembly** are supported.
 * customizable. It can be customized for any given domain.
 
+[![Rhino in Action](https://img.youtube.com/vi/WadKhfLyqTQ/0.jpg)](https://www.youtube.com/watch?v=WadKhfLyqTQ)
+
 NOTE: Currently only Linux and Raspberry Pi builds are available to the open-source community. But we do have plans to
 make other platforms available as well in upcoming releases.
 
