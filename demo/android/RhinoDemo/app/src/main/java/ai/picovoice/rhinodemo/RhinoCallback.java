@@ -1,7 +1,7 @@
 package ai.picovoice.rhinodemo;
 
-import java.util.Map;
+import ai.picovoice.rhino.Rhino;
 
 public interface RhinoCallback {
-    void run(boolean isUnderstood, String intent, Map<String, String> slots);
+    void run(final boolean isUnderstood, final Rhino.RhinoIntent intent);
 }

@@ -20,7 +20,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,23 +34,28 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
+
+import ai.picovoice.rhino.Rhino;
 
 public class RhinoDemoActivity extends AppCompatActivity {
+    private final String TAG = "RHINO_DEMO";
+
+    private static final int[] RESOURCE_IDS = {
+            R.raw.rhino_params,
+            R.raw.smart_lighting_android,
+            R.raw.coffee_maker_android,
+    };
+
+    private ToggleButton recordButton;
+    private TextView intentTextView;
+
     private AudioRecorder audioRecorder;
-    private ToggleButton startButton;
-    private TextView intentView;
+    private RhinoAudioConsumer rhinoAudioConsumer;
 
-    private void copyResources() throws IOException{
-        int[] resourceIds = {
-                R.raw.smart_lighting_android,
-                R.raw.coffee_maker_android,
-                R.raw.rhino_params
-        };
+    private void copyResources() throws IOException {
+        final Resources resources = this.getResources();
 
-        Resources resources = this.getResources();
-
-        for (int id : resourceIds) {
+        for (int id : RESOURCE_IDS) {
             final String filename = resources.getResourceEntryName(id);
             final String extension = (id == R.raw.rhino_params) ? ".pv" : ".rhn";
 
@@ -61,9 +65,9 @@ public class RhinoDemoActivity extends AppCompatActivity {
                 is = new BufferedInputStream(resources.openRawResource(id));
                 os = new BufferedOutputStream(this.openFileOutput(filename + extension, AppCompatActivity.MODE_PRIVATE));
 
-                int b;
-                while ((b = is.read()) != -1) {
-                    os.write(b);
+                int x;
+                while ((x = is.read()) != -1) {
+                    os.write(x);
                 }
                 os.flush();
             } finally {
@@ -85,63 +89,47 @@ public class RhinoDemoActivity extends AppCompatActivity {
         try {
             copyResources();
         } catch (IOException e) {
+            Log.e(TAG, "Failed to copy resource files.");
             Log.e(TAG, e.getMessage());
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(this, "Failed to copy resource files.", Toast.LENGTH_SHORT).show();
         }
 
-        startButton = findViewById(R.id.startButton);
-        intentView = findViewById(R.id.intentView);
+        recordButton = findViewById(R.id.startButton);
+        intentTextView = findViewById(R.id.intentView);
+
+        try {
+            createRhino();
+            audioRecorder = new AudioRecorder(rhinoAudioConsumer);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to initialize rhino and/or audio recording.");
+            Log.e(TAG, e.getMessage());
+
+            Toast.makeText(this, "Failed to initialize rhino and/or audio recording.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean hasRecordPermission() {
-        int permResult = ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
-        return permResult == PackageManager.PERMISSION_GRANTED;
-    }
-
-    void showRecordPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
     }
 
     public void onClick(View view) {
         try {
-            if (startButton.isChecked()) {
+            if (recordButton.isChecked()) {
                 if (hasRecordPermission()) {
-                    RhinoManager rhinoManager = createRhino();
-                    audioRecorder = new AudioRecorder(rhinoManager);
                     audioRecorder.start();
-                    Log.i(TAG, "yo");
                 } else {
-                    Log.i(TAG, "hello");
-                    showRecordPermission();
+                    recordButton.toggle();
+                    Toast.makeText(this, "Does not have record permission.", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.i(TAG, "boo");
-                if (audioRecorder != null) {
-                    audioRecorder.stop();
-                }
+                audioRecorder.stop();
+                rhinoAudioConsumer.reset();
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        // We only ask for record permission.
-        if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            ToggleButton tbtn = findViewById(R.id.startButton);
-            tbtn.toggle();
-        } else {
-            try {
-                RhinoManager rhinoManager = createRhino();
-                audioRecorder = new AudioRecorder(rhinoManager);
-                audioRecorder.start();
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
+            Toast.makeText(this, "Something went wrong.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -149,36 +137,31 @@ public class RhinoDemoActivity extends AppCompatActivity {
         return new File(this.getFilesDir(), filename).getAbsolutePath();
     }
 
-    private final String TAG = "RhinoDemo";
-
-    private RhinoManager createRhino() throws Exception {
-        return new RhinoManager(
+    private void createRhino() throws Exception {
+        rhinoAudioConsumer = new RhinoAudioConsumer(
                 getAbsolutePath("rhino_params.pv"),
                 getAbsolutePath("coffee_maker_android.rhn"),
                 new RhinoCallback() {
                     @Override
-                    public void run(final boolean isUnderstood, final String intent, final Map<String, String> slots) {
+                    public void run(final boolean isUnderstood, final Rhino.RhinoIntent intent) {
                         Log.i(TAG, isUnderstood ? "true" : "false");
-                        Log.i(TAG, intent);
-                        for (String key: slots.keySet()) {
-                            Log.i(TAG, key + ": " + slots.get(key));
+                        Log.i(TAG, intent.getIntent());
+                        for (String key: intent.getSlots().keySet()) {
+                            Log.i(TAG, key + ": " + intent.getSlots().get(key));
                         }
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.i(TAG, "before toggle!");
-                                startButton.toggle();
-                                Log.i(TAG, "after toggle");
+                                recordButton.toggle();
                                 if (isUnderstood) {
-                                    intentView.setText("");
-                                    intentView.append(String.format("intent: %s\n", intent));
-                                    for (String key: slots.keySet()) {
-                                        intentView.append(String.format("%s: %s\n", key, slots.get(key)));
+                                    intentTextView.setText("");
+                                    intentTextView.append(String.format("intent: %s\n", intent.getIntent()));
+                                    for (String key: intent.getSlots().keySet()) {
+                                        intentTextView.append(String.format("%s: %s\n", key, intent.getSlots().get(key)));
                                     }
-                                    Log.i(TAG, "set text!");
                                 } else {
-                                    intentView.setText("command is not understood.\n");
+                                    intentTextView.setText("command is not understood.\n");
                                 }
                             }
                         });
