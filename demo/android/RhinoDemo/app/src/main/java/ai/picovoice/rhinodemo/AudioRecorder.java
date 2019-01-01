@@ -54,7 +54,7 @@ class AudioRecorder {
         this.frameLength = audioConsumer.getFrameLength();
     }
 
-    void start() throws Exception {
+    void start() {
         if (started.get()) {
             return;
         }

@@ -41,7 +41,7 @@ public class RhinoAudioConsumer implements AudioConsumer {
         return rhino.sampleRate();
     }
 
-    public void reset() throws RhinoException {
+    void reset() throws RhinoException {
         rhino.reset();
         isFinalized = false;
     }

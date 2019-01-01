@@ -100,7 +100,6 @@ public class RhinoDemoActivity extends AppCompatActivity {
 
         try {
             createRhino();
-            audioRecorder = new AudioRecorder(rhinoAudioConsumer);
         } catch (Exception e) {
             Log.e(TAG, "Failed to initialize rhino and/or audio recording.");
             Log.e(TAG, e.getMessage());
@@ -116,7 +115,10 @@ public class RhinoDemoActivity extends AppCompatActivity {
     public void onClick(View view) {
         try {
             if (recordButton.isChecked()) {
+                intentTextView.setText("");
+
                 if (hasRecordPermission()) {
+                    audioRecorder = new AudioRecorder(rhinoAudioConsumer);
                     audioRecorder.start();
                 } else {
                     recordButton.toggle();
@@ -162,6 +164,12 @@ public class RhinoDemoActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     intentTextView.setText("command is not understood.\n");
+                                }
+                                try {
+                                    audioRecorder.stop();
+                                    rhinoAudioConsumer.reset();
+                                } catch (Exception e) {
+                                    Log.e(TAG, e.getMessage());
                                 }
                             }
                         });
