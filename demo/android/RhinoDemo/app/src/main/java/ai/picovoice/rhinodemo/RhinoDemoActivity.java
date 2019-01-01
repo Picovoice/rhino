@@ -41,11 +41,11 @@ import ai.picovoice.rhino.Rhino;
 public class RhinoDemoActivity extends AppCompatActivity {
     private static final String TAG = "RHINO_DEMO";
 
-    private static final int[] RESOURCE_IDS = {
-            R.raw.rhino_params,
-            R.raw.smart_lighting_android,
-            R.raw.coffee_maker_android,
-    };
+    private static final int PARAM_ID = R.raw.rhino_params;
+    private static final int CONTEXT_ID = R.raw.smart_lighting_android;
+
+    private static final String PARAM_FILENAME = "rhino_params.pv";
+    private static final String CONTEXT_FILENAME = "rhino_context.rhn";
 
     private ToggleButton recordButton;
     private TextView intentTextView;
@@ -53,33 +53,34 @@ public class RhinoDemoActivity extends AppCompatActivity {
     private AudioRecorder audioRecorder;
     private RhinoAudioConsumer rhinoAudioConsumer;
 
-    private void copyResources() throws IOException {
+
+    private void copyResource(int resourceId, String filename) throws IOException {
         final Resources resources = this.getResources();
 
-        for (int id : RESOURCE_IDS) {
-            final String filename = resources.getResourceEntryName(id);
-            final String extension = (id == R.raw.rhino_params) ? ".pv" : ".rhn";
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new BufferedInputStream(resources.openRawResource(resourceId));
+            os = new BufferedOutputStream(this.openFileOutput(filename, AppCompatActivity.MODE_PRIVATE));
 
-            InputStream is = null;
-            OutputStream os = null;
-            try {
-                is = new BufferedInputStream(resources.openRawResource(id));
-                os = new BufferedOutputStream(this.openFileOutput(filename + extension, AppCompatActivity.MODE_PRIVATE));
-
-                int x;
-                while ((x = is.read()) != -1) {
-                    os.write(x);
-                }
-                os.flush();
-            } finally {
-                if (is != null) {
-                    is.close();
-                }
-                if (os != null) {
-                    os.close();
-                }
+            int x;
+            while ((x = is.read()) != -1) {
+                os.write(x);
+            }
+            os.flush();
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+            if (os != null) {
+                os.close();
             }
         }
+    }
+
+    private void copyResources() throws IOException {
+        copyResource(PARAM_ID, PARAM_FILENAME);
+        copyResource(CONTEXT_ID, CONTEXT_FILENAME);
     }
 
     private String getAbsolutePath(String filename) {
@@ -88,8 +89,8 @@ public class RhinoDemoActivity extends AppCompatActivity {
 
     private void initRhino() throws Exception {
         rhinoAudioConsumer = new RhinoAudioConsumer(
-                getAbsolutePath("rhino_params.pv"),
-                getAbsolutePath("coffee_maker_android.rhn"),
+                getAbsolutePath(PARAM_FILENAME),
+                getAbsolutePath(CONTEXT_FILENAME),
                 new RhinoCallback() {
                     @Override
                     public void run(final boolean isUnderstood, final Rhino.RhinoIntent intent) {
@@ -137,6 +138,9 @@ public class RhinoDemoActivity extends AppCompatActivity {
 
         recordButton = findViewById(R.id.startButton);
         intentTextView = findViewById(R.id.intentView);
+
+        TextView contextTextView = findViewById(R.id.contextTextView);
+        contextTextView.setText(this.getResources().getResourceEntryName(CONTEXT_ID).replace("_android", "").replace("_", " "));
 
         try {
             initRhino();
