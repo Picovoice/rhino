@@ -17,6 +17,8 @@
 
 package ai.picovoice.rhino;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ public class Rhino {
         final private String intent;
         final private Map<String, String> slots;
 
-        public RhinoIntent(String intent, Map<String, String> slots) {
+        RhinoIntent(String intent, Map<String, String> slots) {
             this.intent = intent;
             this.slots = slots;
         }
@@ -63,6 +65,7 @@ public class Rhino {
 
     public boolean process(short[] pcm) throws RhinoException {
         try {
+            // Log.w("rhino", "working");
             return process(object, pcm) == 1;
         } catch (Exception e) {
             throw new RhinoException(e);
@@ -71,14 +74,14 @@ public class Rhino {
 
     public boolean isUnderstood() throws RhinoException {
         try {
-            return is_understood(object) == 1;
+            return isUnderstood(object) == 1;
         } catch (Exception e) {
             throw new RhinoException(e);
         }
     }
 
     public RhinoIntent getIntent() throws RhinoException {
-        final String intentPacked = get_intent(object);
+        final String intentPacked = getIntent(object);
         String[] parts = intentPacked.split(",");
         if (parts.length == 0) {
             throw new RhinoException("could not retrieve intent");
@@ -104,37 +107,21 @@ public class Rhino {
         }
     }
 
-    public String contextExpressions() throws RhinoException {
-        try {
-            return context_expressions(object);
-        } catch (Exception e) {
-            throw new RhinoException(e);
-        }
-    }
-
-    public int frameLength() {
-        return frame_length();
-    }
-
-    public int sampleRate() {
-        return sample_rate();
-    }
-
     private native long init(String model_file_path, String context_file_path);
 
     private native long delete(long object);
 
     private native int process(long object, short[] pcm);
 
-    private native int is_understood(long object);
+    private native int isUnderstood(long object);
 
-    private native String get_intent(long object);
+    private native String getIntent(long object);
 
     private native boolean reset(long object);
 
-    private native String context_expressions(long object);
+    public native String contexExpressions(long object);
 
-    private native int frame_length();
+    public native int frameLength();
 
-    private native int sample_rate();
+    public native int sampleRate();
 }
