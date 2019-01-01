@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 class AudioRecorder {
-    private static final String TAG = AudioRecorder.class.getName();
+    private static final String TAG = "AUDIO_RECORDER";
 
     private final AudioConsumer audioConsumer;
     private final int sampleRate;

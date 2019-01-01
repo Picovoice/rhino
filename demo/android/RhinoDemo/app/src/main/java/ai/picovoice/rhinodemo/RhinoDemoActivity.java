@@ -34,11 +34,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 
 import ai.picovoice.rhino.Rhino;
 
 public class RhinoDemoActivity extends AppCompatActivity {
-    private final String TAG = "RHINO_DEMO";
+    private static final String TAG = "RHINO_DEMO";
 
     private static final int[] RESOURCE_IDS = {
             R.raw.rhino_params,
@@ -81,6 +82,45 @@ public class RhinoDemoActivity extends AppCompatActivity {
         }
     }
 
+    private String getAbsolutePath(String filename) {
+        return new File(this.getFilesDir(), filename).getAbsolutePath();
+    }
+
+    private void initRhino() throws Exception {
+        rhinoAudioConsumer = new RhinoAudioConsumer(
+                getAbsolutePath("rhino_params.pv"),
+                getAbsolutePath("coffee_maker_android.rhn"),
+                new RhinoCallback() {
+                    @Override
+                    public void run(final boolean isUnderstood, final Rhino.RhinoIntent intent) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                recordButton.toggle();
+                                if (isUnderstood) {
+                                    intentTextView.setText("");
+                                    intentTextView.append(String.format("intent: %s\n", intent.getIntent()));
+
+                                    final Map<String, String> slots = intent.getSlots();
+                                    for (String key: slots.keySet()) {
+                                        intentTextView.append(String.format("%s: %s\n", key, slots.get(key)));
+                                    }
+                                } else {
+                                    intentTextView.setText("command is not understood.\n");
+                                }
+
+                                try {
+                                    audioRecorder.stop();
+                                    rhinoAudioConsumer.reset();
+                                } catch (Exception e) {
+                                    Log.e(TAG, e.getMessage());
+                                }
+                            }
+                        });
+                    }
+                });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,12 +139,12 @@ public class RhinoDemoActivity extends AppCompatActivity {
         intentTextView = findViewById(R.id.intentView);
 
         try {
-            createRhino();
+            initRhino();
         } catch (Exception e) {
-            Log.e(TAG, "Failed to initialize rhino and/or audio recording.");
+            Log.e(TAG, "Failed to initialize Rhino.");
             Log.e(TAG, e.getMessage());
 
-            Toast.makeText(this, "Failed to initialize rhino and/or audio recording.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to initialize Rhino.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -133,47 +173,5 @@ public class RhinoDemoActivity extends AppCompatActivity {
 
             Toast.makeText(this, "Something went wrong.", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private String getAbsolutePath(String filename) {
-        return new File(this.getFilesDir(), filename).getAbsolutePath();
-    }
-
-    private void createRhino() throws Exception {
-        rhinoAudioConsumer = new RhinoAudioConsumer(
-                getAbsolutePath("rhino_params.pv"),
-                getAbsolutePath("coffee_maker_android.rhn"),
-                new RhinoCallback() {
-                    @Override
-                    public void run(final boolean isUnderstood, final Rhino.RhinoIntent intent) {
-                        Log.i(TAG, isUnderstood ? "true" : "false");
-                        Log.i(TAG, intent.getIntent());
-                        for (String key: intent.getSlots().keySet()) {
-                            Log.i(TAG, key + ": " + intent.getSlots().get(key));
-                        }
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                recordButton.toggle();
-                                if (isUnderstood) {
-                                    intentTextView.setText("");
-                                    intentTextView.append(String.format("intent: %s\n", intent.getIntent()));
-                                    for (String key: intent.getSlots().keySet()) {
-                                        intentTextView.append(String.format("%s: %s\n", key, intent.getSlots().get(key)));
-                                    }
-                                } else {
-                                    intentTextView.setText("command is not understood.\n");
-                                }
-                                try {
-                                    audioRecorder.stop();
-                                    rhinoAudioConsumer.reset();
-                                } catch (Exception e) {
-                                    Log.e(TAG, e.getMessage());
-                                }
-                            }
-                        });
-                    }
-                });
     }
 }
