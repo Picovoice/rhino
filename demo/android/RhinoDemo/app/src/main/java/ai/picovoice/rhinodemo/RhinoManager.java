@@ -35,7 +35,6 @@ public class RhinoManager implements AudioConsumer {
             } else {
                 callback.run(false, null, null);
             }
-
         }
     }
 

@@ -17,14 +17,12 @@
 package ai.picovoice.rhinodemo;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -38,7 +36,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
-import java.lang.reflect.Field;
 
 public class RhinoDemoActivity extends AppCompatActivity {
     private AudioRecorder audioRecorder;
@@ -94,7 +91,6 @@ public class RhinoDemoActivity extends AppCompatActivity {
 
         startButton = findViewById(R.id.startButton);
         intentView = findViewById(R.id.intentView);
-
     }
 
     private boolean hasRecordPermission() {
@@ -161,12 +157,31 @@ public class RhinoDemoActivity extends AppCompatActivity {
                 getAbsolutePath("coffee_maker_android.rhn"),
                 new RhinoCallback() {
                     @Override
-                    public void run(boolean isUnderstood, String intent, Map<String, String> slots) {
+                    public void run(final boolean isUnderstood, final String intent, final Map<String, String> slots) {
                         Log.i(TAG, isUnderstood ? "true" : "false");
                         Log.i(TAG, intent);
                         for (String key: slots.keySet()) {
                             Log.i(TAG, key + ": " + slots.get(key));
                         }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.i(TAG, "before toggle!");
+                                startButton.toggle();
+                                Log.i(TAG, "after toggle");
+                                if (isUnderstood) {
+                                    intentView.setText("");
+                                    intentView.append(String.format("intent: %s\n", intent));
+                                    for (String key: slots.keySet()) {
+                                        intentView.append(String.format("%s: %s\n", key, slots.get(key)));
+                                    }
+                                    Log.i(TAG, "set text!");
+                                } else {
+                                    intentView.setText("command is not understood.\n");
+                                }
+                            }
+                        });
                     }
                 });
     }
