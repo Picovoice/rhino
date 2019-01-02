@@ -38,6 +38,7 @@ public class RhinoDemoWithPorcupineActivity extends AppCompatActivity {
     private static final String RHINO_MODEL_FILENAME = "rhino_params.pv";
     private static final String RHINO_CONTEXT_FILENAME = "rhino_context.rhn";
 
+    private TextView wakeWordTextView;
     private TextView intentTextView;
 
     private AudioRecorder audioRecorder;
@@ -89,7 +90,12 @@ public class RhinoDemoWithPorcupineActivity extends AppCompatActivity {
                 new PorcupineCallback() {
                     @Override
                     public void run() {
-
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                wakeWordTextView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                            }
+                        });
                     }
                 },
                 new RhinoCallback() {
@@ -98,6 +104,8 @@ public class RhinoDemoWithPorcupineActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                wakeWordTextView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
                                 if (isUnderstood) {
                                     intentTextView.setText("");
                                     intentTextView.append(String.format("intent: %s\n", intent.getIntent()));
@@ -111,7 +119,6 @@ public class RhinoDemoWithPorcupineActivity extends AppCompatActivity {
                                 }
 
                                 try {
-                                    audioRecorder.stop();
                                     audioConsumer.reset();
                                 } catch (Exception e) {
                                     Log.e(TAG, e.getMessage());
@@ -143,8 +150,9 @@ public class RhinoDemoWithPorcupineActivity extends AppCompatActivity {
 
         intentTextView = findViewById(R.id.intentTextView);
 
-        TextView wakeWordTextView = findViewById(R.id.wakeWordTextView);
+        wakeWordTextView = findViewById(R.id.wakeWordTextView);
         wakeWordTextView.setText("Wake Word: " + resourceIdToString(PORCUPINE_KEYWORD_FILE_ID));
+        wakeWordTextView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
         TextView contextTextView = findViewById(R.id.contextTextView);
         contextTextView.setText("Context: " + resourceIdToString(RHINO_CONTEXT_FILE_ID));
@@ -156,6 +164,13 @@ public class RhinoDemoWithPorcupineActivity extends AppCompatActivity {
             Log.e(TAG, e.getMessage());
 
             Toast.makeText(this, "Failed to initialize Rhino.", Toast.LENGTH_SHORT).show();
+        }
+
+        if (hasRecordPermission()) {
+            audioRecorder = new AudioRecorder(audioConsumer);
+            audioRecorder.start();
+        } else {
+            Toast.makeText(this, "Does not have record permission.", Toast.LENGTH_SHORT).show();
         }
     }
 

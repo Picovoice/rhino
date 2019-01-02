@@ -57,7 +57,7 @@ public class RhinoWithPorcupineAudioConsumer implements AudioConsumer {
             intentInferenceIsFinalized = rhino.process(pcm);
             if (intentInferenceIsFinalized) {
                 final boolean isUnderstood = rhino.isUnderstood();
-                final Rhino.Intent rhinoIntent = rhino.getIntent();
+                final Rhino.Intent rhinoIntent = isUnderstood ? rhino.getIntent() : null;
                 rhinoCallback.run(isUnderstood, rhinoIntent);
             }
         }
