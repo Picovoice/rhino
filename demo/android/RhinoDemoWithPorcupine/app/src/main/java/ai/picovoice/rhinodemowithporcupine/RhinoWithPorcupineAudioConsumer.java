@@ -39,6 +39,7 @@ public class RhinoWithPorcupineAudioConsumer implements AudioConsumer {
             RhinoCallback rhinoCallback) throws PorcupineException, RhinoException {
         porcupine = new Porcupine(porcupineModelFilePath, porcupineKeywordFilePath, porcupineSensitivity);
         rhino = new Rhino(rhinoModelFilePath, rhinoContextFilePath);
+
         this.porcupineCallback = porcupineCallback;
         this.rhinoCallback = rhinoCallback;
 
@@ -50,11 +51,13 @@ public class RhinoWithPorcupineAudioConsumer implements AudioConsumer {
     public void consume(short[] pcm) throws Exception {
         if (!wakeWordDetected) {
             wakeWordDetected = porcupine.processFrame(pcm);
+
             if (wakeWordDetected) {
                 porcupineCallback.run();
             }
         } else if (!intentInferenceIsFinalized) {
             intentInferenceIsFinalized = rhino.process(pcm);
+
             if (intentInferenceIsFinalized) {
                 final boolean isUnderstood = rhino.isUnderstood();
                 final Rhino.Intent rhinoIntent = isUnderstood ? rhino.getIntent() : null;
@@ -63,10 +66,16 @@ public class RhinoWithPorcupineAudioConsumer implements AudioConsumer {
         }
     }
 
-    public void reset() throws RhinoException {
+    void reset() throws RhinoException {
         rhino.reset();
+
         wakeWordDetected = false;
         intentInferenceIsFinalized = false;
+    }
+
+    void delete() throws RhinoException {
+        porcupine.delete();
+        rhino.delete();
     }
 
     @Override
