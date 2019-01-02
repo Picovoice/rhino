@@ -40,7 +40,7 @@ public class RhinoAudioConsumer implements AudioConsumer {
 
         if (isFinalized) {
             final boolean isUnderstood = rhino.isUnderstood();
-            final Rhino.RhinoIntent intent = isUnderstood ? rhino.getIntent() : null;
+            final Rhino.Intent intent = isUnderstood ? rhino.getIntent() : null;
             callback.run(isUnderstood, intent);
         }
     }

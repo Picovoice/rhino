@@ -93,7 +93,7 @@ public class RhinoDemoActivity extends AppCompatActivity {
                 getAbsolutePath(CONTEXT_FILENAME),
                 new RhinoCallback() {
                     @Override
-                    public void run(final boolean isUnderstood, final Rhino.RhinoIntent intent) {
+                    public void run(final boolean isUnderstood, final Rhino.Intent intent) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

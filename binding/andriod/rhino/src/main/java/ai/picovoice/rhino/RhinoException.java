@@ -18,11 +18,11 @@
 package ai.picovoice.rhino;
 
 public class RhinoException extends Exception {
-    public RhinoException(Throwable cause) {
+    RhinoException(Throwable cause) {
         super(cause);
     }
 
-    public RhinoException(String message) {
+    RhinoException(String message) {
         super(message);
     }
 }

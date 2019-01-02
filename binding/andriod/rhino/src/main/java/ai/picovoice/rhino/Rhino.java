@@ -17,17 +17,15 @@
 
 package ai.picovoice.rhino;
 
-import android.util.Log;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class Rhino {
-    public class RhinoIntent {
+    public class Intent {
         final private String intent;
         final private Map<String, String> slots;
 
-        RhinoIntent(String intent, Map<String, String> slots) {
+        Intent(String intent, Map<String, String> slots) {
             this.intent = intent;
             this.slots = slots;
         }
@@ -65,7 +63,6 @@ public class Rhino {
 
     public boolean process(short[] pcm) throws RhinoException {
         try {
-            // Log.w("rhino", "working");
             return process(object, pcm) == 1;
         } catch (Exception e) {
             throw new RhinoException(e);
@@ -80,23 +77,23 @@ public class Rhino {
         }
     }
 
-    public RhinoIntent getIntent() throws RhinoException {
+    public Intent getIntent() throws RhinoException {
         final String intentPacked = getIntent(object);
         String[] parts = intentPacked.split(",");
         if (parts.length == 0) {
-            throw new RhinoException("could not retrieve intent");
+            throw new RhinoException("Failed to retrieve intent.");
         }
 
         Map<String, String> slots = new HashMap<>();
         for (int i = 1; i < parts.length; i++) {
             String[] slotValue = parts[i].split(":");
             if (slotValue.length != 2) {
-                throw new RhinoException("count not retrieve intent");
+                throw new RhinoException("Failed to retrieve intent.");
             }
             slots.put(slotValue[0], slotValue[1]);
         }
 
-        return new RhinoIntent(parts[0], slots);
+        return new Intent(parts[0], slots);
     }
 
     public void reset() throws RhinoException {
@@ -119,7 +116,7 @@ public class Rhino {
 
     private native boolean reset(long object);
 
-    public native String contexExpressions(long object);
+    public native String contextExpressions(long object);
 
     public native int frameLength();
 

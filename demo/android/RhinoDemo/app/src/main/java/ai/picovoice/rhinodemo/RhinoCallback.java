@@ -16,8 +16,8 @@
 
 package ai.picovoice.rhinodemo;
 
-import ai.picovoice.rhino.Rhino.RhinoIntent;
+import ai.picovoice.rhino.Rhino.Intent;
 
 public interface RhinoCallback {
-    void run(final boolean isUnderstood, final RhinoIntent intent);
+    void run(final boolean isUnderstood, final Intent intent);
 }
