@@ -27,8 +27,8 @@ Rhino is
 
 [![Rhino in Action](https://img.youtube.com/vi/WadKhfLyqTQ/0.jpg)](https://www.youtube.com/watch?v=WadKhfLyqTQ)
 
-NOTE: Currently only Linux and Raspberry Pi builds are available to the open-source community. But we do have plans to
-make other platforms available as well in upcoming releases.
+NOTE: Currently Raspberry Pi, Android, and Linux builds are available to the open-source community. But we do have plans
+to make other platforms available as well in upcoming releases.
 
 ## Table of Contents
 * [Try It Out](#try-it-out)
