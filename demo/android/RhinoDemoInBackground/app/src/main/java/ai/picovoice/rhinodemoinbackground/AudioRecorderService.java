@@ -7,14 +7,13 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Process;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicBoolean;
+import ai.picovoice.rhino.Rhino;
 
 public class AudioRecorderService extends Service {
     private static final String TAG = "RHINO_SERVICE";
@@ -38,7 +37,7 @@ public class AudioRecorderService extends Service {
 
         switch (action) {
             case START_RECORDING:
-                startRecording();
+                startRecording(intent);
                 break;
             case STOP_RECORDING:
                 stopRecording();
@@ -50,10 +49,49 @@ public class AudioRecorderService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void startRecording() {
+    private AudioRecorder audioRecorder;
+    private RhinoWithPorcupineAudioConsumer audioConsumer;
+
+    private void startRecording(Intent intent) {
         Log.i(TAG, "start recording");
 
-        Intent intent = new Intent();
+        Bundle extras = intent.getExtras();
+        if (extras == null) {
+            throw new IllegalArgumentException("Parameters are null");
+        }
+
+        final String porcupineModelFilePath = extras.getString("porcupineModelFilePath");
+        final String porcupineKeywordFilePath = extras.getString("porcupineKeywordFilePath");
+        final float porcupineSensitivity = extras.getFloat("porcupineSensitivity");
+        final String rhinoModelFilePath = extras.getString("rhinoModelFilePath");
+        final String rhinoContextFilePath = extras.getString("rhinoContextFilePath");
+
+
+        try {
+            audioConsumer = new RhinoWithPorcupineAudioConsumer(
+                    porcupineModelFilePath,
+                    porcupineKeywordFilePath,
+                    porcupineSensitivity,
+                    rhinoModelFilePath,
+                    rhinoContextFilePath,
+                    new PorcupineCallback() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG, "wake word detected");
+                        }
+                    },
+                    new RhinoCallback() {
+                        @Override
+                        public void run(boolean isUnderstood, Rhino.Intent intent) {
+                            Log.i(TAG, isUnderstood ? "true" : "false");
+                            Log.i(TAG, intent.getIntent());
+                        }
+                    });
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        audioRecorder = new AudioRecorder(audioConsumer);
+        audioRecorder.start();
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         // Create notification builder.
@@ -83,6 +121,17 @@ public class AudioRecorderService extends Service {
 
     private void stopRecording() {
         Log.i(TAG, "stop recording");
+
+        try {
+            audioRecorder.stop();
+            audioConsumer.delete();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        audioRecorder = null;
+        audioConsumer = null;
+
         stopForeground(true);
         stopSelf();
     }
