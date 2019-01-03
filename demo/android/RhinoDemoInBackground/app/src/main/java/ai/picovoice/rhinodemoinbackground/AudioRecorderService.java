@@ -1,6 +1,7 @@
 package ai.picovoice.rhinodemoinbackground;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
@@ -13,7 +14,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.util.Map;
+
 import ai.picovoice.rhino.Rhino;
+import ai.picovoice.rhino.RhinoException;
 
 public class AudioRecorderService extends Service {
     private static final String TAG = "RHINO_SERVICE";
@@ -52,6 +56,9 @@ public class AudioRecorderService extends Service {
     private AudioRecorder audioRecorder;
     private RhinoWithPorcupineAudioConsumer audioConsumer;
 
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+
     private void startRecording(Intent intent) {
         Log.i(TAG, "start recording");
 
@@ -78,13 +85,34 @@ public class AudioRecorderService extends Service {
                         @Override
                         public void run() {
                             Log.i(TAG, "wake word detected");
+                            builder.setContentTitle("wake word detected");
+                            notificationManager.notify(1, builder.build());
                         }
                     },
                     new RhinoCallback() {
                         @Override
                         public void run(boolean isUnderstood, Rhino.Intent intent) {
-                            Log.i(TAG, isUnderstood ? "true" : "false");
-                            Log.i(TAG, intent.getIntent());
+                            if (isUnderstood) {
+                                builder.setContentTitle(intent.getIntent());
+
+                                final Map<String, String> slots = intent.getSlots();
+                                String slotsString = "{";
+                                for (final String key : slots.keySet()) {
+                                    slotsString += key + ": " + slots.get(key) + ", ";
+                                }
+                                slotsString += "}";
+
+                                builder.setContentText(slotsString);
+                                notificationManager.notify(1, builder.build());
+                            } else {
+                                builder.setContentTitle("command was not understood");
+                                notificationManager.notify(1, builder.build());
+                            }
+                            try {
+                                audioConsumer.reset();
+                            } catch (RhinoException e) {
+                                Log.e(TAG, e.getMessage());
+                            }
                         }
                     });
         } catch (Exception e) {
@@ -95,7 +123,7 @@ public class AudioRecorderService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         // Create notification builder.
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "SOME_CHANNEL");
+        builder = new NotificationCompat.Builder(this, "SOME_CHANNEL");
 
         // Make notification show big text.
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
@@ -115,6 +143,9 @@ public class AudioRecorderService extends Service {
 
         // Build the notification.
         Notification notification = builder.build();
+
+
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         startForeground(1, notification);
     }
