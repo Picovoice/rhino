@@ -28,12 +28,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
+/**
+ * Records audio from microphone in a format that can be processed by suite of technologies developed
+ * at Picovoice.
+ */
 class AudioRecorder {
-    private static final String TAG = "AUDIO_RECORDER";
+    private static final String TAG = "PV_AUDIO_RECORDER";
 
     private final AudioConsumer audioConsumer;
-    private final int sampleRate;
-    private final int frameLength;
 
     private AtomicBoolean started = new AtomicBoolean(false);
     private AtomicBoolean stop = new AtomicBoolean(false);
@@ -42,28 +44,37 @@ class AudioRecorder {
     private class RecordTask implements Callable<Void> {
         @Override
         public Void call() throws Exception {
-            android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
+            Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
             record();
             return null;
         }
     }
 
+    /**
+     * Constructor.
+     * @param audioConsumer The consumer for recorded audio.
+     */
     AudioRecorder(AudioConsumer audioConsumer) {
         this.audioConsumer = audioConsumer;
-        this.sampleRate = audioConsumer.getSampleRate();
-        this.frameLength = audioConsumer.getFrameLength();
     }
 
+    /**
+     * Starts the recording of audio.
+     */
     void start() {
         if (started.get()) {
             return;
         }
-
         started.set(true);
+
         Executors.newSingleThreadExecutor().submit(new RecordTask());
     }
 
-    void stop() throws InterruptedException{
+    /**
+     * Stops the recording of audio.
+     * @throws InterruptedException On failure.
+     */
+    void stop() throws InterruptedException {
         if (!started.get()) {
             return;
         }
@@ -78,29 +89,29 @@ class AudioRecorder {
 
     private void record() throws Exception {
         final int minBufferSize = AudioRecord.getMinBufferSize(
-                sampleRate,
+                audioConsumer.getSampleRate(),
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT);
-        final int bufferSize = Math.max(sampleRate / 2, minBufferSize);
+        final int bufferSize = Math.max(audioConsumer.getSampleRate() / 2, minBufferSize);
 
-        short[] buffer = new short[frameLength];
+        short[] frame = new short[audioConsumer.getFrameLength()];
 
         AudioRecord record = null;
         try {
             record = new AudioRecord(
                     MediaRecorder.AudioSource.MIC,
-                    sampleRate,
+                    audioConsumer.getSampleRate(),
                     AudioFormat.CHANNEL_IN_MONO,
                     AudioFormat.ENCODING_PCM_16BIT,
                     bufferSize);
             record.startRecording();
 
             while (!stop.get()) {
-                int numRead = record.read(buffer, 0, buffer.length);
-                if (numRead == buffer.length) {
-                    audioConsumer.consume(buffer);
+                int numRead = record.read(frame, 0, frame.length);
+                if (numRead == frame.length) {
+                    audioConsumer.consume(frame);
                 } else {
-                    Log.d(TAG, "Not enough samples for the audio consumer.");
+                    Log.w(TAG, "Not enough samples for the audio consumer.");
                 }
             }
             record.stop();

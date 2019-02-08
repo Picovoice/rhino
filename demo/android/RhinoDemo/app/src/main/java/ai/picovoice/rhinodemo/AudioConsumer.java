@@ -16,10 +16,26 @@
 
 package ai.picovoice.rhinodemo;
 
+/**
+ * Consumes (processes) audio in consecutive chunks (frames).
+ */
 interface AudioConsumer {
+    /**
+     * Consumes (processes) a frame of audio.
+     * @param pcm Audio PCM.
+     * @throws Exception On failure.
+     */
     void consume(short[] pcm) throws Exception;
 
+    /**
+     * Getter for valid number of samples per frame.
+     * @return Valid number of samples per frame.
+     */
     int getFrameLength();
 
+    /**
+     * Getter for valid sample rate.
+     * @return Valid sample rate.
+     */
     int getSampleRate();
 }

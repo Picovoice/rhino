@@ -36,13 +36,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-import ai.picovoice.rhino.Rhino;
+import ai.picovoice.rhino.RhinoIntent;
 
 public class RhinoDemoActivity extends AppCompatActivity {
-    private static final String TAG = "RHINO_DEMO";
+    private static final String TAG = "PV_RHINO_DEMO";
 
     private static final int PARAM_ID = R.raw.rhino_params;
-    private static final int CONTEXT_ID = R.raw.smart_lighting_android;
+    /**
+     * Change this to enable processing in a new context.
+     */
+    private static final int CONTEXT_ID = R.raw.coffee_maker_android;
 
     private static final String PARAM_FILENAME = "rhino_params.pv";
     private static final String CONTEXT_FILENAME = "rhino_context.rhn";
@@ -52,7 +55,6 @@ public class RhinoDemoActivity extends AppCompatActivity {
 
     private AudioRecorder audioRecorder;
     private RhinoAudioConsumer rhinoAudioConsumer;
-
 
     private void copyResource(int resourceId, String filename) throws IOException {
         final Resources resources = this.getResources();
@@ -93,7 +95,7 @@ public class RhinoDemoActivity extends AppCompatActivity {
                 getAbsolutePath(CONTEXT_FILENAME),
                 new RhinoCallback() {
                     @Override
-                    public void run(final boolean isUnderstood, final Rhino.Intent intent) {
+                    public void run(final boolean isUnderstood, final RhinoIntent intent) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -107,13 +109,14 @@ public class RhinoDemoActivity extends AppCompatActivity {
                                         intentTextView.append(String.format("%s: %s\n", key, slots.get(key)));
                                     }
                                 } else {
-                                    intentTextView.setText("command is not understood.\n");
+                                    intentTextView.setText("Spoken command is not understood.\n");
                                 }
 
                                 try {
                                     audioRecorder.stop();
                                     rhinoAudioConsumer.reset();
                                 } catch (Exception e) {
+                                    Log.e(TAG, "Failed to stop recording audio and reset Rhino");
                                     Log.e(TAG, e.getMessage());
                                 }
                             }

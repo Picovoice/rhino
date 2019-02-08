@@ -18,16 +18,35 @@ package ai.picovoice.rhinodemo;
 
 import ai.picovoice.rhino.Rhino;
 import ai.picovoice.rhino.RhinoException;
+import ai.picovoice.rhino.RhinoIntent;
 
-
+/**
+ * An implementation of {@link ai.picovoice.rhinodemo.AudioConsumer} for Picovoice's speech-to-intent
+ * engine (aka Rhino).
+ */
 public class RhinoAudioConsumer implements AudioConsumer {
     private final Rhino rhino;
     private final RhinoCallback callback;
     private boolean isFinalized;
 
+    /**
+     * Constructor.
+     * @param modelFilePath Absolute path to model file.
+     * @param contextFilePath Absolute path to context file.
+     * @param callback Callback to be executed upon inference of the intent.
+     * @throws RhinoException On failure.
+     */
     RhinoAudioConsumer(String modelFilePath, String contextFilePath, RhinoCallback callback) throws RhinoException {
         rhino = new Rhino(modelFilePath, contextFilePath);
         this.callback = callback;
+    }
+
+    /**
+     * Releases resources acquired by Rhino.
+     * @throws RhinoException On failure.
+     */
+    void delete() throws RhinoException {
+        rhino.delete();
     }
 
     @Override
@@ -40,7 +59,7 @@ public class RhinoAudioConsumer implements AudioConsumer {
 
         if (isFinalized) {
             final boolean isUnderstood = rhino.isUnderstood();
-            final Rhino.Intent intent = isUnderstood ? rhino.getIntent() : null;
+            final RhinoIntent intent = isUnderstood ? rhino.getIntent() : null;
             callback.run(isUnderstood, intent);
         }
     }
@@ -55,6 +74,11 @@ public class RhinoAudioConsumer implements AudioConsumer {
         return rhino.sampleRate();
     }
 
+    /**
+     * Resets the internal state of the engine. It should be called before the engine can be used
+     * to infer intent from a new stream of audio.
+     * @throws RhinoException On failure.
+     */
     void reset() throws RhinoException {
         rhino.reset();
         isFinalized = false;

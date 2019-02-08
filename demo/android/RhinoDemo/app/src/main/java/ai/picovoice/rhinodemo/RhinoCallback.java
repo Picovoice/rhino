@@ -16,8 +16,17 @@
 
 package ai.picovoice.rhinodemo;
 
-import ai.picovoice.rhino.Rhino.Intent;
+import ai.picovoice.rhino.RhinoIntent;
 
+/**
+ * Callback to be used by Rhino (Picovoice's speech to intent engine) upon inferring user's intent.
+ */
 public interface RhinoCallback {
-    void run(final boolean isUnderstood, final Intent intent);
+    /**
+     * Callback function.
+     * @param isUnderstood Flag indicating if the spoken command is understood and is within domain
+     *                     of interest.
+     * @param intent User's intent.
+     */
+    void run(final boolean isUnderstood, final RhinoIntent intent);
 }
