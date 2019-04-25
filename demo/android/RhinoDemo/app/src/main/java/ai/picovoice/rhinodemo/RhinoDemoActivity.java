@@ -52,7 +52,6 @@ public class RhinoDemoActivity extends AppCompatActivity {
 
     private ToggleButton recordButton;
     private TextView intentTextView;
-
     private AudioRecorder audioRecorder;
     private RhinoAudioConsumer rhinoAudioConsumer;
 
@@ -80,11 +79,6 @@ public class RhinoDemoActivity extends AppCompatActivity {
         }
     }
 
-    private void copyResources() throws IOException {
-        copyResource(PARAM_ID, PARAM_FILENAME);
-        copyResource(CONTEXT_ID, CONTEXT_FILENAME);
-    }
-
     private String getAbsolutePath(String filename) {
         return new File(this.getFilesDir(), filename).getAbsolutePath();
     }
@@ -105,18 +99,18 @@ public class RhinoDemoActivity extends AppCompatActivity {
                                     intentTextView.append(String.format("intent: %s\n", intent.getIntent()));
 
                                     final Map<String, String> slots = intent.getSlots();
-                                    for (String key: slots.keySet()) {
+                                    for (String key : slots.keySet()) {
                                         intentTextView.append(String.format("%s: %s\n", key, slots.get(key)));
                                     }
                                 } else {
-                                    intentTextView.setText("Spoken command is not understood.\n");
+                                    intentTextView.setText("spoken command is not understood.\n");
                                 }
 
                                 try {
                                     audioRecorder.stop();
                                     rhinoAudioConsumer.reset();
                                 } catch (Exception e) {
-                                    Log.e(TAG, "Failed to stop recording audio and reset Rhino");
+                                    Log.e(TAG, "failed to stop recording audio and reset Rhino");
                                     Log.e(TAG, e.getMessage());
                                 }
                             }
@@ -131,12 +125,13 @@ public class RhinoDemoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rhino_demo);
 
         try {
-            copyResources();
+            copyResource(PARAM_ID, PARAM_FILENAME);
+            copyResource(CONTEXT_ID, CONTEXT_FILENAME);
         } catch (IOException e) {
-            Log.e(TAG, "Failed to copy resource files.");
+            Log.e(TAG, "failed to copy resource files.");
             Log.e(TAG, e.getMessage());
 
-            Toast.makeText(this, "Failed to copy resource files.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "failed to copy resource files.", Toast.LENGTH_SHORT).show();
         }
 
         recordButton = findViewById(R.id.startButton);
@@ -148,10 +143,10 @@ public class RhinoDemoActivity extends AppCompatActivity {
         try {
             initRhino();
         } catch (Exception e) {
-            Log.e(TAG, "Failed to initialize Rhino.");
+            Log.e(TAG, "failed to initialize Rhino.");
             Log.e(TAG, e.getMessage());
 
-            Toast.makeText(this, "Failed to initialize Rhino.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "failed to initialize Rhino.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -169,7 +164,7 @@ public class RhinoDemoActivity extends AppCompatActivity {
                     audioRecorder.start();
                 } else {
                     recordButton.toggle();
-                    Toast.makeText(this, "Does not have record permission.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "does not have record permission.", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 audioRecorder.stop();
@@ -178,7 +173,7 @@ public class RhinoDemoActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
 
-            Toast.makeText(this, "Something went wrong.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "something went wrong.", Toast.LENGTH_SHORT).show();
         }
     }
 }
