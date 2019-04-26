@@ -106,14 +106,14 @@ class RhinoTestCase(unittest.TestCase):
         machine = platform.machine()
 
         if system == 'Darwin':
-            return cls._abs_path('/resources/contexts/mac/coffee_maker_mac.rhn')
+            return cls._abs_path('resources/contexts/mac/coffee_maker_mac.rhn')
         elif system == 'Linux':
             if machine == 'x86_64':
                 return cls._abs_path('resources/contexts/linux/coffee_maker_linux.rhn')
             elif machine.startswith('arm'):
                 return cls._abs_path('resources/contexts/raspberrypi/coffee_maker_raspberrypi.rhn')
         elif system == 'Windows':
-            return cls._abs_path('/resources/contexts/windows/coffee_maker_windows.rhn')
+            return cls._abs_path('resources/contexts/windows/coffee_maker_windows.rhn')
         else:
             raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
 
