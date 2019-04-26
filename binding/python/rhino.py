@@ -20,7 +20,7 @@ from enum import Enum
 
 
 class Rhino(object):
-    """Python binding for Picovoice's Speech to Intent (a.k.a Rhino) engine."""
+    """Python binding for Picovoice's Speech-to-Intent (a.k.a Rhino) engine."""
 
     class PicovoiceStatuses(Enum):
         """Status codes corresponding to 'pv_status_t' defined in 'include/picovoice.h'"""
