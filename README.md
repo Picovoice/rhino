@@ -1,5 +1,7 @@
 # Rhino
 
+[![GitHub release](https://img.shields.io/github/release/Picovoice/rhino.svg)](https://github.com/Picovoice/rhino/releases)
+
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
