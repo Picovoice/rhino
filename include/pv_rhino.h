@@ -23,8 +23,10 @@
 #include "picovoice.h"
 
 #ifdef __cplusplus
+
 extern "C"
 {
+
 #endif
 
 /**
@@ -34,22 +36,10 @@ extern "C"
  * extraction is finalized. When finalized, the intent can be retrieved as structured data in form of an intent string
  * and pairs of slots and values representing arguments (details) of intent. The number of samples per frame can be
  * attained by calling 'pv_rhino_frame_length()'. The incoming audio needs to have a sample rate equal to
- * 'pv_sample_rate()' and be 16-bit linearly-encoded. Furthermore, Rhino operates on single channel audio.
+ * 'pv_sample_rate()' and be 16-bit linearly-encoded. Furthermore, Rhino operates on single-channel audio.
  */
 typedef struct pv_rhino_object pv_rhino_object_t;
 
-#ifdef PV_RHINO_BAREMACHINE
-/**
- * Constructor.
- *
- * @param context Context parameters. A context represents the set of expressions (commands), intents, and intent
- * arguments (slots) within a domain of interest.
- * @param context_length Length of context in bytes.
- * @param[out] object Constructed speech-to-intent object.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY' on failure.
- */
-PV_API pv_status_t pv_rhino_init(const void *context, int context_length, pv_rhino_object_t **object);
-#else
 /**
  * Constructor.
  *
@@ -60,8 +50,10 @@ PV_API pv_status_t pv_rhino_init(const void *context, int context_length, pv_rhi
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT', 'PV_STATUS_IO_ERROR', or 'PV_STATUS_OUT_OF_MEMORY' on
  * failure.
  */
-PV_API pv_status_t pv_rhino_init(const char *model_file_path, const char *context_file_path, pv_rhino_object_t **object);
-#endif
+PV_API pv_status_t pv_rhino_init(
+        const char *model_file_path,
+        const char *context_file_path,
+        pv_rhino_object_t **object);
 
 /**
  * Destructor.
@@ -101,16 +93,16 @@ PV_API pv_status_t pv_rhino_is_understood(const pv_rhino_object_t *object, bool 
  * @param object Speech-to-intent object.
  * @param[out] intent Inferred intent.
  * @param[out] num_slots Number of slots.
- * @param[out] slots Array of inferred slots. Its memory needs to be freed by the caller.
+ * @param[out] slots Array of inferred slots. Its memory needs to be freed by calling 'pv_rhino_free_slots_and_values()'.
  * @param[out] values Array of inferred slot values in the same order of inferred slots. Its memory needs to be freed
- * by the caller.
+ * by calling 'pv_rhino_free_slots_and_values()'.
  * @return State code. Returns 'PV_STATUS_INVALID_ARGUMENT', 'PV_STATUS_INVALID_STATE', or 'PV_STATUS_OUT_OF_MEMORY' on
  * failure.
  */
 PV_API pv_status_t pv_rhino_get_intent(
         const pv_rhino_object_t *object,
         const char **intent,
-        int *num_slots,
+        int32_t *num_slots,
         const char ***slots,
         const char ***values);
 
@@ -147,8 +139,22 @@ PV_API const char *pv_rhino_version(void);
  */
 PV_API int pv_rhino_frame_length(void);
 
+/**
+ * Frees memory resources allocated to returned slots and their corresponding values after calling
+ * 'pv_rhino_get_intent()'. Note that you can't and shouldn't free these resources via standard C library 'free()'.
+ *
+ * @param object Speech-to-intent object.
+ * @param slots Slots
+ * @param values Slot values.
+ *
+ * @return Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
+ */
+PV_API pv_status_t pv_rhino_free_slots_and_values(const pv_rhino_object_t *object, const char **slots, const char **values);
+
 #ifdef __cplusplus
+
 }
+
 #endif
 
 #endif // PV_RHINO_H

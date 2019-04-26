@@ -52,6 +52,7 @@ class AudioRecorder {
 
     /**
      * Constructor.
+     *
      * @param audioConsumer The consumer for recorded audio.
      */
     AudioRecorder(AudioConsumer audioConsumer) {
@@ -72,6 +73,7 @@ class AudioRecorder {
 
     /**
      * Stops the recording of audio.
+     *
      * @throws InterruptedException On failure.
      */
     void stop() throws InterruptedException {
@@ -81,7 +83,7 @@ class AudioRecorder {
 
         stop.set(true);
         while (!stopped.get()) {
-            Thread.sleep(10);
+            Thread.sleep(32);
         }
 
         started.set(false);
@@ -111,7 +113,7 @@ class AudioRecorder {
                 if (numRead == frame.length) {
                     audioConsumer.consume(frame);
                 } else {
-                    Log.w(TAG, "Not enough samples for the audio consumer.");
+                    Log.w(TAG, "not enough samples for the audio consumer.");
                 }
             }
             record.stop();

@@ -31,9 +31,10 @@ public class RhinoAudioConsumer implements AudioConsumer {
 
     /**
      * Constructor.
-     * @param modelFilePath Absolute path to model file.
+     *
+     * @param modelFilePath   Absolute path to model file.
      * @param contextFilePath Absolute path to context file.
-     * @param callback Callback to be executed upon inference of the intent.
+     * @param callback        Callback to be executed upon inference of the intent.
      * @throws RhinoException On failure.
      */
     RhinoAudioConsumer(String modelFilePath, String contextFilePath, RhinoCallback callback) throws RhinoException {
@@ -43,6 +44,7 @@ public class RhinoAudioConsumer implements AudioConsumer {
 
     /**
      * Releases resources acquired by Rhino.
+     *
      * @throws RhinoException On failure.
      */
     void delete() throws RhinoException {
@@ -77,6 +79,7 @@ public class RhinoAudioConsumer implements AudioConsumer {
     /**
      * Resets the internal state of the engine. It should be called before the engine can be used
      * to infer intent from a new stream of audio.
+     *
      * @throws RhinoException On failure.
      */
     void reset() throws RhinoException {

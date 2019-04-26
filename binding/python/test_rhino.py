@@ -88,25 +88,34 @@ class RhinoTestCase(unittest.TestCase):
         system = platform.system()
         machine = platform.machine()
 
-        if system == 'Linux':
+        if system == 'Darwin':
+            return cls._abs_path('lib/mac/x86_64/libpv_rhino.dylib')
+        elif system == 'Linux':
             if machine == 'x86_64':
                 return cls._abs_path('lib/linux/x86_64/libpv_rhino.so')
             elif machine.startswith('arm'):
                 return cls._abs_path('lib/raspberry-pi/arm11/libpv_rhino.so')
-
-        raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
+        elif system == 'Windows':
+            return cls._abs_path('lib/windows/amd64/libpv_rhino.dll')
+        else:
+            raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
 
     @classmethod
     def _context_file_path(cls):
         system = platform.system()
         machine = platform.machine()
 
-        if system == 'Linux' and machine == 'x86_64':
-            return cls._abs_path('resources/contexts/linux/coffee_maker_linux.rhn')
-        elif system == 'Linux' and machine.startswith('arm'):
-            return cls._abs_path('resources/contexts/raspberrypi/coffee_maker_raspberrypi.rhn')
-
-        raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
+        if system == 'Darwin':
+            return cls._abs_path('resources/contexts/mac/coffee_maker_mac.rhn')
+        elif system == 'Linux':
+            if machine == 'x86_64':
+                return cls._abs_path('resources/contexts/linux/coffee_maker_linux.rhn')
+            elif machine.startswith('arm'):
+                return cls._abs_path('resources/contexts/raspberrypi/coffee_maker_raspberrypi.rhn')
+        elif system == 'Windows':
+            return cls._abs_path('resources/contexts/windows/coffee_maker_windows.rhn')
+        else:
+            raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
 
 
 if __name__ == '__main__':

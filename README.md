@@ -2,7 +2,7 @@
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from speech commands within a given context of
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
 interest in real-time. For example, given a speech command "*Can I have a small double-shot espresso with a lot of sugar
  and some milk*" it infers that the user wants to *order a drink* with the following specific requirements.
 
@@ -20,15 +20,14 @@ Rhino is
 
 * intuitive. It allows users to utter their intention in a natural and conversational fashion.
 * using deep neural networks trained in **real-world situations**.
-* compact and computationally-efficient making it suitable for **IoT** applications. It can run with as low as 100 KB of RAM.
-* cross-platform. It is implemented in fixed-point ANSI C. Currently **ARM Cortex-M**, **ARM Cortex-A**,
-**Raspberry Pi**, **Android**, **iOS**, **watchOS**, **Linux**, **Mac**, **Windows**, and **WebAssembly** are supported.
+* compact and computationally-efficient making it suitable for **IoT** applications. It can run with as low as 90 KB of
+RAM on an MCU.
+* cross-platform. It is implemented in fixed-point ANSI C. Currently **Raspberry Pi**, **Beagle Bone** **Android**,
+**iOS**, **Linux**, **Mac**, **Windows**, and **web browsers** (**WebAssembly**) are supported. Additionally support for
+various **ARM Cortex-A**, **ARM Cortex-M** (M4/M7) and **DSP cores** is available for commercial customers.
 * customizable. It can be customized for any given domain.
 
 [![Rhino in Action](https://img.youtube.com/vi/WadKhfLyqTQ/0.jpg)](https://www.youtube.com/watch?v=WadKhfLyqTQ)
-
-NOTE: Currently Raspberry Pi, Android, and Linux builds are available to the open-source community. But we do have plans
-to make other platforms available as well in upcoming releases.
 
 ## Table of Contents
 * [Try It Out](#try-it-out)
@@ -43,9 +42,11 @@ to make other platforms available as well in upcoming releases.
 * [Running Demo Applications](#running-demo-applications)
     * [Running Python Demo Application](#running-python-demo-application)
     * [Running C Demo Application](#running-c-demo-application)
+    * [Runnning Android Demo Application](#running-android-demo-application)
 * [Integration](#integration)
     * [C](#c)
     * [Python](#python)
+    * [Android](#android)
 * [Releases](#releases)
 * [License](#license)
 
@@ -64,17 +65,17 @@ requires significant CPU and memory for an on-device implementation.
 
 Rhino solves this problem by providing a tightly-coupled speech recognition and NLU engine that are jointly optimized
 for a specific domain (use case). Rhino is quite lean and can even run on small embedded processors
-(think ARM Cortex-M or fixed-point DSPs) with very limited RAM (as low as 100 KB) making it ideal for
+(think ARM Cortex-M or fixed-point DSPs) with very limited RAM (as low as 90 KB) making it ideal for
 resource-constrained IoT applications.
 
 ## Metrics
 
-The table shows the average CPU usage on three different platforms (1) Raspberry Pi zero, (2) Raspberry Pi 3, and an
-Ubuntu box (i5-6500 CPU @ 3.20GHz). You can recreate this using the [C demo application](/demo/c).
+The table shows the average CPU usage on two different platforms (1) Raspberry Pi zero and (2) Raspberry Pi 3. You can
+recreate this using the [C demo application](/demo/c).
 
-Raspberry Pi zero | Raspberry Pi 3 | Ubuntu Desktop (i5-6500 CPU @ 3.20GHz)
-:---: | :---: | :---:
-48.7% | 8.9% | 1.2%
+Raspberry Pi zero | Raspberry Pi 3
+:---: | :---:
+46.4% | 7.2%
 
 ## Terminology
 
@@ -93,8 +94,8 @@ of spoken commands:
 
 ### Expression
 
-A context is made of a collection of spoken commands mapped to the user's intent. An expression is an entity that defines a mapping between
-a (or a set of) spoken commands and its (their) corresponding intent. For example
+A context is made of a collection of spoken commands mapped to the user's intent. An expression is an entity that defines
+a mapping between a (or a set of) spoken commands and its (their) corresponding intent. For example
 
 * {turnCommand} the lights. -> {turnIntent}
 * Make the {location} light {intensityChange}. -> {changeIntensityIntent}
@@ -143,7 +144,7 @@ python demo/python/rhino_demo.py \
 --rhino_context_file_path ./resources/contexts/linux/coffee_maker_linux.rhn \
 --porcupine_library_path ./resources/porcupine/lib/linux/x86_64/libpv_porcupine.so \
 --porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
---porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/linux/hey_alfred_linux.ppn
+--porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/linux/hey\ pico_linux.ppn
 ```
 
 The following runs the engine on a *Raspberry Pi 3* to infer intent within the context of smart lighting system
@@ -155,13 +156,18 @@ python demo/python/rhino_demo.py \
 --rhino_context_file_path ./resources/contexts/raspberrypi/coffee_maker_raspberrypi.rhn \
 --porcupine_library_path ./resources/porcupine/lib/raspberry-pi/cortex-a53/libpv_porcupine.so \
 --porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
---porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/raspberrypi/hey_alfred_raspberrypi.ppn
+--porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/raspberrypi/hey\ pico_raspberrypi.ppn
 ```
 
 ### Running C Demo Application
 
 This [demo application](demo/c) is mainly used to show how Rhino can be integrated into an efficient C/C++ application.
 Furthermore it can be used to measure runtime metrics of the engine on various supported platforms.
+
+### Running Android Demo Application
+
+Using Android Studio open [demo/android](/demo/android) as an Android project and then run the application. Note that
+you need an android phone with developer options enabled connected to your machine in order to run the application.
 
 ## Integration
 
@@ -282,7 +288,51 @@ collector.
 rhino.delete()
 ```
 
+### Android
+
+Rhino provides a binding for Android using JNI. It can be initialized using.
+
+```java
+    final String modelFilePath = ... // It is available at lib/common/rhino_params.pv
+    final String contextFilePath = ...
+    
+    Rhino rhino = new Rhino(modelFilePath, contextFilePath);
+```
+
+once initialized `rhino` can be used for intent inference.
+
+
+```java
+    private short[] getNextAudioFrame();
+
+    while (rhino.process(getNextAudioFrame()));
+    
+    if (rhino.isUnderstood()) {
+        RhinoIntent intent = rhino.getIntent();
+        // logic to perform an action given the intent object.
+    } else {
+        // logic for handling out of context or unrecognized command
+    }
+```
+
+when finalized the processing be sure to reset the object before processing a new stream of audio via
+
+```java
+    rhino.reset()
+```
+
+finally, prior to exiting the application be sure to release resources acquired via
+
+```java
+    rhino.delete()
+```
+
 ## Releases
+
+### v1.2.0 April 26, 2019
+
+* Accuracy improvements.
+* Runtime optimizations.
 
 ### v1.1.0 December 23rd, 2018
 

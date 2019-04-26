@@ -39,7 +39,7 @@ from rhino import Rhino
 
 class RhinoDemo(Thread):
     """
-    Demo class for Speech to Intent (aka Rhino) library. It creates an input audio stream from a microphone, monitors
+    Demo class for Speech-to-Intent (aka Rhino) library. It creates an input audio stream from a microphone, monitors
     it, and upon detecting the specified wake phrase extracts the intent from the speech command that follows. Wake word
     detection is done using Porcupine's wake word detection engine (https://github.com/Picovoice/Porcupine).
     """
@@ -113,7 +113,12 @@ class RhinoDemo(Thread):
                 library_path=self._rhino_library_path,
                 model_file_path=self._rhino_model_file_path,
                 context_file_path=self._rhino_context_file_path)
+
+            print()
+            print('****************************** context ******************************')
             print(rhino.context_expressions)
+            print('*********************************************************************')
+            print()
 
             pa = pyaudio.PyAudio()
 
@@ -144,6 +149,7 @@ class RhinoDemo(Thread):
                 else:
                     if rhino.is_understood():
                         intent, slot_values = rhino.get_intent()
+                        print()
                         print('intent: %s' % intent)
                         print('---')
                         for slot, value in slot_values.items():
