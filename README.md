@@ -69,12 +69,12 @@ resource-constrained IoT applications.
 
 ## Metrics
 
-The table shows the average CPU usage on three different platforms (1) Raspberry Pi zero, (2) Raspberry Pi 3, and an
-Ubuntu box (i5-6500 CPU @ 3.20GHz). You can recreate this using the [C demo application](/demo/c).
+The table shows the average CPU usage on two different platforms (1) Raspberry Pi zero and (2) Raspberry Pi 3. You can
+recreate this using the [C demo application](/demo/c).
 
-Raspberry Pi zero | Raspberry Pi 3 | Ubuntu Desktop (i5-6500 CPU @ 3.20GHz)
-:---: | :---: | :---:
-48.7% | 8.9% | 1.2%
+Raspberry Pi zero | Raspberry Pi 3
+:---: | :---:
+46.4% | 7.2%
 
 ## Terminology
 
