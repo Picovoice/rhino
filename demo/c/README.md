@@ -9,7 +9,7 @@ The following command compiles the demo. It has been tested on Ubuntu 16.04/18.0
 Raspberry Pi. Note that you need to execute this from the root of the repository.
 
 ```bash
-    gcc -O3 -o demo/c/rhino_demo -I include demo/c/rhino_demo.c -lm -ldl --std-=c99
+    gcc -O3 -o demo/c/rhino_demo -I include demo/c/rhino_demo.c -lm -ldl --std=c99
 ```
 
 ## Run
