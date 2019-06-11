@@ -351,4 +351,4 @@ Everything in this repository is licensed under Apache 2.0 including the context
 [resources/contexts](/resources/contexts).
 
 Custom contexts are only provided with the purchase of the commercial license. In order to inquire about the commercial
-license [contact us](https://picovoice.ai/company/#contact-us).
+license send an email to hello@picovoice.ai.
