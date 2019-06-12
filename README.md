@@ -350,5 +350,5 @@ finally, prior to exiting the application be sure to release resources acquired 
 Everything in this repository is licensed under Apache 2.0 including the contexts available under
 [resources/contexts](/resources/contexts).
 
-Custom contexts are only provided with the purchase of the commercial license. In order to inquire about the commercial
-license send an email to hello@picovoice.ai.
+Custom contexts are only provided with the purchase of the commercial license. To enquire about commercial
+licensing, [contact us](https://picovoice.ai/contact.html).
