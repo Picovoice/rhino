@@ -51,6 +51,7 @@ various **ARM Cortex-A**, **ARM Cortex-M** (M4/M7) and **DSP cores** is availabl
     * [Android](#android)
 * [Releases](#releases)
 * [License](#license)
+* [FAQ](#faq)
 
 ## Try It Out
 
@@ -352,3 +353,199 @@ Everything in this repository is licensed under Apache 2.0 including the context
 
 Custom contexts are only provided with the purchase of the commercial license. To enquire about commercial
 licensing, [contact us](https://picovoice.ai/contact.html).
+
+## FAQ
+
+**[Q] Which speech product should I use?**
+
+**[A]** If you need to recognize a single phrase or a number of (tens or less) of predefined phrases, in an
+always-listening fashion, then you should use Porcupine (wake word engine). If you need to recognize complex voice
+commands within a confined and well-defined domain with limited number of vocabulary and variations of spoken forms
+(1000s or less), then you should use [Rhino](https://github.com/Picovoice/rhino) (speech-to-intent engine). If you need
+to transcribe free-form speech in an open-domain, then you should use [Cheetah](https://github.com/Picovoice/cheetah)
+(speech-to-text engine).
+
+**[Q] What are the benefits of implementing voice interfaces on-device, instead of using cloud services?**
+
+**[A]** Privacy, minimal latency, improved reliability, runtime efficiency, cost saving to name a few. More detail is
+available [here](https://picovoice.ai/blog/the_case_for_voice_ai_on_the_edge.html).
+
+**[Q] Does Picovoice technology work in far-field applications?**
+
+**[A]** It depends on many factors including the distance, ambient noise level, reverberation (echo), quality of
+microphone, and audio frontend used (if any). It is recommended to try out our technology using the freely-available
+sample models in your environment. Additionally, we often publish open-source benchmarks of our technology in noisy
+environments [1](https://github.com/Picovoice/wakeword-benchmark)
+[2](https://github.com/Picovoice/speech-to-intent-benchmark) [3](https://github.com/Picovoice/stt-benchmark). If the
+target environment is noisy and/or reverberant and user is few meters away from the microphone, a multi-microphone audio
+frontend can be beneficial.
+
+**[Q] Does Picovoice software work in my target environment and noise conditions?**
+
+**[A]** It depends on variety of factors. You should test it out yourself with the free samples made available on
+Picovoice GitHub pages. If it does not work, we can fine-tune it for your target environment.
+
+**[Q] Does Picovoice software work in presence of noise and reverberation?**
+
+**[A]** Picovoice software is designed to function robustly in presence of noise and reverberations. We have benchmarked
+and published the performance results under various noisy conditions [1](https://github.com/Picovoice/wakeword-benchmark)
+[2](https://github.com/Picovoice/speech-to-intent-benchmark) [3](https://github.com/Picovoice/stt-benchmark).
+The end-to-end performance depends on the type and amount of noise and reverberation. We highly recommend testing out
+the software using freely-available models in your target environment and application.
+
+**[Q] Can I use Picovoice software for telephony applications?**
+
+**[A]** We expect audio with 16000 sampling rate. PSTN networks usually sample at 8000 rate. It is possible to
+upsample but then the frequency content above 4000 is gone and performance will be suboptimal. It is possible to train
+acoustic models for telephony applications if the commercial opportunity is justified.
+
+**[Q] My audio source is 48kHz/44.1KHz. Does Picovoice software support that?**
+
+**[A]** Picovoice software expects a 16000Hz sampling rate. You will need to resample (downsample). Typically,
+operating systems or sound cards (Audio codecs) provide such functionality; otherwise, you will need to implement it.
+
+**[Q] Can Picovoice help with building my voice enabled product?**
+
+**[A]** Our core business is software licensing. That being said, we do have a wide variety of expertise internally
+in voice, software, and hardware. We consider such requests on a case-by-case basis and assist clients who can
+guarantee a certain minimum licensing volume.
+
+
+**[Q] If I am using GitHub to evaluate the software, do you provide technical support?**
+
+**[A]** Prior to commercial engagement, basic support solely pertaining to software issues or bugs is provided via
+GitHub issues by the open-source community or a member of our team. We do not offer any free support with integration
+or support with any platform (either operating system or hardware) that is not officially supported via GitHub.
+
+**[Q] Why does Picovoice have GitHub repositories?**
+
+**[A]** To facilitate performance evaluation, for commercial prospects, and also enable open source community to
+take advantage of the technology for personal and non-commercial applications.
+
+**[Q] What is the engagement process?**
+
+**[A]** You may use what is available on GitHub while respecting its governing license terms without engaging with us.
+This facilitates performance evaluation. Then you need to acquire a development license to get access to custom speech
+models or use the software for development and internal evaluation within a company. Development license is for
+building a PoC or prototype. When ready to commercialize you need to acquire a commercial license. The terms depend
+on your vertical.
+
+**[Q] Does Picovoice offer AEC, VAD, noise suppression, or microphone array beamforming?**
+
+**[A]** No. But we do have partners who provide such algorithms. Please add this to your inquiry when reaching out
+and we can connect you.
+
+**[Q] Can you build a voice-enabled app for me?**
+
+**[A]** We do not provide software development services, so most likely the answer is no.  However, via a professional
+services agreement we can help with proofs-of-concept (these will typically be rudimentary apps focused on voice user
+interface or building the audio pipeline), evaluations on a specific domain/task, integration of SDK in your app,
+training of custom acoustic and language models, and porting to custom hardware platforms.
+
+**[Q] How many commands (expressions) can Picovoice speech-to-intent software understand?**
+
+**[A]** There is no technical limit on the number of commands (expressions) or slot values Picovoice speech-to-intent
+software can understand. However, on platforms with limited memory (MCUs or DSPs), the total number of commands and
+vocabulary will be dictated by the available amount of memory. Roughly speaking, for 100 commands and unique words,
+you should allocate around 50KB of additional memory.
+
+**[Q] Which languages does Rhino speech-to-intent support?**
+
+**[A]** At the moment, we only support the English language. For significant commercial opportunities, we may be able to
+prioritize and partially reinvest commercial license fees into supporting new languages for customers.
+
+**[Q] What is Rhino speech-to-intent detection accuracy?**
+
+**[A]** Picovoice has done rigorous performance benchmarking on its Rhino speech-to-intent engine and published the results
+publicly [here](https://github.com/Picovoice/speech-to-intent-benchmark). In addition, the audio data and the code used
+for benchmarking have been made publicly available under the Apache 2.0 license to allow for the results to be reproduced
+
+Rhino speech-to-intent engine can extract intents from spoken utterances with higher than 97% accuracy in clean (no noise)
+environments, and 92% accuracy in noisy environments with signal to noise ratio of 9dB at microphone level.
+
+**[Q] Can Rhino understand phone numbers, time of day, dates, alphanumerics, etc?**
+
+**[A]** Yes, Rhino can accurately understand numbers, alphanumerics, and similar challenging parameters.
+[Here](https://www.youtube.com/watch?v=T0tAnh8tUQg) is a demo of phone dialing interaction running on ARM Cortex-M4 processor
+simulating a hearable application:
+
+
+**[Q] What is required to support additional languages?**
+
+**[A]** Supporting a new language is an involved, time consuming process, and requires substantial investment. For
+significant commercial opportunities, we may be able to prioritize and partially reinvest commercial license fees into
+supporting new languages for customers. 
+
+
+**[Q] Which platforms does Rhino speech-to-intent engine support?**
+
+**[A]** Rhino speech-to-intent is supported on Raspberry Pi (all models), BeagleBone, Android, iOS, Linux, macOS,
+Windows, and modern web browsers (WebAssembly). Additionally we have support for various ARM Cortex-A and ARM Cortex-M (M4/M7)
+MCUs by NXP and STMicro.
+
+As part of our professional service, we can port our software to other proprietary platforms such as DSP cores
+or Neural Net accelerators depending on the size of the commercial opportunity. Such engagement typically warrants
+non-recurring engineering fees in addition to prepaid commercial royalties.
+
+**[Q] Does Picovoice speech-to-intent software work in my target environment and noise conditions?**
+
+**[A]** The overall performance depends on various factors such as speaker distance, level/type of noise, room acoustics,
+quality of microphone, and audio frontend algorithms used (if any). It is usually best to try out our technology 
+in your target environment using sample models freely-available. Additionally, we have published an open-source benchmark
+of our speech-to-intent software in a noisy environment [here](https://github.com/Picovoice/speech-to-intent-benchmark), which can be used as a reference.
+
+**[Q] Does Picovoice speech-to-intent software work in presence of noise and reverberation?**
+
+**[A]** Yes, Picovoice speech-to-intent engine is resilient to noise, reverberation, and other acoustic artifacts.
+We have done rigorous performance benchmarking on Rhino speech-to-intent engine and published the results publicly
+[here](https://github.com/Picovoice/speech-to-intent-benchmark). In addition, the audio data and the code used for
+benchmarking have been made publicly available under Apache 2.0 license to reproduce the results. The results show 92%
+accuracy in a noisy environment with signal to noise ratio of 9dB at microphone level.
+
+**[Q] Is there a limit on the number of slot values?**
+
+**[A]** There is no technical limit on the number of slot values Picovoice speech-to-intent software can understand.
+However, on platforms with limited memory (particularly MCUs), the total number will be dictated by the available amount of memory.
+Roughly speaking, for 100 unique words/phrases, you should allocate around 50KB of additional memory. 
+
+**[Q] Are there any best practices for designing speech-to-intent context (Interaction model)?**
+
+**[A]** The design process for the Picovoice speech-to-intent interaction model (or context) is similar to designing Alexa skills.
+In general, you have to make sure your context follows the common patterns for situational design:
+
+- Adaptability: Let users speak in their own words.
+- Personalization: Individualize your entire interaction.
+- Availability: Collapse your menus; make all options top-level.
+- Relatability: Talk with them, not at them.
+
+**[Q] I need to use speech-to-intent software in an Interactive Voice Response (IVR) application. Is that possible?**
+
+**[A]** Yes. Picovoice speech-to-intent software is a powerful tool for building IVR applications. However, please note
+that Picovoice software only works well on 16kHz audio and does not perform optimally in telephony applications that use 8kHz audio.
+
+**[Q] Does Picovoice speech-to-intent software perform endpointing?**
+
+**[A]** Yes, Picovoice speech-to-intent software performs endpointing automatically. 
+
+**[Q] Does my application need to listen to a wake word before processing the audio with speech-to-intent software?**
+
+**[A]** Speech-to-intent software requires a method of initiation to start listening when the user is about to speak.
+That could be implemented by either push-to-talk switch or by the Picovoice wake word detection engine, depending on the
+customer requirement. 
+
+**[Q] How do I develop a speech-to-intent context model file?**
+
+**[A]** Designing a speech-to-intent context is straightforward and does not require any specialized technical skills.
+You need to compile an exhaustive list of all possible utterances/expressions users would say to mean something.
+Once you do that, you organize them by intent and identify the variables in each expression.
+For example, in a smart lighting application, the user might say:
+
+- "[set, change, switch, make, turn] the bedroom light [to] orange"
+- "[set, change, switch, make, turn] the color in bedroom to orange"
+
+**[Q] What’s the advantage of using Picovoice speech-to-intent software instead of using Speech-to-Text and input the transcribed text into an NLU engine to extract intents?**
+
+**[A]** Using a generic speech-to-text engine with NLU usually results in suboptimal accuracy without any tuning.
+We have benchmarked the performance of Picovoice speech-to-intent engine against Google’s Dialogflow tool
+[here](https://github.com/Picovoice/speech-to-intent-benchmark).
+
