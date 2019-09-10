@@ -33,7 +33,6 @@ various **ARM Cortex-A**, **ARM Cortex-M** (M4/M7) and **DSP cores** is availabl
 
 ## Table of Contents
 * [Try It Out](#try-it-out)
-* [Motivation](#motivation)
 * [Metrics](#metrics)
 * [Terminology](#terminology)
     * [Context](#context)
@@ -41,9 +40,9 @@ various **ARM Cortex-A**, **ARM Cortex-M** (M4/M7) and **DSP cores** is availabl
     * [Intent](#intent)
     * [Slot](#slot)
 * [Structure of Repository](#structure-of-repository)
-* [Running Demo Applications](#running-demo-applications)
-    * [Running Python Demo Application](#running-python-demo-application)
-    * [Running C Demo Application](#running-c-demo-application)
+* [Demo Applications](#demo-applications)
+    * [Running the Python Demo Application](#running-the-python-demo-application)
+    * [Running the C Demo Application](#running-the-c-demo-application)
     * [Runnning Android Demo Application](#running-android-demo-application)
 * [Integration](#integration)
     * [C](#c)
@@ -159,7 +158,7 @@ python demo/python/rhino_demo.py \
 --porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/raspberrypi/hey\ pico_raspberrypi.ppn
 ```
 
-### C Demo Application
+### Running the C Demo Application
 
 The [C demo application](demo/c) is mainly used to show how Rhino can be integrated into an efficient C/C++ application.
 Furthermore, it can be used to measure runtime metrics of the engine on various supported platforms.
