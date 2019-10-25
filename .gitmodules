@@ -1,0 +1,3 @@
+[submodule "resources/porcupine"]
+	path = resources/porcupine
+	url = git@github.com:Picovoice/porcupine.git
