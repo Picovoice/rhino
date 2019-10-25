@@ -45,7 +45,7 @@ class Rhino(object):
     class CRhino(Structure):
         pass
 
-    def __init__(self, library_path, model_file_path, context_file_path):
+    def __init__(self, library_path, model_file_path, context_file_path, sensitivity=0.5):
         """
         Constructor.
 
@@ -53,6 +53,9 @@ class Rhino(object):
         :param model_file_path: Absolute path to file containing model parameters.
         :param context_file_path: Absolute path to file containing context parameters. A context represents the set of
         expressions (commands), intents, and intent arguments (slots) within a domain of interest.
+        :param sensitivity: Sensitivity for inference. It should be a floating-point number within [0, 1]. A higher
+        sensitivity value results in fewer inference misses at the cost of potentially increasing the erroneous
+        inference rate.
         """
 
         if not os.path.exists(library_path):
@@ -67,12 +70,16 @@ class Rhino(object):
             raise ValueError("couldn't find context file at '%s'" % context_file_path)
 
         init_func = library.pv_rhino_init
-        init_func.argtypes = [c_char_p, c_char_p, POINTER(POINTER(self.CRhino))]
+        init_func.argtypes = [c_char_p, c_char_p, c_float, POINTER(POINTER(self.CRhino))]
         init_func.restype = self.PicovoiceStatuses
 
         self._handle = POINTER(self.CRhino)()
 
-        status = init_func(model_file_path.encode('utf-8'), context_file_path.encode('utf-8'), byref(self._handle))
+        status = init_func(
+            model_file_path.encode('utf-8'),
+            context_file_path.encode('utf-8'),
+            sensitivity,
+            byref(self._handle))
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('initialization failed')
 
@@ -101,16 +108,16 @@ class Rhino(object):
         self._reset_func.argtypes = [POINTER(self.CRhino)]
         self._reset_func.restype = self.PicovoiceStatuses
 
-        context_expressions_func = library.pv_rhino_context_expressions
-        context_expressions_func.argtypes = [POINTER(self.CRhino), POINTER(c_char_p)]
-        context_expressions_func.restype = self.PicovoiceStatuses
+        context_info_func = library.pv_rhino_context_info
+        context_info_func.argtypes = [POINTER(self.CRhino), POINTER(c_char_p)]
+        context_info_func.restype = self.PicovoiceStatuses
 
-        expressions = c_char_p()
-        status = context_expressions_func(self._handle, byref(expressions))
+        context_info = c_char_p()
+        status = context_info_func(self._handle, byref(context_info))
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('getting expressions failed')
 
-        self._context_expressions = expressions.value.decode('utf-8')
+        self._context_info = context_info.value.decode('utf-8')
 
         version_func = library.pv_rhino_version
         version_func.argtypes = []
@@ -210,7 +217,7 @@ class Rhino(object):
         (intent arguments).
         """
 
-        return self._context_expressions
+        return self._context_info
 
     @property
     def version(self):
