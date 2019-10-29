@@ -20,16 +20,27 @@ interest, in real-time. For example, given a speech command *"Can I have a small
 
 Rhino is:
 
-* intuitive. It allows users to utter their intention in a natural and conversational fashion.
-* using deep neural networks trained in **real-world situations**.
-* compact and computationally-efficient, making it suitable for **IoT** applications. It can run with as little as 90 KB of
+* Intuitive. It allows users to utter their intention in a natural and conversational fashion.
+* Using deep neural networks trained in **real-world situations**.
+* Compact and computationally-efficient, making it suitable for **IoT** applications. It can run with as little as 90 KB of
 RAM on an MCU.
-* cross-platform. It is implemented in fixed-point ANSI C. Currently **Raspberry Pi**, **BeagleBone**, **Android**,
+* Cross-platform. It is implemented in fixed-point ANSI C. Currently **Raspberry Pi**, **BeagleBone**, **Android**,
 **iOS**, **Linux**, **macOS**, **Windows**, and **web browsers** (**WebAssembly**) are supported. Additionally, support for
 various **ARM Cortex-A**, **ARM Cortex-M** (M4/M7) and **DSP cores** is available for commercial customers.
-* customizable. It can be customized for any given domain.
+* Customizable. It can be customized for any given domain.
 
 [![Rhino in Action](https://img.youtube.com/vi/WadKhfLyqTQ/0.jpg)](https://www.youtube.com/watch?v=WadKhfLyqTQ)
+
+## Picovoice Console
+
+Announcing [Picovoice Console](https://console.picovoice.ai) support for Rhino. You can now use the Picovoice Console to create Speech-to-Intent contexts, add intents, and train them into Rhino models. The Console is a web-based platform for
+building voice applications. You can sign up for an account with your email address or with your GitHub account.
+
+Intents are made up of a collection of expressions, written in the "Rhino Expression Language", a straightforward way of embedding features like optional phrasing and slots to match user intent and record variables from their utterances.
+
+Pronunciation of phrases is detected as you edit, with no need to submit the file for processing to discover missing words. As with Porcupine, a missing pronunciation can typically be addressed for commercial customers.
+
+Models generated with the Picovoice Console may be used for evaluation and non-commerical use only. To use Rhino in a commercial setting, [contact the Picovoice team](https://picovoice.ai/contact.html).
 
 ## Table of Contents
 * [Try It Out](#try-it-out)
