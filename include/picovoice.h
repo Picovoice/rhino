@@ -50,7 +50,7 @@ typedef enum {
  * @param status Status code.
  * @return String representation.
  */
-const char *pv_status_to_string(pv_status_t status);
+PV_API const char *pv_status_to_string(pv_status_t status);
 
 #ifdef __cplusplus
 
