@@ -58,7 +58,6 @@ let Rhino = (function () {
             pcmWasmBuffer.set(new Uint8Array(pcmInt16Array.buffer));
 
             let isFinalized = processWasm(handleWasm, pcmWasmPointer);
-            console.log(isFinalized);
             if (isFinalized === 1) {
                 let isUnderstood = isUnderstoodWasm(handleWasm);
                 if (isUnderstood === -1) {
@@ -83,6 +82,8 @@ let Rhino = (function () {
                         intent[slot] = value;
                     }
                 }
+
+                resetWasm(handleWasm);
 
                 return {isUnderstood: (isUnderstood === 1), intent: intent}
             } else if (isFinalized === 0) {
