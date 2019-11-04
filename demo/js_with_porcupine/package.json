@@ -1,0 +1,17 @@
+{
+  "name": "rhino-demo",
+  "version": "1.0.0",
+  "description": "rhino demo running locally in browser",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@picovoice/porcupine_manager": "1.3.0",
+    "@picovoice/rhino_manager": "1.1.0"
+  },
+  "devDependencies": {
+    "live-server": "*"
+  }
+}
