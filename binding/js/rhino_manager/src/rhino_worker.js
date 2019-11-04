@@ -23,13 +23,13 @@ function init(context_) {
     context = context_;
 
     if (Rhino.isLoaded()) {
-        rhino = Rhino.create(context)
+        rhino = Rhino.create(context);
     }
 }
 
 function process(inputFrame) {
     if (rhino == null && Rhino.isLoaded()) {
-        rhino = Rhino.create(context)
+        rhino = Rhino.create(context);
     } else if (rhino != null) {
         let result = rhino.process(inputFrame);
         if ('isUnderstood' in result) {

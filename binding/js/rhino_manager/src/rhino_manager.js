@@ -3,16 +3,13 @@ RhinoManager = (function (rhinoWorkerScript, downsamplingScript) {
 
     let start = function (context, inferenceCallback, errorCallback) {
         rhinoWorker = new Worker(rhinoWorkerScript);
-        rhinoWorker.postMessage({
-            command: "init",
-            context: context,
-        });
+        rhinoWorker.postMessage({command: "init", context: context});
 
         rhinoWorker.onmessage = function (e) {
             inferenceCallback(e);
         };
 
-        WebVoiceProcessor.start([rhinoWorker], downsamplingScript, errorCallback);
+        WebVoiceProcessor.start([this], downsamplingScript, errorCallback);
     };
 
     let stop = function () {
@@ -20,5 +17,9 @@ RhinoManager = (function (rhinoWorkerScript, downsamplingScript) {
         rhinoWorker.postMessage({command: "release"});
     };
 
-    return {start: start, stop: stop}
+    let processFrame = function (frame) {
+        rhinoWorker.postMessage({command: "process", inputFrame: frame});
+    };
+
+    return {start: start, processFrame: processFrame, stop: stop}
 });
