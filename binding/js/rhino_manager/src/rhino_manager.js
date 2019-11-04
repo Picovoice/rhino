@@ -6,7 +6,7 @@ RhinoManager = (function (rhinoWorkerScript, downsamplingScript) {
         rhinoWorker.postMessage({command: "init", context: context});
 
         rhinoWorker.onmessage = function (e) {
-            inferenceCallback(e);
+            inferenceCallback(e.data);
         };
 
         WebVoiceProcessor.start([this], downsamplingScript, errorCallback);
