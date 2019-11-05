@@ -79,20 +79,29 @@ public class RhinoManager {
                     var values: UnsafeMutablePointer<UnsafePointer<Int8>?>?
                     pv_rhino_get_intent(self.rhino, &intent, &numSlots, &slots, &values)
                     
-                    if !isUnderstood {
-                        self.onInference?(InferenceInfo(isUnderstood: false, intent: "", slots: [String: String]()))
-                    } else {
-                        var slotsDictionary = [String: String]()
-                        for i in 1...numSlots {
+                    var intentString = ""
+                    var slotsDictionary = [String: String]()
+                    
+                    if isUnderstood {
+                        intentString = String(cString: intent!)
+                        for i in 0...(numSlots - 1) {
                             let slot = String(cString: slots!.advanced(by: Int(i)).pointee!)
                             let value = String(cString: values!.advanced(by: Int(i)).pointee!)
+                            print(slot)
+                            print(value)
                             slotsDictionary[slot] = value
                         }
                         
-                        self.onInference?(InferenceInfo(isUnderstood: isUnderstood, intent: String(cString: intent!), slots: slotsDictionary))
-                        
                         pv_rhino_free_slots_and_values(self.rhino, slots, values)
+                        print(intentString)
+                        
+                    } else {
+                        print("didnt understand")
                     }
+
+                    pv_rhino_reset(self.rhino)
+                    
+                    self.onInference?(InferenceInfo(isUnderstood: isUnderstood, intent: intentString, slots: slotsDictionary))
                 }
             }
         }
