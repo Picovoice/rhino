@@ -13,6 +13,7 @@
 		BB193E982370C4F500556136 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB193E972370C4F500556136 /* Assets.xcassets */; };
 		BB193E9B2370C4F500556136 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9A2370C4F500556136 /* Preview Assets.xcassets */; };
 		BB193E9E2370C4F500556136 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9C2370C4F500556136 /* LaunchScreen.storyboard */; };
+		BB53346A23720DFA003B6FD1 /* rhino_manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB53346923720DFA003B6FD1 /* rhino_manager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		BB193E9A2370C4F500556136 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BB193E9D2370C4F500556136 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB193E9F2370C4F500556136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB53346923720DFA003B6FD1 /* rhino_manager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = rhino_manager.swift; path = ../../../../binding/ios/rhino_manager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 		BB193E902370C4EC00556136 /* RhinoDemo */ = {
 			isa = PBXGroup;
 			children = (
+				BB53346923720DFA003B6FD1 /* rhino_manager.swift */,
 				BB193E912370C4EC00556136 /* AppDelegate.swift */,
 				BB193E932370C4EC00556136 /* SceneDelegate.swift */,
 				BB193E952370C4EC00556136 /* ContentView.swift */,
@@ -146,6 +149,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB53346A23720DFA003B6FD1 /* rhino_manager.swift in Sources */,
 				BB193E922370C4EC00556136 /* AppDelegate.swift in Sources */,
 				BB193E942370C4EC00556136 /* SceneDelegate.swift in Sources */,
 				BB193E962370C4EC00556136 /* ContentView.swift in Sources */,

@@ -1,0 +1,247 @@
+//
+// Copyright 2019 Picovoice Inc.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+import AVFoundation
+import pv_rhino
+
+/// Errors corresponding to different status codes returned by Porcupine library.
+public enum RhinoManagerError: Error {
+    case outOfMemory
+    case io
+    case invalidArgument
+}
+
+public enum RhinoManagerPermissionError: Error {
+    case recordingDenied
+}
+
+public class RhinoManager {
+
+    private var rhino: OpaquePointer?
+
+    private let audioInputEngine: AudioInputEngine
+
+    public let modelFilePath: String
+    public let contextFilePath: String
+
+    public var onInference: ((Void) -> Void)?
+
+    public private(set) var isListening = false
+
+    private var shouldBeListening: Bool = false
+
+    public init(modelFilePath: String, contextFilePath: String, onInference: ((Void) -> Void)?) throws {
+
+        self.modelFilePath = modelFilePath
+        self.contextFilePath = contextFilePath
+        self.onInference = onInference
+
+        self.audioInputEngine = AudioInputEngine_AudioQueue()
+
+        audioInputEngine.audioInput = { [weak self] audio in
+
+            guard let `self` = self else {
+                return
+            }
+
+            var isFinalized: Bool = false
+
+            pv_rhino_process(self.rhino, audio, &isFinalized)
+            if isFinalized {
+                var isUnderstood: Bool = false
+                pv_rhino_is_understood(self.rhino, &isUnderstood)
+                if isUnderstood {
+                    pv_rhino_get_intent(self.rhino)
+                }
+            }
+        }
+
+        let status = pv_rhino_init(modelFilePath, contextFilePath, 0.5f, &rhino)
+        try checkInitStatus(status)
+
+        let audioSession = AVAudioSession.sharedInstance()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(onAudioSessionInterruption(_:)), name: .AVAudioSessionInterruption, object: audioSession)
+    }
+
+    deinit {
+        if isListening {
+            stopListening()
+        }
+        pv_rhino_delete(rhino)
+        rhino = nil
+    }
+
+    public func startListening() throws {
+
+        shouldBeListening = true
+
+        let audioSession = AVAudioSession.sharedInstance()
+        // Only check if it's denied, permission will be automatically asked.
+        if audioSession.recordPermission() == .denied {
+            throw PorcupineManagerPermissionError.recordingDenied
+        }
+
+        guard !isListening else {
+            return
+        }
+
+        try audioSession.setCategory(AVAudioSessionCategoryRecord)
+        try audioSession.setMode(AVAudioSessionModeMeasurement)
+        try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
+
+        try audioInputEngine.start()
+
+        isListening = true
+    }
+
+    public func stopListening() {
+
+        shouldBeListening = false
+
+        guard isListening else {
+            return
+        }
+
+        audioInputEngine.stop()
+        isListening = false
+    }
+
+    // MARK: - Private
+
+    private func checkInitStatus(_ status: pv_status_t) throws {
+        switch status {
+        case PV_STATUS_IO_ERROR:
+            throw PorcupineManagerError.io
+        case PV_STATUS_OUT_OF_MEMORY:
+            throw PorcupineManagerError.outOfMemory
+        case PV_STATUS_INVALID_ARGUMENT:
+            throw PorcupineManagerError.invalidArgument
+        default:
+            return
+        }
+    }
+
+    @objc private func onAudioSessionInterruption(_ notification: Notification) {
+
+        guard let userInfo = notification.userInfo,
+            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+            let type = AVAudioSessionInterruptionType(rawValue: typeValue) else {
+                return
+        }
+
+        if type == .began {
+            audioInputEngine.pause()
+        } else if type == .ended {
+            // Interruption options are ignored. AudioEngine should be restarted
+            // unless PorcupineManager is told to stop listening.
+            guard let _ = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else {
+                return
+            }
+            if shouldBeListening {
+                audioInputEngine.unpause()
+            }
+        }
+    }
+}
+
+private protocol AudioInputEngine: AnyObject {
+
+    var audioInput: ((UnsafePointer<Int16>) -> Void)? { get set }
+
+    func start() throws
+    func stop()
+
+    func pause()
+    func unpause()
+}
+
+private class AudioInputEngine_AudioQueue: AudioInputEngine {
+
+    private let numBuffers = 3
+    private var audioQueue: AudioQueueRef?
+
+    var audioInput: ((UnsafePointer<Int16>) -> Void)?
+
+    func start() throws {
+        var format = AudioStreamBasicDescription(
+            mSampleRate: Float64(pv_sample_rate()),
+            mFormatID: kAudioFormatLinearPCM,
+            mFormatFlags: kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked,
+            mBytesPerPacket: 2,
+            mFramesPerPacket: 1,
+            mBytesPerFrame: 2,
+            mChannelsPerFrame: 1,
+            mBitsPerChannel: 16,
+            mReserved: 0)
+        let userData = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
+        AudioQueueNewInput(&format, createAudioQueueCallback(), userData, nil, nil, 0, &audioQueue)
+
+        guard let queue = audioQueue else {
+            return
+        }
+
+        let bufferSize = UInt32(pv_rhino_frame_length()) * 2
+        for _ in 0..<numBuffers {
+            var bufferRef: AudioQueueBufferRef? = nil
+            AudioQueueAllocateBuffer(queue, bufferSize, &bufferRef)
+            if let buffer = bufferRef {
+                AudioQueueEnqueueBuffer(queue, buffer, 0, nil)
+            }
+        }
+
+        AudioQueueStart(queue, nil)
+    }
+
+    func stop() {
+        guard let audioQueue = audioQueue else {
+            return
+        }
+        AudioQueueStop(audioQueue, true)
+        AudioQueueDispose(audioQueue, false)
+    }
+
+    func pause() {
+        guard let audioQueue = audioQueue else {
+            return
+        }
+        AudioQueuePause(audioQueue)
+    }
+
+    func unpause() {
+        guard let audioQueue = audioQueue else {
+            return
+        }
+        AudioQueueFlush(audioQueue)
+        AudioQueueStart(audioQueue, nil)
+    }
+
+    private func createAudioQueueCallback() -> AudioQueueInputCallback {
+        return { userData, queue, bufferRef, startTimeRef, numPackets, packetDescriptions in
+
+            // `self` is passed in as userData in the audio queue callback.
+            guard let userData = userData else {
+                return
+            }
+            let `self` = Unmanaged<AudioInputEngine_AudioQueue>.fromOpaque(userData).takeUnretainedValue()
+
+            let pcm = bufferRef.pointee.mAudioData.assumingMemoryBound(to: Int16.self)
+
+            if let audioInput = self.audioInput {
+                audioInput(pcm)
+            }
+
+            AudioQueueEnqueueBuffer(queue, bufferRef, 0, nil)
+        }
+    }
+}
