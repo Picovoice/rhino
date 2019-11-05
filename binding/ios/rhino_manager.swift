@@ -25,6 +25,18 @@ public enum RhinoManagerPermissionError: Error {
     case recordingDenied
 }
 
+public struct InferenceInfo {
+    let isUnderstood: Bool
+    let intent: String
+    let slots: Dictionary<String, String>
+    
+    public init(isUnderstood: Bool, intent: String, slots: Dictionary<String, String>) {
+        self.isUnderstood = isUnderstood
+        self.intent = intent
+        self.slots = slots
+    }
+}
+
 public class RhinoManager {
 
     private var rhino: OpaquePointer?
@@ -34,13 +46,13 @@ public class RhinoManager {
     public let modelFilePath: String
     public let contextFilePath: String
 
-    public var onInference: (() -> Void)?
+    public var onInference: ((InferenceInfo) -> Void)?
 
     public private(set) var isListening = false
 
     private var shouldBeListening: Bool = false
 
-    public init(modelFilePath: String, contextFilePath: String, onInference: (() -> Void)?) throws {
+    public init(modelFilePath: String, contextFilePath: String, onInference: ((InferenceInfo) -> Void)?) throws {
 
         self.modelFilePath = modelFilePath
         self.contextFilePath = contextFilePath
@@ -66,6 +78,21 @@ public class RhinoManager {
                     var slots: UnsafeMutablePointer<UnsafePointer<Int8>?>?
                     var values: UnsafeMutablePointer<UnsafePointer<Int8>?>?
                     pv_rhino_get_intent(self.rhino, &intent, &numSlots, &slots, &values)
+                    
+                    if !isUnderstood {
+                        self.onInference?(InferenceInfo(isUnderstood: false, intent: "", slots: [String: String]()))
+                    } else {
+                        var slotsDictionary = [String: String]()
+                        for i in 1...numSlots {
+                            let slot = String(cString: slots!.advanced(by: Int(i)).pointee!)
+                            let value = String(cString: values!.advanced(by: Int(i)).pointee!)
+                            slotsDictionary[slot] = value
+                        }
+                        
+                        self.onInference?(InferenceInfo(isUnderstood: isUnderstood, intent: String(cString: intent!), slots: slotsDictionary))
+                        
+                        pv_rhino_free_slots_and_values(self.rhino, slots, values)
+                    }
                 }
             }
         }
