@@ -9,14 +9,32 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    let modelFilePath = Bundle.main.path(forResource: "rhino_params", ofType: "pv")
+    let contextFilePath = Bundle.main.path(forResource: "smart_lighting_ios", ofType: "rhn")
+    
+    @State var rhinoManager: RhinoManager!
+    @State var isRecording = false
     @State var count: Int = 0
+    
+    let inferenceCallback: ((InferenceInfo) -> Void) = { info in
+    }
     
     var body: some View {
         VStack {
             Text("\(count)")
-            Button(action: {self.count = self.count + 1}) {
-                Text(/*@START_MENU_TOKEN@*/"Start"/*@END_MENU_TOKEN@*/)
-                    .font(.largeTitle)
+            
+            Button(action: {
+                do {
+                    self.rhinoManager = try RhinoManager(modelFilePath: self.modelFilePath!, contextFilePath: self.contextFilePath!, onInference: self.inferenceCallback)
+                    try self.rhinoManager.startListening()
+                } catch {
+                    
+                }
+                
+                
+            }) {
+                Text(/*@START_MENU_TOKEN@*/"Start"/*@END_MENU_TOKEN@*/).font(.largeTitle)
             }
         }
     }

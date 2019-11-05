@@ -15,6 +15,9 @@
 		BB193E9E2370C4F500556136 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9C2370C4F500556136 /* LaunchScreen.storyboard */; };
 		BB53346A23720DFA003B6FD1 /* rhino_manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB53346923720DFA003B6FD1 /* rhino_manager.swift */; };
 		BB53349D2372152D003B6FD1 /* libpv_rhino.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB53349C2372152D003B6FD1 /* libpv_rhino.a */; };
+		BB5334A123723091003B6FD1 /* smart_lighting_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */; };
+		BB5334A223723091003B6FD1 /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = BB5334A023723091003B6FD1 /* coffee_maker_ios.rhn */; };
+		BB5334A4237230AD003B6FD1 /* rhino_params.pv in Resources */ = {isa = PBXBuildFile; fileRef = BB5334A3237230AD003B6FD1 /* rhino_params.pv */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +32,9 @@
 		BB53346923720DFA003B6FD1 /* rhino_manager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = rhino_manager.swift; path = ../../../../binding/ios/rhino_manager.swift; sourceTree = "<group>"; };
 		BB53349C2372152D003B6FD1 /* libpv_rhino.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpv_rhino.a; path = ../../../lib/ios/libpv_rhino.a; sourceTree = "<group>"; };
 		BB53349E2372166F003B6FD1 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = smart_lighting_ios.rhn; path = ../../../../resources/contexts/ios/smart_lighting_ios.rhn; sourceTree = "<group>"; };
+		BB5334A023723091003B6FD1 /* coffee_maker_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_ios.rhn; path = ../../../../resources/contexts/ios/coffee_maker_ios.rhn; sourceTree = "<group>"; };
+		BB5334A3237230AD003B6FD1 /* rhino_params.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params.pv; path = ../../../../lib/common/rhino_params.pv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +69,9 @@
 		BB193E902370C4EC00556136 /* RhinoDemo */ = {
 			isa = PBXGroup;
 			children = (
+				BB5334A3237230AD003B6FD1 /* rhino_params.pv */,
+				BB5334A023723091003B6FD1 /* coffee_maker_ios.rhn */,
+				BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */,
 				BB53349E2372166F003B6FD1 /* module.modulemap */,
 				BB53346923720DFA003B6FD1 /* rhino_manager.swift */,
 				BB193E912370C4EC00556136 /* AppDelegate.swift */,
@@ -151,7 +160,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB193E9E2370C4F500556136 /* LaunchScreen.storyboard in Resources */,
+				BB5334A223723091003B6FD1 /* coffee_maker_ios.rhn in Resources */,
 				BB193E9B2370C4F500556136 /* Preview Assets.xcassets in Resources */,
+				BB5334A123723091003B6FD1 /* smart_lighting_ios.rhn in Resources */,
+				BB5334A4237230AD003B6FD1 /* rhino_params.pv in Resources */,
 				BB193E982370C4F500556136 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
