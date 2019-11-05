@@ -14,6 +14,7 @@
 		BB193E9B2370C4F500556136 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9A2370C4F500556136 /* Preview Assets.xcassets */; };
 		BB193E9E2370C4F500556136 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9C2370C4F500556136 /* LaunchScreen.storyboard */; };
 		BB53346A23720DFA003B6FD1 /* rhino_manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB53346923720DFA003B6FD1 /* rhino_manager.swift */; };
+		BB53349D2372152D003B6FD1 /* libpv_rhino.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB53349C2372152D003B6FD1 /* libpv_rhino.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		BB193E9D2370C4F500556136 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB193E9F2370C4F500556136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB53346923720DFA003B6FD1 /* rhino_manager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = rhino_manager.swift; path = ../../../../binding/ios/rhino_manager.swift; sourceTree = "<group>"; };
+		BB53349C2372152D003B6FD1 /* libpv_rhino.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpv_rhino.a; path = ../../../lib/ios/libpv_rhino.a; sourceTree = "<group>"; };
+		BB53349E2372166F003B6FD1 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB53349D2372152D003B6FD1 /* libpv_rhino.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +48,7 @@
 			children = (
 				BB193E902370C4EC00556136 /* RhinoDemo */,
 				BB193E8F2370C4EC00556136 /* Products */,
+				BB53349B2372152D003B6FD1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +63,7 @@
 		BB193E902370C4EC00556136 /* RhinoDemo */ = {
 			isa = PBXGroup;
 			children = (
+				BB53349E2372166F003B6FD1 /* module.modulemap */,
 				BB53346923720DFA003B6FD1 /* rhino_manager.swift */,
 				BB193E912370C4EC00556136 /* AppDelegate.swift */,
 				BB193E932370C4EC00556136 /* SceneDelegate.swift */,
@@ -76,6 +82,14 @@
 				BB193E9A2370C4F500556136 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		BB53349B2372152D003B6FD1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BB53349C2372152D003B6FD1 /* libpv_rhino.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,11 +235,13 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LIBRARY_SEARCH_PATHS = "${SRCROOT}/../../../lib/ios";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -275,10 +291,12 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LIBRARY_SEARCH_PATHS = "${SRCROOT}/../../../lib/ios";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};

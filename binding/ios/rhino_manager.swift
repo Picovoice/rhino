@@ -34,13 +34,13 @@ public class RhinoManager {
     public let modelFilePath: String
     public let contextFilePath: String
 
-    public var onInference: ((Void) -> Void)?
+    public var onInference: (() -> Void)?
 
     public private(set) var isListening = false
 
     private var shouldBeListening: Bool = false
 
-    public init(modelFilePath: String, contextFilePath: String, onInference: ((Void) -> Void)?) throws {
+    public init(modelFilePath: String, contextFilePath: String, onInference: (() -> Void)?) throws {
 
         self.modelFilePath = modelFilePath
         self.contextFilePath = contextFilePath
@@ -61,17 +61,17 @@ public class RhinoManager {
                 var isUnderstood: Bool = false
                 pv_rhino_is_understood(self.rhino, &isUnderstood)
                 if isUnderstood {
-                    pv_rhino_get_intent(self.rhino)
+                    var intent: UnsafePointer<Int8>?
+                    var numSlots: Int32 = 0
+                    var slots: UnsafeMutablePointer<UnsafePointer<Int8>?>?
+                    var values: UnsafeMutablePointer<UnsafePointer<Int8>?>?
+                    pv_rhino_get_intent(self.rhino, &intent, &numSlots, &slots, &values)
                 }
             }
         }
 
-        let status = pv_rhino_init(modelFilePath, contextFilePath, 0.5f, &rhino)
+        let status = pv_rhino_init(modelFilePath, contextFilePath, 0.5, &rhino)
         try checkInitStatus(status)
-
-        let audioSession = AVAudioSession.sharedInstance()
-
-        NotificationCenter.default.addObserver(self, selector: #selector(onAudioSessionInterruption(_:)), name: .AVAudioSessionInterruption, object: audioSession)
     }
 
     deinit {
@@ -88,17 +88,17 @@ public class RhinoManager {
 
         let audioSession = AVAudioSession.sharedInstance()
         // Only check if it's denied, permission will be automatically asked.
-        if audioSession.recordPermission() == .denied {
-            throw PorcupineManagerPermissionError.recordingDenied
+        if audioSession.recordPermission == .denied {
+            throw RhinoManagerPermissionError.recordingDenied
         }
 
         guard !isListening else {
             return
         }
 
-        try audioSession.setCategory(AVAudioSessionCategoryRecord)
-        try audioSession.setMode(AVAudioSessionModeMeasurement)
-        try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
+        try audioSession.setCategory(AVAudioSession.Category.record)
+        try audioSession.setMode(AVAudioSession.Mode.measurement)
+        try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
 
         try audioInputEngine.start()
 
@@ -122,11 +122,11 @@ public class RhinoManager {
     private func checkInitStatus(_ status: pv_status_t) throws {
         switch status {
         case PV_STATUS_IO_ERROR:
-            throw PorcupineManagerError.io
+            throw RhinoManagerError.io
         case PV_STATUS_OUT_OF_MEMORY:
-            throw PorcupineManagerError.outOfMemory
+            throw RhinoManagerError.outOfMemory
         case PV_STATUS_INVALID_ARGUMENT:
-            throw PorcupineManagerError.invalidArgument
+            throw RhinoManagerError.invalidArgument
         default:
             return
         }
@@ -136,7 +136,7 @@ public class RhinoManager {
 
         guard let userInfo = notification.userInfo,
             let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let type = AVAudioSessionInterruptionType(rawValue: typeValue) else {
+            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
                 return
         }
 
