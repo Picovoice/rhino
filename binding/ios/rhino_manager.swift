@@ -14,7 +14,6 @@
 import AVFoundation
 import pv_rhino
 
-/// Errors corresponding to different status codes returned by Porcupine library.
 public enum RhinoManagerError: Error {
     case outOfMemory
     case io
@@ -38,7 +37,6 @@ public struct InferenceInfo {
 }
 
 public class RhinoManager {
-
     private var rhino: OpaquePointer?
 
     private let audioInputEngine: AudioInputEngine
@@ -46,17 +44,17 @@ public class RhinoManager {
     public let modelFilePath: String
     public let contextFilePath: String
 
-    public var onInference: ((InferenceInfo) -> Void)?
+    public var onInferenceCallback: ((InferenceInfo) -> Void)?
 
     public private(set) var isListening = false
 
     private var shouldBeListening: Bool = false
 
-    public init(modelFilePath: String, contextFilePath: String, onInference: ((InferenceInfo) -> Void)?) throws {
+    public init(modelFilePath: String, contextFilePath: String, onInferenceCallback: ((InferenceInfo) -> Void)?) throws {
 
         self.modelFilePath = modelFilePath
         self.contextFilePath = contextFilePath
-        self.onInference = onInference
+        self.onInferenceCallback = onInferenceCallback
 
         self.audioInputEngine = AudioInputEngine_AudioQueue()
 
@@ -69,9 +67,11 @@ public class RhinoManager {
             var isFinalized: Bool = false
 
             pv_rhino_process(self.rhino, audio, &isFinalized)
+            
             if isFinalized {
                 var isUnderstood: Bool = false
                 pv_rhino_is_understood(self.rhino, &isUnderstood)
+                
                 if isUnderstood {
                     var intent: UnsafePointer<Int8>?
                     var numSlots: Int32 = 0
@@ -87,21 +87,15 @@ public class RhinoManager {
                         for i in 0...(numSlots - 1) {
                             let slot = String(cString: slots!.advanced(by: Int(i)).pointee!)
                             let value = String(cString: values!.advanced(by: Int(i)).pointee!)
-                            print(slot)
-                            print(value)
                             slotsDictionary[slot] = value
                         }
                         
                         pv_rhino_free_slots_and_values(self.rhino, slots, values)
-                        print(intentString)
-                        
-                    } else {
-                        print("didnt understand")
                     }
 
                     pv_rhino_reset(self.rhino)
                     
-                    self.onInference?(InferenceInfo(isUnderstood: isUnderstood, intent: intentString, slots: slotsDictionary))
+                    self.onInferenceCallback?(InferenceInfo(isUnderstood: isUnderstood, intent: intentString, slots: slotsDictionary))
                 }
             }
         }
@@ -123,7 +117,6 @@ public class RhinoManager {
         shouldBeListening = true
 
         let audioSession = AVAudioSession.sharedInstance()
-        // Only check if it's denied, permission will be automatically asked.
         if audioSession.recordPermission == .denied {
             throw RhinoManagerPermissionError.recordingDenied
         }
@@ -165,28 +158,6 @@ public class RhinoManager {
             throw RhinoManagerError.invalidArgument
         default:
             return
-        }
-    }
-
-    @objc private func onAudioSessionInterruption(_ notification: Notification) {
-
-        guard let userInfo = notification.userInfo,
-            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
-                return
-        }
-
-        if type == .began {
-            audioInputEngine.pause()
-        } else if type == .ended {
-            // Interruption options are ignored. AudioEngine should be restarted
-            // unless PorcupineManager is told to stop listening.
-            guard let _ = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else {
-                return
-            }
-            if shouldBeListening {
-                audioInputEngine.unpause()
-            }
         }
     }
 }
