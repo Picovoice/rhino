@@ -1,3 +1,4 @@
+.DS_Store
 .idea/
 binding/python/__pycache__/
 binding/python/*.pyc
