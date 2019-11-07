@@ -1,0 +1,28 @@
+include LICENSE
+
+include demo/python/rhino_demo.py
+include binding/python/rhino.py
+include lib/common/rhino_params.pv
+include lib/beaglebone/libpv_rhino.so
+include lib/linux/x86_64/libpv_rhino.so
+include lib/mac/x86_64/libpv_rhino.dylib
+include lib/raspberry-pi/arm11/libpv_rhino.so
+include lib/raspberry-pi/cortex-a7/libpv_rhino.so
+include lib/raspberry-pi/cortex-a53/libpv_rhino.so
+
+include resources/porcupine/binding/python/porcupine.py
+include resources/porcupine/lib/common/porcupine_params.pv
+include resources/porcupine/lib/beaglebone/libpv_porcupine.so
+include resources/porcupine/lib/linux/x86_64/libpv_porcupine.so
+include resources/porcupine/lib/mac/x86_64/libpv_porcupine.dylib
+include resources/porcupine/lib/raspberry-pi/arm11/libpv_porcupine.so
+include resources/porcupine/lib/raspberry-pi/cortex-a7/libpv_porcupine.so
+include resources/porcupine/lib/raspberry-pi/cortex-a53/libpv_porcupine.so
+
+recursive-include resources/contexts/beaglebone *
+recursive-include resources/contexts/linux *
+recursive-include resources/contexts/mac/ *
+recursive-include resources/contexts/raspberrypi *
+recursive-include resources/util/python *
+
+global-exclude README.md

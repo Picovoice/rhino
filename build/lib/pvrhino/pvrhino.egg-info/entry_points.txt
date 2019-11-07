@@ -1,0 +1,3 @@
+[console_scripts]
+pvrhino_mic = pvrhino.demo.python.rhino_demo:main
+
