@@ -199,17 +199,20 @@ class RhinoDemo(Thread):
         pa.terminate()
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--rhino_library_path', help="absolute path to Rhino's dynamic library", default=RHINO_LIBRARY_PATH)
+    parser.add_argument('--rhino_library_path', help="absolute path to Rhino's dynamic library",
+                        default=RHINO_LIBRARY_PATH)
 
-    parser.add_argument('--rhino_model_file_path', help="absolute path to Rhino's model file path", default=RHINO_MODEL_FILE_PATH)
+    parser.add_argument('--rhino_model_file_path', help="absolute path to Rhino's model file path",
+                        default=RHINO_MODEL_FILE_PATH)
 
     parser.add_argument('--rhino_context_file_path', help="absolute path to Rhino's context file", type=str,
                         default=CONTEXT_FILE_PATH)
 
-    parser.add_argument('--porcupine_library_path', help="absolute path to Porcupine's dynamic library", default=PORCUPINE_LIBRARY_PATH)
+    parser.add_argument('--porcupine_library_path', help="absolute path to Porcupine's dynamic library",
+                        default=PORCUPINE_LIBRARY_PATH)
 
     parser.add_argument('--porcupine_model_file_path', help="absolute path to Porcupine's model parameter file",
                         default=PORCUPINE_MODEL_FILE_PATH)
@@ -244,3 +247,7 @@ if __name__ == '__main__':
             porcupine_sensitivity=args.porcupine_sensitivity,
             input_device_index=args.input_audio_device_index,
             output_path=args.output_path).run()
+
+
+if __name__ == '__main__':
+    main()

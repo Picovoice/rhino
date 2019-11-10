@@ -28,8 +28,8 @@ LONG_DESCRIPTION = \
     pvrhino_mic
     ```
     Then start with "Hey Pico" and order coffee. The demo infers intent from spoken commands in the context of a coffee maker 
-    and initializes the Porcupine engine to detect the wake phrase _Hey Pico_. When the wake phrase is detected, 
-    Rhino starts processing the followup spoken command and prints out the inferred intent and slot values to the console.
+    and initializes the Porcupine engine to detect the wake phrase _Hey Pico_. When the wake phrase is detected,
+    Rhino starts processing the follow-up spoken command and prints out the inferred intent and slot values to the console.
     
     In order to get more information about using demos, run them with '--help' argument or look into their GitHub page
     [here](https://github.com/Picovoice/rhino/tree/master/demo/python).
@@ -38,7 +38,8 @@ LONG_DESCRIPTION = \
     You can create an instance of Rhino engine for use within your application using the factory method provided below.
     ```python
     import pvrhino
-    pvrhino.create(context_file_path=...)
+    context_file_path= # The file is available under resources/contexts/
+    pvrhino.create(context_file_path)
     ```
     If the `context_file_path` is not provided, the default context is the coffee maker.
     """
@@ -50,7 +51,7 @@ for x in ('build', 'dist', 'pvrhino.egg-info'):
 
 setuptools.setup(
     name="pvrhino",
-    version="1.0.0",
+    version="1.2.0",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="On-device speech-to-text engine powered by deep learning.",
