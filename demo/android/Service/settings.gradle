@@ -1,0 +1,4 @@
+include ':app', ':rhino', ':rhinomanager'
+rootProject.name='Service'
+project(':rhino').projectDir = new File(settingsDir, '../../../binding/android/Rhino/app')
+project(':rhinomanager').projectDir = new File(settingsDir, '../../../binding/android/RhinoManager/app')
