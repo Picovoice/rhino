@@ -1,4 +1,4 @@
-package ai.picovoice.service;
+package ai.picovoice.rhinodemoservice;
 
 import android.os.Bundle;
 
