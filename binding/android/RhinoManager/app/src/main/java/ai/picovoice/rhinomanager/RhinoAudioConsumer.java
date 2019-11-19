@@ -37,7 +37,7 @@ public class RhinoAudioConsumer implements AudioConsumer {
      * @param callback        Callback to be executed upon inference of the intent.
      * @throws RhinoException On failure.
      */
-    RhinoAudioConsumer(String modelFilePath, String contextFilePath, RhinoCallback callback) throws RhinoException {
+    public RhinoAudioConsumer(String modelFilePath, String contextFilePath, RhinoCallback callback) throws RhinoException {
         rhino = new Rhino(modelFilePath, contextFilePath);
         this.callback = callback;
     }
@@ -47,7 +47,7 @@ public class RhinoAudioConsumer implements AudioConsumer {
      *
      * @throws RhinoException On failure.
      */
-    void delete() throws RhinoException {
+    public void delete() throws RhinoException {
         rhino.delete();
     }
 
@@ -82,7 +82,7 @@ public class RhinoAudioConsumer implements AudioConsumer {
      *
      * @throws RhinoException On failure.
      */
-    void reset() throws RhinoException {
+    public void reset() throws RhinoException {
         rhino.reset();
         isFinalized = false;
     }

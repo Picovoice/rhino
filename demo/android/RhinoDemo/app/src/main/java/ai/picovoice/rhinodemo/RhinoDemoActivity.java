@@ -20,8 +20,8 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -37,6 +37,10 @@ import java.io.OutputStream;
 import java.util.Map;
 
 import ai.picovoice.rhino.RhinoIntent;
+import ai.picovoice.rhinomanager.AudioRecorder;
+import ai.picovoice.rhinomanager.RhinoAudioConsumer;
+import ai.picovoice.rhinomanager.RhinoCallback;
+
 
 public class RhinoDemoActivity extends AppCompatActivity {
     private static final String TAG = "PV_RHINO_DEMO";

@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Records audio from microphone in a format that can be processed by suite of technologies developed
  * at Picovoice.
  */
-class AudioRecorder {
+public class AudioRecorder {
     private static final String TAG = "PV_AUDIO_RECORDER";
 
     private final AudioConsumer audioConsumer;
@@ -55,14 +55,14 @@ class AudioRecorder {
      *
      * @param audioConsumer The consumer for recorded audio.
      */
-    AudioRecorder(AudioConsumer audioConsumer) {
+    public AudioRecorder(AudioConsumer audioConsumer) {
         this.audioConsumer = audioConsumer;
     }
 
     /**
      * Starts the recording of audio.
      */
-    void start() {
+    public void start() {
         if (started.get()) {
             return;
         }
@@ -76,7 +76,7 @@ class AudioRecorder {
      *
      * @throws InterruptedException On failure.
      */
-    void stop() throws InterruptedException {
+    public void stop() throws InterruptedException {
         if (!started.get()) {
             return;
         }
