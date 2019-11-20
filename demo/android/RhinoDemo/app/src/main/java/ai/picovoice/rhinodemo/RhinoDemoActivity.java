@@ -17,16 +17,18 @@
 package ai.picovoice.rhinodemo;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -45,12 +47,6 @@ import ai.picovoice.rhinomanager.RhinoCallback;
 public class RhinoDemoActivity extends AppCompatActivity {
     private static final String TAG = "PV_RHINO_DEMO";
 
-    private static final int PARAM_ID = R.raw.rhino_params;
-    /**
-     * Change this to enable processing in a new context.
-     */
-    private static final int CONTEXT_ID = R.raw.coffee_maker_android;
-
     private static final String PARAM_FILENAME = "rhino_params.pv";
     private static final String CONTEXT_FILENAME = "rhino_context.rhn";
 
@@ -59,27 +55,14 @@ public class RhinoDemoActivity extends AppCompatActivity {
     private AudioRecorder audioRecorder;
     private RhinoAudioConsumer rhinoAudioConsumer;
 
-    private void copyResource(int resourceId, String filename) throws IOException {
-        final Resources resources = this.getResources();
-
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = new BufferedInputStream(resources.openRawResource(resourceId));
-            os = new BufferedOutputStream(this.openFileOutput(filename, AppCompatActivity.MODE_PRIVATE));
-
-            int x;
-            while ((x = is.read()) != -1) {
-                os.write(x);
+    private void copyResourceFile(int resourceID, String filename) throws IOException {
+        Resources resources = getResources();
+        try (InputStream is = new BufferedInputStream(resources.openRawResource(resourceID), 256); OutputStream os = new BufferedOutputStream(openFileOutput(filename, Context.MODE_PRIVATE), 256)) {
+            int r;
+            while ((r = is.read()) != -1) {
+                os.write(r);
             }
             os.flush();
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-            if (os != null) {
-                os.close();
-            }
         }
     }
 
@@ -89,8 +72,8 @@ public class RhinoDemoActivity extends AppCompatActivity {
 
     private void initRhino() throws Exception {
         rhinoAudioConsumer = new RhinoAudioConsumer(
-                getAbsolutePath(PARAM_FILENAME),
-                getAbsolutePath(CONTEXT_FILENAME),
+                getAbsolutePath("rhino_params.pv"),
+                getAbsolutePath("rhino_context.rhn"),
                 new RhinoCallback() {
                     @Override
                     public void run(final boolean isUnderstood, final RhinoIntent intent) {
@@ -115,7 +98,6 @@ public class RhinoDemoActivity extends AppCompatActivity {
                                     rhinoAudioConsumer.reset();
                                 } catch (Exception e) {
                                     Log.e(TAG, "failed to stop recording audio and reset Rhino");
-                                    Log.e(TAG, e.getMessage());
                                 }
                             }
                         });
@@ -129,28 +111,19 @@ public class RhinoDemoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rhino_demo);
 
         try {
-            copyResource(PARAM_ID, PARAM_FILENAME);
-            copyResource(CONTEXT_ID, CONTEXT_FILENAME);
+            copyResourceFile(R.raw.rhino_params, PARAM_FILENAME);
+            copyResourceFile(R.raw.coffee_maker_android, CONTEXT_FILENAME);
         } catch (IOException e) {
-            Log.e(TAG, "failed to copy resource files.");
-            Log.e(TAG, e.getMessage());
-
-            Toast.makeText(this, "failed to copy resource files.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to copy resource files.", Toast.LENGTH_SHORT).show();
         }
 
         recordButton = findViewById(R.id.startButton);
         intentTextView = findViewById(R.id.intentView);
 
-        TextView contextTextView = findViewById(R.id.contextTextView);
-        contextTextView.setText(this.getResources().getResourceEntryName(CONTEXT_ID).replace("_android", "").replace("_", " "));
-
         try {
             initRhino();
         } catch (Exception e) {
-            Log.e(TAG, "failed to initialize Rhino.");
-            Log.e(TAG, e.getMessage());
-
-            Toast.makeText(this, "failed to initialize Rhino.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to initialize Rhino.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -160,12 +133,16 @@ public class RhinoDemoActivity extends AppCompatActivity {
         try {
             rhinoAudioConsumer.delete();
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            //
         }
     }
 
     private boolean hasRecordPermission() {
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestRecordPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);
     }
 
     public void onClick(View view) {
@@ -178,16 +155,14 @@ public class RhinoDemoActivity extends AppCompatActivity {
                     audioRecorder.start();
                 } else {
                     recordButton.toggle();
-                    Toast.makeText(this, "does not have record permission.", Toast.LENGTH_SHORT).show();
+                    requestRecordPermission();
                 }
             } else {
                 audioRecorder.stop();
                 rhinoAudioConsumer.reset();
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-
-            Toast.makeText(this, "something went wrong.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Something went wrong.", Toast.LENGTH_SHORT).show();
         }
     }
 }
