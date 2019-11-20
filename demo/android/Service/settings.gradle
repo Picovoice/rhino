@@ -1,0 +1,7 @@
+include ':app', ':rhino', ':rhinomanager', ':porcupine', ':porcupinemanager'
+rootProject.name='Service'
+
+project(':porcupinemanager').projectDir = new File(settingsDir, '../../../resources/porcupine/binding/android/PorcupineManager/app')
+project(':porcupine').projectDir = new File(settingsDir, '../../../resources/porcupine/binding/android/Porcupine/app')
+project(':rhinomanager').projectDir = new File(settingsDir, '../../../binding/android/RhinoManager/app')
+project(':rhino').projectDir = new File(settingsDir, '../../../binding/android/Rhino/app')
