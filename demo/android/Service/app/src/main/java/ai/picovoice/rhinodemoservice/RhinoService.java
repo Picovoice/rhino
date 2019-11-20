@@ -104,12 +104,11 @@ public class RhinoService extends Service {
                         if (isWakeWordDetected) {
                             contextText = "wake word detected. listening ...";
                         } else if (isUnderstood) {
-                            contextText = "intent : " + rhinoIntent.getIntent() + "\n";
+                            contextText = "intent : " + rhinoIntent.getIntent() + " - ";
                             final Map<String, String> slots = rhinoIntent.getSlots();
                             for (String key : slots.keySet()) {
-                                contextText = key + " : " + slots.get(key) + " - ";
+                                contextText += key + " : " + slots.get(key) + " - ";
                             }
-                            contextText += "\n";
                         } else {
                             contextText = "did not understand the command";
                         }
@@ -145,7 +144,9 @@ public class RhinoService extends Service {
     @Override
     public void onDestroy() {
         try {
-            audioRecorder.stop();
+            if (audioRecorder != null) {
+                audioRecorder.stop();
+            }
         } catch (InterruptedException e) {
             //
         }

@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void startService() {
         Intent serviceIntent = new Intent(this, RhinoService.class);
+        serviceIntent.putExtra("keywordFileName", "picovoice_android.ppn");
+        serviceIntent.putExtra("contextFileName", "coffee_maker_android.rhn");
         ContextCompat.startForegroundService(this, serviceIntent);
     }
 
