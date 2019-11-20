@@ -19,7 +19,7 @@ package ai.picovoice.rhinomanager;
 /**
  * Consumes (processes) audio in consecutive chunks (frames).
  */
-interface AudioConsumer {
+public interface AudioConsumer {
     /**
      * Consumes (processes) a frame of audio.
      *
