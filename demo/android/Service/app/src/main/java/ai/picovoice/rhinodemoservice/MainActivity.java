@@ -1,55 +1,95 @@
 package ai.picovoice.rhinodemoservice;
 
-import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity {
+    private ToggleButton startButton;
+
+    private boolean hasRecordPermission() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestRecordPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+        if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            startButton.toggle();
+        } else {
+            startService();
+        }
+    }
+
+    private void copyResourceFile(int resourceID, String filename) throws IOException {
+        Resources resources = getResources();
+        try (InputStream is = new BufferedInputStream(resources.openRawResource(resourceID), 256); OutputStream os = new BufferedOutputStream(openFileOutput(filename, Context.MODE_PRIVATE), 256)) {
+            int r;
+            while ((r = is.read()) != -1) {
+                os.write(r);
+            }
+            os.flush();
+        }
+    }
+
+    private void startService() {
+        Intent serviceIntent = new Intent(this, RhinoService.class);
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
+
+    private void stopService() {
+        Intent serviceIntent = new Intent(this, RhinoService.class);
+        stopService(serviceIntent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        try {
+            copyResourceFile(R.raw.porcupine_params, "porcupine_params.pv");
+            copyResourceFile(R.raw.rhino_params, "rhino_params.pv");
+            copyResourceFile(R.raw.coffee_maker_android, "coffee_maker_android.rhn");
+            copyResourceFile(R.raw.picovoice_android, "picovoice_android.ppn");
+        } catch (IOException e) {
+            Toast.makeText(this, "Failed to copy resource files.", Toast.LENGTH_SHORT).show();
         }
 
-        return super.onOptionsItemSelected(item);
+        startButton = findViewById(R.id.startButton);
+
+        startButton.setOnClickListener(v -> {
+            if (startButton.isChecked()) {
+                if (hasRecordPermission()) {
+                    startService();
+                } else {
+                    requestRecordPermission();
+                }
+            } else {
+                stopService();
+            }
+        });
     }
 }
