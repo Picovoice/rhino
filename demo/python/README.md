@@ -35,7 +35,7 @@ and Rhino context file. For example to run the same demo on a Linux box
 python demo/python/rhino_demo.py \
 --rhino_library_path ./lib/linux/x86_64/libpv_rhino.so \
 --rhino_model_file_path ./lib/common/rhino_params.pv \
---rhino_context_file_path ./resources/contexts/linux/music_player_linux.rhn \
+--rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn \
 --porcupine_library_path ./resources/porcupine/lib/linux/x86_64/libpv_porcupine.so \
 --porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
 --porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/linux/hey\ pico_linux.ppn
