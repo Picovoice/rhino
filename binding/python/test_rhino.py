@@ -96,7 +96,7 @@ class RhinoTestCase(unittest.TestCase):
             elif machine.startswith('arm'):
                 return cls._abs_path('lib/raspberry-pi/arm11/libpv_rhino.so')
         elif system == 'Windows':
-            return cls._abs_path('lib/windows/amd64/libpv_rhino.dll')
+            return cls._abs_path('lib\\windows\\amd64\\libpv_rhino.dll')
         else:
             raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
 
