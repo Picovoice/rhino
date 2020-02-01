@@ -1,3 +1,14 @@
+#
+# Copyright 2018 Picovoice Inc.
+#
+# You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+# file accompanying this source.
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+
 import os
 import platform
 import unittest
@@ -14,8 +25,8 @@ class RhinoTestCase(unittest.TestCase):
     def setUpClass(cls):
         cls.rhino = Rhino(
             library_path=cls._library_path(),
-            model_file_path=cls._abs_path('lib/common/rhino_params.pv'),
-            context_file_path=cls._context_file_path())
+            model_path=cls._abs_path('lib/common/rhino_params.pv'),
+            context_path=cls._context_file_path())
 
     @classmethod
     def tearDownClass(cls):
@@ -74,7 +85,7 @@ class RhinoTestCase(unittest.TestCase):
         self.assertFalse(self.rhino.is_understood(), "shouldn't be able to understand")
 
     def test_context_expressions(self):
-        self.assertIsInstance(self.rhino.context_expressions, str)
+        self.assertIsInstance(self.rhino.context_info, str)
 
     def test_version(self):
         self.assertIsInstance(self.rhino.version, str)

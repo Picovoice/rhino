@@ -116,7 +116,7 @@ class RhinoDemo(Thread):
 
             print()
             print('****************************** context ******************************')
-            print(rhino.context_expressions)
+            print(rhino.context_info)
             print('*********************************************************************')
             print()
 

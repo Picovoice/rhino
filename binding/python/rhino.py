@@ -1,17 +1,12 @@
 #
 # Copyright 2018 Picovoice Inc.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+# file accompanying this source.
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
 #
 
 import os
@@ -45,13 +40,13 @@ class Rhino(object):
     class CRhino(Structure):
         pass
 
-    def __init__(self, library_path, model_file_path, context_file_path, sensitivity=0.5):
+    def __init__(self, library_path, model_path, context_path, sensitivity=0.5):
         """
         Constructor.
 
         :param library_path: Absolute path to Rhino's dynamic library.
-        :param model_file_path: Absolute path to file containing model parameters.
-        :param context_file_path: Absolute path to file containing context parameters. A context represents the set of
+        :param model_path: Absolute path to file containing model parameters.
+        :param context_path: Absolute path to file containing context parameters. A context represents the set of
         expressions (commands), intents, and intent arguments (slots) within a domain of interest.
         :param sensitivity: Sensitivity for inference. It should be a floating-point number within [0, 1]. A higher
         sensitivity value results in fewer inference misses at the cost of potentially increasing the erroneous
@@ -63,11 +58,11 @@ class Rhino(object):
 
         library = cdll.LoadLibrary(library_path)
 
-        if not os.path.exists(model_file_path):
-            raise ValueError("couldn't find model file at '%s'" % model_file_path)
+        if not os.path.exists(model_path):
+            raise ValueError("couldn't find model file at '%s'" % model_path)
 
-        if not os.path.exists(context_file_path):
-            raise ValueError("couldn't find context file at '%s'" % context_file_path)
+        if not os.path.exists(context_path):
+            raise ValueError("couldn't find context file at '%s'" % context_path)
 
         init_func = library.pv_rhino_init
         init_func.argtypes = [c_char_p, c_char_p, c_float, POINTER(POINTER(self.CRhino))]
@@ -76,8 +71,8 @@ class Rhino(object):
         self._handle = POINTER(self.CRhino)()
 
         status = init_func(
-            model_file_path.encode('utf-8'),
-            context_file_path.encode('utf-8'),
+            model_path.encode('utf-8'),
+            context_path.encode('utf-8'),
             sensitivity,
             byref(self._handle))
         if status is not self.PicovoiceStatuses.SUCCESS:
@@ -107,6 +102,25 @@ class Rhino(object):
         self._reset_func = library.pv_rhino_reset
         self._reset_func.argtypes = [POINTER(self.CRhino)]
         self._reset_func.restype = self.PicovoiceStatuses
+
+        state_size_byte_func = library.pv_rhino_state_size_byte
+        state_size_byte_func.argtypes = [POINTER(self.CRhino), POINTER(c_int)]
+        state_size_byte_func.restype = self.PicovoiceStatuses
+
+        state_size_byte = c_int32()
+        status = state_size_byte_func(self._handle, byref(state_size_byte))
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('Initialization failed')
+
+        self._state = (c_byte * state_size_byte.value)()
+
+        self._get_state_func = library.pv_rhino_get_state
+        self._get_state_func.argtypes = [POINTER(self.CRhino), c_void_p]
+        self._get_state_func.restype = self.PicovoiceStatuses
+
+        self._set_state_func = library.pv_rhino_set_state
+        self._set_state_func.argtypes = [POINTER(self.CRhino), c_void_p]
+        self._set_state_func.restype = self.PicovoiceStatuses
 
         context_info_func = library.pv_rhino_context_info
         context_info_func.argtypes = [POINTER(self.CRhino), POINTER(c_char_p)]
@@ -211,7 +225,27 @@ class Rhino(object):
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('reset failed')
 
     @property
-    def context_expressions(self):
+    def get_state(self):
+        """Getter for the state."""
+
+        status = self._get_state_func(self._handle, self._state)
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('Getting state failed')
+
+        return self._state
+
+    def set_state(self, state):
+        """
+        Setter for the state.
+        :param state: Object's state
+        """
+
+        status = self._set_state_func(self._handle, state)
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('Setting state failed')
+
+    @property
+    def context_info(self):
         """
         Getter for expressions. Each expression maps a set of spoken phrases to an intent and possibly a number of slots
         (intent arguments).
