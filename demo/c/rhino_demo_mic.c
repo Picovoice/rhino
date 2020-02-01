@@ -9,12 +9,10 @@
     specific language governing permissions and limitations under the License.
 */
 
-
 #include <alsa/asoundlib.h>
 #include <dlfcn.h>
 #include <signal.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "pv_porcupine.h"
 #include "pv_rhino.h"
@@ -29,7 +27,8 @@ void interrupt_handler(int _) {
 int main(int argc, char *argv[]) {
     if (argc != 8) {
         fprintf(stderr,
-                "usage : %s rhino_library_path rhino_model_path rhino_context_path porcupine_library_path porcupine_model_path porcupine_keyword_file_path input_audio_device\n",
+                "usage : %s rhino_library_path rhino_model_path rhino_context_path porcupine_library_path "
+                "porcupine_model_path porcupine_keyword_path input_audio_device\n",
                 argv[0]);
         exit(1);
     }
@@ -41,7 +40,7 @@ int main(int argc, char *argv[]) {
     const char *rhino_context_path = argv[3];
     const char *porcupine_library_path = argv[4];
     const char *porcupine_model_path = argv[5];
-    const char *porcupine_keyword_file_path = argv[6];
+    const char *porcupine_keyword_path = argv[6];
     const char *input_audio_device = argv[7];
 
     void *rhino_library = dlopen(rhino_library_path, RTLD_NOW);
@@ -51,6 +50,18 @@ int main(int argc, char *argv[]) {
     }
 
     char *error;
+
+    const char *(*pv_status_to_string)(pv_status_t) = dlsym(rhino_library, "pv_status_to_string");
+    if ((error = dlerror()) != NULL) {
+        fprintf(stderr, "failed to load 'pv_status_to_string' with '%s'.\n", error);
+        exit(1);
+    }
+
+    int32_t (*pv_sample_rate)() = dlsym(rhino_library, "pv_sample_rate");
+    if ((error = dlerror()) != NULL) {
+        fprintf(stderr, "failed to load 'pv_sample_rate' with '%s'.\n", error);
+        exit(1);
+    }
 
     pv_status_t (*pv_rhino_init)(const char *, const char *, float, pv_rhino_t **);
     pv_rhino_init = dlsym(rhino_library, "pv_rhino_init");
@@ -117,19 +128,7 @@ int main(int argc, char *argv[]) {
 
     void *porcupine_library = dlopen(porcupine_library_path, RTLD_NOW);
     if (!porcupine_library) {
-        fprintf(stderr, "failed to load Porcupine's library.\n");
-        exit(1);
-    }
-
-    const char *(*pv_status_to_string)(pv_status_t) = dlsym(porcupine_library, "pv_status_to_string");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_status_to_string' with '%s'.\n", error);
-        exit(1);
-    }
-
-    int32_t (*pv_sample_rate)() = dlsym(porcupine_library, "pv_sample_rate");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_sample_rate' with '%s'.\n", error);
+        fprintf(stderr, "failed to open Porcupine's library.\n");
         exit(1);
     }
 
@@ -159,27 +158,18 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    const int32_t frame_length = pv_rhino_frame_length();
-    assert(pv_rhino_frame_length() == pv_porcupine_frame_length());
-
-    int16_t *pcm = malloc(sizeof(int16_t) * frame_length);
-    if (!pcm) {
-        printf("failed to allocate memory for audio buffer\n");
-        return 1;
+    pv_rhino_t *rhino;
+    pv_status_t status = pv_rhino_init(rhino_model_path, rhino_context_path, 0.5f, &rhino);
+    if (status != PV_STATUS_SUCCESS) {
+        fprintf(stderr, "'pv_rhino_init' failed with '%s'\n", pv_status_to_string(status));
+        exit(1);
     }
 
     pv_porcupine_t *porcupine;
     const float sensitivity = 0.5f;
-    pv_status_t status = pv_porcupine_init(porcupine_model_path, 1, &porcupine_keyword_file_path, &sensitivity, &porcupine);
+    status = pv_porcupine_init(porcupine_model_path, 1, &porcupine_keyword_path, &sensitivity, &porcupine);
     if (status != PV_STATUS_SUCCESS) {
         fprintf(stderr, "'pv_porcupine_init' failed with '%s'\n", pv_status_to_string(status));
-        exit(1);
-    }
-
-    pv_rhino_t *rhino;
-    status = pv_rhino_init(rhino_model_path, rhino_context_path, 0.5f, &rhino);
-    if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "'pv_rhino_init' failed with '%s'\n", pv_status_to_string(status));
         exit(1);
     }
 
@@ -241,8 +231,23 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    const int32_t frame_length = pv_rhino_frame_length();
+    if (pv_rhino_frame_length() != pv_porcupine_frame_length()) {
+        exit(1);
+    }
+
+    int16_t *pcm = malloc(sizeof(int16_t) * frame_length);
+    if (!pcm) {
+        printf("failed to allocate memory for audio buffer\n");
+        return 1;
+    }
+
     const char *context_info;
-    pv_rhino_context_info(rhino, &context_info);
+    status = pv_rhino_context_info(rhino, &context_info);
+    if (status != PV_STATUS_SUCCESS) {
+        fprintf(stderr, "'pv_rhino_context_info' failed with '%s'\n", pv_status_to_string(status));
+        exit(1);
+    }
     fprintf(stdout, "%s\n\n", context_info);
 
     bool is_wake_word_detected = false;
@@ -282,6 +287,7 @@ int main(int argc, char *argv[]) {
                     fprintf(stderr, "'pv_rhino_is_understood' failed with '%s'\n", pv_status_to_string(status));
                     exit(1);
                 }
+
                 if (is_understood) {
                     const char *intent;
                     int32_t num_slots;
@@ -301,11 +307,12 @@ int main(int argc, char *argv[]) {
 
                     status = pv_rhino_free_slots_and_values(rhino, slots, values);
                     if (status != PV_STATUS_SUCCESS) {
-                        fprintf(stderr, "'pv_rhino_free_slots_and_values' failed with '%s'\n", pv_status_to_string(status));
+                        fprintf(stderr, "'pv_rhino_free_slots_and_values' failed with '%s'\n",
+                                pv_status_to_string(status));
                         exit(1);
                     }
                 } else {
-                    fprintf(stdout, "failed to understand the intent\n");
+                    fprintf(stdout, "couldn't infer the intent\n");
                 }
 
                 status = pv_rhino_reset(rhino);
@@ -318,6 +325,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    free(pcm);
     snd_pcm_close(alsa_handle);
     pv_porcupine_delete(porcupine);
     pv_rhino_delete(rhino);

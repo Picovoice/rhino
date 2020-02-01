@@ -9,7 +9,6 @@
     specific language governing permissions and limitations under the License.
 */
 
-
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,11 +29,25 @@ int main(int argc, char *argv[]) {
 
     void *rhino_library = dlopen(library_path, RTLD_NOW);
     if (!rhino_library) {
-        fprintf(stderr,"failed to open library");
+        fprintf(stderr, "failed to open library");
         exit(1);
     }
 
     char *error;
+
+    const char *(*pv_status_to_string)(pv_status_t);
+    pv_status_to_string = dlsym(rhino_library, "pv_status_to_string");
+    if ((error = dlerror()) != NULL) {
+        fprintf(stderr, "failed to load 'pv_status_to_string' with '%s'.\n", error);
+        exit(1);
+    }
+
+    int32_t (*pv_sample_rate)();
+    pv_sample_rate = dlsym(rhino_library, "pv_sample_rate");
+    if ((error = dlerror()) != NULL) {
+        fprintf(stderr, "failed to load 'pv_sample_rate' with '%s'.\n", error);
+        exit(1);
+    }
 
     pv_status_t (*pv_rhino_init)(const char *, const char *, float, pv_rhino_t **);
     pv_rhino_init = dlsym(rhino_library, "pv_rhino_init");
@@ -85,22 +98,16 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    const char *(*pv_status_to_string)(pv_status_t) = dlsym(rhino_library, "pv_status_to_string");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_status_to_string' with '%s'.\n", error);
-        exit(1);
-    }
-
-    int32_t (*pv_sample_rate)();
-    pv_sample_rate = dlsym(rhino_library, "pv_sample_rate");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_sample_rate' with '%s'.\n", error);
+    pv_rhino_t *rhino;
+    pv_status_t status = pv_rhino_init(model_path, context_path, 0.5f, &rhino);
+    if (status != PV_STATUS_SUCCESS) {
+        fprintf(stderr, "'pv_rhino_init' failed with '%s'\n", pv_status_to_string(status));
         exit(1);
     }
 
     FILE *wav = fopen(wav_path, "rb");
     if (!wav) {
-        fprintf(stderr,"failed to open wav file\n");
+        fprintf(stderr, "failed to open wav file\n");
         exit(1);
     }
 
@@ -113,14 +120,7 @@ int main(int argc, char *argv[]) {
 
     int16_t *pcm = malloc(sizeof(int16_t) * frame_length);
     if (!pcm) {
-        fprintf(stderr,"failed to allocate memory for audio buffer\n");
-        exit(1);
-    }
-
-    pv_rhino_t *rhino;
-    pv_status_t status = pv_rhino_init(model_path, context_path, 0.5f, &rhino);
-    if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "'pv_rhino_init' failed with '%s'\n", pv_status_to_string(status));
+        fprintf(stderr, "failed to allocate memory for audio buffer\n");
         exit(1);
     }
 
@@ -153,22 +153,22 @@ int main(int argc, char *argv[]) {
                 const char **values;
                 status = pv_rhino_get_intent(rhino, &intent, &num_slots, &slots, &values);
                 if (status != PV_STATUS_SUCCESS) {
-                    fprintf(stderr,"'pv_rhino_get_intent' failed with '%s'\n", pv_status_to_string(status));
+                    fprintf(stderr, "'pv_rhino_get_intent' failed with '%s'\n", pv_status_to_string(status));
                     exit(1);
                 }
 
-                fprintf(stdout,"'%s'\n", intent);
+                fprintf(stdout, "intent : '%s'\n", intent);
                 for (int i = 0; i < num_slots; i++) {
                     fprintf(stdout, "'%s' : '%s'\n", slots[i], values[i]);
                 }
 
                 status = pv_rhino_free_slots_and_values(rhino, slots, values);
                 if (status != PV_STATUS_SUCCESS) {
-                    fprintf(stderr,"'pv_rhino_free_slots_and_values' failed with '%s'\n", pv_status_to_string(status));
+                    fprintf(stderr, "'pv_rhino_free_slots_and_values' failed with '%s'\n", pv_status_to_string(status));
                     exit(1);
                 }
             } else {
-                fprintf(stdout, "failed to understand intent\n");
+                fprintf(stdout, "couldn't infer the intent\n");
             }
 
             break;
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
     }
 
     const double real_time_factor = total_cpu_time_usec / total_processed_time_usec;
-    fprintf(stdout, "real time factor is : %.3f\n", real_time_factor);
+    fprintf(stdout, "real time factor : %.3f\n", real_time_factor);
 
     free(pcm);
     fclose(wav);
