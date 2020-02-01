@@ -1,17 +1,12 @@
 #
 # Copyright 2018 Picovoice Inc.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+# file accompanying this source.
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
 #
 
 import argparse
@@ -31,10 +26,11 @@ def _abs_path(rel_path):
 
 sys.path.append(_abs_path('binding/python'))
 sys.path.append(_abs_path('resources/porcupine/binding/python'))
-
+sys.path.append(_abs_path('resources/util/python'))
 
 from porcupine import Porcupine
 from rhino import Rhino
+from util import *
 
 
 class RhinoDemo(Thread):
@@ -111,8 +107,8 @@ class RhinoDemo(Thread):
 
             rhino = Rhino(
                 library_path=self._rhino_library_path,
-                model_file_path=self._rhino_model_file_path,
-                context_file_path=self._rhino_context_file_path)
+                model_path=self._rhino_model_file_path,
+                context_path=self._rhino_context_file_path)
 
             print()
             print('****************************** context ******************************')
@@ -197,20 +193,36 @@ class RhinoDemo(Thread):
         pa.terminate()
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--rhino_library_path', help="absolute path to Rhino's dynamic library")
+    parser.add_argument(
+        '--rhino_library_path',
+        default=RHINO_LIBRARY_PATH,
+        help="absolute path to Rhino's dynamic library")
 
-    parser.add_argument('--rhino_model_file_path', help="absolute path to Rhino's model file path")
+    parser.add_argument(
+        '--rhino_model_file_path',
+        default=RHINO_MODEL_FILE_PATH,
+        help="absolute path to Rhino's model file path")
 
+    parser.add_argument('--rhino_context', help='name for the context', choices=CONTEXTS)
     parser.add_argument('--rhino_context_file_path', help="absolute path to Rhino's context file", type=str)
 
-    parser.add_argument('--porcupine_library_path', help="absolute path to Porcupine's dynamic library")
+    parser.add_argument(
+        '--porcupine_library_path',
+        default=PORCUPINE_LIBRARY_PATH,
+        help="absolute path to Porcupine's dynamic library")
 
-    parser.add_argument('--porcupine_model_file_path', help="absolute path to Porcupine's model parameter file")
+    parser.add_argument(
+        '--porcupine_model_file_path',
+        default=PORCUPINE_MODEL_FILE_PATH,
+        help="absolute path to Porcupine's model parameter file")
 
-    parser.add_argument('--porcupine_keyword_file_path', help='absolute path to porcupine keyword file', type=str)
+    parser.add_argument(
+        '--porcupine_keyword_file_path',
+        default=KEYWORD_FILE_PATHS['picovoice'],
+        help='absolute path to porcupine keyword file')
 
     parser.add_argument('--porcupine_sensitivity', help="Porcupine's detection sensitivity [0, 1]", default=0.5)
 
@@ -229,13 +241,24 @@ if __name__ == '__main__':
     if args.show_audio_devices_info:
         RhinoDemo.show_audio_devices_info()
     else:
+        if args.rhino_context_file_path is None:
+            if args.rhino_context is None:
+                raise ValueError('either --rhino_context or --rhino_context_file_path must be set')
+            context_file_path = CONTEXT_FILE_PATHS[args.rhino_context]
+        else:
+            context_file_path = args.rhino_context_file_path
+
         RhinoDemo(
             rhino_library_path=args.rhino_library_path,
             rhino_model_file_path=args.rhino_model_file_path,
-            rhino_context_file_path=args.rhino_context_file_path,
+            rhino_context_file_path=context_file_path,
             porcupine_library_path=args.porcupine_library_path,
             porcupine_model_file_path=args.porcupine_model_file_path,
             porcupine_keyword_file_path=args.porcupine_keyword_file_path,
             porcupine_sensitivity=args.porcupine_sensitivity,
             input_device_index=args.input_audio_device_index,
             output_path=args.output_path).run()
+
+
+if __name__ == '__main__':
+    main()

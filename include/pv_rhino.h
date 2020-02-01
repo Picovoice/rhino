@@ -126,36 +126,6 @@ PV_API pv_status_t pv_rhino_free_slots_and_values(const pv_rhino_t *object, cons
 PV_API pv_status_t pv_rhino_reset(pv_rhino_t *object);
 
 /**
- * Getter for the size of the state. The state contains information about the acoustic environment and can be retrieved
- * using 'pv_rhino_get_state()' or set by calling 'pv_rhino_set_state()'. State transfer is recommended when using Rhino
- * along with Picovoice's wake word engine (Porcupine).
- *
- * @param object Speech-to-Intent object.
- * @param state_size State size in bytes.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
- */
-PV_API pv_status_t pv_rhino_state_size_byte(const pv_rhino_t *object, int32_t *state_size);
-
-/**
- * Getter for the state.
- *
- * @param object Speech-to-Intent object.
- * @param state Buffer for saving the state. The memory needs to be pre-allocated by the caller. The required size can
- * be retrieved by calling 'pv_rhino_state_size_byte()'.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
- */
-PV_API pv_status_t pv_rhino_get_state(const pv_rhino_t *object, void *state);
-
-/**
- * Setter for the state.
- *
- * @param object Speech-to-Intent object.
- * @param state Object's state.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' on failure.
- */
-PV_API pv_status_t pv_rhino_set_state(pv_rhino_t *object, const void *state);
-
-/**
  * Getter for context information.
  *
  * @param object Speech-to-Intent object.

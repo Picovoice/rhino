@@ -103,25 +103,6 @@ class Rhino(object):
         self._reset_func.argtypes = [POINTER(self.CRhino)]
         self._reset_func.restype = self.PicovoiceStatuses
 
-        state_size_byte_func = library.pv_rhino_state_size_byte
-        state_size_byte_func.argtypes = [POINTER(self.CRhino), POINTER(c_int)]
-        state_size_byte_func.restype = self.PicovoiceStatuses
-
-        state_size_byte = c_int32()
-        status = state_size_byte_func(self._handle, byref(state_size_byte))
-        if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('Initialization failed')
-
-        self._state = (c_byte * state_size_byte.value)()
-
-        self._get_state_func = library.pv_rhino_get_state
-        self._get_state_func.argtypes = [POINTER(self.CRhino), c_void_p]
-        self._get_state_func.restype = self.PicovoiceStatuses
-
-        self._set_state_func = library.pv_rhino_set_state
-        self._set_state_func.argtypes = [POINTER(self.CRhino), c_void_p]
-        self._set_state_func.restype = self.PicovoiceStatuses
-
         context_info_func = library.pv_rhino_context_info
         context_info_func.argtypes = [POINTER(self.CRhino), POINTER(c_char_p)]
         context_info_func.restype = self.PicovoiceStatuses
@@ -223,26 +204,6 @@ class Rhino(object):
         status = self._reset_func(self._handle)
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('reset failed')
-
-    @property
-    def get_state(self):
-        """Getter for the state."""
-
-        status = self._get_state_func(self._handle, self._state)
-        if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('Getting state failed')
-
-        return self._state
-
-    def set_state(self, state):
-        """
-        Setter for the state.
-        :param state: Object's state
-        """
-
-        status = self._set_state_func(self._handle, state)
-        if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('Setting state failed')
 
     @property
     def context_info(self):

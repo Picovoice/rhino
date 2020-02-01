@@ -10,12 +10,16 @@
 #
 
 import os
-import platform
+import sys
 import unittest
 
 import soundfile
 
 from rhino import Rhino
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
+
+from util import *
 
 
 class RhinoTestCase(unittest.TestCase):
@@ -24,9 +28,9 @@ class RhinoTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.rhino = Rhino(
-            library_path=cls._library_path(),
-            model_path=cls._abs_path('lib/common/rhino_params.pv'),
-            context_path=cls._context_file_path())
+            library_path=RHINO_LIBRARY_PATH,
+            model_path=RHINO_MODEL_FILE_PATH,
+            context_path=CONTEXT_FILE_PATHS['coffee_maker'])
 
     @classmethod
     def tearDownClass(cls):
@@ -68,7 +72,7 @@ class RhinoTestCase(unittest.TestCase):
 
     def test_out_of_context(self):
         audio, sample_rate =\
-            soundfile.read( self._abs_path('resources/audio_samples/test_out_of_context.wav'), dtype='int16')
+            soundfile.read(self._abs_path('resources/audio_samples/test_out_of_context.wav'), dtype='int16')
         assert sample_rate == self.rhino.sample_rate
 
         num_frames = len(audio) // self.rhino.frame_length
@@ -93,40 +97,6 @@ class RhinoTestCase(unittest.TestCase):
     @staticmethod
     def _abs_path(rel_path):
         return os.path.join(os.path.dirname(__file__), '../..', rel_path)
-
-    @classmethod
-    def _library_path(cls):
-        system = platform.system()
-        machine = platform.machine()
-
-        if system == 'Darwin':
-            return cls._abs_path('lib/mac/x86_64/libpv_rhino.dylib')
-        elif system == 'Linux':
-            if machine == 'x86_64':
-                return cls._abs_path('lib/linux/x86_64/libpv_rhino.so')
-            elif machine.startswith('arm'):
-                return cls._abs_path('lib/raspberry-pi/arm11/libpv_rhino.so')
-        elif system == 'Windows':
-            return cls._abs_path('lib\\windows\\amd64\\libpv_rhino.dll')
-        else:
-            raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
-
-    @classmethod
-    def _context_file_path(cls):
-        system = platform.system()
-        machine = platform.machine()
-
-        if system == 'Darwin':
-            return cls._abs_path('resources/contexts/mac/coffee_maker_mac.rhn')
-        elif system == 'Linux':
-            if machine == 'x86_64':
-                return cls._abs_path('resources/contexts/linux/coffee_maker_linux.rhn')
-            elif machine.startswith('arm'):
-                return cls._abs_path('resources/contexts/raspberrypi/coffee_maker_raspberrypi.rhn')
-        elif system == 'Windows':
-            return cls._abs_path('resources/contexts/windows/coffee_maker_windows.rhn')
-        else:
-            raise NotImplementedError('Rhino is not supported on %s/%s yet!' % (system, machine))
 
 
 if __name__ == '__main__':
