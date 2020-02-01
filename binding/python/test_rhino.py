@@ -14,7 +14,6 @@ import sys
 import unittest
 
 import soundfile
-
 from rhino import Rhino
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
@@ -41,7 +40,7 @@ class RhinoTestCase(unittest.TestCase):
         self.rhino.reset()
 
     def test_within_context(self):
-        audio, sample_rate =\
+        audio, sample_rate = \
             soundfile.read(self._abs_path('resources/audio_samples/test_within_context.wav'), dtype='int16')
         assert sample_rate == self.rhino.sample_rate
 
@@ -71,7 +70,7 @@ class RhinoTestCase(unittest.TestCase):
         self.assertEqual(slot_values, expected_slot_values, "incorrect slot values")
 
     def test_out_of_context(self):
-        audio, sample_rate =\
+        audio, sample_rate = \
             soundfile.read(self._abs_path('resources/audio_samples/test_out_of_context.wav'), dtype='int16')
         assert sample_rate == self.rhino.sample_rate
 
@@ -88,7 +87,7 @@ class RhinoTestCase(unittest.TestCase):
 
         self.assertFalse(self.rhino.is_understood(), "shouldn't be able to understand")
 
-    def test_context_expressions(self):
+    def test_context_info(self):
         self.assertIsInstance(self.rhino.context_info, str)
 
     def test_version(self):
