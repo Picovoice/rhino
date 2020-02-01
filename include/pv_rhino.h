@@ -127,8 +127,8 @@ PV_API pv_status_t pv_rhino_reset(pv_rhino_t *object);
 
 /**
  * Getter for the size of the state. The state contains information about the acoustic environment and can be retrieved
- * using 'pv_rhino_get_state()' or set by calling 'pv_rhino_set_state()'. State transfer is recommended when
- * using Rhino along with Picovoice's wake word engine (Porcupine).
+ * using 'pv_rhino_get_state()' or set by calling 'pv_rhino_set_state()'. State transfer is recommended when using Rhino
+ * along with Picovoice's wake word engine (Porcupine).
  *
  * @param object Speech-to-Intent object.
  * @param state_size State size in bytes.
@@ -176,7 +176,7 @@ PV_API const char *pv_rhino_version(void);
  *
  * @return Frame length.
  */
-PV_API int pv_rhino_frame_length(void);
+PV_API int32_t pv_rhino_frame_length(void);
 
 #ifdef __cplusplus
 
