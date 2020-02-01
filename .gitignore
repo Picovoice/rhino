@@ -1,7 +1,5 @@
 .DS_Store
 .idea/
-binding/python/__pycache__/
-binding/python/*.pyc
-resources/porcupine/binding/python/__pycache__/
+*.pyc
+__pycache__
 demo/c/rhino_demo
-
