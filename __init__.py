@@ -25,7 +25,7 @@ def create(library_path=None, model_path=None, context_path=None, context=None):
             raise ValueError("'context' or 'context_path' must be set")
         if context not in CONTEXTS:
             raise ValueError(
-                "context '%s' is not available by default. default contexts are :\n%s" % (context, ', '.join(KEYWORDS)))
+                "context '%s' is not available by default. default contexts are :\n%s" % (context, ', '.join(CONTEXTS)))
         context_path = CONTEXT_FILE_PATHS[context]
 
     return Rhino(

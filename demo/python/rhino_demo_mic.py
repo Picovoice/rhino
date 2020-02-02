@@ -48,7 +48,6 @@ class RhinoDemo(Thread):
             porcupine_library_path,
             porcupine_model_file_path,
             porcupine_keyword_file_path,
-            porcupine_sensitivity,
             input_device_index=None,
             output_path=None):
         """
@@ -60,7 +59,6 @@ class RhinoDemo(Thread):
         :param porcupine_library_path: Absolute path to Porcupine's dynamic library.
         :param porcupine_model_file_path: Absolute path to Porcupine's model parameter file.
         :param porcupine_keyword_file_path: Absolute path to Porcupine's keyword file for wake phrase.
-        :param porcupine_sensitivity: Porcupine's detection sensitivity.
         :param input_device_index: Optional argument. If provided, audio is recorded from this input device. Otherwise,
         the default audio input device is used.
         :param output_path: If provided recorded audio will be stored in this location at the end of the run.
@@ -75,13 +73,12 @@ class RhinoDemo(Thread):
         self._porcupine_library_path = porcupine_library_path
         self._porcupine_model_file_path = porcupine_model_file_path
         self._porcupine_keyword_file_path = porcupine_keyword_file_path
-        self._porcupine_sensitivity = porcupine_sensitivity
 
         self._input_device_index = input_device_index
 
         self._output_path = output_path
         if self._output_path is not None:
-            self._recorded_frames = []
+            self._recorded_frames = list()
 
     def run(self):
         """
@@ -103,7 +100,7 @@ class RhinoDemo(Thread):
                 library_path=self._porcupine_library_path,
                 model_file_path=self._porcupine_model_file_path,
                 keyword_file_paths=[self._porcupine_keyword_file_path],
-                sensitivities=[self._porcupine_sensitivity])
+                sensitivities=[0.5])
 
             rhino = Rhino(
                 library_path=self._rhino_library_path,
@@ -206,7 +203,6 @@ def main():
         default=RHINO_MODEL_FILE_PATH,
         help="absolute path to Rhino's model file path")
 
-    parser.add_argument('--rhino_context', help='name for the context', choices=CONTEXTS)
     parser.add_argument('--rhino_context_file_path', help="absolute path to Rhino's context file", type=str)
 
     parser.add_argument(
@@ -224,9 +220,11 @@ def main():
         default=KEYWORD_FILE_PATHS['picovoice'],
         help='absolute path to porcupine keyword file')
 
-    parser.add_argument('--porcupine_sensitivity', help="Porcupine's detection sensitivity [0, 1]", default=0.5)
-
-    parser.add_argument('--input_audio_device_index', help='index of input audio device', type=int, default=None)
+    parser.add_argument(
+        '--input_audio_device_index',
+        help='index of input audio device',
+        type=int,
+        default=None)
 
     parser.add_argument(
         '--output_path',
@@ -241,21 +239,13 @@ def main():
     if args.show_audio_devices_info:
         RhinoDemo.show_audio_devices_info()
     else:
-        if args.rhino_context_file_path is None:
-            if args.rhino_context is None:
-                raise ValueError('either --rhino_context or --rhino_context_file_path must be set')
-            context_file_path = CONTEXT_FILE_PATHS[args.rhino_context]
-        else:
-            context_file_path = args.rhino_context_file_path
-
         RhinoDemo(
             rhino_library_path=args.rhino_library_path,
             rhino_model_file_path=args.rhino_model_file_path,
-            rhino_context_file_path=context_file_path,
+            rhino_context_file_path=args.rhino_context_file_path,
             porcupine_library_path=args.porcupine_library_path,
             porcupine_model_file_path=args.porcupine_model_file_path,
             porcupine_keyword_file_path=args.porcupine_keyword_file_path,
-            porcupine_sensitivity=args.porcupine_sensitivity,
             input_device_index=args.input_audio_device_index,
             output_path=args.output_path).run()
 

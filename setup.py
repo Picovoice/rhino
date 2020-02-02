@@ -54,7 +54,7 @@ setuptools.setup(
     version="1.3.0",
     author="Picovoice",
     author_email="hello@picovoice.ai",
-    description="On-device speech-to-text engine powered by deep learning.",
+    description="On-device speech-to-intent engine powered by deep learning.",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     url="https://github.com/Picovoice/rhino",

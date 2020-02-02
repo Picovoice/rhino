@@ -135,10 +135,10 @@ class Rhino(object):
     def process(self, pcm):
         """
         Processes a frame of audio and emits a flag indicating if intent inference is finalized. When finalized,
-        'self.is_understood()' should be called to check if the spoken command is considered valid.
+        '.is_understood()' should be called to check if the spoken command is considered valid.
 
         :param pcm: A frame of audio samples. The number of samples per frame can be attained by calling
-        'self.frame_length'. The incoming audio needs to have a sample rate equal to 'self.sample_rate' and be 16-bit
+        '.frame_length'. The incoming audio needs to have a sample rate equal to '.sample_rate' and be 16-bit
         linearly-encoded. Furthermore, Rhino operates on single channel audio.
 
         :return: Flag indicating if intent inference is finalized.
@@ -171,7 +171,7 @@ class Rhino(object):
         """
          Getter for the intent. The intent is presented as an intent string and a dictionary mapping slots to their
          values. It should be called only after intent extraction is finalized and it is verified that the spoken
-         command is understood via calling 'self.is_understood()'.
+         command is understood via calling '.is_understood()'.
 
         :return: Tuple of intent string and slot/value dictionary.
         """

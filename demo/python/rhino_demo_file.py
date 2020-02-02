@@ -23,37 +23,39 @@ def _abs_path(rel_path):
 sys.path.append(_abs_path('binding/python'))
 sys.path.append(_abs_path('resources/util/python'))
 
-
 from rhino import Rhino
 from util import *
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_audio_file_path', help='Absolute path to input audio file', required=True)
 
-    parser.add_argument('--library_path', help="absolute path to Porcupine's dynamic library", default=RHINO_LIBRARY_PATH)
+    parser.add_argument(
+        '--input_audio_file_path',
+        help='absolute path to input audio file',
+        required=True)
 
-    parser.add_argument('--model_file_path', help='absolute path to model parameter file', default=RHINO_MODEL_FILE_PATH)
+    parser.add_argument(
+        '--context_file_path',
+        help="absolute path to Rhino's context file",
+        required=True)
 
-    parser.add_argument('--rhino_context', help='name for the context', choices=CONTEXTS)
-    parser.add_argument('--rhino_context_file_path', help="absolute path to Rhino's context file", type=str)
+    parser.add_argument(
+        '--library_path',
+        help="absolute path to dynamic library",
+        default=RHINO_LIBRARY_PATH)
 
-    parser.add_argument('--sensitivity', help='detection sensitivity [0, 1]', default=0.5)
+    parser.add_argument(
+        '--model_file_path',
+        help='absolute path to model parameter file',
+        default=RHINO_MODEL_FILE_PATH)
 
     args = parser.parse_args()
-
-    if args.rhino_context_file_path is None:
-        if args.rhino_context is None:
-            raise ValueError('either --rhino_context or --rhino_context_file_path must be set')
-        context_file_path = CONTEXT_FILE_PATHS[args.rhino_context]
-    else:
-        context_file_path = args.rhino_context_file_path
 
     rhino = Rhino(
         library_path=args.library_path,
         model_path=args.model_file_path,
-        context_path=context_file_path)
+        context_path=args.context_file_path)
 
     audio, sample_rate = soundfile.read(args.input_audio_file_path, dtype='int16')
     assert sample_rate == rhino.sample_rate
@@ -61,16 +63,14 @@ def main():
     num_frames = len(audio) // rhino.frame_length
     for i in range(num_frames):
         frame = audio[i * rhino.frame_length:(i + 1) * rhino.frame_length]
-        intent_extraction_is_finalized = rhino.process(frame)
-        if intent_extraction_is_finalized:
+        is_finalized = rhino.process(frame)
+        if is_finalized:
             if rhino.is_understood():
                 intent, slot_values = rhino.get_intent()
                 print()
-                print('intent: %s' % intent)
-                print('---')
+                print('intent : %s' % intent)
                 for slot, value in slot_values.items():
                     print('%s: %s' % (slot, value))
-                print()
             else:
                 print("didn't understand the command")
             break
