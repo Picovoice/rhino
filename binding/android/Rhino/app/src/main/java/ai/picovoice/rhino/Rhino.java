@@ -1,18 +1,12 @@
 /*
- * Copyright 2018 Picovoice Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+    Copyright 2018 Picovoice Inc.
+    You may not use this file except in compliance with the license. A copy of the license is
+    located in the "LICENSE" file accompanying this source.
+    Unless required by applicable law or agreed to in writing, software distributed under the
+    License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+    express or implied. See the License for the specific language governing permissions and
+    limitations under the License.
+*/
 
 
 package ai.picovoice.rhino;
@@ -21,9 +15,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Binding for Picovoice's speech-to-intent engine (aka Rhino). The object directly infers intent
- * from speech commands within a given context of interest in real-time. It processes incoming audio
- * in consecutive frames (chunks) and at the end of each frame indicates if the intent extraction is
+ * Binding for Picovoice's Speech-to-Intent engine (Rhino). The engine directly infers intent
+ * from spoken commands within a given domain of interest in real-time. It processes incoming audio
+ * in consecutive frames (chunks) and at the end of each frame indicates if the intent inference is
  * finalized. When finalized, the intent can be retrieved as structured data in form of an intent
  * string and pairs of slots and values representing arguments (details) of intent. The number of
  * samples per frame can be attained by calling {@link #frameLength()}. The incoming audio needs to
@@ -152,7 +146,7 @@ public class Rhino {
      * @return Expressions.
      * @throws RhinoException On failure.
      */
-    public String getContextExpressions() throws RhinoException {
+    public String getContextInformation() throws RhinoException {
         try {
             return contextExpressions(object);
         } catch (Exception e) {
