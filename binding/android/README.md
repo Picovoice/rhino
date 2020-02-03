@@ -6,4 +6,4 @@ pipelines.
 # RhinoManager
 
 Provides a high-level API that takes care of audio recording as well. For example usage refer to
-[Activity demo](/demo/android/RhinoDemo) or [Service demo](/demo/android/Service).
+[Activity demo](/demo/android/Activity) or [Service demo](/demo/android/Service).

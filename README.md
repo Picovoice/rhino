@@ -159,8 +159,9 @@ In above command replace `${SYSTEM}` with your platform name (e.g. linux, mac, r
 
 ### Android Demos
 
-Using Android Studio, open [demo/android](/demo/android) as an Android project and then run the application. Note that
-you will need an Android phone (with developer options enabled) connected to your machine.
+Using Android Studio, open [demo/android/Activity](/demo/android/Activity) as an Android project and then run the
+application. Note that you will need an Android phone (with developer options enabled) connected to your machine. After
+pressing the start button you can issue commands such as "turn off the lights" or "set the lights in the living room to purple".
 
 ### iOS Demos
 

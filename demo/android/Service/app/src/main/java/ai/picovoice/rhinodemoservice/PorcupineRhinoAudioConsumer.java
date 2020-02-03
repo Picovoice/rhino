@@ -1,3 +1,13 @@
+/*
+    Copyright 2018 Picovoice Inc.
+    You may not use this file except in compliance with the license. A copy of the license is
+    located in the "LICENSE" file accompanying this source.
+    Unless required by applicable law or agreed to in writing, software distributed under the
+    License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+    express or implied. See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
 package ai.picovoice.rhinodemoservice;
 
 import ai.picovoice.porcupine.Porcupine;
@@ -13,7 +23,7 @@ public class PorcupineRhinoAudioConsumer implements AudioConsumer {
     private final PorcupineRhinoCallback callback;
     private boolean isWakeWordDetected;
 
-    public PorcupineRhinoAudioConsumer(
+    PorcupineRhinoAudioConsumer(
             String porcupineModelFilePath,
             String porcupineKeywordFilePath,
             String rhinoModelFilePath,
@@ -33,7 +43,7 @@ public class PorcupineRhinoAudioConsumer implements AudioConsumer {
     @Override
     public void consume(short[] pcm) throws Exception {
         if (!isWakeWordDetected) {
-            isWakeWordDetected = porcupine.processFrame(pcm);
+            isWakeWordDetected = porcupine.process(pcm) == 0;
             if (isWakeWordDetected) {
                 callback.run(true, false, null);
             }
