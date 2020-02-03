@@ -5,8 +5,8 @@
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
-interest, in real-time. For example, given a speech command *"Can I have a small double-shot espresso with a lot of sugar
- and some milk"*, Rhino infers that the user wants to *order a drink* with these specifications:
+interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso with a lot of sugar
+ and some milk"*, Rhino infers that the user wants to *"order a drink"* with these specifications:
 
 ```json
 {
@@ -20,27 +20,12 @@ interest, in real-time. For example, given a speech command *"Can I have a small
 
 Rhino is:
 
-* Intuitive. It allows users to utter their intention in a natural and conversational fashion.
-* Using deep neural networks trained in **real-world situations**.
-* Compact and computationally-efficient, making it suitable for **IoT** applications. It can run with as little as 90 KB of
-RAM on an MCU.
-* Cross-platform. It is implemented in fixed-point ANSI C. Currently **Raspberry Pi**, **BeagleBone**, **Android**,
-**iOS**, **Linux**, **macOS**, **Windows**, and **web browsers** (**WebAssembly**) are supported. Additionally, support for
-various **ARM Cortex-A**, **ARM Cortex-M** (M4/M7) and **DSP cores** is available for commercial customers.
-* Customizable. It can be customized for any given domain.
-
-[![Rhino in Action](https://img.youtube.com/vi/WadKhfLyqTQ/0.jpg)](https://www.youtube.com/watch?v=WadKhfLyqTQ)
-
-## Picovoice Console
-
-Announcing [Picovoice Console](https://console.picovoice.ai) support for Rhino. You can now use the Picovoice Console to create Speech-to-Intent contexts, add intents, and train them into Rhino models. The Console is a web-based platform for
-building voice applications. You can sign up for an account with your email address or with your GitHub account.
-
-Intents are made up of a collection of expressions, written in the "Rhino Expression Language", a straightforward way of embedding features like optional phrasing and slots to match user intent and record variables from their utterances.
-
-Pronunciation of phrases is detected as you edit, with no need to submit the file for processing to discover missing words. As with Porcupine, a missing pronunciation can typically be addressed for commercial customers.
-
-Models generated with the Picovoice Console may be used for evaluation and non-commerical use only. To use Rhino in a commercial setting, [contact the Picovoice team](https://picovoice.ai/contact.html).
+* using deep neural networks trained in **real-world environments.
+* Compact and computationally-efficient, making it perfect for IoT.
+* cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (all variants), Beagle Bone, Android, iOS,
+Linux (x86_64), Mac (x86_64), Windows (x86_64), and web browsers are supported. Furthermore, Support for various ARM
+Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for enterprise customers.
+* self-service. Developer UX designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Table of Contents
 * [License](#license)
@@ -69,16 +54,36 @@ Models generated with the Picovoice Console may be used for evaluation and non-c
 
 ## License
 
-Everything in this repository is licensed under Apache 2.0 including the contexts available under
-[resources/contexts](/resources/contexts).
+This repository is licensed under Apache 2.0 which allows running the engine on all supported platforms
+(except microcontrollers) using a set of freely-available [models](/resources/contexts). You may create custom models
+using [Picovoice Console](https://console.picovoice.ai/) for **non-commercial and personal use** free of charge. The 
+free-tier only allows model training for x86_64 (Linux, Mac, and Windows).
 
-Custom contexts are only provided with the purchase of the commercial license. To enquire about commercial
-licensing, [contact us](https://picovoice.ai/contact.html).
+Custom models for other platforms are only provided with the purchase of the Picovoice enterprise license. To enquire
+about the Picovoice development and commercial license terms and fees, [contact us](https://picovoice.ai/contact.html).
 
 ## Try It Out
 
-Try out Rhino using its [interactive web demo](https://picovoice.ai/products/rhino.html). You need a working
-microphone.
+* [Interactive Web Demo](https://picovoice.ai/products/rhino.html)
+
+* [Picovoice Console](https://console.picovoice.ai/)
+
+![Picovoice Console](resources/doc/picovoice-console-rhino.gif)
+
+* Rhino and [Porcupine](https://github.com/Picovoice/porcupine) on an ARM Cortex-M4
+
+[![Porcupine in Action](https://img.youtube.com/vi/T0tAnh8tUQg/0.jpg)](https://www.youtube.com/watch?v=T0tAnh8tUQg)
+
+## Picovoice Console
+
+Announcing [Picovoice Console](https://console.picovoice.ai) support for Rhino. You can now use the Picovoice Console to create Speech-to-Intent contexts, add intents, and train them into Rhino models. The Console is a web-based platform for
+building voice applications. You can sign up for an account with your email address or with your GitHub account.
+
+Intents are made up of a collection of expressions, written in the "Rhino Expression Language", a straightforward way of embedding features like optional phrasing and slots to match user intent and record variables from their utterances.
+
+Pronunciation of phrases is detected as you edit, with no need to submit the file for processing to discover missing words. As with Porcupine, a missing pronunciation can typically be addressed for commercial customers.
+
+Models generated with the Picovoice Console may be used for evaluation and non-commerical use only. To use Rhino in a commercial setting, [contact the Picovoice team](https://picovoice.ai/contact.html).
 
 ## Performance
 
