@@ -32,10 +32,7 @@ Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for ente
 * [Try It Out](#try-it-out)
 * [Performance](#performance)
 * [Terminology](#terminology)
-    * [Context](#context)
-    * [Expression](#expression)
-    * [Intent](#intent)
-    * [Slot](#slot)
+* [Picovoice Console](#picovoice-console)
 * [Structure of Repository](#structure-of-repository)
 * [Running Demo Applications](#running-demo-applications)
     * [Python](#python-demos)
@@ -74,68 +71,72 @@ about the Picovoice development and commercial license terms and fees, [contact 
 
 [![Porcupine in Action](https://img.youtube.com/vi/T0tAnh8tUQg/0.jpg)](https://www.youtube.com/watch?v=T0tAnh8tUQg)
 
-## Picovoice Console
-
-Announcing [Picovoice Console](https://console.picovoice.ai) support for Rhino. You can now use the Picovoice Console to create Speech-to-Intent contexts, add intents, and train them into Rhino models. The Console is a web-based platform for
-building voice applications. You can sign up for an account with your email address or with your GitHub account.
-
-Intents are made up of a collection of expressions, written in the "Rhino Expression Language", a straightforward way of embedding features like optional phrasing and slots to match user intent and record variables from their utterances.
-
-Pronunciation of phrases is detected as you edit, with no need to submit the file for processing to discover missing words. As with Porcupine, a missing pronunciation can typically be addressed for commercial customers.
-
-Models generated with the Picovoice Console may be used for evaluation and non-commerical use only. To use Rhino in a commercial setting, [contact the Picovoice team](https://picovoice.ai/contact.html).
-
 ## Performance
 
-This table shows the average CPU usage on two different platforms: Raspberry Pi Zero and Raspberry Pi 3. You can
-recreate this using the [C demo application](/demo/c).
-
-Raspberry Pi Zero | Raspberry Pi 3
-:---: | :---:
-46.4% | 7.2%
+A comparison between the accuracy of Rhino and [Google's Dialogflow](https://dialogflow.com/) is provided
+[here](https://github.com/Picovoice/speech-to-intent-benchmark). **Across different noisy environments Rhino is 96%
+accurate while Dialogflow is only 75% accurate**. Additionally, Rhino can run fully on-device on a Raspberry Pi 3 with
+7% CPU usage while Dialogflow needs a cloud connection.
 
 ## Terminology
 
-### Context
+Rhino infers user's intent from spoken commands within a *domain of interest*. We refer to such *specialized domain* as
+context. Below we explain how to create a context for your use case (e.g. robot control, washing machine) and introduce
+a few formal definitions. 
 
-A context defines the set of spoken commands that users of the application might say. Additionally, it maps each spoken
-command to users' intent. For example, when building a smart lighting system:
+In simplest form context can be thought of a set of spoken commands each mapped to an intent:
 
-* Turn off the lights
-* Make the bedroom light darker
-* Set the lights in the living room to purple
+* makeCoffee : Make me a large coffee with longs of soy milk.
+* TurnLightsOff : Turn off the lights in the office.
+* callNumber : call 604 123 9876.
 
-### Expression
+In examples above the sentences (voice commands) on the right hand side are called expression. Each expression is what
+we expect the user to utter within interaction with the application.
 
-A context is made of a collection of spoken commands mapped to the user's intent. An expression is an entity that defines
-a mapping between a (or a set of) spoken commands and its (their) corresponding intent. For example:
+Consider the expression "Make me a large coffee with longs of soy milk". What we require from Rhino is the intent "makeCoffee" and
+also the details of the command such as the size of the drink and where the customer would want any milk and how much. We can capture these
+details via slots as below:
 
-* {turnCommand} the lights -> {turnIntent}
-* Make the {location} light {intensityChange} -> {changeIntensityIntent}
-* Set the lights in the {location} to {color} -> {setColorIntent}
+Make me a $size:coffeeSize $coffeeDrink:coffeeDrink with $amount:milkAmount milk.
 
-The tokens within curly braces represent variables in spoken commands. They are either the user's intent (e.g. turnIntent)
-or can be intent's details (e.g. location).
+$size:coffeeSize means that we expect a variable of type `size` to occur and we want to capture its value in a variable named `coffeeSize`.
+Slots gives us the ability to capture details of the spoken commands and then use them. Furthermore there are possibly many
+more ways of ordering coffee such as 
 
-### Intent
+* I want a $size:coffeeSize $coffeeDrink:coffeeDrink with $amount:milkAmount milk.
+* Please make me a $size:coffeeSize $coffeeDrink:coffeeDrink with $amount:milkAmount milk.
 
-An intent represents what a user wants to accomplish with a spoken command. For example, the intent of the phrase
-"*Set the lights in the living room to purple*" is to set the color of lights. In order to take action based on this,
-we might need to have more information such as which light or what is the desired color.
+These variations can be capture using shorthands as below
 
-### Slot
+(please) [I want, Make me] a $size:coffeeSize $coffeeDrink:coffeeDrink with $amount:milkAmount milk.
 
-A slot represents the details of the user's intent. For example, the phrase
-"*Set the lights in the living room to purple*" has slots for location (living room)
-and color (purple).
+() encompass optional parts of the commands and [] can be though of logical OR.
+
+In practice all above is designed using Picovoice Console. Read below.
+
+## Picovoice Console
+
+[Picovoice Console](https://console.picovoice.ai) enables creating Speech-to-Intent contexts and training Rhino models.
+The Console is a web-based platform for building voice applications.
 
 ## Structure of Repository
 
+If using SSH clone the repository by
+
+```bash
+git clone --recurse-submodules git@github.com:Picovoice/rhino.git
+```
+
+If using HTTPS then type
+
+```bash
+git clone --recurse-submodules https://github.com/Picovoice/rhino.git
+```
+
 Rhino is shipped as an ANSI C shared library. The binary files for supported platforms are located under [lib](/lib)
-and header files are at [include](/include). Bindings are available at [binding](/binding) to facilitate usage from higher-level
-languages/platforms. Demo applications are at [demo](/demo). When possible, use one of the demo applications as a
-starting point for your own implementation. Finally, [resources](resources) is a placeholder for data used by various
-applications within the repository.
+and header files are at [include](/include). Bindings are available at [binding](/binding) to facilitate usage from
+higher-level languages. Demo applications are at [demo](/demo). Finally, [resources](resources) is a placeholder for
+data used by various applications within the repository.
 
 ## Running Demo Applications
 
