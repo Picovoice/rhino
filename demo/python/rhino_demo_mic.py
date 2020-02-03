@@ -203,7 +203,7 @@ def main():
         default=RHINO_MODEL_FILE_PATH,
         help="absolute path to Rhino's model file path")
 
-    parser.add_argument('--rhino_context_file_path', help="absolute path to Rhino's context file", type=str)
+    parser.add_argument('--rhino_context_file_path', help="absolute path to Rhino's context file", required=True)
 
     parser.add_argument(
         '--porcupine_library_path',
@@ -229,7 +229,6 @@ def main():
     parser.add_argument(
         '--output_path',
         help='absolute path to where recorded audio will be stored. If not set, it will be bypassed.',
-        type=str,
         default=None)
 
     parser.add_argument('--show_audio_devices_info', action='store_true')
