@@ -43,32 +43,44 @@ Pronunciation of phrases is detected as you edit, with no need to submit the fil
 Models generated with the Picovoice Console may be used for evaluation and non-commerical use only. To use Rhino in a commercial setting, [contact the Picovoice team](https://picovoice.ai/contact.html).
 
 ## Table of Contents
+* [License](#license)
 * [Try It Out](#try-it-out)
-* [Metrics](#metrics)
+* [Performance](#performance)
 * [Terminology](#terminology)
     * [Context](#context)
     * [Expression](#expression)
     * [Intent](#intent)
     * [Slot](#slot)
 * [Structure of Repository](#structure-of-repository)
-* [Demo Applications](#demo-applications)
-    * [Running the Python Demo Application](#running-the-python-demo-application)
-    * [Running the C Demo Application](#running-the-c-demo-application)
-    * [Runnning Android Demo Application](#running-android-demo-application)
+* [Running Demo Applications](#running-demo-applications)
+    * [Python](#python-demos)
+    * [Android](#android-demos)
+    * [iOS](#ios-demos)
+    * [JavaScript](#javascript-demos)
+    * [C](#c-demos)
 * [Integration](#integration)
-    * [C](#c)
     * [Python](#python)
     * [Android](#android)
+    * [iOS](#ios)
+    * [JavaScript](#javascript)
+    * [C](#c)
 * [Releases](#releases)
-* [License](#license)
 * [FAQ](#faq)
+
+## License
+
+Everything in this repository is licensed under Apache 2.0 including the contexts available under
+[resources/contexts](/resources/contexts).
+
+Custom contexts are only provided with the purchase of the commercial license. To enquire about commercial
+licensing, [contact us](https://picovoice.ai/contact.html).
 
 ## Try It Out
 
 Try out Rhino using its [interactive web demo](https://picovoice.ai/products/rhino.html). You need a working
 microphone.
 
-## Metrics
+## Performance
 
 This table shows the average CPU usage on two different platforms: Raspberry Pi Zero and Raspberry Pi 3. You can
 recreate this using the [C demo application](/demo/c).
@@ -120,9 +132,9 @@ languages/platforms. Demo applications are at [demo](/demo). When possible, use 
 starting point for your own implementation. Finally, [resources](resources) is a placeholder for data used by various
 applications within the repository.
 
-## Demo Applications
+## Running Demo Applications
 
-### Running the Python Demo Application
+### Python Demos
 
 This [demo application](/demo/python) allows testing Rhino using your computer's microphone. It opens an input audio stream,
 monitors it using our [Porcupine](https://github.com/Picovoice/porcupine) wake word detection engine, and when the wake
@@ -169,87 +181,23 @@ python demo/python/rhino_demo.py \
 --porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/raspberrypi/hey\ pico_raspberrypi.ppn
 ```
 
-### Running the C Demo Application
-
-The [C demo application](demo/c) is mainly used to show how Rhino can be integrated into an efficient C/C++ application.
-Furthermore, it can be used to measure runtime metrics of the engine on various supported platforms.
-
-### Running Android Demo Application
+### Android Demos
 
 Using Android Studio, open [demo/android](/demo/android) as an Android project and then run the application. Note that
 you will need an Android phone (with developer options enabled) connected to your machine.
 
+### iOS Demos
+
+### JavaScript Demos
+
+### C Demos
+
+The [C demo application](demo/c) is mainly used to show how Rhino can be integrated into an efficient C/C++ application.
+Furthermore, it can be used to measure runtime metrics of the engine on various supported platforms.
+
 ## Integration
 
 Below are code snippets showcasing how Rhino can be integrated into different applications.
-
-### C
-
-Rhino is implemented in ANSI C and therefore can be directly linked to C applications. The [pv_rhino.h](/include/pv_rhino.h)
-header file contains relevant information. An instance of the Rhino object can be constructed as follows.
-
-```c
-const char *model_file_path = ... // available at lib/common/rhino_params.pv
-const char *context_file_path = ... // absolute path to context file for the domain of interest
-
-pv_rhino_object_t *rhino;
-const pv_status_t status = pv_rhino_init(model_file_path, context_file_path, &rhino);
-if (status != PV_STATUS_SUCCESS) {
-    // add error handling code
-}
-```
-
-Now the handle `rhino` can be used to infer intent from an incoming audio stream. Rhino accepts single channel, 16-bit PCM
-audio. The sample rate can be retrieved using `pv_sample_rate()`. Finally, Rhino accepts input audio in consecutive chunks
-(frames); the length of each frame can be retrieved using `pv_rhino_frame_length()`.
-
-```c
-extern const int16_t *get_next_audio_frame(void);
-
-while (true) {
-    const int16_t *pcm = get_next_audio_frame();
-
-    bool is_finalized;
-    pv_status_t status = pv_rhino_process(rhino, pcm, &is_finalized);
-    if (status != PV_STATUS_SUCCESS) {
-        // add error handling code
-    }
-
-    if (is_finalized) {
-        bool is_understood;
-        status = pv_rhino_is_understood(rhino, &is_understood);
-        if (status != PV_STATUS_SUCCESS) {
-            // add error handling code
-        }
-
-        if (is_understood) {
-            const char *intent;
-            int num_slots;
-            const char **slots;
-            const char **values;
-            status = pv_rhino_get_intent(rhino, &intent, &num_slots, &slots, &values);
-            if (status != PV_STATUS_SUCCESS) {
-                // add error handling code
-            }
-
-            // add code to take action based on inferred intent and slot values
-
-            free(slots);
-            free(values);
-        } else {
-            // add code to handle unsupported commands
-        }
-
-        pv_rhino_reset(rhino);
-    }
-}
-```
-
-When done, remember to release the resources acquired.
-
-```c
-pv_rhino_delete(rhino);
-```
 
 ### Python
 
@@ -337,7 +285,88 @@ Finally, prior to exiting the application be sure to release resources acquired 
     rhino.delete()
 ```
 
+### iOS
+
+### JavaScript
+
+### C
+
+Rhino is implemented in ANSI C and therefore can be directly linked to C applications. The [pv_rhino.h](/include/pv_rhino.h)
+header file contains relevant information. An instance of the Rhino object can be constructed as follows.
+
+```c
+const char *model_file_path = ... // available at lib/common/rhino_params.pv
+const char *context_file_path = ... // absolute path to context file for the domain of interest
+
+pv_rhino_object_t *rhino;
+const pv_status_t status = pv_rhino_init(model_file_path, context_file_path, &rhino);
+if (status != PV_STATUS_SUCCESS) {
+    // add error handling code
+}
+```
+
+Now the handle `rhino` can be used to infer intent from an incoming audio stream. Rhino accepts single channel, 16-bit PCM
+audio. The sample rate can be retrieved using `pv_sample_rate()`. Finally, Rhino accepts input audio in consecutive chunks
+(frames); the length of each frame can be retrieved using `pv_rhino_frame_length()`.
+
+```c
+extern const int16_t *get_next_audio_frame(void);
+
+while (true) {
+    const int16_t *pcm = get_next_audio_frame();
+
+    bool is_finalized;
+    pv_status_t status = pv_rhino_process(rhino, pcm, &is_finalized);
+    if (status != PV_STATUS_SUCCESS) {
+        // add error handling code
+    }
+
+    if (is_finalized) {
+        bool is_understood;
+        status = pv_rhino_is_understood(rhino, &is_understood);
+        if (status != PV_STATUS_SUCCESS) {
+            // add error handling code
+        }
+
+        if (is_understood) {
+            const char *intent;
+            int num_slots;
+            const char **slots;
+            const char **values;
+            status = pv_rhino_get_intent(rhino, &intent, &num_slots, &slots, &values);
+            if (status != PV_STATUS_SUCCESS) {
+                // add error handling code
+            }
+
+            // add code to take action based on inferred intent and slot values
+
+            free(slots);
+            free(values);
+        } else {
+            // add code to handle unsupported commands
+        }
+
+        pv_rhino_reset(rhino);
+    }
+}
+```
+
+When done, remember to release the resources acquired.
+
+```c
+pv_rhino_delete(rhino);
+```
+
 ## Releases
+
+### v1.3.0 February 13th, 2020
+
+* Accuracy improvements.
+* Runtime optimizations.
+* Added support for Raspberry Pi 4
+* Added support for JavaScript.
+* Added support for iOS.
+* Updated documentation.
 
 ### v1.2.0 April 26, 2019
 
@@ -352,14 +381,6 @@ Finally, prior to exiting the application be sure to release resources acquired 
 ### v1.0.0 November 2nd, 2018
 
 * Initial Release
-
-## License
-
-Everything in this repository is licensed under Apache 2.0 including the contexts available under
-[resources/contexts](/resources/contexts).
-
-Custom contexts are only provided with the purchase of the commercial license. To enquire about commercial
-licensing, [contact us](https://picovoice.ai/contact.html).
 
 ## FAQ
 
