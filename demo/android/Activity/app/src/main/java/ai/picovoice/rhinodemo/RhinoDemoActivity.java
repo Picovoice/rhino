@@ -112,7 +112,7 @@ public class RhinoDemoActivity extends AppCompatActivity {
 
         try {
             copyResourceFile(R.raw.rhino_params, PARAM_FILENAME);
-            copyResourceFile(R.raw.coffee_maker_android, CONTEXT_FILENAME);
+            copyResourceFile(R.raw.smart_lighting_android, CONTEXT_FILENAME);
         } catch (IOException e) {
             Toast.makeText(this, "Failed to copy resource files.", Toast.LENGTH_SHORT).show();
         }
