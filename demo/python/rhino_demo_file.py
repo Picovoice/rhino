@@ -15,13 +15,8 @@ import sys
 
 import soundfile
 
-
-def _abs_path(rel_path):
-    return os.path.join(os.path.dirname(__file__), '../..', rel_path)
-
-
-sys.path.append(_abs_path('binding/python'))
-sys.path.append(_abs_path('resources/util/python'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../binding/python'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
 
 from rhino import Rhino
 from util import *

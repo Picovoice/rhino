@@ -19,14 +19,9 @@ import numpy as np
 import pyaudio
 import soundfile
 
-
-def _abs_path(rel_path):
-    return os.path.join(os.path.dirname(__file__), '../..', rel_path)
-
-
-sys.path.append(_abs_path('binding/python'))
-sys.path.append(_abs_path('resources/porcupine/binding/python'))
-sys.path.append(_abs_path('resources/util/python'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../binding/python'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/porcupine/binding/python'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
 
 from porcupine import Porcupine
 from rhino import Rhino
@@ -173,7 +168,11 @@ class RhinoDemo(Thread):
 
             if self._output_path is not None and len(self._recorded_frames) > 0:
                 recorded_audio = np.concatenate(self._recorded_frames, axis=0).astype(np.int16)
-                soundfile.write(self._output_path, recorded_audio, samplerate=porcupine.sample_rate, subtype='PCM_16')
+                soundfile.write(
+                    os.path.expanduser(self._output_path),
+                    recorded_audio,
+                    samplerate=porcupine.sample_rate,
+                    subtype='PCM_16')
 
     _AUDIO_DEVICE_INFO_KEYS = ['index', 'name', 'defaultSampleRate', 'maxInputChannels']
 
@@ -203,7 +202,9 @@ def main():
         default=RHINO_MODEL_FILE_PATH,
         help="absolute path to Rhino's model file path")
 
-    parser.add_argument('--rhino_context_file_path', help="absolute path to Rhino's context file", required=True)
+    parser.add_argument(
+        '--rhino_context_file_path',
+        help="absolute path to Rhino's context file")
 
     parser.add_argument(
         '--porcupine_library_path',
@@ -238,6 +239,9 @@ def main():
     if args.show_audio_devices_info:
         RhinoDemo.show_audio_devices_info()
     else:
+        if not args.rhino_context_file_path:
+            raise ValueError('missing rhino_context_file_path')
+
         RhinoDemo(
             rhino_library_path=args.rhino_library_path,
             rhino_model_file_path=args.rhino_model_file_path,

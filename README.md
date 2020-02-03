@@ -147,45 +147,15 @@ monitors it using our [Porcupine](https://github.com/Picovoice/porcupine) wake w
 phrase is detected it will extract the intent within the follow-up spoken command using Rhino.
 
 The following command runs the demo application on your machine to infer intent from spoken commands in the context of a
-coffee maker. It also initializes the Porcupine engine to detect the wake phrase *Hey Pico*. When the wake
+smart lighting system. It also initializes the Porcupine engine to detect the wake phrase "Picovoice". When the wake
 phrase is detected, Rhino starts processing the followup spoken command and prints out the inferred intent and slot
 values to the console.
 
-#### Linux
-
 ```bash
-python demo/python/rhino_demo.py \
---rhino_library_path ./lib/linux/x86_64/libpv_rhino.so \
---rhino_model_file_path ./lib/common/rhino_params.pv \
---rhino_context_file_path ./resources/contexts/linux/coffee_maker_linux.rhn \
---porcupine_library_path ./resources/porcupine/lib/linux/x86_64/libpv_porcupine.so \
---porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
---porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/linux/hey\ pico_linux.ppn
+python3 demo/python/rhino_demo_mic.py --rhino_context_file_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
 ```
 
-#### macOS
-
-```bash
-python3 demo/python/rhino_demo.py \
---rhino_library_path ./lib/mac/x86_64/libpv_rhino.dylib \
---rhino_model_file_path ./lib/common/rhino_params.pv \
---rhino_context_file_path ./resources/contexts/mac/coffee_maker_mac.rhn \
---porcupine_library_path ./resources/porcupine/lib/mac/x86_64/libpv_porcupine.dylib \
---porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
---porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/mac/hey\ pico_mac.ppn
-```
-
-#### Raspberry Pi
-
-```bash
-python demo/python/rhino_demo.py \
---rhino_library_path ./lib/raspberry-pi/cortex-a53/libpv_rhino.so \
---rhino_model_file_path ./lib/common/rhino_params.pv \
---rhino_context_file_path ./resources/contexts/raspberrypi/coffee_maker_raspberrypi.rhn \
---porcupine_library_path ./resources/porcupine/lib/raspberry-pi/cortex-a53/libpv_porcupine.so \
---porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
---porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/raspberrypi/hey\ pico_raspberrypi.ppn
-```
+In above command replace `${SYSTEM}` with your platform name (e.g. linux, mac, raspberry-pi).
 
 ### Android Demos
 
