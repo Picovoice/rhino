@@ -244,7 +244,7 @@ to initialize an instance:
 library_path = ... # absolute path to Rhino's dynamic library
 model_file_path = ... # available at lib/common/rhino_params.pv
 context_file_path = ... # absolute path to context file for the domain of interest
-    
+
 rhino = Rhino(
     library_path=library_path,
     model_path=model_file_path,
@@ -257,9 +257,7 @@ commands as below:
 
 ```python
 def get_next_audio_frame():
-    # add code to get the next audio frame
     pass
-
 
 while True:
     is_finalized = rhino.process(get_next_audio_frame())
@@ -480,8 +478,8 @@ to transcribe free-form speech in an open-domain, then you should use [Cheetah](
 
 **[Q] What are the benefits of implementing voice interfaces on-device, instead of using cloud services?**
 
-**[A]** Privacy, minimal latency, improved reliability, runtime efficiency, cost saving to name a few. More detail is
-available [here](https://picovoice.ai/blog/the_case_for_voice_ai_on_the_edge.html).
+**[A]** Privacy, minimal latency, improved reliability, runtime efficiency, and cost saving to name a few. More detail is
+available in this [blog post](https://picovoice.ai/blog/the_case_for_voice_ai_on_the_edge.html).
 
 **[Q] Does Picovoice technology work in far-field applications?**
 
@@ -496,7 +494,7 @@ frontend can be beneficial.
 **[Q] Does Picovoice software work in my target environment and noise conditions?**
 
 **[A]** It depends on variety of factors. You should test it out yourself with the free samples made available on
-Picovoice GitHub pages. If it does not work, we can fine-tune it for your target environment.
+Picovoice GitHub pages. If it does not work, we can fine-tune it for enterprise customers.
 
 **[Q] Does Picovoice software work in presence of noise and reverberation?**
 
@@ -514,8 +512,8 @@ acoustic models for telephony applications if the commercial opportunity is just
 
 **[Q] My audio source is 48kHz/44.1KHz. Does Picovoice software support that?**
 
-**[A]** Picovoice software expects a 16000Hz sampling rate. You will need to resample (downsample). Typically,
-operating systems or sound cards (Audio codecs) provide such functionality; otherwise, you will need to implement it.
+**[A]** Picovoice software expects a 16000Hz sampling rate. You will need to downsample. Typically, operating systems or
+sound cards (Audio codecs) provide such functionality; otherwise, you will need to implement it.
 
 **[Q] Can Picovoice help with building my voice enabled product?**
 
@@ -523,12 +521,11 @@ operating systems or sound cards (Audio codecs) provide such functionality; othe
 in voice, software, and hardware. We consider such requests on a case-by-case basis and assist clients who can
 guarantee a certain minimum licensing volume.
 
-
 **[Q] If I am using GitHub to evaluate the software, do you provide technical support?**
 
 **[A]** Prior to commercial engagement, basic support solely pertaining to software issues or bugs is provided via
-GitHub issues by the open-source community or a member of our team. We do not offer any free support with integration
-or support with any platform (either operating system or hardware) that is not officially supported via GitHub.
+GitHub issues. We do not offer any free support with integration or support with any platform
+(either operating system or hardware) that is not officially supported via GitHub.
 
 **[Q] Why does Picovoice have GitHub repositories?**
 
@@ -574,7 +571,7 @@ publicly [here](https://github.com/Picovoice/speech-to-intent-benchmark). In add
 for benchmarking have been made publicly available under the Apache 2.0 license to allow for the results to be reproduced
 
 Rhino speech-to-intent engine can extract intents from spoken utterances with higher than 97% accuracy in clean (no noise)
-environments, and 92% accuracy in noisy environments with signal to noise ratio of 9dB at microphone level.
+environments, and 95% accuracy in noisy environments with signal to noise ratio of 9dB at microphone level.
 
 **[Q] Can Rhino understand phone numbers, time of day, dates, alphanumerics, etc?**
 
