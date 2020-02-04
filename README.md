@@ -80,9 +80,9 @@ accurate while Dialogflow is only 75% accurate**. Additionally, Rhino can run fu
 
 ## Terminology
 
-Rhino infers user's intent from spoken commands within a *domain of interest*. We refer to such *specialized domain* as
+Rhino infers the user's intent from spoken commands within a *domain of interest*. We refer to such *specialized domain* as
 context. Below we explain how to create a context for your use case (e.g. robot control, washing machine) and introduce
-a few formal definitions. 
+a few definitions. 
 
 In simplest form context can be thought of a set of spoken commands each mapped to an intent:
 
@@ -90,29 +90,19 @@ In simplest form context can be thought of a set of spoken commands each mapped 
 * TurnLightsOff : Turn off the lights in the office.
 * callNumber : call 604 123 9876.
 
-In examples above the sentences (voice commands) on the right hand side are called expression. Each expression is what
-we expect the user to utter within interaction with the application.
+In examples above the sentences (voice commands) on the right-hand-side are called expression. Each expression is what
+we expect the user to utter within the course of interaction with the application.
 
 Consider the expression "Make me a large coffee with longs of soy milk". What we require from Rhino is the intent "makeCoffee" and
-also the details of the command such as the size of the drink and where the customer would want any milk and how much. We can capture these
+also the details of the command such as the size of the drink and how much milk do the customer wants if any. We can capture these
 details via slots as below:
 
 Make me a $size:coffeeSize $coffeeDrink:coffeeDrink with $amount:milkAmount milk.
 
-$size:coffeeSize means that we expect a variable of type `size` to occur and we want to capture its value in a variable named `coffeeSize`.
-Slots gives us the ability to capture details of the spoken commands and then use them. Furthermore there are possibly many
-more ways of ordering coffee such as 
+$size:coffeeSize means that we expect a variable of type `size` to occur and we want to capture its value in a variable
+named `coffeeSize`. We call such variables "slots". Slots give us the ability to capture details of the spoken commands.
 
-* I want a $size:coffeeSize $coffeeDrink:coffeeDrink with $amount:milkAmount milk.
-* Please make me a $size:coffeeSize $coffeeDrink:coffeeDrink with $amount:milkAmount milk.
-
-These variations can be capture using shorthands as below
-
-(please) [I want, Make me] a $size:coffeeSize $coffeeDrink:coffeeDrink with $amount:milkAmount milk.
-
-() encompass optional parts of the commands and [] can be though of logical OR.
-
-In practice all above is designed using Picovoice Console. Read below.
+In practice, all the above is designed using [Picovoice Console](https://console.picovoice.ai).
 
 ## Picovoice Console
 
