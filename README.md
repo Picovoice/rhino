@@ -6,7 +6,7 @@ Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
 interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso with a lot of sugar
- and some milk"*, Rhino infers that the user wants to *"order a drink"* with these specifications:
+ and some milk"*, Rhino infers that the user wants to order a drink with these specifications:
 
 ```json
 {
@@ -20,17 +20,18 @@ interest, in real-time. For example, given a spoken command *"Can I have a small
 
 Rhino is:
 
-* using deep neural networks trained in **real-world environments.
+* using deep neural networks trained in real-world environments.
 * Compact and computationally-efficient, making it perfect for IoT.
 * cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (all variants), Beagle Bone, Android, iOS,
 Linux (x86_64), Mac (x86_64), Windows (x86_64), and web browsers are supported. Furthermore, Support for various ARM
 Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for enterprise customers.
-* self-service. Developer UX designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
+* self-service. Developers and UX designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Table of Contents
 * [License](#license)
 * [Try It Out](#try-it-out)
 * [Performance](#performance)
+* [Model Variants](#model-variants)
 * [Terminology](#terminology)
 * [Picovoice Console](#picovoice-console)
 * [Structure of Repository](#structure-of-repository)
@@ -74,40 +75,64 @@ about the Picovoice development and commercial license terms and fees, [contact 
 ## Performance
 
 A comparison between the accuracy of Rhino and [Google's Dialogflow](https://dialogflow.com/) is provided
-[here](https://github.com/Picovoice/speech-to-intent-benchmark). **Across different noisy environments Rhino is 96%
-accurate while Dialogflow is only 75% accurate**. Additionally, Rhino can run fully on-device on a Raspberry Pi 3 with
+[here](https://github.com/Picovoice/speech-to-intent-benchmark). Across different noisy environments **Rhino is 96%
+accurate while Dialogflow reaches 75% accuracy**. Additionally, Rhino runs fully on-device on a Raspberry Pi 3 with
 7% CPU usage while Dialogflow needs a cloud connection.
+
+## Model Variants
+
+The library in this repository is the standard trim of the engine. The standard trim is suitable for applications running
+on microprocessors (e.g. Raspberry Pi and BeagleBone) and mobile devices (Android and iOS). Picovoice has developed
+several trims of the engine targeted at a wide range of applications. These are only available to enterprise customers.
 
 ## Terminology
 
-Rhino infers the user's intent from spoken commands within a *domain of interest*. We refer to such *specialized domain* as
-context. Below we explain how to create a context for your use case (e.g. robot control, washing machine) and introduce
-a few definitions. 
+Rhino infers the user's intent from spoken commands within a domain of interest. We refer to such a specialized domain as
+a **Context**. Context can be thought of a set of voice commands each mapped to an intent:
 
-In simplest form context can be thought of a set of spoken commands each mapped to an intent:
+```yaml
+turnOff:
+  - Turn off the lights in the office.
+  - Turn off all lights
+setColor:
+  - Set the kitchen lights to blue.
+lowerIntensity:
+  - Dim the lights.
+  - Make the lights darker
+```
 
-* makeCoffee : Make me a large coffee with longs of soy milk.
-* TurnLightsOff : Turn off the lights in the office.
-* callNumber : call 604 123 9876.
+In examples above each voice command is called an **Expression**. Expressions are what we expect the user to utter
+within the course of interaction with our application.
 
-In examples above the sentences (voice commands) on the right-hand-side are called expression. Each expression is what
-we expect the user to utter within the course of interaction with the application.
+Consider the expression *"Turn off the lights in the office"*. What we require from Rhino is to infer the
+intent (turnOff) and also the details of the command such as the location if specified. We can capture these details
+using slots by rewriting the expression as below:
 
-Consider the expression "Make me a large coffee with longs of soy milk". What we require from Rhino is the intent "makeCoffee" and
-also the details of the command such as the size of the drink and how much milk do the customer wants if any. We can capture these
-details via slots as below:
+Turn off the lights in the `$location:lightLocation`.
 
-Make me a $size:coffeeSize $coffeeDrink:coffeeDrink with $amount:milkAmount milk.
+`$location:lightLocation` means that we expect a variable of type `location` to occur and we want to capture its value
+in a variable named `lightLocation`. We call such variable a *Slot*. Slots give us the ability to capture details of the
+spoken commands. Each slot type can be defined as a set of values for example
 
-$size:coffeeSize means that we expect a variable of type `size` to occur and we want to capture its value in a variable
-named `coffeeSize`. We call such variables "slots". Slots give us the ability to capture details of the spoken commands.
+```yaml
+lightLocation:
+  - "attic"
+  - "balcony"
+  - "basement"
+  - "bathroom"
+  - "bedroom"
+  - "entrance"
+  - "kitchen"
+  - "living room"
+  - ...
+```
 
-In practice, all the above is designed using [Picovoice Console](https://console.picovoice.ai).
+You can create custom contexts using [Picovoice Console](https://console.picovoice.ai).
 
 ## Picovoice Console
 
-[Picovoice Console](https://console.picovoice.ai) enables creating Speech-to-Intent contexts and training Rhino models.
-The Console is a web-based platform for building voice applications.
+[Picovoice Console](https://console.picovoice.ai) enables creating Speech-to-Intent contexts. The Console is a web-based
+platform for building voice applications.
 
 ## Structure of Repository
 
