@@ -1,7 +1,7 @@
 # Compatibility
 
 You need a C99-compatible compiler to build these demos. The microphone based demo can only run on Linux-based systems
-such as Ubuntu, Raspberry Pi, and Beagle Bone as it depends on ALSA.
+(e.g. Ubuntu, Raspberry Pi, and Beagle Bone) as it depends on ALSA.
 
 # Usage
 
@@ -10,39 +10,51 @@ such as Ubuntu, Raspberry Pi, and Beagle Bone as it depends on ALSA.
 Compile by executing the following command from the root of the repository
 
 ```bash
-gcc -O3 -o demo/c/rhino_demo_mic -I include/ -I resources/porcupine/include/ demo/c/rhino_demo_mic.c -ldl -lasound -std=c99
+gcc -O3 -o demo/c/rhino_demo_mic -I include -I resources/porcupine/include \
+demo/c/rhino_demo_mic.c -ldl -lasound -std=c99
 ```
 
 Running the executable without any commandline arguments prints the usage info to the console as below
 
 ```bash
 $ demo/c/rhino_demo_mic
-usage : demo/c/rhino_demo_mic rhino_library_path rhino_model_path rhino_context_path porcupine_library_path porcupine_model_path porcupine_keyword_path input_audio_device
+usage : demo/c/rhino_demo_mic rhino_library_path rhino_model_path rhino_context_path
+porcupine_library_path porcupine_model_path porcupine_keyword_path input_audio_device
 ```
 
 Then you need to find the name of audio input device on your machine using `arecord -L` utility.
 
-The following starts an audio steaming from the microphone available on an Ubuntu 18.04 machine and listens for wake phrase
-"porcupine" and infers follow-on commands within the context of a smart lighting system.
+The following starts an audio steaming from the microphone on an Ubuntu 18.04 machine and listens for wake phrase
+"Picovoice" and infers follow-on commands within the context of a smart lighting system. For example you can say "Picovoice, turn on the lights"
 
 ```bash
-demo/c/rhino_demo_mic lib/linux/x86_64/libpv_rhino.so lib/common/rhino_params.pv resources/contexts/linux/smart_lighting_linux.rhn \
-resources/porcupine/lib/linux/x86_64/libpv_porcupine.so resources/porcupine/lib/common/porcupine_params.pv \
-resources/porcupine/resources/keyword_files/linux/picovoice_linux.ppn plughw:CARD=AK5371
+demo/c/rhino_demo_mic \
+lib/linux/x86_64/libpv_rhino.so \
+lib/common/rhino_params.pv \
+resources/contexts/linux/smart_lighting_linux.rhn \
+resources/porcupine/lib/linux/x86_64/libpv_porcupine.so \
+resources/porcupine/lib/common/porcupine_params.pv \
+resources/porcupine/resources/keyword_files/linux/picovoice_linux.ppn \
+plughw:CARD=AK5371
 ```
 
 The following achieves the same on a Raspberry Pi 4
 
 ```bash
-demo/c/rhino_demo_mic lib/raspberry-pi/cortex-a72/libpv_rhino.so lib/common/rhino_params.pv resources/contexts/raspberry-pi/smart_lighting_raspberry-pi.rhn \
-resources/porcupine/lib/raspberry-pi/cortex-a72/libpv_porcupine.so resources/porcupine/lib/common/porcupine_params.pv \
-resources/porcupine/resources/keyword_files/raspberry-pi/picovoice_raspberry-pi.ppn plughw:CARD=AK5371
+demo/c/rhino_demo_mic \
+lib/raspberry-pi/cortex-a72/libpv_rhino.so \
+lib/common/rhino_params.pv \
+resources/contexts/raspberry-pi/smart_lighting_raspberry-pi.rhn \
+resources/porcupine/lib/raspberry-pi/cortex-a72/libpv_porcupine.so \
+resources/porcupine/lib/common/porcupine_params.pv \
+resources/porcupine/resources/keyword_files/raspberry-pi/picovoice_raspberry-pi.ppn \
+plughw:CARD=AK5371
 ```
 
 ## File-Based
 
 **Note that the demo expect a single-channel WAV file with a sampling rate of 16000 and 16-bit linear PCM encoding. If you
-provide a file with incorrect format the demo does not perform any format validation and simply outputs incorrect results.**
+provide a file with incorrect format the demo does not perform any format validation and simply outputs incorrect result.**
 
 Compile by executing the following command from the root of the repository
 
@@ -59,7 +71,10 @@ usage : ./demo/c/rhino_demo_file library_path model_path context_path wav_path
 For example the following processes one of the WAV files under resources folder on  an Ubuntu 18.04
 
 ```bash
-./demo/c/rhino_demo_file lib/linux/x86_64/libpv_rhino.so lib/common/rhino_params.pv resources/contexts/linux/coffee_maker_linux.rhn \
+./demo/c/rhino_demo_file \
+lib/linux/x86_64/libpv_rhino.so \
+lib/common/rhino_params.pv \
+resources/contexts/linux/coffee_maker_linux.rhn \
 resources/audio_samples/test_within_context.wav 
 ```
 
@@ -78,6 +93,9 @@ real time factor : 0.007
 The following achieves the same on a Raspberry Pi 4
 
 ```bash
-./demo/c/rhino_demo_file lib/raspberry-pi/cortex-a72/libpv_rhino.so lib/common/rhino_params.pv resources/contexts/raspberry-pi/coffee_maker_raspberry-pi.rhn \
+./demo/c/rhino_demo_file \
+lib/raspberry-pi/cortex-a72/libpv_rhino.so \
+lib/common/rhino_params.pv \
+resources/contexts/raspberry-pi/coffee_maker_raspberry-pi.rhn \
 resources/audio_samples/test_within_context.wav 
 ```

@@ -14,15 +14,12 @@ python3 demo/python/rhino_demo_mic.py --help
 Run the demo by executing the following from the root of the repository
 
 ```bash
-python3 demo/python/rhino_demo_mic.py --rhino_context_file_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
+python3 demo/python/rhino_demo_mic.py \
+--rhino_context_file_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
 ```
 
 Then you can issue commands such as "Picovoice, turn off the lights" or
 "Picovoice, set the lights in the attic to purple". The full list of available expressions is printed to the console.
-
-It starts recording audio from the *default* input audio device, initializes instances of Porcupine and Rhino
-engines, and monitors the incoming audio for the wake phrase "Picovoice". Upon detection of the wake word the followup
- command is processed by Rhino to infer user's intent and the inferred result is written into the console.
 
 ## FAQ
 
@@ -67,18 +64,16 @@ It can be seen that the last device (index 21) is considered default. But on thi
 the input device which has an index of 10. After finding the correct index the demo application can be invoked as below
 
 ```bash
-python3 demo/python/rhino_demo_mic.py --rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn \
---input_audio_device_index 10
+python3 demo/python/rhino_demo_mic.py --input_audio_device_index 10 \
+--rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved by
 
 ```bash
-python3 demo/python/rhino_demo_mic.py --rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn \
---output-path ~/test.wav
+python3 demo/python/rhino_demo_mic.py --output-path ~/test.wav \
+--rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn
 ```
-
-If after listening to stored file there is no apparent problem detected please open an issue.
 
 # File-Based Demo
 
