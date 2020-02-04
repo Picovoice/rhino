@@ -165,6 +165,10 @@ pressing the start button you can issue commands such as "turn off the lights" o
 
 ### iOS Demos
 
+Using [Xcode](https://developer.apple.com/xcode/), open
+[demo/ios/RhinoDemo/RhinoDemo.xcodeproj](/demo/ios/RhinoDemo/RhinoDemo.xcodeproj) and run the application. You will
+need an iOS device connected to your machine and a valid Apple developer account.
+
 ### JavaScript Demos
 
 You need `npm` installed first. Install dependencies by executing the following commands from
@@ -184,8 +188,27 @@ npx live-server --ignore="${PWD}/node_modules"
 
 ### C Demos
 
-The [C demo application](demo/c) is mainly used to show how Rhino can be integrated into an efficient C/C++ application.
-Furthermore, it can be used to measure runtime metrics of the engine on various supported platforms.
+[This demo](/demo/c/rhino_demo_mic.c) runs on Linux-based systems (e.g. Ubuntu, Raspberry Pi, and BeagleBone) and
+Mac. You need `GCC` and `ALSA` installed to compile it. Compile the demo using
+
+```bash
+gcc -O3 -o demo/c/rhino_demo_mic -I include/ -I resources/porcupine/include/ demo/c/rhino_demo_mic.c -ldl -lasound -std=c99
+```
+
+Find the name of audio input device (microphone) on your computer using `arecord -L`. Finally execute the following
+
+```bash
+demo/c/rhino_demo_mic ${RHINO_LIBRARY_PATH} lib/common/rhino_params.pv resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn \
+${PORCUPINE_LIBRARY_PATH} resources/porcupine/lib/common/porcupine_params.pv resources/porcupine/resources/keyword_files/${SYSTEM}/picovoice_${SYSTEM}.ppn \
+${INPUT_AUDIO_DEVICE}
+```
+
+Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the 
+name of the operating system on your machine (e.g. linux, mac, windows, or raspberry-pi), and `${INPUT_AUDIO_DEVICE}` with
+the name of your microphone device. The demo opens an audio stream and detects utterances of keyword "Picovoice"
+followed by spoken commands for a smart lighting system. For example you can say "Picovoice, turn on the lights".
+
+In order to learn more about file-based C demo go to [demo/c](/demo/c).
 
 ## Integration
 
