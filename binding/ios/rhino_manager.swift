@@ -92,11 +92,12 @@ public class RhinoManager {
                         
                         pv_rhino_free_slots_and_values(self.rhino, slots, values)
                     }
-
-                    pv_rhino_reset(self.rhino)
-                    
                     self.onInferenceCallback?(InferenceInfo(isUnderstood: isUnderstood, intent: intentString, slots: slotsDictionary))
+                } else {
+                    self.onInferenceCallback?(InferenceInfo(isUnderstood: isUnderstood, intent: "", slots: [:]))
                 }
+
+                pv_rhino_reset(self.rhino)
             }
         }
 
