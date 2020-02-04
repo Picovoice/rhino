@@ -1,6 +1,15 @@
+/*
+    Copyright 2018 Picovoice Inc.
+    You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+    file accompanying this source.
+    Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+    an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+    specific language governing permissions and limitations under the License.
+*/
+
 let Rhino = (function () {
     /**
-     * Binding for speech-to-intent object. It initializes the JS binding for WebAssembly module and exposes
+     * Binding for Speech-to-Intent object. It initializes the JavaScript binding for WebAssembly module and exposes
      * a factory method for creating new instances of speech-to-intent engine.
      */
 

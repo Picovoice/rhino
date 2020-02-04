@@ -6,7 +6,7 @@
 </head>
 <body>
 <script src="node_modules/@picovoice/web-voice-processor/src/web_voice_processor.js"></script>
-<script src="node_modules/@picovoice/rhino_manager/src/rhino_manager.js"></script>
+<script src="rhino_manager.js"></script>
 
 <script>
     let context = new Uint8Array([
@@ -2467,7 +2467,7 @@
 
     start = function () {
         rhinoManager = RhinoManager(
-            "/node_modules/@picovoice/rhino_manager/src/rhino_worker.js",
+            "/rhino_worker.js",
             "/node_modules/@picovoice/web-voice-processor/src/downsampling_worker.js");
 
         rhinoManager.start(context, inferenceCallback, errorCallback);
@@ -2493,7 +2493,7 @@
     </h1>
 
     <p align="left" style="line-height: 2; font-size: 1.25em">
-        This demo allows you to change the color of the smart lamp (above) using Rhino. Note that you need a
+        This demo simulates a smart lighting system using Rhino. Note that you need a
         working microphone. This demo is running locally in the browser. You can turn off your internet connection
         and it will keep working.
     </p>
