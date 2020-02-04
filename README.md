@@ -111,7 +111,7 @@ using slots by rewriting the expression as below:
 Turn off the lights in the `$location:lightLocation`.
 
 `$location:lightLocation` means that we expect a variable of type `location` to occur and we want to capture its value
-in a variable named `lightLocation`. We call such variable a *Slot*. Slots give us the ability to capture details of the
+in a variable named `lightLocation`. We call such variable a **Slot**. Slots give us the ability to capture details of the
 spoken commands. Each slot type can be defined as a set of values for example
 
 ```yaml
@@ -157,20 +157,20 @@ data used by various applications within the repository.
 
 ### Python Demos
 
-This [demo application](/demo/python) allows testing Rhino using your computer's microphone. It opens an input audio stream,
-monitors it using our [Porcupine](https://github.com/Picovoice/porcupine) wake word detection engine, and when the wake
-phrase is detected it will extract the intent within the follow-up spoken command using Rhino.
+This [demo application](/demo/python/rhino_demo_mic.py) allows testing Rhino using your computer's microphone. It opens
+an input audio stream, monitors it using our [Porcupine](https://github.com/Picovoice/porcupine) wake word detection
+engine, and when the wake phrase is detected it will extract the intent within the follow-up spoken command using Rhino.
 
 The following command runs the demo application on your machine to infer intent from spoken commands in the context of a
-smart lighting system. It also initializes the Porcupine engine to detect the wake phrase "Picovoice". When the wake
-phrase is detected, Rhino starts processing the followup spoken command and prints out the inferred intent and slot
-values to the console.
+smart lighting system. It also initializes the Porcupine engine to detect the wake phrase "Picovoice". When running you
+can issue commands such as "Picovoice, turn on the lights".
 
 ```bash
-python3 demo/python/rhino_demo_mic.py --rhino_context_file_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
+python3 demo/python/rhino_demo_mic.py \
+--rhino_context_file_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
 ```
 
-In above command replace `${SYSTEM}` with your platform name (e.g. linux, mac, raspberry-pi).
+In the above command replace `${SYSTEM}` with your platform name (e.g. linux, mac, raspberry-pi).
 
 ### Android Demos
 
@@ -182,7 +182,8 @@ pressing the start button you can issue commands such as "turn off the lights" o
 
 Using [Xcode](https://developer.apple.com/xcode/), open
 [demo/ios/RhinoDemo/RhinoDemo.xcodeproj](/demo/ios/RhinoDemo/RhinoDemo.xcodeproj) and run the application. You will
-need an iOS device connected to your machine and a valid Apple developer account.
+need an iOS device connected to your machine and a valid Apple developer account. After pressing the start button you can
+issue commands such as "turn off the lights".
 
 ### JavaScript Demos
 
@@ -203,27 +204,32 @@ npx live-server --ignore="${PWD}/node_modules"
 
 ### C Demos
 
-[This demo](/demo/c/rhino_demo_mic.c) runs on Linux-based systems (e.g. Ubuntu, Raspberry Pi, and BeagleBone) and
-Mac. You need `GCC` and `ALSA` installed to compile it. Compile the demo using
+[This demo](/demo/c/rhino_demo_mic.c) runs on Linux-based systems (e.g. Ubuntu, Raspberry Pi, and BeagleBone). You need
+`GCC` and `ALSA` installed to compile it. Compile the demo using
 
 ```bash
-gcc -O3 -o demo/c/rhino_demo_mic -I include/ -I resources/porcupine/include/ demo/c/rhino_demo_mic.c -ldl -lasound -std=c99
+gcc -O3 -o demo/c/rhino_demo_mic -I include -I resources/porcupine/include/ demo/c/rhino_demo_mic.c \
+-ldl -lasound -std=c99
 ```
 
 Find the name of audio input device (microphone) on your computer using `arecord -L`. Finally execute the following
 
 ```bash
-demo/c/rhino_demo_mic ${RHINO_LIBRARY_PATH} lib/common/rhino_params.pv resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn \
-${PORCUPINE_LIBRARY_PATH} resources/porcupine/lib/common/porcupine_params.pv resources/porcupine/resources/keyword_files/${SYSTEM}/picovoice_${SYSTEM}.ppn \
+demo/c/rhino_demo_mic \
+${RHINO_LIBRARY_PATH} \
+lib/common/rhino_params.pv \
+resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn \
+${PORCUPINE_LIBRARY_PATH} \
+resources/porcupine/lib/common/porcupine_params.pv \
+resources/porcupine/resources/keyword_files/${SYSTEM}/picovoice_${SYSTEM}.ppn \
 ${INPUT_AUDIO_DEVICE}
 ```
 
-Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the 
-name of the operating system on your machine (e.g. linux, mac, windows, or raspberry-pi), and `${INPUT_AUDIO_DEVICE}` with
+Replace `${RHINO_LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the 
+name of the operating system on your machine (e.g. linux or raspberry-pi), `${PORCUPINE_LIBRARY_PATH}` with path to appropriate
+Porcupine library available under [resources/porcupine/lib](/resources/porcupine/lib) and `${INPUT_AUDIO_DEVICE}` with
 the name of your microphone device. The demo opens an audio stream and detects utterances of keyword "Picovoice"
 followed by spoken commands for a smart lighting system. For example you can say "Picovoice, turn on the lights".
-
-In order to learn more about file-based C demo go to [demo/c](/demo/c).
 
 ## Integration
 
