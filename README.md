@@ -167,6 +167,21 @@ pressing the start button you can issue commands such as "turn off the lights" o
 
 ### JavaScript Demos
 
+You need `npm` installed first. Install dependencies by executing the following commands from
+[demo/javaScript/standalone](/demo/javascript/standalone)
+
+```bash
+npm install
+npm install -g copy-files-from-to
+copy-files-from-to
+```
+
+Run this to launch the demo and follow instructions on the page.
+
+```bash
+npx live-server --ignore="${PWD}/node_modules"
+```
+
 ### C Demos
 
 The [C demo application](demo/c) is mainly used to show how Rhino can be integrated into an efficient C/C++ application.
