@@ -226,8 +226,8 @@ context_file_path = ... # absolute path to context file for the domain of intere
     
 rhino = Rhino(
     library_path=library_path,
-    model_file_path=model_file_path,
-    context_file_path=context_file_path) 
+    model_path=model_file_path,
+    context_path=context_file_path) 
 ```
 
 When initialized, valid sample rate can be obtained using `rhino.sample_rate`. Expected frame length
@@ -302,7 +302,56 @@ Finally, prior to exiting the application be sure to release resources acquired 
 
 ### iOS
 
+The [RhinoManager](binding/ios/rhino_manager.swift) class manages all activities related to creating an input audio stream
+feeding it into Rhino's library, and invoking a user-provided detection callback. The class can be initialized as below
+
+```swift
+let modelFilePath: String = ... // It is available at lib/common/rhino_params.pv
+let contextFilePath: String = ...
+let onInferenceCallback: ((InferenceInfo) -> Void) = {
+    // detection event callback
+}
+
+let manager = RhinoManager(modelFilePath: modelFilePath, contextFilePath: contextFilePath, onInferenceCallback: onInferenceCallback);
+```
+
+when initialized, input audio can be processed using `manager.startListening()`.
+
 ### JavaScript
+
+Create a new instance of engine using
+
+```javascript
+let context = new Uint8Array([...]);
+
+let handle = Rhino.create(context)
+```
+
+`context` is an array of 8-bit unsigned integers (i.e. `UInt8Array`) representing the domain of interest. When
+instantiated `handle` can process audio via its `.process` method.
+
+```javascript
+    let getNextAudioFrame = function() {
+        ...
+    };
+    
+    let result = {};
+    do {
+        result = handle.process(getNextAudioFrame())
+    } while (Object.keys(result).length === 0);
+    
+    if (result.isUnderstood) {
+        // callback to act upon inference result
+    } else {
+        // callback to handle failed inference
+    }
+```
+
+When done be sure to release resources acquired by WebAssembly using `.release`.
+
+```javascript
+    handle.release();
+```
 
 ### C
 
@@ -313,7 +362,7 @@ header file contains relevant information. An instance of the Rhino object can b
 const char *model_file_path = ... // available at lib/common/rhino_params.pv
 const char *context_file_path = ... // absolute path to context file for the domain of interest
 
-pv_rhino_object_t *rhino;
+pv_rhino_t *rhino;
 const pv_status_t status = pv_rhino_init(model_file_path, context_file_path, &rhino);
 if (status != PV_STATUS_SUCCESS) {
     // add error handling code
