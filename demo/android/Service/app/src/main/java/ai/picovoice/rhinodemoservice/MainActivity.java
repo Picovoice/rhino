@@ -1,3 +1,13 @@
+/*
+    Copyright 2018 Picovoice Inc.
+    You may not use this file except in compliance with the license. A copy of the license is
+    located in the "LICENSE" file accompanying this source.
+    Unless required by applicable law or agreed to in writing, software distributed under the
+    License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+    express or implied. See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
 package ai.picovoice.rhinodemoservice;
 
 import androidx.annotation.NonNull;
@@ -57,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private void startService() {
         Intent serviceIntent = new Intent(this, RhinoService.class);
         serviceIntent.putExtra("keywordFileName", "picovoice_android.ppn");
-        serviceIntent.putExtra("contextFileName", "coffee_maker_android.rhn");
+        serviceIntent.putExtra("contextFileName", "smart_lighting_android.rhn");
         ContextCompat.startForegroundService(this, serviceIntent);
     }
 
@@ -74,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             copyResourceFile(R.raw.porcupine_params, "porcupine_params.pv");
             copyResourceFile(R.raw.rhino_params, "rhino_params.pv");
-            copyResourceFile(R.raw.coffee_maker_android, "coffee_maker_android.rhn");
+            copyResourceFile(R.raw.smart_lighting_android, "smart_lighting_android.rhn");
             copyResourceFile(R.raw.picovoice_android, "picovoice_android.ppn");
         } catch (IOException e) {
             Toast.makeText(this, "Failed to copy resource files.", Toast.LENGTH_SHORT).show();

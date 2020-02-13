@@ -5,8 +5,8 @@
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
-interest, in real-time. For example, given a speech command *"Can I have a small double-shot espresso with a lot of sugar
- and some milk"*, Rhino infers that the user wants to *order a drink* with these specifications:
+interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso with a lot of sugar
+ and some milk"*, Rhino infers that the user wants to order a drink with these specifications:
 
 ```json
 {
@@ -20,236 +20,220 @@ interest, in real-time. For example, given a speech command *"Can I have a small
 
 Rhino is:
 
-* Intuitive. It allows users to utter their intention in a natural and conversational fashion.
-* Using deep neural networks trained in **real-world situations**.
-* Compact and computationally-efficient, making it suitable for **IoT** applications. It can run with as little as 90 KB of
-RAM on an MCU.
-* Cross-platform. It is implemented in fixed-point ANSI C. Currently **Raspberry Pi**, **BeagleBone**, **Android**,
-**iOS**, **Linux**, **macOS**, **Windows**, and **web browsers** (**WebAssembly**) are supported. Additionally, support for
-various **ARM Cortex-A**, **ARM Cortex-M** (M4/M7) and **DSP cores** is available for commercial customers.
-* Customizable. It can be customized for any given domain.
-
-[![Rhino in Action](https://img.youtube.com/vi/WadKhfLyqTQ/0.jpg)](https://www.youtube.com/watch?v=WadKhfLyqTQ)
-
-## Picovoice Console
-
-Announcing [Picovoice Console](https://console.picovoice.ai) support for Rhino. You can now use the Picovoice Console to create Speech-to-Intent contexts, add intents, and train them into Rhino models. The Console is a web-based platform for
-building voice applications. You can sign up for an account with your email address or with your GitHub account.
-
-Intents are made up of a collection of expressions, written in the "Rhino Expression Language", a straightforward way of embedding features like optional phrasing and slots to match user intent and record variables from their utterances.
-
-Pronunciation of phrases is detected as you edit, with no need to submit the file for processing to discover missing words. As with Porcupine, a missing pronunciation can typically be addressed for commercial customers.
-
-Models generated with the Picovoice Console may be used for evaluation and non-commerical use only. To use Rhino in a commercial setting, [contact the Picovoice team](https://picovoice.ai/contact.html).
+* using deep neural networks trained in real-world environments.
+* Compact and computationally-efficient, making it perfect for IoT.
+* cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (all variants), Beagle Bone, Android, iOS,
+Linux (x86_64), Mac (x86_64), Windows (x86_64), and web browsers are supported. Furthermore, Support for various ARM
+Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for enterprise customers.
+* self-service. Developers and UX designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Table of Contents
+* [License](#license)
 * [Try It Out](#try-it-out)
-* [Metrics](#metrics)
+* [Performance](#performance)
+* [Model Variants](#model-variants)
 * [Terminology](#terminology)
-    * [Context](#context)
-    * [Expression](#expression)
-    * [Intent](#intent)
-    * [Slot](#slot)
+* [Picovoice Console](#picovoice-console)
 * [Structure of Repository](#structure-of-repository)
-* [Demo Applications](#demo-applications)
-    * [Running the Python Demo Application](#running-the-python-demo-application)
-    * [Running the C Demo Application](#running-the-c-demo-application)
-    * [Runnning Android Demo Application](#running-android-demo-application)
+* [Running Demo Applications](#running-demo-applications)
+    * [Python](#python-demos)
+    * [Android](#android-demos)
+    * [iOS](#ios-demos)
+    * [JavaScript](#javascript-demos)
+    * [C](#c-demos)
 * [Integration](#integration)
-    * [C](#c)
     * [Python](#python)
     * [Android](#android)
+    * [iOS](#ios)
+    * [JavaScript](#javascript)
+    * [C](#c)
 * [Releases](#releases)
-* [License](#license)
 * [FAQ](#faq)
+
+## License
+
+This repository is licensed under Apache 2.0 which allows running the engine on all supported platforms
+(except microcontrollers) using a set of freely-available [models](/resources/contexts). You may create custom models
+using [Picovoice Console](https://console.picovoice.ai/) for **non-commercial and personal use** free of charge. The 
+free-tier only allows model training for x86_64 (Linux, Mac, and Windows).
+
+Custom models for other platforms are only provided with the purchase of the Picovoice enterprise license. To enquire
+about the Picovoice development and commercial license terms and fees, [contact us](https://picovoice.ai/contact.html).
 
 ## Try It Out
 
-Try out Rhino using its [interactive web demo](https://picovoice.ai/products/rhino.html). You need a working
-microphone.
+* [Interactive Web Demo](https://picovoice.ai/products/rhino.html)
 
-## Metrics
+* [Picovoice Console](https://console.picovoice.ai/)
 
-This table shows the average CPU usage on two different platforms: Raspberry Pi Zero and Raspberry Pi 3. You can
-recreate this using the [C demo application](/demo/c).
+![Picovoice Console](resources/doc/picovoice-console-rhino.gif)
 
-Raspberry Pi Zero | Raspberry Pi 3
-:---: | :---:
-46.4% | 7.2%
+* Rhino and [Porcupine](https://github.com/Picovoice/porcupine) on an ARM Cortex-M4
+
+[![Porcupine in Action](https://img.youtube.com/vi/T0tAnh8tUQg/0.jpg)](https://www.youtube.com/watch?v=T0tAnh8tUQg)
+
+## Performance
+
+A comparison between the accuracy of Rhino and [Google's Dialogflow](https://dialogflow.com/) is provided
+[here](https://github.com/Picovoice/speech-to-intent-benchmark). Across different noisy environments **Rhino is 96%
+accurate while Dialogflow reaches 75% accuracy**. Additionally, Rhino runs fully on-device on a Raspberry Pi 3 with
+7% CPU usage while Dialogflow needs a cloud connection.
+
+## Model Variants
+
+The library in this repository is the standard trim of the engine. The standard trim is suitable for applications running
+on microprocessors (e.g. Raspberry Pi and BeagleBone) and mobile devices (Android and iOS). Picovoice has developed
+several trims of the engine targeted at a wide range of applications. These are only available to enterprise customers.
 
 ## Terminology
 
-### Context
+Rhino infers the user's intent from spoken commands within a domain of interest. We refer to such a specialized domain as
+a **Context**. Context can be thought of a set of voice commands each mapped to an intent:
 
-A context defines the set of spoken commands that users of the application might say. Additionally, it maps each spoken
-command to users' intent. For example, when building a smart lighting system:
+```yaml
+turnOff:
+  - Turn off the lights in the office.
+  - Turn off all lights
+setColor:
+  - Set the kitchen lights to blue.
+lowerIntensity:
+  - Dim the lights.
+  - Make the lights darker
+```
 
-* Turn off the lights
-* Make the bedroom light darker
-* Set the lights in the living room to purple
+In examples above each voice command is called an **Expression**. Expressions are what we expect the user to utter
+within the course of interaction with our application.
 
-### Expression
+Consider the expression *"Turn off the lights in the office"*. What we require from Rhino is to infer the
+intent (turnOff) and also the details of the command such as the location if specified. We can capture these details
+using slots by rewriting the expression as below:
 
-A context is made of a collection of spoken commands mapped to the user's intent. An expression is an entity that defines
-a mapping between a (or a set of) spoken commands and its (their) corresponding intent. For example:
+Turn off the lights in the `$location:lightLocation`.
 
-* {turnCommand} the lights -> {turnIntent}
-* Make the {location} light {intensityChange} -> {changeIntensityIntent}
-* Set the lights in the {location} to {color} -> {setColorIntent}
+`$location:lightLocation` means that we expect a variable of type `location` to occur and we want to capture its value
+in a variable named `lightLocation`. We call such variable a **Slot**. Slots give us the ability to capture details of the
+spoken commands. Each slot type can be defined as a set of values for example
 
-The tokens within curly braces represent variables in spoken commands. They are either the user's intent (e.g. turnIntent)
-or can be intent's details (e.g. location).
+```yaml
+lightLocation:
+  - "attic"
+  - "balcony"
+  - "basement"
+  - "bathroom"
+  - "bedroom"
+  - "entrance"
+  - "kitchen"
+  - "living room"
+  - ...
+```
 
-### Intent
+You can create custom contexts using [Picovoice Console](https://console.picovoice.ai).
 
-An intent represents what a user wants to accomplish with a spoken command. For example, the intent of the phrase
-"*Set the lights in the living room to purple*" is to set the color of lights. In order to take action based on this,
-we might need to have more information such as which light or what is the desired color.
+## Picovoice Console
 
-### Slot
-
-A slot represents the details of the user's intent. For example, the phrase
-"*Set the lights in the living room to purple*" has slots for location (living room)
-and color (purple).
+[Picovoice Console](https://console.picovoice.ai) enables creating Speech-to-Intent contexts. The Console is a web-based
+platform for building voice applications.
 
 ## Structure of Repository
 
+If using SSH clone the repository by
+
+```bash
+git clone --recurse-submodules git@github.com:Picovoice/rhino.git
+```
+
+If using HTTPS then type
+
+```bash
+git clone --recurse-submodules https://github.com/Picovoice/rhino.git
+```
+
 Rhino is shipped as an ANSI C shared library. The binary files for supported platforms are located under [lib](/lib)
-and header files are at [include](/include). Bindings are available at [binding](/binding) to facilitate usage from higher-level
-languages/platforms. Demo applications are at [demo](/demo). When possible, use one of the demo applications as a
-starting point for your own implementation. Finally, [resources](resources) is a placeholder for data used by various
-applications within the repository.
+and header files are at [include](/include). Bindings are available at [binding](/binding) to facilitate usage from
+higher-level languages. Demo applications are at [demo](/demo). Finally, [resources](resources) is a placeholder for
+data used by various applications within the repository.
 
-## Demo Applications
+## Running Demo Applications
 
-### Running the Python Demo Application
+### Python Demos
 
-This [demo application](/demo/python) allows testing Rhino using your computer's microphone. It opens an input audio stream,
-monitors it using our [Porcupine](https://github.com/Picovoice/porcupine) wake word detection engine, and when the wake
-phrase is detected it will extract the intent within the follow-up spoken command using Rhino.
+This [demo application](/demo/python/rhino_demo_mic.py) allows testing Rhino using your computer's microphone. It opens
+an input audio stream, monitors it using our [Porcupine](https://github.com/Picovoice/porcupine) wake word detection
+engine, and when the wake phrase is detected it will extract the intent within the follow-up spoken command using Rhino.
 
 The following command runs the demo application on your machine to infer intent from spoken commands in the context of a
-coffee maker. It also initializes the Porcupine engine to detect the wake phrase *Hey Pico*. When the wake
-phrase is detected, Rhino starts processing the followup spoken command and prints out the inferred intent and slot
-values to the console.
-
-#### Linux
+smart lighting system. It also initializes the Porcupine engine to detect the wake phrase "Picovoice". When running you
+can issue commands such as "Picovoice, turn on the lights".
 
 ```bash
-python demo/python/rhino_demo.py \
---rhino_library_path ./lib/linux/x86_64/libpv_rhino.so \
---rhino_model_file_path ./lib/common/rhino_params.pv \
---rhino_context_file_path ./resources/contexts/linux/coffee_maker_linux.rhn \
---porcupine_library_path ./resources/porcupine/lib/linux/x86_64/libpv_porcupine.so \
---porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
---porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/linux/hey\ pico_linux.ppn
+python3 demo/python/rhino_demo_mic.py \
+--rhino_context_file_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
 ```
 
-#### macOS
+In the above command replace `${SYSTEM}` with your platform name (e.g. linux, mac, raspberry-pi).
+
+### Android Demos
+
+Using Android Studio, open [demo/android/Activity](/demo/android/Activity) as an Android project and then run the
+application. Note that you will need an Android phone (with developer options enabled) connected to your machine. After
+pressing the start button you can issue commands such as "turn off the lights" or "set the lights in the living room to purple".
+
+### iOS Demos
+
+Using [Xcode](https://developer.apple.com/xcode/), open
+[demo/ios/RhinoDemo/RhinoDemo.xcodeproj](/demo/ios/RhinoDemo/RhinoDemo.xcodeproj) and run the application. You will
+need an iOS device connected to your machine and a valid Apple developer account. After pressing the start button you can
+issue commands such as "turn off the lights".
+
+### JavaScript Demos
+
+You need `npm` installed first. Install dependencies by executing the following commands from
+[demo/javaScript/standalone](/demo/javascript/standalone)
 
 ```bash
-python3 demo/python/rhino_demo.py \
---rhino_library_path ./lib/mac/x86_64/libpv_rhino.dylib \
---rhino_model_file_path ./lib/common/rhino_params.pv \
---rhino_context_file_path ./resources/contexts/mac/coffee_maker_mac.rhn \
---porcupine_library_path ./resources/porcupine/lib/mac/x86_64/libpv_porcupine.dylib \
---porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
---porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/mac/hey\ pico_mac.ppn
+npm install
+npm install -g copy-files-from-to
+copy-files-from-to
 ```
 
-#### Raspberry Pi
+Run this to launch the demo and follow instructions on the page.
 
 ```bash
-python demo/python/rhino_demo.py \
---rhino_library_path ./lib/raspberry-pi/cortex-a53/libpv_rhino.so \
---rhino_model_file_path ./lib/common/rhino_params.pv \
---rhino_context_file_path ./resources/contexts/raspberrypi/coffee_maker_raspberrypi.rhn \
---porcupine_library_path ./resources/porcupine/lib/raspberry-pi/cortex-a53/libpv_porcupine.so \
---porcupine_model_file_path ./resources/porcupine/lib/common/porcupine_params.pv \
---porcupine_keyword_file_path ./resources/porcupine/resources/keyword_files/raspberrypi/hey\ pico_raspberrypi.ppn
+npx live-server --ignore="${PWD}/node_modules"
 ```
 
-### Running the C Demo Application
+### C Demos
 
-The [C demo application](demo/c) is mainly used to show how Rhino can be integrated into an efficient C/C++ application.
-Furthermore, it can be used to measure runtime metrics of the engine on various supported platforms.
+[This demo](/demo/c/rhino_demo_mic.c) runs on Linux-based systems (e.g. Ubuntu, Raspberry Pi, and BeagleBone). You need
+`GCC` and `ALSA` installed to compile it. Compile the demo using
 
-### Running Android Demo Application
+```bash
+gcc -O3 -o demo/c/rhino_demo_mic -I include -I resources/porcupine/include/ demo/c/rhino_demo_mic.c \
+-ldl -lasound -std=c99
+```
 
-Using Android Studio, open [demo/android](/demo/android) as an Android project and then run the application. Note that
-you will need an Android phone (with developer options enabled) connected to your machine.
+Find the name of audio input device (microphone) on your computer using `arecord -L`. Finally execute the following
+
+```bash
+demo/c/rhino_demo_mic \
+${RHINO_LIBRARY_PATH} \
+lib/common/rhino_params.pv \
+resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn \
+${PORCUPINE_LIBRARY_PATH} \
+resources/porcupine/lib/common/porcupine_params.pv \
+resources/porcupine/resources/keyword_files/${SYSTEM}/picovoice_${SYSTEM}.ppn \
+${INPUT_AUDIO_DEVICE}
+```
+
+Replace `${RHINO_LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the 
+name of the operating system on your machine (e.g. linux or raspberry-pi), `${PORCUPINE_LIBRARY_PATH}` with path to appropriate
+Porcupine library available under [resources/porcupine/lib](/resources/porcupine/lib) and `${INPUT_AUDIO_DEVICE}` with
+the name of your microphone device. The demo opens an audio stream and detects utterances of keyword "Picovoice"
+followed by spoken commands for a smart lighting system. For example you can say "Picovoice, turn on the lights".
 
 ## Integration
 
 Below are code snippets showcasing how Rhino can be integrated into different applications.
-
-### C
-
-Rhino is implemented in ANSI C and therefore can be directly linked to C applications. The [pv_rhino.h](/include/pv_rhino.h)
-header file contains relevant information. An instance of the Rhino object can be constructed as follows.
-
-```c
-const char *model_file_path = ... // available at lib/common/rhino_params.pv
-const char *context_file_path = ... // absolute path to context file for the domain of interest
-
-pv_rhino_object_t *rhino;
-const pv_status_t status = pv_rhino_init(model_file_path, context_file_path, &rhino);
-if (status != PV_STATUS_SUCCESS) {
-    // add error handling code
-}
-```
-
-Now the handle `rhino` can be used to infer intent from an incoming audio stream. Rhino accepts single channel, 16-bit PCM
-audio. The sample rate can be retrieved using `pv_sample_rate()`. Finally, Rhino accepts input audio in consecutive chunks
-(frames); the length of each frame can be retrieved using `pv_rhino_frame_length()`.
-
-```c
-extern const int16_t *get_next_audio_frame(void);
-
-while (true) {
-    const int16_t *pcm = get_next_audio_frame();
-
-    bool is_finalized;
-    pv_status_t status = pv_rhino_process(rhino, pcm, &is_finalized);
-    if (status != PV_STATUS_SUCCESS) {
-        // add error handling code
-    }
-
-    if (is_finalized) {
-        bool is_understood;
-        status = pv_rhino_is_understood(rhino, &is_understood);
-        if (status != PV_STATUS_SUCCESS) {
-            // add error handling code
-        }
-
-        if (is_understood) {
-            const char *intent;
-            int num_slots;
-            const char **slots;
-            const char **values;
-            status = pv_rhino_get_intent(rhino, &intent, &num_slots, &slots, &values);
-            if (status != PV_STATUS_SUCCESS) {
-                // add error handling code
-            }
-
-            // add code to take action based on inferred intent and slot values
-
-            free(slots);
-            free(values);
-        } else {
-            // add code to handle unsupported commands
-        }
-
-        pv_rhino_reset(rhino);
-    }
-}
-```
-
-When done, remember to release the resources acquired.
-
-```c
-pv_rhino_delete(rhino);
-```
 
 ### Python
 
@@ -260,11 +244,11 @@ to initialize an instance:
 library_path = ... # absolute path to Rhino's dynamic library
 model_file_path = ... # available at lib/common/rhino_params.pv
 context_file_path = ... # absolute path to context file for the domain of interest
-    
+
 rhino = Rhino(
     library_path=library_path,
-    model_file_path=model_file_path,
-    context_file_path=context_file_path) 
+    model_path=model_file_path,
+    context_path=context_file_path) 
 ```
 
 When initialized, valid sample rate can be obtained using `rhino.sample_rate`. Expected frame length
@@ -273,9 +257,7 @@ commands as below:
 
 ```python
 def get_next_audio_frame():
-    # add code to get the next audio frame
     pass
-
 
 while True:
     is_finalized = rhino.process(get_next_audio_frame())
@@ -337,7 +319,137 @@ Finally, prior to exiting the application be sure to release resources acquired 
     rhino.delete()
 ```
 
+### iOS
+
+The [RhinoManager](binding/ios/rhino_manager.swift) class manages all activities related to creating an input audio stream
+feeding it into Rhino's library, and invoking a user-provided detection callback. The class can be initialized as below
+
+```swift
+let modelFilePath: String = ... // It is available at lib/common/rhino_params.pv
+let contextFilePath: String = ...
+let onInferenceCallback: ((InferenceInfo) -> Void) = {
+    // detection event callback
+}
+
+let manager = RhinoManager(modelFilePath: modelFilePath, contextFilePath: contextFilePath, onInferenceCallback: onInferenceCallback);
+```
+
+when initialized, input audio can be processed using `manager.startListening()`.
+
+### JavaScript
+
+Create a new instance of engine using
+
+```javascript
+let context = new Uint8Array([...]);
+
+let handle = Rhino.create(context)
+```
+
+`context` is an array of 8-bit unsigned integers (i.e. `UInt8Array`) representing the domain of interest. When
+instantiated `handle` can process audio via its `.process` method.
+
+```javascript
+    let getNextAudioFrame = function() {
+        ...
+    };
+    
+    let result = {};
+    do {
+        result = handle.process(getNextAudioFrame())
+    } while (Object.keys(result).length === 0);
+    
+    if (result.isUnderstood) {
+        // callback to act upon inference result
+    } else {
+        // callback to handle failed inference
+    }
+```
+
+When done be sure to release resources acquired by WebAssembly using `.release`.
+
+```javascript
+    handle.release();
+```
+
+### C
+
+Rhino is implemented in ANSI C and therefore can be directly linked to C applications. The [pv_rhino.h](/include/pv_rhino.h)
+header file contains relevant information. An instance of the Rhino object can be constructed as follows.
+
+```c
+const char *model_file_path = ... // available at lib/common/rhino_params.pv
+const char *context_file_path = ... // absolute path to context file for the domain of interest
+
+pv_rhino_t *rhino;
+const pv_status_t status = pv_rhino_init(model_file_path, context_file_path, &rhino);
+if (status != PV_STATUS_SUCCESS) {
+    // add error handling code
+}
+```
+
+Now the handle `rhino` can be used to infer intent from an incoming audio stream. Rhino accepts single channel, 16-bit PCM
+audio. The sample rate can be retrieved using `pv_sample_rate()`. Finally, Rhino accepts input audio in consecutive chunks
+(frames); the length of each frame can be retrieved using `pv_rhino_frame_length()`.
+
+```c
+extern const int16_t *get_next_audio_frame(void);
+
+while (true) {
+    const int16_t *pcm = get_next_audio_frame();
+
+    bool is_finalized;
+    pv_status_t status = pv_rhino_process(rhino, pcm, &is_finalized);
+    if (status != PV_STATUS_SUCCESS) {
+        // add error handling code
+    }
+
+    if (is_finalized) {
+        bool is_understood;
+        status = pv_rhino_is_understood(rhino, &is_understood);
+        if (status != PV_STATUS_SUCCESS) {
+            // add error handling code
+        }
+
+        if (is_understood) {
+            const char *intent;
+            int num_slots;
+            const char **slots;
+            const char **values;
+            status = pv_rhino_get_intent(rhino, &intent, &num_slots, &slots, &values);
+            if (status != PV_STATUS_SUCCESS) {
+                // add error handling code
+            }
+
+            // add code to take action based on inferred intent and slot values
+
+            free(slots);
+            free(values);
+        } else {
+            // add code to handle unsupported commands
+        }
+
+        pv_rhino_reset(rhino);
+    }
+}
+```
+
+When done, remember to release the resources acquired.
+
+```c
+pv_rhino_delete(rhino);
+```
+
 ## Releases
+
+### v1.3.0 February 13th, 2020
+
+* Accuracy improvements.
+* Runtime optimizations.
+* Added support for Raspberry Pi 4
+* Added support for JavaScript.
+* Added support for iOS.
+* Updated documentation.
 
 ### v1.2.0 April 26, 2019
 
@@ -353,14 +465,6 @@ Finally, prior to exiting the application be sure to release resources acquired 
 
 * Initial Release
 
-## License
-
-Everything in this repository is licensed under Apache 2.0 including the contexts available under
-[resources/contexts](/resources/contexts).
-
-Custom contexts are only provided with the purchase of the commercial license. To enquire about commercial
-licensing, [contact us](https://picovoice.ai/contact.html).
-
 ## FAQ
 
 **[Q] Which speech product should I use?**
@@ -374,8 +478,8 @@ to transcribe free-form speech in an open-domain, then you should use [Cheetah](
 
 **[Q] What are the benefits of implementing voice interfaces on-device, instead of using cloud services?**
 
-**[A]** Privacy, minimal latency, improved reliability, runtime efficiency, cost saving to name a few. More detail is
-available [here](https://picovoice.ai/blog/the_case_for_voice_ai_on_the_edge.html).
+**[A]** Privacy, minimal latency, improved reliability, runtime efficiency, and cost saving to name a few. More detail is
+available in this [blog post](https://picovoice.ai/blog/the_case_for_voice_ai_on_the_edge.html).
 
 **[Q] Does Picovoice technology work in far-field applications?**
 
@@ -390,7 +494,7 @@ frontend can be beneficial.
 **[Q] Does Picovoice software work in my target environment and noise conditions?**
 
 **[A]** It depends on variety of factors. You should test it out yourself with the free samples made available on
-Picovoice GitHub pages. If it does not work, we can fine-tune it for your target environment.
+Picovoice GitHub pages. If it does not work, we can fine-tune it for enterprise customers.
 
 **[Q] Does Picovoice software work in presence of noise and reverberation?**
 
@@ -408,8 +512,8 @@ acoustic models for telephony applications if the commercial opportunity is just
 
 **[Q] My audio source is 48kHz/44.1KHz. Does Picovoice software support that?**
 
-**[A]** Picovoice software expects a 16000Hz sampling rate. You will need to resample (downsample). Typically,
-operating systems or sound cards (Audio codecs) provide such functionality; otherwise, you will need to implement it.
+**[A]** Picovoice software expects a 16000Hz sampling rate. You will need to downsample. Typically, operating systems or
+sound cards (Audio codecs) provide such functionality; otherwise, you will need to implement it.
 
 **[Q] Can Picovoice help with building my voice enabled product?**
 
@@ -417,12 +521,11 @@ operating systems or sound cards (Audio codecs) provide such functionality; othe
 in voice, software, and hardware. We consider such requests on a case-by-case basis and assist clients who can
 guarantee a certain minimum licensing volume.
 
-
 **[Q] If I am using GitHub to evaluate the software, do you provide technical support?**
 
 **[A]** Prior to commercial engagement, basic support solely pertaining to software issues or bugs is provided via
-GitHub issues by the open-source community or a member of our team. We do not offer any free support with integration
-or support with any platform (either operating system or hardware) that is not officially supported via GitHub.
+GitHub issues. We do not offer any free support with integration or support with any platform
+(either operating system or hardware) that is not officially supported via GitHub.
 
 **[Q] Why does Picovoice have GitHub repositories?**
 
@@ -468,7 +571,7 @@ publicly [here](https://github.com/Picovoice/speech-to-intent-benchmark). In add
 for benchmarking have been made publicly available under the Apache 2.0 license to allow for the results to be reproduced
 
 Rhino speech-to-intent engine can extract intents from spoken utterances with higher than 97% accuracy in clean (no noise)
-environments, and 92% accuracy in noisy environments with signal to noise ratio of 9dB at microphone level.
+environments, and 95% accuracy in noisy environments with signal to noise ratio of 9dB at microphone level.
 
 **[Q] Can Rhino understand phone numbers, time of day, dates, alphanumerics, etc?**
 

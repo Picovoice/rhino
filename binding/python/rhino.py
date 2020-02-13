@@ -1,17 +1,12 @@
 #
 # Copyright 2018 Picovoice Inc.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+# file accompanying this source.
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
 #
 
 import os
@@ -20,7 +15,7 @@ from enum import Enum
 
 
 class Rhino(object):
-    """Python binding for Picovoice's Speech-to-Intent (a.k.a Rhino) engine."""
+    """Python binding for Picovoice's Speech-to-Intent (Rhino) engine."""
 
     class PicovoiceStatuses(Enum):
         """Status codes corresponding to 'pv_status_t' defined in 'include/picovoice.h'"""
@@ -45,13 +40,13 @@ class Rhino(object):
     class CRhino(Structure):
         pass
 
-    def __init__(self, library_path, model_file_path, context_file_path, sensitivity=0.5):
+    def __init__(self, library_path, model_path, context_path, sensitivity=0.5):
         """
         Constructor.
 
         :param library_path: Absolute path to Rhino's dynamic library.
-        :param model_file_path: Absolute path to file containing model parameters.
-        :param context_file_path: Absolute path to file containing context parameters. A context represents the set of
+        :param model_path: Absolute path to file containing model parameters.
+        :param context_path: Absolute path to file containing context parameters. A context represents the set of
         expressions (commands), intents, and intent arguments (slots) within a domain of interest.
         :param sensitivity: Sensitivity for inference. It should be a floating-point number within [0, 1]. A higher
         sensitivity value results in fewer inference misses at the cost of potentially increasing the erroneous
@@ -59,15 +54,15 @@ class Rhino(object):
         """
 
         if not os.path.exists(library_path):
-            raise ValueError("couldn't find library at '%s'" % library_path)
+            raise IOError("couldn't find Rhino's library at '%s'" % library_path)
 
         library = cdll.LoadLibrary(library_path)
 
-        if not os.path.exists(model_file_path):
-            raise ValueError("couldn't find model file at '%s'" % model_file_path)
+        if not os.path.exists(model_path):
+            raise IOError("couldn't find model file at '%s'" % model_path)
 
-        if not os.path.exists(context_file_path):
-            raise ValueError("couldn't find context file at '%s'" % context_file_path)
+        if not os.path.exists(context_path):
+            raise IOError("couldn't find context file at '%s'" % context_path)
 
         init_func = library.pv_rhino_init
         init_func.argtypes = [c_char_p, c_char_p, c_float, POINTER(POINTER(self.CRhino))]
@@ -76,8 +71,8 @@ class Rhino(object):
         self._handle = POINTER(self.CRhino)()
 
         status = init_func(
-            model_file_path.encode('utf-8'),
-            context_file_path.encode('utf-8'),
+            model_path.encode('utf-8'),
+            context_path.encode('utf-8'),
             sensitivity,
             byref(self._handle))
         if status is not self.PicovoiceStatuses.SUCCESS:
@@ -104,6 +99,10 @@ class Rhino(object):
             POINTER(POINTER(c_char_p))]
         self._get_intent_func.restype = self.PicovoiceStatuses
 
+        self._free_slots_and_values_func = library.pv_rhino_free_slots_and_values
+        self._free_slots_and_values_func.argtypes = [POINTER(self.CRhino), POINTER(c_char_p), POINTER(c_char_p)]
+        self._free_slots_and_values_func.restype = self.PicovoiceStatuses
+
         self._reset_func = library.pv_rhino_reset
         self._reset_func.argtypes = [POINTER(self.CRhino)]
         self._reset_func.restype = self.PicovoiceStatuses
@@ -115,7 +114,7 @@ class Rhino(object):
         context_info = c_char_p()
         status = context_info_func(self._handle, byref(context_info))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('getting expressions failed')
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('retrieving context information failed')
 
         self._context_info = context_info.value.decode('utf-8')
 
@@ -135,15 +134,14 @@ class Rhino(object):
 
     def process(self, pcm):
         """
-        Processes a frame of audio and emits a flag indicating if the engine has finalized intent extraction. When
-        finalized, 'self.is_understood()' should be called to check if the command was valid
-        (is within context of interest).
+        Processes a frame of audio and emits a flag indicating if intent inference is finalized. When finalized,
+        '.is_understood()' should be called to check if the spoken command is considered valid.
 
         :param pcm: A frame of audio samples. The number of samples per frame can be attained by calling
-        'self.frame_length'. The incoming audio needs to have a sample rate equal to 'self.sample_rate' and be 16-bit
+        '.frame_length'. The incoming audio needs to have a sample rate equal to '.sample_rate' and be 16-bit
         linearly-encoded. Furthermore, Rhino operates on single channel audio.
 
-        :return: Flag indicating whether the engine has finalized intent extraction.
+        :return: Flag indicating if intent inference is finalized.
         """
 
         if len(pcm) != self.frame_length:
@@ -152,7 +150,7 @@ class Rhino(object):
         is_finalized = c_bool()
         status = self._process_func(self._handle, (c_short * len(pcm))(*pcm), byref(is_finalized))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('processing failed')
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
         return is_finalized.value
 
@@ -160,25 +158,22 @@ class Rhino(object):
         """
         Indicates if the spoken command is valid, is within the domain of interest (context), and the engine understood
         it.
-
-        :return: Flag indicating if the spoken command is valid, is within the domain of interest (context), and the
-        engine understood it.
         """
 
         is_understood = c_bool()
         status = self._is_understood_func(self._handle, byref(is_understood))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('failed to verify if the spoken command is understood')
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
         return is_understood.value
 
     def get_intent(self):
         """
-         Getter for the intent inferred from spoken command. The intent is presented as an intent string and a
-         dictionary mapping slots to their values. It should be called only after intent extraction is finalized and it
-         is verified that the spoken command is valid and understood via calling 'self.is_understood()'.
+         Getter for the intent. The intent is presented as an intent string and a dictionary mapping slots to their
+         values. It should be called only after intent extraction is finalized and it is verified that the spoken
+         command is understood via calling '.is_understood()'.
 
-        :return: Tuple of intent string and slot dictionary.
+        :return: Tuple of intent string and slot/value dictionary.
         """
 
         intent = c_char_p()
@@ -192,11 +187,15 @@ class Rhino(object):
             byref(slots),
             byref(values))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('getting intent failed')
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
         slot_values = dict()
         for i in range(num_slots.value):
             slot_values[slots[i].decode('utf-8')] = values[i].decode('utf-8')
+
+        status = self._free_slots_and_values_func(self._handle, slots, values)
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
         return intent.value.decode('utf-8'), slot_values
 
@@ -208,26 +207,23 @@ class Rhino(object):
 
         status = self._reset_func(self._handle)
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('reset failed')
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
     @property
-    def context_expressions(self):
-        """
-        Getter for expressions. Each expression maps a set of spoken phrases to an intent and possibly a number of slots
-        (intent arguments).
-        """
+    def context_info(self):
+        """Getter for context information."""
 
         return self._context_info
 
     @property
     def version(self):
-        """Getter for version string."""
+        """Getter for version."""
 
         return self._version
 
     @property
     def frame_length(self):
-        """Getter for length (number of audio samples) per frame."""
+        """Getter for number of audio samples per frame."""
 
         return self._frame_length
 

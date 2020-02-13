@@ -1,0 +1,9 @@
+node_modules
+package-lock.json
+porcupine.js
+porcupine_worker.js
+pv_porcupine.js
+pv_porcupine.wasm
+pv_rhino.js
+pv_rhino.wasm
+rhino.js
