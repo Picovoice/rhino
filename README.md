@@ -62,7 +62,7 @@ about the Picovoice development and commercial license terms and fees, [contact 
 
 ## Try It Out
 
-* [Interactive Web Demo](https://picovoice.ai/products/rhino.html)
+* [Interactive Web Demo](https://picovoice.ai/demos/rhino/)
 
 * [Picovoice Console](https://console.picovoice.ai/)
 
