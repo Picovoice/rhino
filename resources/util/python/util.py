@@ -79,7 +79,7 @@ def _porcupine_library_path():
         elif _PV_MACHINE == 'beaglebone':
             return _abs_path('resources/porcupine/lib/beaglebone/libpv_porcupine.so')
     elif _PV_SYSTEM == 'Windows':
-        return _abs_path('resources/porcupine/lib/windows/libpv_porcupine.dll')
+        return _abs_path('resources/porcupine/lib/windows/amd64/libpv_porcupine.dll')
 
     raise NotImplementedError('unsupported platform')
 
