@@ -64,7 +64,7 @@ about the Picovoice development and commercial license terms and fees, [contact 
 ## Use Cases
 
 Rhino should be used when the domain of voice interactions is specific (limited). Smart appliances, hearables,
-infotainment systems, and automotive, are a few examples.
+infotainment systems, and automotive are a few examples.
 
 * If open-domain transcription is required (i.e. the user can say anything), check out
 [Leopard](https://github.com/Picovoice/leopard)
