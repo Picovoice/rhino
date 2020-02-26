@@ -29,6 +29,7 @@ Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for ente
 
 ## Table of Contents
 * [License](#license)
+* [Use Cases](#use-cases)
 * [Try It Out](#try-it-out)
 * [Performance](#performance)
 * [Model Variants](#model-variants)
@@ -59,6 +60,19 @@ free-tier only allows model training for x86_64 (Linux, Mac, and Windows).
 
 Custom models for other platforms are only provided with the purchase of the Picovoice enterprise license. To enquire
 about the Picovoice development and commercial license terms and fees, [contact us](https://picovoice.ai/contact.html).
+
+## Use Cases
+
+Rhino should be used when the domain of voice interactions is specific (limited). Smart appliances, hearables,
+infotainment systems, and automotive, are a few examples.
+
+* If open-domain transcription is required (i.e. the user can say anything), check out
+[Leopard](https://github.com/Picovoice/leopard)
+* If open-domain transcription with real-time feedback (incremental transcription results) is needed, check out
+[Cheetah](https://github.com/Picovoice/cheetah).
+* If you need to recognize a few simple voice commands or activate a device using voice you should check out
+[Porcupine](https://github.com/Picovoice/porcupine).
+
 
 ## Try It Out
 
