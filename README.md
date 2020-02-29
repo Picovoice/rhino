@@ -118,11 +118,19 @@ lowerIntensity:
 In examples above, each voice command is called an **expression**. Expressions are what we expect the user to utter
 to interact with our voice application.
 
-Consider the expression *"Turn off the lights in the office"*. What we require from Rhino is to infer the
-intent (turnOff) and also record the specific details from the utterance, such as a specific location (if specified). We can capture these details
-using slots by updating the expression:
+Consider the expression *"Turn off the lights in the office"*. What we require from Rhino is:
 
-Turn off the lights in the `$location:lightLocation`.
+1. To infer the intent ("turnOff")
+2. Record the specific details from the utterance, in thiscase the location ("office")
+
+We can capture these details using slots by updating the expression:
+
+```yaml
+turnOff:
+  - Turn off the lights in the `$location:lightLocation`.
+  - Turn off all lights
+...
+```
 
 `$location:lightLocation` means that we expect a variable of type `location` to occur and we want to capture its value
 in a variable named `lightLocation`. We call such variable a **slot**. Slots give us the ability to capture details of the
