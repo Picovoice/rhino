@@ -121,14 +121,13 @@ to interact with our voice application.
 Consider the expression *"Turn off the lights in the office"*. What we require from Rhino is:
 
 1. To infer the intent ("turnOff")
-2. Record the specific details from the utterance, in thiscase the location ("office")
+2. Record the specific details from the utterance, in this case the location ("office")
 
 We can capture these details using slots by updating the expression:
 
 ```yaml
 turnOff:
   - Turn off the lights in the `$location:lightLocation`.
-  - Turn off all lights
 ...
 ```
 
