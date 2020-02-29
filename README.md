@@ -102,31 +102,31 @@ several trims of the engine targeted at a wide range of applications. These are 
 ## Terminology
 
 Rhino infers the user's intent from spoken commands within a domain of interest. We refer to such a specialized domain as
-a **Context**. Context can be thought of a set of voice commands each mapped to an intent:
+a **context**. A context can be thought of a set of voice commands each mapped to an intent:
 
 ```yaml
 turnOff:
-  - Turn off the lights in the office.
+  - Turn off the lights in the office
   - Turn off all lights
 setColor:
-  - Set the kitchen lights to blue.
+  - Set the kitchen lights to blue
 lowerIntensity:
-  - Dim the lights.
+  - Dim the lights
   - Make the lights darker
 ```
 
-In examples above each voice command is called an **Expression**. Expressions are what we expect the user to utter
-within the course of interaction with our application.
+In examples above, each voice command is called an **expression**. Expressions are what we expect the user to utter
+to interact with our voice application.
 
 Consider the expression *"Turn off the lights in the office"*. What we require from Rhino is to infer the
-intent (turnOff) and also the details of the command such as the location if specified. We can capture these details
-using slots by rewriting the expression as below:
+intent (turnOff) and also record the specific details from the utterance, such as a specific location (if specified). We can capture these details
+using slots by updating the expression:
 
 Turn off the lights in the `$location:lightLocation`.
 
 `$location:lightLocation` means that we expect a variable of type `location` to occur and we want to capture its value
-in a variable named `lightLocation`. We call such variable a **Slot**. Slots give us the ability to capture details of the
-spoken commands. Each slot type can be defined as a set of values for example
+in a variable named `lightLocation`. We call such variable a **slot**. Slots give us the ability to capture details of the
+spoken commands. Each slot type is be defined as a set of phrases. For example:
 
 ```yaml
 lightLocation:
@@ -141,22 +141,24 @@ lightLocation:
   - ...
 ```
 
-You can create custom contexts using [Picovoice Console](https://console.picovoice.ai).
+You can create custom contexts using the [Picovoice Console](https://console.picovoice.ai).
+
+To learn the complete expression syntax of Rhino, see the [Speech-to-Intent Syntax Cheat Sheet](https://picovoice.ai/docs/syntax-cheat-sheet/).
 
 ## Picovoice Console
 
-[Picovoice Console](https://console.picovoice.ai) enables creating Speech-to-Intent contexts. The Console is a web-based
-platform for building voice applications.
+The [Picovoice Console](https://console.picovoice.ai) enables creating Speech-to-Intent contexts. The Console is a web-based
+platform for building voice applications and training models.
 
 ## Structure of Repository
 
-If using SSH clone the repository by
+If using SSH, clone the repository with:
 
 ```bash
 git clone --recurse-submodules git@github.com:Picovoice/rhino.git
 ```
 
-If using HTTPS then type
+If using HTTPS, then type:
 
 ```bash
 git clone --recurse-submodules https://github.com/Picovoice/rhino.git
