@@ -127,7 +127,7 @@ We can capture these details using slots by updating the expression:
 
 ```yaml
 turnOff:
-  - Turn off the lights in the `$location:lightLocation`.
+  - Turn off the lights in the $location:lightLocation.
 ...
 ```
 
