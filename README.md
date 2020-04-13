@@ -465,7 +465,7 @@ pv_rhino_delete(rhino);
 
 ## Releases
 
-### v1.4.0 April 3rd, 2020
+### v1.4.0 April 13th, 2020
 
 * Accuracy improvements.
 * Builtin slots
