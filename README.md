@@ -80,7 +80,7 @@ infotainment systems, and automotive are a few examples.
 
 * [Picovoice Console](https://console.picovoice.ai/)
 
-![Picovoice Console](resources/doc/picovoice-console-rhino.gif)
+![Picovoice Console](resources/doc/console_rhino.gif)
 
 * Rhino and [Porcupine](https://github.com/Picovoice/porcupine) on an ARM Cortex-M4
 
