@@ -59,7 +59,7 @@ using [Picovoice Console](https://console.picovoice.ai/) for **non-commercial an
 free-tier only allows model training for x86_64 (Linux, Mac, and Windows).
 
 Custom models for other platforms are only provided with the purchase of the Picovoice enterprise license. To enquire
-about the Picovoice development and commercial license terms and fees, [contact us](https://picovoice.ai/contact.html).
+about the Picovoice development and commercial license terms and fees, [contact Picovoice](https://picovoice.ai/contact/).
 
 ## Use Cases
 
