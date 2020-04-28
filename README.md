@@ -25,7 +25,7 @@ Rhino is:
 * cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (all variants), Beagle Bone, Android, iOS,
 Linux (x86_64), Mac (x86_64), Windows (x86_64), and web browsers are supported. Furthermore, Support for various ARM
 Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for enterprise customers.
-* self-service. Developers and UX designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
+* self-service. Developers and UX designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
 ## Table of Contents
 * [License](#license)
@@ -55,7 +55,7 @@ Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for ente
 
 This repository is licensed under Apache 2.0 which allows running the engine on all supported platforms
 (except microcontrollers) using a set of freely-available [models](/resources/contexts). You may create custom models
-using [Picovoice Console](https://console.picovoice.ai/) for **non-commercial and personal use** free of charge. The 
+using [Picovoice Console](https://picovoice.ai/console/) for **non-commercial and personal use** free of charge. The 
 free-tier only allows model training for x86_64 (Linux, Mac, and Windows).
 
 Custom models for other platforms are only provided with the purchase of the Picovoice enterprise license. To enquire
@@ -78,7 +78,7 @@ infotainment systems, and automotive are a few examples.
 
 * [Interactive Web Demo](https://picovoice.ai/demos/rhino/)
 
-* [Picovoice Console](https://console.picovoice.ai/)
+* [Picovoice Console](https://picovoice.ai/console/)
 
 ![Picovoice Console](resources/doc/console_rhino.gif)
 
