@@ -148,13 +148,13 @@ lightLocation:
   - ...
 ```
 
-You can create custom contexts using the [Picovoice Console](https://console.picovoice.ai).
+You can create custom contexts using the [Picovoice Console](https://picovoice.ai/console/).
 
 To learn the complete expression syntax of Rhino, see the [Speech-to-Intent Syntax Cheat Sheet](https://picovoice.ai/docs/syntax-cheat-sheet/).
 
 ## Picovoice Console
 
-The [Picovoice Console](https://console.picovoice.ai) enables creating Speech-to-Intent contexts. The Console is a web-based
+The [Picovoice Console](https://picovoice.ai/console/) enables creating Speech-to-Intent contexts. The Console is a web-based
 platform for building voice applications and training models.
 
 ## Structure of Repository
