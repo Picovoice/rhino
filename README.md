@@ -76,11 +76,14 @@ infotainment systems, and automotive are a few examples.
 
 ## Try It Out
 
-* [Interactive Web Demo](https://picovoice.ai/demos/rhino/)
+* [Interactive Web Demo](https://picovoice.ai/demos/barista/)
 
-* [Picovoice Console](https://picovoice.ai/console/)
+* [Picovoice Console (Rhino Editor)](https://picovoice.ai/console/)
 
 ![Picovoice Console](resources/doc/console_rhino.gif)
+
+* [Picovoice Console Rhino Tutorial](https://picovoice.ai/tutorials/designing-a-drive-thru-with-edge-voice-ai/)
+* [Picovoice Console Rhino Video Tutorial](https://www.youtube.com/watch?v=npBaOx30QUs)
 
 * Rhino and [Porcupine](https://github.com/Picovoice/porcupine) on an ARM Cortex-M4
 
