@@ -15,12 +15,6 @@ import sys
 
 import soundfile
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../binding/python'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
-
-from rhino import Rhino
-from util import *
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -74,4 +68,9 @@ def main():
 
 
 if __name__ == '__main__':
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../../binding/python'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
+    from rhino import Rhino
+    from util import *
+
     main()

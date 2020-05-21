@@ -16,10 +16,6 @@ import unittest
 import soundfile
 from rhino import Rhino
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
-
-from util import *
-
 
 class RhinoTestCase(unittest.TestCase):
     rhino = None
@@ -99,4 +95,7 @@ class RhinoTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
+    from util import *
+
     unittest.main()

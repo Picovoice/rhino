@@ -19,14 +19,6 @@ import numpy as np
 import pyaudio
 import soundfile
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../binding/python'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/porcupine/binding/python'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
-
-from porcupine import Porcupine
-from rhino import Rhino
-from util import *
-
 
 class RhinoDemo(Thread):
     """
@@ -254,4 +246,11 @@ def main():
 
 
 if __name__ == '__main__':
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../../binding/python'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/porcupine/binding/python'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
+    from porcupine import Porcupine
+    from rhino import Rhino
+    from util import *
+
     main()
