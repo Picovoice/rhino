@@ -30,5 +30,38 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "copyFiles": [
+    {
+      "from": "../../../binding/javascript/rhino.js",
+      "to": "./public/scripts/rhino.js"
+    },
+    {
+      "from": "../../../lib/wasm/pv_rhino.js",
+      "to": "./public/scripts/pv_rhino.js"
+    },
+    {
+      "from": "../../../lib/wasm/pv_rhino.wasm",
+      "to": "./public/scripts/pv_rhino.wasm"
+    },
+    {
+      "from": "../../../resources/porcupine/lib/wasm/pv_porcupine.js",
+      "to": "./public/scripts/pv_porcupine.js"
+    },
+    {
+      "from": "../../../resources/porcupine/lib/wasm/pv_porcupine.wasm",
+      "to": "./public/scripts/pv_porcupine.wasm"
+    },
+    {
+      "from": "../../../resources/porcupine/demo/javascript/scripts/porcupine_worker.js",
+      "to": "./public/scripts/porcupine_worker.js"
+    },
+    {
+      "from": "../../../resources/porcupine/binding/javascript/porcupine.js",
+      "to": "./public/scripts/porcupine.js"
+    }
+  ],
+  "copyFilesSettings": {
+    "whenFileExists": "overwrite"
   }
 }
