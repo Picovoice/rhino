@@ -11,7 +11,7 @@ const porcupineWorkerUrl = `/scripts/porcupine_worker.js`
 const rhinoWorkerUrl = `/scripts/rhino_worker.js`
 const downsamplingWorkerUrl = `/scripts/downsampling_worker.js`
 
-class LightingDemoZoo {
+class Picovoice {
   constructor() {
     this.ppnRhnMgr = null
     this.keywordIDs = {
@@ -63,4 +63,4 @@ class LightingDemoZoo {
   }
 }
 
-export default LightingDemoZoo
+export default Picovoice
