@@ -1,38 +1,65 @@
-.App {
-  text-align: center;
-}
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.house-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  height: 404px;
+  width: 484px;
+  margin: 3rem auto;
 }
 
-.App-link {
-  color: #61dafb;
+.house-container .active {
+    box-shadow: 0 0 10px pink;
+    border: 2px solid pink;
+  }
+
+.house {
+  width: 480px;
+  height: 400px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.room {
+  fill: white;
+  stroke: black;
+  stroke-width: 4.8px;
+}
+
+.lights {
+  fill: none;
+  stroke: none;
+}
+
+#living-room.on {
+  fill: url(#livingRoomGradient);
+
+}
+
+#bedroom.on {
+  fill: url(#bedroomGradient);
+}
+
+#bathroom.on {
+  fill: url(#bathroomGradient);
+}
+
+#hallway.on {
+  fill: url(#hallwayGradient);
+}
+
+#kitchen.on {
+  fill: url(#kitchenGradient);
+}
+
+#closet.on {
+  fill: url(#closetGradient);
+}
+
+#pantry.on {
+  fill: url(#pantryGradient);
+}
+
+#outer-wall {
+  stroke: black;
+  stroke-width: 4.8px;
+  fill: white;
 }
