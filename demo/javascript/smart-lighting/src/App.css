@@ -1,4 +1,56 @@
-.lighting-demo .house-container {
+h1 {
+  text-align: center;
+}
+
+strong{
+  color: darkblue;
+}
+
+
+.lighting-demo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+}
+
+.side-panel{
+  width: 400px;
+  margin: 0rem 5rem;
+}
+
+
+
+.side-panel .instructions{
+  border: dashed 4px darkgrey;
+  border-radius: 2rem;
+  width: 80%;
+  text-align: center;
+  padding: 0.5rem 0.5rem;
+  margin: 1rem auto;
+}
+
+
+
+.side-panel .instructions .badge{
+  border-radius: 0.2rem;
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  margin: 0.4rem;
+}
+
+#demo-button{
+  background-color: lightblue;
+  padding: 0.8rem 2rem;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  display: block;
+  margin: auto;
+}
+
+.house-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6,46 +58,74 @@
   width: 484px;
   margin: 3rem auto;
 }
-.lighting-demo .house-container.active {
+.house-container.active {
   box-shadow: 0 0 10px pink;
   border: 2px solid pink;
 }
-.lighting-demo .house {
+
+.house {
   width: 480px;
   height: 400px;
 }
-.lighting-demo .house .room {
+.house .room {
   fill: white;
   stroke: black;
   stroke-width: 4.8px;
 }
-.lighting-demo .house .lights {
+.house .lights {
   fill: none;
   stroke: none;
 }
-.lighting-demo #living-room.on {
+#living-room.on {
   fill: url(#livingRoomGradient);
 }
-.lighting-demo #bedroom.on {
+#bedroom.on {
   fill: url(#bed roomGradient);
 }
-.lighting-demo #bathroom.on {
+#bathroom.on {
   fill: url(#bathroomGradient);
 }
-.lighting-demo #hallway.on {
+#hallway.on {
   fill: url(#hallwayGradient);
 }
-.lighting-demo #kitchen.on {
+#kitchen.on {
   fill: url(#kitchenGradient);
 }
-.lighting-demo #closet.on {
+#closet.on {
   fill: url(#closetGradient);
 }
-.lighting-demo #pantry.on {
+#pantry.on {
   fill: url(#pantryGradient);
 }
-.lighting-demo #outer-wall {
+#outer-wall {
   stroke: black;
   stroke-width: 4.8px;
   fill: white;
+}
+
+
+@media only screen and (max-width: 992px) {
+  .lighting-demo{
+    display: block;
+  }
+  .side-panel{
+    margin: auto;
+  }
+  .house-container{
+    margin: auto;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+
+  .house-container{
+    width: 254px;
+    height: 212.3px;
+    margin: 2rem auto;
+  }
+
+  .house {
+    width: 250px;
+    height: 208.3px;
+    }
 }
