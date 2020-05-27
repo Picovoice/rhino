@@ -1,5 +1,4 @@
-
-.house-container {
+.lighting-demo .house-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,58 +6,45 @@
   width: 484px;
   margin: 3rem auto;
 }
-
-.house-container .active {
-    box-shadow: 0 0 10px pink;
-    border: 2px solid pink;
-  }
-
-.house {
+.lighting-demo .house-container.active {
+  box-shadow: 0 0 10px pink;
+  border: 2px solid pink;
+}
+.lighting-demo .house {
   width: 480px;
   height: 400px;
 }
-
-.room {
+.lighting-demo .house .room {
   fill: white;
   stroke: black;
   stroke-width: 4.8px;
 }
-
-.lights {
+.lighting-demo .house .lights {
   fill: none;
   stroke: none;
 }
-
-#living-room.on {
+.lighting-demo #living-room.on {
   fill: url(#livingRoomGradient);
-
 }
-
-#bedroom.on {
-  fill: url(#bedroomGradient);
+.lighting-demo #bedroom.on {
+  fill: url(#bed roomGradient);
 }
-
-#bathroom.on {
+.lighting-demo #bathroom.on {
   fill: url(#bathroomGradient);
 }
-
-#hallway.on {
+.lighting-demo #hallway.on {
   fill: url(#hallwayGradient);
 }
-
-#kitchen.on {
+.lighting-demo #kitchen.on {
   fill: url(#kitchenGradient);
 }
-
-#closet.on {
+.lighting-demo #closet.on {
   fill: url(#closetGradient);
 }
-
-#pantry.on {
+.lighting-demo #pantry.on {
   fill: url(#pantryGradient);
 }
-
-#outer-wall {
+.lighting-demo #outer-wall {
   stroke: black;
   stroke-width: 4.8px;
   fill: white;

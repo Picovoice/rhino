@@ -1,20 +1,7 @@
 import React, { useState, useEffect } from "react";
+import "./App.css"
 
 import Picovoice from "./picovoice/picovoice";
-
-// // Bootstrap
-// import Alert from "react-bootstrap/Alert"
-// import Button from "react-bootstrap/Button"
-// import Col from "react-bootstrap/Col"
-// import Row from "react-bootstrap/Row"
-// import Container from "react-bootstrap/Container"
-// import Accordion from "react-bootstrap/Accordion"
-// import Card from "react-bootstrap/Card"
-// import Badge from "react-bootstrap/Badge"
-
-// // FontAwesome
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-// import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
 
 const demo = new Picovoice();
 
@@ -414,8 +401,8 @@ export default function LightingDemo(props) {
   });
 
   return (
-    <span>
-      <div class="text-center mb-5">
+    <span className = "lighting-demo">
+      <div className="text-center mb-5">
         <button
           disabled={demoLoading}
           className={
@@ -867,6 +854,7 @@ export default function LightingDemo(props) {
             className={`lights${bathroomLightState ? " on" : ""}`}
             id="bathroom"
           />
+
           {/* HALLWAY LIGHTS*/}
           <rect
             x="305"
@@ -876,6 +864,7 @@ export default function LightingDemo(props) {
             className={`lights${hallwayLightState ? " on" : ""}`}
             id="hallway"
           />
+          
           {/* CLOSET LIGHTS*/}
           <rect
             x="256"
@@ -885,6 +874,7 @@ export default function LightingDemo(props) {
             className={`lights${closetLightState ? " on" : ""}`}
             id="closet"
           />
+
           {/* PANTRY LIGHTS*/}
           <rect
             x="256"
