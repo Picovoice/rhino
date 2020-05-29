@@ -630,69 +630,69 @@
 
 </script>
 
-<div align="center" style="padding: 2.5em">
+<div style="text-align: center;" style="padding: 2.5em">
     <h1>
         Rhino Demo
     </h1>
 
-    <p align="left" style="line-height: 2; font-size: 1.25em">
+    <p style="text-align: left;" style="line-height: 2; font-size: 1.25em">
         This demo simulates a smart lighting system. Note that you need a  working microphone. This demo is running
         locally in the browser. You can turn off your internet connection and it will keep working. After pressing start
         you can issue commands such as "Picovoice, turn on the lights". The full list of commands is available below.
     </p>
 
-    <p align="center">
+    <p style="text-align: center;">
         <button id="demo_button" onclick="start()" style="font-size: 1.5em; padding: 0.5em 1em">
             Start Demo
         </button>
     </p>
 
-    <div align="center" id="inference-box" style="background-color:#00BFFF;min-height: 200px;margin: 2rem 4rem;">
+    <div style="text-align: center;" id="inference-box" style="background-color:#00BFFF;min-height: 200px;margin: 2rem 4rem;">
 
     </div>
 
-    <div align="left" style="margin: 2rem 4rem;">
-    context:<br/>
-    &nbsp&nbsp expressions:<br/>
-    &nbsp&nbsp&nbsp&nbsp turnLight:<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[switch, turn] $state:state [the, all] lights"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[switch, turn] [the, all] lights $state:state"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[switch, turn] $state:state the $location:location lights"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[switch, turn] the $location:location lights $state:state"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[switch, turn] $state:state the lights in the $location:location"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[switch, turn] the lights in the $location:location $state:state"<br/>
-    &nbsp&nbsp&nbsp&nbsp turnOffLight:<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "shut off the $location:location lights"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "shut the $location:location lights off"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "shut off the lights in the $location:location"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "shut the lights in the $location:location off"<br/>
-    &nbsp&nbsp&nbsp&nbsp changeIntensity:<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[turn, make] [the, all] lights $intensityChange:intensityChange"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[turn, make] the $location:location lights $intensityChange:intensityChange"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[turn, make] the lights in the $location:location
-    $intensityChange:intensityChange"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "$adjustIntensity:adjustIntensity brightness in the $location:location"<br/>
-    &nbsp&nbsp&nbsp&nbsp lowerIntensity:<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "dim [the, all] lights"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "dim the $location:location lights"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "dim the lights in the $location:location"<br/>
-    &nbsp&nbsp&nbsp&nbsp changeColor:<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[set, change, switch] the lights to $color:color"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[set, change, switch] the $location:location lights to $color:color"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[set, change, switch] the lights in the $location:location to $color:color"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[set, change, switch] color to $color:color"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[set, change, switch] color in the $location:location to $color:color"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[turn, make] the lights $color:color"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[turn, make] the $location:location lights $color:color"<br/>
-    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp - "[turn, make] the lights in the $location:location $color:color"<br/>
-    &nbsp&nbsp slots:<br/>
-    &nbsp&nbsp&nbsp&nbsp state: ["off", "on"]<br/>
-    &nbsp&nbsp&nbsp&nbsp color: ["black", "blue", "green", "pink", "purple", "red", "violet", "white", "yellow"]<br/>
-    &nbsp&nbsp&nbsp&nbsp location: ["attic", "balcony", "basement", "bathroom", "bedroom", "entrance", "kitchen",
-    "living room"]<br/>
-    &nbsp&nbsp&nbsp&nbsp intensityChange: ["brighter", "darker", "dimmer"]<br/>
-    &nbsp&nbsp&nbsp&nbsp adjustIntensity: ["decrease", "increase", "lower", "raise"]<br/>
-</div>
+    <div style="text-align:left;">
+        <pre>
+        context: 
+          expressions: 
+            turnLight: 
+              - "[switch, turn] [the, all] lights $state:state" 
+              - "[switch, turn] $state:state [the, all] lights" 
+              - "[switch, turn] $state:state the $location:location lights" 
+              - "[switch, turn] $state:state the lights in the $location:location" 
+              - "[switch, turn] the $location:location lights $state:state" 
+              - "[switch, turn] the lights in the $location:location $state:state" 
+            turnOffLight: 
+              - "shut off the $location:location lights" 
+              - "shut off the lights in the $location:location" 
+              - "shut the $location:location lights off" 
+              - "shut the lights in the $location:location off" 
+            changeIntensity: 
+              - "[turn, make] [the, all] lights $intensityChange:intensityChange" 
+              - "[turn, make] the $location:location lights $intensityChange:intensityChange" 
+              - "[turn, make] the lights in the $location:location $intensityChange:intensityChange" 
+              - "$adjustIntensity:adjustIntensity brightness in the $location:location" 
+            lowerIntensity: 
+              - "dim [the, all] lights" 
+              - "dim the $location:location lights" 
+              - "dim the lights in the $location:location" 
+            changeColor: 
+              - "[set, change, switch] color in the $location:location to $color:color" 
+              - "[set, change, switch] color to $color:color" 
+              - "[set, change, switch] the $location:location lights to $color:color" 
+              - "[set, change, switch] the lights in the $location:location to $color:color" 
+              - "[set, change, switch] the lights to $color:color" 
+              - "[turn, make] the $location:location lights $color:color" 
+              - "[turn, make] the lights $color:color" 
+              - "[turn, make] the lights in the $location:location $color:color" 
+          slots: 
+            adjustIntensity: ["decrease", "increase", "lower", "raise"] 
+            color: ["black", "blue", "green", "pink", "purple", "red", "violet", "white", "yellow"] 
+            intensityChange: ["brighter", "darker", "dimmer"] 
+            location: ["attic", "balcony", "basement", "bathroom", "bedroom", "entrance", "kitchen", "living room"] 
+            state: ["off", "on"] 
+        </pre>
+      </div>
 </div>
 </body>
 </html>
