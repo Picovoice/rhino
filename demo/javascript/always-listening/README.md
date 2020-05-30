@@ -4,6 +4,8 @@
 
 Install the demo's dependencies by using either yarn or npm. Execute the commands provided from [demo/javascript](/demo/javascript). This will launch a local server hosting the demo.
 
+Note: As this demo uses Porcupine, make sure your local repository has the porcupine submodule initialized. Otherwise you will encounter errors when it tries to copy the Porcupine files.
+
 ### Yarn
 
 ```bash
