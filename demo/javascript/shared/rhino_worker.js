@@ -18,6 +18,12 @@ onmessage = function (e) {
     case "process":
       process(e.data.inputFrame);
       break;
+    case "pause":
+      paused = true;
+      break;
+    case "resume":
+      paused = false;
+      break;
     case "release":
       release();
       break;
@@ -25,11 +31,12 @@ onmessage = function (e) {
 };
 
 let context;
-
+let paused;
 let rhino = null;
 
 function init(context_) {
   context = context_;
+  paused = false;
 
   if (Rhino.isLoaded()) {
     rhino = Rhino.create(context);
@@ -37,12 +44,16 @@ function init(context_) {
 }
 
 function process(inputFrame) {
-  if (rhino == null && Rhino.isLoaded()) {
+  if (rhino === null && Rhino.isLoaded()) {
     rhino = Rhino.create(context);
-  } else if (rhino != null) {
-    let result = rhino.process(inputFrame);
-    if ("isUnderstood" in result) {
-      postMessage(result);
+  }
+
+  if (!paused) {
+    if (rhino !== null) {
+      let result = rhino.process(inputFrame);
+      if ("isUnderstood" in result) {
+        postMessage(result);
+      }
     }
   }
 }
