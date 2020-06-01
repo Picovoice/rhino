@@ -30,6 +30,10 @@
     {
       "from": "../../../lib/wasm/pv_rhino.wasm",
       "to": "pv_rhino.wasm"
+    },
+    {
+      "from": "../shared/rhino_worker.js",
+      "to": "rhino_worker.js"
     }
   ],
   "copyFilesSettings": {
