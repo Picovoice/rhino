@@ -468,6 +468,10 @@ pv_rhino_delete(rhino);
 
 ## Releases
 
+### v1.5.0 June 4th, 2020
+
+* Accuracy improvements.
+
 ### v1.4.0 April 13th, 2020
 
 * Accuracy improvements.
