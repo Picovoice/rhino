@@ -13,7 +13,6 @@ PorcupineRhinoManager = (function () {
   let ppnReady = false;
   let rhnReady = false;
   let downsamplingScript;
-  let rhinoWorkerScript;
   let initCallback;
 
   let isWakeWordDetected = false;
