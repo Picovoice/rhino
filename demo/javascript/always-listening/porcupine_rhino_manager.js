@@ -26,8 +26,8 @@ PorcupineRhinoManager = (function () {
     downsamplingScript
   ) {
     porcupineWorker = new Worker(porcupineWorkerScript);
-    porcupineWorker.postMessage({
     rhinoWorker = new Worker(rhinoWorkerScript);
+    rhinoWorker.postMessage({ command: "init", context: context });
 
     let engine = this;
 
