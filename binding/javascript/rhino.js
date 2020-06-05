@@ -11,21 +11,34 @@ let Rhino = (function () {
   /**
    * Binding for Speech-to-Intent object. It initializes the JavaScript binding for WebAssembly module and exposes
    * a factory method for creating new instances of speech-to-intent engine.
+   *
+   * When the WebAssembly module has finished loading, if a callback function was provided via the RhinoOptions object,
+   * it will be invoked. Otherwise, use `.isLoaded()` to determine if Rhino is ready.
    */
 
-  let initWasm = null;
-  let releaseWasm = null;
-  let processWasm = null;
-  let isUnderstoodWasm = null;
-  let getIntentWasm = null;
-  let getNumSlotsWasm = null;
-  let getSlotWasm = null;
-  let getSlotValueWasm = null;
-  let resetWasm = null;
+  let callback = null;
   let contextInfoWasm = null;
   let frameLength = null;
-  let version = null;
+  let getIntentWasm = null;
+  let getNumSlotsWasm = null;
+  let getSlotValueWasm = null;
+  let getSlotWasm = null;
+  let initWasm = null;
+  let isUnderstoodWasm = null;
+  let processWasm = null;
+  let releaseWasm = null;
+  let resetWasm = null;
   let sampleRate = null;
+  let version = null;
+
+  if (typeof RhinoOptions !== "undefined") {
+    if (
+      RhinoOptions !== null &&
+      typeof RhinoOptions.callback !== "undefined"
+    ) {
+      callback = RhinoOptions.callback;
+    }
+  }
 
   let rhinoModule = RhinoModule();
   rhinoModule.then(function (Module) {
@@ -62,6 +75,10 @@ let Rhino = (function () {
     frameLength = Module.cwrap("pv_rhino_wasm_frame_length", "number", [])();
     version = Module.cwrap("pv_rhino_wasm_version", "string", [])();
     sampleRate = Module.cwrap("pv_wasm_sample_rate", "number", [])();
+
+    if (callback !== undefined && callback !== null) {
+      callback();
+    }
   });
 
   let isLoaded = function () {
