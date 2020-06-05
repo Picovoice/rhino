@@ -213,20 +213,29 @@ issue commands such as "turn off the lights".
 
 ### JavaScript Demos
 
-You need `npm` installed first. Install dependencies by executing the following commands from
-[demo/javaScript/standalone](/demo/javascript/standalone)
+You need `yarn` or `npm` installed first. Install the demo dependencies by executing either of the following sets of `yarn` or `npm` commands from
+[demo/javascript/standalone](/demo/javascript/standalone)
+
+#### Yarn
+
+```bash
+yarn
+yarn copy
+yarn start
+```
+
+#### NPM
 
 ```bash
 npm install
 npm install -g copy-files-from-to
 copy-files-from-to
+npx serve
 ```
 
-Run this to launch the demo and follow instructions on the page.
+#### Web Browser
 
-```bash
-npx live-server --ignore="${PWD}/node_modules"
-```
+The last command will launch a local server running the demo. Open http://localhost:5000 in your web browser and follow the instructions on the page.
 
 ### C Demos
 
