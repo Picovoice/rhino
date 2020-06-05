@@ -7,11 +7,7 @@
     specific language governing permissions and limitations under the License.
 */
 
-PorcupineRhinoManager = function (
-  porcupineWorkerScript,
-  rhinoWorkerScript,
-  downsamplingScript
-) {
+PorcupineRhinoManager = (function () {
   let porcupineWorker;
   let rhinoWorker;
 
@@ -23,34 +19,44 @@ PorcupineRhinoManager = function (
     keywordDetectionCallback,
     context,
     inferenceCallback,
-    errorCallback
+    errorCallback,
+    initCallback,
+    porcupineWorkerScript,
+    rhinoWorkerScript,
+    downsamplingScript
   ) {
     porcupineWorker = new Worker(porcupineWorkerScript);
     porcupineWorker.postMessage({
-      command: "init",
-      keywordIDs: keywordsID,
-      sensitivities: keywordSensitivities,
-    });
-
     rhinoWorker = new Worker(rhinoWorkerScript);
     rhinoWorker.postMessage({ command: "init", context: context });
 
-    porcupineWorker.onmessage = function (e) {
-      if (!isWakeWordDetected) {
-        isWakeWordDetected = e.data.keyword !== null;
+    let engine = this;
 
-        if (isWakeWordDetected) {
-          keywordDetectionCallback(e.data.keyword);
+    porcupineWorker.onmessage = function (messageEvent) {
+      if (messageEvent.data.status === "ppn-init") {
+        porcupineWorker.postMessage({
+          command: "init",
+          keywordIDs: keywordsID,
+          sensitivities: keywordSensitivities,
+        });
+        WebVoiceProcessor.start([engine], downsamplingScript, errorCallback);
+
+        initCallback();
+      } else {
+        if (!isWakeWordDetected) {
+          isWakeWordDetected = messageEvent.data.keyword !== null;
+
+          if (isWakeWordDetected) {
+            keywordDetectionCallback(messageEvent.data.keyword);
+          }
         }
       }
     };
 
-    rhinoWorker.onmessage = function (e) {
-      inferenceCallback(e.data);
+    rhinoWorker.onmessage = function (messageEvent) {
+      inferenceCallback(messageEvent.data);
       isWakeWordDetected = false;
     };
-
-    WebVoiceProcessor.start([this], downsamplingScript, errorCallback);
   };
 
   let stop = function () {
@@ -68,4 +74,4 @@ PorcupineRhinoManager = function (
   };
 
   return { start: start, processFrame: processFrame, stop: stop };
-};
+})();

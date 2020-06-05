@@ -505,7 +505,7 @@
 
       let keywordDetectionCallback = function (keyword) {
         document.querySelector("#inference-box").innerHTML =
-          "detected '" + keyword + " <br/>";
+          "detected '" + keyword + "'" + " <br/>";
       };
 
       let inferenceCallback = function (info) {
@@ -524,34 +524,37 @@
         stop();
       };
 
-      let porcupineRhinoManager;
+      let initCallback = function () {
+        let demoButton = document.querySelector("#demo_button");
+        demoButton.setAttribute("onclick", "stop()");
+        demoButton.innerText = "Stop Demo";
+        demoButton.disabled = false;
+      };
 
       start = function () {
-        porcupineRhinoManager = PorcupineRhinoManager(
-          "/porcupine_worker.js",
-          "/rhino_worker.js",
-          "/node_modules/@picovoice/web-voice-processor/src/downsampling_worker.js"
-        );
-
-        porcupineRhinoManager.start(
+        PorcupineRhinoManager.start(
           KEYWORDS_ID,
           SENSITIVITIES,
           keywordDetectionCallback,
           context,
           inferenceCallback,
-          errorCallback
+          errorCallback,
+          initCallback,
+          "/porcupine_worker.js",
+          "/rhino_worker.js",
+          "/node_modules/@picovoice/web-voice-processor/src/downsampling_worker.js"
         );
 
         document.querySelector("#inference-box").textContent = "";
 
-        document
-          .querySelector("#demo_button")
-          .setAttribute("onclick", "stop()");
-        document.querySelector("#demo_button").innerText = "Stop Demo";
+        let demoButton = document.querySelector("#demo_button");
+
+        demoButton.innerText = "Initializing...";
+        demoButton.disabled = true;
       };
 
       stop = function () {
-        porcupineRhinoManager.stop();
+        PorcupineRhinoManager.stop();
 
         document
           .querySelector("#demo_button")
