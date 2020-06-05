@@ -359,31 +359,37 @@
         stop();
       };
 
-      let rhinoManager;
+      initCallback = function () {
+        let demoButton = document.querySelector("#demo_button");
+        demoButton.disabled = false;
+        demoButton.innerText = "Stop Demo";
+      };
 
       start = function () {
-        rhinoManager = RhinoManager(
+        RhinoManager.start(
+          context,
+          inferenceCallback,
+          errorCallback,
+          initCallback,
           "/rhino_worker.js",
           "/node_modules/@picovoice/web-voice-processor/src/downsampling_worker.js"
         );
 
-        rhinoManager.start(context, inferenceCallback, errorCallback);
-
         document.querySelector("#inference-box").textContent = "";
 
-        document
-          .querySelector("#demo_button")
-          .setAttribute("onclick", "stop()");
-        document.querySelector("#demo_button").innerText = "Stop Demo";
+        let demoButton = document.querySelector("#demo_button");
+
+        demoButton.setAttribute("onclick", "stop()");
+        demoButton.innerText = "Initializing...";
+        demoButton.disabled = true;
       };
 
       stop = function () {
-        rhinoManager.stop();
+        RhinoManager.stop();
 
-        document
-          .querySelector("#demo_button")
-          .setAttribute("onclick", "start()");
-        document.querySelector("#demo_button").innerText = "Start Demo";
+        let demoButton = document.querySelector("#demo_button");
+        demoButton.setAttribute("onclick", "start()");
+        demoButton.innerText = "Start Demo";
       };
     </script>
 
@@ -392,7 +398,7 @@
         Rhino Demo
       </h1>
 
-      <p style="line-height: 2; font-size: 1.25em; text-align: left; ">
+      <p style="line-height: 2; font-size: 1.25em; text-align: left;">
         This demo simulates a smart lighting system using Rhino. Note that you
         need a working microphone. This demo is running locally in the browser.
         You can turn off your internet connection and it will keep working.
@@ -410,10 +416,15 @@
 
       <div
         id="inference-box"
-        style="background-color: #00bfff; min-height: 200px; margin: 2rem 4rem; text-align: center;"
+        style="
+          background-color: #00bfff;
+          min-height: 200px;
+          margin: 2rem 4rem;
+          text-align: center;
+        "
       ></div>
 
-      <div style="text-align:left;">
+      <div style="text-align: left;">
         <pre>
         context: 
           expressions: 

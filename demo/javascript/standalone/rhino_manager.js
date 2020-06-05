@@ -7,23 +7,36 @@
     specific language governing permissions and limitations under the License.
 */
 
-RhinoManager = function (rhinoWorkerScript, downsamplingScript) {
+RhinoManager = (function () {
   let rhinoWorker;
 
-  let start = function (context, inferenceCallback, errorCallback) {
+  let start = function (
+    context,
+    inferenceCallback,
+    errorCallback,
+    initCallback,
+    rhinoWorkerScript,
+    downsamplingScript
+  ) {
     rhinoWorker = new Worker(rhinoWorkerScript);
-    rhinoWorker.postMessage({ command: "init", context: context });
 
-    rhinoWorker.onmessage = function (e) {
-      inferenceCallback(e.data);
+    let engine = this;
+
+    rhinoWorker.onmessage = function (messageEvent) {
+      if (messageEvent.data.status === "rhn-init") {
+        rhinoWorker.postMessage({ command: "init", context: context });
+        WebVoiceProcessor.start([engine], downsamplingScript, errorCallback);
+        initCallback();
+      } else {
+        inferenceCallback(messageEvent.data);
+      }
     };
-
-    WebVoiceProcessor.start([this], downsamplingScript, errorCallback);
   };
 
   let stop = function () {
     WebVoiceProcessor.stop();
     rhinoWorker.postMessage({ command: "release" });
+    rhinoWorker = null;
   };
 
   let processFrame = function (frame) {
@@ -31,4 +44,4 @@ RhinoManager = function (rhinoWorkerScript, downsamplingScript) {
   };
 
   return { start: start, processFrame: processFrame, stop: stop };
-};
+})();
