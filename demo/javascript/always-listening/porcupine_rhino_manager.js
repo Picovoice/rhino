@@ -10,6 +10,10 @@
 PorcupineRhinoManager = (function () {
   let porcupineWorker;
   let rhinoWorker;
+  let ppnReady = false;
+  let rhnReady = false;
+  let downsamplingScript;
+  let initCallback;
 
   let isWakeWordDetected = false;
 
@@ -19,28 +23,30 @@ PorcupineRhinoManager = (function () {
     keywordDetectionCallback,
     context,
     inferenceCallback,
-    errorCallback,
-    initCallback,
+    errorCallback_,
+    initCallback_,
     porcupineWorkerScript,
     rhinoWorkerScript,
-    downsamplingScript
+    downsamplingScript_
   ) {
+    ppnReady = false;
+    rhnReady = false;
     porcupineWorker = new Worker(porcupineWorkerScript);
     rhinoWorker = new Worker(rhinoWorkerScript);
-    rhinoWorker.postMessage({ command: "init", context: context });
 
-    let engine = this;
+    downsamplingScript = downsamplingScript_;
+    errorCallback = errorCallback_;
+    initCallback = initCallback_;
 
     porcupineWorker.onmessage = function (messageEvent) {
       if (messageEvent.data.status === "ppn-init") {
+        ppnReady = true;
         porcupineWorker.postMessage({
           command: "init",
           keywordIDs: keywordsID,
           sensitivities: keywordSensitivities,
         });
-        WebVoiceProcessor.start([engine], downsamplingScript, errorCallback);
-
-        initCallback();
+        ready(this);
       } else {
         if (!isWakeWordDetected) {
           isWakeWordDetected = messageEvent.data.keyword !== null;
@@ -50,18 +56,33 @@ PorcupineRhinoManager = (function () {
           }
         }
       }
-    };
+    }.bind(this);
 
     rhinoWorker.onmessage = function (messageEvent) {
-      inferenceCallback(messageEvent.data);
-      isWakeWordDetected = false;
-    };
+      if (messageEvent.data.status === "rhn-init") {
+        rhnReady = true;
+        rhinoWorker.postMessage({ command: "init", context: context });
+        ready(this);
+      } else {
+        inferenceCallback(messageEvent.data);
+        isWakeWordDetected = false;
+      }
+    }.bind(this);
+  };
+
+  let ready = function (engine) {
+    if (ppnReady && rhnReady) {
+      WebVoiceProcessor.start([engine], downsamplingScript, errorCallback);
+      initCallback();
+    }
   };
 
   let stop = function () {
     WebVoiceProcessor.stop();
     porcupineWorker.postMessage({ command: "release" });
+    porcupineWorker = null;
     rhinoWorker.postMessage({ command: "release" });
+    rhinoWorker = null;
   };
 
   let processFrame = function (frame) {
