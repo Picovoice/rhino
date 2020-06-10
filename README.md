@@ -458,8 +458,7 @@ while (true) {
 
             // add code to take action based on inferred intent and slot values
 
-            free(slots);
-            free(values);
+            pv_rhino_free_slots_and_values(rhino, slots, values);
         } else {
             // add code to handle unsupported commands
         }
