@@ -1,0 +1,126 @@
+Metadata-Version: 2.1
+Name: pipwin
+Version: 0.5.0
+Summary: pipwin installs compiled python binaries on windows provided by Christoph Gohlke
+Home-page: https://github.com/lepisma/pipwin
+Author: lepisma
+Author-email: abhinav.tushar.vs@gmail.com
+License: BSD
+Keywords: pipwin windows binaries
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 3
+Requires-Dist: docopt
+Requires-Dist: requests
+Requires-Dist: pyprind
+Requires-Dist: six
+Requires-Dist: beautifulsoup4 (>=4.9.0)
+Requires-Dist: js2py
+Requires-Dist: packaging
+Requires-Dist: pySmartDL (==1.2.4); python_version < "3.4"
+Requires-Dist: pySmartDL (>=1.3.1); python_version >= "3.4"
+
+===============================
+pipwin
+===============================
+
+
+.. image:: https://img.shields.io/pypi/v/pipwin.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/pipwin/
+    :alt: Latest Version
+
+.. image:: https://img.shields.io/appveyor/ci/lepisma/pipwin.svg?style=flat-square
+    :target: https://ci.appveyor.com/project/lepisma/pipwin
+    :alt: Build
+
+.. image:: https://img.shields.io/pypi/l/pipwin.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/pipwin/
+    :alt: License
+
+**pipwin** is a complementary tool for **pip** on Windows. **pipwin** installs
+unofficial python package binaries for windows provided by Christoph Gohlke here
+`http://www.lfd.uci.edu/~gohlke/pythonlibs/
+<http://www.lfd.uci.edu/~gohlke/pythonlibs/>`_
+
+**Version 0.2.X changes the structure of cache file. Make sure to run `pipwin refresh` if updated.**
+
+QuickStart
+^^^^^^^^^^
+
+.. code-block::
+
+   >> pip install pipwin
+   >> pipwin search cv
+
+   Did you mean any of these ?
+
+     * cvxopt
+     * opencv-python
+     * abcview
+     * cvxpy
+
+   >> pipwin install opencv-python
+
+   >> pipwin install numpy>=1.11
+
+
+Details
+^^^^^^^
+
+- On first run, **pipwin** builds a cache of available package list in ``~/.pipwin``
+
+- You can force a cache rebuild using : ``pipwin refresh``
+
+- List all available packages : ``pipwin list``
+
+- Search packages : ``pipwin search <partial_name/name>``
+
+- Install packages : ``pipwin install <package>``
+
+  Also works version specifiers, e.g. ``pipwin install <package>==<version>`` or
+  ``pipwin install <package><=<version>``
+
+- Download only (to ``~/pipwin`` or ``<dest>`` if provided) : ``pipwin
+  download -d <dest> <package>``
+
+- Install from pipwin requirements file : ``pipwin install -r requirements.txt``
+
+- Download only from pipwin requirements file : ``pipwin download -r
+  requirements.txt``
+
+- Uninstall packages (Can directly use **pip** for this) : ``pipwin uninstall
+  <package>``
+
+**Free software: BSD license**
+
+
+Changelog
+---------
+
+v0.5.0
+~~~~~~
+
+- Handles text vs string parsing for beautifulsoup4 for python2 vs python3.
+- Fixes [issue 43](https://github.com/lepisma/pipwin/issues/43)
+
+v0.4.9
+~~~~~~
+
+- More robust whitespace handling in requirement parsing.
+
+v0.4.8
+~~~~~~
+
+- Using PySmartDL to handle download and install of packages.
+- Removed progress bar and streaming downloader blocks now handled by PySmartDL.
+
+v0.4.7
+~~~~~~
+
+- Using postman client type to overcome use of robobrowser to create package
+  cache.
+
+

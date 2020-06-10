@@ -1,5 +1,5 @@
 /*
-    Copyright 2018 Picovoice Inc.
+    Copyright 2018-2020 Picovoice Inc.
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
     Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -7,28 +7,41 @@
     specific language governing permissions and limitations under the License.
 */
 
-RhinoManager = (function (rhinoWorkerScript, downsamplingScript) {
-    let rhinoWorker;
+RhinoManager = (function () {
+  let rhinoWorker;
 
-    let start = function (context, inferenceCallback, errorCallback) {
-        rhinoWorker = new Worker(rhinoWorkerScript);
-        rhinoWorker.postMessage({command: "init", context: context});
+  let start = function (
+    context,
+    inferenceCallback,
+    errorCallback,
+    initCallback,
+    rhinoWorkerScript,
+    downsamplingScript
+  ) {
+    rhinoWorker = new Worker(rhinoWorkerScript);
 
-        rhinoWorker.onmessage = function (e) {
-            inferenceCallback(e.data);
-        };
+    let engine = this;
 
-        WebVoiceProcessor.start([this], downsamplingScript, errorCallback);
+    rhinoWorker.onmessage = function (messageEvent) {
+      if (messageEvent.data.status === "rhn-init") {
+        rhinoWorker.postMessage({ command: "init", context: context });
+        WebVoiceProcessor.start([engine], downsamplingScript, errorCallback);
+        initCallback();
+      } else {
+        inferenceCallback(messageEvent.data);
+      }
     };
+  };
 
-    let stop = function () {
-        WebVoiceProcessor.stop();
-        rhinoWorker.postMessage({command: "release"});
-    };
+  let stop = function () {
+    WebVoiceProcessor.stop();
+    rhinoWorker.postMessage({ command: "release" });
+    rhinoWorker = null;
+  };
 
-    let processFrame = function (frame) {
-        rhinoWorker.postMessage({command: "process", inputFrame: frame});
-    };
+  let processFrame = function (frame) {
+    rhinoWorker.postMessage({ command: "process", inputFrame: frame });
+  };
 
-    return {start: start, processFrame: processFrame, stop: stop}
-});
+  return { start: start, processFrame: processFrame, stop: stop };
+})();
