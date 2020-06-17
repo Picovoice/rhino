@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import Picovoice from "./picovoice/picovoice"
+import "@picovoice/web-voice-processor/src/web_voice_processor"
 import "./App.css";
+import {Helmet} from "react-helmet"
 
-import Picovoice from "./picovoice/picovoice";
+const demo = new Picovoice()
 
-const demo = new Picovoice();
 
 const LIVING_ROOM = "living room";
 const BEDROOM = "bedroom";
@@ -292,7 +294,7 @@ export default function LightingDemo(props) {
   };
 
   const startListening = () => {
-    demo.start();
+    demo.start(initEvent, keywordEvent, inferenceEvent)
     setListening(true);
     setWakePhrase(false);
     setIntentFailed(false);
@@ -316,48 +318,54 @@ export default function LightingDemo(props) {
     setMessage("");
   };
 
-  const inferenceEvent = (event) => {
-    const information = event.detail;
-    setWakePhrase(false);
-    console.log(information);
-    if (information.isUnderstood === false) {
-      setIntentFailed(true);
-    } else {
-      setIntentFailed(false);
-      const intent = information.intent;
-      const slots = information.slots;
-      const location = slots["location"];
+  const inferenceEvent = information => {
+    setWakePhrase(false)
 
-      if (intent === "StateControl") {
-        const state = slots["state"] === "on" ? true : false;
-        STATE_MAP.get(location)(state);
-      } else if (intent === "ColorControl") {
-        const color = LIGHT_MAP.get(slots["color"]);
-        COLOR_MAP.get(location)(color);
+    if (information.isUnderstood === false) {
+      setIntentFailed(true)
+    } else {
+      setIntentFailed(false)
+      const intent = information.intent
+      const slots = information.slots
+      const location =
+        slots["location"] === undefined ? "all" : slots["location"]
+
+      if (intent === "changeLightState") {
+        const state = slots["state"] === "on" ? true : false
+        STATE_MAP.get(location)(state)
+      } else if (intent === "changeLightStateOff") {
+        STATE_MAP.get(location)(false)
+      } else if (intent === "changeColor") {
+        const color = LIGHT_MAP.get(slots["color"])
+        COLOR_MAP.get(location)(color)
         if (location !== "all") {
-          STATE_MAP.get(location)(true);
+          STATE_MAP.get(location)(true)
         }
-      } else if (intent === "IntensityControl") {
-        const dir = DIRECTION_MAP.get(slots["intensity"]);
-        changeIntensity(location, dir);
-      } else if (intent === "Reset") {
-        const resetAspect = RESET_MAP.get(slots["aspect"]);
+      } else if (intent === "changeIntensity") {
+        const dir = DIRECTION_MAP.get(slots["intensity"])
+        changeIntensity(location, dir)
+      } else if (intent === "reset") {
+        const resetAspect = RESET_MAP.get(slots["feature"])
         if (location === null || location === undefined) {
           if (resetAspect === ASPECT_COLOR) {
-            setAllLightColor(LIGHT_YELLOW);
+            setAllLightColor(LIGHT_YELLOW)
           } else if (resetAspect === ASPECT_INTENSITY) {
-            setAllLightIntensity(1);
+            setAllLightIntensity(1)
           }
         } else {
           if (resetAspect === ASPECT_COLOR) {
-            COLOR_MAP.get(location)(LIGHT_YELLOW);
+            COLOR_MAP.get(location)(LIGHT_YELLOW)
           } else if (resetAspect === ASPECT_INTENSITY) {
-            changeIntensity(location, "reset");
+            changeIntensity(location, "reset")
           }
         }
       }
     }
-  };
+  }
+
+  useEffect(() => {
+    demo.refresh(initEvent, keywordEvent, inferenceEvent)
+  })
 
   useEffect(() => {
     if (message !== "") {
@@ -376,32 +384,12 @@ export default function LightingDemo(props) {
     };
   }, []);
 
-  useEffect(() => {
-    document.addEventListener("ppn-init", initEvent);
-
-    return () => {
-      document.removeEventListener("ppn-init", initEvent);
-    };
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener("zoo-ppn", keywordEvent);
-
-    return () => {
-      document.removeEventListener("zoo-ppn", keywordEvent);
-    };
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener("zoo-rhn", inferenceEvent);
-
-    return () => {
-      document.removeEventListener("zoo-rhn", inferenceEvent);
-    };
-  });
 
   return (
     <>
+    <Helmet>
+    <script src="node_modules/@picovoice/web-voice-processor/src/web_voice_processor"></script>
+    </Helmet>
       <h1>Smart Lighting Demo</h1>
       <div className="lighting-demo">
         <div className="side-panel">
