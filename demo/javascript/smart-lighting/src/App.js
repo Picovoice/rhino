@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Picovoice from "./picovoice/picovoice"
 import "@picovoice/web-voice-processor/src/web_voice_processor"
 import "./App.css";
-import {Helmet} from "react-helmet"
 
 const demo = new Picovoice()
 
@@ -387,9 +386,6 @@ export default function LightingDemo(props) {
 
   return (
     <>
-    <Helmet>
-    <script src="node_modules/@picovoice/web-voice-processor/src/web_voice_processor"></script>
-    </Helmet>
       <h1>Smart Lighting Demo</h1>
       <div className="lighting-demo">
         <div className="side-panel">
@@ -432,27 +428,27 @@ export default function LightingDemo(props) {
             <p>
               Possible Colors:
               <br /> <br />
-              <div className="badge" style={{ backgroundColor: LIGHT_RED }}>
+              <span className="badge" style={{ backgroundColor: LIGHT_RED }}>
                 Red
-              </div>
-              <div className="badge" style={{ backgroundColor: LIGHT_ORANGE }}>
+              </span>
+              <span className="badge" style={{ backgroundColor: LIGHT_ORANGE }}>
                 Orange
-              </div>
-              <div className="badge" style={{ backgroundColor: LIGHT_YELLOW }}>
+              </span>
+              <span className="badge" style={{ backgroundColor: LIGHT_YELLOW }}>
                 Yellow
-              </div>
-              <div className="badge" style={{ backgroundColor: LIGHT_GREEN }}>
+              </span>
+              <span className="badge" style={{ backgroundColor: LIGHT_GREEN }}>
                 Green
-              </div>
-              <div className="badge" style={{ backgroundColor: LIGHT_BLUE }}>
+              </span>
+              <span className="badge" style={{ backgroundColor: LIGHT_BLUE }}>
                 Blue
-              </div>
-              <div className="badge" style={{ backgroundColor: LIGHT_PURPLE }}>
+              </span>
+              <span className="badge" style={{ backgroundColor: LIGHT_PURPLE }}>
                 Purple
-              </div>
-              <div className="badge" style={{ backgroundColor: LIGHT_PINK }}>
+              </span>
+              <span className="badge" style={{ backgroundColor: LIGHT_PINK }}>
                 Pink
-              </div>
+              </span>
             </p>
           </div>
         </div>
