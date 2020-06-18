@@ -448,6 +448,18 @@ export default function LightingDemo(props) {
                 Pink
               </span>
             </p>
+
+            <h3>Dimming/Brightening</h3>
+            <p>Here are some example phrases:</p>
+            <p className="example-phrase">
+              <strong>"Turn the lights in the hallway up"</strong>
+            </p>
+            <p className="example-phrase">
+              <strong>"Make the closet lights brighter"</strong>
+            </p>
+            <p className="example-phrase">
+              <strong>"Dim all the lights"</strong>
+            </p>
           </div>
         </div>
 
