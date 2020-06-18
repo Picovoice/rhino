@@ -1,5 +1,5 @@
 /*
-    Copyright 2018 Picovoice Inc.
+    Copyright 2018-2020 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -9,54 +9,64 @@
     specific language governing permissions and limitations under the License.
 */
 
+let callback = function callback() {
+  postMessage({ status: "ppn-init" });
+};
+let PorcupineOptions = { callback: callback };
+
 importScripts("pv_porcupine.js");
 importScripts("porcupine.js");
 
-console.log("porcupine")
 onmessage = function (e) {
-    console.log(e.data.command)
-    switch (e.data.command) {
-        case "init":
-            init(e.data.keywordIDs, e.data.sensitivities);
-            break;
-        case "process":
-            process(e.data.inputFrame);
-            break;
-        case "release":
-            release();
-            break;
-    }
+  switch (e.data.command) {
+    case "init":
+      init(e.data.keywordIDs, e.data.sensitivities);
+      break;
+    case "process":
+      process(e.data.inputFrame);
+      break;
+    case "pause":
+      paused = true;
+      break;
+    case "resume":
+      paused = false;
+      break;
+    case "release":
+      release();
+      break;
+  }
 };
 
 let keywordIDArray;
 let keywords;
 let sensitivities;
-
+let paused;
 let porcupine = null;
 
 function init(keywordIDs, _sensitivities_) {
-    keywordIDArray = Object.values(keywordIDs);
-    keywords = Object.keys(keywordIDs);
-    sensitivities = _sensitivities_;
-
-    if (Porcupine.isLoaded()) {
-        porcupine = Porcupine.create(keywordIDArray, sensitivities);
-    }
+  paused = false;
+  keywordIDArray = Object.values(keywordIDs);
+  keywords = Object.keys(keywordIDs);
+  sensitivities = _sensitivities_;
+  porcupine = Porcupine.create(keywordIDArray, sensitivities);
 }
 
 function process(inputFrame) {
-    if (porcupine == null && Porcupine.isLoaded()) {
-        porcupine = Porcupine.create(keywordIDArray, sensitivities);
-    } else if (porcupine != null) {
-        let keywordIndex = porcupine.process(inputFrame);
-        postMessage({keyword: keywordIndex === -1 ? null : keywords[keywordIndex]});
+  if (porcupine !== null && !paused) {
+    let keywordIndex = porcupine.process(inputFrame);
+    if (keywordIndex !== -1) {
+      postMessage({
+        keyword: keywords[keywordIndex],
+      });
     }
+  }
 }
 
 function release() {
-    if (porcupine !== null) {
-        porcupine.release();
-    }
+  if (porcupine !== null) {
+    porcupine.release();
+  }
 
-    porcupine = null;
+  porcupine = null;
+  close();
 }

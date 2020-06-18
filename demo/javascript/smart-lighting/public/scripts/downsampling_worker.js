@@ -1,6 +1,3 @@
-console.log("downslapler1")
-
-
 onmessage = function (e) {
     switch (e.data.command) {
         case "init":
@@ -59,4 +56,3 @@ function reset() {
     inputBuffer = [];
 }
 
-console.log("downsampler2")

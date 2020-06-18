@@ -5,8 +5,6 @@ const rhinoWorkerUrl = `${process.env.PUBLIC_URL}/scripts/rhino_worker.js`
 // const downsamplingWorkerUrl = `/node_modules/@picovoice/web-voice-processor/src/downsampling_worker.js`
 const downsamplingWorkerUrl = `${process.env.PUBLIC_URL}/scripts/downsampling_worker.js`
 
-console.log("Picovoice")
-
 class Picovoice {
   constructor ()  {
     this.ppnRhnMgr = window.PorcupineRhinoManager
@@ -37,7 +35,6 @@ class Picovoice {
       rhinoWorkerUrl,
       downsamplingWorkerUrl
     );
-    console.log("started")
 
   }
 

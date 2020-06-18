@@ -6,7 +6,6 @@
     an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
     specific language governing permissions and limitations under the License.
 */
-console.log("ppnrhnmngr")
 
 PorcupineRhinoManager = (function () {
   let porcupineWorker;
@@ -39,10 +38,8 @@ PorcupineRhinoManager = (function () {
     errorCallback = errorCallback_;
     initCallback = initCallback_;
 
-    console.log("workers created")
 
     porcupineWorker.onmessage = function (messageEvent) {
-      console.log("worker")
       if (messageEvent.data.status === "ppn-init") {
         ppnReady = true;
         porcupineWorker.postMessage({
@@ -66,7 +63,6 @@ PorcupineRhinoManager = (function () {
       if (messageEvent.data.status === "rhn-init") {
         rhnReady = true;
         rhinoWorker.postMessage({ command: "init", context: context });
-        console.log("ready")
         ready(this);
       } else {
         inferenceCallback(messageEvent.data);
@@ -76,10 +72,7 @@ PorcupineRhinoManager = (function () {
   };
 
   let ready = function (engine) {
-    console.log("ready func")
-    console.log(ppnReady)
     if (ppnReady && rhnReady) {
-      console.log("ready func if")
       WebVoiceProcessor.start([engine], downsamplingScript, errorCallback);
       initCallback();
     }
