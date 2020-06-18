@@ -48,7 +48,7 @@
     },
     {
       "from": "../shared/rhino_worker.js",
-      "to": "rhino_worker.js"
+      "to": "./public/scripts/rhino_worker.js"
     },
     {
       "from": "../../../resources/porcupine/lib/wasm/pv_porcupine.js",

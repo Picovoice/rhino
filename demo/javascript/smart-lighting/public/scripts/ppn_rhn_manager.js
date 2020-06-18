@@ -66,6 +66,7 @@ PorcupineRhinoManager = (function () {
       if (messageEvent.data.status === "rhn-init") {
         rhnReady = true;
         rhinoWorker.postMessage({ command: "init", context: context });
+        console.log("ready")
         ready(this);
       } else {
         inferenceCallback(messageEvent.data);
@@ -75,7 +76,10 @@ PorcupineRhinoManager = (function () {
   };
 
   let ready = function (engine) {
+    console.log("ready func")
+    console.log(ppnReady)
     if (ppnReady && rhnReady) {
+      console.log("ready func if")
       WebVoiceProcessor.start([engine], downsamplingScript, errorCallback);
       initCallback();
     }

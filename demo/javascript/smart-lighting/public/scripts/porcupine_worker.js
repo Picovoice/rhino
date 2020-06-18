@@ -12,7 +12,9 @@
 importScripts("pv_porcupine.js");
 importScripts("porcupine.js");
 
+console.log("porcupine")
 onmessage = function (e) {
+    console.log(e.data.command)
     switch (e.data.command) {
         case "init":
             init(e.data.keywordIDs, e.data.sensitivities);
