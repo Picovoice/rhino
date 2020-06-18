@@ -14,15 +14,17 @@ PorcupineRhinoManager = (function () {
   let rhnReady = false;
   let downsamplingScript;
   let initCallback;
+  let keywordDetectionCallback
+  let inferenceCallback;
 
   let isWakeWordDetected = false;
 
   let start = function (
     keywordsID,
     keywordSensitivities,
-    keywordDetectionCallback,
+    keywordDetectionCallback_,
     context,
-    inferenceCallback,
+    inferenceCallback_,
     errorCallback_,
     initCallback_,
     porcupineWorkerScript,
@@ -37,7 +39,8 @@ PorcupineRhinoManager = (function () {
     downsamplingScript = downsamplingScript_;
     errorCallback = errorCallback_;
     initCallback = initCallback_;
-
+    keywordDetectionCallback = keywordDetectionCallback_;
+    inferenceCallback = inferenceCallback_;
 
     porcupineWorker.onmessage = function (messageEvent) {
       if (messageEvent.data.status === "ppn-init") {
@@ -78,6 +81,12 @@ PorcupineRhinoManager = (function () {
     }
   };
 
+  let refresh = function (initCallback_, keywordDetectionCallback_, inferenceCallback_) {
+    initCallback = initCallback_;
+    keywordDetectionCallback = keywordDetectionCallback_;
+    inferenceCallback = inferenceCallback_;
+  }
+
   let stop = function () {
     WebVoiceProcessor.stop();
     porcupineWorker.postMessage({ command: "release" });
@@ -94,5 +103,5 @@ PorcupineRhinoManager = (function () {
     }
   };
 
-  return { start: start, processFrame: processFrame, stop: stop };
+  return { start: start, refresh: refresh, processFrame: processFrame, stop: stop };
 })();

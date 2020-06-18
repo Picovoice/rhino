@@ -40,9 +40,7 @@ class Picovoice {
 
   refresh = (initCallback, ppnCallback, rhnCallback) => {
     if (this.ppnRhnMgr !== null) {
-      this.ppnRhnMgr.initCallback = initCallback
-      this.ppnRhnMgr.ppnCallback = ppnCallback
-      this.ppnRhnMgr.rhnCallback = rhnCallback
+      this.ppnRhnMgr.refresh(initCallback, ppnCallback, rhnCallback)
     }
   }
 
@@ -50,7 +48,6 @@ class Picovoice {
     if (this.ppnRhnMgr !== null) {
       this.ppnRhnMgr.stop()
     }
-    this.ppnRhnMgr = null
   }
 }
 
