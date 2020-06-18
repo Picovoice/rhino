@@ -2,27 +2,23 @@ h1 {
   text-align: center;
 }
 
-strong{
+strong {
   color: darkblue;
 }
 
-
-.lighting-demo{
+.lighting-demo {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-
 }
 
-.side-panel{
+.side-panel {
   width: 400px;
   margin: 0rem 5rem;
 }
 
-
-
-.side-panel .instructions{
+.side-panel .instructions {
   border: dashed 4px darkgrey;
   border-radius: 2rem;
   width: 80%;
@@ -31,23 +27,21 @@ strong{
   margin: 1rem auto;
 }
 
-
-
-.side-panel .instructions .badge{
+.side-panel .instructions .badge {
   border-radius: 0.2rem;
   display: inline-block;
   padding: 0.1rem 0.4rem;
   margin: 0.4rem;
 }
 
-#demo-button{
+#demo-button {
   background-color: lightblue;
   padding: 0.8rem 2rem;
   color: white;
   border: none;
   border-radius: 0.4rem;
   display: block;
-  margin: auto;
+  margin: 1rem auto;
 }
 
 .house-container {
@@ -80,7 +74,7 @@ strong{
   fill: url(#livingRoomGradient);
 }
 #bedroom.on {
-  fill: url(#bed roomGradient);
+  fill: url(#bedroomGradient);
 }
 #bathroom.on {
   fill: url(#bathroomGradient);
@@ -103,22 +97,67 @@ strong{
   fill: white;
 }
 
+ @keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.progress-indicator{
+  text-align: center;
+}
+
+.progress-indicator .spinner{
+  margin: auto;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-top: 0.3rem solid darkorange;
+  border-right: 0.3rem solid darkorange;
+  border-bottom: 0.3rem solid darkorange;
+  border-left: 0.3rem solid transparent;
+  -webkit-animation: spin  1s infinite linear;
+          animation: spin 1s infinite linear;
+}
+
+.progress-indicator .spinner.initializing{
+  border-top: 0.3rem solid red;
+  border-right: 0.3rem solid red;
+  border-bottom: 0.3rem solid red;
+}
+
+.progress-indicator .spinner.wakephrase{
+  border-top: 0.3rem solid darkorange;
+  border-right: 0.3rem solid darkorange;
+  border-bottom: 0.3rem solid darkorange;
+}
+
+.progress-indicator .spinner.command{
+  border-top: 0.3rem solid green;
+  border-right: 0.3rem solid green;
+  border-bottom: 0.3rem solid green;
+}
+
 
 @media only screen and (max-width: 992px) {
-  .lighting-demo{
+  .lighting-demo {
     display: block;
   }
-  .side-panel{
+  .side-panel {
     margin: auto;
   }
-  .house-container{
+  .house-container {
     margin: auto;
   }
 }
 
 @media only screen and (max-width: 600px) {
-
-  .house-container{
+  .house-container {
     width: 254px;
     height: 212.3px;
     margin: 2rem auto;
@@ -127,5 +166,5 @@ strong{
   .house {
     width: 250px;
     height: 208.3px;
-    }
+  }
 }
