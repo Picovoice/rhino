@@ -16,15 +16,6 @@ yarn copy
 yarn start
 ```
 
-### NPM
-
-```bash
-npm install
-npm install -g copy-files-from-to
-copy-files-from-to
-npx serve
-```
-
 ## Try the demo
 
 Open http://localhost:3000 in your web browser to try the demo.

@@ -5,7 +5,15 @@
 /.pnp
 .pnp.js
 
-/public/scripts
+/public/scripts/porcupine.js
+/public/scripts/porcupine_worker.js
+/public/scripts/pv_porcupine.js
+/public/scripts/pv_porcupine.wasm
+/public/scripts/pv_rhino.js
+/public/scripts/pv_rhino.wasm
+/public/scripts/rhino.js
+/public/scripts/rhino_worker.js
+
 # testing
 /coverage
 
