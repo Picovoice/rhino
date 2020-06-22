@@ -143,6 +143,10 @@ strong {
   border-bottom: 0.3rem solid green;
 }
 
+.message{
+  text-align: center;
+}
+
 @media only screen and (max-width: 992px) {
   .lighting-demo {
     display: block;

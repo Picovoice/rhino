@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import SmartLightingDemo from "./picovoice/smart_lighting_demo";
 import "@picovoice/web-voice-processor/src/web_voice_processor";
 import "./App.css";
-const MESSAGE_TIMEOUT_MS = 5000
+const MESSAGE_TIMEOUT_MS = 5000;
 
 const demo = new SmartLightingDemo();
 
@@ -977,6 +977,9 @@ export default function LightingDemo(props) {
               </>
             )}
           </div>
+            {message !== "" && (
+              <div className = "message">{message}</div>
+            )}
           <button
             disabled={demoLoading}
             className={listening && !demoLoading ? "btn-danger" : "btn-primary"}
