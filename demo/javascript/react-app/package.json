@@ -50,6 +50,10 @@
       "to": "./public/scripts/rhino_worker.js"
     },
     {
+      "from": "../shared/ppn_rhn_manager.js",
+      "to": "./public/scripts/ppn_rhn_manager.js"
+    },
+    {
       "from": "../../../resources/porcupine/lib/wasm/pv_porcupine.js",
       "to": "./public/scripts/pv_porcupine.js"
     },
@@ -64,6 +68,10 @@
     {
       "from": "../../../resources/porcupine/binding/javascript/porcupine.js",
       "to": "./public/scripts/porcupine.js"
+    },
+    {
+      "from": "./node_modules/@picovoice/web-voice-processor/src/downsampling_worker.js",
+      "to": "./public/scripts/downsampling_worker.js"
     }
   ],
   "copyFilesSettings": {

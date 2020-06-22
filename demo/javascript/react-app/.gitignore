@@ -13,6 +13,9 @@
 /public/scripts/pv_rhino.wasm
 /public/scripts/rhino.js
 /public/scripts/rhino_worker.js
+/public/scripts/downsampling_worker.js
+/public/scripts/ppn_rhn_manager.js
+
 
 # testing
 /coverage
