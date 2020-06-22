@@ -36,6 +36,10 @@
       "to": "rhino_worker.js"
     },
     {
+      "from": "../shared/ppn_rhn_manager.js",
+      "to": "porcupine_rhino_manager.js"
+    },
+    {
       "from": "../../../resources/porcupine/lib/wasm/pv_porcupine.js",
       "to": "pv_porcupine.js"
     },
