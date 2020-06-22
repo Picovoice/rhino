@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import SmartLightingDemo from "./picovoice/smart_lighting_demo";
 import "@picovoice/web-voice-processor/src/web_voice_processor";
 import "./App.css";
+const MESSAGE_TIMEOUT_MS = 5000
 
 const demo = new SmartLightingDemo();
 
@@ -310,7 +311,6 @@ export default function LightingDemo(props) {
 
   const keywordEvent = (event) => {
     setWakePhrase(true);
-    console.log("wakephrase detected");
     // reset the demo on re-activating the keyword
     setIntentFailed(false);
     setMessage("");
@@ -361,6 +361,7 @@ export default function LightingDemo(props) {
     }
   };
 
+  // Refresh the callbacks so that their closures see the latest state of the React hooks
   useEffect(() => {
     demo.refresh(initEvent, keywordEvent, inferenceEvent);
   });
@@ -369,18 +370,9 @@ export default function LightingDemo(props) {
     if (message !== "") {
       setTimeout(() => {
         setMessage("");
-      }, 5000);
+      }, MESSAGE_TIMEOUT_MS);
     }
   }, [message]);
-
-  // Whe navigating away / closing demo modal, and the demo is still running
-  useEffect(() => {
-    return () => {
-      try {
-        demo.stop();
-      } catch (exception) {}
-    };
-  }, []);
 
   return (
     <>

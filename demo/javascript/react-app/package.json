@@ -1,6 +1,6 @@
 {
-  "name": "react-app",
-  "version": "0.1.0",
+  "name": "smart-lighting-react-app",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@picovoice/web-voice-processor": "^1.3.0",
