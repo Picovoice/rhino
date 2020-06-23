@@ -957,6 +957,17 @@ export default function LightingDemo(props) {
               </text>
             </svg>
           </div>
+          <button
+            disabled={demoLoading}
+            className={listening && !demoLoading ? "btn-danger" : "btn-primary"}
+            variant="primary"
+            onClick={() => toggleListening()}
+            id="demo-button"
+          >
+            {!demoLoading && listening && "Stop Demo"}
+            {!demoLoading && !listening && "Start Listening"}
+            {demoLoading && "Loading…"}
+          </button>
           <div className="progress-indicator">
             {demoLoading && (
               <>
@@ -980,17 +991,9 @@ export default function LightingDemo(props) {
             {message !== "" && (
               <div className = "message">{message}</div>
             )}
-          <button
-            disabled={demoLoading}
-            className={listening && !demoLoading ? "btn-danger" : "btn-primary"}
-            variant="primary"
-            onClick={() => toggleListening()}
-            id="demo-button"
-          >
-            {!demoLoading && listening && "Stop Demo"}
-            {!demoLoading && !listening && "Start Listening"}
-            {demoLoading && "Loading…"}
-          </button>
+            {intentFailed && (
+              <div className = "message">Speech-to-intent engine couldn't understand your command</div>
+            )}
         </div>
       </div>
     </>
