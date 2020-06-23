@@ -19,12 +19,13 @@ strong {
 }
 
 .side-panel .instructions {
-  border: dashed 4px darkgrey;
-  border-radius: 2rem;
+  border: dashed 2px darkgrey;
+  border-radius: 1rem;
   width: 80%;
   text-align: center;
   padding: 0.5rem 0.5rem;
   margin: 1rem auto;
+  background: #f9f9f9;
 }
 
 .side-panel .instructions .badge {
@@ -35,7 +36,7 @@ strong {
 }
 
 #demo-button {
-  background-color: lightblue;
+  background-color: #377dff;
   padding: 0.8rem 2rem;
   color: white;
   border: none;
@@ -95,6 +96,10 @@ strong {
   stroke: black;
   stroke-width: 4.8px;
   fill: white;
+}
+
+.alerts-container{
+  height: 150px;
 }
 
 @keyframes spin {

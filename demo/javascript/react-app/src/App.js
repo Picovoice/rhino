@@ -957,6 +957,8 @@ export default function LightingDemo(props) {
               </text>
             </svg>
           </div>
+          <div className = "alerts-container">
+
           <button
             disabled={demoLoading}
             className={listening && !demoLoading ? "btn-danger" : "btn-primary"}
@@ -995,6 +997,8 @@ export default function LightingDemo(props) {
               <div className = "message">Speech-to-intent engine couldn't understand your command</div>
             )}
         </div>
+          </div>
+          
       </div>
     </>
   );
