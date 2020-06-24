@@ -16,6 +16,7 @@
 /public/scripts/downsampling_worker.js
 /public/scripts/ppn_rhn_manager.js
 
+/src/picovoice/lighting_64.js
 
 # testing
 /coverage

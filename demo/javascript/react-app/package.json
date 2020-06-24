@@ -17,7 +17,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "copy": "yarn run copy-files-from-to"
+    "copy": "yarn run copy-files-from-to",
+    "base64" : "node rhn.js"
   },
   "eslintConfig": {
     "extends": "react-app"

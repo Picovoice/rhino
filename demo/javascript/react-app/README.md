@@ -13,6 +13,7 @@ Note: As this demo uses Porcupine, make sure your local repository has the porcu
 ```bash
 yarn
 yarn copy
+yarn base64
 yarn start
 ```
 
