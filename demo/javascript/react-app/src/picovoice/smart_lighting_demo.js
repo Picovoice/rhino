@@ -1,8 +1,5 @@
-import {
-  LIGHTING_CONTEXT,
-  PICO_HOUSE_64,
-  PICO_HOME_64,
-} from "./smart_lighting_models_base64";
+import { LIGHTING_CONTEXT } from "./lighting_context.js";
+import { PICOVOICE_64 } from "./picovoice_64.js";
 
 const porcupineWorkerUrl = `${process.env.PUBLIC_URL}/scripts/porcupine_worker.js`;
 const rhinoWorkerUrl = `${process.env.PUBLIC_URL}/scripts/rhino_worker.js`;
@@ -12,11 +9,10 @@ class SmartLightingDemo {
   constructor() {
     this.ppnRhnMgr = window.PorcupineRhinoManager;
     this.keywordIDs = {
-      picohouse_0: Buffer.from(PICO_HOUSE_64, "base64"),
-      picohome_0: Buffer.from(PICO_HOME_64, "base64"),
+      picovoice: Buffer.from(PICOVOICE_64, "base64"),
     };
 
-    this.sensitivities = new Float32Array([0.6, 0.6]);
+    this.sensitivities = new Float32Array([0.6]);
 
     this.context = Buffer.from(LIGHTING_CONTEXT, "base64");
   }

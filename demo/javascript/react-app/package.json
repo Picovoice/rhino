@@ -18,7 +18,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "copy": "yarn run copy-files-from-to",
-    "base64" : "node rhn.js"
+    "base64" : "node base64.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -75,6 +75,10 @@
     {
       "from": "./node_modules/@picovoice/web-voice-processor/src/downsampling_worker.js",
       "to": "./public/scripts/downsampling_worker.js"
+    },
+    {
+      "from": "../../../resources/porcupine/resources/keyword_files/wasm/picovoice_wasm.ppn",
+      "to": "./models/picovoice.ppn"
     }
   ],
   "copyFilesSettings": {

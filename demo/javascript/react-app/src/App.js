@@ -388,8 +388,7 @@ export default function LightingDemo(props) {
               various aspects of the lights in this house.
             </p>
             <p>
-              To start any command, say <strong>"Pico House"</strong> or{" "}
-              <strong>"Pico Home"</strong> to wake the device.
+              To start any command, say <strong>"Picovoice"</strong> to wake the device.
             </p>
 
             <h3>Turning The Lights On/Off</h3>
@@ -980,7 +979,7 @@ export default function LightingDemo(props) {
             {listening && !demoLoading && !wakePhrase && (
               <>
                 <div className="spinner wakephrase"></div>
-                <div>Listening for "Pico House" or "Pico Home"...</div>
+                <div>Listening for "Picovoice"...</div>
               </>
             )}
             {listening && !demoLoading && wakePhrase && (
