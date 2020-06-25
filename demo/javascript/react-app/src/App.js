@@ -304,19 +304,19 @@ export default function LightingDemo(props) {
     }
   };
 
-  const initEvent = (event) => {
+  const initCallback = (event) => {
     setDemoInitialized(true);
     setDemoLoading(false);
   };
 
-  const keywordEvent = (event) => {
+  const ppnCallback = (event) => {
     setWakePhrase(true);
     // reset the demo on re-activating the keyword
     setIntentFailed(false);
     setMessage("");
   };
 
-  const inferenceEvent = (information) => {
+  const rhnCallback = (information) => {
     setWakePhrase(false);
 
     if (information.isUnderstood === false) {
@@ -363,7 +363,7 @@ export default function LightingDemo(props) {
 
   // Refresh the callbacks so that their closures see the latest state of the React hooks
   useEffect(() => {
-    demo.refresh(initEvent, keywordEvent, inferenceEvent);
+    demo.refresh(initCallback, ppnCallback, rhnCallback);
   });
 
   useEffect(() => {
