@@ -293,7 +293,7 @@ export default function LightingDemo(props) {
   };
 
   const startListening = () => {
-    demo.start(initEvent, keywordEvent, inferenceEvent);
+    demo.start(initCallback, ppnCallback, rhnCallback);
     setListening(true);
     setWakePhrase(false);
     setIntentFailed(false);
