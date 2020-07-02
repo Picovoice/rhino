@@ -10,4 +10,4 @@ This demo is applicable when push to talk is desired.
 
 ## React App
 
-This demo integrates Picovoice's products into a react application.
+This demo integrates the always-listening demo into a React application.
