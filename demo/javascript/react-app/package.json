@@ -1,0 +1,91 @@
+{
+  "name": "smart-lighting-react-app",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@picovoice/web-voice-processor": "^1.3.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "copy-files-from-to": "^3.1.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "copy": "yarn run copy-files-from-to",
+    "base64" : "node base64.js"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "copyFiles": [
+    {
+      "from": "../../../binding/javascript/rhino.js",
+      "to": "./public/scripts/rhino.js"
+    },
+    {
+      "from": "../../../lib/wasm/pv_rhino.js",
+      "to": "./public/scripts/pv_rhino.js"
+    },
+    {
+      "from": "../../../lib/wasm/pv_rhino.wasm",
+      "to": "./public/scripts/pv_rhino.wasm"
+    },
+    {
+      "from": "../shared/rhino_worker.js",
+      "to": "./public/scripts/rhino_worker.js"
+    },
+    {
+      "from": "../shared/ppn_rhn_manager.js",
+      "to": "./public/scripts/ppn_rhn_manager.js"
+    },
+    {
+      "from": "../../../resources/porcupine/lib/wasm/pv_porcupine.js",
+      "to": "./public/scripts/pv_porcupine.js"
+    },
+    {
+      "from": "../../../resources/porcupine/lib/wasm/pv_porcupine.wasm",
+      "to": "./public/scripts/pv_porcupine.wasm"
+    },
+    {
+      "from": "../../../resources/porcupine/demo/javascript/scripts/porcupine_worker.js",
+      "to": "./public/scripts/porcupine_worker.js"
+    },
+    {
+      "from": "../../../resources/porcupine/binding/javascript/porcupine.js",
+      "to": "./public/scripts/porcupine.js"
+    },
+    {
+      "from": "./node_modules/@picovoice/web-voice-processor/src/downsampling_worker.js",
+      "to": "./public/scripts/downsampling_worker.js"
+    },
+    {
+      "from": "../../../resources/porcupine/resources/keyword_files/wasm/picovoice_wasm.ppn",
+      "to": "./models/picovoice.ppn"
+    },
+    {
+      "from": "../../../resources/contexts/wasm/smart_lighting_wasm.rhn",
+      "to": "./models/lighting.rhn"
+    }
+  ],
+  "copyFilesSettings": {
+    "whenFileExists": "overwrite"
+  }
+}
