@@ -20,6 +20,7 @@
 /src/picovoice/picovoice_64.js
 
 /models/picovoice.ppn
+/models/lighting.rhn
 
 # testing
 /coverage

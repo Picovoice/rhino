@@ -79,6 +79,10 @@
     {
       "from": "../../../resources/porcupine/resources/keyword_files/wasm/picovoice_wasm.ppn",
       "to": "./models/picovoice.ppn"
+    },
+    {
+      "from": "../../../resources/contexts/wasm/smart_lighting_wasm.rhn",
+      "to": "./models/lighting.rhn"
     }
   ],
   "copyFilesSettings": {
