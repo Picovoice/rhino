@@ -198,21 +198,19 @@ def main():
         '--rhino_context_file_path',
         help="absolute path to Rhino's context file")
 
-    # FIXME
     parser.add_argument(
         '--porcupine_library_path',
-        default=None,
+        default=PORCUPINE_LIBRARY_PATH,
         help="absolute path to Porcupine's dynamic library")
 
     parser.add_argument(
         '--porcupine_model_file_path',
-        default=os.path.join(os.path.dirname(__file__), '../../resources/porcupine/lib/common/porcupine_params.pv'),
+        default=PORCUPINE_MODEL_FILE_PATH,
         help="absolute path to Porcupine's model parameter file")
 
-    # FIXME
     parser.add_argument(
         '--porcupine_keyword_file_path',
-        default=None,
+        default=PORCUPINE_KEYWORD_FILE_PATHS['picovoice'],
         help='absolute path to porcupine keyword file')
 
     parser.add_argument(
@@ -249,10 +247,13 @@ def main():
 
 if __name__ == '__main__':
     sys.path.append(os.path.join(os.path.dirname(__file__), '../../binding/python'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/porcupine/binding/python'))
     sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
-    from porcupine import Porcupine
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources'))
+    from porcupine.binding.python.porcupine import Porcupine
     from rhino import Rhino
     from util import *
+    from porcupine.resources.util.python import MODEL_FILE_PATH as PORCUPINE_MODEL_FILE_PATH
+    from porcupine.resources.util.python import LIBRARY_PATH as PORCUPINE_LIBRARY_PATH
+    from porcupine.resources.util.python import KEYWORD_FILE_PATHS as PORCUPINE_KEYWORD_FILE_PATHS
 
     main()
