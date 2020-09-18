@@ -1,5 +1,5 @@
 #
-# Copyright 2018 Picovoice Inc.
+# Copyright 2018-2020 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -186,31 +186,33 @@ def main():
 
     parser.add_argument(
         '--rhino_library_path',
-        default=RHINO_LIBRARY_PATH,
+        default=LIBRARY_PATH,
         help="absolute path to Rhino's dynamic library")
 
     parser.add_argument(
         '--rhino_model_file_path',
-        default=RHINO_MODEL_FILE_PATH,
+        default=MODEL_PATH,
         help="absolute path to Rhino's model file path")
 
     parser.add_argument(
         '--rhino_context_file_path',
         help="absolute path to Rhino's context file")
 
+    # FIXME
     parser.add_argument(
         '--porcupine_library_path',
-        default=PORCUPINE_LIBRARY_PATH,
+        default=None,
         help="absolute path to Porcupine's dynamic library")
 
     parser.add_argument(
         '--porcupine_model_file_path',
-        default=PORCUPINE_MODEL_FILE_PATH,
+        default=os.path.join(os.path.dirname(__file__), '../../resources/porcupine/lib/common/porcupine_params.pv'),
         help="absolute path to Porcupine's model parameter file")
 
+    # FIXME
     parser.add_argument(
         '--porcupine_keyword_file_path',
-        default=KEYWORD_FILE_PATHS['picovoice'],
+        default=None,
         help='absolute path to porcupine keyword file')
 
     parser.add_argument(

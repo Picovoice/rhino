@@ -22,10 +22,7 @@ class RhinoTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.rhino = Rhino(
-            library_path=RHINO_LIBRARY_PATH,
-            model_path=RHINO_MODEL_FILE_PATH,
-            context_path=CONTEXT_FILE_PATHS['coffee_maker'])
+        cls.rhino = Rhino(library_path=LIBRARY_PATH, model_path=MODEL_PATH, context_path=CONTEXT_PATHS['coffee_maker'])
 
     @classmethod
     def tearDownClass(cls):
@@ -37,7 +34,9 @@ class RhinoTestCase(unittest.TestCase):
 
     def test_within_context(self):
         audio, sample_rate = \
-            soundfile.read(self._abs_path('resources/audio_samples/test_within_context.wav'), dtype='int16')
+            soundfile.read(
+                os.path.join(os.path.dirname(__file__), '../../resources/audio_samples/test_within_context.wav'),
+                dtype='int16')
         assert sample_rate == self.rhino.sample_rate
 
         num_frames = len(audio) // self.rhino.frame_length
@@ -67,7 +66,9 @@ class RhinoTestCase(unittest.TestCase):
 
     def test_out_of_context(self):
         audio, sample_rate = \
-            soundfile.read(self._abs_path('resources/audio_samples/test_out_of_context.wav'), dtype='int16')
+            soundfile.read(
+                os.path.join(os.path.dirname(__file__), '../../resources/audio_samples/test_out_of_context.wav'),
+                dtype='int16')
         assert sample_rate == self.rhino.sample_rate
 
         num_frames = len(audio) // self.rhino.frame_length

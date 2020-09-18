@@ -155,8 +155,8 @@ class Rhino(object):
     def is_understood(self):
         """
         Indicates if the spoken command is valid, is within the domain of interest (context), and the engine understood
-        it. Upon success '.get_intent()' may be called to retrieve inferred intent. If not understood, '.reset()' should be
-        called.
+        it. Upon success '.get_intent()' may be called to retrieve inferred intent. If not understood, '.reset()' should
+        be called.
         """
 
         is_understood = c_bool()
@@ -168,9 +168,9 @@ class Rhino(object):
 
     def get_intent(self):
         """
-         Getter for the intent. The intent is presented as an intent string and a dictionary mapping slots to their
-         values. It should be called only after intent inference is finalized and it is verified that the spoken
-         command is understood via calling '.is_understood()'.
+         Getter for the intent. The intent is stored as an intent string and a dictionary mapping slots to their values.
+         It should be called only after intent inference is finalized and it is verified that the spoken command is
+         understood via calling '.is_understood()'.
 
         :return: Tuple of intent string and slot/value dictionary.
         """
@@ -179,12 +179,7 @@ class Rhino(object):
         num_slots = c_int()
         slots = POINTER(c_char_p)()
         values = POINTER(c_char_p)()
-        status = self._get_intent_func(
-            self._handle,
-            byref(intent),
-            byref(num_slots),
-            byref(slots),
-            byref(values))
+        status = self._get_intent_func(self._handle, byref(intent), byref(num_slots), byref(slots), byref(values))
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
