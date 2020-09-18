@@ -1,5 +1,5 @@
 #
-# Copyright 2018 Picovoice Inc.
+# Copyright 2018-2020 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -15,7 +15,7 @@ from enum import Enum
 
 
 class Rhino(object):
-    """Python binding for Picovoice's Speech-to-Intent (Rhino) engine."""
+    """Python binding for Picovoice's Rhino Speech-to-Intent engine."""
 
     class PicovoiceStatuses(Enum):
         """Status codes corresponding to 'pv_status_t' defined in 'include/picovoice.h'"""
@@ -47,14 +47,13 @@ class Rhino(object):
         :param library_path: Absolute path to Rhino's dynamic library.
         :param model_path: Absolute path to file containing model parameters.
         :param context_path: Absolute path to file containing context parameters. A context represents the set of
-        expressions (commands), intents, and intent arguments (slots) within a domain of interest.
-        :param sensitivity: Sensitivity for inference. It should be a floating-point number within [0, 1]. A higher
-        sensitivity value results in fewer inference misses at the cost of potentially increasing the erroneous
-        inference rate.
+        expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
+        :param sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value
+        results in fewer inference misses at the cost of (potentially) increasing the erroneous inference rate.
         """
 
         if not os.path.exists(library_path):
-            raise IOError("couldn't find Rhino's library at '%s'" % library_path)
+            raise IOError("couldn't find Rhino's dynamic library at '%s'" % library_path)
 
         library = cdll.LoadLibrary(library_path)
 
@@ -64,17 +63,16 @@ class Rhino(object):
         if not os.path.exists(context_path):
             raise IOError("couldn't find context file at '%s'" % context_path)
 
+        if not 0 <= sensitivity <= 1:
+            raise ValueError("sensitivity should be within [0, 1]")
+
         init_func = library.pv_rhino_init
         init_func.argtypes = [c_char_p, c_char_p, c_float, POINTER(POINTER(self.CRhino))]
         init_func.restype = self.PicovoiceStatuses
 
         self._handle = POINTER(self.CRhino)()
 
-        status = init_func(
-            model_path.encode('utf-8'),
-            context_path.encode('utf-8'),
-            sensitivity,
-            byref(self._handle))
+        status = init_func(model_path.encode('utf-8'), context_path.encode('utf-8'), sensitivity, byref(self._handle))
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('initialization failed')
 
@@ -128,7 +126,7 @@ class Rhino(object):
         self._sample_rate = library.pv_sample_rate()
 
     def delete(self):
-        """Releases resources acquired by Rhino's library."""
+        """Releases resources acquired."""
 
         self._delete_func(self._handle)
 
@@ -139,13 +137,13 @@ class Rhino(object):
 
         :param pcm: A frame of audio samples. The number of samples per frame can be attained by calling
         '.frame_length'. The incoming audio needs to have a sample rate equal to '.sample_rate' and be 16-bit
-        linearly-encoded. Furthermore, Rhino operates on single channel audio.
+        linearly-encoded. Rhino operates on single-channel audio.
 
         :return: Flag indicating if intent inference is finalized.
         """
 
         if len(pcm) != self.frame_length:
-            raise ValueError("invalid frame length")
+            raise ValueError("invalid frame length. expecting %d but got %d" % (self.frame_length, len(pcm)))
 
         is_finalized = c_bool()
         status = self._process_func(self._handle, (c_short * len(pcm))(*pcm), byref(is_finalized))
@@ -157,7 +155,8 @@ class Rhino(object):
     def is_understood(self):
         """
         Indicates if the spoken command is valid, is within the domain of interest (context), and the engine understood
-        it.
+        it. Upon success '.get_intent()' may be called to retrieve inferred intent. If not understood, '.reset()' should be
+        called.
         """
 
         is_understood = c_bool()
@@ -170,7 +169,7 @@ class Rhino(object):
     def get_intent(self):
         """
          Getter for the intent. The intent is presented as an intent string and a dictionary mapping slots to their
-         values. It should be called only after intent extraction is finalized and it is verified that the spoken
+         values. It should be called only after intent inference is finalized and it is verified that the spoken
          command is understood via calling '.is_understood()'.
 
         :return: Tuple of intent string and slot/value dictionary.
@@ -211,19 +210,19 @@ class Rhino(object):
 
     @property
     def context_info(self):
-        """Getter for context information."""
+        """Context information."""
 
         return self._context_info
 
     @property
     def version(self):
-        """Getter for version."""
+        """Version."""
 
         return self._version
 
     @property
     def frame_length(self):
-        """Getter for number of audio samples per frame."""
+        """Number of audio samples per frame."""
 
         return self._frame_length
 
