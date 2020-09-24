@@ -90,10 +90,6 @@ class RhinoTestCase(unittest.TestCase):
     def test_version(self):
         self.assertIsInstance(self.rhino.version, str)
 
-    @staticmethod
-    def _abs_path(rel_path):
-        return os.path.join(os.path.dirname(__file__), '../..', rel_path)
-
 
 if __name__ == '__main__':
     sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))

@@ -49,7 +49,7 @@ class Rhino(object):
         :param context_path: Absolute path to file containing context parameters. A context represents the set of
         expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
         :param sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value
-        results in fewer inference misses at the cost of (potentially) increasing the erroneous inference rate.
+        results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
         """
 
         if not os.path.exists(library_path):
@@ -74,7 +74,7 @@ class Rhino(object):
 
         status = init_func(model_path.encode('utf-8'), context_path.encode('utf-8'), sensitivity, byref(self._handle))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('initialization failed')
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
         self._delete_func = library.pv_rhino_delete
         self._delete_func.argtypes = [POINTER(self.CRhino)]
@@ -112,7 +112,7 @@ class Rhino(object):
         context_info = c_char_p()
         status = context_info_func(self._handle, byref(context_info))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]('retrieving context information failed')
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
         self._context_info = context_info.value.decode('utf-8')
 
@@ -132,18 +132,18 @@ class Rhino(object):
 
     def process(self, pcm):
         """
-        Processes a frame of audio and emits a flag indicating if intent inference is finalized. When finalized,
+        Processes a frame of audio and emits a flag indicating if the inference is finalized. When finalized,
         '.is_understood()' should be called to check if the spoken command is considered valid.
 
         :param pcm: A frame of audio samples. The number of samples per frame can be attained by calling
         '.frame_length'. The incoming audio needs to have a sample rate equal to '.sample_rate' and be 16-bit
         linearly-encoded. Rhino operates on single-channel audio.
 
-        :return: Flag indicating if intent inference is finalized.
+        :return: Flag indicating if the inference is finalized.
         """
 
         if len(pcm) != self.frame_length:
-            raise ValueError("invalid frame length. expecting %d but got %d" % (self.frame_length, len(pcm)))
+            raise ValueError("invalid frame length. expected %d but received %d" % (self.frame_length, len(pcm)))
 
         is_finalized = c_bool()
         status = self._process_func(self._handle, (c_short * len(pcm))(*pcm), byref(is_finalized))
