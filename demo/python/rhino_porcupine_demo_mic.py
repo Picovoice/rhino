@@ -16,6 +16,7 @@ import sys
 from threading import Thread
 
 import numpy as np
+import pvrhino
 import pyaudio
 import soundfile
 
@@ -89,7 +90,7 @@ class RhinoDemo(Thread):
                 keyword_file_paths=[self._porcupine_keyword_file_path],
                 sensitivities=[0.5])
 
-            rhino = Rhino(
+            rhino = pvrhino.create(
                 library_path=self._rhino_library_path,
                 model_path=self._rhino_model_file_path,
                 context_path=self._rhino_context_file_path)
@@ -186,12 +187,12 @@ def main():
 
     parser.add_argument(
         '--rhino_library_path',
-        default=LIBRARY_PATH,
+        default=pvrhino.LIBRARY_PATH,
         help="absolute path to Rhino's dynamic library")
 
     parser.add_argument(
         '--rhino_model_file_path',
-        default=MODEL_PATH,
+        default=pvrhino.MODEL_PATH,
         help="absolute path to Rhino's model file path")
 
     parser.add_argument(
@@ -246,12 +247,8 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../../binding/python'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
     sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources'))
     from porcupine.binding.python.porcupine import Porcupine
-    from rhino import Rhino
-    from util import *
     from porcupine.resources.util.python import MODEL_FILE_PATH as PORCUPINE_MODEL_FILE_PATH
     from porcupine.resources.util.python import LIBRARY_PATH as PORCUPINE_LIBRARY_PATH
     from porcupine.resources.util.python import KEYWORD_FILE_PATHS as PORCUPINE_KEYWORD_FILE_PATHS

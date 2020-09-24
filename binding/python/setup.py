@@ -92,6 +92,7 @@ with open(os.path.join(os.path.dirname(__file__), 'MANIFEST.in'), 'w') as f:
     f.write(MANIFEST_IN.strip('\n '))
 
 LONG_DESCRIPTION = """
+TODO
 """
 
 setuptools.setup(

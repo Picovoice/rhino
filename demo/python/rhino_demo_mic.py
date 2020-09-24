@@ -12,10 +12,10 @@
 import argparse
 import os
 import struct
-import sys
 from threading import Thread
 
 import numpy as np
+import pvrhino
 import pyaudio
 import soundfile
 
@@ -63,7 +63,7 @@ class RhinoDemo(Thread):
         audio_stream = None
 
         try:
-            rhino = Rhino(
+            rhino = pvrhino.create(
                 library_path=self._library_path,
                 model_path=self._model_path,
                 context_path=self._context_path)
@@ -146,9 +146,9 @@ class RhinoDemo(Thread):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--library_path', default=LIBRARY_PATH, help="absolute path to dynamic library")
+    parser.add_argument('--library_path', default=pvrhino.LIBRARY_PATH, help="absolute path to dynamic library")
 
-    parser.add_argument('--model_path', default=MODEL_PATH, help="absolute path to model file")
+    parser.add_argument('--model_path', default=pvrhino.MODEL_PATH, help="absolute path to model file")
 
     parser.add_argument('--context_path', help="absolute path to context file")
 
@@ -178,9 +178,4 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../../binding/python'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
-    from rhino import Rhino
-    from util import *
-
     main()

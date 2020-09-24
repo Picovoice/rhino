@@ -10,9 +10,8 @@
 #
 
 import argparse
-import os
-import sys
 
+import pvrhino
 import soundfile
 
 
@@ -23,15 +22,15 @@ def main():
 
     parser.add_argument('--context_path', help="absolute path to context file", required=True)
 
-    parser.add_argument('--library_path', help="absolute path to dynamic library", default=LIBRARY_PATH)
+    parser.add_argument('--library_path', help="absolute path to dynamic library", default=pvrhino.LIBRARY_PATH)
 
-    parser.add_argument('--model_path', help='absolute path to model file', default=MODEL_PATH)
+    parser.add_argument('--model_path', help='absolute path to model file', default=pvrhino.MODEL_PATH)
 
     parser.add_argument('--sensitivity', help='inference sensitivity.', default=0.5)
 
     args = parser.parse_args()
 
-    rhino = Rhino(
+    rhino = pvrhino.create(
         library_path=args.library_path,
         model_path=args.model_path,
         context_path=args.context_path,
@@ -63,9 +62,4 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../../binding/python'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
-    from rhino import Rhino
-    from util import *
-
     main()
