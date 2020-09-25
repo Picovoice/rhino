@@ -16,9 +16,10 @@ shutil.copy(
     os.path.join(os.path.dirname(__file__), 'rhino_demo_mic.py'),
     os.path.join(package_folder, 'rhino_demo_mic.py'))
 
-MANIFEST_IN = """
-include LICENSE
+shutil.copy(os.path.join(os.path.dirname(__file__), '../../LICENSE'), package_folder)
 
+MANIFEST_IN = """
+include pvrhinodemo/LICENSE
 include pvrhinodemo/rhino_demo_file.py
 include pvrhinodemo/rhino_demo_mic.py
 """
@@ -32,10 +33,10 @@ TODO
 
 setuptools.setup(
     name="pvrhinodemo",
-    version="1.3.3",
+    version="1.3.4",
     author="Picovoice",
     author_email="hello@picovoice.ai",
-    description="On-device Speech-to-Intent engine powered by deep learning.",
+    description="On-Device Speech-to-Intent engine powered by deep learning.",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     url="https://github.com/Picovoice/rhino",
@@ -43,7 +44,7 @@ setuptools.setup(
     install_requires=[
         "enum34==1.1.6",
         "numpy",
-        "pvrhino==1.3.0",
+        "pvrhino==1.3.1",
         "pyaudio",
         "pysoundfile>=0.9.0",
     ],
