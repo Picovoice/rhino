@@ -21,12 +21,6 @@ for platform in ('common',) + platforms:
         os.path.join(os.path.dirname(__file__), '../../lib', platform),
         os.path.join(package_folder, 'lib', platform))
 
-os.makedirs(os.path.join(package_folder, 'resources/contexts'))
-for platform in platforms:
-    shutil.copytree(
-        os.path.join(os.path.dirname(__file__), '../../resources/contexts', platform),
-        os.path.join(package_folder, 'resources/contexts', platform))
-
 os.makedirs(os.path.join(package_folder, 'resources/util/python'))
 shutil.copy(
     os.path.join(os.path.dirname(__file__), '../../resources/util/python/__init__.py'),
@@ -34,6 +28,8 @@ shutil.copy(
 shutil.copy(
     os.path.join(os.path.dirname(__file__), '../../resources/util/python/util.py'),
     os.path.join(package_folder, 'resources/util/python'))
+
+shutil.copy(os.path.join(os.path.dirname(__file__), '../../LICENSE'), package_folder)
 
 INIT_SCRIPT = """
 from .binding.python.rhino import Rhino
@@ -67,8 +63,7 @@ with open(os.path.join(package_folder, '__init__.py'), 'w') as f:
     f.write('\n')
 
 MANIFEST_IN = """
-include LICENSE
-
+include pvrhino/LICENSE
 include pvrhino/binding/python/rhino.py
 include pvrhino/lib/common/rhino_params.pv
 include pvrhino/lib/beaglebone/libpv_rhino.so
@@ -79,12 +74,6 @@ include pvrhino/lib/raspberry-pi/cortex-a7/libpv_rhino.so
 include pvrhino/lib/raspberry-pi/cortex-a53/libpv_rhino.so
 include pvrhino/lib/raspberry-pi/cortex-a72/libpv_rhino.so
 include pvrhino/lib/windows/amd64/libpv_rhino.dll
-
-recursive-include pvrhino/resources/contexts/beaglebone *
-recursive-include pvrhino/resources/contexts/linux *
-recursive-include pvrhino/resources/contexts/mac/ *
-recursive-include pvrhino/resources/contexts/raspberry-pi *
-recursive-include pvrhino/resources/contexts/windows *
 recursive-include pvrhino/resources/util/python *
 """
 
@@ -97,10 +86,10 @@ TODO
 
 setuptools.setup(
     name="pvrhino",
-    version="1.3.0",
+    version="1.3.1",
     author="Picovoice",
     author_email="hello@picovoice.ai",
-    description="On-device Speech-to-Intent engine powered by deep learning.",
+    description="On-Device Speech-to-Intent powered by deep learning.",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     url="https://github.com/Picovoice/rhino",
