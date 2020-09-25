@@ -183,7 +183,7 @@ data used by various applications within the repository.
 
 ### Python Demos
 
-This [demo application](/demo/python/rhino_demo_mic.py) allows testing Rhino using your computer's microphone. It opens
+This [demo application](/demo/python/rhino_porcupine_demo_mic.py) allows testing Rhino using your computer's microphone. It opens
 an input audio stream, monitors it using our [Porcupine](https://github.com/Picovoice/porcupine) wake word detection
 engine, and when the wake phrase is detected it will extract the intent within the follow-up spoken command using Rhino.
 
@@ -192,7 +192,7 @@ smart lighting system. It also initializes the Porcupine engine to detect the wa
 can issue commands such as "Picovoice, turn on the lights".
 
 ```bash
-python3 demo/python/rhino_demo_mic.py \
+python3 demo/python/rhino_porcupine_demo_mic.py \
 --rhino_context_file_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
 ```
 

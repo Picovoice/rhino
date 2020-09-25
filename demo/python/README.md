@@ -8,13 +8,13 @@ your platform name (e.g. linux, mac, raspberry-pi).
 Usage information can be retrieved using
 
 ```bash
-python3 demo/python/rhino_demo_mic.py --help
+python3 demo/python/rhino_porcupine_demo_mic.py --help
 ```
 
 Run the demo by executing the following from the root of the repository
 
 ```bash
-python3 demo/python/rhino_demo_mic.py \
+python3 demo/python/rhino_porcupine_demo_mic.py \
 --rhino_context_file_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
 ```
 
@@ -30,7 +30,7 @@ There are a couple of debugging facilities baked into the demo application to so
 the console
 
 ```bash
-python3 ./demo/python/rhino_demo_mic.py --show_audio_devices_info
+python3 ./demo/python/rhino_porcupine_demo_mic.py --show_audio_devices_info
 ```
 
 It provides information about various audio input devices on the box. On a Linux box, this is the console output
@@ -64,14 +64,14 @@ It can be seen that the last device (index 21) is considered default. But on thi
 the input device which has an index of 10. After finding the correct index the demo application can be invoked as below
 
 ```bash
-python3 demo/python/rhino_demo_mic.py --input_audio_device_index 10 \
+python3 demo/python/rhino_porcupine_demo_mic.py --input_audio_device_index 10 \
 --rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved by
 
 ```bash
-python3 demo/python/rhino_demo_mic.py --output-path ~/test.wav \
+python3 demo/python/rhino_porcupine_demo_mic.py --output-path ~/test.wav \
 --rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn
 ```
 
