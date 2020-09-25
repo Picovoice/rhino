@@ -64,35 +64,3 @@ def _library_path():
 LIBRARY_PATH = _library_path()
 
 MODEL_PATH = os.path.join(os.path.dirname(__file__), '../../../lib/common/rhino_params.pv')
-
-
-def _context_files_subdir():
-    if _PV_SYSTEM == 'Darwin':
-        return 'mac'
-    elif _PV_SYSTEM == 'Linux':
-        if _PV_MACHINE == 'x86_64':
-            return 'linux'
-        elif _PV_MACHINE in _RASPBERRY_PI_MACHINES:
-            return 'raspberry-pi'
-        elif _PV_MACHINE == 'beaglebone':
-            return 'beaglebone'
-    elif _PV_SYSTEM == 'Windows':
-        return 'windows'
-
-    raise NotImplementedError('unsupported platform')
-
-
-def _context_file_paths():
-    context_files_dir = \
-        os.path.join(os.path.dirname(__file__), '../../../resources/contexts/%s' % _context_files_subdir())
-
-    res = dict()
-    for x in os.listdir(context_files_dir):
-        res[x.rsplit('_', maxsplit=1)[0]] = os.path.join(context_files_dir, x)
-
-    return res
-
-
-CONTEXT_PATHS = _context_file_paths()
-
-CONTEXTS = CONTEXT_PATHS.keys()
