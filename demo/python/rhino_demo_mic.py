@@ -33,8 +33,9 @@ class RhinoDemo(Thread):
 
         :param library_path: Absolute path to Rhino's dynamic library.
         :param model_path: Absolute path to file containing model parameters.
-        :param context_path: Absolute path to file containing context parameters. A context represents the set of
-        expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
+        :param context_path: Absolute path to file containing context model (file with `.rhn` extension). A context
+        represents the set of expressions (spoken commands), intents, and intent arguments (slots) within a domain of
+        interest.
         :param audio_device_index: Optional argument. If provided, audio is recorded from this input device. Otherwise,
         the default audio input device is used.
         :param output_path: If provided recorded audio will be stored in this location at the end of the run.

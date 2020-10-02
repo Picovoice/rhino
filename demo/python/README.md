@@ -56,14 +56,14 @@ rhino_demo_file --input_audio_path ${AUDIO_PATH} --context_path ${CONTEXT_PATH}
 
 ### Microphone Demo
 
-It opens an audio stream from a microphone and performs inference in spoken commands
+It opens an audio stream from a microphone and performs inference in spoken commands:
 
 ```bash
 rhino_demo_mic --context_path ${CONTEXT_PATH}
 ```
 
 It is possible that the default audio input device recognized by PyAudio is not the one being used. There are a couple
-of debugging facilities baked into the demo application to solve this. First, type the following into the console
+of debugging facilities baked into the demo application to solve this. First, type the following into the console:
 
 ```bash
 rhino_demo_mic --show_audio_devices

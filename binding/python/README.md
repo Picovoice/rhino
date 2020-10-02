@@ -35,7 +35,7 @@ pip3 install pvrhino
 
 ## Usage
 
-Create an instance of the engine
+Create an instance of the engine:
 
 ```python
 import pvrhino
@@ -53,7 +53,7 @@ inference rate.
 ```python
 import pvrhino
 
-handle = pvrhino.create(context_path='/absolute/path/to/context', sensitivity=0.)
+handle = pvrhino.create(context_path='/absolute/path/to/context', sensitivity=0.25)
 ```
 
 When initialized, the valid sample rate is given by `handle.sample_rate`. Expected frame length (number of audio samples
@@ -78,7 +78,7 @@ while True:
             # add code to take action based on inferred intent and slot values
 ```
 
-When done resources have to be released explicitly
+When done resources have to be released explicitly:
 
 ```python
 handle.delete()
