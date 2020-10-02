@@ -36,7 +36,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Picovoice/rhino",
     packages=["pvrhinodemo"],
-    install_requires=["enum34", "numpy", "pvrhino==1.3.5", "pyaudio", "soundfile"],
+    install_requires=["enum34", "numpy", "pvrhino==1.5.0", "pyaudio", "soundfile"],
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
