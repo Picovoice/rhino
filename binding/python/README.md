@@ -43,7 +43,7 @@ import pvrhino
 handle = pvrhino.create(context_path='/absolute/path/to/context')
 ```
 
-Where `context_path` is the absolute path to Speech-to-Intent context you have created either using
+Where `context_path` is the absolute path to Speech-to-Intent context created either using
 [Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository.
 
 The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating point number within
