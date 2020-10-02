@@ -9,8 +9,6 @@
 # specific language governing permissions and limitations under the License.
 #
 
-import os
-import sys
 import unittest
 
 import soundfile
@@ -23,34 +21,38 @@ class RhinoTestCase(unittest.TestCase):
 
     @staticmethod
     def _context_path():
-        pv_system = platform.system()
+        system = platform.system()
 
-        if pv_system == 'Darwin':
+        if system == 'Darwin':
             return os.path.join(os.path.dirname(__file__), '../../resources/contexts/mac/coffee_maker_mac.rhn')
-        elif pv_system == 'Linux':
+        elif system == 'Linux':
             if platform.machine() == 'x86_64':
-                return platform.machine()
-
-            cpu_info = subprocess.check_output(['cat', '/proc/cpuinfo']).decode()
-            hardware_info = [x for x in cpu_info.split('\n') if 'Hardware' in x][0]
-
-            if 'BCM' in hardware_info:
-                pv_machine = 'raspberry-pi'
-            elif 'AM33' in hardware_info:
-                pv_machine = 'beaglebone'
+                return os.path.join(os.path.dirname(__file__), '../../resources/contexts/linux/coffee_maker_linux.rhn')
             else:
-                raise NotImplementedError('Unsupported CPU.')
-        elif pv_system == 'Windows':
+                cpu_info = subprocess.check_output(['cat', '/proc/cpuinfo']).decode()
+                hardware_info = [x for x in cpu_info.split('\n') if 'Hardware' in x][0]
+
+                if 'BCM' in hardware_info:
+                    return os.path.join(
+                        os.path.dirname(__file__),
+                        '../../resources/contexts/raspberry-pi/coffee_maker_raspberry-pi.rhn')
+                elif 'AM33' in hardware_info:
+                    return os.path.join(
+                        os.path.dirname(__file__),
+                        '../../resources/contexts/beaglebone/coffee_maker_beaglebone.rhn')
+                else:
+                    raise NotImplementedError('Unsupported CPU.')
+        elif system == 'Windows':
             return os.path.join(os.path.dirname(__file__), '../../resources/contexts/windows/coffee_maker_windows.rhn')
         else:
-            raise ValueError("Unsupported system '%s'." % pv_system)
+            raise ValueError("Unsupported system '%s'." % system)
 
     @classmethod
     def setUpClass(cls):
         cls.rhino = Rhino(
             library_path=pv_library_path('../..'),
             model_path=pv_model_path('../..'),
-            context_path=CONTEXT_PATHS['coffee_maker'])
+            context_path=cls._context_path())
 
     @classmethod
     def tearDownClass(cls):

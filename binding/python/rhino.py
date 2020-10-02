@@ -174,27 +174,25 @@ class Rhino(object):
 
         inference = dict(is_understood=is_understood)
 
-        if not is_understood:
-            return inference
+        if is_understood:
+            intent = c_char_p()
+            num_slots = c_int()
+            slots = POINTER(c_char_p)()
+            values = POINTER(c_char_p)()
+            status = self._get_intent_func(self._handle, byref(intent), byref(num_slots), byref(slots), byref(values))
+            if status is not self.PicovoiceStatuses.SUCCESS:
+                raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
-        intent = c_char_p()
-        num_slots = c_int()
-        slots = POINTER(c_char_p)()
-        values = POINTER(c_char_p)()
-        status = self._get_intent_func(self._handle, byref(intent), byref(num_slots), byref(slots), byref(values))
-        if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+            slot_values = dict()
+            for i in range(num_slots.value):
+                slot_values[slots[i].decode('utf-8')] = values[i].decode('utf-8')
 
-        slot_values = dict()
-        for i in range(num_slots.value):
-            slot_values[slots[i].decode('utf-8')] = values[i].decode('utf-8')
+            status = self._free_slots_and_values_func(self._handle, slots, values)
+            if status is not self.PicovoiceStatuses.SUCCESS:
+                raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
-        status = self._free_slots_and_values_func(self._handle, slots, values)
-        if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
-
-        inference['intent'] = intent.value.decode('utf-8')
-        inference['slots'] = slot_values
+            inference['intent'] = intent.value.decode('utf-8')
+            inference['slots'] = slot_values
 
         status = self._reset_func(self._handle)
         if status is not self.PicovoiceStatuses.SUCCESS:
