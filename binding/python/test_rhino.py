@@ -17,8 +17,6 @@ from util import *
 
 
 class RhinoTestCase(unittest.TestCase):
-    rhino = None
-
     @staticmethod
     def _context_path():
         system = platform.system()
@@ -47,6 +45,8 @@ class RhinoTestCase(unittest.TestCase):
         else:
             raise ValueError("Unsupported system '%s'." % system)
 
+    rhino = None
+
     @classmethod
     def setUpClass(cls):
         cls.rhino = Rhino(
@@ -66,22 +66,20 @@ class RhinoTestCase(unittest.TestCase):
                 dtype='int16')
         assert sample_rate == self.rhino.sample_rate
 
-        num_frames = len(audio) // self.rhino.frame_length
-
         is_finalized = False
-        for i in range(num_frames):
+        for i in range(len(audio) // self.rhino.frame_length):
             frame = audio[i * self.rhino.frame_length:(i + 1) * self.rhino.frame_length]
             is_finalized = self.rhino.process(frame)
             if is_finalized:
                 break
 
-        self.assertTrue(is_finalized, "couldn't finalize")
+        self.assertTrue(is_finalized, "Failed to finalize.")
 
         inference = self.rhino.get_inference()
 
-        self.assertTrue(inference['is_understood'], "couldn't understand")
+        self.assertTrue(inference.is_understood, "Couldn't understand.")
 
-        self.assertEqual('orderDrink', inference['intent'], "incorrect intent")
+        self.assertEqual('orderDrink', inference.intent, "Incorrect intent.")
 
         expected_slot_values = dict(
             sugarAmount='some sugar',
@@ -89,7 +87,7 @@ class RhinoTestCase(unittest.TestCase):
             coffeeDrink='americano',
             numberOfShots='double shot',
             size='medium')
-        self.assertEqual(inference['slots'], expected_slot_values, "incorrect slot values")
+        self.assertEqual(inference.slots, expected_slot_values, "Incorrect slots.")
 
     def test_out_of_context(self):
         audio, sample_rate = \
@@ -98,24 +96,16 @@ class RhinoTestCase(unittest.TestCase):
                 dtype='int16')
         assert sample_rate == self.rhino.sample_rate
 
-        num_frames = len(audio) // self.rhino.frame_length
-
         is_finalized = False
-        for i in range(num_frames):
+        for i in range(len(audio) // self.rhino.frame_length):
             frame = audio[i * self.rhino.frame_length:(i + 1) * self.rhino.frame_length]
             is_finalized = self.rhino.process(frame)
             if is_finalized:
                 break
 
-        self.assertTrue(is_finalized, "couldn't finalize")
+        self.assertTrue(is_finalized, "Failed to finalize.")
 
-        self.assertFalse(self.rhino.get_inference()['is_understood'], "shouldn't be able to understand")
-
-    def test_context_info(self):
-        self.assertIsInstance(self.rhino.context_info, str)
-
-    def test_version(self):
-        self.assertIsInstance(self.rhino.version, str)
+        self.assertFalse(self.rhino.get_inference().is_understood, "Shouldn't be able to understand.")
 
 
 if __name__ == '__main__':
