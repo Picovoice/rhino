@@ -28,7 +28,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
 
 setuptools.setup(
     name="pvrhinodemo",
-    version="1.3.5",
+    version="1.3.6",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Rhino Speech-to-Intent engine demos.",
@@ -53,5 +53,5 @@ setuptools.setup(
         ],
     ),
     python_requires='>=3',
-    keywords="wake word engine, hotword detection, keyword spotting, wake word detection, voice commands",
+    keywords="Speech-to-Intent, voice commands, voice control, speech recognition, natural language understanding"
 )

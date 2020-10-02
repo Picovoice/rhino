@@ -46,7 +46,7 @@ sudo pip3 install pvrhinodemo
 ### File Demo
 
 It allows testing Rhino on a corpus of audio files. The demo is mainly useful for quantitative performance
-benchmarking. It accepts 16kHz audio files. Porcupine processes a single-channel audio stream if a stereo file is
+benchmarking. It accepts 16kHz audio files. Rhino processes a single-channel audio stream if a stereo file is
 provided it only processes the first (left) channel. Note that only the relevant spoken command should be present in the
 file and no other speech. Also there needs to be at least one second of silence at the end of the file.
 
@@ -66,7 +66,7 @@ It is possible that the default audio input device recognized by PyAudio is not 
 of debugging facilities baked into the demo application to solve this. First, type the following into the console
 
 ```bash
-rhino_demo_micy --show_audio_devices
+rhino_demo_mic --show_audio_devices
 ```
 
 It provides information about various audio input devices on the box. On a Linux box, this is the console output
