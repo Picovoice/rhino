@@ -1,2 +1,3 @@
-pvrhino
+pvporcupine
+pvrhino==1.5.0
 pyaudio

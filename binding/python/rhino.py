@@ -10,16 +10,22 @@
 #
 
 import os
+from collections import namedtuple
 from ctypes import *
 from enum import Enum
 
 
 class Rhino(object):
-    """Python binding for Picovoice's Rhino Speech-to-Intent engine."""
+    """
+    Python binding for Rhino Speech-to-Intent engine. It directly infers the user's intent from spoken commands in
+    real-time. Rhino processes incoming audio in consecutive frames and indicates if the inference is finalized. When
+    finalized, the inferred intent can be retrieved as structured data in the form of an intent string and pairs of
+    slots and values. The number of samples per frame can be attained by calling `.frame_length`. The incoming audio
+    needs to have a sample rate equal to `.sample_rate` and be 16-bit linearly-encoded. Rhino operates on single-channel
+    audio.
+    """
 
     class PicovoiceStatuses(Enum):
-        """Status codes corresponding to 'pv_status_t' defined in 'include/picovoice.h'"""
-
         SUCCESS = 0
         OUT_OF_MEMORY = 1
         IO_ERROR = 2
@@ -53,18 +59,18 @@ class Rhino(object):
         """
 
         if not os.path.exists(library_path):
-            raise IOError("couldn't find Rhino's dynamic library at '%s'" % library_path)
+            raise IOError("Couldn't find Rhino's dynamic library at '%s'." % library_path)
 
         library = cdll.LoadLibrary(library_path)
 
         if not os.path.exists(model_path):
-            raise IOError("couldn't find model file at '%s'" % model_path)
+            raise IOError("Couldn't find model file at '%s'." % model_path)
 
         if not os.path.exists(context_path):
-            raise IOError("couldn't find context file at '%s'" % context_path)
+            raise IOError("Couldn't find context file at '%s'." % context_path)
 
         if not 0 <= sensitivity <= 1:
-            raise ValueError("sensitivity should be within [0, 1]")
+            raise ValueError("Sensitivity should be within [0, 1].")
 
         init_func = library.pv_rhino_init
         init_func.argtypes = [c_char_p, c_char_p, c_float, POINTER(POINTER(self.CRhino))]
@@ -133,17 +139,16 @@ class Rhino(object):
     def process(self, pcm):
         """
         Processes a frame of audio and emits a flag indicating if the inference is finalized. When finalized,
-        '.is_understood()' should be called to check if the spoken command is considered valid.
+        `.is_understood()` should be called to check if the spoken command is considered valid.
 
         :param pcm: A frame of audio samples. The number of samples per frame can be attained by calling
-        '.frame_length'. The incoming audio needs to have a sample rate equal to '.sample_rate' and be 16-bit
+        `.frame_length`. The incoming audio needs to have a sample rate equal to `.sample_rate` and be 16-bit
         linearly-encoded. Rhino operates on single-channel audio.
-
         :return: Flag indicating if the inference is finalized.
         """
 
         if len(pcm) != self.frame_length:
-            raise ValueError("invalid frame length. expected %d but received %d" % (self.frame_length, len(pcm)))
+            raise ValueError("Invalid frame length. expected %d but received %d" % (self.frame_length, len(pcm)))
 
         is_finalized = c_bool()
         status = self._process_func(self._handle, (c_short * len(pcm))(*pcm), byref(is_finalized))
@@ -152,56 +157,54 @@ class Rhino(object):
 
         return is_finalized.value
 
-    def is_understood(self):
+    Inference = namedtuple('Inference', ['is_understood', 'intent', 'slots'])
+
+    def get_inference(self):
         """
-        Indicates if the spoken command is valid, is within the domain of interest (context), and the engine understood
-        it. Upon success '.get_intent()' may be called to retrieve inferred intent. If not understood, '.reset()' should
-        be called.
+         Gets inference results from Rhino. If the spoken command was understood, it includes the specific intent name
+         that was inferred, and (if applicable) slot keys and specific slot values. Should only be called after the
+         process function returns true, otherwise Rhino has not yet reached an inference conclusion.
+         :return An immutable object with `.is_understood`, '.intent` , and `.slots` getters.
         """
 
         is_understood = c_bool()
         status = self._is_understood_func(self._handle, byref(is_understood))
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+        is_understood = is_understood.value
 
-        return is_understood.value
+        if is_understood:
+            intent = c_char_p()
+            num_slots = c_int()
+            slot_keys = POINTER(c_char_p)()
+            slot_values = POINTER(c_char_p)()
+            status = self._get_intent_func(
+                self._handle,
+                byref(intent),
+                byref(num_slots),
+                byref(slot_keys),
+                byref(slot_values))
+            if status is not self.PicovoiceStatuses.SUCCESS:
+                raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
-    def get_intent(self):
-        """
-         Getter for the intent. The intent is stored as an intent string and a dictionary mapping slots to their values.
-         It should be called only after intent inference is finalized and it is verified that the spoken command is
-         understood via calling '.is_understood()'.
+            intent = intent.value.decode('utf-8')
 
-        :return: Tuple of intent string and slot/value dictionary.
-        """
+            slots = dict()
+            for i in range(num_slots.value):
+                slots[slot_keys[i].decode('utf-8')] = slot_values[i].decode('utf-8')
 
-        intent = c_char_p()
-        num_slots = c_int()
-        slots = POINTER(c_char_p)()
-        values = POINTER(c_char_p)()
-        status = self._get_intent_func(self._handle, byref(intent), byref(num_slots), byref(slots), byref(values))
-        if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
-
-        slot_values = dict()
-        for i in range(num_slots.value):
-            slot_values[slots[i].decode('utf-8')] = values[i].decode('utf-8')
-
-        status = self._free_slots_and_values_func(self._handle, slots, values)
-        if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
-
-        return intent.value.decode('utf-8'), slot_values
-
-    def reset(self):
-        """
-        Resets the internal state of the engine. It should be called before the engine can be used to infer intent from
-        a new stream of audio.
-        """
+            status = self._free_slots_and_values_func(self._handle, slot_keys, slot_values)
+            if status is not self.PicovoiceStatuses.SUCCESS:
+                raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+        else:
+            intent = None
+            slots = dict()
 
         status = self._reset_func(self._handle)
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+
+        return self.Inference(is_understood=is_understood, intent=intent, slots=slots)
 
     @property
     def context_info(self):

@@ -12,10 +12,10 @@
 import argparse
 import os
 import struct
-import sys
 from threading import Thread
 
 import numpy as np
+import pvporcupine
 import pvrhino
 import pyaudio
 import soundfile
@@ -84,10 +84,10 @@ class RhinoDemo(Thread):
         intent_extraction_is_finalized = False
 
         try:
-            porcupine = Porcupine(
+            porcupine = pvporcupine.create(
                 library_path=self._porcupine_library_path,
-                model_file_path=self._porcupine_model_file_path,
-                keyword_file_paths=[self._porcupine_keyword_file_path],
+                model_path=self._porcupine_model_file_path,
+                keyword_paths=[self._porcupine_keyword_file_path],
                 sensitivities=[0.5])
 
             rhino = pvrhino.create(
@@ -122,24 +122,24 @@ class RhinoDemo(Thread):
                     self._recorded_frames.append(pcm)
 
                 if not wake_phrase_detected:
-                    wake_phrase_detected = porcupine.process(pcm)
+                    keyword_index = porcupine.process(pcm)
+                    wake_phrase_detected = keyword_index == 0
                     if wake_phrase_detected:
                         print('detected wake phrase')
                 elif not intent_extraction_is_finalized:
                     intent_extraction_is_finalized = rhino.process(pcm)
                 else:
-                    if rhino.is_understood():
-                        intent, slot_values = rhino.get_intent()
+                    inference = rhino.get_inference()
+                    if inference.is_understood:
                         print()
-                        print('intent: %s' % intent)
+                        print('intent: %s' % inference.intent)
                         print('---')
-                        for slot, value in slot_values.items():
+                        for slot, value in inference.slots.items():
                             print('%s: %s' % (slot, value))
                         print()
                     else:
                         print("didn't understand the command")
 
-                    rhino.reset()
                     wake_phrase_detected = False
                     intent_extraction_is_finalized = False
 
@@ -201,17 +201,17 @@ def main():
 
     parser.add_argument(
         '--porcupine_library_path',
-        default=PORCUPINE_LIBRARY_PATH,
+        default=pvporcupine.LIBRARY_PATH,
         help="absolute path to Porcupine's dynamic library")
 
     parser.add_argument(
         '--porcupine_model_file_path',
-        default=PORCUPINE_MODEL_FILE_PATH,
+        default=pvporcupine.MODEL_PATH,
         help="absolute path to Porcupine's model parameter file")
 
     parser.add_argument(
         '--porcupine_keyword_file_path',
-        default=PORCUPINE_KEYWORD_FILE_PATHS['picovoice'],
+        default=pvporcupine.KEYWORD_PATHS['picovoice'],
         help='absolute path to porcupine keyword file')
 
     parser.add_argument(
@@ -247,10 +247,4 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources'))
-    from porcupine.binding.python.porcupine import Porcupine
-    from porcupine.resources.util.python import MODEL_FILE_PATH as PORCUPINE_MODEL_FILE_PATH
-    from porcupine.resources.util.python import LIBRARY_PATH as PORCUPINE_LIBRARY_PATH
-    from porcupine.resources.util.python import KEYWORD_FILE_PATHS as PORCUPINE_KEYWORD_FILE_PATHS
-
     main()

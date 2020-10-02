@@ -21,7 +21,7 @@ interest, in real-time. For example, given a spoken command *"Can I have a small
 Rhino is:
 
 * using deep neural networks trained in real-world environments.
-* Compact and computationally-efficient, making it perfect for IoT.
+* compact and computationally-efficient, making it perfect for IoT.
 * cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (all variants), Beagle Bone, Android, iOS,
 Linux (x86_64), Mac (x86_64), Windows (x86_64), and web browsers are supported. Furthermore, Support for various ARM
 Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for enterprise customers.

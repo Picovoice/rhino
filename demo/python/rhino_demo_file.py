@@ -18,15 +18,22 @@ import soundfile
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--input_audio_path', help='absolute path to input audio file', required=True)
+    parser.add_argument('--input_audio_path', help='Absolute path to input audio file.', required=True)
 
-    parser.add_argument('--context_path', help="absolute path to context file", required=True)
+    parser.add_argument('--context_path', help="Absolute path to context file.", required=True)
 
-    parser.add_argument('--library_path', help="absolute path to dynamic library", default=pvrhino.LIBRARY_PATH)
+    parser.add_argument('--library_path', help='Absolute path to dynamic library.', default=pvrhino.LIBRARY_PATH)
 
-    parser.add_argument('--model_path', help='absolute path to model file', default=pvrhino.MODEL_PATH)
+    parser.add_argument(
+        '--model_path',
+        help='Absolute path to the file containing model parameters.',
+        default=pvrhino.MODEL_PATH)
 
-    parser.add_argument('--sensitivity', help='inference sensitivity.', default=0.5)
+    parser.add_argument(
+        '--sensitivity',
+        help="Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
+             "fewer misses at the cost of (potentially) increasing the erroneous inference rate.",
+        default=0.5)
 
     args = parser.parse_args()
 
@@ -37,25 +44,28 @@ def main():
         sensitivity=args.sensitivity)
 
     audio, sample_rate = soundfile.read(args.input_audio_path, dtype='int16')
+    if audio.ndim == 2:
+        print("Picovoice processes single-channel audio but stereo file is provided. Processing left channel only.")
+        audio = audio[0, :]
     if sample_rate != rhino.sample_rate:
-        raise ValueError("input audio file should have a sample rate of %d. got %d" % (rhino.sample_rate, sample_rate))
+        raise ValueError("Audio file should have a sample rate of %d. got %d" % (rhino.sample_rate, sample_rate))
 
     num_frames = len(audio) // rhino.frame_length
     for i in range(num_frames):
         frame = audio[i * rhino.frame_length:(i + 1) * rhino.frame_length]
         is_finalized = rhino.process(frame)
         if is_finalized:
-            if rhino.is_understood():
-                intent, slot_values = rhino.get_intent()
+            inference = rhino.get_inference()
+            if inference.is_understood:
                 print('{')
-                print("  intent : '%s'" % intent)
+                print("  intent : '%s'" % inference.intent)
                 print('  slots : {')
-                for slot, value in slot_values.items():
+                for slot, value in inference.slots.items():
                     print("    %s : '%s'" % (slot, value))
                 print('  }')
                 print('}')
             else:
-                print("didn't understand the command")
+                print("Didn't understand the command.")
             break
 
     rhino.delete()

@@ -9,28 +9,55 @@
 # specific language governing permissions and limitations under the License.
 #
 
-import os
-import sys
 import unittest
 
 import soundfile
 from rhino import Rhino
+from util import *
 
 
 class RhinoTestCase(unittest.TestCase):
+    @staticmethod
+    def _context_path():
+        system = platform.system()
+
+        if system == 'Darwin':
+            return os.path.join(os.path.dirname(__file__), '../../resources/contexts/mac/coffee_maker_mac.rhn')
+        elif system == 'Linux':
+            if platform.machine() == 'x86_64':
+                return os.path.join(os.path.dirname(__file__), '../../resources/contexts/linux/coffee_maker_linux.rhn')
+            else:
+                cpu_info = subprocess.check_output(['cat', '/proc/cpuinfo']).decode()
+                hardware_info = [x for x in cpu_info.split('\n') if 'Hardware' in x][0]
+
+                if 'BCM' in hardware_info:
+                    return os.path.join(
+                        os.path.dirname(__file__),
+                        '../../resources/contexts/raspberry-pi/coffee_maker_raspberry-pi.rhn')
+                elif 'AM33' in hardware_info:
+                    return os.path.join(
+                        os.path.dirname(__file__),
+                        '../../resources/contexts/beaglebone/coffee_maker_beaglebone.rhn')
+                else:
+                    raise NotImplementedError('Unsupported CPU.')
+        elif system == 'Windows':
+            return os.path.join(os.path.dirname(__file__), '../../resources/contexts/windows/coffee_maker_windows.rhn')
+        else:
+            raise ValueError("Unsupported system '%s'." % system)
+
     rhino = None
 
     @classmethod
     def setUpClass(cls):
-        cls.rhino = Rhino(library_path=LIBRARY_PATH, model_path=MODEL_PATH, context_path=CONTEXT_PATHS['coffee_maker'])
+        cls.rhino = Rhino(
+            library_path=pv_library_path('../..'),
+            model_path=pv_model_path('../..'),
+            context_path=cls._context_path())
 
     @classmethod
     def tearDownClass(cls):
         if cls.rhino is not None:
             cls.rhino.delete()
-
-    def tearDown(self):
-        self.rhino.reset()
 
     def test_within_context(self):
         audio, sample_rate = \
@@ -39,22 +66,20 @@ class RhinoTestCase(unittest.TestCase):
                 dtype='int16')
         assert sample_rate == self.rhino.sample_rate
 
-        num_frames = len(audio) // self.rhino.frame_length
-
         is_finalized = False
-        for i in range(num_frames):
+        for i in range(len(audio) // self.rhino.frame_length):
             frame = audio[i * self.rhino.frame_length:(i + 1) * self.rhino.frame_length]
             is_finalized = self.rhino.process(frame)
             if is_finalized:
                 break
 
-        self.assertTrue(is_finalized, "couldn't finalize")
+        self.assertTrue(is_finalized, "Failed to finalize.")
 
-        self.assertTrue(self.rhino.is_understood(), "couldn't understand")
+        inference = self.rhino.get_inference()
 
-        intent, slot_values = self.rhino.get_intent()
+        self.assertTrue(inference.is_understood, "Couldn't understand.")
 
-        self.assertEqual('orderDrink', intent, "incorrect intent")
+        self.assertEqual('orderDrink', inference.intent, "Incorrect intent.")
 
         expected_slot_values = dict(
             sugarAmount='some sugar',
@@ -62,7 +87,7 @@ class RhinoTestCase(unittest.TestCase):
             coffeeDrink='americano',
             numberOfShots='double shot',
             size='medium')
-        self.assertEqual(slot_values, expected_slot_values, "incorrect slot values")
+        self.assertEqual(inference.slots, expected_slot_values, "Incorrect slots.")
 
     def test_out_of_context(self):
         audio, sample_rate = \
@@ -71,28 +96,17 @@ class RhinoTestCase(unittest.TestCase):
                 dtype='int16')
         assert sample_rate == self.rhino.sample_rate
 
-        num_frames = len(audio) // self.rhino.frame_length
-
         is_finalized = False
-        for i in range(num_frames):
+        for i in range(len(audio) // self.rhino.frame_length):
             frame = audio[i * self.rhino.frame_length:(i + 1) * self.rhino.frame_length]
             is_finalized = self.rhino.process(frame)
             if is_finalized:
                 break
 
-        self.assertTrue(is_finalized, "couldn't finalize")
+        self.assertTrue(is_finalized, "Failed to finalize.")
 
-        self.assertFalse(self.rhino.is_understood(), "shouldn't be able to understand")
-
-    def test_context_info(self):
-        self.assertIsInstance(self.rhino.context_info, str)
-
-    def test_version(self):
-        self.assertIsInstance(self.rhino.version, str)
+        self.assertFalse(self.rhino.get_inference().is_understood, "Shouldn't be able to understand.")
 
 
 if __name__ == '__main__':
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../../resources/util/python'))
-    from util import *
-
     unittest.main()

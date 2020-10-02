@@ -1,36 +1,72 @@
-# Microphone-Based Demo
+# Rhino Speech-to-Intent Engine Demos
 
-This demo uses Picovoice's wake-word engine ([Porcupine](https://github.com/Picovoice/porcupine)) to showcase hands-free
-usage of Rhino. The default wake word is "Picovoice" but it can be changed via command-line arguments. In the following,
-we assume that commands are executed from the root of the repository. Additionally, you should replace `${SYSTEM}` with
-your platform name (e.g. linux, mac, raspberry-pi).
+Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-Usage information can be retrieved using
+This package contains demos and commandline utilities for processing real-time audio (i.e. microphone) and audio files
+using Rhino Speech-to-Intent engine.
 
-```bash
-python3 demo/python/rhino_porcupine_demo_mic.py --help
+## Rhino
+
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
+interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso with a lot of sugar
+ and some milk"*, Rhino infers that the user wants to order a drink with these specifications:
+
+```json
+{
+  "type": "espresso",
+  "size": "small",
+  "numberOfShots": "2",
+  "sugar": "a lot",
+  "milk": "some"
+}
 ```
 
-Run the demo by executing the following from the root of the repository
+Rhino is:
+
+* using deep neural networks trained in real-world environments.
+* compact and computationally-efficient, making it perfect for IoT.
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+
+## Compatibility
+
+- Python 3
+- Runs on Linux (x86_64), Mac (x86_64), Windows (x86_64), Raspberry Pi (all variants), and BeagleBone.
+
+## Installation
+
+Microphone demo uses [PyAudio](https://people.csail.mit.edu/hubert/pyaudio/) for recording input audio. Consult the
+installation guide at [PyAudio](https://people.csail.mit.edu/hubert/pyaudio/).
 
 ```bash
-python3 demo/python/rhino_porcupine_demo_mic.py \
---rhino_context_file_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
+sudo pip3 install pvrhinodemo
 ```
 
-Then you can issue commands such as "Picovoice, turn off the lights" or
-"Picovoice, set the lights in the attic to purple". The full list of available expressions is printed to the console.
+## Usage
 
-## FAQ
+### File Demo
 
-#### The demo application does not detect/infer anything. Why?
-
-The most probable cause of this is that the default audio input device recognized by PyAudio is not the one being used.
-There are a couple of debugging facilities baked into the demo application to solve this. First, type the following into
-the console
+It allows testing Rhino on a corpus of audio files. The demo is mainly useful for quantitative performance
+benchmarking. It accepts 16kHz audio files. Rhino processes a single-channel audio stream if a stereo file is
+provided it only processes the first (left) channel. Note that only the relevant spoken command should be present in the
+file and no other speech. Also there needs to be at least one second of silence at the end of the file.
 
 ```bash
-python3 ./demo/python/rhino_porcupine_demo_mic.py --show_audio_devices_info
+rhino_demo_file --input_audio_path ${AUDIO_PATH} --context_path ${CONTEXT_PATH} 
+```
+
+### Microphone Demo
+
+It opens an audio stream from a microphone and performs inference in spoken commands:
+
+```bash
+rhino_demo_mic --context_path ${CONTEXT_PATH}
+```
+
+It is possible that the default audio input device recognized by PyAudio is not the one being used. There are a couple
+of debugging facilities baked into the demo application to solve this. First, type the following into the console:
+
+```bash
+rhino_demo_mic --show_audio_devices
 ```
 
 It provides information about various audio input devices on the box. On a Linux box, this is the console output
@@ -64,35 +100,11 @@ It can be seen that the last device (index 21) is considered default. But on thi
 the input device which has an index of 10. After finding the correct index the demo application can be invoked as below
 
 ```bash
-python3 demo/python/rhino_porcupine_demo_mic.py --input_audio_device_index 10 \
---rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn
+rhino_demo_mic --context_path ${CONTEXT_PATH} --audio_device_index 10
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved by
 
 ```bash
-python3 demo/python/rhino_porcupine_demo_mic.py --output-path ~/test.wav \
---rhino_context_file_path ./resources/contexts/linux/smart_lighting_linux.rhn
-```
-
-# File-Based Demo
-
-This demo processes a given audio file and infers the intent from spoken command within the file. Note that only the
-relevant spoken command should be present in the file and no other speech. Also there needs to be at least one second of
-silence at the end of the file. Try the demo using
-
-```bash
-python3 demo/python/rhino_demo_file.py --input_audio_file_path resources/audio_samples/test_within_context.wav \
---context_file_path resources/contexts/${SYSTEM}/coffee_maker_${SYSTEM}.rhn 
-```
-
-Which prints out the following in the console
-
-```bash
-intent : orderDrink
-sugarAmount: some sugar
-milkAmount: lots of milk
-coffeeDrink: americano
-numberOfShots: double shot
-size: medium
+rhino_demo_mic --context_path ${CONTEXT_PATH} --audio_device_index 10 --output_path ~/test.wav
 ```
