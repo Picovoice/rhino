@@ -15,11 +15,16 @@ from enum import Enum
 
 
 class Rhino(object):
-    """Python binding for Picovoice's Rhino Speech-to-Intent engine."""
+    """
+    Python binding for Rhino Speech-to-Intent engine. It directly infers the user's intent from spoken commands in
+    real-time. Rhino processes incoming audio in consecutive frames and indicates if the inference is finalized. When
+    finalized, the inferred intent can be retrieved as structured data in the form of an intent string and pairs of
+    slots and values. The number of samples per frame can be attained by calling `.frame_length`. The incoming audio
+    needs to have a sample rate equal to `.sample_rate` and be 16-bit linearly-encoded. Rhino operates on single-channel
+    audio.
+    """
 
     class PicovoiceStatuses(Enum):
-        """Status codes corresponding to 'pv_status_t' defined in 'include/picovoice.h'"""
-
         SUCCESS = 0
         OUT_OF_MEMORY = 1
         IO_ERROR = 2
@@ -53,18 +58,18 @@ class Rhino(object):
         """
 
         if not os.path.exists(library_path):
-            raise IOError("couldn't find Rhino's dynamic library at '%s'" % library_path)
+            raise IOError("Couldn't find Rhino's dynamic library at '%s'." % library_path)
 
         library = cdll.LoadLibrary(library_path)
 
         if not os.path.exists(model_path):
-            raise IOError("couldn't find model file at '%s'" % model_path)
+            raise IOError("Couldn't find model file at '%s'." % model_path)
 
         if not os.path.exists(context_path):
-            raise IOError("couldn't find context file at '%s'" % context_path)
+            raise IOError("Couldn't find context file at '%s'." % context_path)
 
         if not 0 <= sensitivity <= 1:
-            raise ValueError("sensitivity should be within [0, 1]")
+            raise ValueError("Sensitivity should be within [0, 1].")
 
         init_func = library.pv_rhino_init
         init_func.argtypes = [c_char_p, c_char_p, c_float, POINTER(POINTER(self.CRhino))]
@@ -152,28 +157,25 @@ class Rhino(object):
 
         return is_finalized.value
 
-    def is_understood(self):
+    def get_inference(self):
         """
-        Indicates if the spoken command is valid, is within the domain of interest (context), and the engine understood
-        it. Upon success '.get_intent()' may be called to retrieve inferred intent. If not understood, '.reset()' should
-        be called.
+         Gets inference results from Rhino. If the phrase was understood, it includes the specific intent name that was
+         inferred, and (if applicable) slot keys and specific slot values. Should only be called after the process
+         function returns true, otherwise Rhino has not yet reached an inference conclusion.
+         :return A dictionary with `is_understood`, and possibly 'intent` (if it is understood), and `slots` keys
+         (if the inferred intent has slots).
         """
 
         is_understood = c_bool()
         status = self._is_understood_func(self._handle, byref(is_understood))
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+        is_understood = is_understood.value
 
-        return is_understood.value
+        inference = dict(is_understood=is_understood)
 
-    def get_intent(self):
-        """
-         Getter for the intent. The intent is stored as an intent string and a dictionary mapping slots to their values.
-         It should be called only after intent inference is finalized and it is verified that the spoken command is
-         understood via calling '.is_understood()'.
-
-        :return: Tuple of intent string and slot/value dictionary.
-        """
+        if not is_understood:
+            return inference
 
         intent = c_char_p()
         num_slots = c_int()
@@ -191,17 +193,14 @@ class Rhino(object):
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
-        return intent.value.decode('utf-8'), slot_values
-
-    def reset(self):
-        """
-        Resets the internal state of the engine. It should be called before the engine can be used to infer intent from
-        a new stream of audio.
-        """
+        inference['intent'] = intent.value.decode('utf-8')
+        inference['slots'] = slot_values
 
         status = self._reset_func(self._handle)
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+
+        return inference
 
     @property
     def context_info(self):
