@@ -78,12 +78,12 @@ public class Rhino {
     }
 
     /**
-     * Gets inference results from Rhino. If the spoken command was understood, it includes the
+     * Gets inference result from Rhino. If the spoken command was understood, it includes the
      * specific intent name that was inferred, and (if applicable) slot keys and specific slot
      * values. Should only be called after the process function returns true, otherwise Rhino has
      * not yet reached an inference conclusion.
      *
-     * @return {@link RhinoInference}.
+     * @return The result of inference as a {@link RhinoInference} object.
      * @throws RhinoException if inference retrieval fails.
      */
     public RhinoInference getInference() throws RhinoException {
