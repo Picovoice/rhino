@@ -139,7 +139,7 @@ class Rhino(object):
     def process(self, pcm):
         """
         Processes a frame of audio and emits a flag indicating if the inference is finalized. When finalized,
-        `.is_understood()` should be called to check if the spoken command is considered valid.
+        `.get_inference()` should be called to retrieve the intent and slots, if the spoken command is considered valid.
 
         :param pcm: A frame of audio samples. The number of samples per frame can be attained by calling
         `.frame_length`. The incoming audio needs to have a sample rate equal to `.sample_rate` and be 16-bit

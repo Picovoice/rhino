@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -38,26 +39,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-import ai.picovoice.rhino.RhinoIntent;
-import ai.picovoice.rhinomanager.AudioRecorder;
-import ai.picovoice.rhinomanager.RhinoAudioConsumer;
-import ai.picovoice.rhinomanager.RhinoCallback;
+import ai.picovoice.rhino.RhinoInference;
+import ai.picovoice.rhinomanager.RhinoManager;
+import ai.picovoice.rhinomanager.RhinoManagerCallback;
 
 
 public class RhinoDemoActivity extends AppCompatActivity {
     private static final String TAG = "PV_RHINO_DEMO";
 
-    private static final String PARAM_FILENAME = "rhino_params.pv";
-    private static final String CONTEXT_FILENAME = "rhino_context.rhn";
-
     private ToggleButton recordButton;
     private TextView intentTextView;
-    private AudioRecorder audioRecorder;
-    private RhinoAudioConsumer rhinoAudioConsumer;
+    private RhinoManager rhinoManager;
 
     private void copyResourceFile(int resourceID, String filename) throws IOException {
-        Resources resources = getResources();
-        try (InputStream is = new BufferedInputStream(resources.openRawResource(resourceID), 256); OutputStream os = new BufferedOutputStream(openFileOutput(filename, Context.MODE_PRIVATE), 256)) {
+        final Resources resources = getResources();
+        try (
+                InputStream is = new BufferedInputStream(resources.openRawResource(resourceID), 256);
+                OutputStream os = new BufferedOutputStream(openFileOutput(filename, Context.MODE_PRIVATE), 256)) {
             int r;
             while ((r = is.read()) != -1) {
                 os.write(r);
@@ -71,21 +69,22 @@ public class RhinoDemoActivity extends AppCompatActivity {
     }
 
     private void initRhino() throws Exception {
-        rhinoAudioConsumer = new RhinoAudioConsumer(
+        rhinoManager = new RhinoManager(
                 getAbsolutePath("rhino_params.pv"),
                 getAbsolutePath("rhino_context.rhn"),
-                new RhinoCallback() {
+                0.25f,
+                new RhinoManagerCallback() {
                     @Override
-                    public void run(final boolean isUnderstood, final RhinoIntent intent) {
+                    public void invoke(final RhinoInference inference) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 recordButton.toggle();
-                                if (isUnderstood) {
+                                if (inference.getIsUnderstood()) {
                                     intentTextView.setText("");
-                                    intentTextView.append(String.format("intent: %s\n", intent.getIntent()));
+                                    intentTextView.append(String.format("intent: %s\n", inference.getIntent()));
 
-                                    final Map<String, String> slots = intent.getSlots();
+                                    final Map<String, String> slots = inference.getSlots();
                                     for (String key : slots.keySet()) {
                                         intentTextView.append(String.format("%s: %s\n", key, slots.get(key)));
                                     }
@@ -94,8 +93,7 @@ public class RhinoDemoActivity extends AppCompatActivity {
                                 }
 
                                 try {
-                                    audioRecorder.stop();
-                                    rhinoAudioConsumer.reset();
+                                    rhinoManager.stop();
                                 } catch (Exception e) {
                                     Log.e(TAG, "failed to stop recording audio and reset Rhino");
                                 }
@@ -111,8 +109,8 @@ public class RhinoDemoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rhino_demo);
 
         try {
-            copyResourceFile(R.raw.rhino_params, PARAM_FILENAME);
-            copyResourceFile(R.raw.smart_lighting_android, CONTEXT_FILENAME);
+            copyResourceFile(R.raw.rhino_params, "rhino_params.pv");
+            copyResourceFile(R.raw.smart_lighting_android, "rhino_context.rhn");
         } catch (IOException e) {
             Toast.makeText(this, "Failed to copy resource files.", Toast.LENGTH_SHORT).show();
         }
@@ -131,7 +129,7 @@ public class RhinoDemoActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         try {
-            rhinoAudioConsumer.delete();
+            rhinoManager.delete();
         } catch (Exception e) {
             //
         }
@@ -145,21 +143,32 @@ public class RhinoDemoActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            recordButton.toggle();
+        } else {
+            try {
+                rhinoManager.start();
+            } catch (Exception e) {
+                Toast.makeText(this, "Failed to initialize Rhino.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     public void onClick(View view) {
         try {
             if (recordButton.isChecked()) {
                 intentTextView.setText("");
 
                 if (hasRecordPermission()) {
-                    audioRecorder = new AudioRecorder(rhinoAudioConsumer);
-                    audioRecorder.start();
+                    rhinoManager.start();
                 } else {
                     recordButton.toggle();
                     requestRecordPermission();
                 }
             } else {
-                audioRecorder.stop();
-                rhinoAudioConsumer.reset();
+                rhinoManager.stop();
             }
         } catch (Exception e) {
             Toast.makeText(this, "Something went wrong.", Toast.LENGTH_SHORT).show();

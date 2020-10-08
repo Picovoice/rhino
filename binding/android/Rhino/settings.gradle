@@ -1,2 +1,2 @@
-include ':app'
-rootProject.name='Rhino'
+include ':rhino'
+rootProject.name = "Rhino"
