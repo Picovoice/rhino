@@ -58,8 +58,9 @@ public class RhinoManager {
     }
 
     /**
-     * Start recording audio from the microphone and infers the user's intent from the spoken command. Once the inference
-     * is finalized it will invoke the user provided callback and terminates.
+     * Start recording audio from the microphone and infers the user's intent from the spoken
+     * command. Once the inference is finalized it will invoke the user provided callback and
+     * terminates recording audio.
      */
     public void process() {
         Executors.newSingleThreadExecutor().submit(new Callable<Void>() {
