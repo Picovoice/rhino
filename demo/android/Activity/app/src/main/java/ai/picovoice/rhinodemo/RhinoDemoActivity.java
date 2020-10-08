@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Picovoice Inc.
+ * Copyright 2018-2020 Picovoice Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,8 +44,6 @@ import ai.picovoice.rhinomanager.RhinoManagerCallback;
 
 
 public class RhinoDemoActivity extends AppCompatActivity {
-    private static final String TAG = "PV_RHINO_DEMO";
-
     private ToggleButton recordButton;
     private TextView intentTextView;
     private RhinoManager rhinoManager;
@@ -90,12 +87,6 @@ public class RhinoDemoActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     intentTextView.setText("spoken command is not understood.\n");
-                                }
-
-                                try {
-                                    rhinoManager.stop();
-                                } catch (Exception e) {
-                                    Log.e(TAG, "failed to stop recording audio and reset Rhino");
                                 }
                             }
                         });
@@ -149,7 +140,7 @@ public class RhinoDemoActivity extends AppCompatActivity {
             recordButton.toggle();
         } else {
             try {
-                rhinoManager.start();
+                rhinoManager.process();
             } catch (Exception e) {
                 Toast.makeText(this, "Failed to initialize Rhino.", Toast.LENGTH_SHORT).show();
             }
@@ -162,13 +153,11 @@ public class RhinoDemoActivity extends AppCompatActivity {
                 intentTextView.setText("");
 
                 if (hasRecordPermission()) {
-                    rhinoManager.start();
+                    rhinoManager.process();
                 } else {
                     recordButton.toggle();
                     requestRecordPermission();
                 }
-            } else {
-                rhinoManager.stop();
             }
         } catch (Exception e) {
             Toast.makeText(this, "Something went wrong.", Toast.LENGTH_SHORT).show();
