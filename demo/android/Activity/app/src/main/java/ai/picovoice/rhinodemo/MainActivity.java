@@ -43,7 +43,7 @@ import ai.picovoice.rhinomanager.RhinoManager;
 import ai.picovoice.rhinomanager.RhinoManagerCallback;
 
 
-public class RhinoDemoActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     private ToggleButton recordButton;
     private TextView intentTextView;
     private RhinoManager rhinoManager;
