@@ -77,23 +77,20 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 recordButton.toggle();
+                                intentTextView.setText("\n    {\n");
+                                intentTextView.append(String.format("        \"isUnderstood\" : \"%b\",\n", inference.getIsUnderstood()));
                                 if (inference.getIsUnderstood()) {
-                                    intentTextView.setText("{\n");
-                                    intentTextView.append(String.format("    isUnderstood : '%b'\n", inference.getIsUnderstood()));
-
-                                    if (inference.getIsUnderstood()) {
-                                        intentTextView.append(String.format("    intent : '%s'\n", inference.getIntent()));
-
-                                        final Map<String, String> slots = inference.getSlots();
+                                    intentTextView.append(String.format("        \"intent\" : \"%s\",\n", inference.getIntent()));
+                                    final Map<String, String> slots = inference.getSlots();
+                                    if (slots.size() > 0) {
+                                        intentTextView.append("        \"slots\" : {\n");
                                         for (String key : slots.keySet()) {
-                                            intentTextView.append(String.format("    %s : '%s'\n", key, slots.get(key)));
+                                            intentTextView.append(String.format("            \"%s\" : \"%s\",\n", key, slots.get(key)));
                                         }
+                                        intentTextView.append("        }\n");
                                     }
-
-                                    intentTextView.append("}");
-                                } else {
-                                    intentTextView.setText("Spoken command is not understood.\n");
                                 }
+                                intentTextView.append("    }\n");
                             }
                         });
                     }
