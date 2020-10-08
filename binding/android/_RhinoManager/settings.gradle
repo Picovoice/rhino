@@ -1,5 +1,0 @@
-include ':app'
-rootProject.name='RhinoManager'
-
-include ':rhino'
-project(':rhino').projectDir = new File(settingsDir, '../Rhino/rhino')
