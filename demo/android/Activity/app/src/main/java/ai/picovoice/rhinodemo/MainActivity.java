@@ -78,15 +78,21 @@ public class MainActivity extends AppCompatActivity {
                             public void run() {
                                 recordButton.toggle();
                                 if (inference.getIsUnderstood()) {
-                                    intentTextView.setText("");
-                                    intentTextView.append(String.format("intent: %s\n", inference.getIntent()));
+                                    intentTextView.setText("{\n");
+                                    intentTextView.append(String.format("    isUnderstood : '%b'\n", inference.getIsUnderstood()));
 
-                                    final Map<String, String> slots = inference.getSlots();
-                                    for (String key : slots.keySet()) {
-                                        intentTextView.append(String.format("%s: %s\n", key, slots.get(key)));
+                                    if (inference.getIsUnderstood()) {
+                                        intentTextView.append(String.format("    intent : '%s'\n", inference.getIntent()));
+
+                                        final Map<String, String> slots = inference.getSlots();
+                                        for (String key : slots.keySet()) {
+                                            intentTextView.append(String.format("    %s : '%s'\n", key, slots.get(key)));
+                                        }
                                     }
+
+                                    intentTextView.append("}");
                                 } else {
-                                    intentTextView.setText("spoken command is not understood.\n");
+                                    intentTextView.setText("Spoken command is not understood.\n");
                                 }
                             }
                         });
@@ -119,11 +125,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            rhinoManager.delete();
-        } catch (Exception e) {
-            //
-        }
+
+        rhinoManager.delete();
     }
 
     private boolean hasRecordPermission() {
@@ -139,28 +142,20 @@ public class MainActivity extends AppCompatActivity {
         if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
             recordButton.toggle();
         } else {
-            try {
                 rhinoManager.process();
-            } catch (Exception e) {
-                Toast.makeText(this, "Failed to initialize Rhino.", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 
     public void onClick(View view) {
-        try {
-            if (recordButton.isChecked()) {
-                intentTextView.setText("");
+        if (recordButton.isChecked()) {
+            intentTextView.setText("");
 
-                if (hasRecordPermission()) {
-                    rhinoManager.process();
-                } else {
-                    recordButton.toggle();
-                    requestRecordPermission();
-                }
+            if (hasRecordPermission()) {
+                rhinoManager.process();
+            } else {
+                recordButton.toggle();
+                requestRecordPermission();
             }
-        } catch (Exception e) {
-            Toast.makeText(this, "Something went wrong.", Toast.LENGTH_SHORT).show();
         }
     }
 }

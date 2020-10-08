@@ -22,7 +22,7 @@ import ai.picovoice.rhino.Rhino;
 import ai.picovoice.rhino.RhinoException;
 
 /**
- * High-level interface for Rhino Speech-to-Intent egnine. It handles recording audio from microphone,
+ * High-level interface for Rhino Speech-to-Intent engine. It handles recording audio from microphone,
  * processes it in real-time using Rhino, and notifies the client when an intent is inferred from
  * the spoken command.
  */
@@ -30,6 +30,19 @@ public class RhinoManager {
     private final Rhino rhino;
     private final RhinoManagerCallback callback;
 
+    /**
+     * Constructor.
+     *
+     * @param modelPath   Absolute path to the file containing model parameters.
+     * @param contextPath Absolute path to file containing context parameters. A context represents
+     *                    the set of expressions (spoken commands), intents, and intent arguments
+     *                    (slots) within a domain of interest.
+     * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher
+     *                    sensitivity value results in fewer misses at the cost of (potentially)
+     *                    increasing the erroneous inference rate.
+     * @param callback    It is invoked upon completion of intent inference.
+     * @throws RhinoManagerException if there is an error in reading audio or intent inference.
+     */
     public RhinoManager(
             String modelPath,
             String contextPath,
@@ -44,6 +57,10 @@ public class RhinoManager {
         this.callback = callback;
     }
 
+    /**
+     * Start recording audio from the microphone and infers the user's intent from the spoken command. Once the inference
+     * is finalized it will invoke the user provided callback and terminates.
+     */
     public void process() {
         Executors.newSingleThreadExecutor().submit(new Callable<Void>() {
             @Override
@@ -92,6 +109,9 @@ public class RhinoManager {
         });
     }
 
+    /**
+     * Releases resources acquired by Rhino. It should be called when disposing the object.
+     */
     public void delete() {
         rhino.delete();
     }
