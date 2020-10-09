@@ -320,10 +320,11 @@ rhino.delete()
 Rhino provides a binding for Android using JNI. It can be initialized using:
 
 ```java
-    final String modelFilePath = ... // It is available at lib/common/rhino_params.pv
-    final String contextFilePath = ...
+    final String modelPath = ... // It is available at lib/common/rhino_params.pv
+    final String contextPath = ...
+    final float sensitivity = 0.5;
     
-    Rhino rhino = new Rhino(modelFilePath, contextFilePath);
+    Rhino rhino = new Rhino(modelPath, contextPath, sensitivity);
 ```
 
 Once initialized, `rhino` can be used for intent inference:
@@ -332,20 +333,14 @@ Once initialized, `rhino` can be used for intent inference:
 ```java
     private short[] getNextAudioFrame();
 
-    while (rhino.process(getNextAudioFrame()));
+    while (!rhino.process(getNextAudioFrame()));
     
-    if (rhino.isUnderstood()) {
-        RhinoIntent intent = rhino.getIntent();
+    final RhinoInference inference = rhino.getInference();
+    if (inference.getIsUnderstood()) {
         // logic to perform an action given the intent object.
     } else {
         // logic for handling out of context or unrecognized command
     }
-```
-
-When finished processing, be sure to reset the object before processing a new stream of audio via:
-
-```java
-    rhino.reset()
 ```
 
 Finally, prior to exiting the application be sure to release resources acquired via:

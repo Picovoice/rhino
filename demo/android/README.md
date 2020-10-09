@@ -1,8 +1,7 @@
-# Activity
+# Porcupine Wake Word Engine
 
-This demo is intended for applications that need to do voice recognition when in focus. The default context for this demo
-is "smart lighting". Simply press start and the engine can recognize commands such as "turn off the lights" or "
-set the lights in the bedroom to blue". See below for the full context:
+The default context for this demo is "smart lighting". Simply press start and the engine can recognize commands such as
+"turn off the lights" or "set the lights in the bedroom to blue". See below for the full context:
 
 ```yaml
 context:
@@ -91,9 +90,3 @@ context:
       - colors
       - intensity
 ```
-
-# Service
-
-This demo is intended for an application that needs to do voice recognition for an extended period. The demo uses
-Picovoice's wake-word engine ([Porcupine](https://github.com/Picovoice/porcupine)) to provide an always-listening experience.
-The default wake phrase is "Picovoice". The default Rhino context is "smart lighting" as in the above.
