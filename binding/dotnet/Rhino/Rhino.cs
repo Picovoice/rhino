@@ -33,9 +33,9 @@ namespace Picovoice
     }
 
     /// <summary>
-    /// Struct for holding Rhino inference result
+    /// Class for holding Rhino inference result
     /// </summary>
-    public struct Inference
+    public class Inference
     {
         public Inference(bool isUnderstood, string intent, Dictionary<string,string> slots)
         {
@@ -92,7 +92,14 @@ namespace Picovoice
         [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int pv_rhino_frame_length();
 
-        public static string MODEL_PATH = Utils.PvModelPath();
+        public static readonly string MODEL_PATH;
+
+        static Rhino() 
+        {
+            MODEL_PATH = Utils.PvModelPath();
+        }
+
+        private bool _isFinalized;
 
         /// <summary>
         /// Factory method for Rhino Speech-to-Intent engine.
@@ -106,7 +113,7 @@ namespace Picovoice
         /// default location.
         /// </param>       
         /// <param name="sensitivity">
-        /// Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in fewer misses 
+        /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses 
         /// at the cost of (potentially) increasing the erroneous inference rate.
         /// </param>
         /// <returns>An instance of Rhino Speech-to-Intent engine.</returns>                             
@@ -141,7 +148,7 @@ namespace Picovoice
 
             if (sensitivity < 0 || sensitivity > 1)
             {
-                throw new ArgumentException("Sensitivities should be within [0, 1].");
+                throw new ArgumentException("Sensitivity value should be within [0, 1].");
             }
 
             RhinoStatus status = pv_rhino_init(modelPath, contextPath, sensitivity, out _libraryPointer);
@@ -156,8 +163,11 @@ namespace Picovoice
             {
                 throw RhinoStatusToException(status);
             }
+            
             ContextInfo = Marshal.PtrToStringAnsi(contextInfoPtr);
-
+            Version = Marshal.PtrToStringAnsi(pv_rhino_version());
+            SampleRate = pv_sample_rate();
+            FrameLength = pv_rhino_frame_length();
         }
 
         /// <summary>
@@ -179,15 +189,14 @@ namespace Picovoice
                 throw new ArgumentException($"Input audio frame size ({pcm.Length}) was not the size specified by Rhino engine ({FrameLength}). " +
                     $"Use rhino.FrameLength to get the correct size.");
             }
-
-            bool isFinalized;
-            RhinoStatus status = pv_rhino_process(_libraryPointer, pcm, out isFinalized);
+            
+            RhinoStatus status = pv_rhino_process(_libraryPointer, pcm, out _isFinalized);
             if (status != RhinoStatus.SUCCESS)
             {
                 throw RhinoStatusToException(status);
             }
 
-            return isFinalized;
+            return _isFinalized;
         }
 
         /// <summary>
@@ -200,6 +209,11 @@ namespace Picovoice
         /// </returns>
         public Inference GetInference()
         {
+            if (!_isFinalized) 
+            {
+                throw RhinoStatusToException(RhinoStatus.INVALID_STATE);
+            }
+
             bool isUnderstood;
             string intent;
             Dictionary<string, string> slots;
@@ -257,26 +271,26 @@ namespace Picovoice
         /// Gets the current context information.
         /// </summary>
         /// <returns>Context information</returns>
-        public string ContextInfo { get; private set; }         
+        public string ContextInfo { get; private set; }
 
 
         /// <summary>
         /// Gets the version number of the Rhino library.
         /// </summary>
         /// <returns>Version of Rhino</returns>
-        public string Version => Marshal.PtrToStringAnsi(pv_rhino_version());
+        public string Version { get; private set; }        
 
         /// <summary>
         /// Gets the required number of audio samples per frame.
         /// </summary>
         /// <returns>Required frame length.</returns>
-        public int FrameLength => pv_rhino_frame_length();
+        public int FrameLength { get; private set; }
 
         /// <summary>
         /// Get the audio sample rate required by Rhino
         /// </summary>
         /// <returns>Required sample rate.</returns>
-        public int SampleRate => pv_sample_rate();
+        public int SampleRate { get; private set; }
 
         /// <summary>
         /// Coverts status codes to relavent .NET exceptions
@@ -309,6 +323,9 @@ namespace Picovoice
             {
                 pv_rhino_delete(_libraryPointer);
                 _libraryPointer = IntPtr.Zero;
+
+                // ensures finalizer doesn't trigger if already manually disposed
+                GC.SuppressFinalize(this);
             }
         }
 

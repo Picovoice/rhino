@@ -74,9 +74,9 @@ namespace RhinoDemo
                         }
                         else 
                         {
-                            Console.WriteLine("Didn't understand the command.");
+                            Console.WriteLine("Didn't understand the command.");                            
                         }
-                        break;
+                        return;
                     }
 
                     frameIndex = 0;
@@ -88,11 +88,13 @@ namespace RhinoDemo
                     reader.ReadInt16();
                 }                
             }
+
+            Console.WriteLine("Reached end of audio file before Rhino returned an inference.");
         }
 
 
         /// <summary>
-        ///  Reads RIFF header of a WAV file and validates it against required properties
+        ///  Reads RIFF header of a WAV file and validates its properties against Picovoice audio processing requirements
         /// </summary>
         /// <param name="reader">WAV file stream reader</param>
         /// <param name="requiredSampleRate">Required sample rate in Hz</param>     

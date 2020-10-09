@@ -25,7 +25,7 @@ Rhino is:
 ## Compatibility
 
 - .NET Standard 2.0, .NET Core 3.0+, .NET Framework 4.6.1+
-- Runs on Linux (x86_64), Mac (x86_64) and Windows (x86_64)
+- Runs on Linux (x86_64), MacOS (x86_64) and Windows (x86_64)
 
 ## Installation
 
@@ -65,8 +65,8 @@ single-channel audio.
 ```csharp
 short[] GetNextAudioFrame()
 {
-	// .. get audioFrame
-	return audioFrame;
+    // .. get audioFrame
+    return audioFrame;
 }
 
 while(true)
@@ -89,10 +89,14 @@ while(true)
 }
 ```
 
-When done resources have to be released explicitly:
+Rhino will have its resources freed by the garbage collector, but to have resources freed 
+immediately after use, wrap it in a using statement: 
 
 ```csharp
-handle.Dispose()
+using(Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context"))
+{
+    // .. Rhino usage here
+}
 ```
 
 ## Demos

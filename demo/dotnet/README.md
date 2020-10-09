@@ -30,7 +30,7 @@ Rhino is:
 ## Compatibility
 
 - .NET Core 3.1+
-- Runs on Linux (x86_64), Mac (x86_64) and Windows (x86_64)
+- Runs on Linux (x86_64), MacOS (x86_64) and Windows (x86_64)
 
 ## Installation
 
