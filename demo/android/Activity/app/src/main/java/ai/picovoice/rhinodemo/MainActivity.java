@@ -39,8 +39,8 @@ import java.io.OutputStream;
 import java.util.Map;
 
 import ai.picovoice.rhino.RhinoInference;
-import ai.picovoice.rhinomanager.RhinoManager;
-import ai.picovoice.rhinomanager.RhinoManagerCallback;
+import ai.picovoice.rhino.RhinoManager;
+import ai.picovoice.rhino.RhinoManagerCallback;
 
 
 public class MainActivity extends AppCompatActivity {
