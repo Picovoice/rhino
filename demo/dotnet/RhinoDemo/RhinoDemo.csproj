@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<Configurations>FileDemo.Debug;FileDemo.Release;MicDemo.Debug;MicDemo.Release</Configurations>
+		<Platforms>x64</Platforms>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'FileDemo.Debug' Or '$(Configuration)' == 'FileDemo.Release'">
+		<StartupObject>RhinoDemo.FileDemo</StartupObject>
+		<TargetName>RhinoFileDemo</TargetName>
+		<AssemblyName>RhinoFileDemo</AssemblyName>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'MicDemo.Debug' Or '$(Configuration)' == 'MicDemo.Release'">
+		<StartupObject>RhinoDemo.MicDemo</StartupObject>
+		<TargetName>RhinoMicDemo</TargetName>
+		<AssemblyName>RhinoMicDemo</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="OpenTK" Version="4.0.1" />
+		<PackageReference Include="Rhino" Version="1.5.0" />
+	</ItemGroup>
+</Project>
