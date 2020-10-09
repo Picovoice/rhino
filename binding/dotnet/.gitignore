@@ -1,0 +1,9 @@
+.vscode
+.vs
+*.user
+Rhino/bin
+Rhino/obj
+Rhino/Properties
+RhinoTest/bin
+RhinoTest/obj
+TestResults

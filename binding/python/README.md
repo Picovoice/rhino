@@ -87,4 +87,4 @@ handle.delete()
 ## Demos
 
 [pvrhinodemo](https://pypi.org/project/pvrhinodemo/) provides command-line utilities for processing real-time
-audio (i.e. microphone) and files using Porcupine.
+audio (i.e. microphone) and files using Rhino.
