@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFrameworks>netstandard2.0</TargetFrameworks>
+	  <Version>1.5.0</Version>
+	  <Authors>Picovoice</Authors>
+	  <Company />
+	  <Product>Rhino Speech-to-Intent Engine</Product>
+	  <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+	  <PackageProjectUrl>https://github.com/Picovoice/rhino</PackageProjectUrl>	  
+	  <RepositoryUrl>https://github.com/Picovoice/rhino.git</RepositoryUrl>
+	  <RepositoryType>git</RepositoryType>
+	  <PackageTags>nlu, intent, inference, speech recognition, voice commands, offline, private, voice, ai, voice assistant</PackageTags>
+	  <PackageReleaseNotes>See https://github.com/Picovoice/rhino/ </PackageReleaseNotes>
+	  <Copyright>Picovoice 2020</Copyright>
+	  <Description>Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of interest, in real-time. 
+
+For example, given a spoken command "Can I have a small double-shot espresso with a lot of sugar and some milk", Rhino infers that the user wants to order a drink with these specifications:  { "type": "espresso", "size": "small", "numberOfShots": "2", "sugar": "a lot", "milk": "some" }
+
+Rhino is:
+  - using deep neural networks trained in real-world environments.
+  - compact and computationally-efficient, making it perfect for IoT.
+  - cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (all variants), 
+    Beagle Bone, Android, iOS, Linux (x86_64), Mac (x86_64), Windows (x86_64), and 
+    web browsers are supported. Furthermore, Support for various ARM Cortex-A 
+    microprocessors and ARM Cortex-M microcontrollers is available for enterprise customers.
+  - self-service. Developers and UX designers can train custom models using Picovoice Console.
+</Description>
+	  <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+	  <PackageIcon>pv_circle_512.png</PackageIcon>
+	  <Platforms>x64</Platforms>	 
+  </PropertyGroup>
+	<ItemGroup>		
+		<Content Include="Rhino.targets">
+			<PackagePath>build\netstandard2.0</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\..\..\lib\windows\amd64\libpv_rhino.dll">
+			<PackagePath>build/netstandard2.0/lib/libpv_rhino.dll</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Visible>false</Visible>
+		</Content>
+		<Content Include="..\..\..\lib\linux\x86_64\libpv_rhino.so">
+			<PackagePath>build/netstandard2.0/lib/libpv_rhino.so</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Visible>false</Visible>
+		</Content>
+		<Content Include="..\..\..\lib\mac\x86_64\libpv_rhino.dylib">
+			<PackagePath>build/netstandard2.0/lib/libpv_rhino.dylib</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Visible>false</Visible>
+		</Content>
+		<Content Include="..\..\..\lib\common\rhino_params.pv">
+			<PackagePath>build/netstandard2.0/content/lib/common/rhino_params.pv</PackagePath>
+			<Link>lib\common\rhino_params.pv</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>			
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Content\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="Content\pv_circle_512.png">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
+	</ItemGroup>
+</Project>

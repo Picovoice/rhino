@@ -1,4 +1,2 @@
-include ':app', ':rhino', ':rhinomanager'
-
-project(':rhinomanager').projectDir = new File(settingsDir, '../../../binding/android/RhinoManager/app')
-project(':rhino').projectDir = new File(settingsDir, '../../../binding/android/Rhino/app')
+include ':rhino'
+include ':app'
