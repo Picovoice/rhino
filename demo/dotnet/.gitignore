@@ -1,5 +1,5 @@
 .vs
-PorcupineDemo/bin/**
-PorcupineDemo/obj/**
+RhinoDemo/bin/**
+RhinoDemo/obj/**
 PorcupineDemo/Properties/**
 *.user
