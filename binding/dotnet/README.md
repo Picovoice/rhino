@@ -97,5 +97,5 @@ handle.Dispose()
 
 ## Demos
 
-The [Rhino dotnet demo project](https://github.com/Picovoice/rhino/tree/master/demo/dotnet) is a .NET Core console app that allows for 
+The [Rhino dotnet demo project](/demo/dotnet) is a .NET Core console app that allows for 
 processing real-time audio (i.e. microphone) and files using Rhino.
