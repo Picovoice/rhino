@@ -38,12 +38,14 @@ Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for ente
 * [Structure of Repository](#structure-of-repository)
 * [Running Demo Applications](#running-demo-applications)
     * [Python](#python-demos)
+    * [Python](#net-demos)
     * [Android](#android-demos)
     * [iOS](#ios-demos)
     * [JavaScript](#javascript-demos)
     * [C](#c-demos)
 * [Integration](#integration)
     * [Python](#python)
+    * [Python](#net)
     * [Android](#android)
     * [iOS](#ios)
     * [JavaScript](#javascript)
@@ -198,6 +200,19 @@ python3 demo/python/rhino_porcupine_demo_mic.py \
 
 In the above command replace `${SYSTEM}` with your platform name (e.g. linux, mac, raspberry-pi).
 
+### .NET Demos
+
+The [Rhino dotnet demo](/demo/dotnet) is a command line application that lets you choose between running Rhino on a 
+audio file or on real-time microphone input. 
+
+The following command runs the demo application on your machine to infer intent from spoken commands in the context of a
+smart lighting system:
+
+```bash
+dotnet run -c MicDemo.Release -- --input_audio_path ${AUDIO_PATH} 
+--context_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
+```
+
 ### Android Demos
 
 Using Android Studio, open [demo/android/Activity](/demo/android/Activity) as an Android project and then run the
@@ -313,6 +328,63 @@ collector.
 
 ```python
 rhino.delete()
+```
+
+### .NET
+
+Install the .NET SDK using Nuget or the dotnet CLI
+
+```bash
+dotnet add package Rhino
+```
+
+The SDK exposes a factory method to create instances of the engine as below:
+
+```csharp
+using Rhino
+
+Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context");
+```
+
+When initialized, the valid sample rate is given by `handle.SampleRate`. Expected frame length (number of audio samples
+in an input array) is `handle.FrameLength`. The engine accepts 16-bit linearly-encoded PCM and operates on
+single-channel audio.
+
+```csharp
+short[] GetNextAudioFrame()
+{
+    // .. get audioFrame
+    return audioFrame;
+}
+
+while(true)
+{
+    bool isFinalized = handle.Process(GetNextAudioFrame());   
+    if(isFinalized)
+    {
+        Inference inference = handle.GetInference();
+        if(inference.IsUnderstood)
+        {
+            // .. code to handle unsupported commands  
+        }
+        else
+        {
+            string intent = inference.Intent;
+            Dictionary<string, string> slots = inference.Slots;
+            // .. code to take action based on inferred intent and slot values
+        }        
+    }
+}
+```
+
+Rhino will have its resources freed by the garbage collector, but to have resources freed 
+immediately after use, wrap it in a using statement: 
+
+```csharp
+using(Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context"))
+{
+    // .. Rhino usage here
+}
 ```
 
 ### Android
