@@ -188,7 +188,6 @@ class Rhino {
     }
 
     const packed = pv_rhino.get_inference(this.handle);
-    console.log(packed)
 
     const parts = packed.split(",");
     const status = parseInt(parts[0]);
