@@ -34,7 +34,6 @@ These demos run Rhino on **NodeJS 12** on the following platforms:
 - Linux (x86_64)
 - macOS (x86_64)
 - Raspberry Pi (2,3,4)
-- Windows (x86_64)
 
 Note: there is currently an unresolved issue with the backing FFI library which causes crashes on NodeJS 14+.
 
@@ -57,12 +56,6 @@ The [node-record-lpm16](https://www.npmjs.com/package/node-record-lpcm16) librar
 ##### macOS
 
 See [the documentation for node-record-lpm16](https://www.npmjs.com/package/node-record-lpcm16#dependencies) for instructions on installing [SoX](http://sox.sourceforge.net/).
-
-##### Windows
-
-For SoX on Windows, note that **many users have reported difficulties with the current (at the time of writing) version of SoX (14.4.2)**. You may have better luck with version 14.4.1. See [the documentation for node-record-lpm16](https://www.npmjs.com/package/node-record-lpcm16#dependencies) for instructions on installing [SoX](http://sox.sourceforge.net/).
-
-You must ensure that the sox executable is available on the Windows %PATH% so that the demo can launch it.
 
 ##### Raspberry Pi
 
