@@ -21,7 +21,7 @@ const {
 } = require("./errors");
 const { getSystemLibraryPath } = require("./platforms");
 
-const pv_rhino = require(getSystemLibraryPath());
+const pvRhino = require(getSystemLibraryPath());
 
 const MODEL_PATH_DEFAULT = "lib/common/rhino_params.pv";
 
@@ -78,16 +78,16 @@ class Rhino {
       );
     }
 
-    const packed = pv_rhino.init(modelPath, contextPath, sensitivity);
-    const status = packed % 10n;
+    const packed = pvRhino.init(modelPath, contextPath, sensitivity);
+    const status = Number(packed % 10n);
     this.handle = (status == PV_STATUS_T.SUCCESS) ? (packed / 10n) : 0;
-    if (status != PV_STATUS_T.SUCCESS) {
+    if (status !== PV_STATUS_T.SUCCESS) {
       pvStatusToException(status, "Rhino failed to initialize");
     }
 
-    this._frameLength = pv_rhino.frame_length();
-    this._sampleRate = pv_rhino.sample_rate();
-    this._version = pv_rhino.version();
+    this._frameLength = pvRhino.frame_length();
+    this._sampleRate = pvRhino.sample_rate();
+    this._version = pvRhino.version();
 
     this.isFinalized = false;
   }
@@ -145,7 +145,7 @@ class Rhino {
 
     const frameBuffer = new Int16Array(frame);
 
-    const packed = pv_rhino.process(this.handle, frameBuffer);
+    const packed = pvRhino.process(this.handle, frameBuffer);
     const status = packed % 10;
     this.isFinalized = (status == PV_STATUS_T.SUCCESS) ? (packed / 10) : -1;
     if (status !== PV_STATUS_T.SUCCESS) {
@@ -187,7 +187,7 @@ class Rhino {
       );
     }
 
-    const packed = pv_rhino.get_inference(this.handle);
+    const packed = pvRhino.get_inference(this.handle);
 
     const parts = packed.split(",");
     const status = parseInt(parts[0]);
@@ -215,7 +215,7 @@ class Rhino {
    * @returns {string} the context YAML
    */
   getContextInfo() {
-    return pv_rhino.context_info(this.handle);
+    return pvRhino.context_info(this.handle);
   }
 
   /**
@@ -226,7 +226,7 @@ class Rhino {
    */
   release() {
     if (this.handle !== 0) {
-      pv_rhino.delete(this.handle);
+      pvRhino.delete(this.handle);
       this.handle = 0;
     } else {
       console.warn("Rhino is not initialized; nothing to destroy");
