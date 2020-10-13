@@ -10,11 +10,8 @@
 //
 "use strict";
 
-const ArrayType = require("ref-array-napi");
-const ffi = require("ffi-napi");
 const fs = require("fs");
 const path = require("path");
-const ref = require("ref-napi");
 
 const PV_STATUS_T = require("./pv_status_t");
 const {
@@ -24,15 +21,9 @@ const {
 } = require("./errors");
 const { getSystemLibraryPath } = require("./platforms");
 
-const MODEL_PATH_DEFAULT = "lib/common/rhino_params.pv";
+const pvRhino = require(getSystemLibraryPath());
 
-// ffi types
-const int16Array = ArrayType(ref.types.int16);
-const int32Ptr = ref.refType(ref.types.int32);
-const rhnObjPtr = ref.refType(ref.types.void);
-const rhnObjPtrPtr = ref.refType(rhnObjPtr);
-const boolPtr = ref.refType(ref.types.bool);
-const cStringArrayPtr = ArrayType(ref.types.CString);
+const MODEL_PATH_DEFAULT = "lib/common/rhino_params.pv";
 
 /**
  * Wraps the Rhino engine and context.
@@ -87,54 +78,18 @@ class Rhino {
       );
     }
 
-    this.rhnPtrPtr = ref.alloc(rhnObjPtrPtr);
-    this.isFinalizedPtr = ref.alloc(ref.types.bool);
-
-    this.libRhn = ffi.Library(libraryPath, {
-      pv_rhino_context_info: [ref.types.int32, [rhnObjPtr, ref.types.CString]],
-      pv_rhino_delete: [ref.types.void, [rhnObjPtr]],
-      pv_rhino_frame_length: [ref.types.int32, []],
-      pv_rhino_free_slots_and_values: [
-        ref.types.int32,
-        [rhnObjPtr, cStringArrayPtr, cStringArrayPtr],
-      ],
-      pv_rhino_get_intent: [
-        ref.types.int32,
-        [
-          rhnObjPtr,
-          ref.types.CString,
-          int32Ptr,
-          cStringArrayPtr,
-          cStringArrayPtr,
-        ],
-      ],
-      pv_rhino_init: [
-        ref.types.int32,
-        [ref.types.CString, ref.types.CString, ref.types.float, rhnObjPtrPtr],
-      ],
-      pv_rhino_is_understood: [ref.types.int32, [rhnObjPtr, boolPtr]],
-      pv_rhino_process: [ref.types.int32, [rhnObjPtr, int16Array, boolPtr]],
-      pv_sample_rate: [ref.types.int32, []],
-      pv_rhino_reset: [ref.types.int32, [rhnObjPtr]],
-      pv_rhino_version: [ref.types.CString, []],
-    });
-
-    this._frameLength = this.libRhn.pv_rhino_frame_length();
-    this._sampleRate = this.libRhn.pv_sample_rate();
-    this._version = this.libRhn.pv_rhino_version();
-
-    const initStatus = this.libRhn.pv_rhino_init(
-      modelPath,
-      contextPath,
-      sensitivity,
-      this.rhnPtrPtr
-    );
-
-    if (initStatus !== PV_STATUS_T.SUCCESS) {
-      pvStatusToException(initStatus, "Rhino failed to initialize");
+    const packed = pvRhino.init(modelPath, contextPath, sensitivity);
+    const status = Number(packed % 10n);
+    this.handle = (status == PV_STATUS_T.SUCCESS) ? (packed / 10n) : 0;
+    if (status !== PV_STATUS_T.SUCCESS) {
+      pvStatusToException(status, "Rhino failed to initialize");
     }
 
-    this.rhnPtr = this.rhnPtrPtr.deref();
+    this._frameLength = pvRhino.frame_length();
+    this._sampleRate = pvRhino.sample_rate();
+    this._version = pvRhino.version();
+
+    this.isFinalized = false;
   }
 
   /**
@@ -167,7 +122,7 @@ class Rhino {
    * @returns {boolean} true when Rhino has concluded processing audio and determined the intent (or that the intent was not understood), false otherwise.
    */
   process(frame) {
-    if (this.rhnPtr === null) {
+    if (this.handle === 0) {
       throw new PvStateError("Rhino is not initialized");
     }
 
@@ -188,22 +143,16 @@ class Rhino {
       );
     }
 
-    const frameBuffer = int16Array(this.frameLength);
-    for (let i = 0; i < this.frameLength; i++) {
-      frameBuffer[i] = frame[i];
-    }
+    const frameBuffer = new Int16Array(frame);
 
-    const status = this.libRhn.pv_rhino_process(
-      this.rhnPtr,
-      frameBuffer,
-      this.isFinalizedPtr
-    );
-
+    const packed = pvRhino.process(this.handle, frameBuffer);
+    const status = packed % 10;
+    this.isFinalized = (status == PV_STATUS_T.SUCCESS) ? (packed / 10) : -1;
     if (status !== PV_STATUS_T.SUCCESS) {
       pvStatusToException(status, "Rhino failed to process the frame");
     }
 
-    return this.isFinalizedPtr.deref();
+    return this.isFinalized;
   }
 
   /**
@@ -232,87 +181,28 @@ class Rhino {
    * }
    */
   getInference() {
-    if (!this.isFinalizedPtr.deref()) {
+    if (!this.isFinalized) {
       throw new PvStateError(
         "'getInference' was called but Rhino has not yet reached a conclusion. Use the results of calling process to determine if Rhino has concluded"
       );
     }
 
-    let isUnderstoodPtr = ref.alloc(ref.types.bool);
-    let isUnderstoodStatus = this.libRhn.pv_rhino_is_understood(
-      this.rhnPtr,
-      isUnderstoodPtr
-    );
+    const packed = pvRhino.get_inference(this.handle);
 
-    if (isUnderstoodStatus !== PV_STATUS_T.SUCCESS) {
-      pvStatusToException(
-        isUnderstoodStatus,
-        "Rhino failed to check if intent was understood"
-      );
+    const parts = packed.split(",");
+    const status = parseInt(parts[0]);
+    if (status !== PV_STATUS_T.SUCCESS) {
+      pvStatusToException(status, "Rhino failed to get inference");
     }
 
-    let isUnderstood = isUnderstoodPtr.deref();
-    let inference = { isUnderstood: isUnderstood };
-
-    if (isUnderstood) {
-      let numSlotsPtr = ref.alloc(ref.types.int32);
-      let intentPtr = ref.alloc(ref.types.CString);
-      let slotsPtr = ref.alloc(cStringArrayPtr);
-      let valuesPtr = ref.alloc(cStringArrayPtr);
-
-      let getIntentStatus = this.libRhn.pv_rhino_get_intent(
-        this.rhnPtr,
-        intentPtr,
-        numSlotsPtr,
-        slotsPtr,
-        valuesPtr
-      );
-
-      if (getIntentStatus !== PV_STATUS_T.SUCCESS) {
-        pvStatusToException(getIntentStatus, "Rhino failed to get intent");
-      }
-
-      inference["intent"] = intentPtr.deref();
+    let inference = {isUnderstood: (parts[1] === "1")};
+    if (inference.isUnderstood) {
+      inference["intent"] = parts[2];
       inference["slots"] = {};
-
-      let numSlots = numSlotsPtr.deref();
-
-      if (numSlots > 0) {
-        let slotData = slotsPtr.deref();
-        let valueData = valuesPtr.deref();
-
-        // We need to use the number of slots returned to tell the ref ArrayType
-        // how many array entries are present in slots/values before we can
-        // iterate over the array
-        slotData.length = numSlots;
-        valueData.length = numSlots;
-
-        let slots = {};
-
-        for (let i = 0; i < numSlots; i++) {
-          slots[slotData[i]] = valueData[i];
-        }
-
-        inference["slots"] = slots;
+      for (let i = 2; i < parts.length; i++) {
+        const slotAndValue = parts[i].split(":");
+        inference["slots"][slotAndValue[0]] = slotAndValue[1];
       }
-
-      let freeSlotsAndValuesStatus = this.libRhn.pv_rhino_free_slots_and_values(
-        this.rhnPtr,
-        slotsPtr.deref(),
-        valuesPtr.deref()
-      );
-
-      if (freeSlotsAndValuesStatus !== PV_STATUS_T.SUCCESS) {
-        pvStatusToException(
-          freeSlotsAndValuesStatus,
-          "Rhino failed to free intent resources"
-        );
-      }
-    }
-
-    let resetStatus = this.libRhn.pv_rhino_reset(this.rhnPtr);
-    if (resetStatus !== PV_STATUS_T.SUCCESS) {
-      pvStatusToException(resetStatus, "Rhino failed to reset");
     }
 
     return inference;
@@ -325,18 +215,7 @@ class Rhino {
    * @returns {string} the context YAML
    */
   getContextInfo() {
-    let contextInfoPtr = ref.alloc(ref.types.CString);
-
-    let contextInfoStatus = this.libRhn.pv_rhino_context_info(
-      this.rhnPtr,
-      contextInfoPtr
-    );
-
-    if (contextInfoStatus !== PV_STATUS_T.SUCCESS) {
-      pvStatusToException(resetStatus, "Rhino failed to get the context info");
-    }
-
-    return contextInfoPtr.deref();
+    return pvRhino.context_info(this.handle);
   }
 
   /**
@@ -346,10 +225,9 @@ class Rhino {
    * to reclaim the memory that was allocated by the C library.
    */
   release() {
-    if (this.rhnPtr !== null) {
-      this.libRhn.pv_rhino_delete(this.rhnPtr);
-      this.rhnPtr = null;
-      this.rhnPtrPtr = null;
+    if (this.handle !== 0) {
+      pvRhino.delete(this.handle);
+      this.handle = 0;
     } else {
       console.warn("Rhino is not initialized; nothing to destroy");
     }
