@@ -101,6 +101,15 @@ describe("intent detection (coffee maker)", () => {
 
     rhinoEngine.release();
   });
+
+  test("process method returns boolean", () => {
+    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let isFinalized = rhinoEngine.process(
+      new Int16Array(rhinoEngine.frameLength)
+    );
+    expect(isFinalized).toEqual(false);
+    rhinoEngine.release();
+  });
 });
 
 describe("manual paths", () => {

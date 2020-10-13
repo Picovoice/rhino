@@ -115,10 +115,10 @@ class Rhino {
   }
 
   /**
-   * Process a frame of audio.
+   * Process a frame of pcm audio.
    *
    * @param {Array} frame 16-bit integers of 16kHz linear PCM mono audio.
-   * The specific array length is obtained from Rhino via the framelength field.
+   * The specific array length is obtained from Rhino via the frameLength field.
    * @returns {boolean} true when Rhino has concluded processing audio and determined the intent (or that the intent was not understood), false otherwise.
    */
   process(frame) {
@@ -147,11 +147,12 @@ class Rhino {
 
     const packed = pvRhino.process(this.handle, frameBuffer);
     const status = packed % 10;
-    this.isFinalized = (status == PV_STATUS_T.SUCCESS) ? (packed / 10) : -1;
+
     if (status !== PV_STATUS_T.SUCCESS) {
       pvStatusToException(status, "Rhino failed to process the frame");
     }
-
+    
+    this.isFinalized = (packed / 10) === 1;
     return this.isFinalized;
   }
 
