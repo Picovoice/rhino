@@ -29,13 +29,11 @@ To learn more about Rhino, see the [product](https://picovoice.ai/products/rhino
 
 ## Compatibility
 
-These demos run Rhino on **NodeJS 12** on the following platforms:
+These demos run Rhino on **NodeJS 12+** on the following platforms:
 
 - Linux (x86_64)
 - macOS (x86_64)
 - Raspberry Pi (2,3,4)
-
-Note: there is currently an unresolved issue with the backing FFI library which causes crashes on NodeJS 14+.
 
 ### Web Browsers
 
