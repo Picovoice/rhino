@@ -30,8 +30,9 @@ struct ContentView: View {
                     
                     do {
                         self.rhinoManager = try RhinoManager(
-                            modelFilePath: self.modelFilePath!,
-                            contextFilePath: self.contextFilePath!,
+                            modelPath: self.modelFilePath!,
+                            contextPath: self.contextFilePath!,
+                            sensitivity: 0.5,
                             onInferenceCallback: { info in
                                 if !info.isUnderstood {
                                     self.result = "did not understand the command"

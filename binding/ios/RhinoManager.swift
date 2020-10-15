@@ -14,13 +14,10 @@ public enum RhinoManagerError: Error {
     case invalidArgument
     case io
     case outOfMemory
-}
-
-public enum RhinoManagerPermissionError: Error {
     case recordingDenied
 }
 
-public struct InferenceInfo {
+public struct Inference {
     let isUnderstood: Bool
     let intent: String
     let slots: Dictionary<String, String>
@@ -33,26 +30,18 @@ public struct InferenceInfo {
 }
 
 public class RhinoManager {
-    private var rhino: OpaquePointer?
+    private var onInferenceCallback: ((Inference) -> Void)?
     
     private let audioInputEngine: AudioInputEngine
     
-    public let modelFilePath: String
-    public let contextFilePath: String
+    private var rhino: OpaquePointer?
     
-    public var onInferenceCallback: ((InferenceInfo) -> Void)?
+    private var isListening = false
     
-    public private(set) var isListening = false
-    
-    private var shouldBeListening: Bool = false
-    
-    public init(modelFilePath: String, contextFilePath: String, onInferenceCallback: ((InferenceInfo) -> Void)?) throws {
-        
-        self.modelFilePath = modelFilePath
-        self.contextFilePath = contextFilePath
+    public init(modelPath: String, contextPath: String, sensitivity: Float32, onInferenceCallback: ((Inference) -> Void)?) throws {
         self.onInferenceCallback = onInferenceCallback
         
-        self.audioInputEngine = AudioInputEngine_AudioQueue()
+        self.audioInputEngine = AudioInputEngine()
         
         audioInputEngine.audioInput = { [weak self] audio in
             
@@ -66,56 +55,53 @@ public class RhinoManager {
             
             if isFinalized {
                 var isUnderstood: Bool = false
+                var intent = ""
+                var slots = [String: String]()
+                
                 pv_rhino_is_understood(self.rhino, &isUnderstood)
                 
                 if isUnderstood {
-                    var intent: UnsafePointer<Int8>?
+                    var cIntent: UnsafePointer<Int8>?
                     var numSlots: Int32 = 0
-                    var slots: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-                    var values: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-                    pv_rhino_get_intent(self.rhino, &intent, &numSlots, &slots, &values)
-                    
-                    var intentString = ""
-                    var slotsDictionary = [String: String]()
+                    var cSlotKeys: UnsafeMutablePointer<UnsafePointer<Int8>?>?
+                    var cSlotValues: UnsafeMutablePointer<UnsafePointer<Int8>?>?
+                    pv_rhino_get_intent(self.rhino, &cIntent, &numSlots, &cSlotKeys, &cSlotValues)
                     
                     if isUnderstood {
-                        intentString = String(cString: intent!)
+                        intent = String(cString: cIntent!)
                         for i in 0...(numSlots - 1) {
-                            let slot = String(cString: slots!.advanced(by: Int(i)).pointee!)
-                            let value = String(cString: values!.advanced(by: Int(i)).pointee!)
-                            slotsDictionary[slot] = value
+                            let slot = String(cString: cSlotKeys!.advanced(by: Int(i)).pointee!)
+                            let value = String(cString: cSlotValues!.advanced(by: Int(i)).pointee!)
+                            slots[slot] = value
                         }
                         
-                        pv_rhino_free_slots_and_values(self.rhino, slots, values)
+                        pv_rhino_free_slots_and_values(self.rhino, cSlotKeys, cSlotValues)
                     }
-                    self.onInferenceCallback?(InferenceInfo(isUnderstood: isUnderstood, intent: intentString, slots: slotsDictionary))
-                } else {
-                    self.onInferenceCallback?(InferenceInfo(isUnderstood: isUnderstood, intent: "", slots: [:]))
                 }
                 
                 pv_rhino_reset(self.rhino)
+                
+                self.onInferenceCallback?(Inference(isUnderstood: isUnderstood, intent: intent, slots: slots))
             }
         }
         
-        let status = pv_rhino_init(modelFilePath, contextFilePath, 0.5, &rhino)
-        try checkInitStatus(status)
+        let status = pv_rhino_init(modelPath, contextPath, sensitivity, &rhino)
+        try checkStatus(status)
     }
     
     deinit {
         if isListening {
             stopListening()
         }
+        
         pv_rhino_delete(rhino)
         rhino = nil
     }
     
     public func startListening() throws {
-        
-        shouldBeListening = true
-        
         let audioSession = AVAudioSession.sharedInstance()
         if audioSession.recordPermission == .denied {
-            throw RhinoManagerPermissionError.recordingDenied
+            throw RhinoManagerError.recordingDenied
         }
         
         guard !isListening else {
@@ -132,20 +118,16 @@ public class RhinoManager {
     }
     
     public func stopListening() {
-        
-        shouldBeListening = false
-        
         guard isListening else {
             return
         }
         
         audioInputEngine.stop()
+        
         isListening = false
     }
     
-    // MARK: - Private
-    
-    private func checkInitStatus(_ status: pv_status_t) throws {
+    private func checkStatus(_ status: pv_status_t) throws {
         switch status {
         case PV_STATUS_IO_ERROR:
             throw RhinoManagerError.io
@@ -159,19 +141,7 @@ public class RhinoManager {
     }
 }
 
-private protocol AudioInputEngine: AnyObject {
-    
-    var audioInput: ((UnsafePointer<Int16>) -> Void)? { get set }
-    
-    func start() throws
-    func stop()
-    
-    func pause()
-    func unpause()
-}
-
-private class AudioInputEngine_AudioQueue: AudioInputEngine {
-    
+private class AudioInputEngine {
     private let numBuffers = 3
     private var audioQueue: AudioQueueRef?
     
@@ -215,21 +185,6 @@ private class AudioInputEngine_AudioQueue: AudioInputEngine {
         AudioQueueDispose(audioQueue, false)
     }
     
-    func pause() {
-        guard let audioQueue = audioQueue else {
-            return
-        }
-        AudioQueuePause(audioQueue)
-    }
-    
-    func unpause() {
-        guard let audioQueue = audioQueue else {
-            return
-        }
-        AudioQueueFlush(audioQueue)
-        AudioQueueStart(audioQueue, nil)
-    }
-    
     private func createAudioQueueCallback() -> AudioQueueInputCallback {
         return { userData, queue, bufferRef, startTimeRef, numPackets, packetDescriptions in
             
@@ -237,7 +192,7 @@ private class AudioInputEngine_AudioQueue: AudioInputEngine {
             guard let userData = userData else {
                 return
             }
-            let `self` = Unmanaged<AudioInputEngine_AudioQueue>.fromOpaque(userData).takeUnretainedValue()
+            let `self` = Unmanaged<AudioInputEngine>.fromOpaque(userData).takeUnretainedValue()
             
             let pcm = bufferRef.pointee.mAudioData.assumingMemoryBound(to: Int16.self)
             
