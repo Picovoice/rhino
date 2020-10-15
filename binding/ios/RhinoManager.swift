@@ -38,8 +38,6 @@ public class RhinoManager {
     
     private var rhino: OpaquePointer?
     
-    private var isListening = false
-    
     /// Constructor.
     ///
     /// - Parameters:
@@ -94,6 +92,8 @@ public class RhinoManager {
                 pv_rhino_reset(self.rhino)
                 
                 self.onInferenceCallback?(Inference(isUnderstood: isUnderstood, intent: intent, slots: slots))
+                
+                self.audioInputEngine.stop()
             }
         }
         
@@ -102,24 +102,16 @@ public class RhinoManager {
     }
     
     deinit {
-        if isListening {
-            stopListening()
-        }
-        
         pv_rhino_delete(rhino)
         rhino = nil
     }
     
     /// Start recording audio from the microphone and infers the user's intent from the spoken command. Once the inference is finalized it will invoke the user
     /// provided callback and terminates recording audio.
-    public func startListening() throws {
+    public func process() throws {
         let audioSession = AVAudioSession.sharedInstance()
         if audioSession.recordPermission == .denied {
             throw RhinoManagerError.recordingDenied
-        }
-        
-        guard !isListening else {
-            return
         }
         
         try audioSession.setCategory(AVAudioSession.Category.record)
@@ -127,18 +119,6 @@ public class RhinoManager {
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         
         try audioInputEngine.start()
-        
-        isListening = true
-    }
-    
-    public func stopListening() {
-        guard isListening else {
-            return
-        }
-        
-        audioInputEngine.stop()
-        
-        isListening = false
     }
     
     private func checkStatus(_ status: pv_status_t) throws {
@@ -195,7 +175,7 @@ private class AudioInputEngine {
         guard let audioQueue = audioQueue else {
             return
         }
-        AudioQueueStop(audioQueue, true)
+        AudioQueueStop(audioQueue, false)
         AudioQueueDispose(audioQueue, false)
     }
     

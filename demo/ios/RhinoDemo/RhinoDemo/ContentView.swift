@@ -42,17 +42,15 @@ struct ContentView: View {
                                         self.result += k + " : " + v + "\n"
                                     }
                                 }
-                                self.rhinoManager.stopListening()
                                 self.buttonLabel = "START"
                             })
-                        try self.rhinoManager.startListening()
+                        try self.rhinoManager.process()
                     } catch {
                         
                     }
                     
                     self.buttonLabel = "STOP"
                 } else {
-                    self.rhinoManager.stopListening()
                     self.buttonLabel = "START"
                 }
             }) {
