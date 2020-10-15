@@ -29,6 +29,8 @@ public struct Inference {
     }
 }
 
+/// High-level iOS binding for Rhino Speech-to-Intent engine. It handles recording audio from microphone, processes it in real-time using Rhino, and notifies the client
+/// when an intent is inferred from the spoken command.
 public class RhinoManager {
     private var onInferenceCallback: ((Inference) -> Void)?
     
@@ -38,6 +40,16 @@ public class RhinoManager {
     
     private var isListening = false
     
+    /// Constructor.
+    ///
+    /// - Parameters:
+    ///   - modelPath: Absolute path to file containing model parameters.
+    ///   - contextPath: Absolute path to file containing context parameters. A context represents the set of expressions (spoken commands), intents, and
+    ///   intent arguments (slots) within a domain of interest.
+    ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially)
+    ///   increasing the erroneous inference rate.
+    ///   - onInferenceCallback: It is invoked upon completion of intent inference.
+    /// - Throws: RhinoManagerError
     public init(modelPath: String, contextPath: String, sensitivity: Float32, onInferenceCallback: ((Inference) -> Void)?) throws {
         self.onInferenceCallback = onInferenceCallback
         
@@ -98,6 +110,8 @@ public class RhinoManager {
         rhino = nil
     }
     
+    /// Start recording audio from the microphone and infers the user's intent from the spoken command. Once the inference is finalized it will invoke the user
+    /// provided callback and terminates recording audio.
     public func startListening() throws {
         let audioSession = AVAudioSession.sharedInstance()
         if audioSession.recordPermission == .denied {
