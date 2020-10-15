@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                recordButton.setEnabled(true);
+                                recordButton.setText("START");
                                 recordButton.toggle();
                                 intentTextView.setText("\n    {\n");
                                 intentTextView.append(String.format("        \"isUnderstood\" : \"%b\",\n", inference.getIsUnderstood()));
@@ -137,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            recordButton.setEnabled(true);
+            recordButton.setText("START");
             recordButton.toggle();
         } else {
                 rhinoManager.process();
@@ -145,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick(View view) {
         if (recordButton.isChecked()) {
+            recordButton.setEnabled(false);
+            recordButton.setText("...");
             intentTextView.setText("");
 
             if (hasRecordPermission()) {
