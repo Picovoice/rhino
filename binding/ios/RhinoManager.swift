@@ -38,6 +38,10 @@ public class RhinoManager {
     
     private var rhino: OpaquePointer?
     
+    private var started = false
+    
+    private var stop = false
+    
     /// Constructor.
     ///
     /// - Parameters:
@@ -93,7 +97,7 @@ public class RhinoManager {
                 
                 self.onInferenceCallback?(Inference(isUnderstood: isUnderstood, intent: intent, slots: slots))
                 
-                self.audioInputEngine.stop()
+                self.stop = true
             }
         }
         
@@ -109,6 +113,12 @@ public class RhinoManager {
     /// Start recording audio from the microphone and infers the user's intent from the spoken command. Once the inference is finalized it will invoke the user
     /// provided callback and terminates recording audio.
     public func process() throws {
+        if self.started {
+            return
+        }
+        
+        self.started = true
+        
         let audioSession = AVAudioSession.sharedInstance()
         if audioSession.recordPermission == .denied {
             throw RhinoManagerError.recordingDenied
@@ -117,6 +127,17 @@ public class RhinoManager {
         try audioSession.setCategory(AVAudioSession.Category.record)
         try audioSession.setMode(AVAudioSession.Mode.measurement)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        
+        let dispatchQueue = DispatchQueue(label: "RhinoManagerWatcher", qos: .background)
+        dispatchQueue.async {
+            while !self.stop {
+                usleep(10000)
+            }
+            self.audioInputEngine.stop()
+            
+            self.started = false
+            self.stop = false
+        }
         
         try audioInputEngine.start()
     }
@@ -175,8 +196,8 @@ private class AudioInputEngine {
         guard let audioQueue = audioQueue else {
             return
         }
-        AudioQueueStop(audioQueue, false)
-        AudioQueueDispose(audioQueue, false)
+        AudioQueueStop(audioQueue, true)
+        AudioQueueDispose(audioQueue, true)
     }
     
     private func createAudioQueueCallback() -> AudioQueueInputCallback {

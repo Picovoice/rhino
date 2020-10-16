@@ -29,21 +29,23 @@ struct ContentView: View {
                             contextPath: self.contextPath!,
                             sensitivity: 0.5,
                             onInferenceCallback: { x in
-                                result += "{\n"
-                                self.result += "    \"isUnderstood\" : \"" + x.isUnderstood.description + "\",\n"
-                                if x.isUnderstood {
-                                    self.result += "    \"intent : \"" + x.intent + "\",\n"
-                                    if !x.slots.isEmpty {
-                                        result += "    \"slots\" : {\n"
-                                        for (k, v) in x.slots {
-                                            self.result += "        \"" + k + "\" : \"" + v + "\",\n"
+                                DispatchQueue.main.async {
+                                    result = "{\n"
+                                    self.result += "    \"isUnderstood\" : \"" + x.isUnderstood.description + "\",\n"
+                                    if x.isUnderstood {
+                                        self.result += "    \"intent : \"" + x.intent + "\",\n"
+                                        if !x.slots.isEmpty {
+                                            result += "    \"slots\" : {\n"
+                                            for (k, v) in x.slots {
+                                                self.result += "        \"" + k + "\" : \"" + v + "\",\n"
+                                            }
+                                            result += "    }\n"
                                         }
-                                        result += "    }\n"
                                     }
+                                    result += "}\n"
+                                    
+                                    self.buttonLabel = "START"
                                 }
-                                result += "}\n"
-                                
-                                self.buttonLabel = "START"
                             })
                         try self.rhinoManager.process()
                     } catch {
