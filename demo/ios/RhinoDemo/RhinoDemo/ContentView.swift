@@ -27,7 +27,7 @@ struct ContentView: View {
                         self.rhinoManager = try RhinoManager(
                             modelPath: self.modelPath!,
                             contextPath: self.contextPath!,
-                            sensitivity: 0.5,
+                            sensitivity: 0.0,
                             onInferenceCallback: { x in
                                 DispatchQueue.main.async {
                                     result = "{\n"
@@ -52,7 +52,7 @@ struct ContentView: View {
                         
                     }
                     
-                    self.buttonLabel = "..."
+                    self.buttonLabel = "    ...    "
                 } else {
                     self.buttonLabel = "START"
                 }
