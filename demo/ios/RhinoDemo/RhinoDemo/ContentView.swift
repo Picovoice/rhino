@@ -1,22 +1,17 @@
 //
-// Copyright 2019 Picovoice Inc.
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+//  Copyright 2018-2020 Picovoice Inc.
+//  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+//  file accompanying this source.
+//  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+//  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+//  specific language governing permissions and limitations under the License.
 //
 
 import SwiftUI
 
 struct ContentView: View {
-    
-    let modelFilePath = Bundle.main.path(forResource: "rhino_params", ofType: "pv")
-    let contextFilePath = Bundle.main.path(forResource: "smart_lighting_ios", ofType: "rhn")
+    let modelPath = Bundle.main.path(forResource: "rhino_params", ofType: "pv")
+    let contextPath = Bundle.main.path(forResource: "smart_lighting_ios", ofType: "rhn")
     
     @State var rhinoManager: RhinoManager!
     @State var buttonLabel = "START"
@@ -30,35 +25,42 @@ struct ContentView: View {
                     
                     do {
                         self.rhinoManager = try RhinoManager(
-                            modelFilePath: self.modelFilePath!,
-                            contextFilePath: self.contextFilePath!,
-                            onInferenceCallback: { info in
-                                if !info.isUnderstood {
-                                    self.result = "did not understand the command"
-                                } else {
-                                    self.result = "intent : " + info.intent + "\n"
-                                    for (k, v) in info.slots {
-                                        self.result += k + " : " + v + "\n"
+                            modelPath: self.modelPath!,
+                            contextPath: self.contextPath!,
+                            sensitivity: 0.0,
+                            onInferenceCallback: { x in
+                                DispatchQueue.main.async {
+                                    result = "{\n"
+                                    self.result += "    \"isUnderstood\" : \"" + x.isUnderstood.description + "\",\n"
+                                    if x.isUnderstood {
+                                        self.result += "    \"intent : \"" + x.intent + "\",\n"
+                                        if !x.slots.isEmpty {
+                                            result += "    \"slots\" : {\n"
+                                            for (k, v) in x.slots {
+                                                self.result += "        \"" + k + "\" : \"" + v + "\",\n"
+                                            }
+                                            result += "    }\n"
+                                        }
                                     }
+                                    result += "}\n"
+                                    
+                                    self.buttonLabel = "START"
                                 }
-                                self.rhinoManager.stopListening()
-                                self.buttonLabel = "START"
                             })
-                        try self.rhinoManager.startListening()
+                        try self.rhinoManager.process()
                     } catch {
                         
                     }
                     
-                    self.buttonLabel = "STOP"
+                    self.buttonLabel = "    ...    "
                 } else {
-                    self.rhinoManager.stopListening()
                     self.buttonLabel = "START"
                 }
             }) {
                 Text("\(buttonLabel)")
                     .padding()
-                    .background(Color.gray)
-                    .foregroundColor(Color.blue)
+                    .background(Color.blue)
+                    .foregroundColor(Color.white)
                     .font(.largeTitle)
             }
             
