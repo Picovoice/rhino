@@ -28,7 +28,7 @@ const MODEL_PATH_DEFAULT = "lib/common/rhino_params.pv";
 /**
  * Wraps the Rhino engine and context.
  *
- * Performs the calls to the Rhino dynamic library via FFI. Does some basic parameter validation to prevent
+ * Performs the calls to the Rhino node library. Does some basic parameter validation to prevent
  * errors occurring in the library layer. Provides clearer error messages in native JavaScript.
  */
 class Rhino {

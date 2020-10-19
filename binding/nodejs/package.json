@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-node",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Picovoice Rhino NodeJS binding",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Picovoice/rhino.git"
+    "url": "git+https://github.com/Picovoice/rhino.git",
+    "directory": "binding/nodejs"
   },
   "keywords": [
     "nlu",
@@ -23,7 +24,7 @@
     "ai",
     "voice assistant"
   ],
-  "author": "Picovoice, Inc.",
+  "author": "Picovoice Inc.",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/Picovoice/rhino/issues"
