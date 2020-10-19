@@ -59,6 +59,12 @@ dotnet build -c FileDemo.Release
 
 ## Usage
 
+NOTE: the working directory for all dotnet commands is:
+
+```bash
+rhino/demo/dotnet/RhinoDemo
+```
+
 ### File Demo
 
 The file demo uses Rhino to get an inference result from an audio file. This demo is mainly useful for quantitative performance 
