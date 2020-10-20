@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Rhino:jar">
+    <output-path>$PROJECT_DIR$/bin</output-path>
+    <root id="archive" name="rhino-1.5.0.jar">
+      <element id="module-output" name="Rhino" />
+    </root>
+  </artifact>
+</component>
