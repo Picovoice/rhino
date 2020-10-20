@@ -25,7 +25,7 @@ Rhino is:
 ## Compatibility
 
 - .NET Standard 2.0, .NET Core 3.0+, .NET Framework 4.6.1+
-- Runs on Linux (x86_64), MacOS (x86_64) and Windows (x86_64)
+- Runs on Linux (x86_64), macOS (x86_64) and Windows (x86_64)
 
 ## Installation
 
