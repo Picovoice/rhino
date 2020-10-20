@@ -39,6 +39,7 @@ Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for ente
 * [Running Demo Applications](#running-demo-applications)
     * [Python](#python-demos)
     * [.NET](#net-demos)
+    * [Java](#java-demos)
     * [Android](#android-demos)
     * [iOS](#ios-demos)
     * [JavaScript](#javascript-demos)
@@ -46,6 +47,7 @@ Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for ente
 * [Integration](#integration)
     * [Python](#python)
     * [.NET](#net)
+    * [Java](#java)
     * [Android](#android)
     * [iOS](#ios)
     * [JavaScript](#javascript)
@@ -209,8 +211,18 @@ The following command runs the demo application on your machine to infer intent 
 smart lighting system:
 
 ```bash
-dotnet run -c MicDemo.Release -- --input_audio_path ${AUDIO_PATH} 
---context_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
+dotnet run -c MicDemo.Release -- --context_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
+```
+
+### Java Demos
+
+The [Rhino Java demo](/demo/java) is a command-line application that lets you choose between running Rhino on a 
+audio file or on real-time microphone input.
+
+The following command uses the Java demo to run inference on an audio file in context of a smart coffee maker:
+
+```bash
+java -jar rhino-file-demo.jar -i ${AUDIO_PATH} -c ./resources/contexts/${SYSTEM}/coffee_maker_${SYSTEM}.rhn
 ```
 
 ### Android Demos
@@ -365,13 +377,13 @@ while(true)
         Inference inference = handle.GetInference();
         if(inference.IsUnderstood)
         {
-            // .. code to handle unsupported commands  
-        }
-        else
-        {
             string intent = inference.Intent;
             Dictionary<string, string> slots = inference.Slots;
             // .. code to take action based on inferred intent and slot values
+        }
+        else
+        {
+            // .. code to handle unsupported commands              
         }        
     }
 }
@@ -385,6 +397,53 @@ using(Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context"))
 {
     // .. Rhino usage here
 }
+```
+
+### Java
+
+You can install the Rhino Java SDK by downloading and referencing the latest [Rhino JAR file](/binding/java/bin).
+
+The SDK exposes a Builder that allows you to create an instance of the engine:
+
+```java
+import ai.picovoice.rhino.*;
+
+try{
+    Rhino handle = new Rhino.Builder()
+                    .setContextPath("/absolute/path/to/context")
+                    .build();
+} catch (RhinoException e) { }
+```
+
+When initialized, the valid sample rate is given by `handle.getSampleRate()`. Expected frame length (number of audio samples
+in an input array) is `handle.getFrameLength()`. The engine accepts 16-bit linearly-encoded PCM and operates on
+single-channel audio.
+
+```java
+short[] getNextAudioFrame(){
+    // .. get audioFrame
+    return audioFrame;
+}
+
+while(true) {
+    boolean isFinalized = handle.process(getNextAudioFrame());   
+    if(isFinalized){
+        RhinoInference inference = handle.getInference();
+        if(inference.getIsUnderstood()){
+            String intent = inference.getIntent();
+            Map<string, string> slots = inference.getSlots();
+            // .. code to take action based on inferred intent and slot values              
+        } else {
+            // .. code to handle unsupported commands
+        }        
+    }
+}
+```
+
+Once you're done with Rhino, ensure you release its resources explicitly:
+
+```java
+handle.delete();
 ```
 
 ### Android

@@ -1,21 +1,31 @@
-# Porcupine Wake Word Engine Demos
+# Rhino Speech-to-Intent Engine Demos
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 This package contains Java command-line demos for processing real-time audio (i.e. microphone) and audio files
-using Porcupine wake word engine.
+using Rhino Speech-to-Intent engine.
 
-## Porcupine
+## Rhino
 
-Porcupine is a highly-accurate and lightweight wake word engine. It enables building always-listening voice-enabled
-applications. 
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
+interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso with a lot of sugar 
+and some milk"*, Rhino infers that the user wants to order a drink with these specifications:
 
-Porcupine is:
+```json
+{
+  "type": "espresso",
+  "size": "small",
+  "numberOfShots": "2",
+  "sugar": "a lot",
+  "milk": "some"
+}
+```
 
-- using deep neural networks trained in real-world environments.
-- compact and computationally-efficient making it perfect for IoT.
-- scalable. It can detect multiple always-listening voice commands with no added CPU/memory footprint.
-- self-service. Developers can train custom wake phrases using [Picovoice Console](https://picovoice.ai/console/).
+Rhino is:
+
+* using deep neural networks trained in real-world environments.
+* compact and computationally-efficient, making it perfect for IoT.
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
 ## Compatibility
 
@@ -24,92 +34,42 @@ Porcupine is:
 
 ## Installation
 
-You can get the latest Java demo executable JARs [here](/demo/java/bin). 
+You can get the latest Java demo executable JARs [here](/demo/java/bin).
 
 If you wish, you can build the demos from source by opening the project with the [IntelliJ IDE](https://www.jetbrains.com/idea/download/).
 Select "Build > Build Project" to build the two demo classes or "Build > Build Artifacts" to create the executable JARs.
 
 ## Usage
 
-NOTE: the working directory for java commands is:
+NOTE: the working directory for all dotnet commands is:
 
 ```bash
-porcupine/demo/java/bin
+rhino/demo/java/bin
 ```
 
 ### File Demo
 
-The file demo uses Porcupine to scan for keywords in a wave file. The demo is mainly useful for quantitative performance benchmarking against a corpus of audio data. 
-Porcupine processes a 16kHz, single-channel audio stream. If a stereo file is provided it only processes the first (left) channel. 
-The following processes a file looking for instances of the phrase "Picovoice":
+The file demo uses Rhino to get an inference result from an audio file. This demo is mainly useful for quantitative performance 
+benchmarking against a corpus of audio data. Note that only the relevant spoken command should be present in the file 
+and no other speech. There also needs to be at least one second of silence at the end of the file.
 
 ```bash
-java -jar porcupine-file-demo.jar -i ${AUDIO_PATH} -k picovoice
+java -jar rhino-file-demo.jar -i ${AUDIO_PATH} -c ${CONTEXT_PATH}
 ```
-
-`-k` or `--keywords` is a shorthand for using default keyword files shipped with the package. The list of default keyword files
-can be seen in the usage string:
-
-```bash
-java -jar porcupine-file-demo.jar -h
-```
-
-To detect multiple phrases concurrently provide them as separate arguments:
-
-```bash
-java -jar porcupine-file-demo.jar -i ${AUDIO_PATH} -k grasshopper porcupine
-```
-
-To detect non-default keywords (e.g. models created using [Picovoice Console](https://picovoice.ai/console/))
-use the `-kp` or `--keyword_paths` argument:
-
-```bash
-java -jar porcupine-file-demo.jar -i ${AUDIO_PATH} -kp ${KEYWORD_PATH_ONE} ${KEYWORD_PATH_TWO}
-```
-
-The sensitivity of the engine can be tuned per keyword using the `-s` or `--sensitivities` input argument:
-
-```bash
-java -jar porcupine-file-demo.jar -i ${AUDIO_PATH} -k grasshopper porcupine -s 0.3 0.6
-```
-
-Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating-point number within
-`[0, 1]`. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate.
 
 ### Microphone Demo
 
-This demo opens an audio stream from a microphone and detects utterances of a given wake word. The following opens the default
-microphone and detects occurrences of "Picovoice":
+The microphone demo opens an audio stream from a microphone and performs inference on spoken commands:
 
 ```bash
-java -jar porcupine-mic-demo.jar -k picovoice
-```
-
-`-k` or `--keywords` is a shorthand for using default keyword files shipped with the package. The list of default keyword files
-can be seen in the usage string:
-
-```bash
-java -jar porcupine-mic-demo.jar -h
-```
-
-To detect multiple phrases concurrently provide them as separate arguments:
-
-```bash
-java -jar porcupine-mic-demo.jar -k picovoice porcupine
-```
-
-To detect non-default keywords (e.g. models created using [Picovoice Console](https://picovoice.ai/console/))
-use the `-kp` or `--keyword_paths` argument:
-
-```bash
-java -jar porcupine-mic-demo.jar -kp ${KEYWORD_PATH_ONE} ${KEYWORD_PATH_TWO}
+java -jar rhino-mic-demo.jar -c ${CONTEXT_PATH}
 ```
 
 It is possible that the default audio input device is not the one you wish to use. There are a couple
 of debugging facilities baked into the demo application to solve this. First, type the following into the console:
 
 ```bash
-java -jar porcupine-mic-demo.jar -sd
+java -jar rhino-mic-demo.jar -sd
 ```
 
 It provides information about various audio input devices on the box. On a Windows PC, this is the output:
@@ -117,21 +77,21 @@ It provides information about various audio input devices on the box. On a Windo
 ```
 Available input devices:
 
-    Device 4: Microphone Array (Realtek(R) Au
-    Device 5: Microphone Headset USB
+    Device 0: Microphone Array (Realtek(R) Au
+    Device 1: Microphone Headset USB	
 ``` 
 
 You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the Headset 
 microphone in the above example, you can invoke the demo application as below:
 
 ```bash
-java -jar porcupine-mic-demo.jar -k picovoice -di 5
+java -jar rhino-mic-demo.jar -c ${CONTEXT_PATH} -di 1
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved with:
 
 ```bash
-java -jar porcupine-mic-demo.jar -k picovoice -di 5 -o ./test.wav
+java -jar rhino-mic-demo.jar -c ${CONTEXT_PATH} -di 1 -o ./test.wav
 ```
 
 If after listening to stored file there is no apparent problem detected please open an issue.
