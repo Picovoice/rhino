@@ -77,13 +77,13 @@ while(true)
         Inference inference = handle.GetInference();
         if(inference.IsUnderstood)
         {
-            // .. code to handle unsupported commands  
-        }
-        else
-        {
             string intent = inference.Intent;
             Dictionary<string, string> slots = inference.Slots;
             // .. code to take action based on inferred intent and slot values
+        }
+        else
+        {
+            // .. code to handle unsupported commands              
         }        
     }
 }
