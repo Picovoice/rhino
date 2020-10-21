@@ -21,6 +21,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="OpenTK" Version="4.0.1" />
-		<PackageReference Include="Rhino" Version="1.5.0" />
+		<PackageReference Include="Rhino" Version="1.5.1" />
 	</ItemGroup>
 </Project>
