@@ -40,7 +40,7 @@ dotnet add package Rhino
 Create an instance of the engine:
 
 ```csharp
-using Rhino
+using Pv;
 
 Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context");
 ```
@@ -53,7 +53,7 @@ The sensitivity of the engine can be tuned using the `sensitivity` parameter. It
 inference rate.
 
 ```csharp
-using Rhino
+using Pv;
 
 Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context", sensitivity: 0.25f);
 ```

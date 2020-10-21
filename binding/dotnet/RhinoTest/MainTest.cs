@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Picovoice;
+using Pv;
 
 namespace RhinoTest
 {

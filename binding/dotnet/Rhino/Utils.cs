@@ -11,9 +11,8 @@
 
 using System.IO;
 using System.Reflection;
-using System.Collections.Generic;
 
-namespace Picovoice
+namespace Pv
 {
     public static class Utils
     {        

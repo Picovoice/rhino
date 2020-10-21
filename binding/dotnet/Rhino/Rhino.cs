@@ -12,11 +12,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace Picovoice
+namespace Pv
 {
     /// <summary>
     /// Status codes returned by Rhino library
