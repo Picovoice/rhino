@@ -47,11 +47,9 @@ namespace RhinoDemo
 
             // read audio and send frames to rhino
             short[] rhinoFrame = new short[rhino.FrameLength];
-            int frameIndex = 0;
-            long totalSamplesRead = 0;
+            int frameIndex = 0;            
             while (reader.BaseStream.Position != reader.BaseStream.Length)
-            {
-                totalSamplesRead++;
+            {                
                 rhinoFrame[frameIndex++] = reader.ReadInt16();
 
                 if (frameIndex == rhinoFrame.Length)
