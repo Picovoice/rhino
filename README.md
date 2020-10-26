@@ -5,8 +5,8 @@
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
-interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso with a lot of sugar
- and some milk"*, Rhino infers that the user wants to order a drink with these specifications:
+interest, in real-time. For example, given a spoken command _"Can I have a small double-shot espresso with a lot of sugar
+and some milk"_, Rhino infers that the user wants to order a drink with these specifications:
 
 ```json
 {
@@ -20,46 +20,47 @@ interest, in real-time. For example, given a spoken command *"Can I have a small
 
 Rhino is:
 
-* using deep neural networks trained in real-world environments.
-* compact and computationally-efficient, making it perfect for IoT.
-* cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (all variants), Beagle Bone, Android, iOS,
-Linux (x86_64), Mac (x86_64), Windows (x86_64), and web browsers are supported. Furthermore, Support for various ARM
-Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for enterprise customers.
-* self-service. Developers and UX designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+- using deep neural networks trained in real-world environments.
+- compact and computationally-efficient, making it perfect for IoT.
+- cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (all variants), Beagle Bone, Android, iOS,
+  Linux (x86_64), Mac (x86_64), Windows (x86_64), and web browsers are supported. Furthermore, Support for various ARM
+  Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for enterprise customers.
+- self-service. Developers and UX designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
 ## Table of Contents
-* [License](#license)
-* [Use Cases](#use-cases)
-* [Try It Out](#try-it-out)
-* [Performance](#performance)
-* [Model Variants](#model-variants)
-* [Terminology](#terminology)
-* [Picovoice Console](#picovoice-console)
-* [Structure of Repository](#structure-of-repository)
-* [Running Demo Applications](#running-demo-applications)
-    * [Python](#python-demos)
-    * [.NET](#net-demos)
-    * [Java](#java-demos)
-    * [Android](#android-demos)
-    * [iOS](#ios-demos)
-    * [JavaScript](#javascript-demos)
-    * [C](#c-demos)
-* [Integration](#integration)
-    * [Python](#python)
-    * [.NET](#net)
-    * [Java](#java)
-    * [Android](#android)
-    * [iOS](#ios)
-    * [JavaScript](#javascript)
-    * [C](#c)
-* [Releases](#releases)
-* [FAQ](#faq)
+
+- [License](#license)
+- [Use Cases](#use-cases)
+- [Try It Out](#try-it-out)
+- [Performance](#performance)
+- [Model Variants](#model-variants)
+- [Terminology](#terminology)
+- [Picovoice Console](#picovoice-console)
+- [Structure of Repository](#structure-of-repository)
+- [Running Demo Applications](#running-demo-applications)
+  - [Python](#python-demos)
+  - [.NET](#net-demos)
+  - [Java](#java-demos)
+  - [Android](#android-demos)
+  - [iOS](#ios-demos)
+  - [JavaScript](#javascript-demos)
+  - [C](#c-demos)
+- [Integration](#integration)
+  - [Python](#python)
+  - [.NET](#net)
+  - [Java](#java)
+  - [Android](#android)
+  - [iOS](#ios)
+  - [JavaScript](#javascript)
+  - [C](#c)
+- [Releases](#releases)
+- [FAQ](#faq)
 
 ## License
 
 This repository is licensed under Apache 2.0 which allows running the engine on all supported platforms
 (except microcontrollers) using a set of freely-available [models](/resources/contexts). You may create custom models
-using [Picovoice Console](https://picovoice.ai/console/) for **non-commercial and personal use** free of charge. The 
+using [Picovoice Console](https://picovoice.ai/console/) for **non-commercial and personal use** free of charge. The
 free-tier only allows model training for x86_64 (Linux, Mac, and Windows).
 
 Custom models for other platforms are only provided with the purchase of the Picovoice enterprise license. To enquire
@@ -70,26 +71,25 @@ about the Picovoice development and commercial license terms and fees, [contact 
 Rhino should be used when the domain of voice interactions is specific (limited). Smart appliances, hearables,
 infotainment systems, and automotive are a few examples.
 
-* If open-domain transcription is required (i.e. the user can say anything), check out
-[Leopard](https://github.com/Picovoice/leopard)
-* If open-domain transcription with real-time feedback (incremental transcription results) is needed, check out
-[Cheetah](https://github.com/Picovoice/cheetah).
-* If you need to recognize a few simple voice commands or activate a device using voice you should check out
-[Porcupine](https://github.com/Picovoice/porcupine).
-
+- If open-domain transcription is required (i.e. the user can say anything), check out
+  [Leopard](https://github.com/Picovoice/leopard)
+- If open-domain transcription with real-time feedback (incremental transcription results) is needed, check out
+  [Cheetah](https://github.com/Picovoice/cheetah).
+- If you need to recognize a few simple voice commands or activate a device using voice you should check out
+  [Porcupine](https://github.com/Picovoice/porcupine).
 
 ## Try It Out
 
-* [Interactive Web Demo](https://picovoice.ai/demos/barista/)
+- [Interactive Web Demo](https://picovoice.ai/demos/barista/)
 
-* [Picovoice Console (Rhino Editor)](https://picovoice.ai/console/)
+- [Picovoice Console (Rhino Editor)](https://picovoice.ai/console/)
 
 ![Picovoice Console](resources/doc/console_rhino.gif)
 
-* [Picovoice Console Rhino Tutorial](https://picovoice.ai/tutorials/designing-a-drive-thru-with-edge-voice-ai/)
-* [Picovoice Console Rhino Video Tutorial](https://www.youtube.com/watch?v=npBaOx30QUs)
+- [Picovoice Console Rhino Tutorial](https://picovoice.ai/tutorials/designing-a-drive-thru-with-edge-voice-ai/)
+- [Picovoice Console Rhino Video Tutorial](https://www.youtube.com/watch?v=npBaOx30QUs)
 
-* Rhino and [Porcupine](https://github.com/Picovoice/porcupine) on an ARM Cortex-M4
+- Rhino and [Porcupine](https://github.com/Picovoice/porcupine) on an ARM Cortex-M4
 
 [![Porcupine in Action](https://img.youtube.com/vi/T0tAnh8tUQg/0.jpg)](https://www.youtube.com/watch?v=T0tAnh8tUQg)
 
@@ -125,7 +125,7 @@ lowerIntensity:
 In examples above, each voice command is called an **expression**. Expressions are what we expect the user to utter
 to interact with our voice application.
 
-Consider the expression *"Turn off the lights in the office"*. What we require from Rhino is:
+Consider the expression _"Turn off the lights in the office"_. What we require from Rhino is:
 
 1. To infer the intent ("turnOff")
 2. Record the specific details from the utterance, in this case the location ("office")
@@ -135,7 +135,6 @@ We can capture these details using slots by updating the expression:
 ```yaml
 turnOff:
   - Turn off the lights in the $location:lightLocation.
-...
 ```
 
 `$location:lightLocation` means that we expect a variable of type `location` to occur and we want to capture its value
@@ -204,8 +203,8 @@ In the above command replace `${SYSTEM}` with your platform name (e.g. linux, ma
 
 ### .NET Demos
 
-The [Rhino dotnet demo](/demo/dotnet) is a command line application that lets you choose between running Rhino on a 
-audio file or on real-time microphone input. 
+The [Rhino dotnet demo](/demo/dotnet) is a command line application that lets you choose between running Rhino on a
+audio file or on real-time microphone input.
 
 The following command runs the demo application on your machine to infer intent from spoken commands in the context of a
 smart lighting system:
@@ -216,7 +215,7 @@ dotnet run -c MicDemo.Release -- --context_path ./resources/contexts/${SYSTEM}/s
 
 ### Java Demos
 
-The [Rhino Java demo](/demo/java) is a command-line application that lets you choose between running Rhino on a 
+The [Rhino Java demo](/demo/java) is a command-line application that lets you choose between running Rhino on a
 audio file or on real-time microphone input.
 
 The following command uses the Java demo to run inference on an audio file in context of a smart coffee maker:
@@ -240,14 +239,13 @@ issue commands such as "turn off the lights".
 
 ### JavaScript Demos
 
-You need `yarn` or `npm` installed first. Install the demo dependencies by executing either of the following sets of `yarn` or `npm` commands from
-[demo/javascript/standalone](/demo/javascript/standalone)
+You need `yarn` or `npm`. Install the demo dependencies by executing either of the following sets of `yarn` or `npm` commands from
+[demo/javascript/](/demo/javascript/).
 
 #### Yarn
 
 ```bash
 yarn
-yarn copy
 yarn start
 ```
 
@@ -287,7 +285,7 @@ resources/porcupine/resources/keyword_files/${SYSTEM}/picovoice_${SYSTEM}.ppn \
 ${INPUT_AUDIO_DEVICE}
 ```
 
-Replace `${RHINO_LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the 
+Replace `${RHINO_LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the
 name of the operating system on your machine (e.g. linux or raspberry-pi), `${PORCUPINE_LIBRARY_PATH}` with path to appropriate
 Porcupine library available under [resources/porcupine/lib](/resources/porcupine/lib) and `${INPUT_AUDIO_DEVICE}` with
 the name of your microphone device. The demo opens an audio stream and detects utterances of keyword "Picovoice"
@@ -310,7 +308,7 @@ context_file_path = ... # absolute path to context file for the domain of intere
 rhino = Rhino(
     library_path=library_path,
     model_path=model_file_path,
-    context_path=context_file_path) 
+    context_path=context_file_path)
 ```
 
 When initialized, valid sample rate can be obtained using `rhino.sample_rate`. Expected frame length
@@ -371,7 +369,7 @@ short[] GetNextAudioFrame()
 
 while(true)
 {
-    bool isFinalized = handle.Process(GetNextAudioFrame());   
+    bool isFinalized = handle.Process(GetNextAudioFrame());
     if(isFinalized)
     {
         Inference inference = handle.GetInference();
@@ -383,14 +381,14 @@ while(true)
         }
         else
         {
-            // .. code to handle unsupported commands              
-        }        
+            // .. code to handle unsupported commands
+        }
     }
 }
 ```
 
-Rhino will have its resources freed by the garbage collector, but to have resources freed 
-immediately after use, wrap it in a using statement: 
+Rhino will have its resources freed by the garbage collector, but to have resources freed
+immediately after use, wrap it in a using statement:
 
 ```csharp
 using(Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context"))
@@ -426,16 +424,16 @@ short[] getNextAudioFrame(){
 }
 
 while(true) {
-    boolean isFinalized = handle.process(getNextAudioFrame());   
+    boolean isFinalized = handle.process(getNextAudioFrame());
     if(isFinalized){
         RhinoInference inference = handle.getInference();
         if(inference.getIsUnderstood()){
             String intent = inference.getIntent();
             Map<string, string> slots = inference.getSlots();
-            // .. code to take action based on inferred intent and slot values              
+            // .. code to take action based on inferred intent and slot values
         } else {
             // .. code to handle unsupported commands
-        }        
+        }
     }
 }
 ```
@@ -454,18 +452,17 @@ Rhino provides a binding for Android using JNI. It can be initialized using:
     final String modelPath = ... // It is available at lib/common/rhino_params.pv
     final String contextPath = ...
     final float sensitivity = 0.5;
-    
+
     Rhino rhino = new Rhino(modelPath, contextPath, sensitivity);
 ```
 
 Once initialized, `rhino` can be used for intent inference:
 
-
 ```java
     private short[] getNextAudioFrame();
 
     while (!rhino.process(getNextAudioFrame()));
-    
+
     final RhinoInference inference = rhino.getInference();
     if (inference.getIsUnderstood()) {
         // logic to perform an action given the intent object.
@@ -514,12 +511,12 @@ instantiated `handle` can process audio via its `.process` method.
     let getNextAudioFrame = function() {
         ...
     };
-    
+
     let result = {};
     do {
         result = handle.process(getNextAudioFrame())
     } while (Object.keys(result).length === 0);
-    
+
     if (result.isUnderstood) {
         // callback to act upon inference result
     } else {
@@ -530,7 +527,7 @@ instantiated `handle` can process audio via its `.process` method.
 When done be sure to release resources acquired by WebAssembly using `.release`.
 
 ```javascript
-    handle.release();
+handle.release();
 ```
 
 ### C
@@ -604,35 +601,35 @@ pv_rhino_delete(rhino);
 
 ### v1.5.0 June 4th, 2020
 
-* Accuracy improvements.
+- Accuracy improvements.
 
 ### v1.4.0 April 13th, 2020
 
-* Accuracy improvements.
-* Builtin slots
+- Accuracy improvements.
+- Builtin slots
 
 ### v1.3.0 February 13th, 2020
 
-* Accuracy improvements.
-* Runtime optimizations.
-* Added support for Raspberry Pi 4
-* Added support for JavaScript.
-* Added support for iOS.
-* Updated documentation.
+- Accuracy improvements.
+- Runtime optimizations.
+- Added support for Raspberry Pi 4
+- Added support for JavaScript.
+- Added support for iOS.
+- Updated documentation.
 
 ### v1.2.0 April 26, 2019
 
-* Accuracy improvements.
-* Runtime optimizations.
+- Accuracy improvements.
+- Runtime optimizations.
 
 ### v1.1.0 December 23rd, 2018
 
-* Accuracy improvements.
-* Open-sourced Raspberry Pi build.
+- Accuracy improvements.
+- Open-sourced Raspberry Pi build.
 
 ### v1.0.0 November 2nd, 2018
 
-* Initial Release
+- Initial Release
 
 ## FAQ
 
@@ -716,7 +713,7 @@ and we can connect you.
 
 **[Q] Can you build a voice-enabled app for me?**
 
-**[A]** We do not provide software development services, so most likely the answer is no.  However, via a professional
+**[A]** We do not provide software development services, so most likely the answer is no. However, via a professional
 services agreement we can help with proofs-of-concept (these will typically be rudimentary apps focused on voice user
 interface or building the audio pipeline), evaluations on a specific domain/task, integration of SDK in your app,
 training of custom acoustic and language models, and porting to custom hardware platforms.
@@ -748,13 +745,11 @@ environments, and 95% accuracy in noisy environments with signal to noise ratio 
 [Here](https://www.youtube.com/watch?v=T0tAnh8tUQg) is a demo of phone dialing interaction running on ARM Cortex-M4 processor
 simulating a hearable application:
 
-
 **[Q] What is required to support additional languages?**
 
 **[A]** Supporting a new language is an involved, time consuming process, and requires substantial investment. For
 significant commercial opportunities, we may be able to prioritize and partially reinvest commercial license fees into
-supporting new languages for customers. 
-
+supporting new languages for customers.
 
 **[Q] Which platforms does Rhino speech-to-intent engine support?**
 
@@ -769,7 +764,7 @@ non-recurring engineering fees in addition to prepaid commercial royalties.
 **[Q] Does Picovoice speech-to-intent software work in my target environment and noise conditions?**
 
 **[A]** The overall performance depends on various factors such as speaker distance, level/type of noise, room acoustics,
-quality of microphone, and audio frontend algorithms used (if any). It is usually best to try out our technology 
+quality of microphone, and audio frontend algorithms used (if any). It is usually best to try out our technology
 in your target environment using sample models freely-available. Additionally, we have published an open-source benchmark
 of our speech-to-intent software in a noisy environment [here](https://github.com/Picovoice/speech-to-intent-benchmark), which can be used as a reference.
 
@@ -785,7 +780,7 @@ accuracy in a noisy environment with signal to noise ratio of 9dB at microphone 
 
 **[A]** There is no technical limit on the number of slot values Picovoice speech-to-intent software can understand.
 However, on platforms with limited memory (particularly MCUs), the total number will be dictated by the available amount of memory.
-Roughly speaking, for 100 unique words/phrases, you should allocate around 50KB of additional memory. 
+Roughly speaking, for 100 unique words/phrases, you should allocate around 50KB of additional memory.
 
 **[Q] Are there any best practices for designing speech-to-intent context (Interaction model)?**
 
@@ -804,13 +799,13 @@ that Picovoice software only works well on 16kHz audio and does not perform opti
 
 **[Q] Does Picovoice speech-to-intent software perform endpointing?**
 
-**[A]** Yes, Picovoice speech-to-intent software performs endpointing automatically. 
+**[A]** Yes, Picovoice speech-to-intent software performs endpointing automatically.
 
 **[Q] Does my application need to listen to a wake word before processing the audio with speech-to-intent software?**
 
 **[A]** Speech-to-intent software requires a method of initiation to start listening when the user is about to speak.
 That could be implemented by either push-to-talk switch or by the Picovoice wake word detection engine, depending on the
-customer requirement. 
+customer requirement.
 
 **[Q] How do I develop a speech-to-intent context model file?**
 
