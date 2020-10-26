@@ -1,13 +1,33 @@
-# JavaScript Demos
+# JavaScript Standalone (Push to Talk) Demo
 
-## Always Listening
+Note: demos that use Rhino with Porcupine have been moved to the [picovoice](https://github.com/Picovoice/picovoice/tree/master/demo/javacript) repository.
 
-This demo uses Picovoice's wake word engine (Porcupine) to provide a hands-free experience.
+## Usage
 
-## Standalone
+Install the demo's dependencies by using either yarn or npm. Execute the commands provided from [demo/javascript](/demo/javascript). This will launch a local server hosting the demo.
 
-This demo is applicable when push to talk is desired.
+### Yarn
 
-## React App
+```bash
+yarn
+yarn start
+```
 
-This demo integrates the always-listening demo into a React application.
+### NPM
+
+```bash
+npm install
+npm install -g copy-files-from-to
+copy-files-from-to
+npx serve
+```
+
+## Try the demo
+
+Open http://localhost:5000 in your web browser to try the demo.
+
+## Browser Compatibility
+
+[RhinoManager](rhino_manager.js) uses the
+[Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and
+[WebAssembly](https://webassembly.org/), which are supported on all modern browsers (excluding Internet Explorer).
