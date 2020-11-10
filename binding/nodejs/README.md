@@ -34,7 +34,7 @@ Files generated with the Picovoice Console carry restrictions including (but not
 
 ## Compatibility
 
-This binding is for running Rhino on **NodeJS 12+** on the following platforms:
+This binding is for running Rhino on **NodeJS 10+** on the following platforms:
 
 - Linux (x86_64)
 - macOS (x86_64)

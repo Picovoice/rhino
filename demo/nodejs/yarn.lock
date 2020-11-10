@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@picovoice/rhino-node@1.5.3":
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-node/-/rhino-node-1.5.3.tgz#3a0dfd533e54cfcd5e47b61473ce95715007732e"
-  integrity sha512-5REwLinRMFfOAEYKC/sF4oCVyZbWXb4omlwFZrm4zpoVm4LIINjvZWq80B1whse+A+QRUD/wxgIX/SmE6fWJuw==
+"@picovoice/rhino-node@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-node/-/rhino-node-1.5.4.tgz#e79318ba56c9c4ffab06be87a47bb819fd3b2f96"
+  integrity sha512-p3qB0rQm0KtAOMo7pOzCTHapAZCrNt1CWTZkOTvd/LW3/K2PCl85JQD9QaQwohiFBegoduKZcossihBC0gEQwg==
 
 commander@^6.1.0:
   version "6.1.0"

@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-node",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Picovoice Rhino NodeJS binding",
   "main": "index.js",
   "scripts": {
@@ -37,7 +37,7 @@
     "wavefile": "^11.0.0"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=10.0.0"
   },
   "cpu": [
     "!ia32",
