@@ -18,23 +18,19 @@ Running the executable without any commandline arguments prints the usage info t
 
 ```bash
 $ demo/c/rhino_demo_mic
-usage : demo/c/rhino_demo_mic rhino_library_path rhino_model_path rhino_context_path
-porcupine_library_path porcupine_model_path porcupine_keyword_path input_audio_device
+usage : demo/c/rhino_demo_mic library_path model_path context_path input_audio_device
 ```
 
 Then you need to find the name of audio input device on your machine using `arecord -L` utility.
 
-The following starts an audio steaming from the microphone on an Ubuntu 18.04 machine and listens for wake phrase
-"Picovoice" and infers follow-on commands within the context of a smart lighting system. For example you can say "Picovoice, turn on the lights"
+The following starts an audio steaming from the microphone on an Ubuntu 18.04 machine and infers follow-on commands
+within the context of a smart lighting system. For example you can say "turn on the lights"
 
 ```bash
 demo/c/rhino_demo_mic \
 lib/linux/x86_64/libpv_rhino.so \
 lib/common/rhino_params.pv \
 resources/contexts/linux/smart_lighting_linux.rhn \
-resources/porcupine/lib/linux/x86_64/libpv_porcupine.so \
-resources/porcupine/lib/common/porcupine_params.pv \
-resources/porcupine/resources/keyword_files/linux/picovoice_linux.ppn \
 plughw:CARD=AK5371
 ```
 
@@ -45,9 +41,6 @@ demo/c/rhino_demo_mic \
 lib/raspberry-pi/cortex-a72/libpv_rhino.so \
 lib/common/rhino_params.pv \
 resources/contexts/raspberry-pi/smart_lighting_raspberry-pi.rhn \
-resources/porcupine/lib/raspberry-pi/cortex-a72/libpv_porcupine.so \
-resources/porcupine/lib/common/porcupine_params.pv \
-resources/porcupine/resources/keyword_files/raspberry-pi/picovoice_raspberry-pi.ppn \
 plughw:CARD=AK5371
 ```
 
