@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import { RhinoManager } from '@picovoice/rhino-react-native';
-import { exists } from 'react-native-fs';
 
 const RNFS = require('react-native-fs')
 

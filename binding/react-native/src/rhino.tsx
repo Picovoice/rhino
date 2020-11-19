@@ -39,7 +39,7 @@ class Rhino {
    * Creates an instance of the Rhino Speech-to-Intent engine.
    * @param contextPath Absolute path to context file.
    * @param modelPath Path to the file containing model parameters. If not set it will be set to the default location.
-   * @param sensitivity Inference sensitivity. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate. 
+   * @param sensitivity Inference sensitivity. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
    * Sensitivity should be a floating-point number within [0, 1].
    * @returns An instance of the engine.
    */
@@ -48,10 +48,9 @@ class Rhino {
     modelPath?: string,
     sensitivity?: number
   ) {
-
     if (modelPath === undefined) {
       modelPath = RCTRhino.DEFAULT_MODEL_PATH;
-    }    
+    }
 
     if (sensitivity === undefined) {
       sensitivity = 0.5;
@@ -61,12 +60,15 @@ class Rhino {
       return Promise.reject(
         `Sensitivity value in 'sensitivities' not in range [0,1]: ${sensitivity}`
       );
-    }  
+    }
 
-    let { handle, frameLength, sampleRate, version, contextInfo } = await RCTRhino.create(
-      modelPath, 
-      contextPath, 
-      sensitivity);    
+    let {
+      handle,
+      frameLength,
+      sampleRate,
+      version,
+      contextInfo,
+    } = await RCTRhino.create(modelPath, contextPath, sensitivity);
     return new Rhino(handle, frameLength, sampleRate, version, contextInfo);
   }
 
@@ -123,7 +125,7 @@ class Rhino {
    * }
    */
   async getInference() {
-    if(!this._isFinalized){
+    if (!this._isFinalized) {
       return Promise.reject(
         "'getInference' was called but Rhino has not yet reached a conclusion. Use the results of calling process to determine if Rhino has concluded"
       );
@@ -147,7 +149,7 @@ class Rhino {
   get contextInfo() {
     return this._contextInfo;
   }
-  
+
   /**
    * Gets the required number of audio samples per frame.
    * @returns Required frame length.
