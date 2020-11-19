@@ -1,37 +1,28 @@
 # Rhino Binding for React Native
 
-## Rhino
+## Rhino Speech-to-Intent Engine
 
-Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of interest, in real-time. For example, given a "Coffee Maker" context, and the utterance _"Can I have a small double-shot espresso with a lot of sugar and some milk?"_, Rhino infers that the user wants to order a drink with particular choices:
+Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
+
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
+interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso with a lot of sugar
+ and some milk"*, Rhino infers that the user wants to order a drink with these specifications:
 
 ```json
 {
-  "intent": "orderDrink",
-  "slots":
-  {
-    "type": "espresso",
-    "size": "small",
-    "numberOfShots": "2",
-    "sugar": "a lot",
-    "milk": "some"
-  }
+  "type": "espresso",
+  "size": "small",
+  "numberOfShots": "2",
+  "sugar": "a lot",
+  "milk": "some"
 }
 ```
 
-Unlike typical NLU inference software, Rhino does _not_ use generic Speech-to-Text transcription, and instead operates on a compact, bespoke model generated for a specific use case; e.g. a coffee maker, or smart home lighting. Unless you deliberately program it to do so, it won't understand phrases like _"tell me a joke"_. Using this approach (combined with Picovoice's proprietary deep learning technology) allows for:
+Rhino is:
 
-- dramatically improved efficiency (it can even run on tiny microcontrollers)
-- accuracy gains from not having to anticipate every possible spoken phrase
-- avoiding transcription errors compounding into the intent understanding (e.g. homonyms are much less of an issue, because we probably know which word makes sense).
-
-To learn more about Rhino, see the [product](https://picovoice.ai/products/rhino/), [documentation](https://picovoice.ai/docs/), and [GitHub](https://github.com/Picovoice/rhino/) pages.
-
-### Creating a context
-
-To design contexts and train into RHN files, see the [Picovoice Console](https://picovoice.ai/console/).
-
-Files generated with the Picovoice Console carry restrictions including (but not limited to): training allowance, time limits, available platforms, and commercial usage.
-
+* using deep neural networks trained in real-world environments.
+* compact and computationally-efficient, making it perfect for IoT.
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
 ## Compatibility
 
