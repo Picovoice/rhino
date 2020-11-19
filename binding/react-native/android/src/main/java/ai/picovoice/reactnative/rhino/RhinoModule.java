@@ -12,10 +12,6 @@
 
 package ai.picovoice.reactnative.rhino;
 
-import ai.picovoice.rhino.Rhino;
-import ai.picovoice.rhino.RhinoException;
-import ai.picovoice.rhino.RhinoInference;
-
 import android.content.res.Resources;
 import android.util.Log;
 
@@ -37,11 +33,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ai.picovoice.rhino.Rhino;
+import ai.picovoice.rhino.RhinoException;
+import ai.picovoice.rhino.RhinoInference;
+
 
 public class RhinoModule extends ReactContextBaseJavaModule {
 
   private static final String LOG_TAG = "PvRhino";
-  
+
   private final ReactApplicationContext reactContext;
   private final Map<String, Rhino> rhinoPool = new HashMap<String, Rhino>();
 
@@ -74,13 +74,13 @@ public class RhinoModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void create(String modelPath, String contextPath, Float sensitivity, Promise promise) {
-      
+
     try {
       Rhino rhino = new Rhino(modelPath, contextPath, sensitivity.floatValue());
       rhinoPool.put(String.valueOf(System.identityHashCode(rhino)), rhino);
-     
+
       WritableMap paramMap = Arguments.createMap();
-      paramMap.putString("handle", String.valueOf(System.identityHashCode(rhino)));    
+      paramMap.putString("handle", String.valueOf(System.identityHashCode(rhino)));
       paramMap.putInt("frameLength", rhino.getFrameLength());
       paramMap.putInt("sampleRate", rhino.getSampleRate());
       paramMap.putString("version", rhino.getVersion());
@@ -134,18 +134,17 @@ public class RhinoModule extends ReactContextBaseJavaModule {
       Rhino rhino = rhinoPool.get(handle);
       RhinoInference inference = rhino.getInference();
 
-      WritableMap inferenceMap = Arguments.createMap();                        
+      WritableMap inferenceMap = Arguments.createMap();
       final Map<String, String> slots = inference.getSlots();
-      if(slots != null){
+      if (slots != null) {
         WritableMap slotMap = Arguments.createMap();
-        for(Map.Entry<String, String> slot : slots.entrySet()){
+        for (Map.Entry<String, String> slot : slots.entrySet()) {
           slotMap.putString(slot.getKey(), slot.getValue());
         }
         inferenceMap.putMap("slots", slotMap);
-      }
-      else{
+      } else {
         inferenceMap.putMap("slots", null);
-      }            
+      }
       inferenceMap.putString("intent", inference.getIntent());
       inferenceMap.putBoolean("isUnderstood", inference.getIsUnderstood());
 
