@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import { RhinoManager } from '@picovoice/rhino-react-native';
+import { exists } from 'react-native-fs';
 
 const RNFS = require('react-native-fs')
 
@@ -42,7 +43,8 @@ export default class App extends Component<Props, State> {
       await RNFS.copyFileRes(contextFilename, contextPath);
     }
     else if(Platform.OS == 'ios'){
-
+      contextFilename += "_ios.rhn";  
+      contextPath = `${RNFS.MainBundlePath}/${contextFilename}`;
     }
 
     // load context
@@ -110,7 +112,7 @@ export default class App extends Component<Props, State> {
         {
           title: 'Microphone Permission',
           message:
-            'Rhino needs access to your microphone to listen make intent inferences.',
+            'Rhino needs access to your microphone to make intent inferences.',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',

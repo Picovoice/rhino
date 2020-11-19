@@ -42,8 +42,9 @@ local.properties
 android.iml
 android/src/main/jniLibs/**
 android/src/main/res/**
-Porcupine.java
-PorcupineException.java
+Rhino.java
+RhinoException.java
+RhinoInference.java
 
 # node.js
 #

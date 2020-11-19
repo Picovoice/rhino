@@ -24,8 +24,8 @@ mkdirp.sync("./android/src/main/res/raw")
 fs.copyFileSync('../../lib/common/rhino_params.pv','./android/src/main/res/raw/rhino_params.pv')
 
 // copy iOS resources
-// mkdirp.sync("./ios/resources")
-// fs.copyFileSync('../../lib/common/rhino_params.pv','./ios/resources/rhino_params.pv')
-// fs.copyFileSync('../../lib/ios/libpv_rhino.a','./ios/pv_rhino/libpv_rhino.a')
-// fs.copyFileSync('../../include/picovoice.h','./ios/pv_rhino/picovoice.h')
-// fs.copyFileSync('../../include/pv_rhino.h','./ios/pv_rhino/pv_rhino.h')
+mkdirp.sync("./ios/resources")
+fs.copyFileSync('../../lib/common/rhino_params.pv','./ios/resources/rhino_params.pv')
+fs.copyFileSync('../../lib/ios/libpv_rhino.a','./ios/pv_rhino/libpv_rhino.a')
+fs.copyFileSync('../../include/picovoice.h','./ios/pv_rhino/picovoice.h')
+fs.copyFileSync('../../include/pv_rhino.h','./ios/pv_rhino/pv_rhino.h')

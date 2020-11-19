@@ -70,11 +70,6 @@ PODS:
   - OpenSSL-Universal (1.0.2.20):
     - OpenSSL-Universal/Static (= 1.0.2.20)
   - OpenSSL-Universal/Static (1.0.2.20)
-  - porcupine-react-native (1.8.0):
-    - porcupine-react-native/pv_porcupine (= 1.8.0)
-    - React
-  - porcupine-react-native/pv_porcupine (1.8.0):
-    - React
   - RCTRequired (0.63.3)
   - RCTTypeSafety (0.63.3):
     - FBLazyVector (= 0.63.3)
@@ -303,8 +298,13 @@ PODS:
     - React-Core (= 0.63.3)
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
-  - RNCPicker (1.9.2):
-    - React-Core
+  - rhino-react-native (1.5.0):
+    - React
+    - rhino-react-native/pv_rhino (= 1.5.0)
+  - rhino-react-native/pv_rhino (1.5.0):
+    - React
+  - RNFS (2.16.6):
+    - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -334,7 +334,6 @@ DEPENDENCIES:
   - FlipperKit/SKIOSNetworkPlugin (~> 0.54.0)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - "porcupine-react-native (from `../node_modules/@picovoice/porcupine-react-native`)"
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -358,7 +357,8 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
+  - "rhino-react-native (from `../node_modules/@picovoice/rhino-react-native`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -387,8 +387,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
-  porcupine-react-native:
-    :path: "../node_modules/@picovoice/porcupine-react-native"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -431,8 +429,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
-  RNCPicker:
-    :path: "../node_modules/@react-native-picker/picker"
+  rhino-react-native:
+    :path: "../node_modules/@picovoice/rhino-react-native"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -453,7 +453,6 @@ SPEC CHECKSUMS:
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   OpenSSL-Universal: ff34003318d5e1163e9529b08470708e389ffcdd
-  porcupine-react-native: d6b463d7f17402885860058c95fec8da6ed92af0
   RCTRequired: 48884c74035a0b5b76dbb7a998bd93bcfc5f2047
   RCTTypeSafety: edf4b618033c2f1c5b7bc3d90d8e085ed95ba2ab
   React: f36e90f3ceb976546e97df3403e37d226f79d0e3
@@ -475,10 +474,11 @@ SPEC CHECKSUMS:
   React-RCTText: 65a6de06a7389098ce24340d1d3556015c38f746
   React-RCTVibration: 8e9fb25724a0805107fc1acc9075e26f814df454
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
-  RNCPicker: 4850f485a2b6a51788c7582d90d4b7d0e1644036
+  rhino-react-native: f3cd5ef20bf2b778bfabe80aef03d2b4a0f4ab4b
+  RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 53dc11d4ec66a39eb9f7ad89c4439a44ba423b90
+PODFILE CHECKSUM: 17ea041cba76b9278be7294a6ed4fa31881600ad
 
 COCOAPODS: 1.10.0

@@ -14,7 +14,7 @@
     "copy": "node copy.js",
     "prepare": "bob build",
     "release": "release-it",
-    "bootstrap": "yarn && yarn pods && yarn copy"
+    "bootstrap": "yarn && yarn copy"
   },
   "keywords": [
     "react-native",

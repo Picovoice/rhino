@@ -7,14 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0212DCE325507DFC001A11F3 /* libpv_porcupine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0212DCA225507849001A11F3 /* libpv_porcupine.a */; };
-		0212E0662550E3FC001A11F3 /* porcupine_params.pv in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0212E0632550E388001A11F3 /* porcupine_params.pv */; };
-		0212E06A2550E408001A11F3 /* keyword_files in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0212E0642550E3A2001A11F3 /* keyword_files */; };
-		F4FF95D7245B92E800C19C63 /* Porcupine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* Porcupine.swift */; };
+		F4FF95D7245B92E800C19C63 /* Rhino.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* Rhino.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		58B511D91A9E6C8500147676 /* CopyFiles */ = {
@@ -23,8 +17,6 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				0212E06A2550E408001A11F3 /* keyword_files in CopyFiles */,
-				0212E0662550E3FC001A11F3 /* porcupine_params.pv in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -32,15 +24,10 @@
 
 /* Begin PBXFileReference section */
 		0212DAFC254CDFE9001A11F3 /* module.private.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.private.modulemap; sourceTree = "<group>"; };
-		0212DCA225507849001A11F3 /* libpv_porcupine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpv_porcupine.a; sourceTree = "<group>"; };
-		0212DCC225507BDF001A11F3 /* pv_porcupine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pv_porcupine.h; sourceTree = "<group>"; };
-		0212DCC325507BDF001A11F3 /* picovoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = picovoice.h; sourceTree = "<group>"; };
-		0212E0632550E388001A11F3 /* porcupine_params.pv */ = {isa = PBXFileReference; lastKnownFileType = file; path = porcupine_params.pv; sourceTree = "<group>"; };
-		0212E0642550E3A2001A11F3 /* keyword_files */ = {isa = PBXFileReference; lastKnownFileType = folder; path = keyword_files; sourceTree = "<group>"; };
-		134814201AA4EA6300B7C361 /* libPorcupine.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPorcupine.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3E7B5891CC2AC0600A0062D /* Porcupine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Porcupine.m; sourceTree = "<group>"; };
-		F4FF95D5245B92E700C19C63 /* Porcupine-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Porcupine-Bridging-Header.h"; sourceTree = "<group>"; };
-		F4FF95D6245B92E800C19C63 /* Porcupine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Porcupine.swift; sourceTree = "<group>"; };
+		134814201AA4EA6300B7C361 /* libRhino.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRhino.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3E7B5891CC2AC0600A0062D /* Rhino.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Rhino.m; sourceTree = "<group>"; };
+		F4FF95D5245B92E700C19C63 /* Rhino.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Rhino.h; sourceTree = "<group>"; };
+		F4FF95D6245B92E800C19C63 /* Rhino.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rhino.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,7 +35,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0212DCE325507DFC001A11F3 /* libpv_porcupine.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,22 +48,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0212DC7E254D5A08001A11F3 /* pv_porcupine */ = {
+		0212DC7E254D5A08001A11F3 /* pv_rhino */ = {
 			isa = PBXGroup;
 			children = (
 				0212DAFC254CDFE9001A11F3 /* module.private.modulemap */,
-				0212DCC325507BDF001A11F3 /* picovoice.h */,
-				0212DCC225507BDF001A11F3 /* pv_porcupine.h */,
-				0212DCA225507849001A11F3 /* libpv_porcupine.a */,
 			);
-			path = pv_porcupine;
+			path = pv_rhino;
 			sourceTree = "<group>";
 		};
 		0212E0622550E33F001A11F3 /* resources */ = {
 			isa = PBXGroup;
 			children = (
-				0212E0642550E3A2001A11F3 /* keyword_files */,
-				0212E0632550E388001A11F3 /* porcupine_params.pv */,
 			);
 			path = resources;
 			sourceTree = "<group>";
@@ -85,7 +66,6 @@
 		02C03F26255B122800D91214 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				BEA49910696C487496C514EC /* libVoiceProcessor.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -93,7 +73,7 @@
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				134814201AA4EA6300B7C361 /* libPorcupine.a */,
+				134814201AA4EA6300B7C361 /* libRhino.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,10 +82,10 @@
 			isa = PBXGroup;
 			children = (
 				0212E0622550E33F001A11F3 /* resources */,
-				0212DC7E254D5A08001A11F3 /* pv_porcupine */,
-				F4FF95D6245B92E800C19C63 /* Porcupine.swift */,
-				B3E7B5891CC2AC0600A0062D /* Porcupine.m */,
-				F4FF95D5245B92E700C19C63 /* Porcupine-Bridging-Header.h */,
+				0212DC7E254D5A08001A11F3 /* pv_rhino */,
+				F4FF95D6245B92E800C19C63 /* Rhino.swift */,
+				B3E7B5891CC2AC0600A0062D /* Rhino.m */,
+				F4FF95D5245B92E700C19C63 /* Rhino.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
 				0212DAF9254CCFE1001A11F3 /* Frameworks */,
 				C0A73A08B764400F863BFF62 /* Libraries */,
@@ -123,9 +103,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		58B511DA1A9E6C8500147676 /* Porcupine */ = {
+		58B511DA1A9E6C8500147676 /* Rhino */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "Porcupine" */;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "Rhino" */;
 			buildPhases = (
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
@@ -135,9 +115,9 @@
 			);
 			dependencies = (
 			);
-			name = Porcupine;
+			name = Rhino;
 			productName = RCTDataManager;
-			productReference = 134814201AA4EA6300B7C361 /* libPorcupine.a */;
+			productReference = 134814201AA4EA6300B7C361 /* libRhino.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -154,7 +134,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "Porcupine" */;
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "Rhino" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -165,24 +145,19 @@
 			mainGroup = 58B511D21A9E6C8500147676;
 			productRefGroup = 58B511D21A9E6C8500147676;
 			projectDirPath = "";
-			projectReferences = (
-			);
 			projectRoot = "";
 			targets = (
-				58B511DA1A9E6C8500147676 /* Porcupine */,
+				58B511DA1A9E6C8500147676 /* Rhino */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		58B511D71A9E6C8500147676 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4FF95D7245B92E800C19C63 /* Porcupine.swift in Sources */,
+				F4FF95D7245B92E800C19C63 /* Rhino.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,18 +267,18 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
-					"$(PROJECT_DIR)/pv_porcupine/**",
+					"$(PROJECT_DIR)/pv_rhino/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"${SRCROOT}/../../../lib/ios",
-					"$(PROJECT_DIR)/pv_porcupine",
+					"$(PROJECT_DIR)/pv_rhino",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = Porcupine;
+				PRODUCT_NAME = Rhino;
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}";
-				SWIFT_OBJC_BRIDGING_HEADER = "Porcupine-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Rhino-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -317,18 +292,18 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
-					"$(PROJECT_DIR)/pv_porcupine/**",
+					"$(PROJECT_DIR)/pv_rhino/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"${SRCROOT}/../../../lib/ios",
-					"$(PROJECT_DIR)/pv_porcupine",
+					"$(PROJECT_DIR)/pv_rhino",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = Porcupine;
+				PRODUCT_NAME = Rhino;
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}";
-				SWIFT_OBJC_BRIDGING_HEADER = "Porcupine-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Rhino-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -336,7 +311,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "Porcupine" */ = {
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "Rhino" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511ED1A9E6C8500147676 /* Debug */,
@@ -345,7 +320,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "Porcupine" */ = {
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "Rhino" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511F01A9E6C8500147676 /* Debug */,

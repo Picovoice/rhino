@@ -60,19 +60,20 @@ class RhinoManager {
       BufferEmitter.BUFFER_EMITTER_KEY,
       async (buffer: number[]) => {
         if (this._rhino === null) return;
-          try{
-            this._isFinalized = await this._rhino.process(buffer); 
-            
-            if(this._isFinalized === true){
-              let inference = await this._rhino.getInference();
-              if(inference !== undefined){
-                this._inferenceCallback(inference);
-              }
-            }
-          }catch(e){
-            console.error(e);
-          }
         
+        try{
+          this._isFinalized = await this._rhino.process(buffer); 
+          
+          if(this._isFinalized === true){
+            let inference = await this._rhino.getInference();
+            if(inference !== undefined){
+              this._inferenceCallback(inference);
+            }
+          }
+        }catch(e){
+          console.error(e);
+        }
+      
       }
     );
   }
