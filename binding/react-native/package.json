@@ -65,7 +65,7 @@
     "typescript": "^3.8.3"
   },
   "peerDependencies": {
-    "@picovoice/react-native-voice-processor": "^1.0.0",
+    "@picovoice/react-native-voice-processor": "*",
     "react": "*",
     "react-native": "*"
   },
