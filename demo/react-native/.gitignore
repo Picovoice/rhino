@@ -57,3 +57,7 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+#resources
+coffee_maker_ios.rhn
+coffee_maker_android.rhn
