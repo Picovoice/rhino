@@ -10,25 +10,17 @@ type State = {
   buttonText: string;
   rhinoText: string;
   isListening: boolean;
-  backgroundColour: string;
-
-  error: string | null;
 };
 
 export default class App extends Component<Props, State> {
-  _rhinoManager: RhinoManager | undefined;
-  _detectionColour: string = '#00E5C3';
-  _defaultColour: string = '#F5FCFF';
+  _rhinoManager: RhinoManager | undefined;  
 
   constructor(props: Props) {
     super(props);
     this.state = {
       buttonText: 'Start',
       rhinoText: '',
-      isListening: false,
-      backgroundColour: this._defaultColour,
-
-      error: null,
+      isListening: false
     };
   }
 
