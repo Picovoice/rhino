@@ -14,11 +14,11 @@ yarn install
 ### Running On Android
 
 ```sh
-npx react-native run-android
+yarn android
 ```
 
 ### Running On iOS
 
 ```sh
-npx react-native run-ios
+yarn ios
 ```
