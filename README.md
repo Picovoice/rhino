@@ -42,6 +42,7 @@ Rhino is:
   - [Python](#python-demos)
   - [.NET](#net-demos)
   - [Java](#java-demos)
+  - [React Native Demos](#react-native-demos)
   - [Android](#android-demos)
   - [iOS](#ios-demos)
   - [JavaScript](#javascript-demos)
@@ -50,6 +51,7 @@ Rhino is:
   - [Python](#python)
   - [.NET](#net)
   - [Java](#java)
+  - [React Native](#react-native)
   - [Android](#android)
   - [iOS](#ios)
   - [JavaScript](#javascript)
@@ -221,6 +223,29 @@ The following command uses the Java demo to run inference on an audio file in co
 ```bash
 java -jar rhino-file-demo.jar -i ${AUDIO_PATH} -c ./resources/contexts/${SYSTEM}/coffee_maker_${SYSTEM}.rhn
 ```
+
+### React Native Demos
+
+To run the React Native Rhino demo app you'll first need to setup your React Native environment. For this, 
+please refer to [React Native's documentation](https://reactnative.dev/docs/environment-setup). Once your environment has 
+been set up, navigate to [demo/react-native](/demo/react-native) to run the following commands. 
+
+To install packages, run:
+```sh
+yarn install
+```
+
+To run on Android:
+```sh
+yarn android
+```
+
+To run on iOS:
+
+```sh
+yarn ios
+```
+
 
 ### Android Demos
 
@@ -440,6 +465,83 @@ Once you're done with Rhino, ensure you release its resources explicitly:
 
 ```java
 handle.delete();
+```
+
+### React Native
+
+For React Native integration, you can install our 
+[@picovoice/react-native-voice-processor](https://www.npmjs.com/package/@picovoice/react-native-voice-processor) and 
+[@picovoice/rhino-react-native](https://www.npmjs.com/package/@picovoice/rhino-react-native) native modules into 
+your project using yarn or npm. The module provides you with two levels of API to choose from depending 
+on your needs.  
+
+#### High-Level API
+
+[RhinoManager](/binding/react-native/src/rhinomanager.tsx) provides a high-level API that takes care of
+audio recording. This class is the quickest way to get started.
+
+The constructor `RhinoManager.create` will create an instance of a RhinoManager using a context file that you pass to it.
+```javascript
+async createRhinoManager(){
+    try{
+        this._rhinoManager = await RhinoManager.create(
+            '/path/to/context/file.rhn',
+            inferenceCallback);
+    } catch (err) {
+        // handle error
+    }
+}
+```
+
+Once you have instantiated a RhinoManager, you can start/stop audio capture and wake word detection by calling:
+
+```javascript
+this._rhinoManager.start();
+// use rhino
+this._rhinoManager.stop();
+
+// once you're done
+this._rhinoManager.delete();
+```
+
+[@picovoice/react-native-voice-processor](https://github.com/Picovoice/react-native-voice-processor/) handles 
+audio capture and RhinoManager passes frames to the inference engine for you.
+
+#### Low-Level API
+
+[Rhino](/binding/react-native/src/rhino.tsx) provides low-level access to the inference engine for those
+who want to incorporate speech-to-intent into a already existing audio processing pipeline.
+
+`Rhino` is created by passing a context file to its static constructor `create`:
+
+```javascript
+async createRhino(){
+    try{
+        this._rhino = await Rhino.create('/path/to/context/file.rhn');
+    } catch (err) {
+        // handle error
+    }
+}
+```
+As you can see, in this case you don't pass in an inference callback as you will be passing in audio frames directly using the `process` function:
+
+```javascript
+let buffer = getAudioFrame();
+
+try {
+    let isFinalized = await this._rhino.process(buffer);
+    if (isFinalized) {
+        let inference = await this._rhino.getInference();
+        
+        // uses inference result
+        // ..        
+    }
+} catch (e) {
+    // handle error
+}
+
+// once you're done
+this._rhino.delete();
 ```
 
 ### Android

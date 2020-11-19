@@ -144,7 +144,7 @@ this._rhinoManager = await RhinoManager.create(
     0.25);
 ```
 
-Once you have instaiated a Rhino manager, you can start audio capture and intent inference by calling:
+Once you have instantiated a RhinoManager, you can start audio capture and intent inference by calling:
 
 ```javascript
 this._rhinoManager.start();
