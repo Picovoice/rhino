@@ -19,6 +19,7 @@ export default class App extends Component<Props, State> {
     super(props);
     this.state = {
       buttonText: 'Start',
+      buttonDisabled: false,
       rhinoText: '',
       isListening: false
     };
@@ -44,7 +45,7 @@ export default class App extends Component<Props, State> {
         this.setState({
           rhinoText: JSON.stringify(inference, null, 4)
         });    
-        
+      
         this._stopProcessing();
       });
     }
@@ -61,10 +62,15 @@ export default class App extends Component<Props, State> {
   }
 
   async _startProcessing() {
+
     if(this.state.isListening){
       return;
     }
-    
+
+    this.setState({
+        buttonDisabled: true
+    });
+
     let recordAudioRequest;
     if (Platform.OS == 'android') {
       recordAudioRequest = this._requestRecordAudioPermission();
@@ -80,19 +86,27 @@ export default class App extends Component<Props, State> {
         return;
       }
 
-      this._rhinoManager?.start();
-      this.setState({
-        buttonText: '...',
-        isListening: true,
-      });
+      this._rhinoManager.start().then((didStart)=>{
+        if(didStart){          
+          this.setState({
+            buttonText: '...',
+            buttonDisabled: false,
+            isListening: true,
+          });
+        }
+      });      
     });
   }
 
   _stopProcessing() {
-    this._rhinoManager?.stop();
-    this.setState({
-      buttonText: 'Start',
-      isListening: false,
+    this._rhinoManager?.stop().then((didStop)=>{
+      if(didStop){                  
+        this.setState({
+          buttonText: 'Start',
+          buttonDisabled: false,
+          isListening: false,
+        });
+      }
     });
   }
 
@@ -140,6 +154,7 @@ export default class App extends Component<Props, State> {
               borderRadius: 100,
               }}
             onPress={() => this._startProcessing()}
+            disabled={this.state.buttonDisabled}
           >
             <Text style={styles.buttonText}>{this.state.buttonText}</Text>
           </TouchableOpacity>
