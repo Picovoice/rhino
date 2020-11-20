@@ -50,7 +50,7 @@ class RhinoManager {
     this._inferenceCallback = inferenceCallback;
     this._rhino = rhino;
     this._isFinalized = false;
-    this._voiceProcessor = new VoiceProcessor(
+    this._voiceProcessor = VoiceProcessor.getVoiceProcessor(
       rhino.frameLength,
       rhino.sampleRate
     );
@@ -64,9 +64,24 @@ class RhinoManager {
           this._isFinalized = await this._rhino.process(buffer);
 
           if (this._isFinalized === true) {
+            
             let inference = await this._rhino.getInference();
+            
+            // format for friendly display
             if (inference !== undefined) {
-              this._inferenceCallback(inference);
+              let formattedInference;
+              if (inference['isUnderstood'] === true) {
+                formattedInference = {
+                  isUnderstood: inference['isUnderstood'],
+                  intent: inference['intent'],
+                  slots: inference['slots'],
+                };
+              } else {
+                formattedInference = {
+                  isUnderstood: inference['isUnderstood'],
+                };
+              }
+              this._inferenceCallback(formattedInference);
             }
           }
         } catch (e) {
@@ -79,15 +94,15 @@ class RhinoManager {
   /**
    * Opens audio input stream and sends audio frames to Rhino
    */
-  start() {
-    this._voiceProcessor.start();
+  async start() {
+    return this._voiceProcessor.start();
   }
 
   /**
    * Closes audio stream
    */
-  stop() {
-    this._voiceProcessor.stop();
+  async stop() {
+    return this._voiceProcessor.stop();
   }
 
   /**

@@ -16,6 +16,10 @@ class PvRhino: NSObject {
 
     private var rhinoPool:Dictionary<String, OpaquePointer?> = [:]
     
+    override static func requiresMainQueueSetup() -> Bool {
+        return true
+    }
+
     @objc func constantsToExport() -> Dictionary<String, Any> {
         
         let modelPath : String = Bundle.main.path(forResource: "rhino_params", ofType: "pv") ?? "unknown"
