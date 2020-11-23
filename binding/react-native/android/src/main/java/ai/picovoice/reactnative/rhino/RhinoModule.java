@@ -77,11 +77,11 @@ public class RhinoModule extends ReactContextBaseJavaModule {
 
     try {
       Rhino rhino = new Rhino(modelPath, contextPath, sensitivity.floatValue());
-      String rhinoKey = String.valueOf(System.identityHashCode(rhino));
-      rhinoPool.put(rhinoKey, rhino);
+      String handle = String.valueOf(System.identityHashCode(rhino));
+      rhinoPool.put(handle, rhino);
 
       WritableMap paramMap = Arguments.createMap();
-      paramMap.putString("handle", String.valueOf(System.identityHashCode(rhino)));
+      paramMap.putString("handle", handle);
       paramMap.putInt("frameLength", rhino.getFrameLength());
       paramMap.putInt("sampleRate", rhino.getSampleRate());
       paramMap.putString("version", rhino.getVersion());
@@ -93,23 +93,23 @@ public class RhinoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void delete(String rhinoId) {
-    if (rhinoPool.containsKey(rhinoId)) {
-      rhinoPool.get(rhinoId).delete();
-      rhinoPool.remove(rhinoId);
+  public void delete(String handle) {
+    if (rhinoPool.containsKey(handle)) {
+      rhinoPool.get(handle).delete();
+      rhinoPool.remove(handle);
     }
   }
 
   @ReactMethod
-  public void process(String rhinoId, ReadableArray pcmArray, Promise promise) {
+  public void process(String handle, ReadableArray pcmArray, Promise promise) {
     try {
 
-      if (!rhinoPool.containsKey(rhinoId)) {
+      if (!rhinoPool.containsKey(handle)) {
         promise.reject("Invalid Rhino handle provided to native module.");
         return;
       }
 
-      Rhino rhino = rhinoPool.get(rhinoId);      
+      Rhino rhino = rhinoPool.get(handle);      
 
       ArrayList<Object> pcmArrayList = pcmArray.toArrayList();
       short[] buffer = new short[pcmArray.size()];

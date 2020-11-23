@@ -77,9 +77,9 @@ class Rhino {
    * @returns {object} inference result at time of frame being processed
    * JSON object had fields:
    *  - isFinalized: whether Rhino has made an inference
-   *  - isUnderstood: whether Rhino understood what it heard based on the context,
-   *  - intent: name of intent that it inferred
-   *  - slots: {} dictionary of slot keys and values the it heard from intent
+   *  - isUnderstood: if isFinalized, whether Rhino understood what it heard based on the context,
+   *  - intent: if isUnderstood, name of intent that were inferred
+   *  - slots: if isUnderstood, dictionary of slot keys and values that were inferred
    */
   async process(frame: number[]) {
     if (frame === undefined) {
