@@ -110,14 +110,6 @@ class Rhino {
   }
 
   /**
-   * Resets speech-to-intent engine
-   * Do this after retrieving an inference with getInference
-   */
-  async reset() {
-    return RCTRhino.reset(this._handle);
-  }
-
-  /**
    * Gets the source of the Rhino context in YAML format. Shows the list of intents,
    * which expressions map to those intents, as well as slots and their possible values.
    * @returns The context YAML

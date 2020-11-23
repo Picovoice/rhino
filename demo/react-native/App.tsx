@@ -44,10 +44,11 @@ export default class App extends Component<Props, State> {
       this._rhinoManager = await RhinoManager.create(contextPath, (inference:object)=>{  
         
         this.setState({
-          rhinoText: JSON.stringify(inference, null, 4)
+          rhinoText: JSON.stringify(inference, null, 4),
+          buttonText: 'Start',
+          buttonDisabled: false,
+          isListening: false,
         });    
-      
-        this._stopProcessing();
       });
     }
     catch(e){
@@ -87,7 +88,7 @@ export default class App extends Component<Props, State> {
         return;
       }
 
-      this._rhinoManager.start().then((didStart)=>{
+      this._rhinoManager.process().then((didStart)=>{
         if(didStart){          
           this.setState({
             buttonText: '...',
@@ -97,18 +98,6 @@ export default class App extends Component<Props, State> {
           });
         }
       });      
-    });
-  }
-
-  _stopProcessing() {
-    this._rhinoManager?.stop().then((didStop)=>{
-      if(didStop){                  
-        this.setState({
-          buttonText: 'Start',
-          buttonDisabled: false,
-          isListening: false,
-        });
-      }
     });
   }
 

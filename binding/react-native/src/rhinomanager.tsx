@@ -56,62 +56,59 @@ class RhinoManager {
     this._bufferEmitter = new NativeEventEmitter(BufferEmitter);
     this._needsReset = false;
 
+    // function that's executed every time an audio buffer is received
+    const process = async (buffer: number[]) => {
+      try {
+        if (this._rhino === null) return;
+
+        // don't process if we've already already received a result
+        if (this._needsReset) return;
+
+        let result = await this._rhino.process(buffer);
+
+        // throw out result if we've already received one
+        if (this._needsReset) return;
+
+        if (result['isFinalized'] === true) {
+          this._needsReset = true;
+
+          // format result
+          let formattedInference;
+          if (result['isUnderstood'] === true) {
+            formattedInference = {
+              isUnderstood: result['isUnderstood'],
+              intent: result['intent'],
+              slots: result['slots'],
+            };
+          } else {
+            formattedInference = {
+              isUnderstood: result['isUnderstood'],
+            };
+          }
+
+          // send out result and stop audio
+          this._inferenceCallback(formattedInference);
+          await this._voiceProcessor.stop();
+          this._needsReset = false;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
     this._bufferListener = this._bufferEmitter.addListener(
       BufferEmitter.BUFFER_EMITTER_KEY,
       async (buffer: number[]) => {
-
-        if (this._rhino === null) return;
-        
-        try {
-          // don't process if we've already already received a result
-          if(this._needsReset) return
-
-          let result = await this._rhino.process(buffer)
-          
-          // throw out result if we've already seen it
-          if(this._needsReset) return 
-          
-          if (result['isFinalized'] === true) {      
-            
-            this._needsReset = true      
-            
-            // format result
-            let formattedInference;
-            if (result['isUnderstood'] === true) {
-              formattedInference = {
-                isUnderstood: result['isUnderstood'],
-                intent: result['intent'],
-                slots: result['slots'],
-              };
-            } else {
-              formattedInference = {
-                isUnderstood: result['isUnderstood'],
-              };
-            }
-            
-            this._inferenceCallback(formattedInference);          
-          }
-        } catch (e) {
-          console.error(e)
-        }
-      });
+        await process(buffer);
+      }
+    );
   }
 
   /**
    * Opens audio input stream and sends audio frames to Rhino
    */
-  async start() {
+  async process() {
     return await this._voiceProcessor.start();
-  }
-
-  /**
-   * Closes audio stream
-   */
-  async stop() {
-    let didStop = await this._voiceProcessor.stop();
-    await this._rhino?.reset();
-    this._needsReset = false;
-    return didStop;
   }
 
   /**
@@ -124,7 +121,6 @@ class RhinoManager {
       this._rhino = null;
     }
   }
-
 }
 
 export default RhinoManager;
