@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "copy && react-native run-ios",    
+    "android-run": "react-native run-android",
+    "ios-run": "react-native run-ios",    
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",

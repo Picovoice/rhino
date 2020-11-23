@@ -8,13 +8,13 @@ you can run the following commands from this repo location.
 
 ### Running On Android
 ```sh
-yarn android-install
-yarn android
+yarn android-install    # sets up environment
+yarn android-run        # builds and deploys to Android
 ```
 
 ### Running On iOS
 
 ```sh
-yarn ios-install
-yarn ios
+yarn ios-install        # sets up environment
+yarn ios-run            # builds and deploys to iOS
 ```
