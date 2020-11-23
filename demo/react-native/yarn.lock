@@ -1017,15 +1017,15 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@picovoice/react-native-voice-processor@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/react-native-voice-processor/-/react-native-voice-processor-1.0.0.tgz#55763d76f558f994a548a0add7426e6cf0b1a0d0"
-  integrity sha512-QMyx+WrFlPmELmbneQQL57avSIIsNSinFOomWqxwhztzpDakHGLO6n1XQB1fxaQ+P5QpeNFvw1VZaNHgST4w/g==
+"@picovoice/react-native-voice-processor@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/react-native-voice-processor/-/react-native-voice-processor-1.0.1.tgz#9e7be10a22acf8675e6f285b4b5b3b1fbfec917a"
+  integrity sha512-SFF2tzc655v91YlgI/UhG8c74l0GmCyR7AthMkMps+16xpd/sSnEloedH+cKh4dHT/wTnhLpo7xpdfhmASVfRg==
 
-"@picovoice/rhino-react-native@^1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react-native/-/rhino-react-native-1.5.1.tgz#926885c896c1670694d9398c65c91db5c2132a20"
-  integrity sha512-Xdi1+OhJmBRwQSBnBN/vSwiPDVjRIWuMXvEz23pPXvcQGjn3g2f1neDtLXVNxgApV/2R1Aa8HM88yUVSUWJ3xw==
+"@picovoice/rhino-react-native@^1.5.3":
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react-native/-/rhino-react-native-1.5.3.tgz#88433fd9a05075d16f1ed93ba315e2c039a6e148"
+  integrity sha512-5VZ1Akca3MNRLPbq7MNAEZSCiTW2TwahLAeSCABKnxx5iMJe7P5UJTuJDdwnDzdk5vd2Z8zTLzttRwyY7XVjwQ==
 
 "@react-native-community/cli-debugger-ui@^4.9.0":
   version "4.9.0"

@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-react-native",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Picovoice Rhino React Native binding",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
