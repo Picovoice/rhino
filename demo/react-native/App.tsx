@@ -91,6 +91,7 @@ export default class App extends Component<Props, State> {
         if(didStart){          
           this.setState({
             buttonText: '...',
+            rhinoText: '',
             buttonDisabled: false,
             isListening: true,
           });

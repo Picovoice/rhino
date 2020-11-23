@@ -37,24 +37,25 @@ import ai.picovoice.rhino.Rhino;
 import ai.picovoice.rhino.RhinoException;
 import ai.picovoice.rhino.RhinoInference;
 
-public class RhinoState{
-  public Rhino handle;
-  public boolean isFinalized;
-  public boolean needsReset;
-
-  public RhinoState(Rhino handle){
-    this.handle = handle;
-    this.isFinalized = false;
-    this.needsReset = false;
-  }
-}
 
 public class RhinoModule extends ReactContextBaseJavaModule {
+
+  class RhinoState{
+    public Rhino handle;
+    public boolean isFinalized;
+    public boolean needsReset;
+  
+    public RhinoState(Rhino handle){
+      this.handle = handle;
+      this.isFinalized = false;
+      this.needsReset = false;
+    }
+  }
 
   private static final String LOG_TAG = "PvRhino";
 
   private final ReactApplicationContext reactContext;
-  private final Map<String, Rhino> rhinoPool = new HashMap<String, Rhino>();
+  private final Map<String, RhinoState> rhinoPool = new HashMap<String, RhinoState>();
 
   public RhinoModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -104,26 +105,26 @@ public class RhinoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void delete(String handle) {
-    if (rhinoPool.containsKey(handle)) {
-      rhinoPool.get(handle).delete();
-      rhinoPool.remove(handle);
+  public void delete(String rhinoId) {
+    if (rhinoPool.containsKey(rhinoId)) {
+      rhinoPool.get(rhinoId).handle.delete();
+      rhinoPool.remove(rhinoId);
     }
   }
 
   @ReactMethod
-  public void process(String handle, ReadableArray pcmArray, Promise promise) {
+  public void process(String rhinoId, ReadableArray pcmArray, Promise promise) {
     try {
 
-      if (!rhinoPool.containsKey(handle)) {
+      if (!rhinoPool.containsKey(rhinoId)) {
         promise.reject("Invalid Rhino handle provided to native module.");
         return;
       }
 
-      RhinoState rhino = rhinoPool.get(handle);
+      RhinoState rhino = rhinoPool.get(rhinoId);
       WritableMap inferenceMap = Arguments.createMap();  
       if(rhino.needsReset){
-        inferenceMap.putMap("isFinalized", false);
+        inferenceMap.putBoolean("isFinalized", false);
       }
 
       ArrayList<Object> pcmArrayList = pcmArray.toArrayList();
@@ -132,8 +133,8 @@ public class RhinoModule extends ReactContextBaseJavaModule {
         buffer[i] = ((Number) pcmArrayList.get(i)).shortValue();
       }
 
-      boolean isFinalized = rhino.process(buffer);      
-      inferenceMap.putMap("isFinalized", isFinalized);
+      boolean isFinalized = rhino.handle.process(buffer);      
+      inferenceMap.putBoolean("isFinalized", isFinalized);
 
       if(!isFinalized){        
         promise.resolve(inferenceMap);
@@ -144,10 +145,10 @@ public class RhinoModule extends ReactContextBaseJavaModule {
       }
 
       // update rhino
-      rhinoPool.put(handle, rhino);
+      rhinoPool.put(rhinoId, rhino);
 
-      RhinoInference inference = rhino.getInference();      
-      boolean isUnderstood = inference.getIsUnderstood()
+      RhinoInference inference = rhino.handle.getInference();      
+      boolean isUnderstood = inference.getIsUnderstood();
       inferenceMap.putBoolean("isUnderstood", isUnderstood);
       
       if(!isUnderstood){
@@ -170,12 +171,12 @@ public class RhinoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void reset(String handle) {
-    if (rhinoPool.containsKey(handle)) {
-      RhinoState rhino = rhinoPool.get(handle);
+  public void reset(String rhinoId) {
+    if (rhinoPool.containsKey(rhinoId)) {
+      RhinoState rhino = rhinoPool.get(rhinoId);
       rhino.isFinalized = false;
       rhino.needsReset = false;      
-      rhinoPool.put(handle, rhino);
+      rhinoPool.put(rhinoId, rhino);
     }
   }
 
