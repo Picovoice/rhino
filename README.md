@@ -495,7 +495,7 @@ Upon receiving an inference callback, audio capture will stop automatically and 
 call `.process()` again.
 
 ```javascript
-this._rhinoManager.process();
+let didStart = await this._rhinoManager.process();
 ```
 
 When you are done using Rhino, release you must explicityly resources:

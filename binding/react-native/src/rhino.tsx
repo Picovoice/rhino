@@ -19,20 +19,6 @@ class Rhino {
   private _version: string;
   private _contextInfo: string;
 
-  constructor(
-    handle: string,
-    frameLength: number,
-    sampleRate: number,
-    version: string,
-    contextInfo: string
-  ) {
-    this._handle = handle;
-    this._frameLength = frameLength;
-    this._sampleRate = sampleRate;
-    this._version = version;
-    this._contextInfo = contextInfo;  
-  }
-
   /**
    * Creates an instance of the Rhino Speech-to-Intent engine.
    * @param contextPath Absolute path to context file.
@@ -70,6 +56,20 @@ class Rhino {
     return new Rhino(handle, frameLength, sampleRate, version, contextInfo);
   }
 
+  private constructor(
+    handle: string,
+    frameLength: number,
+    sampleRate: number,
+    version: string,
+    contextInfo: string
+  ) {
+    this._handle = handle;
+    this._frameLength = frameLength;
+    this._sampleRate = sampleRate;
+    this._version = version;
+    this._contextInfo = contextInfo;
+  }
+
   /**
    * Process a frame of pcm audio with the speech-to-intent engine.
    * @param frame frame 16-bit integers of 16kHz linear PCM mono audio.
@@ -98,7 +98,7 @@ class Rhino {
         `Non-integer frame values provided to process(): ${frame[0]}. Rhino requires 16-bit integers`
       );
     }
-    
+
     return RCTRhino.process(this._handle, frame);
   }
 

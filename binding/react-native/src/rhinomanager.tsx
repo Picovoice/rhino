@@ -36,7 +36,7 @@ class RhinoManager {
    * @returns An instance of the Rhino Manager
    */
 
-  static async create(
+  public static async create(
     contextPath: string,
     inferenceCallback: InferenceCallback,
     modelPath?: string,
