@@ -21,10 +21,10 @@ export type InferenceCallback = (inference: object) => void;
 class RhinoManager {
   private _voiceProcessor: VoiceProcessor;
   private _rhino: Rhino | null;
-  private _isFinalized: boolean;
   private _inferenceCallback: InferenceCallback;
   private _bufferListener?: EventSubscription;
   private _bufferEmitter: NativeEventEmitter;
+  private _needsReset: boolean;
 
   /**
    * Creates an instance of the Rhino Manager.
@@ -46,63 +46,72 @@ class RhinoManager {
     return new RhinoManager(rhino, inferenceCallback);
   }
 
-  constructor(rhino: Rhino, inferenceCallback: InferenceCallback) {
+  private constructor(rhino: Rhino, inferenceCallback: InferenceCallback) {
     this._inferenceCallback = inferenceCallback;
     this._rhino = rhino;
-    this._isFinalized = false;
     this._voiceProcessor = VoiceProcessor.getVoiceProcessor(
       rhino.frameLength,
       rhino.sampleRate
     );
     this._bufferEmitter = new NativeEventEmitter(BufferEmitter);
+    this._needsReset = false;
+
     this._bufferListener = this._bufferEmitter.addListener(
       BufferEmitter.BUFFER_EMITTER_KEY,
       async (buffer: number[]) => {
+
         if (this._rhino === null) return;
-
+        
         try {
-          this._isFinalized = await this._rhino.process(buffer);
+          // don't process if we've already already received a result
+          if(this._needsReset) return
 
-          if (this._isFinalized === true) {
+          let result = await this._rhino.process(buffer)
+          
+          // throw out result if we've already seen it
+          if(this._needsReset) return 
+          
+          if (result['isFinalized'] === true) {      
             
-            let inference = await this._rhino.getInference();
+            this._needsReset = true      
             
-            // format for friendly display
-            if (inference !== undefined) {
-              let formattedInference;
-              if (inference['isUnderstood'] === true) {
-                formattedInference = {
-                  isUnderstood: inference['isUnderstood'],
-                  intent: inference['intent'],
-                  slots: inference['slots'],
-                };
-              } else {
-                formattedInference = {
-                  isUnderstood: inference['isUnderstood'],
-                };
-              }
-              this._inferenceCallback(formattedInference);
+            // format result
+            let formattedInference;
+            if (result['isUnderstood'] === true) {
+              formattedInference = {
+                isUnderstood: result['isUnderstood'],
+                intent: result['intent'],
+                slots: result['slots'],
+              };
+            } else {
+              formattedInference = {
+                isUnderstood: result['isUnderstood'],
+              };
             }
+            
+            this._inferenceCallback(formattedInference);          
           }
         } catch (e) {
-          console.error(e);
+          console.error(e)
         }
-      }
-    );
+      });
   }
 
   /**
    * Opens audio input stream and sends audio frames to Rhino
    */
   async start() {
-    return this._voiceProcessor.start();
+    return await this._voiceProcessor.start();
   }
 
   /**
    * Closes audio stream
    */
   async stop() {
-    return this._voiceProcessor.stop();
+    let didStop = await this._voiceProcessor.stop();
+    await this._rhino?.reset();
+    this._needsReset = false;
+    return didStop;
   }
 
   /**
@@ -115,6 +124,7 @@ class RhinoManager {
       this._rhino = null;
     }
   }
+
 }
 
 export default RhinoManager;

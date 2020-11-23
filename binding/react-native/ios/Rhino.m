@@ -30,4 +30,11 @@ RCT_EXTERN_METHOD(getInference: (NSString *)handle
                   resolver: (RCTPromiseResolveBlock)resolve
                   rejecter: (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(reset: (NSString *)handle)
+
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
+
 @end

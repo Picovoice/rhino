@@ -41,7 +41,8 @@ export default class App extends Component<Props, State> {
 
     // load context
     try{
-      this._rhinoManager = await RhinoManager.create(contextPath, (inference:object)=>{    
+      this._rhinoManager = await RhinoManager.create(contextPath, (inference:object)=>{  
+        
         this.setState({
           rhinoText: JSON.stringify(inference, null, 4)
         });    

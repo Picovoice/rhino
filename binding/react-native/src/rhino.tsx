@@ -18,7 +18,6 @@ class Rhino {
   private _sampleRate: number;
   private _version: string;
   private _contextInfo: string;
-  private _isFinalized: boolean;
 
   constructor(
     handle: string,
@@ -31,8 +30,7 @@ class Rhino {
     this._frameLength = frameLength;
     this._sampleRate = sampleRate;
     this._version = version;
-    this._contextInfo = contextInfo;
-    this._isFinalized = false;
+    this._contextInfo = contextInfo;  
   }
 
   /**
@@ -76,7 +74,12 @@ class Rhino {
    * Process a frame of pcm audio with the speech-to-intent engine.
    * @param frame frame 16-bit integers of 16kHz linear PCM mono audio.
    * The specific array length is obtained from Rhino via the frameLength field.
-   * @returns true when Rhino has concluded processing audio and determined the intent (or that the intent was not understood), false otherwise.
+   * @returns {object} inference result at time of frame being processed
+   * JSON object had fields:
+   *  - isFinalized: whether Rhino has made an inference
+   *  - isUnderstood: whether Rhino understood what it heard based on the context,
+   *  - intent: name of intent that it inferred
+   *  - slots: {} dictionary of slot keys and values the it heard from intent
    */
   async process(frame: number[]) {
     if (frame === undefined) {
@@ -95,43 +98,8 @@ class Rhino {
         `Non-integer frame values provided to process(): ${frame[0]}. Rhino requires 16-bit integers`
       );
     }
-
-    this._isFinalized = await RCTRhino.process(this._handle, frame);
-    return this._isFinalized;
-  }
-  /**
-   * Gets inference results from Rhino. If the phrase was understood, it includes the specific intent name
-   * that was inferred, and (if applicable) slot keys and specific slot values.
-   *
-   * Should only be called after the process function returns true, otherwise Rhino
-   * has not yet reached an inference conclusion.
-   * @see {@link process}
-   *
-   *
-   * @returns {object} with inference information (isUnderstood, intent, slots)
-   *
-   * e.g.:
-   *
-   * {
-   *   isUnderstood: true,
-   *   intent: 'orderDrink',
-   *   slots: {
-   *     size: 'medium',
-   *     numberOfShots: 'double shot',
-   *     coffeeDrink: 'americano',
-   *     milkAmount: 'lots of milk',
-   *     sugarAmount: 'some sugar'
-   *   }
-   * }
-   */
-  async getInference() {
-    if (!this._isFinalized) {
-      return Promise.reject(
-        "'getInference' was called but Rhino has not yet reached a conclusion. Use the results of calling process to determine if Rhino has concluded"
-      );
-    }
-
-    return RCTRhino.getInference(this._handle);
+    
+    return RCTRhino.process(this._handle, frame);
   }
 
   /**
@@ -139,6 +107,14 @@ class Rhino {
    */
   async delete() {
     return RCTRhino.delete(this._handle);
+  }
+
+  /**
+   * Resets speech-to-intent engine
+   * Do this after retrieving an inference with getInference
+   */
+  async reset() {
+    return RCTRhino.reset(this._handle);
   }
 
   /**
