@@ -11,7 +11,7 @@
 
 import pv_rhino
 
-public struct Rhino {        
+public struct RhinoState {        
     var handle: OpaquePointer?
     var isFinalized: Bool
     var needsReset:Bool
@@ -26,7 +26,7 @@ public struct Rhino {
 @objc(PvRhino)
 class PvRhino: NSObject {
 
-    private var rhinoPool:Dictionary<String, Rhino> = [:]
+    private var rhinoPool:Dictionary<String, RhinoState> = [:]
 
     @objc func constantsToExport() -> Dictionary<String, Any> {
         
@@ -49,7 +49,7 @@ class PvRhino: NSObject {
 
         if status == PV_STATUS_SUCCESS {
             let handleStr:String = String(describing:rhinoHandle)
-            rhinoPool[handleStr] = Rhino(handle:rhinoHandle);
+            rhinoPool[handleStr] = RhinoState(handle:rhinoHandle);
             
             var cContextInfo: UnsafePointer<Int8>?
             pv_rhino_context_info(rhinoHandle, &cContextInfo);
@@ -91,7 +91,7 @@ class PvRhino: NSObject {
 
             pv_rhino_process(rhino.handle, pcm, &rhino.isFinalized)            
                     
-            if !rhino.needsReset {
+            if !rhino.isFinalized {
                 return resolve([
                     "isFinalized": false
                 ])
@@ -104,60 +104,15 @@ class PvRhino: NSObject {
             var isUnderstood: Bool = false
             
             pv_rhino_is_understood(rhino.handle, &isUnderstood)
-            
-            var inference:Dictionary<String,Any?>
-            
-            if !isUnderstood {
-                return resolve([
+
+            var inference:Dictionary<String,Any?>            
+            if !isUnderstood {                
+                inference = [
                     "isFinalized": true,
-                    "isUnderstood": isUnderstood
-                ])
-            }
+                    "isUnderstood": false
+                ]
+            } else {
 
-            var cIntent: UnsafePointer<Int8>?
-            var numSlots: Int32 = 0
-            var cSlotKeys: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-            var cSlotValues: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-            pv_rhino_get_intent(rhino.handle, &cIntent, &numSlots, &cSlotKeys, &cSlotValues)
-            
-            let intent = String(cString: cIntent!)
-            var slots = [String: String]()
-            for i in 0...(numSlots - 1) {
-                let slot = String(cString: cSlotKeys!.advanced(by: Int(i)).pointee!)
-                let value = String(cString: cSlotValues!.advanced(by: Int(i)).pointee!)
-                slots[slot] = value
-            }
-            
-            pv_rhino_free_slots_and_values(rhino.handle, cSlotKeys, cSlotValues)
-            
-            resolve([
-                "isFinalized": true,
-                "isUnderstood": isUnderstood,
-                "intent": intent,
-                "slots": slots
-            ])
-                     
-        }
-        else{
-            reject("PvRhino:process", "Invalid Rhino handle provided to native module.", nil)
-        }
-    }
-    
-    @objc(getInference:resolver:rejecter:)
-    func getInference(handle:String, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) -> Void {
-                
-        if let rhino = rhinoPool[handle]{
-            if(!rhino.isFinalized){
-                reject("PvRhino:getInference", "Attempted to getInference before Rhino had finalized.", nil)
-            }
-
-            var isUnderstood: Bool = false
-            
-            pv_rhino_is_understood(rhino.handle, &isUnderstood)
-            
-            var inference:Dictionary<String,Any?>
-            
-            if isUnderstood {
                 var cIntent: UnsafePointer<Int8>?
                 var numSlots: Int32 = 0
                 var cSlotKeys: UnsafeMutablePointer<UnsafePointer<Int8>?>?
@@ -173,34 +128,28 @@ class PvRhino: NSObject {
                 }
                 
                 pv_rhino_free_slots_and_values(rhino.handle, cSlotKeys, cSlotValues)
-                
+                pv_rhino_reset(rhino.handle)
                 inference = [
-                    "isUnderstood": isUnderstood,
+                    "isFinalized": true,
+                    "isUnderstood": true,
                     "intent": intent,
-                    "slots": slots,
+                    "slots": slots
                 ]
             }
-            else{
-                inference = [
-                    "isUnderstood": isUnderstood,
-                    "intent": nil,
-                    "slots": nil
-                ]
-            }
-            
-            resolve(inference)
+            pv_rhino_reset(rhino.handle)
+            return resolve(inference)
         }
         else{
-            reject("PvRhino:getInference", "Invalid Rhino handle provided to native module.", nil)
+            reject("PvRhino:process", "Invalid Rhino handle provided to native module.", nil)
         }
-    }
+    }       
     
     @objc(reset:)
     func reset(handle:String) -> Void {
-        if let rhino = rhinoPool[handle]{
-            pv_rhino_reset(rhino.handle)
+        if var rhino = rhinoPool[handle]{
             rhino.isFinalized = false
             rhino.needsReset = false
+            rhinoPool[handle] = rhino
         }
     }                        
 }

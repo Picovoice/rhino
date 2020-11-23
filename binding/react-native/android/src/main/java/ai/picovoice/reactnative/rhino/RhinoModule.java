@@ -37,6 +37,17 @@ import ai.picovoice.rhino.Rhino;
 import ai.picovoice.rhino.RhinoException;
 import ai.picovoice.rhino.RhinoInference;
 
+public class RhinoState{
+  public Rhino handle;
+  public boolean isFinalized;
+  public boolean needsReset;
+
+  public RhinoState(Rhino handle){
+    this.handle = handle;
+    this.isFinalized = false;
+    this.needsReset = false;
+  }
+}
 
 public class RhinoModule extends ReactContextBaseJavaModule {
 
@@ -77,7 +88,8 @@ public class RhinoModule extends ReactContextBaseJavaModule {
 
     try {
       Rhino rhino = new Rhino(modelPath, contextPath, sensitivity.floatValue());
-      rhinoPool.put(String.valueOf(System.identityHashCode(rhino)), rhino);
+      String rhinoKey = String.valueOf(System.identityHashCode(rhino));
+      rhinoPool.put(rhinoKey, new RhinoState(rhino));
 
       WritableMap paramMap = Arguments.createMap();
       paramMap.putString("handle", String.valueOf(System.identityHashCode(rhino)));
@@ -108,49 +120,62 @@ public class RhinoModule extends ReactContextBaseJavaModule {
         return;
       }
 
-      Rhino rhino = rhinoPool.get(handle);
+      RhinoState rhino = rhinoPool.get(handle);
+      WritableMap inferenceMap = Arguments.createMap();  
+      if(rhino.needsReset){
+        inferenceMap.putMap("isFinalized", false);
+      }
+
       ArrayList<Object> pcmArrayList = pcmArray.toArrayList();
       short[] buffer = new short[pcmArray.size()];
       for (int i = 0; i < pcmArray.size(); i++) {
         buffer[i] = ((Number) pcmArrayList.get(i)).shortValue();
       }
 
-      boolean result = rhino.process(buffer);
-      promise.resolve(result);
+      boolean isFinalized = rhino.process(buffer);      
+      inferenceMap.putMap("isFinalized", isFinalized);
+
+      if(!isFinalized){        
+        promise.resolve(inferenceMap);
+        return;
+      }
+      else{
+        rhino.needsReset = true;
+      }
+
+      // update rhino
+      rhinoPool.put(handle, rhino);
+
+      RhinoInference inference = rhino.getInference();      
+      boolean isUnderstood = inference.getIsUnderstood()
+      inferenceMap.putBoolean("isUnderstood", isUnderstood);
+      
+      if(!isUnderstood){
+        promise.resolve(inferenceMap);
+        return;
+      }
+
+      inferenceMap.putString("intent", inference.getIntent());
+      final Map<String, String> slots = inference.getSlots();      
+      WritableMap slotMap = Arguments.createMap();
+      for (Map.Entry<String, String> slot : slots.entrySet()) {
+        slotMap.putString(slot.getKey(), slot.getValue());
+      }
+      inferenceMap.putMap("slots", slotMap);    
+      promise.resolve(inferenceMap);      
+
     } catch (RhinoException e) {
       promise.reject(e.toString());
     }
   }
 
   @ReactMethod
-  public void getInference(String handle, Promise promise) {
-    try {
-
-      if (!rhinoPool.containsKey(handle)) {
-        promise.reject("Invalid Rhino handle provided to native module.");
-        return;
-      }
-
-      Rhino rhino = rhinoPool.get(handle);
-      RhinoInference inference = rhino.getInference();
-
-      WritableMap inferenceMap = Arguments.createMap();
-      final Map<String, String> slots = inference.getSlots();
-      if (slots != null) {
-        WritableMap slotMap = Arguments.createMap();
-        for (Map.Entry<String, String> slot : slots.entrySet()) {
-          slotMap.putString(slot.getKey(), slot.getValue());
-        }
-        inferenceMap.putMap("slots", slotMap);
-      } else {
-        inferenceMap.putMap("slots", null);
-      }
-      inferenceMap.putString("intent", inference.getIntent());
-      inferenceMap.putBoolean("isUnderstood", inference.getIsUnderstood());
-
-      promise.resolve(inferenceMap);
-    } catch (RhinoException e) {
-      promise.reject(e.toString());
+  public void reset(String handle) {
+    if (rhinoPool.containsKey(handle)) {
+      RhinoState rhino = rhinoPool.get(handle);
+      rhino.isFinalized = false;
+      rhino.needsReset = false;      
+      rhinoPool.put(handle, rhino);
     }
   }
 
