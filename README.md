@@ -228,22 +228,19 @@ java -jar rhino-file-demo.jar -i ${AUDIO_PATH} -c ./resources/contexts/${SYSTEM}
 
 To run the React Native Rhino demo app you'll first need to setup your React Native environment. For this, 
 please refer to [React Native's documentation](https://reactnative.dev/docs/environment-setup). Once your environment has 
-been set up, navigate to [demo/react-native](/demo/react-native) to run the following commands. 
+been set up, navigate to [demo/react-native](/demo/react-native) to run the following commands:
 
-To install packages, run:
+For Android: 
 ```sh
-yarn install
+yarn android-install    # sets up environment
+yarn android-run        # builds and deploys to Android
 ```
 
-To run on Android:
-```sh
-yarn android
-```
-
-To run on iOS:
+For iOS:
 
 ```sh
-yarn ios
+yarn ios-install        # sets up environment
+yarn ios-run            # builds and deploys to iOS
 ```
 
 
