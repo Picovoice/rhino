@@ -77,7 +77,7 @@ class Rhino {
    * @returns {object} inference result at time of frame being processed
    * JSON object had fields:
    *  - isFinalized: whether Rhino has made an inference
-   *  - isUnderstood: if isFinalized, whether Rhino understood what it heard based on the context,
+   *  - isUnderstood: if isFinalized, whether Rhino understood what it heard based on the context
    *  - intent: if isUnderstood, name of intent that were inferred
    *  - slots: if isUnderstood, dictionary of slot keys and values that were inferred
    */

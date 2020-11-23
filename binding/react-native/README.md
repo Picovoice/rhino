@@ -150,13 +150,9 @@ Once you have instantiated a RhinoManager, you can start audio capture and inten
 this._rhinoManager.start();
 ```
 
-And then stop it by calling:
+When RhinoManager returns an inference result via the inferenceCallback, it will automatically stop audio capture for you. When you wish to result, call `.start()` again.
 
-```javascript
-this._rhinoManager.stop();
-```
-
-Once the app is done with using RhinoManager, be sure you explicitly release the resources allocated for it:
+Once your app is done with using RhinoManager, be sure you explicitly release the resources allocated for it:
 ```javascript
 this._rhinoManager.delete();
 ```
@@ -182,25 +178,28 @@ async createRhino(){
     }
 }
 ```
-As you can see, in this case you don't pass in an inference callback as you will be passing in audio frames directly using the `process` function:
+As you can see, in this case you don't pass in an inference callback as you will be passing in audio frames directly using the `process` function. The JSON result that is returned from `process` will have up to four fields:
+- isFinalized - whether Rhino has made an inference
+- isUnderstood - if isFinalized, whether Rhino understood what it heard based on the context
+- intent - if isUnderstood, name of intent that were inferred
+- slots - if isUnderstood, dictionary of slot keys and values that were inferred
 
 ```javascript
 let buffer = getAudioFrame();
 
 try {
-    let isFinalized = await this._rhino.process(buffer);
-    if (isFinalized) {
-        let inference = await this._rhino.getInference();
-        // inference result example:
-        //   {
-        //     isUnderstood: true,
-        //     intent: 'orderDrink',
-        //     slots: {
-        //       size: 'medium',
-        //       coffeeDrink: 'americano',
-        //       sugarAmount: 'some sugar'
-        //     }
-        //   }
+    let result = await this._rhino.process(buffer);   
+    // inference result example:
+    //   {
+    //     isFinalized: true,
+    //     isUnderstood: true,
+    //     intent: 'orderDrink',
+    //     slots: {
+    //       size: 'medium',
+    //       coffeeDrink: 'americano',
+    //       sugarAmount: 'some sugar'
+    //     }
+    //   }
     }
 } catch (e) {
     // handle error
