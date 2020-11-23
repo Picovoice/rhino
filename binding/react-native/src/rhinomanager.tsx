@@ -57,7 +57,7 @@ class RhinoManager {
     this._needsReset = false;
 
     // function that's executed every time an audio buffer is received
-    const process = async (buffer: number[]) => {
+    const processBuffer = async (buffer: number[]) => {
       try {
         if (this._rhino === null) return;
 
@@ -99,7 +99,7 @@ class RhinoManager {
     this._bufferListener = this._bufferEmitter.addListener(
       BufferEmitter.BUFFER_EMITTER_KEY,
       async (buffer: number[]) => {
-        await process(buffer);
+        await processBuffer(buffer);
       }
     );
   }

@@ -493,14 +493,16 @@ async createRhinoManager(){
 }
 ```
 
-Once you have instantiated a RhinoManager, you can start/stop audio capture and wake word detection by calling:
+Once you have instantiated a RhinoManager, you can start/stop audio capture and wake word detection by calling `.process()`.
+Upon receiving an inference callback, audio capture will stop automatically and Rhino will reset. To restart it you must 
+call `.process()` again.
 
 ```javascript
-this._rhinoManager.start();
-// use rhino
-this._rhinoManager.stop();
+this._rhinoManager.process();
+```
 
-// once you're done
+When you are done using Rhino, release you must explicityly resources:
+```javascript
 this._rhinoManager.delete();
 ```
 
@@ -523,18 +525,19 @@ async createRhino(){
     }
 }
 ```
-As you can see, in this case you don't pass in an inference callback as you will be passing in audio frames directly using the `process` function:
+As you can see, in this case you don't pass in an inference callback as you will be passing in audio frames directly 
+using the `process` function. The JSON result that is returned from `process` will have up to four fields:
+- isFinalized - whether Rhino has made an inference
+- isUnderstood - if isFinalized, whether Rhino understood what it heard based on the context
+- intent - if isUnderstood, name of intent that were inferred
+- slots - if isUnderstood, dictionary of slot keys and values that were inferred
 
 ```javascript
 let buffer = getAudioFrame();
-
 try {
-    let isFinalized = await this._rhino.process(buffer);
-    if (isFinalized) {
-        let inference = await this._rhino.getInference();
-        
-        // uses inference result
-        // ..        
+    let result = await this._rhino.process(buffer);    
+    // use result
+    // ..        
     }
 } catch (e) {
     // handle error

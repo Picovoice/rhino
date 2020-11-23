@@ -147,10 +147,10 @@ this._rhinoManager = await RhinoManager.create(
 Once you have instantiated a RhinoManager, you can start audio capture and intent inference by calling:
 
 ```javascript
-this._rhinoManager.start();
+this._rhinoManager.process();
 ```
 
-When RhinoManager returns an inference result via the inferenceCallback, it will automatically stop audio capture for you. When you wish to result, call `.start()` again.
+When RhinoManager returns an inference result via the inferenceCallback, it will automatically stop audio capture for you. When you wish to result, call `.process()` again.
 
 Once your app is done with using RhinoManager, be sure you explicitly release the resources allocated for it:
 ```javascript
