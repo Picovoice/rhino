@@ -4,18 +4,18 @@
   "private": true,
   "scripts": {
     "android-run": "react-native run-android",
-    "ios-run": "react-native run-ios",    
+    "ios-run": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
     "copy": "node copy.js",
-    "ios-link":"cd ios && pod install && cd ..",    
+    "ios-link": "cd ios && pod install && cd ..",
     "ios-install": "yarn && yarn copy && yarn ios-link",
     "android-install": "yarn && yarn copy"
   },
   "dependencies": {
     "@picovoice/react-native-voice-processor": "^1.0.1",
-    "@picovoice/rhino-react-native": "^1.5.3",
+    "@picovoice/rhino-react-native": "^1.5.4",
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-fs": "^2.16.6"
