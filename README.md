@@ -186,17 +186,15 @@ data used by various applications within the repository.
 
 ### Python Demos
 
-This [demo application](/demo/python/rhino_porcupine_demo_mic.py) allows testing Rhino using your computer's microphone. It opens
+This [demo application](/demo/python/rhino_demo_mic.py) allows testing Rhino using your computer's microphone. It opens
 an input audio stream, monitors it using our [Porcupine](https://github.com/Picovoice/porcupine) wake word detection
 engine, and when the wake phrase is detected it will extract the intent within the follow-up spoken command using Rhino.
 
 The following command runs the demo application on your machine to infer intent from spoken commands in the context of a
-smart lighting system. It also initializes the Porcupine engine to detect the wake phrase "Picovoice". When running you
-can issue commands such as "Picovoice, turn on the lights".
+smart lighting system. When running you can issue commands such as "turn on the lights".
 
 ```bash
-python3 demo/python/rhino_porcupine_demo_mic.py \
---rhino_context_file_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
+python3 demo/python/rhino_demo_mic.py --context_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
 ```
 
 In the above command replace `${SYSTEM}` with your platform name (e.g. linux, mac, raspberry-pi).
@@ -260,7 +258,7 @@ issue commands such as "turn off the lights".
 ### JavaScript Demos
 
 You need `yarn` or `npm`. Install the demo dependencies by executing either of the following sets of `yarn` or `npm` commands from
-[demo/javascript/](/demo/javascript/).
+[demo/javascript/](/demo/javascript).
 
 #### Yarn
 
@@ -299,9 +297,6 @@ demo/c/rhino_demo_mic \
 ${RHINO_LIBRARY_PATH} \
 lib/common/rhino_params.pv \
 resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn \
-${PORCUPINE_LIBRARY_PATH} \
-resources/porcupine/lib/common/porcupine_params.pv \
-resources/porcupine/resources/keyword_files/${SYSTEM}/picovoice_${SYSTEM}.ppn \
 ${INPUT_AUDIO_DEVICE}
 ```
 
@@ -579,7 +574,7 @@ Finally, prior to exiting the application be sure to release resources acquired 
 
 ### iOS
 
-The [RhinoManager](binding/ios/rhino_manager.swift) class manages all activities related to creating an input audio stream
+The [RhinoManager](binding/ios/RhinoManager.swift) class manages all activities related to creating an input audio stream
 feeding it into Rhino's library, and invoking a user-provided detection callback. The class can be initialized as below
 
 ```swift
@@ -698,6 +693,13 @@ pv_rhino_delete(rhino);
 ```
 
 ## Releases
+
+### v1.6.0 December 3rd, 2020
+
+- Added support for React Native.
+- Added support for Java.
+- Added support for .NET.
+- Added support for NodeJS.
 
 ### v1.5.0 June 4th, 2020
 

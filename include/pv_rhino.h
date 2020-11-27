@@ -25,7 +25,7 @@ extern "C"
 #endif
 
 /**
- * Forward declaration for the Speech-to-Intent class (Rhino). It directly infers the user's intent from spoken commands
+ * Forward declaration for Rhino Speech-to-Intent engine. It directly infers the user's intent from spoken commands
  * in real-time. Rhino processes incoming audio in consecutive frames and indicates if the inference is finalized. When
  * finalized, the inferred intent can be retrieved as structured data in the form of an intent string and pairs of slots
  * and values. The number of samples per frame can be attained by calling 'pv_rhino_frame_length()'. The incoming audio
