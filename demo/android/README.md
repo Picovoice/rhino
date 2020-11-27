@@ -7,86 +7,48 @@ The default context for this demo is "smart lighting". Simply press start and th
 context:
   expressions:
     changeColor:
-      - (please) [change, set, switch] (the) $location:location (to) $color:color
-      - (please) [change, set, switch] (the) $location:location color (to) $color:color
-      - (please) [change, set, switch] (the) $location:location lights (to) $color:color
-      - (please) [change, set, switch] (the) color [at, in] the $location:location (to) $color:color
-      - (please) [change, set, switch] (the) lights [at, in] the $location:location to $color:color
-      - (please) [change, set, switch] (the) lights to $color:color
-      - (please) [turn, make] (the) $location:location (color) $color:color
-      - (please) [turn, make] (the) lights [at, in] the $location:location $color:color
-      - (please) [turn, make] (the) lights $color:color
-      - (please) [turn, make] (the) lights $color:color [at, in] the $location:location
-    changeIntensity:
-      - (please) [turn, make] (the) $location:location $intensityAdjective:intensity
-      - (please) [turn, make] (the) $location:location lights $intensityAdjective:intensity
-      - (please) [turn, make] (the) lights [in, at] the $location:location $intensityAdjective:intensity
-      - (please) [turn, make] (the) lights $intensityAdjective:intensity
-      - (please) $intensityVerb:intensity (the) [lights, brightness, intensity]
-      - (please) $intensityVerb:intensity (the) $location:location lights
-      - (please) $intensityVerb:intensity (the) lights [in, at] (the) $location:location
-      - (please) $intensityVerb:intensity [the, all] lights
-      - (please) $intensityVerb:intensity the $location:location (brightness)
-      - (please) $intensityVerb:intensity the $location:location [lights, brightness, intensity]
+      - "[turn, make] (all, the) lights $color:color"
+      - "[change, set, switch] (all, the) lights to $color:color"
+      - "[turn, make] (the) $location:location (color, light, lights) $color:color"
+      - "[change, set, switch] (the) $location:location (color, light, lights) to $color:color"
+      - "[turn, make] (the) [color, light, lights] [at, in] (the) $location:location $color:color"
+      - "[change, set, switch] (the) [color, light, lights] [at, in] (the) $location:location to $color:color"
+      - "[turn, make] (the) [color, light, lights] $color:color [at, in] (the) $location:location"
+      - "[change, set, switch] (the) [color, light, lights] to $color:color [at, in] (the) $location:location"
     changeLightState:
-      - (please) [switch, turn] $state:state (the) $location:location (lights)
-      - (please) [switch, turn] $state:state (the) lights
-      - (please) [switch, turn] $state:state (the) lights [at, in] (the) $location:location
-      - (please) [switch, turn] (the) $location:location lights $state:state
-      - (please) [switch, turn] (the) lights $state:state
-      - (please) [switch, turn] (the) lights [in, at] the $location:location $state:state
+      - "[switch, turn] $state:state (all, the) lights"
+      - "[switch, turn] (all, the) lights $state:state"
+      - "[switch, turn] $state:state (the) $location:location (light, lights)"
+      - "[switch, turn] (the) $location:location [light, lights] $state:state"
+      - "[switch, turn] $state:state (the) [light, lights] [at, in] (the) $location:location"
+      - "[switch, turn] (the) [light, lights] [in, at] the $location:location $state:state"
     changeLightStateOff:
-      - (please) shut (the) $location:location lights off
-      - (please) shut (the) lights [at, in] (the) $location:location off
-      - (please) shut off (the) $location:location lights
-      - (please) shut off (the) lights
-      - (please) shut off (the) lights [at, in] (the) $location:location
-    reset:
-      - (please) reset (the) $feature:feature
-      - (please) reset (the) $feature:feature [at, in] (the) $location:location
-      - (please) reset (the) $location:location $feature:feature
+      - "shut off (all, the) lights"
+      - "shut (all, the) lights off"
+      - "shut off (the) $location:location (light, lights)"
+      - "shut (the) $location:location (light, lights) off"
+      - "shut off (the) [light, lights] [at, in] (the) $location:location"
+      - "shut (the) [light, lights] off [at, in] (the) $location:location"
+      - "shut (the) [light, lights] [at, in] (the) $location:location off"
   slots:
     color:
-      - blue
-      - green
-      - orange
-      - pink
-      - purple
-      - red
-      - white
-      - yellow
-    intensityAdjective:
-      - brighter
-      - dimmer
-      - lighter
-      - darker
-      - lower
-    intensityVerb:
-      - brighten
-      - decrease
-      - dim
-      - down
-      - drop
-      - increase
-      - lower
-      - raise
-      - reduce
-      - up
+      - "blue"
+      - "green"
+      - "orange"
+      - "pink"
+      - "purple"
+      - "red"
+      - "white"
+      - "yellow"
     state:
-      - off
-      - on
+      - "off"
+      - "on"
     location:
-      - all
-      - bathroom
-      - bedroom
-      - closet
-      - hallway
-      - kitchen
-      - living room
-      - pantry
-    feature:
-      - brightness
-      - color
-      - colors
-      - intensity
+      - "bathroom"
+      - "bedroom"
+      - "closet"
+      - "hallway"
+      - "kitchen"
+      - "living room"
+      - "pantry"
 ```
