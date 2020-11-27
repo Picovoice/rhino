@@ -286,8 +286,7 @@ The last command will launch a local server running the demo. Open http://localh
 `GCC` and `ALSA` installed to compile it. Compile the demo using
 
 ```bash
-gcc -O3 -o demo/c/rhino_demo_mic -I include -I resources/porcupine/include/ demo/c/rhino_demo_mic.c \
--ldl -lasound -std=c99
+gcc -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c -ldl -lasound -std=c99
 ```
 
 Find the name of audio input device (microphone) on your computer using `arecord -L`. Finally execute the following
