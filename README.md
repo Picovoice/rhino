@@ -578,16 +578,16 @@ The [RhinoManager](binding/ios/RhinoManager.swift) class manages all activities 
 feeding it into Rhino's library, and invoking a user-provided detection callback. The class can be initialized as below
 
 ```swift
-let modelFilePath: String = ... // It is available at lib/common/rhino_params.pv
-let contextFilePath: String = ...
-let onInferenceCallback: ((InferenceInfo) -> Void) = {
+let modelPath: String = ... // It is available at lib/common/rhino_params.pv
+let contextPath: String = ...
+let onInferenceCallback: ((Inference) -> Void) = {
     // detection event callback
 }
 
-let manager = RhinoManager(modelFilePath: modelFilePath, contextFilePath: contextFilePath, onInferenceCallback: onInferenceCallback);
+let manager = RhinoManager(modelPath: modelPath, contextPath: contextPath, onInferenceCallback: onInferenceCallback);
 ```
 
-when initialized, input audio can be processed using `manager.startListening()`.
+when initialized, input audio can be processed using `manager.process()`.
 
 ### JavaScript
 
