@@ -88,14 +88,12 @@ public class RhinoTest {
 
         RhinoInference inference = rhino.getInference();
         assertTrue(inference.getIsUnderstood());
-        assertEquals("orderDrink", inference.getIntent());
+        assertEquals("orderBeverage", inference.getIntent());
 
         Map<String, String> expectedSlotValues  = new HashMap<>() {{
             put("size", "medium");
             put("numberOfShots", "double shot");
-            put("coffeeDrink", "americano");
-            put("milkAmount", "lots of milk");
-            put("sugarAmount", "some sugar");
+            put("beverage", "americano");
         }};
         assertEquals(inference.getSlots(), expectedSlotValues);
     }
