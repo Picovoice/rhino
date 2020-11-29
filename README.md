@@ -97,33 +97,37 @@ A comparison between the accuracy of Rhino and major cloud-based alternatives is
 ## Terminology
 
 Rhino infers the user's intent from spoken commands within a domain of interest. We refer to such a specialized domain as
-a **context**. A context can be thought of a set of voice commands each mapped to an intent:
+a `Context`. A context can be thought of a set of voice commands each mapped to an intent:
 
 ```yaml
-turnOff:
+turnLightOff:
   - Turn off the lights in the office
   - Turn off all lights
-setColor:
+setLightColor:
   - Set the kitchen lights to blue
 ```
 
-In examples above, each voice command is called an **expression**. Expressions are what we expect the user to utter
+In examples above, each voice command is called an `Expression`. Expressions are what we expect the user to utter
 to interact with our voice application.
 
-Consider the expression _"Turn off the lights in the office"_. What we require from Rhino is:
+Consider the expression
 
-1. To infer the intent ("turnOff")
-2. Record the specific details from the utterance, in this case the location ("office")
+>Turn off the lights in the office
+ 
+What we require from Rhino is:
+
+1. To infer the intent (`turnLightOff`)
+2. Record the specific details from the utterance, in this case the location (`office`)
 
 We can capture these details using slots by updating the expression:
 
 ```yaml
-turnOff:
+turnLightOff:
   - Turn off the lights in the $location:lightLocation.
 ```
 
 `$location:lightLocation` means that we expect a variable of type `location` to occur and we want to capture its value
-in a variable named `lightLocation`. We call such variable a **slot**. Slots give us the ability to capture details of the
+in a variable named `lightLocation`. We call such variable a `Slot`. Slots give us the ability to capture details of the
 spoken commands. Each slot type is be defined as a set of phrases. For example:
 
 ```yaml
@@ -147,41 +151,53 @@ To learn the complete expression syntax of Rhino, see the [Speech-to-Intent Synt
 
 ### Python Demos
 
-This [demo application](/demo/python/rhino_demo_mic.py) allows testing Rhino using your computer's microphone. It opens
-an input audio stream, monitors it using our [Porcupine](https://github.com/Picovoice/porcupine) wake word detection
-engine, and when the wake phrase is detected it will extract the intent within the follow-up spoken command using Rhino.
-
-The following command runs the demo application on your machine to infer intent from spoken commands in the context of a
-smart lighting system. When running you can issue commands such as "turn on the lights".
+Install [PyAudio](https://people.csail.mit.edu/hubert/pyaudio/) and then the demo package:
 
 ```bash
-python3 demo/python/rhino_demo_mic.py --context_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
+sudo pip3 install pvrhinodemo
 ```
 
-In the above command replace `${SYSTEM}` with your platform name (e.g. linux, mac, raspberry-pi).
+With a working microphone connected to your device run the following in the terminal:
+
+```
+rhino_demo_mic --context_path ${CONTEXT_FILE_PATH}
+```
+
+Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
+
+For more information about Python demos go to [demo/python](/demo/python).
 
 ### .NET Demos
 
-The [Rhino dotnet demo](/demo/dotnet) is a command line application that lets you choose between running Rhino on a
-audio file or on real-time microphone input.
+[Rhino .NET demo](/demo/dotnet) is a command-line application that lets you choose between running Rhino on an audio
+file or on real-time microphone input.
 
-The following command runs the demo application on your machine to infer intent from spoken commands in the context of a
-smart lighting system:
+Make sure there is a working microphone connected to your device. From [demo/dotnet/RhinoDemo](/demo/dotnet/RhinoDemo)
+run the following in the terminal:
 
 ```bash
-dotnet run -c MicDemo.Release -- --context_path ./resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn
+dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_FILE_PATH}
 ```
+
+Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
+
+For more information about .NET demos go to [demo/dotnet](/demo/dotnet).
 
 ### Java Demos
 
 The [Rhino Java demo](/demo/java) is a command-line application that lets you choose between running Rhino on a
 audio file or on real-time microphone input.
 
-The following command uses the Java demo to run inference on an audio file in context of a smart coffee maker:
+Make sure there is a working microphone connected to your device. From the root of the repository run the following in
+the terminal:
 
 ```bash
-java -jar rhino-file-demo.jar -i ${AUDIO_PATH} -c ./resources/contexts/${SYSTEM}/coffee_maker_${SYSTEM}.rhn
+java -jar demo/java/bin/rhino-mic-demo.jar -c ${CONTEXT_FILE_PATH}
 ```
+
+Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
+
+For more information about Java demos go to [demo/java](/demo/java).
 
 ### React Native Demos
 
@@ -202,76 +218,92 @@ yarn ios-install        # sets up environment
 yarn ios-run            # builds and deploys to iOS
 ```
 
-
 ### Android Demos
 
 Using Android Studio, open [demo/android/Activity](/demo/android/Activity) as an Android project and then run the
-application. Note that you will need an Android phone (with developer options enabled) connected to your machine. After
-pressing the start button you can issue commands such as "turn off the lights" or "set the lights in the living room to purple".
+application. After pressing the start button you can issue commands such as
+
+>Turn off the lights.
+
+or
+
+>>Set the lights in the living room to purple.
+
+For more information about Android demo and the complete list of available expressions go to [demo/android](/demo/android).
 
 ### iOS Demos
 
 Using [Xcode](https://developer.apple.com/xcode/), open
-[demo/ios/RhinoDemo/RhinoDemo.xcodeproj](/demo/ios/RhinoDemo/RhinoDemo.xcodeproj) and run the application. You will
-need an iOS device connected to your machine and a valid Apple developer account. After pressing the start button you can
-issue commands such as "turn off the lights".
+[demo/ios/RhinoDemo/RhinoDemo.xcodeproj](/demo/ios/RhinoDemo/RhinoDemo.xcodeproj) and run the application. After pressing
+the start button you can issue commands such as
+
+>Turn off the lights.
+
+or
+
+>>Set the lights in the living room to purple.
+
+For more information about Android demo and the complete list of available expressions go to [demo/ios/RhinoDemo](/demo/ios/RhinoDemo).
 
 ### JavaScript Demos
 
-You need `yarn` or `npm`. Install the demo dependencies by executing either of the following sets of `yarn` or `npm` commands from
-[demo/javascript/](/demo/javascript).
-
-#### Yarn
+From [demo/javascript](/demo/javascript) run the following in the terminal:
 
 ```bash
 yarn
 yarn start
 ```
 
-#### NPM
-
-```bash
-npm install
-npm install -g copy-files-from-to
-copy-files-from-to
-npx serve
-```
-
-#### Web Browser
-
-The last command will launch a local server running the demo. Open http://localhost:5000 in your web browser and follow the instructions on the page.
-
+It will launch a local server running the demo. Open `http://localhost:5000` in your web browser and follow the
+instructions on the page.
 
 ### NodeJS Demos
 
-### C Demos
-
-[This demo](/demo/c/rhino_demo_mic.c) runs on Linux-based systems (e.g. Ubuntu, Raspberry Pi, and BeagleBone). You need
-`GCC` and `ALSA` installed to compile it. Compile the demo using
+Install [node-record-lpcm16](https://www.npmjs.com/package/node-record-lpcm16) NPM package and follow the instructions
+there for setting up your microphone. Then install the demo package:
 
 ```bash
-gcc -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c -ldl -lasound -std=c99
+yarn global add @picovoice/rhino-node-demo
 ```
 
-Find the name of audio input device (microphone) on your computer using `arecord -L`. Finally execute the following
+With a working microphone connected to your device run the following in the terminal:
+
+```shell
+rhn-mic-demo --context_path ${CONTEXT_FILE_PATH}
+```
+
+Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
+
+For more information about NodeJS demos go to [demo/nodejs](/demo/nodejs).
+
+### C Demos
+
+[Microphone demo](/demo/c/rhino_demo_mic.c) runs on Linux-based systems (e.g. Ubuntu, Raspberry Pi, and BeagleBone).
+Build the demo:
 
 ```bash
-demo/c/rhino_demo_mic \
+gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c -ldl -lasound
+```
+
+Find the name of audio input device (microphone) on your computer using `arecord -L` and then from the root of the
+repository run the demo:
+
+```bash
+./demo/c/rhino_demo_mic \
 ${RHINO_LIBRARY_PATH} \
 lib/common/rhino_params.pv \
 resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn \
 ${INPUT_AUDIO_DEVICE}
 ```
 
-Replace `${RHINO_LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the
-name of the operating system on your machine (e.g. linux or raspberry-pi), `${PORCUPINE_LIBRARY_PATH}` with path to appropriate
-Porcupine library available under [resources/porcupine/lib](/resources/porcupine/lib) and `${INPUT_AUDIO_DEVICE}` with
-the name of your microphone device. The demo opens an audio stream and detects utterances of keyword "Picovoice"
-followed by spoken commands for a smart lighting system. For example you can say "Picovoice, turn on the lights".
+Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the
+name of the platform you are running on (`linux`, `raspberry-pi`, or `beaglebone`), and `${INPUT_AUDIO_DEVICE}` with
+the name of your microphone device. The demo opens an audio stream and your intent from spoken commands in the context
+of a smart lighting system. For example you can say
+
+>Turn on the lights in the bedroom.
 
 ## SDKs
-
-Below are code snippets showcasing how Rhino can be integrated into different applications.
 
 ### Python
 
