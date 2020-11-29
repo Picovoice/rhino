@@ -653,25 +653,34 @@ func getNextAudioFrame() -> UnsafeMutablePointer<Int16> {
 
 while true {
     let pcm = getNextAudioFrame()
-    var isFinalized: Bool = false
 
+    var isFinalized: Bool = false
     let status = pv_rhino_process(handle, pcm, &isFinalized)
     if status != PV_STATUS_SUCCESS {
         // error handling logic
     }
+
     if isFinalized {
         var isUnderstood: Bool = false
         var intent = ""
         var slots = [String: String]()
                 
-        pv_rhino_is_understood(self.rhino, &isUnderstood)
-                
+        status = pv_rhino_is_understood(handle, &isUnderstood)
+        if status != PV_STATUS_SUCCESS {
+            // error handling logic
+        }    
+
         if isUnderstood {
             var cIntent: UnsafePointer<Int8>?
             var numSlots: Int32 = 0
             var cSlotKeys: UnsafeMutablePointer<UnsafePointer<Int8>?>?
             var cSlotValues: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-            status = pv_rhino_get_intent(self.rhino, &cIntent, &numSlots, &cSlotKeys, &cSlotValues)
+            status = pv_rhino_get_intent(
+                handle,
+                &cIntent,
+                &numSlots,
+                &cSlotKeys,
+                &cSlotValues)
             if status != PV_STATUS_SUCCESS {
                 // error handling logic
             }
@@ -686,13 +695,16 @@ while true {
                 
                 // Insert inference logic
 
-                pv_rhino_free_slots_and_values(self.rhino, cSlotKeys, cSlotValues)
+                status = pv_rhino_free_slots_and_values(handle, cSlotKeys, cSlotValues)
+                if status != PV_STATUS_SUCCESS {
+                    // error handling logic
+                }
             } else {
                 // Insert logic for invalid commands
             }
         }
         
-        pv_rhino_reset(self.rhino)
+        pv_rhino_reset(handle)
     }
 }
 ```
