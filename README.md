@@ -310,7 +310,7 @@ of a smart lighting system. For example you can say
 Install the Python SDK:
 
 ```bash
-pip3 install pvporcupine
+pip3 install pvrhino
 ```
 
 The SDK exposes a factory method to create instances of the engine:
@@ -535,24 +535,57 @@ this._rhino.delete();
 
 ### Android
 
-Rhino provides a binding for Android using JNI. It can be initialized using:
+There are two possibilities for integrating Rhino into an Android application.
+
+#### High-Level API
+
+[RhinoManager](binding/android/Rhino/rhino/src/main/java/ai/picovoice/rhino/RhinoManager.java) provides a high-level API
+for integrating Rhino into Android applications. It manages all activities related to creating an input audio stream,
+feeding it into Rhino, and invoking a user-provided inference callback.
 
 ```java
-    final String modelPath = ... // It is available at lib/common/rhino_params.pv
+    final String modelPath = ... // Available at lib/common/rhino_params.pv
     final String contextPath = ...
     final float sensitivity = 0.5;
 
-    Rhino rhino = new Rhino(modelPath, contextPath, sensitivity);
+RhinoManager manager = new RhinoManager(
+        modelPath,
+        contextPath,
+        sensitivity,
+        new RhinoManagerCallback() {
+            @Override
+            public void invoke(RhinoInference inference) {
+                // Insert infernce event logic
+            }
+        });
 ```
 
-Once initialized, `rhino` can be used for intent inference:
+Sensitivity is the parameter that enables developers to trade miss rate for false alarm. It is a floating number within
+[0, 1]. A higher sensitivity reduces miss rate at cost of increased false alarm rate.
+
+When initialized, input audio can be processed using `manager.process()`. When done be sure to release the resources
+using `manager.delete()`.
+
+#### Low-Level API
+
+Rhino provides a binding for Android using JNI. It can be initialized using:
+
+```java
+    final String modelPath = ... // Available at lib/common/rhino_params.pv
+    final String contextPath = ...
+    final float sensitivity = 0.5;
+
+    Rhino handle = new Rhino(modelPath, contextPath, sensitivity);
+```
+
+Once initialized, `handle` can be used for intent inference:
 
 ```java
     private short[] getNextAudioFrame();
 
-    while (!rhino.process(getNextAudioFrame()));
+    while (!handle.process(getNextAudioFrame()));
 
-    final RhinoInference inference = rhino.getInference();
+    final RhinoInference inference = handle.getInference();
     if (inference.getIsUnderstood()) {
         // logic to perform an action given the intent object.
     } else {
@@ -563,10 +596,14 @@ Once initialized, `rhino` can be used for intent inference:
 Finally, prior to exiting the application be sure to release resources acquired via:
 
 ```java
-    rhino.delete()
+    handle.delete()
 ```
 
 ### iOS
+
+There are two approaches for integrating Rhino into an iOS application.
+
+#### High-Level API
 
 The [RhinoManager](binding/ios/RhinoManager.swift) class manages all activities related to creating an input audio stream
 feeding it into Rhino's library, and invoking a user-provided detection callback. The class can be initialized as below
@@ -574,14 +611,97 @@ feeding it into Rhino's library, and invoking a user-provided detection callback
 ```swift
 let modelPath: String = ... // It is available at lib/common/rhino_params.pv
 let contextPath: String = ...
-let onInferenceCallback: ((Inference) -> Void) = {
+let onInferenceCallback: ((Inference) -> Void) = { inference in
     // detection event callback
 }
 
-let manager = RhinoManager(modelPath: modelPath, contextPath: contextPath, onInferenceCallback: onInferenceCallback);
+let manager = RhinoManager(
+    modelPath: modelPath,
+    contextPath: contextPath,
+    onInferenceCallback: onInferenceCallback);
 ```
 
 when initialized, input audio can be processed using `manager.process()`.
+
+#### Direct
+
+Rhino is shipped as a precompiled ANSI C library and can directly be used in Swift using module maps. It can be
+initialized to detect multiple wake words concurrently using:
+
+```swift
+let modelPath: String = ... // Available at lib/common/rhino_params.pv
+let contextPath: String = "/path/to/context/file.rhn"
+let sensitivity: Float32 = 0.35
+
+var handle: OpaquePointer?
+let status = pv_rhino_init(
+    modelPath,
+    contextPath,
+    sensitivity,
+    &handle)
+if status != PV_STATUS_SUCCESS {
+    // error handling logic
+}
+```
+
+Then `handle` can be used to process incoming audio stream.
+
+```swift
+func getNextAudioFrame() -> UnsafeMutablePointer<Int16> {
+    //
+}
+
+while true {
+    let pcm = getNextAudioFrame()
+    var isFinalized: Bool = false
+
+    let status = pv_rhino_process(handle, pcm, &isFinalized)
+    if status != PV_STATUS_SUCCESS {
+        // error handling logic
+    }
+    if isFinalized {
+        var isUnderstood: Bool = false
+        var intent = ""
+        var slots = [String: String]()
+                
+        pv_rhino_is_understood(self.rhino, &isUnderstood)
+                
+        if isUnderstood {
+            var cIntent: UnsafePointer<Int8>?
+            var numSlots: Int32 = 0
+            var cSlotKeys: UnsafeMutablePointer<UnsafePointer<Int8>?>?
+            var cSlotValues: UnsafeMutablePointer<UnsafePointer<Int8>?>?
+            status = pv_rhino_get_intent(self.rhino, &cIntent, &numSlots, &cSlotKeys, &cSlotValues)
+            if status != PV_STATUS_SUCCESS {
+                // error handling logic
+            }
+            
+            if isUnderstood {
+                intent = String(cString: cIntent!)
+                for i in 0...(numSlots - 1) {
+                    let slot = String(cString: cSlotKeys!.advanced(by: Int(i)).pointee!)
+                    let value = String(cString: cSlotValues!.advanced(by: Int(i)).pointee!)
+                    slots[slot] = value
+                }
+                
+                // Insert inference logic
+
+                pv_rhino_free_slots_and_values(self.rhino, cSlotKeys, cSlotValues)
+            } else {
+                // Insert logic for invalid commands
+            }
+        }
+        
+        pv_rhino_reset(self.rhino)
+    }
+}
+```
+
+When finished, release the resources via
+
+```swift
+pv_rhino_delete(handle)
+```
 
 ### JavaScript
 
@@ -627,7 +747,7 @@ Install NodeJS SDK:
 yarn add @picovoice/rhino-node
 ```
 
-Create instances of the Porcupine class by specifying the path to the context file:
+Create instances of the Rhino class by specifying the path to the context file:
 
 ```javascript
 const Rhino = require("@picovoice/rhino-node");
