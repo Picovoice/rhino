@@ -571,32 +571,32 @@ using `manager.delete()`.
 Rhino provides a binding for Android using JNI. It can be initialized using:
 
 ```java
-    final String modelPath = ... // Available at lib/common/rhino_params.pv
-    final String contextPath = ...
-    final float sensitivity = 0.5;
+final String modelPath = ... // Available at lib/common/rhino_params.pv
+final String contextPath = ...
+final float sensitivity = 0.5;
 
-    Rhino handle = new Rhino(modelPath, contextPath, sensitivity);
+Rhino handle = new Rhino(modelPath, contextPath, sensitivity);
 ```
 
 Once initialized, `handle` can be used for intent inference:
 
 ```java
-    private short[] getNextAudioFrame();
+private short[] getNextAudioFrame();
 
-    while (!handle.process(getNextAudioFrame()));
+while (!handle.process(getNextAudioFrame()));
 
-    final RhinoInference inference = handle.getInference();
-    if (inference.getIsUnderstood()) {
-        // logic to perform an action given the intent object.
-    } else {
-        // logic for handling out of context or unrecognized command
-    }
+final RhinoInference inference = handle.getInference();
+if (inference.getIsUnderstood()) {
+    // logic to perform an action given the intent object.
+} else {
+    // logic for handling out of context or unrecognized command
+}
 ```
 
 Finally, prior to exiting the application be sure to release resources acquired via:
 
 ```java
-    handle.delete()
+handle.delete()
 ```
 
 ### iOS
