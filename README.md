@@ -458,11 +458,8 @@ handle.delete();
 
 ### React Native
 
-For React Native integration, you can install our 
-[@picovoice/react-native-voice-processor](https://www.npmjs.com/package/@picovoice/react-native-voice-processor) and 
-[@picovoice/rhino-react-native](https://www.npmjs.com/package/@picovoice/rhino-react-native) native modules into 
-your project using yarn or npm. The module provides you with two levels of API to choose from depending 
-on your needs.  
+Install  [@picovoice/react-native-voice-processor](https://www.npmjs.com/package/@picovoice/react-native-voice-processor) and 
+[@picovoice/rhino-react-native](https://www.npmjs.com/package/@picovoice/rhino-react-native). The SDK provides two APIs: 
 
 #### High-Level API
 
@@ -490,7 +487,7 @@ call `.process()` again.
 let didStart = await this._rhinoManager.process();
 ```
 
-When you are done using Rhino, release you must explicityly resources:
+When you are done using Rhino, release you must explicitly resources:
 ```javascript
 this._rhinoManager.delete();
 ```
@@ -624,23 +621,62 @@ handle.release();
 
 ### NodeJS
 
+Install NodeJS SDK:
+
+```bash
+yarn add @picovoice/rhino-node
+```
+
+Create instances of the Porcupine class by specifying the path to the context file:
+
+```javascript
+const Rhino = require("@picovoice/rhino-node");
+
+
+let handle = new Rhino("/path/to/context/file.rhn");
+```
+
+When instantiated, `handle` can process audio via its `.process` method.
+
+```javascript
+let getNextAudioFrame = function() {
+    ...
+};
+
+let isFinalized = false;
+while (!isFinalized) {
+  isFinalized = handle.process(getNextAudioFrame());
+  if (isFinalized) {
+    let inference = engineInstance.getInference();
+    // Insert inference event callback
+  }
+}
+```
+
+When done be sure to release resources acquired by WebAssembly using `release()`:
+
+```javascript
+handle.release();
+```
+
 ### C
 
 Rhino is implemented in ANSI C and therefore can be directly linked to C applications. The [pv_rhino.h](/include/pv_rhino.h)
 header file contains relevant information. An instance of the Rhino object can be constructed as follows.
 
 ```c
-const char *model_file_path = ... // available at lib/common/rhino_params.pv
-const char *context_file_path = ... // absolute path to context file for the domain of interest
+const char *model_path = ... // Available at lib/common/rhino_params.pv
+const char *context_path = ... // absolute path to context file for the domain of interest
+const float sensitivity = 0.5f;
 
-pv_rhino_t *rhino;
-const pv_status_t status = pv_rhino_init(model_file_path, context_file_path, &rhino);
+pv_rhino_t *handle = NULL;
+const pv_status_t status = pv_rhino_init(model_path, context_path, sensitivity, &handle);
 if (status != PV_STATUS_SUCCESS) {
     // add error handling code
 }
 ```
 
-Now the handle `rhino` can be used to infer intent from an incoming audio stream. Rhino accepts single channel, 16-bit PCM
+Now the `handle` can be used to infer intent from an incoming audio stream. Rhino accepts single channel, 16-bit PCM
 audio. The sample rate can be retrieved using `pv_sample_rate()`. Finally, Rhino accepts input audio in consecutive chunks
 (frames); the length of each frame can be retrieved using `pv_rhino_frame_length()`.
 
@@ -650,24 +686,24 @@ extern const int16_t *get_next_audio_frame(void);
 while (true) {
     const int16_t *pcm = get_next_audio_frame();
 
-    bool is_finalized;
-    pv_status_t status = pv_rhino_process(rhino, pcm, &is_finalized);
+    bool is_finalized = false;
+    pv_status_t status = pv_rhino_process(handle, pcm, &is_finalized);
     if (status != PV_STATUS_SUCCESS) {
         // add error handling code
     }
 
     if (is_finalized) {
-        bool is_understood;
+        bool is_understood = false;
         status = pv_rhino_is_understood(rhino, &is_understood);
         if (status != PV_STATUS_SUCCESS) {
             // add error handling code
         }
 
         if (is_understood) {
-            const char *intent;
-            int num_slots;
-            const char **slots;
-            const char **values;
+            const char *intent = NULL;
+            int32_t num_slots = 0;
+            const char **slots = NULL;
+            const char **values = NULL;
             status = pv_rhino_get_intent(rhino, &intent, &num_slots, &slots, &values);
             if (status != PV_STATUS_SUCCESS) {
                 // add error handling code
