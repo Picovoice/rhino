@@ -8,29 +8,34 @@ using Rhino Speech-to-Intent engine.
 ## Rhino
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
-interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso with a lot of sugar 
-and some milk"*, Rhino infers that the user wants to order a drink with these specifications:
+interest, in real-time. For example, given a spoken command
+
+>Can I have a small double-shot espresso?
+
+Rhino infers that the user and emits the following inference result:
 
 ```json
 {
-  "type": "espresso",
-  "size": "small",
-  "numberOfShots": "2",
-  "sugar": "a lot",
-  "milk": "some"
+  "isUnderstood": "true",
+  "intent": "orderBeverage",
+  "slots": {
+    "beverage": "espresso",
+    "size": "small",
+    "numberOfShots": "2"
+  }
 }
 ```
 
 Rhino is:
 
-* using deep neural networks trained in real-world environments.
-* compact and computationally-efficient, making it perfect for IoT.
-* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+- using deep neural networks trained in real-world environments.
+- compact and computationally-efficient. It is perfect for IoT.
+- self-service. Developers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
 ## Compatibility
 
 - .NET Core 3.1
-- Runs on Linux (x86_64), MacOS (x86_64) and Windows (x86_64)
+- Runs on Linux (x86_64), macOS (x86_64) and Windows (x86_64)
 
 ## Installation
 
