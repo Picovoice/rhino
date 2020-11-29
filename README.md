@@ -227,7 +227,7 @@ application. After pressing the start button you can issue commands such as
 
 or
 
->>Set the lights in the living room to purple.
+>Set the lights in the living room to purple.
 
 For more information about Android demo and the complete list of available expressions go to [demo/android](/demo/android).
 
@@ -241,7 +241,7 @@ the start button you can issue commands such as
 
 or
 
->>Set the lights in the living room to purple.
+>Set the lights in the living room to purple.
 
 For more information about Android demo and the complete list of available expressions go to [demo/ios/RhinoDemo](/demo/ios/RhinoDemo).
 
@@ -307,48 +307,50 @@ of a smart lighting system. For example you can say
 
 ### Python
 
-[rhino.py](/binding/python/rhino.py) provides a Python binding for Rhino library. Below is a quick demonstration of how
-to initialize an instance:
+Install the Python SDK:
+
+```bash
+pip3 install pvporcupine
+```
+
+The SDK exposes a factory method to create instances of the engine:
 
 ```python
-library_path = ... # absolute path to Rhino's dynamic library
-model_file_path = ... # available at lib/common/rhino_params.pv
-context_file_path = ... # absolute path to context file for the domain of interest
-
-rhino = Rhino(
-    library_path=library_path,
-    model_path=model_file_path,
-    context_path=context_file_path)
+import pvrhino
+ 
+handle = pvrhino.create(context_path='/absolute/path/to/context')
 ```
+
+Where `context_path` is the absolute path to Speech-to-Intent context created either using Picovoice Console or one of
+the default contexts available on Rhino's GitHub repository.
 
 When initialized, valid sample rate can be obtained using `rhino.sample_rate`. Expected frame length
 (number of audio samples in an input array) is `rhino.frame_length`. The object can be used to infer intent from spoken
 commands as below:
 
 ```python
+import pvrhino
+ 
+handle = pvrhino.create(context_path='/absolute/path/to/context')
+
 def get_next_audio_frame():
     pass
 
 while True:
-    is_finalized = rhino.process(get_next_audio_frame())
+    is_finalized = handle.process(get_next_audio_frame())
 
     if is_finalized:
-        if rhino.is_understood():
-            intent, slot_values = rhino.get_intent()
-            # add code to take action based on inferred intent and slot values
-        else:
+        inference = handle.get_inference()
+        if not inference.is_understood:
             # add code to handle unsupported commands
             pass
-
-        rhino.reset()
+        else:
+            intent = inference.intent
+            slots = inference.slots
+            # add code to take action based on inferred intent and slot values
 ```
 
-Finally, when done, be sure to explicitly release the resources; the binding class does not rely on the garbage
-collector.
-
-```python
-rhino.delete()
-```
+Finally, when done be sure to explicitly release the resources using `handle.delete()`.
 
 ### .NET
 
@@ -361,7 +363,7 @@ dotnet add package Rhino
 The SDK exposes a factory method to create instances of the engine as below:
 
 ```csharp
-using Rhino
+using Pv
 
 Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context");
 ```
