@@ -9,85 +9,79 @@ interest, in real-time. For example, given a spoken command
 
 >Can I have a small double-shot espresso?
 
-Rhino infers that the user wants to order a drink with these specifications:
+Rhino infers that the user and emits the following inference result:
 
 ```json
 {
-  "type": "espresso",
-  "size": "small",
-  "numberOfShots": "2"
+  "isUnderstood": "true",
+  "intent": "orderBeverage",
+  "slots": {
+    "beverage": "espresso",
+    "size": "small",
+    "numberOfShots": "2"
+  }
 }
 ```
 
 Rhino is:
 
 - using deep neural networks trained in real-world environments.
-- compact and computationally-efficient, making it perfect for IoT.
-- cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (all variants), Beagle Bone, Android, iOS,
-  Linux (x86_64), Mac (x86_64), Windows (x86_64), and web browsers are supported. Furthermore, Support for various ARM
-  Cortex-A microprocessors and ARM Cortex-M microcontrollers is available for enterprise customers.
-- self-service. Developers and UX designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+- compact and computationally-efficient. It is perfect for IoT.
+- cross-platform. Raspberry Pi, BeagleBone, Android, iOS, Linux (x86_64), Mac (x86_64), Windows (x86_64), and web
+browsers are supported. Additionally, enterprise customers have access to ARM Cortex-M SDK.
+- self-service. Developers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
 ## Table of Contents
 
-- [License](#license)
-- [Use Cases](#use-cases)
-- [Try It Out](#try-it-out)
-- [Performance](#performance)
-- [Model Variants](#model-variants)
-- [Terminology](#terminology)
-- [Picovoice Console](#picovoice-console)
-- [Structure of Repository](#structure-of-repository)
-- [Running Demo Applications](#running-demo-applications)
-  - [Python](#python-demos)
-  - [.NET](#net-demos)
-  - [Java](#java-demos)
-  - [React Native](#react-native-demos)
-  - [Android](#android-demos)
-  - [iOS](#ios-demos)
-  - [JavaScript](#javascript-demos)
-  - [C](#c-demos)
-- [Integration](#integration)
-  - [Python](#python)
-  - [.NET](#net)
-  - [Java](#java)
-  - [React Native](#react-native)
-  - [Android](#android)
-  - [iOS](#ios)
-  - [JavaScript](#javascript)
-  - [C](#c)
-- [Releases](#releases)
-- [FAQ](#faq)
+- [Rhino](#rhino)
+  - [Table of Contents](#table-of-contents)
+  - [License & Terms](#license--terms)
+  - [Use Cases](#use-cases)
+  - [Try It Out](#try-it-out)
+  - [Performance](#performance)
+  - [Terminology](#terminology)
+  - [Demos](#demos)
+    - [Python](#python-demos)
+    - [.NET](#net-demos)
+    - [Java](#java-demos)
+    - [React Native](#react-native-demos)
+    - [Android](#android-demos)
+    - [iOS](#ios-demos)
+    - [JavaScript](#javascript-demos)
+    - [NodeJS](#nodejs-demos)
+    - [C](#c-demos)
+  - [SDKs](#sdks)
+    - [Python](#python)
+    - [.NET](#net)
+    - [Java](#java)
+    - [React Native](#react-native)
+    - [Android](#android)
+    - [iOS](#ios)
+    - [JavaScript](#javascript)
+    - [NodeJS](#nodejs)
+    - [C](#c)
+  - [Releases](#releases)
+  - [FAQ](#faq)
 
-## License
+## License & Terms
 
-This repository is licensed under Apache 2.0 which allows running the engine on all supported platforms
-(except microcontrollers) using a set of freely-available [models](/resources/contexts). You may create custom models
-using [Picovoice Console](https://picovoice.ai/console/).
-
-There are two types of Picovoice Console accounts: Personal and Enterprise. Personal accounts empower researchers,
-hobbyists, and tinkerers to experiment. Personal accounts are not permitted for any commercial usage, including internal
-prototyping and proofs-of-concept. Enterprise accounts can unlock all capabilities of Picovoice Console, are permitted
-for use in commercial settings, and have a path to graduate to commercial distribution. For more information check
-[here](https://picovoice.ai/pricing/).
+Rhino SDK is free and licensed under Apache 2.0 including the [models](/resources/contexts) released within the
+repository. [Picovoice Console](https://picovoice.ai/console/) offers two types of subscriptions: Personal and Enterprise.
+Personal accounts can train custom wake word models, subject to limitations and strictly for non-commercial purposes.
+Personal accounts empower researchers, hobbyists, and tinkerers to experiment. Enterprise accounts can unlock all
+capabilities of Picovoice Console, are permitted for use in commercial settings, and have a path to graduate to
+commercial distribution[<sup>*</sup>](https://picovoice.ai/pricing/).
 
 ## Use Cases
 
-Rhino should be used when the domain of voice interactions is specific (limited). Smart appliances, hearables,
-infotainment systems, and automotive are a few examples.
+Rhino is the right product if the domain of voice interactions is specific (limited).
 
-- If you want to create voice experiences similar to Alexa or Google, check out
-[Picovoice SDK](https://github.com/Picovoice/picovoice).
-- If you need to recognize a few simple voice commands or activate a device using voice you should check out
-  [Porcupine](https://github.com/Picovoice/porcupine).
+- If you want to create voice experiences similar to Alexa or Google, check out [Picovoice platform](https://github.com/Picovoice/picovoice).
+- If you need to recognize a few static (always listening) voice commands, check out [Porcupine](https://github.com/Picovoice/porcupine).
 
 ## Try It Out
 
 - [Interactive Web Demo](https://picovoice.ai/demos/barista/)
-
-- [Picovoice Console](https://picovoice.ai/console/)
-
-![Picovoice Console](resources/doc/console_rhino.gif)
 
 - Rhino and [Porcupine](https://github.com/Picovoice/porcupine) on an ARM Cortex-M7
 
@@ -100,12 +94,6 @@ A comparison between the accuracy of Rhino and major cloud-based alternatives is
 
 ![](resources/doc/benchmark.png)
 
-## Model Variants
-
-The library in this repository is the standard trim of the engine. The standard trim is suitable for applications running
-on microprocessors (e.g. Raspberry Pi and BeagleBone) and mobile devices (Android and iOS). Picovoice has developed
-several trims of the engine targeted at a wide range of applications. These are only available to enterprise customers.
-
 ## Terminology
 
 Rhino infers the user's intent from spoken commands within a domain of interest. We refer to such a specialized domain as
@@ -117,9 +105,6 @@ turnOff:
   - Turn off all lights
 setColor:
   - Set the kitchen lights to blue
-lowerIntensity:
-  - Dim the lights
-  - Make the lights darker
 ```
 
 In examples above, each voice command is called an **expression**. Expressions are what we expect the user to utter
@@ -158,31 +143,7 @@ You can create custom contexts using the [Picovoice Console](https://picovoice.a
 
 To learn the complete expression syntax of Rhino, see the [Speech-to-Intent Syntax Cheat Sheet](https://picovoice.ai/docs/syntax-cheat-sheet/).
 
-## Picovoice Console
-
-The [Picovoice Console](https://picovoice.ai/console/) enables creating Speech-to-Intent contexts. The Console is a web-based
-platform for building voice applications and training models.
-
-## Structure of Repository
-
-If using SSH, clone the repository with:
-
-```bash
-git clone --recurse-submodules git@github.com:Picovoice/rhino.git
-```
-
-If using HTTPS, then type:
-
-```bash
-git clone --recurse-submodules https://github.com/Picovoice/rhino.git
-```
-
-Rhino is shipped as an ANSI C shared library. The binary files for supported platforms are located under [lib](/lib)
-and header files are at [include](/include). Bindings are available at [binding](/binding) to facilitate usage from
-higher-level languages. Demo applications are at [demo](/demo). Finally, [resources](resources) is a placeholder for
-data used by various applications within the repository.
-
-## Running Demo Applications
+## Demos
 
 ### Python Demos
 
@@ -280,6 +241,9 @@ npx serve
 
 The last command will launch a local server running the demo. Open http://localhost:5000 in your web browser and follow the instructions on the page.
 
+
+### NodeJS Demos
+
 ### C Demos
 
 [This demo](/demo/c/rhino_demo_mic.c) runs on Linux-based systems (e.g. Ubuntu, Raspberry Pi, and BeagleBone). You need
@@ -305,7 +269,7 @@ Porcupine library available under [resources/porcupine/lib](/resources/porcupine
 the name of your microphone device. The demo opens an audio stream and detects utterances of keyword "Picovoice"
 followed by spoken commands for a smart lighting system. For example you can say "Picovoice, turn on the lights".
 
-## Integration
+## SDKs
 
 Below are code snippets showcasing how Rhino can be integrated into different applications.
 
@@ -624,6 +588,8 @@ When done be sure to release resources acquired by WebAssembly using `.release`.
 handle.release();
 ```
 
+### NodeJS
+
 ### C
 
 Rhino is implemented in ANSI C and therefore can be directly linked to C applications. The [pv_rhino.h](/include/pv_rhino.h)
@@ -733,4 +699,5 @@ pv_rhino_delete(rhino);
 - Initial Release
 
 ## FAQ
+
 You can find the FAQ [here](https://picovoice.ai/docs/faq/rhino/).
