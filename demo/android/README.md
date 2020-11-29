@@ -1,7 +1,14 @@
 # Rhino Speech-to-Intent Engine
 
-The default context for this demo is "smart lighting". Simply press start and the engine can recognize commands such as
-"turn off the lights" or "set the lights in the bedroom to blue". See below for the full context:
+The default context for this demo is `Smart Lighting`. Simply press start and the engine can recognize commands such as
+
+> Turn off the lights.
+
+or
+
+> Set the lights in the bedroom to blue.
+
+See below for the full context:
 
 ```yaml
 context:

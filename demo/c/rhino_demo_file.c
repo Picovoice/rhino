@@ -1,5 +1,5 @@
 /*
-    Copyright 2018 Picovoice Inc.
+    Copyright 2018-2020 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -33,75 +33,77 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    char *error;
+    char *error = NULL;
 
-    const char *(*pv_status_to_string)(pv_status_t);
-    pv_status_to_string = dlsym(rhino_library, "pv_status_to_string");
+    const char *(*pv_status_to_string_func)(pv_status_t) = dlsym(rhino_library, "pv_status_to_string");
     if ((error = dlerror()) != NULL) {
         fprintf(stderr, "failed to load 'pv_status_to_string' with '%s'.\n", error);
         exit(1);
     }
 
-    int32_t (*pv_sample_rate)();
-    pv_sample_rate = dlsym(rhino_library, "pv_sample_rate");
+    int32_t (*pv_sample_rate_func)() = dlsym(rhino_library, "pv_sample_rate");
     if ((error = dlerror()) != NULL) {
         fprintf(stderr, "failed to load 'pv_sample_rate' with '%s'.\n", error);
         exit(1);
     }
 
-    pv_status_t (*pv_rhino_init)(const char *, const char *, float, pv_rhino_t **);
-    pv_rhino_init = dlsym(rhino_library, "pv_rhino_init");
+    pv_status_t (*pv_rhino_init_func)(const char *, const char *, float, pv_rhino_t **) =
+            dlsym(rhino_library, "pv_rhino_init");
     if ((error = dlerror()) != NULL) {
         fprintf(stderr, "failed to load 'pv_rhino_init' with '%s'.\n", error);
         exit(1);
     }
 
-    void (*pv_rhino_delete)(pv_rhino_t *);
-    pv_rhino_delete = dlsym(rhino_library, "pv_rhino_delete");
+    void (*pv_rhino_delete_func)(pv_rhino_t *) = dlsym(rhino_library, "pv_rhino_delete");
     if ((error = dlerror()) != NULL) {
         fprintf(stderr, "failed to load 'pv_rhino_delete' with '%s'.\n", error);
         exit(1);
     }
 
-    pv_status_t (*pv_rhino_process)(pv_rhino_t *, const int16_t *, bool *);
-    pv_rhino_process = dlsym(rhino_library, "pv_rhino_process");
+    pv_status_t (*pv_rhino_process_func)(pv_rhino_t *, const int16_t *, bool *) =
+            dlsym(rhino_library, "pv_rhino_process");
     if ((error = dlerror()) != NULL) {
         fprintf(stderr, "failed to load 'pv_rhino_process' with '%s'.\n", error);
         exit(1);
     }
 
-    pv_status_t (*pv_rhino_is_understood)(const pv_rhino_t *, bool *);
-    pv_rhino_is_understood = dlsym(rhino_library, "pv_rhino_is_understood");
+    pv_status_t (*pv_rhino_is_understood_func)(const pv_rhino_t *, bool *) =
+            dlsym(rhino_library, "pv_rhino_is_understood");
     if ((error = dlerror()) != NULL) {
         fprintf(stderr, "failed to load 'pv_rhino_is_understood' with '%s'.\n", error);
         exit(1);
     }
 
-    pv_status_t (*pv_rhino_get_intent)(const pv_rhino_t *, const char **, int32_t *, const char ***, const char ***);
-    pv_rhino_get_intent = dlsym(rhino_library, "pv_rhino_get_intent");
+    pv_status_t (*pv_rhino_get_intent_func)(const pv_rhino_t *, const char **, int32_t *, const char ***, const char ***) =
+            dlsym(rhino_library, "pv_rhino_get_intent");
     if ((error = dlerror()) != NULL) {
         fprintf(stderr, "failed to load 'pv_rhino_get_intent' with '%s'.\n", error);
         exit(1);
     }
 
-    pv_status_t (*pv_rhino_free_slots_and_values)(const pv_rhino_t *, const char **, const char **);
-    pv_rhino_free_slots_and_values = dlsym(rhino_library, "pv_rhino_free_slots_and_values");
+    pv_status_t (*pv_rhino_free_slots_and_values_func)(const pv_rhino_t *, const char **, const char **) =
+            dlsym(rhino_library, "pv_rhino_free_slots_and_values");
     if ((error = dlerror()) != NULL) {
         fprintf(stderr, "failed to load 'pv_rhino_free_slots_and_values' with '%s'.\n", error);
         exit(1);
     }
 
-    int32_t (*pv_rhino_frame_length)();
-    pv_rhino_frame_length = dlsym(rhino_library, "pv_rhino_frame_length");
+    int32_t (*pv_rhino_frame_length_func)() = dlsym(rhino_library, "pv_rhino_frame_length");
     if ((error = dlerror()) != NULL) {
         fprintf(stderr, "failed to load 'pv_rhino_frame_length' with '%s'.\n", error);
         exit(1);
     }
 
-    pv_rhino_t *rhino;
-    pv_status_t status = pv_rhino_init(model_path, context_path, 0.5f, &rhino);
+    const char *(*pv_rhino_version_func)() = dlsym(rhino_library, "pv_rhino_version");
+    if ((error = dlerror()) != NULL) {
+        fprintf(stderr, "failed to load 'pv_rhino_version' with '%s'.\n", error);
+        exit(1);
+    }
+
+    pv_rhino_t *rhino = NULL;
+    pv_status_t status = pv_rhino_init_func(model_path, context_path, 0.5f, &rhino);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "'pv_rhino_init' failed with '%s'\n", pv_status_to_string(status));
+        fprintf(stderr, "'pv_rhino_init' failed with '%s'\n", pv_status_to_string_func(status));
         exit(1);
     }
 
@@ -116,7 +118,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    const int32_t frame_length = pv_rhino_frame_length();
+    const int32_t frame_length = pv_rhino_frame_length_func();
 
     int16_t *pcm = malloc(sizeof(int16_t) * frame_length);
     if (!pcm) {
@@ -127,48 +129,60 @@ int main(int argc, char *argv[]) {
     double total_cpu_time_usec = 0;
     double total_processed_time_usec = 0;
 
+    fprintf(stdout, "Picovoice Rhino Speech-to-Intent (%s) :\n\n", pv_rhino_version_func());
+
     while (fread(pcm, sizeof(int16_t), frame_length, wav) == (size_t) frame_length) {
         struct timeval before;
         gettimeofday(&before, NULL);
 
-        bool is_finalized;
-        status = pv_rhino_process(rhino, pcm, &is_finalized);
+        bool is_finalized = false;
+        status = pv_rhino_process_func(rhino, pcm, &is_finalized);
         if (status != PV_STATUS_SUCCESS) {
-            fprintf(stderr, "'pv_rhino_process' failed with '%s'\n", pv_status_to_string(status));
+            fprintf(stderr, "'pv_rhino_process' failed with '%s'\n", pv_status_to_string_func(status));
             exit(1);
         }
 
         if (is_finalized) {
-            bool is_understood;
-            status = pv_rhino_is_understood(rhino, &is_understood);
+            bool is_understood = false;
+            status = pv_rhino_is_understood_func(rhino, &is_understood);
             if (status != PV_STATUS_SUCCESS) {
-                fprintf(stderr, "'pv_rhino_is_understood'failed with '%s'\n", pv_status_to_string(status));
+                fprintf(stderr, "'pv_rhino_is_understood'failed with '%s'\n", pv_status_to_string_func(status));
                 exit(1);
             }
 
+            const char *intent = NULL;
+            int32_t num_slots = 0;
+            const char **slots = NULL;
+            const char **values = NULL;
+
             if (is_understood) {
-                const char *intent;
-                int32_t num_slots;
-                const char **slots;
-                const char **values;
-                status = pv_rhino_get_intent(rhino, &intent, &num_slots, &slots, &values);
+                status = pv_rhino_get_intent_func(rhino, &intent, &num_slots, &slots, &values);
                 if (status != PV_STATUS_SUCCESS) {
-                    fprintf(stderr, "'pv_rhino_get_intent' failed with '%s'\n", pv_status_to_string(status));
+                    fprintf(stderr, "'pv_rhino_get_intent' failed with '%s'\n", pv_status_to_string_func(status));
                     exit(1);
                 }
+            }
 
-                fprintf(stdout, "intent : '%s'\n", intent);
-                for (int i = 0; i < num_slots; i++) {
-                    fprintf(stdout, "'%s' : '%s'\n", slots[i], values[i]);
+            fprintf(stdout, "{\n");
+            fprintf(stdout, "  'is_understood' : '%s',\n", is_understood ? "true" : "false");
+            if (is_understood) {
+                fprintf(stdout, "  'intent' : '%s'\n", intent);
+                if (num_slots > 0) {
+                    fprintf(stdout, "  'slots' : {\n");
+                    for (int32_t i = 0; i < num_slots; i++) {
+                        fprintf(stdout, "    '%s' : '%s',\n", slots[i], values[i]);
+                    }
+                    fprintf(stdout, "  }\n");
                 }
+            }
+            fprintf(stdout, "}\n\n");
 
-                status = pv_rhino_free_slots_and_values(rhino, slots, values);
+            if (is_understood) {
+                status = pv_rhino_free_slots_and_values_func(rhino, slots, values);
                 if (status != PV_STATUS_SUCCESS) {
-                    fprintf(stderr, "'pv_rhino_free_slots_and_values' failed with '%s'\n", pv_status_to_string(status));
+                    fprintf(stderr, "'pv_rhino_free_slots_and_values' failed with '%s'\n", pv_status_to_string_func(status));
                     exit(1);
                 }
-            } else {
-                fprintf(stdout, "couldn't infer the intent\n");
             }
 
             break;
@@ -179,7 +193,7 @@ int main(int argc, char *argv[]) {
 
         total_cpu_time_usec +=
                 (double) (after.tv_sec - before.tv_sec) * 1e6 + (double) (after.tv_usec - before.tv_usec);
-        total_processed_time_usec += (frame_length * 1e6) / pv_sample_rate();
+        total_processed_time_usec += (frame_length * 1e6) / pv_sample_rate_func();
     }
 
     const double real_time_factor = total_cpu_time_usec / total_processed_time_usec;
@@ -187,7 +201,7 @@ int main(int argc, char *argv[]) {
 
     free(pcm);
     fclose(wav);
-    pv_rhino_delete(rhino);
+    pv_rhino_delete_func(rhino);
     dlclose(rhino_library);
 
     return 0;

@@ -1,17 +1,17 @@
 # Compatibility
 
 You need a C99-compatible compiler to build these demos. The microphone based demo can only run on Linux-based systems
-(e.g. Ubuntu, Raspberry Pi, and Beagle Bone) as it depends on ALSA.
+(e.g. `Ubuntu`, `Raspberry Pi`, and `BeagleBone`) as it depends on ALSA.
 
 # Usage
 
-## Microphone-Based
+## Microphone Demo
 
 Compile by executing the following command from the root of the repository
 
 ```bash
-gcc -O3 -o demo/c/rhino_demo_mic -I include -I resources/porcupine/include \
-demo/c/rhino_demo_mic.c -ldl -lasound -std=c99
+gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include -I resources/porcupine/include \
+demo/c/rhino_demo_mic.c -ldl -lasound
 ```
 
 Running the executable without any commandline arguments prints the usage info to the console as below
@@ -44,7 +44,7 @@ resources/contexts/raspberry-pi/smart_lighting_raspberry-pi.rhn \
 plughw:CARD=AK5371
 ```
 
-## File-Based
+## File Demo
 
 **Note that the demo expect a single-channel WAV file with a sampling rate of 16000 and 16-bit linear PCM encoding. If you
 provide a file with incorrect format the demo does not perform any format validation and simply outputs incorrect result.**
@@ -52,7 +52,7 @@ provide a file with incorrect format the demo does not perform any format valida
 Compile by executing the following command from the root of the repository
 
 ```bash
-gcc -O3 -o demo/c/rhino_demo_file -I include demo/c/rhino_demo_file.c -ldl -lasound -std=c99
+gcc -std=c99 -O3 -o demo/c/rhino_demo_file -I include demo/c/rhino_demo_file.c -ldl
 ```
 Running the executable without any commandline arguments prints the usage info to the console as below
 
@@ -74,13 +74,17 @@ resources/audio_samples/test_within_context.wav
 Which prints the following in the console
 
 ```bash
-intent : 'orderDrink'
-'sugarAmount' : 'some sugar'
-'milkAmount' : 'lots of milk'
-'coffeeDrink' : 'americano'
-'numberOfShots' : 'double shot'
-'size' : 'medium'
-real time factor : 0.007
+{
+  'is_understood' : 'true',
+  'intent' : 'orderBeverage'
+  'slots' : {
+    'size' : 'medium',
+    'numberOfShots' : 'double shot',
+    'beverage' : 'americano',
+  }
+}
+
+real time factor : 0.011
 ```
 
 The following achieves the same on a Raspberry Pi 4
