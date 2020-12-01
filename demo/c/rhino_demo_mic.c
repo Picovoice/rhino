@@ -230,11 +230,11 @@ int main(int argc, char *argv[]) {
     }
 
     fprintf(stdout, "{\n");
-    fprintf(stdout, "    is_understood : '%s',\n", is_understood ? "true" : "false");
+    fprintf(stdout, "    'is_understood' : '%s',\n", is_understood ? "true" : "false");
     if (is_understood) {
-        fprintf(stdout, "    intent : '%s',\n", intent);
+        fprintf(stdout, "    'intent' : '%s',\n", intent);
         if (num_slots > 0) {
-            fprintf(stdout, "    slots : {\n");
+            fprintf(stdout, "    'slots' : {\n");
             for (int32_t i = 0; i < num_slots; i++) {
                 fprintf(stdout, "        '%s' : '%s',\n", slots[i], values[i]);
             }

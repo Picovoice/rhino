@@ -28,14 +28,14 @@ Rhino infers that the user and emits the following inference result:
 
 Rhino is:
 
-* using deep neural networks trained in real-world environments.
-* compact and computationally-efficient, making it perfect for IoT.
-* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+- using deep neural networks trained in real-world environments.
+- compact and computationally-efficient. It is perfect for IoT.
+- self-service. Developers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
 ## Compatibility
 
 - .NET Core 3.1
-- Runs on Linux (x86_64), MacOS (x86_64) and Windows (x86_64)
+- Runs on Linux (x86_64), macOS (x86_64) and Windows (x86_64)
 
 ## Installation
 

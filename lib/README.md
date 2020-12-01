@@ -1,7 +1,3 @@
-## Linux
-
-Tested on Ubuntu 16.04 and 18.04.
-
 ## Raspberry Pi
 
 * arm11 is tuned for A, B, and Zero.
