@@ -8,16 +8,21 @@ using Rhino Speech-to-Intent engine.
 ## Rhino
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
-interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso with a lot of sugar 
-and some milk"*, Rhino infers that the user wants to order a drink with these specifications:
+interest, in real-time. For example, given a spoken command
+
+>Can I have a small double-shot espresso?
+
+Rhino infers that the user and emits the following inference result:
 
 ```json
 {
-  "type": "espresso",
-  "size": "small",
-  "numberOfShots": "2",
-  "sugar": "a lot",
-  "milk": "some"
+  "isUnderstood": "true",
+  "intent": "orderBeverage",
+  "slots": {
+    "beverage": "espresso",
+    "size": "small",
+    "numberOfShots": "2"
+  }
 }
 ```
 
@@ -36,7 +41,9 @@ Rhino is:
 
 Both demos use [Microsoft's .NET Core framework](https://dotnet.microsoft.com/download).
 
-MicDemo uses [OpenAL](https://openal.org/). On Windows, install using the [OpenAL Windows Installer](https://openal.org/downloads/oalinst.zip).
+MicDemo uses [OpenAL](https://openal.org/). 
+
+On Windows, install using the [OpenAL Windows Installer](https://openal.org/downloads/oalinst.zip).
 
 On Linux use apt-get
 
@@ -59,7 +66,7 @@ dotnet build -c FileDemo.Release
 
 ## Usage
 
-NOTE: the working directory for all dotnet commands is:
+NOTE: File paths arguments must be absolute paths and the working directory for all dotnet commands is:
 
 ```bash
 rhino/demo/dotnet/RhinoDemo

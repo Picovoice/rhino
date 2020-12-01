@@ -275,9 +275,7 @@ namespace RhinoDemo
                 return;
             }
 
-            // argument validation
-            modelPath ??= Rhino.MODEL_PATH;
-
+            // argument validation            
             if (contextPath == null) 
             {
                 throw new ArgumentNullException("context_path");
