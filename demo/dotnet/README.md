@@ -66,7 +66,7 @@ dotnet build -c FileDemo.Release
 
 ## Usage
 
-NOTE: File paths arguments must be absolute paths and the working directory for all dotnet commands is:
+NOTE: File path arguments must be absolute paths. The working directory for the following dotnet commands is:
 
 ```bash
 rhino/demo/dotnet/RhinoDemo
