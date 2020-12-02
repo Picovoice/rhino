@@ -24,7 +24,7 @@ Unlike typical NLU inference software, Rhino does _not_ use generic Speech-to-Te
 - accuracy gains from not having to anticipate every possible spoken phrase
 - avoiding transcription errors compounding into the intent understanding (e.g. homonyms are much less of an issue, because we probably know which word makes sense).
 
-To learn more about Rhino, see the [product](https://picovoice.ai/products/rhino/), [documentation](https://picovoice.ai/docs/), and [GitHub](https://github.com/Picovoice/rhino/) pages.
+To learn more about Rhino, see the [platform](https://picovoice.ai/platform/rhino/), [documentation](https://picovoice.ai/docs/), and [GitHub](https://github.com/Picovoice/rhino/) pages.
 
 ### Creating a context
 
@@ -64,7 +64,7 @@ while (!isFinalized) {
   isFinalized = handle.process(frame);
   // retrieve the inference from Rhino
   if (isFinalized) {
-    let inference = engineInstance.getInference();
+    let inference = handle.getInference();
     // inference result example:
     //
     //   {
@@ -81,7 +81,7 @@ while (!isFinalized) {
   }
 }
 
-// always call release when finished to free the resources allocated by Rhino
+// always call release when finished, to free the resources allocated by Rhino
 handle.release();
 ```
 
