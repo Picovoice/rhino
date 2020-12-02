@@ -79,14 +79,9 @@ class RhinoTestCase(unittest.TestCase):
 
         self.assertTrue(inference.is_understood, "Couldn't understand.")
 
-        self.assertEqual('orderDrink', inference.intent, "Incorrect intent.")
+        self.assertEqual('orderBeverage', inference.intent, "Incorrect intent.")
 
-        expected_slot_values = dict(
-            sugarAmount='some sugar',
-            milkAmount='lots of milk',
-            coffeeDrink='americano',
-            numberOfShots='double shot',
-            size='medium')
+        expected_slot_values = dict(beverage='americano', numberOfShots='double shot', size='medium')
         self.assertEqual(inference.slots, expected_slot_values, "Incorrect slots.")
 
     def test_out_of_context(self):

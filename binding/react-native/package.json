@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-react-native",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "description": "Picovoice Rhino React Native binding",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -14,7 +14,8 @@
     "copy": "node copy.js",
     "prepare": "bob build",
     "release": "release-it",
-    "bootstrap": "yarn && yarn copy"
+    "bootstrap": "yarn && yarn copy",
+    "pkg": "cd pkg && npm pack .. && cd .."
   },
   "keywords": [
     "react-native",

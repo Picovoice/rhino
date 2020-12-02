@@ -72,15 +72,13 @@ namespace RhinoTest
 
             Inference inference = r.GetInference();
             Assert.IsTrue(inference.IsUnderstood, "Couldn't understand.");
-            Assert.AreEqual("orderDrink", inference.Intent, "Incorrect intent.");
+            Assert.AreEqual("orderBeverage", inference.Intent, "Incorrect intent.");
 
             Dictionary<string, string> expectedSlotValues = new Dictionary<string, string>()
             {
                 {"size", "medium"},
                 {"numberOfShots", "double shot"},
-                {"coffeeDrink", "americano"},
-                {"milkAmount", "lots of milk"},
-                {"sugarAmount", "some sugar"},                
+                {"beverage", "americano"},
             };
             Assert.IsTrue(inference.Slots.All((keyValuePair) => 
                                           expectedSlotValues.ContainsKey(keyValuePair.Key) && 

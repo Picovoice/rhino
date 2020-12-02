@@ -322,14 +322,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"RhinoDemo/Preview Content\"";
-				DEVELOPMENT_TEAM = FXK66JFZWS;
+				DEVELOPMENT_TEAM = DXS28SLTD3;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = RhinoDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = rhinodemo111;
+				PRODUCT_BUNDLE_IDENTIFIER = rhinodemo11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -342,14 +342,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"RhinoDemo/Preview Content\"";
-				DEVELOPMENT_TEAM = FXK66JFZWS;
+				DEVELOPMENT_TEAM = DXS28SLTD3;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = RhinoDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = rhinodemo111;
+				PRODUCT_BUNDLE_IDENTIFIER = rhinodemo11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -68,8 +68,8 @@ describe("intent detection (coffee maker)", () => {
     );
 
     expect(inference["isUnderstood"]).toBe(true);
-    expect(inference["intent"]).toEqual("orderDrink");
-    expect(inference["slots"]["coffeeDrink"]).toEqual("americano");
+    expect(inference["intent"]).toEqual("orderBeverage");
+    expect(inference["slots"]["beverage"]).toEqual("americano");
 
     rhinoEngine.release();
   });
@@ -122,8 +122,8 @@ describe("manual paths", () => {
     );
 
     expect(inference["isUnderstood"]).toBe(true);
-    expect(inference["intent"]).toEqual("orderDrink");
-    expect(inference["slots"]["coffeeDrink"]).toEqual("americano");
+    expect(inference["intent"]).toEqual("orderBeverage");
+    expect(inference["slots"]["beverage"]).toEqual("americano");
 
     rhinoEngine.release();
   });
@@ -142,8 +142,8 @@ describe("manual paths", () => {
     );
 
     expect(inference["isUnderstood"]).toBe(true);
-    expect(inference["intent"]).toEqual("orderDrink");
-    expect(inference["slots"]["coffeeDrink"]).toEqual("americano");
+    expect(inference["intent"]).toEqual("orderBeverage");
+    expect(inference["slots"]["beverage"]).toEqual("americano");
 
     rhinoEngine.release();
   });
@@ -218,9 +218,9 @@ describe("getContextInfo", () => {
     let contextInfo = rhinoEngine.getContextInfo();
 
     expect(contextInfo).toMatch(
-      /(\[brew, can I get, can I have, I want, get me, give me, I'd like, make me, may I have\])/i
+      /(\[brew, can I get, can I have, I want, get me, give me, I'd like, make me, may I have)/i
     );
-    expect(contextInfo).toMatch(/(a little bit of sweetener)/i);
+    expect(contextInfo).toMatch(/(- "triple shot")/i);
     expect(contextInfo).not.toMatch(
       /(the third one burned down, fell over, and sank into the swamp)/i
     );
@@ -239,8 +239,8 @@ describe("invalid state", () => {
     );
 
     expect(inference["isUnderstood"]).toBe(true);
-    expect(inference["intent"]).toEqual("orderDrink");
-    expect(inference["slots"]["coffeeDrink"]).toEqual("americano");
+    expect(inference["intent"]).toEqual("orderBeverage");
+    expect(inference["slots"]["beverage"]).toEqual("americano");
 
     rhinoEngine.release();
 

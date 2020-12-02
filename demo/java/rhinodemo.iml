@@ -7,7 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="rhino-1.5.0" level="project" />
+    <orderEntry type="library" name="rhino-1.6.0" level="project" />
     <orderEntry type="library" name="commons-cli:commons-cli:1.4" level="project" />
   </component>
 </module>

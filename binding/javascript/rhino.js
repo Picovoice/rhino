@@ -45,6 +45,7 @@ let Rhino = (function () {
     initWasm = Module.cwrap("pv_rhino_wasm_init", "number", [
       "number",
       "number",
+      "number",
     ]);
     releaseWasm = Module.cwrap("pv_rhino_wasm_delete", ["number"]);
     processWasm = Module.cwrap("pv_rhino_wasm_process", "number", [
@@ -89,7 +90,7 @@ let Rhino = (function () {
     return initWasm != null;
   };
 
-  let create = function (context) {
+  let create = function (context, sensitivity = 0.5) {
     /**
      * Creates an instance of speech-to-intent engine (aka rhino). Can be called only after .isLoaded()
      * returns true.
@@ -108,7 +109,7 @@ let Rhino = (function () {
     );
     heapBuffer.set(context);
 
-    let handleWasm = initWasm(heapPointer, contextSize);
+    let handleWasm = initWasm(heapPointer, contextSize, sensitivity);
     if (handleWasm === 0) {
       throw new Error("failed to initialize rhino");
     }

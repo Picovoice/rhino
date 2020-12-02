@@ -210,9 +210,7 @@ namespace RhinoDemo
             {
                 throw new ArgumentException($"Context file at path {contextPath} does not exist", "--context_path");
             }
-
-            modelPath ??= Rhino.MODEL_PATH;
-
+            
             if (sensitivity < 0 || sensitivity > 1)
             {
                 throw new ArgumentException($"Sensitivity value of {sensitivity} is not valid. Value must be with [0, 1].");
