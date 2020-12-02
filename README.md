@@ -861,7 +861,7 @@ pv_rhino_delete(rhino);
 
 ## Releases
 
-### v1.6.0 December 3rd, 2020
+### v1.6.0 December 2nd, 2020
 
 - Added support for React Native.
 - Added support for Java.
