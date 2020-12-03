@@ -5,9 +5,9 @@
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
-interest, in real-time. For example, given a spoken command
+interest, in real-time. For example, given a spoken command:
 
->Can I have a small double-shot espresso?
+> Can I have a small double-shot espresso?
 
 Rhino infers that the user and emits the following inference result:
 
@@ -27,8 +27,8 @@ Rhino is:
 
 - using deep neural networks trained in real-world environments.
 - compact and computationally-efficient. It is perfect for IoT.
-- cross-platform. Raspberry Pi, BeagleBone, Android, iOS, Linux (x86_64), Mac (x86_64), Windows (x86_64), and web
-browsers are supported. Additionally, enterprise customers have access to ARM Cortex-M SDK.
+- cross-platform: Raspberry Pi, BeagleBone, Android, iOS, Linux (x86_64), Mac (x86_64), Windows (x86_64), and web
+  browsers are supported. Additionally, enterprise customers have access to the ARM Cortex-M SDK.
 - self-service. Developers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
 ## Table of Contents
@@ -65,19 +65,19 @@ browsers are supported. Additionally, enterprise customers have access to ARM Co
 
 ## License & Terms
 
-Rhino SDK is free and licensed under Apache 2.0 including the [models](/resources/contexts) released within the
+The Rhino SDK is free and licensed under Apache 2.0, including the pre-trained [models](/resources/contexts) available within the
 repository. [Picovoice Console](https://picovoice.ai/console/) offers two types of subscriptions: Personal and Enterprise.
 Personal accounts can train custom wake word models, subject to limitations and strictly for non-commercial purposes.
 Personal accounts empower researchers, hobbyists, and tinkerers to experiment. Enterprise accounts can unlock all
 capabilities of Picovoice Console, are permitted for use in commercial settings, and have a path to graduate to
-commercial distribution[<sup>*</sup>](https://picovoice.ai/pricing/).
+commercial distribution[<sup>\*</sup>](https://picovoice.ai/pricing/).
 
 ## Use Cases
 
-Rhino is the right product if the domain of voice interactions is specific (limited).
+Rhino is the right choice if the domain of voice interactions is specific (limited).
 
-- If you want to create voice experiences similar to Alexa or Google, check out [Picovoice platform](https://github.com/Picovoice/picovoice).
-- If you need to recognize a few static (always listening) voice commands, check out [Porcupine](https://github.com/Picovoice/porcupine).
+- If you want to create voice experiences similar to Alexa or Google, see the [Picovoice platform](https://github.com/Picovoice/picovoice).
+- If you need to recognize a few static (always listening) voice commands, see [Porcupine](https://github.com/Picovoice/porcupine).
 
 ## Try It Out
 
@@ -97,7 +97,7 @@ A comparison between the accuracy of Rhino and major cloud-based alternatives is
 ## Terminology
 
 Rhino infers the user's intent from spoken commands within a domain of interest. We refer to such a specialized domain as
-a `Context`. A context can be thought of a set of voice commands each mapped to an intent:
+a `Context`. A context can be thought of a set of voice commands, each mapped to an intent:
 
 ```yaml
 turnLightOff:
@@ -110,10 +110,10 @@ setLightColor:
 In examples above, each voice command is called an `Expression`. Expressions are what we expect the user to utter
 to interact with our voice application.
 
-Consider the expression
+Consider the expression:
 
->Turn off the lights in the office
- 
+> Turn off the lights in the office
+
 What we require from Rhino is:
 
 1. To infer the intent (`turnLightOff`)
@@ -145,7 +145,7 @@ lightLocation:
 
 You can create custom contexts using the [Picovoice Console](https://picovoice.ai/console/).
 
-To learn the complete expression syntax of Rhino, see the [Speech-to-Intent Syntax Cheat Sheet](https://picovoice.ai/docs/syntax-cheat-sheet/).
+To learn the complete expression syntax of Rhino, see the [Speech-to-Intent Syntax Cheat Sheet](https://picovoice.ai/docs/tips/syntax-cheat-sheet/).
 
 ## Demos
 
@@ -165,7 +165,7 @@ rhino_demo_mic --context_path ${CONTEXT_FILE_PATH}
 
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
-For more information about Python demos go to [demo/python](/demo/python).
+For more information about Python demos, go to [demo/python](/demo/python).
 
 ### .NET Demos
 
@@ -181,14 +181,14 @@ dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_FILE_PATH}
 
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
-For more information about .NET demos go to [demo/dotnet](/demo/dotnet).
+For more information about .NET demos, go to [demo/dotnet](/demo/dotnet).
 
 ### Java Demos
 
 The [Rhino Java demo](/demo/java) is a command-line application that lets you choose between running Rhino on a
 audio file or on real-time microphone input.
 
-Make sure there is a working microphone connected to your device. From the root of the repository run the following in
+Make sure there is a working microphone connected to your device. From the root of the repository, run the following in
 the terminal:
 
 ```bash
@@ -201,11 +201,12 @@ For more information about Java demos go to [demo/java](/demo/java).
 
 ### React Native Demos
 
-To run the React Native Rhino demo app you'll first need to setup your React Native environment. For this, 
-please refer to [React Native's documentation](https://reactnative.dev/docs/environment-setup). Once your environment has 
+To run the React Native Rhino demo app you will first need to setup your React Native environment. For this,
+please refer to [React Native's documentation](https://reactnative.dev/docs/environment-setup). Once your environment has
 been set up, navigate to [demo/react-native](/demo/react-native) to run the following commands:
 
-For Android: 
+For Android:
+
 ```sh
 yarn android-install    # sets up environment
 yarn android-run        # builds and deploys to Android
@@ -221,27 +222,27 @@ yarn ios-run            # builds and deploys to iOS
 ### Android Demos
 
 Using Android Studio, open [demo/android/Activity](/demo/android/Activity) as an Android project and then run the
-application. After pressing the start button you can issue commands such as
+application. After pressing the start button you can issue commands such as:
 
->Turn off the lights.
+> Turn off the lights.
 
-or
+or:
 
->Set the lights in the living room to purple.
+> Set the lights in the living room to purple.
 
-For more information about Android demo and the complete list of available expressions go to [demo/android](/demo/android).
+For more information about Android demo and the complete list of available expressions, go to [demo/android](/demo/android).
 
 ### iOS Demos
 
 Using [Xcode](https://developer.apple.com/xcode/), open
 [demo/ios/RhinoDemo/RhinoDemo.xcodeproj](/demo/ios/RhinoDemo/RhinoDemo.xcodeproj) and run the application. After pressing
-the start button you can issue commands such as
+the start button you can issue commands such as:
 
->Turn off the lights.
+> Turn off the lights.
 
-or
+or:
 
->Set the lights in the living room to purple.
+> Set the lights in the living room to purple.
 
 For more information about Android demo and the complete list of available expressions go to [demo/ios/RhinoDemo](/demo/ios/RhinoDemo).
 
@@ -254,19 +255,19 @@ yarn
 yarn start
 ```
 
-It will launch a local server running the demo. Open `http://localhost:5000` in your web browser and follow the
+This will launch a local server running the demo. Open `http://localhost:5000` in your web browser and follow the
 instructions on the page.
 
 ### NodeJS Demos
 
-Install [node-record-lpcm16](https://www.npmjs.com/package/node-record-lpcm16) NPM package and follow the instructions
+Install the [node-record-lpcm16](https://www.npmjs.com/package/node-record-lpcm16) NPM package, and follow the instructions
 there for setting up your microphone. Then install the demo package:
 
 ```bash
 yarn global add @picovoice/rhino-node-demo
 ```
 
-With a working microphone connected to your device run the following in the terminal:
+With a working microphone connected to your device, run the following in the terminal:
 
 ```shell
 rhn-mic-demo --context_path ${CONTEXT_FILE_PATH}
@@ -278,7 +279,8 @@ For more information about NodeJS demos go to [demo/nodejs](/demo/nodejs).
 
 ### C Demos
 
-[Microphone demo](/demo/c/rhino_demo_mic.c) runs on Linux-based systems (e.g. Ubuntu, Raspberry Pi, and BeagleBone).
+The [Microphone demo](/demo/c/rhino_demo_mic.c) runs on Linux-based systems (e.g. Ubuntu, Raspberry Pi, and BeagleBone).
+
 Build the demo:
 
 ```bash
@@ -299,9 +301,9 @@ ${INPUT_AUDIO_DEVICE}
 Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the
 name of the platform you are running on (`linux`, `raspberry-pi`, or `beaglebone`), and `${INPUT_AUDIO_DEVICE}` with
 the name of your microphone device. The demo opens an audio stream and your intent from spoken commands in the context
-of a smart lighting system. For example you can say
+of a smart lighting system. For example you can say:
 
->Turn on the lights in the bedroom.
+> Turn on the lights in the bedroom.
 
 ## SDKs
 
@@ -317,20 +319,20 @@ The SDK exposes a factory method to create instances of the engine:
 
 ```python
 import pvrhino
- 
+
 handle = pvrhino.create(context_path='/absolute/path/to/context')
 ```
 
-Where `context_path` is the absolute path to Speech-to-Intent context created either using Picovoice Console or one of
+Where `context_path` is the absolute path to the Speech-to-Intent context created either using Picovoice Console or one of
 the default contexts available on Rhino's GitHub repository.
 
-When initialized, valid sample rate can be obtained using `rhino.sample_rate`. Expected frame length
-(number of audio samples in an input array) is `rhino.frame_length`. The object can be used to infer intent from spoken
+When initialized, the required sample rate can be obtained using `rhino.sample_rate`. The expected frame length
+(number of audio samples in an input array) is provided by `rhino.frame_length`. The object can be used to infer intent from spoken
 commands as below:
 
 ```python
 import pvrhino
- 
+
 handle = pvrhino.create(context_path='/absolute/path/to/context')
 
 def get_next_audio_frame():
@@ -354,7 +356,7 @@ Finally, when done be sure to explicitly release the resources using `handle.del
 
 ### .NET
 
-Install the .NET SDK using Nuget or the dotnet CLI
+Install the .NET SDK using NuGet or the dotnet CLI:
 
 ```bash
 dotnet add package Rhino
@@ -368,7 +370,7 @@ using Pv
 Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context");
 ```
 
-When initialized, the valid sample rate is given by `handle.SampleRate`. Expected frame length (number of audio samples
+When initialized, the valid sample rate is given by `handle.SampleRate`. The expected frame length (number of audio samples
 in an input array) is `handle.FrameLength`. The engine accepts 16-bit linearly-encoded PCM and operates on
 single-channel audio.
 
@@ -400,7 +402,7 @@ while(true)
 ```
 
 Rhino will have its resources freed by the garbage collector, but to have resources freed
-immediately after use, wrap it in a using statement:
+immediately after use, wrap it in a `using` statement:
 
 ```csharp
 using(Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context"))
@@ -425,7 +427,7 @@ try{
 } catch (RhinoException e) { }
 ```
 
-When initialized, the valid sample rate is given by `handle.getSampleRate()`. Expected frame length (number of audio samples
+When initialized, the valid sample rate is given by `handle.getSampleRate()`. The expected frame length (number of audio samples
 in an input array) is `handle.getFrameLength()`. The engine accepts 16-bit linearly-encoded PCM and operates on
 single-channel audio.
 
@@ -450,7 +452,7 @@ while(true) {
 }
 ```
 
-Once you're done with Rhino, ensure you release its resources explicitly:
+Once you are done with Rhino, ensure you release its resources explicitly:
 
 ```java
 handle.delete();
@@ -458,8 +460,8 @@ handle.delete();
 
 ### React Native
 
-Install  [@picovoice/react-native-voice-processor](https://www.npmjs.com/package/@picovoice/react-native-voice-processor) and 
-[@picovoice/rhino-react-native](https://www.npmjs.com/package/@picovoice/rhino-react-native). The SDK provides two APIs: 
+Install [@picovoice/react-native-voice-processor](https://www.npmjs.com/package/@picovoice/react-native-voice-processor) and
+[@picovoice/rhino-react-native](https://www.npmjs.com/package/@picovoice/rhino-react-native). The SDK provides two APIs:
 
 #### High-Level API
 
@@ -467,6 +469,7 @@ Install  [@picovoice/react-native-voice-processor](https://www.npmjs.com/package
 audio recording. This class is the quickest way to get started.
 
 The constructor `RhinoManager.create` will create an instance of a RhinoManager using a context file that you pass to it.
+
 ```javascript
 async createRhinoManager(){
     try{
@@ -480,7 +483,7 @@ async createRhinoManager(){
 ```
 
 Once you have instantiated a RhinoManager, you can start/stop audio capture and wake word detection by calling `.process()`.
-Upon receiving an inference callback, audio capture will stop automatically and Rhino will reset. To restart it you must 
+Upon receiving an inference callback, audio capture will stop automatically and Rhino will reset. To restart it you must
 call `.process()` again.
 
 ```javascript
@@ -488,11 +491,12 @@ let didStart = await this._rhinoManager.process();
 ```
 
 When you are done using Rhino, release you must explicitly resources:
+
 ```javascript
 this._rhinoManager.delete();
 ```
 
-[@picovoice/react-native-voice-processor](https://github.com/Picovoice/react-native-voice-processor/) handles 
+[@picovoice/react-native-voice-processor](https://github.com/Picovoice/react-native-voice-processor/) handles
 audio capture and RhinoManager passes frames to the inference engine for you.
 
 #### Low-Level API
@@ -511,8 +515,10 @@ async createRhino(){
     }
 }
 ```
-As you can see, in this case you don't pass in an inference callback as you will be passing in audio frames directly 
+
+In this case you do not pass in an inference callback, as you will be passing in audio frames directly
 using the `process` function. The JSON result that is returned from `process` will have up to four fields:
+
 - isFinalized - whether Rhino has made an inference
 - isUnderstood - if isFinalized, whether Rhino understood what it heard based on the context
 - intent - if isUnderstood, name of intent that were inferred
@@ -521,21 +527,21 @@ using the `process` function. The JSON result that is returned from `process` wi
 ```javascript
 let buffer = getAudioFrame();
 try {
-    let result = await this._rhino.process(buffer);    
+    let result = await this._rhino.process(buffer);
     // use result
-    // ..        
+    // ..
     }
 } catch (e) {
     // handle error
 }
 
-// once you're done
+// once you are done
 this._rhino.delete();
 ```
 
 ### Android
 
-There are two possibilities for integrating Rhino into an Android application.
+There are two possibilities for integrating Rhino into an Android application: the High-level API and the Low-level API.
 
 #### High-Level API
 
@@ -560,10 +566,10 @@ RhinoManager manager = new RhinoManager(
         });
 ```
 
-Sensitivity is the parameter that enables developers to trade miss rate for false alarm. It is a floating number within
+Sensitivity is the parameter that enables developers to trade miss rate for false alarm. It is a floating point number within
 [0, 1]. A higher sensitivity reduces miss rate at cost of increased false alarm rate.
 
-When initialized, input audio can be processed using `manager.process()`. When done be sure to release the resources
+When initialized, input audio can be processed using `manager.process()`. When done, be sure to release the resources
 using `manager.delete()`.
 
 #### Low-Level API
@@ -593,7 +599,7 @@ if (inference.getIsUnderstood()) {
 }
 ```
 
-Finally, prior to exiting the application be sure to release resources acquired via:
+Finally, prior to exiting the application be sure to release resources acquired:
 
 ```java
 handle.delete()
@@ -601,12 +607,12 @@ handle.delete()
 
 ### iOS
 
-There are two approaches for integrating Rhino into an iOS application.
+There are two approaches for integrating Rhino into an iOS application: The High-level API and the direct approach.
 
 #### High-Level API
 
 The [RhinoManager](binding/ios/RhinoManager.swift) class manages all activities related to creating an input audio stream
-feeding it into Rhino's library, and invoking a user-provided detection callback. The class can be initialized as below
+feeding it into Rhino's library, and invoking a user-provided detection callback. The class can be initialized as below:
 
 ```swift
 let modelPath: String = ... // It is available at lib/common/rhino_params.pv
@@ -621,7 +627,7 @@ let manager = RhinoManager(
     onInferenceCallback: onInferenceCallback);
 ```
 
-when initialized, input audio can be processed using `manager.process()`.
+When initialized, input audio can be processed using `manager.process()`.
 
 #### Direct
 
@@ -664,11 +670,11 @@ while true {
         var isUnderstood: Bool = false
         var intent = ""
         var slots = [String: String]()
-                
+
         status = pv_rhino_is_understood(handle, &isUnderstood)
         if status != PV_STATUS_SUCCESS {
             // error handling logic
-        }    
+        }
 
         if isUnderstood {
             var cIntent: UnsafePointer<Int8>?
@@ -684,7 +690,7 @@ while true {
             if status != PV_STATUS_SUCCESS {
                 // error handling logic
             }
-            
+
             if isUnderstood {
                 intent = String(cString: cIntent!)
                 for i in 0...(numSlots - 1) {
@@ -692,7 +698,7 @@ while true {
                     let value = String(cString: cSlotValues!.advanced(by: Int(i)).pointee!)
                     slots[slot] = value
                 }
-                
+
                 // Insert inference logic
 
                 status = pv_rhino_free_slots_and_values(handle, cSlotKeys, cSlotValues)
@@ -703,13 +709,13 @@ while true {
                 // Insert logic for invalid commands
             }
         }
-        
+
         pv_rhino_reset(handle)
     }
 }
 ```
 
-When finished, release the resources via
+When finished, release the resources:
 
 ```swift
 pv_rhino_delete(handle)
@@ -717,7 +723,7 @@ pv_rhino_delete(handle)
 
 ### JavaScript
 
-Create a new instance of engine using
+Create a new instance of the Rhino engine:
 
 ```javascript
 let context = new Uint8Array([...]);
@@ -726,7 +732,7 @@ let handle = Rhino.create(context)
 ```
 
 `context` is an array of 8-bit unsigned integers (i.e. `UInt8Array`) representing the domain of interest. When
-instantiated `handle` can process audio via its `.process` method.
+instantiated, `handle` can process audio via its `.process` method.
 
 ```javascript
     let getNextAudioFrame = function() {
@@ -753,7 +759,7 @@ handle.release();
 
 ### NodeJS
 
-Install NodeJS SDK:
+Install the NodeJS SDK:
 
 ```bash
 yarn add @picovoice/rhino-node
@@ -764,11 +770,10 @@ Create instances of the Rhino class by specifying the path to the context file:
 ```javascript
 const Rhino = require("@picovoice/rhino-node");
 
-
 let handle = new Rhino("/path/to/context/file.rhn");
 ```
 
-When instantiated, `handle` can process audio via its `.process` method.
+When instantiated, `handle` can process audio via its `.process` method:
 
 ```javascript
 let getNextAudioFrame = function() {
@@ -785,7 +790,7 @@ while (!isFinalized) {
 }
 ```
 
-When done be sure to release resources acquired by WebAssembly using `release()`:
+When done, be sure to release resources acquired by WebAssembly using `release()`:
 
 ```javascript
 handle.release();
@@ -794,7 +799,7 @@ handle.release();
 ### C
 
 Rhino is implemented in ANSI C and therefore can be directly linked to C applications. The [pv_rhino.h](/include/pv_rhino.h)
-header file contains relevant information. An instance of the Rhino object can be constructed as follows.
+header file contains relevant information. An instance of the Rhino object can be constructed as follows:
 
 ```c
 const char *model_path = ... // Available at lib/common/rhino_params.pv
