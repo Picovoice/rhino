@@ -26,7 +26,7 @@ export default class App extends Component<Props, State> {
   }
 
   async componentDidMount() {
-    let contextName = 'coffee_maker';
+    let contextName = 'smart_lighting';
     let contextFilename = contextName;
     let contextPath = ''
     if(Platform.OS == 'android'){

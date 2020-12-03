@@ -15,7 +15,7 @@ const mkdirp = require("mkdirp");
 
 // copy Android resources
 mkdirp.sync("./android/app/src/main/res/raw")
-fs.copyFileSync('../../resources/contexts/android/coffee_maker_android.rhn','./android/app/src/main/res/raw/coffee_maker_android.rhn')
+fs.copyFileSync('../../resources/contexts/android/smart_lighting_android.rhn','./android/app/src/main/res/raw/smart_lighting_android.rhn')
 
 // copy iOS resources
-fs.copyFileSync('../../resources/contexts/ios/coffee_maker_ios.rhn','./ios/coffee_maker_ios.rhn')
+fs.copyFileSync('../../resources/contexts/ios/smart_lighting_ios.rhn','./ios/smart_lighting_ios.rhn')
