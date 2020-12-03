@@ -188,7 +188,7 @@ For more information about .NET demos, go to [demo/dotnet](/demo/dotnet).
 The [Rhino Java demo](/demo/java) is a command-line application that lets you choose between running Rhino on a
 audio file or on real-time microphone input.
 
-To try the real-time demo, make sure there is a working microphone connected to your device. From [demo/java/bin](/demo/java/bin) run the following command:
+To try the real-time demo, make sure there is a working microphone connected to your device. From the root of the repository run the following command:
 
 ```bash
 java -jar demo/java/bin/rhino-mic-demo.jar -c ${CONTEXT_FILE_PATH}
