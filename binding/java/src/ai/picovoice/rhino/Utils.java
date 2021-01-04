@@ -108,14 +108,11 @@ class Utils {
                         Files.createDirectory(dstPath);
                 } else {
                     Path file = resourceDirectoryPath.resolve(jarEntryName);
-                    if (!Files.exists(file)) {
-                        try (InputStream is = jf.getInputStream(jarEntry)) {
-                            Files.copy(is, file, StandardCopyOption.REPLACE_EXISTING);
-                        }
+                    try (InputStream is = jf.getInputStream(jarEntry)) {
+                        Files.copy(is, file, StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
             }
-
         }
 
         return resourceDirectoryPath;
