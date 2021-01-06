@@ -124,7 +124,7 @@ public class RhinoManager {
             throw RhinoManagerError.recordingDenied
         }
         
-        try audioSession.setCategory(AVAudioSession.Category.record)
+        try audioSession.setCategory(AVAudioSession.Category.playAndRecord)
         try audioSession.setMode(AVAudioSession.Mode.measurement)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         
@@ -134,6 +134,13 @@ public class RhinoManager {
                 usleep(10000)
             }
             self.audioInputEngine.stop()
+            
+            do {
+                try AVAudioSession.sharedInstance().setActive(false)
+            }
+            catch {
+                NSLog("Unable to explicitly deactivate AVAudioSession: \(error)");
+            }
             
             self.started = false
             self.stop = false
