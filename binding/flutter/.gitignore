@@ -1,0 +1,19 @@
+.DS_Store
+.dart_tool/
+
+.packages
+.pub/
+.idea/
+.vscode/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+build/
+
+# comment out the following lines to publish to pub.dev
+assets/lib/
+assets/resources/
+jniLibs/
+picovoice.h
+pv_rhino.h
+libpv_rhino.a
