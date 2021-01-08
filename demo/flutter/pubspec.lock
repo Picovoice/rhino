@@ -168,9 +168,9 @@ packages:
   rhino:
     dependency: "direct main"
     description:
-      path: "../../binding/flutter"
-      relative: true
-    source: path
+      name: rhino
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.6.0"
   sky_engine:
     dependency: transitive
