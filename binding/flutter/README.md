@@ -156,7 +156,7 @@ void createRhino() async {
 }
 ```
 
-To feed Rhino your audio, you must send it frames of audio to its `process` function.
+To deliver audio to the engine, you must send audio frames to its `process` function.
 Each call to `process` will return a Map object that will contain the following items:
 
 - isFinalized - whether Rhino has made an inference

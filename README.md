@@ -44,7 +44,8 @@ Rhino is:
     - [Python](#python-demos)
     - [.NET](#net-demos)
     - [Java](#java-demos)
-    - [React Native](#react-native-demos)
+    - [Flutter] (#flutter-demos)
+    - [React Native](#react-native-demos)    
     - [Android](#android-demos)
     - [iOS](#ios-demos)
     - [JavaScript](#javascript-demos)
@@ -53,8 +54,9 @@ Rhino is:
   - [SDKs](#sdks)
     - [Python](#python)
     - [.NET](#net)
-    - [Java](#java)
-    - [React Native](#react-native)
+    - [Java](#java)    
+    - [Flutter](#flutter)
+    - [React Native](#react-native)    
     - [Android](#android)
     - [iOS](#ios)
     - [JavaScript](#javascript)
@@ -197,6 +199,25 @@ java -jar demo/java/bin/rhino-mic-demo.jar -c ${CONTEXT_FILE_PATH}
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
 For more information about Java demos go to [demo/java](/demo/java).
+
+### Flutter Demos
+
+To run the Rhino demo on Android or iOS with Flutter, you must have the [Flutter SDK](https://flutter.dev/docs/get-started/install) installed on your system. Once installed, you can run `flutter doctor` to determine any other missing requirements for your relevant platform. Once your environment has been set up, launch a simulator or connect an Android/iOS device. 
+
+Before launching the app, use the [copy_assets.sh](/demo/flutter/copy_assets.sh) script to copy the rhino demo context file into the demo project. (**NOTE**: on Windows, Git Bash or another bash shell is required, or you will have to manually copy the context into the project.).
+
+Run the following command from [demo/flutter](/demo/flutter/) to build and deploy the demo to your device:
+```sh
+flutter run
+```
+
+The demo uses a smart lighting context, which can understand commands such as:
+
+> Turn off the lights.
+
+or
+
+> Set the lights in the living room to purple.
 
 ### React Native Demos
 
@@ -465,6 +486,115 @@ Once you are done with Rhino, ensure you release its resources explicitly:
 handle.delete();
 ```
 
+### Flutter
+
+Add the [Rhino Flutter plugin](https://pub.dev/packages/rhino) to your pub.yaml.
+```yaml
+dependencies:  
+  rhino: ^<version>
+```
+The SDK provides two APIs:
+
+#### High-Level API
+
+[RhinoManager](/binding/flutter/lib/rhino_manager.dart) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
+
+The constructor `RhinoManager.create` will create an instance of the RhinoManager using a context file that you pass to it.
+```dart
+import 'package:rhino/rhino_manager.dart';
+import 'package:rhino/rhino_error.dart';
+
+void createRhinoManager() async {
+    try{
+        _rhinoManager = await RhinoManager.create(
+            "/path/to/context/file.rhn",
+            _inferenceCallback);
+    } on PvError catch (err) {
+        // handle rhino init error
+    }
+}
+```
+
+The `inferenceCallback` parameter is a function that you want to execute when Rhino makes an inference.
+The function should accept a map that represents the inference result.
+
+```dart
+void _infererence(Map<String, dynamic> inference){
+    if(inference['isUnderstood']){
+        String intent = inference['intent']
+        Map<String, String> = inference['slots']
+        // add code to take action based on inferred intent and slot values
+    }
+    else{
+        // add code to handle unsupported commands
+    }    
+}
+```
+
+Once you have instantiated a RhinoManager, you can start audio capture and intent inference using the `.process()` function.
+Audio capture stops and rhino resets once an inference result is returned via the inference callback.
+
+```dart
+try{
+    await _rhinoManager.process();
+} on PvAudioException catch (ex) { }
+```
+
+Once your app is done with using RhinoManager, be sure you explicitly release the resources allocated for it:
+```dart
+_rhinoManager.delete();
+```
+
+Our [flutter_voice_processor](https://github.com/Picovoice/flutter-voice-processor/) Flutter plugin captures the frames of audio and automatically passes it to the speech-to-intent engine.
+
+#### Low-Level API
+
+[Rhino](/binding/flutter/lib/rhino.dart) provides low-level access to the inference engine for those who want to incorporate 
+speech-to-intent into a already existing audio processing pipeline.
+
+`Rhino` is created by passing a context file to its static constructor `create`:
+
+```dart
+import 'package:rhino/rhino_manager.dart';
+import 'package:rhino/rhino_error.dart';
+
+void createRhino() async {
+    try{
+        _rhino = await Rhino.create('/path/to/context/file.rhn');
+    } on PvError catch (err) {
+        // handle rhino init error
+    }
+}
+```
+
+To deliver audio to the engine, you must send audio frames to its `process` function.
+Each call to `process` will return a Map object that will contain the following items:
+
+- isFinalized - whether Rhino has made an inference
+- isUnderstood - if isFinalized, whether Rhino understood what it heard based on the context
+- intent - if isUnderstood, name of intent that were inferred
+- slots - if isUnderstood, dictionary of slot keys and values that were inferred
+
+```dart
+List<int> buffer = getAudioFrame();
+
+try {
+    Map<String, dynamic> inference = _rhino.process(buffer);
+    if(inference['isFinalized']){
+        if(inference['isUnderstood']){
+            String intent = inference['intent']
+            Map<String, String> = inference['slots']
+            // add code to take action based on inferred intent and slot values
+        }
+    }
+} on PvError catch (error) {
+    // handle error
+}
+
+// once you are done
+this._rhino.delete();
+```
+
 ### React Native
 
 Install [@picovoice/react-native-voice-processor](https://www.npmjs.com/package/@picovoice/react-native-voice-processor) and
@@ -523,7 +653,7 @@ async createRhino(){
 }
 ```
 
-In this case you do not pass in an inference callback, as you will be passing in audio frames directly
+To deliver audio to the enine, you must pass it audio frames
 using the `process` function. The JSON result that is returned from `process` will have up to four fields:
 
 - isFinalized - whether Rhino has made an inference
