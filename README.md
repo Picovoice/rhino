@@ -44,7 +44,7 @@ Rhino is:
     - [Python](#python-demos)
     - [.NET](#net-demos)
     - [Java](#java-demos)
-    - [Flutter] (#flutter-demos)
+    - [Flutter](#flutter-demos)
     - [React Native](#react-native-demos)    
     - [Android](#android-demos)
     - [iOS](#ios-demos)
