@@ -20,3 +20,6 @@ fi
 
 echo "Copying default model file..."
 cp ../../lib/common/rhino_params.pv ./assets/lib/common/rhino_params.pv
+
+echo "Copying license file..."
+cp ../../LICENSE ./LICENSE
