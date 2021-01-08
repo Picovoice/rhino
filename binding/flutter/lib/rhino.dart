@@ -37,11 +37,11 @@ class Rhino {
   /// The required audio sample rate
   int get sampleRate => _sampleRate;
 
-  /// Gets the source of the Rhino context in YAML format. Shows the list of intents,
-  /// which expressions map to those intents, as well as slots and their possible values.
+  /// The version of rhino
   String get version => _version;
 
-  /// Gets the source of the
+  /// Gets the source of the Rhino context in YAML format. Shows the list of intents,
+  /// which expressions map to those intents, as well as slots and their possible values.
   String get contextInfo => _contextInfo;
 
   /// Static creator for initializing Rhino
