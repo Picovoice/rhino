@@ -149,6 +149,7 @@ class Rhino {
     if (isFinalized.value == 0) {
       return {'isFinalized': false};
     }
+
     Map<String, dynamic> inference = {'isFinalized': true};
 
     // get isUnderstood
@@ -159,39 +160,38 @@ class Rhino {
       pvStatusToException(pvStatus, "Rhino failed to get IsUnderstood value.");
     }
 
-    // return if not understood
-    if (isUnderstood.value == 0) {
+    if (isUnderstood.value == 1) {
+      inference['isUnderstood'] = true;
+
+      // get intent
+      Pointer<Pointer<Utf8>> cIntent = allocate(count: 1);
+      Pointer<Int32> cNumSlots = allocate(count: 1);
+      Pointer<Pointer<Pointer<Utf8>>> cSlots = allocate(count: 1);
+      Pointer<Pointer<Pointer<Utf8>>> cValues = allocate(count: 1);
+      status = _rhinoGetIntent(_handle, cIntent, cNumSlots, cSlots, cValues);
+      pvStatus = PvStatus.values[status];
+      if (pvStatus != PvStatus.SUCCESS) {
+        pvStatusToException(pvStatus, "Rhino failed to get intent.");
+      }
+      inference['intent'] = Utf8.fromUtf8(cIntent[0]);
+
+      // decode slot map
+      Map<String, String> slots = new Map();
+      for (var i = 0; i < cNumSlots.value; i++) {
+        final String slot = Utf8.fromUtf8(cSlots[0][i]);
+        final String value = Utf8.fromUtf8(cValues[0][i]);
+        slots[slot] = value;
+      }
+      inference['slots'] = slots;
+
+      // free slots
+      status = _rhinoFreeSlotsAndValues(_handle, cSlots[0], cValues[0]);
+      pvStatus = PvStatus.values[status];
+      if (pvStatus != PvStatus.SUCCESS) {
+        pvStatusToException(pvStatus, "Rhino failed to free slots.");
+      }
+    } else {
       inference['isUnderstood'] = false;
-      return inference;
-    }
-    inference['isUnderstood'] = true;
-
-    // get intent
-    Pointer<Pointer<Utf8>> cIntent = allocate(count: 1);
-    Pointer<Int32> cNumSlots = allocate(count: 1);
-    Pointer<Pointer<Pointer<Utf8>>> cSlots = allocate(count: 1);
-    Pointer<Pointer<Pointer<Utf8>>> cValues = allocate(count: 1);
-    status = _rhinoGetIntent(_handle, cIntent, cNumSlots, cSlots, cValues);
-    pvStatus = PvStatus.values[status];
-    if (pvStatus != PvStatus.SUCCESS) {
-      pvStatusToException(pvStatus, "Rhino failed to get intent.");
-    }
-    inference['intent'] = Utf8.fromUtf8(cIntent[0]);
-
-    // decode slot map
-    Map<String, String> slots = new Map();
-    for (var i = 0; i < cNumSlots.value; i++) {
-      final String slot = Utf8.fromUtf8(cSlots[0][i]);
-      final String value = Utf8.fromUtf8(cValues[0][i]);
-      slots[slot] = value;
-    }
-    inference['slots'] = slots;
-
-    // free slots
-    status = _rhinoFreeSlotsAndValues(_handle, cSlots[0], cValues[0]);
-    pvStatus = PvStatus.values[status];
-    if (pvStatus != PvStatus.SUCCESS) {
-      pvStatusToException(pvStatus, "Rhino failed to free slots.");
     }
 
     // reset Rhino

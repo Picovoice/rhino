@@ -27,14 +27,14 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
 
   public func doNotCallThisFunction_rhinoInit(modelPath: String, contextPath: String, sensitivity: Float32){
     var rhino:OpaquePointer?
-    let status = pv_rhino_init(
+    let _ = pv_rhino_init(
         modelPath,
         contextPath,
         sensitivity,
         &rhino);
   }
 
-  public func doNotCallThisFunction_rhinoContextInfo(){
+  public func doNotCallThisFunction_rhinoContextInfo(rhino:OpaquePointer?){
     var cContextInfo: UnsafePointer<Int8>?
     pv_rhino_context_info(rhino, &cContextInfo);
   }

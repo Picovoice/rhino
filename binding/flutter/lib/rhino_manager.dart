@@ -81,12 +81,12 @@ class RhinoManager {
       try {
         Map<String, dynamic> rhinoResult = _rhino.process(rhinoFrame);
         if (rhinoResult['isFinalized']) {
+          _awaitingStop = true;
+
           // send inference minus isFinalized
           rhinoResult.remove('isFinalized');
           _inferenceCallback(rhinoResult);
-
           // stop audio processing
-          _awaitingStop = true;
           await _voiceProcessor.stop();
         }
       } on PvError catch (error) {
