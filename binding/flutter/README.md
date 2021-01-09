@@ -130,7 +130,7 @@ try{
 
 Once your app is done with using RhinoManager, be sure you explicitly release the resources allocated for it:
 ```dart
-_rhinoManager.delete();
+await _rhinoManager.delete();
 ```
 
 There is no need to deal with audio capture to enable inference with RhinoManager.
