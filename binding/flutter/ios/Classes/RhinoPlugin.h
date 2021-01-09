@@ -10,8 +10,6 @@
 //
 
 #import <Flutter/Flutter.h>
-#import "pv_rhino.h"
-#import "picovoice.h"
 
 @interface RhinoPlugin : NSObject<FlutterPlugin>
 @end
