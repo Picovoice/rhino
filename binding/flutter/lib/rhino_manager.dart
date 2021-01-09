@@ -101,6 +101,11 @@ class RhinoManager {
   /// result is sent via inference callback
   /// Throws a `PvAudioException` if there was a problem starting the audio engine
   Future<void> process() async {
+    if (_rhino == null || _voiceProcessor == null) {
+      throw new PvStateError(
+          "Cannot start RhinoManager - resources have already been released");
+    }
+
     if (await _voiceProcessor.hasRecordAudioPermission()) {
       try {
         await _voiceProcessor.start();
@@ -118,7 +123,7 @@ class RhinoManager {
   void delete() async {
     if (_voiceProcessor != null) {
       if (_voiceProcessor.isRecording) {
-        _voiceProcessor.stop();
+        await _voiceProcessor.stop();
       }
       _removeVoiceProcessorListener?.call();
       _voiceProcessor = null;
