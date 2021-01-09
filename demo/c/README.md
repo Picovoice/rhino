@@ -10,8 +10,7 @@ You need a C99-compatible compiler to build these demos. The microphone based de
 Compile by executing the following command from the root of the repository
 
 ```bash
-gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include -I resources/porcupine/include \
-demo/c/rhino_demo_mic.c -ldl -lasound
+gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c -ldl -lasound
 ```
 
 Running the executable without any commandline arguments prints the usage info to the console as below
