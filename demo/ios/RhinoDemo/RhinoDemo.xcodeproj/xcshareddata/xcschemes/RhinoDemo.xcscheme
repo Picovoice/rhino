@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1130"
+   LastUpgradeVersion = "1230"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
+               BlueprintIdentifier = "BB193E8D2370C4EC00556136"
                BuildableName = "RhinoDemo.app"
                BlueprintName = "RhinoDemo"
                ReferencedContainer = "container:RhinoDemo.xcodeproj">
@@ -44,7 +44,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
+            BlueprintIdentifier = "BB193E8D2370C4EC00556136"
             BuildableName = "RhinoDemo.app"
             BlueprintName = "RhinoDemo"
             ReferencedContainer = "container:RhinoDemo.xcodeproj">
@@ -61,7 +61,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
+            BlueprintIdentifier = "BB193E8D2370C4EC00556136"
             BuildableName = "RhinoDemo.app"
             BlueprintName = "RhinoDemo"
             ReferencedContainer = "container:RhinoDemo.xcodeproj">
