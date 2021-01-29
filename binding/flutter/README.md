@@ -60,6 +60,8 @@ On Android, open your AndroidManifest.xml and add the following line:
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 ```
 
+**NOTE:** When archiving for release on iOS, you may have to change the build settings of your project in order to prevent stripping of the Rhino library. To do this open the Runner project in XCode and change build setting Deployment -> Strip Style to 'Non-Global Symbols'.
+
 ## Usage
 
 The module provides you with two levels of API to choose from depending on your needs.
@@ -89,7 +91,7 @@ The `inferenceCallback` parameter is a function that you want to execute when Rh
 The function should accept a map that represents the inference result.
 
 ```dart
-void _infererence(Map<String, dynamic> inference){
+void _infererenceCallback(Map<String, dynamic> inference){
     if(inference['isUnderstood']){
         String intent = inference['intent']
         Map<String, String> = inference['slots']
