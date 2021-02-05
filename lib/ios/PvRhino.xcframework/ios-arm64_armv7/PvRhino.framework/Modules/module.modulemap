@@ -1,0 +1,7 @@
+framework module PvRhino {
+  umbrella header "PvRhino.h"
+  header "pv_rhino.h"
+  header "picovoice.h"
+  export *
+  module * {export *}
+}

@@ -1,5 +1,0 @@
-module pv_rhino [system][extern_c] {
-    header "../../../../include/pv_rhino.h"
-    header "../../../../include/picovoice.h"
-    export *
-}

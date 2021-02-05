@@ -8,7 +8,7 @@
 //
 
 import AVFoundation
-import pv_rhino
+import PvRhino
 
 public enum RhinoManagerError: Error {
     case invalidArgument
@@ -124,8 +124,8 @@ public class RhinoManager {
             throw RhinoManagerError.recordingDenied
         }
         
-        try audioSession.setCategory(AVAudioSession.Category.playAndRecord)
-        try audioSession.setMode(AVAudioSession.Mode.measurement)
+        try audioSession.setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
+        try audioSession.setMode(AVAudioSession.Mode.voiceChat)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         
         let dispatchQueue = DispatchQueue(label: "RhinoManagerWatcher", qos: .background)
