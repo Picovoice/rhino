@@ -9,7 +9,7 @@
 // specific language governing permissions and limitations under the License.
 //
 
-import pv_rhino
+import PvRhino
 
 @objc(PvRhino)
 class PvRhino: NSObject {
