@@ -34,6 +34,50 @@ extern "C"
  */
 typedef struct pv_rhino pv_rhino_t;
 
+#if defined(__PV_NO_DYNAMIC_MEMORY__) && defined(__PV_NO_FILE_SYSTEM__)
+
+/**
+ * Constructor.
+ *
+ * @param memory Memory needs to be 8-byte aligned.
+ * @param memory_size Memory size in bytes.
+ * @param context Context parameters. A context represents the set of expressions (spoken commands), intents, and intent
+ * arguments (slots) within a domain of interest.
+ * @param context_size Size of the context in bytes.
+ * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in
+ * fewer misses at the cost of (potentially) increasing the erroneous inference rate.
+ * @param[out] object Constructed Speech-to-Intent object.
+ * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY' on failure.
+ */
+PV_API pv_status_t pv_rhino_init(
+        void *memory_buffer,
+        int32_t memory_size,
+        const void *context,
+        int32_t context_size,
+        float sensitivity,
+        pv_rhino_t **object);
+
+#elif !defined(__PV_NO_DYNAMIC_MEMORY__) && defined(__PV_NO_FILE_SYSTEM__)
+
+/**
+ * Constructor.
+ *
+ * @param context Context parameters. A context represents the set of expressions (spoken commands), intents, and intent
+ * arguments (slots) within a domain of interest.
+ * @param context_size Size of context in bytes.
+ * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in
+ * fewer misses at the cost of (potentially) increasing the erroneous inference rate.
+ * @param[out] object Constructed Speech-to-Intent object.
+ * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY' on failure.
+ */
+PV_API pv_status_t pv_rhino_init(
+        const void *context,
+        int32_t context_size,
+        float sensitivity,
+        pv_rhino_t **object);
+
+#elif !defined(__PV_NO_DYNAMIC_MEMORY__) && !defined(__PV_NO_FILE_SYSTEM__)
+
 /**
  * Constructor.
  *
@@ -51,6 +95,12 @@ PV_API pv_status_t pv_rhino_init(
         const char *context_path,
         float sensitivity,
         pv_rhino_t **object);
+
+#else
+
+#error
+
+#endif
 
 /**
  * Destructor.

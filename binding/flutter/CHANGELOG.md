@@ -6,3 +6,6 @@
 
 ## [1.6.2] - 2020-01-18
 * Updated Rhino iOS lib
+
+## [1.6.3] - 2021-02-05
+* Rhino iOS lib to framework
