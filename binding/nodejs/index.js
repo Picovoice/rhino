@@ -190,21 +190,18 @@ class Rhino {
 
     const packed = pvRhino.get_inference(this.handle);
 
-    const parts = packed.split(",");
+    const parts = packed.slice(0,-1).split(",");
     const status = parseInt(parts[0]);
     if (status !== PV_STATUS_T.SUCCESS) {
-      pvStatusToException(status, "Rhino failed to get inference");
+      pvStatusToException(status, `Rhino failed to get inference: ${status}`);
     }
 
     let inference = { isUnderstood: parts[1] === "1" };
     if (inference.isUnderstood) {
       inference["intent"] = parts[2];
       inference["slots"] = {};
-      for (let i = 2; i < parts.length; i++) {
+      for (let i = 3; i < parts.length; i++) {
         const slotAndValue = parts[i].split(":");
-        if (slotAndValue[0] === undefined || slotAndValue[1] === undefined) {
-          continue;
-        }
         inference["slots"][slotAndValue[0]] = slotAndValue[1];
       }
     }

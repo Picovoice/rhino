@@ -111,7 +111,7 @@ describe("intent detection (coffee maker)", () => {
     rhinoEngine.release();
   });
 
-  test("successful inference object not contain extraneous junk", () => {
+  test("successful inference object does not contain extraneous junk", () => {
     let rhinoEngine = new Rhino(contextPathCoffeeMaker);
     let inference = rhinoProcessWaveFile(
       rhinoEngine,
