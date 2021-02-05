@@ -80,7 +80,7 @@ class Rhino {
 
     const packed = pvRhino.init(modelPath, contextPath, sensitivity);
     const status = Number(packed % 10n);
-    this.handle = (status == PV_STATUS_T.SUCCESS) ? (packed / 10n) : 0;
+    this.handle = status == PV_STATUS_T.SUCCESS ? packed / 10n : 0;
     if (status !== PV_STATUS_T.SUCCESS) {
       pvStatusToException(status, "Rhino failed to initialize");
     }
@@ -151,8 +151,8 @@ class Rhino {
     if (status !== PV_STATUS_T.SUCCESS) {
       pvStatusToException(status, "Rhino failed to process the frame");
     }
-    
-    this.isFinalized = (packed / 10) === 1;
+
+    this.isFinalized = packed / 10 === 1;
     return this.isFinalized;
   }
 
@@ -196,12 +196,15 @@ class Rhino {
       pvStatusToException(status, "Rhino failed to get inference");
     }
 
-    let inference = {isUnderstood: (parts[1] === "1")};
+    let inference = { isUnderstood: parts[1] === "1" };
     if (inference.isUnderstood) {
       inference["intent"] = parts[2];
       inference["slots"] = {};
       for (let i = 2; i < parts.length; i++) {
         const slotAndValue = parts[i].split(":");
+        if (slotAndValue[0] === undefined || slotAndValue[1] === undefined) {
+          continue;
+        }
         inference["slots"][slotAndValue[0]] = slotAndValue[1];
       }
     }

@@ -110,6 +110,23 @@ describe("intent detection (coffee maker)", () => {
     expect(isFinalized).toEqual(false);
     rhinoEngine.release();
   });
+
+  test("successful inference object not contain extraneous junk", () => {
+    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let inference = rhinoProcessWaveFile(
+      rhinoEngine,
+      WAV_PATH_COFFEE_MAKER_IN_CONTEXT
+    );
+    expect(inference.isUnderstood).toEqual(true);
+
+    for (const [key, value] of Object.entries(inference.slots)) {
+      expect(key).not.toEqual("orderBeverage");
+      expect(key).not.toEqual("");
+      expect(value).not.toEqual(undefined);
+    }
+
+    rhinoEngine.release();
+  });
 });
 
 describe("manual paths", () => {
