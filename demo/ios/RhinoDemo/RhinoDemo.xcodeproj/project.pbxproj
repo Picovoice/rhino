@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02A4163025CDBD6D00082745 /* PvRhino.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02A4162D25CDBD5F00082745 /* PvRhino.xcframework */; };
+		02A4163125CDBD6D00082745 /* PvRhino.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 02A4162D25CDBD5F00082745 /* PvRhino.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1760DF18253908E500395344 /* RhinoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1760DF17253908E500395344 /* RhinoManager.swift */; };
 		BB193E922370C4EC00556136 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E912370C4EC00556136 /* AppDelegate.swift */; };
 		BB193E942370C4EC00556136 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E932370C4EC00556136 /* SceneDelegate.swift */; };
@@ -14,13 +16,27 @@
 		BB193E982370C4F500556136 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB193E972370C4F500556136 /* Assets.xcassets */; };
 		BB193E9B2370C4F500556136 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9A2370C4F500556136 /* Preview Assets.xcassets */; };
 		BB193E9E2370C4F500556136 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9C2370C4F500556136 /* LaunchScreen.storyboard */; };
-		BB53349D2372152D003B6FD1 /* libpv_rhino.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB53349C2372152D003B6FD1 /* libpv_rhino.a */; };
 		BB5334A123723091003B6FD1 /* smart_lighting_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */; };
 		BB5334A223723091003B6FD1 /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = BB5334A023723091003B6FD1 /* coffee_maker_ios.rhn */; };
 		BB5334A4237230AD003B6FD1 /* rhino_params.pv in Resources */ = {isa = PBXBuildFile; fileRef = BB5334A3237230AD003B6FD1 /* rhino_params.pv */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		02A4163225CDBD6D00082745 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				02A4163125CDBD6D00082745 /* PvRhino.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		02A4162D25CDBD5F00082745 /* PvRhino.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PvRhino.xcframework; path = ../../../lib/ios/PvRhino.xcframework; sourceTree = "<group>"; };
 		1760DF17253908E500395344 /* RhinoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RhinoManager.swift; path = ../../../../binding/ios/RhinoManager.swift; sourceTree = "<group>"; };
 		BB193E8E2370C4EC00556136 /* RhinoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB193E912370C4EC00556136 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -30,8 +46,6 @@
 		BB193E9A2370C4F500556136 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BB193E9D2370C4F500556136 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB193E9F2370C4F500556136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BB53349C2372152D003B6FD1 /* libpv_rhino.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpv_rhino.a; path = ../../../lib/ios/libpv_rhino.a; sourceTree = "<group>"; };
-		BB53349E2372166F003B6FD1 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = smart_lighting_ios.rhn; path = ../../../../resources/contexts/ios/smart_lighting_ios.rhn; sourceTree = "<group>"; };
 		BB5334A023723091003B6FD1 /* coffee_maker_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_ios.rhn; path = ../../../../resources/contexts/ios/coffee_maker_ios.rhn; sourceTree = "<group>"; };
 		BB5334A3237230AD003B6FD1 /* rhino_params.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params.pv; path = ../../../../lib/common/rhino_params.pv; sourceTree = "<group>"; };
@@ -42,7 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB53349D2372152D003B6FD1 /* libpv_rhino.a in Frameworks */,
+				02A4163025CDBD6D00082745 /* PvRhino.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,7 +87,6 @@
 				BB5334A3237230AD003B6FD1 /* rhino_params.pv */,
 				BB5334A023723091003B6FD1 /* coffee_maker_ios.rhn */,
 				BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */,
-				BB53349E2372166F003B6FD1 /* module.modulemap */,
 				BB193E912370C4EC00556136 /* AppDelegate.swift */,
 				BB193E932370C4EC00556136 /* SceneDelegate.swift */,
 				BB193E952370C4EC00556136 /* ContentView.swift */,
@@ -96,7 +109,7 @@
 		BB53349B2372152D003B6FD1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BB53349C2372152D003B6FD1 /* libpv_rhino.a */,
+				02A4162D25CDBD5F00082745 /* PvRhino.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -111,6 +124,7 @@
 				BB193E8A2370C4EC00556136 /* Sources */,
 				BB193E8B2370C4EC00556136 /* Frameworks */,
 				BB193E8C2370C4EC00556136 /* Resources */,
+				02A4163225CDBD6D00082745 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -322,14 +336,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"RhinoDemo/Preview Content\"";
-				DEVELOPMENT_TEAM = W85R5D2UG6;
+				DEVELOPMENT_TEAM = 65723695GD;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = RhinoDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.rhinodemo;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.iosnativerhinodemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -342,14 +356,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"RhinoDemo/Preview Content\"";
-				DEVELOPMENT_TEAM = W85R5D2UG6;
+				DEVELOPMENT_TEAM = 65723695GD;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = RhinoDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.rhinodemo;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.iosnativerhinodemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

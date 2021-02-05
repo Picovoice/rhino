@@ -236,7 +236,7 @@ PODS:
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
   - React-jsinspector (0.63.3)
-  - react-native-voice-processor (1.0.2):
+  - react-native-voice-processor (1.0.3):
     - React
   - React-RCTActionSheet (0.63.3):
     - React-Core/RCTActionSheetHeaders (= 0.63.3)
@@ -298,10 +298,7 @@ PODS:
     - React-Core (= 0.63.3)
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
-  - rhino-react-native (1.6.3):
-    - React
-    - rhino-react-native/pv_rhino (= 1.6.3)
-  - rhino-react-native/pv_rhino (1.6.3):
+  - rhino-react-native (1.6.5):
     - React
   - RNFS (2.16.6):
     - React
@@ -463,7 +460,7 @@ SPEC CHECKSUMS:
   React-jsi: df07aa95b39c5be3e41199921509bfa929ed2b9d
   React-jsiexecutor: b56c03e61c0dd5f5801255f2160a815f4a53d451
   React-jsinspector: 8e68ffbfe23880d3ee9bafa8be2777f60b25cbe2
-  react-native-voice-processor: 709bc90582d5f05884456cca3a1bbce2342946db
+  react-native-voice-processor: 7e0918ebfbd477a64f9b908fc23441a5af26858f
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
   React-RCTAnimation: 1befece0b5183c22ae01b966f5583f42e69a83c2
   React-RCTBlob: 0b284339cbe4b15705a05e2313a51c6d8b51fa40
@@ -474,7 +471,7 @@ SPEC CHECKSUMS:
   React-RCTText: 65a6de06a7389098ce24340d1d3556015c38f746
   React-RCTVibration: 8e9fb25724a0805107fc1acc9075e26f814df454
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
-  rhino-react-native: fd8f464e16d996be2d6f1e21488a631e990c2519
+  rhino-react-native: d4ea8f855a96e3c4be6d173a325335e1ec961232
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

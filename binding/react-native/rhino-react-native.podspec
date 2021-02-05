@@ -14,23 +14,8 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/Picovoice/rhino.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/*.{h,m,mm,swift}"
-  
-  s.preserve_paths = 'ios/**/*.*'
+  s.vendored_frameworks = "ios/PvRhino.xcframework"
   s.resources = 'ios/resources/**/*.*'
-  
-  s.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-ObjC'}
-
-  s.subspec 'pv_rhino' do |sc|    
-    sc.pod_target_xcconfig = {
-      'SWIFT_INCLUDE_PATHS' => '$(PODS_TARGET_SRCROOT)/ios/pv_rhino',
-      'OTHER_CFLAGS' => '-Xcc -fmodule-map-file="${PODS_TARGET_SRCROOT}/ios/pv_rhino/module.private.modulemap"',
-      'OTHER_SWIFT_FLAGS' => '-Xcc -fmodule-map-file="${PODS_TARGET_SRCROOT}/ios/pv_rhino/module.private.modulemap"'
-    }
-    
-    sc.vendored_libraries = 'ios/pv_rhino/libpv_rhino.a'
-    sc.source_files = 'ios/pv_rhino/pv_rhino.h', 'ios/pv_rhino/picovoice.h'
-    sc.preserve_paths = 'ios/pv_rhino/*.*'
-  end
 
   s.dependency "React"
 end

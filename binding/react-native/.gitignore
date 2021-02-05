@@ -28,9 +28,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-libpv_rhino.a
-picovoice.h
-pv_rhino.h
+PvRhino.xcframework
 ios/resources/**
 
 

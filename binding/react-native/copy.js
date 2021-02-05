@@ -26,6 +26,4 @@ fs.copyFileSync('../../lib/common/rhino_params.pv','./android/src/main/res/raw/r
 // copy iOS resources
 mkdirp.sync("./ios/resources")
 fs.copyFileSync('../../lib/common/rhino_params.pv','./ios/resources/rhino_params.pv')
-fs.copyFileSync('../../lib/ios/libpv_rhino.a','./ios/pv_rhino/libpv_rhino.a')
-fs.copyFileSync('../../include/picovoice.h','./ios/pv_rhino/picovoice.h')
-fs.copyFileSync('../../include/pv_rhino.h','./ios/pv_rhino/pv_rhino.h')
+ncp('../../lib/ios/PvRhino.xcframework', './ios/PvRhino.xcframework')
