@@ -38,6 +38,7 @@ Rhino is:
   - [License & Terms](#license--terms)
   - [Use Cases](#use-cases)
   - [Try It Out](#try-it-out)
+  - [Language Support](#language-support)
   - [Performance](#performance)
   - [Terminology](#terminology)
   - [Demos](#demos)
@@ -88,6 +89,12 @@ Rhino is the right choice if the domain of voice interactions is specific (limit
 - Rhino and [Porcupine](https://github.com/Picovoice/porcupine) on an ARM Cortex-M7
 
 [![Rhino in Action](https://img.youtube.com/vi/WadKhfLyqTQ/0.jpg)](https://www.youtube.com/watch?v=WadKhfLyqTQ)
+
+## Language Support
+
+- English and German
+- French and Spanish coming soon.
+- Support for additional languages is available for commercial customers on a case-by-case basis.
 
 ## Performance
 
