@@ -94,7 +94,7 @@ The function should accept a map that represents the inference result.
 void _infererenceCallback(Map<String, dynamic> inference){
     if(inference['isUnderstood']){
         String intent = inference['intent']
-        Map<String, String> = inference['slots']
+        Map<String, String> slots = inference['slots']
         // add code to take action based on inferred intent and slot values
     }
     else{
@@ -103,7 +103,7 @@ void _infererenceCallback(Map<String, dynamic> inference){
 }
 ```
 
-You can override also the default Rhino model file and/or the inference sensitivity. There is also an optional errorCallback
+You can override the default Rhino model file and/or the inference sensitivity. There is also an optional errorCallback
 that is called if there is a problem encountered while processing audio. These optional parameters can be passed in like so:
 ```dart
 _rhinoManager = await RhinoManager.create(
