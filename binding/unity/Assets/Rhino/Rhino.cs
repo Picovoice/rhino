@@ -142,12 +142,12 @@ namespace Pv.Unity
         {
             if (!File.Exists(modelPath))
             {
-                throw new IOException($"Couldn't find model file at '{modelPath}'");
+                throw new IOException("Couldn't find model file at " + modelPath);
             }
 
             if (!File.Exists(contextPath))
             {
-                throw new IOException($"Couldn't find context file at '{contextPath}'");
+                throw new IOException("Couldn't find context file at " + contextPath);
             }
 
             if (sensitivity < 0 || sensitivity > 1)
@@ -190,8 +190,8 @@ namespace Pv.Unity
         {
             if (pcm.Length != FrameLength)
             {
-                throw new ArgumentException($"Input audio frame size ({pcm.Length}) was not the size specified by Rhino engine ({FrameLength}). " +
-                    $"Use rhino.FrameLength to get the correct size.");
+                throw new ArgumentException(string.Format("Input audio frame size ({0}) was not the size specified by Rhino engine ({1}). ", pcm.Length, FrameLength) +
+                    "Use rhino.FrameLength to get the correct size.");
             }
 
             RhinoStatus status = pv_rhino_process(_libraryPointer, pcm, out _isFinalized);

@@ -41,8 +41,8 @@ public class RhinoDemo : MonoBehaviour
         _startButton = gameObject.GetComponentInChildren<Button>();
         _startButton.onClick.AddListener(ToggleProcessing);
         _locationStates = gameObject.GetComponentsInChildren<Image>().Where(i => i.name != "ToggleListeningButton").ToArray();
-
-        string contextPath = Path.Combine(Application.streamingAssetsPath, "contexts", _platform, $"smart_lighting_{_platform}.rhn");
+        string contextPath = string.Format("contexts/{0}/smart_lighting_{1}.rhn", _platform, _platform);
+        contextPath = Path.Combine(Application.streamingAssetsPath, contextPath);
         try
         {
             _rhinoManager = RhinoManager.Create(contextPath, OnInferenceResult);
