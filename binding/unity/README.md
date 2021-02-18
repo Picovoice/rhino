@@ -53,67 +53,52 @@ The module provides you with two levels of API to choose from depending on your 
 
 #### High-Level API
 
-[PorcupineManager](/binding/unity/Assets/Porcupine/PorcupineManager.cs) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
+[RhinoManager](/binding/unity/Assets/Rhino/RhinoManager.cs) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
 
 >**NOTE:** If running on iOS, you must fill in the Microphone Usage Description under Project Settings>Other Settings in order to enable audio recording.
 
-Using the constructor `PorcupineManager.FromKeywords` will create an instance of the PorcupineManager using one or more of the built-in keywords.
+Using the constructor `RhinoManager.Create` will create an instance of the RhinoManager using the provided context file.
 ```csharp
 using Pv.Unity;
 
-try {
-    List<string> keywords = new List<string>(){ "picovoice", "porcupine" };
-    PorcupineManager _porcupineManager = PorcupineManager.FromKeywords(
-                                            keywords,
-                                            OnWakeWordDetected);
+try 
+{    
+    RhinoManager _rhinoManager = RhinoManager.Create(
+                                    "/path/to/context/file.rhn",
+                                    OnInferenceResult);
 }
 catch (Exception ex)
 {
-    // handle porcupine init error
+    // handle rhino init error
 }
 ```
-The `wakeWordCallback` parameter is a function that you want to execute when Porcupine has detected one of the keywords.
-The function should accept a single integer, keywordIndex, which specifies which wake word has been detected.
+The `inferenceCallback` parameter is a function that you want to execute when Rhino makes an inference. The function should accept `Inference` object 
+that represents the inference result.
 
 ```csharp
-private void OnWakeWordDetected(int keywordIndex){
-    if(keywordIndex == 0){
-        // picovoice detected
+private void OnInferenceResult(Inference inference)
+{
+    if(inference.IsUnderstood)
+    {
+        string intent = inference.Intent;
+        Dictionary<string, string> slots = inference.Slots;
+        // add code to take action based on inferred intent and slot values
     }
-    else if (keywordIndex === 1){
-        // porcupine detected
+    else
+    {
+        // add code to handle unsupported commands
     }
 }
 ```
 
-Available built-in keywords are stored in the constants `PorcupineManager.BUILT_IN_KEYWORDS` and `Porcupine.BUILT_IN_KEYWORDS`.
+You can override the default Rhino model file and/or the inference sensitivity. There is also an optional errorCallback that is called if there is a problem encountered while processing audio. These optional parameters can be passed in like so:
 
-To create an instance of PorcupineManager that detects custom keywords, you can use the `PorcupineManager.FromKeywordPaths`
-static constructor and provide the paths to the `.ppn` file(s).
 ```csharp
-List<string> keywordPaths = new List<string>(){ "/path/to/keyword.ppn" };
-PorcupineManager _porcupineManager = PorcupineManager.FromKeywordPaths( 
-                                        keywordPaths, 
-                                        OnWakeWordDetected);
-```
-
-In addition to custom keywords, you can override the default Porcupine model file and/or keyword sensitivities, as well as add an error callback you want to trigger if there's a problem encountered while Porcupine is processing frames.
-
-These optional parameters can be passed in like so:
-```csharp
-List<string> keywordPaths = new List<string>()
-{ 
-    "/path/to/keyword/file/one.ppn", 
-    "/path/to/keyword/file/two.ppn"
-};
-string modelPath = "path/to/model/file.pv";
-List<float> sensitivites = new List<float>(){ 0.25f, 0.6f };
-
-PorcupineManager _porcupineManager = PorcupineManager.FromKeywordPaths(
-                                        keywordPaths,
-                                        OnWakWordDetected,
-                                        modelPath: modelPath,
-                                        sensitivities: sensitivities,
+RhinoManager _rhinoManager = RhinoManager.Create(
+                                        "/path/to/context/file.rhn",
+                                        OnInferenceResult,
+                                        modelPath: "/path/to/model/file.pv",
+                                        sensitivity: 0.75f,
                                         errorCallback: OnError);
 
 void OnError(Exception ex){
@@ -121,59 +106,73 @@ void OnError(Exception ex){
 }
 ```
 
-Once you have instantiated a PorcupineManager, you can start audio capture and wake word detection by calling:
+Once you have instantiated a RhinoManager, you can start audio capture and intent inference by calling:
 
 ```csharp
-_porcupineManager.Start();
+_rhinoManager.Process();
 ```
 
-And then stop it by calling:
+Audio capture stops and Rhino resets once an inference result is returned via the inference callback. When you wish to result, call `.Process()` again.
 
+Once the app is done with using an instance of RhinoManager, you can explicitly release the audio resources and the resources allocated to Rhino:
 ```csharp
-_porcupineManager.Stop();
+_rhinoManager.Delete();
 ```
 
-Once the app is done with using an instance of PorcupineManager, you can explicitly release the audio resources and the resources allocated to Porcupine:
-```csharp
-_porcupineManager.Delete();
-```
-
-There is no need to deal with audio capture to enable wake word detection with PorcupineManager.
+There is no need to deal with audio capture to enable intent inference with RhinoManager.
 This is because it uses our
 [unity-voice-processor](https://github.com/Picovoice/unity-voice-processor/)
-Unity package to capture frames of audio and automatically pass it to the wake word engine.
+Unity package to capture frames of audio and automatically pass it to the inference engine.
 
 #### Low-Level API
 
-[Porcupine](/binding/unity/Assets/Porcupine/Porcupine.cs) provides low-level access to the wake word engine for those who want to incorporate wake word detection into a already existing audio processing pipeline.
+[Rhino](/binding/unity/Assets/Rhino/Rhino.cs) provides low-level access to the inference engine for those who want to incorporate speech-to-intent into a already existing audio processing pipeline.
 
-To create an instance of `Porcupine`, use the `.Create` static constructor. You can pass a list of built-in keywords as its `keywords` argument or a list or paths to custom keywords using its `keywordPaths` arguement. 
+To create an instance of `Rhino`, use the `.Create` static constructor and a context file.
 
 ```csharp
 using Pv.Unity;
 
 try
-{
-    List<string> keywords = new List<string>(){ "porcupine", "picovoice" };
-    Porcupine _porcupine = Porcupine.Create(keywords: keywords);
+{    
+    Rhino _rhino = Rhino.Create("path/to/context/file.rhn");
 } 
 catch (Exception ex) 
 {
-    // handle porcupine init error
+    // handle rhino init error
 }
 ```
 
-To search for a keyword in audio, you must pass frames of audio to Porcupine using the `Process` function. The `keywordIndex` returned will either be -1 if no detection was made or an integer specifying which keyword was detected.
+To feed Rhino your audio, you must send it frames of audio to its `Process` function until it has made an inference. You can then call GetInference to get the Inference object
+which contains the following properties:
+
+IsUnderstood - whether Rhino understood what it heard based on the context
+Intent - if IsUnderstood, name of intent that were inferred
+Slots - if IsUnderstood, dictionary of slot keys and values that were inferred
 
 ```csharp
-short[] frame = getAudioFrame();
+short[] GetNextAudioFrame()
+{
+    // .. get audioFrame
+    return audioFrame;
+}
 
 try 
 {
-    int keywordIndex = _porcupine.Process(frame);
-    if (keywordIndex >= 0) 
+    bool isFinalized = _rhino.Process(GetNextAudioFrame());   
+    if(isFinalized)
     {
-        // detection made!
+        Inference inference = _rhino.GetInference();
+        if(inference.IsUnderstood)
+        {
+            string intent = inference.Intent;
+            Dictionary<string, string> slots = inference.Slots;
+            // .. code to take action based on inferred intent and slot values
+        }
+        else
+        {
+            // .. code to handle unsupported commands              
+        }        
     }
 }
 catch (Exception ex)
@@ -185,12 +184,12 @@ catch (Exception ex)
 For process to work correctly, the audio data must be in the audio format required by Picovoice.
 The required sample rate is specified by the `SampleRate` property and the required number of audio samples in each frame is specified by the `FrameLength` property. Audio must be single-channel and 16-bit linearly-encoded.
 
-Porcupine implements the `IDisposable` interface, so you can use Porcupine in a `using` block. If you don't use a `using` block, resources will be released by the garbage collector automatically or you can explicitly release the resources like so:
+Rhino implements the `IDisposable` interface, so you can use Rhino in a `using` block. If you don't use a `using` block, resources will be released by the garbage collector automatically or you can explicitly release the resources like so:
 
 ```csharp
-_porcupine.Dispose();
+_rhino.Dispose();
 ```
 
 ## Demo
 
-The Porcupine Unity demo can be imported along with the SDK when you import the Porcupine Unity package. Browse the source of the demo [here](/demo/unity).
+The Rhino Unity demo can be imported along with the SDK when you import the Rhino Unity package. Browse the source of the demo [here](/demo/unity).
