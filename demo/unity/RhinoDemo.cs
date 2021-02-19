@@ -5,6 +5,7 @@ using System.Linq;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 using Pv.Unity;
 
@@ -17,6 +18,7 @@ public class RhinoDemo : MonoBehaviour
 
     RhinoManager _rhinoManager;
 
+    private static readonly string _contextPath;
     private static readonly string _platform;
     private readonly Dictionary<string, Color> _colourLookup = new Dictionary<string, Color>()
     {
@@ -34,6 +36,7 @@ public class RhinoDemo : MonoBehaviour
     static RhinoDemo()
     {
         _platform = GetPlatform();
+        _contextPath = GetContextPath();
     }
 
     void Start()
@@ -41,11 +44,10 @@ public class RhinoDemo : MonoBehaviour
         _startButton = gameObject.GetComponentInChildren<Button>();
         _startButton.onClick.AddListener(ToggleProcessing);
         _locationStates = gameObject.GetComponentsInChildren<Image>().Where(i => i.name != "ToggleListeningButton").ToArray();
-        string contextPath = string.Format("contexts/{0}/smart_lighting_{1}.rhn", _platform, _platform);
-        contextPath = Path.Combine(Application.streamingAssetsPath, contextPath);
+        
         try
         {
-            _rhinoManager = RhinoManager.Create(contextPath, OnInferenceResult);
+            _rhinoManager = RhinoManager.Create(_contextPath, OnInferenceResult);
         }
         catch (Exception ex)
         {
@@ -182,4 +184,43 @@ public class RhinoDemo : MonoBehaviour
                 throw new NotSupportedException(string.Format("Platform '{0}' not supported by Porcupine Unity binding", Application.platform));
         }
     }
+
+    public static string GetContextPath()
+    {
+        string fileName = string.Format("smart_lighting_{0}.rhn", _platform);
+        string srcPath = Path.Combine(Application.streamingAssetsPath, string.Format("contexts/{0}/{1}", _platform, fileName));
+#if !UNITY_EDITOR && UNITY_ANDROID
+        string dstPath = Path.Combine(Application.persistentDataPath, string.Format("contexts/{0}", _platform));
+        if (!Directory.Exists(dstPath))
+        {
+            Directory.CreateDirectory(dstPath);
+        }
+        dstPath = Path.Combine(dstPath, fileName);
+
+        return ExtractResource(srcPath, dstPath);
+#else
+        return srcPath;
+#endif
+    }
+
+#if !UNITY_EDITOR && UNITY_ANDROID
+    public static string ExtractResource(string srcPath, string dstPath)
+    {
+        var loadingRequest = UnityWebRequest.Get(srcPath);
+        loadingRequest.SendWebRequest();
+        while (!loadingRequest.isDone)
+        {
+            if (loadingRequest.isNetworkError || loadingRequest.isHttpError)
+            {
+                break;
+            }
+        }
+        if (!(loadingRequest.isNetworkError || loadingRequest.isHttpError))
+        {
+            File.WriteAllBytes(dstPath, loadingRequest.downloadHandler.data);
+        }
+
+        return dstPath;
+    }
+#endif
 }
