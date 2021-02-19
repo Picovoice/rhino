@@ -1,0 +1,3 @@
+[submodule "binding/unity/Assets/Rhino/VoiceProcessor"]
+	path = binding/unity/Assets/Rhino/VoiceProcessor
+	url = ../unity-voice-processor.git
