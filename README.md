@@ -45,6 +45,7 @@ Rhino is:
     - [Python](#python-demos)
     - [.NET](#net-demos)
     - [Java](#java-demos)
+    - [Unity](#unity-demos)
     - [Flutter](#flutter-demos)
     - [React Native](#react-native-demos)    
     - [Android](#android-demos)
@@ -55,7 +56,8 @@ Rhino is:
   - [SDKs](#sdks)
     - [Python](#python)
     - [.NET](#net)
-    - [Java](#java)    
+    - [Java](#java)
+    - [Unity](#unity)
     - [Flutter](#flutter)
     - [React Native](#react-native)    
     - [Android](#android)
@@ -206,6 +208,12 @@ java -jar demo/java/bin/rhino-mic-demo.jar -c ${CONTEXT_FILE_PATH}
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
 For more information about Java demos go to [demo/java](/demo/java).
+
+### Unity Demos
+
+To run the Rhino Unity demo, import the [Rhino Unity package](/binding/unity/rhino.unitypackage) into your project, open the RhinoDemo scene and hit play. To run on other platforms or in the player, go to _File > Build Settings_, choose your platform and hit the `Build and Run` button.
+
+To browse the demo source go to [demo/unity](/demo/unity).
 
 ### Flutter Demos
 
@@ -491,6 +499,109 @@ Once you are done with Rhino, ensure you release its resources explicitly:
 
 ```java
 handle.delete();
+```
+
+### Unity
+
+Import the [Rhino Unity Package](/binding/unity/rhino.unitypackage) into your Unity project.
+
+The SDK provides two APIs:
+
+#### High-Level API
+
+[RhinoManager](/binding/unity/Assets/Rhino/RhinoManager.cs) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
+
+Using the constructor `RhinoManager.Create` will create an instance of the RhinoManager using the provided context file.
+```csharp
+using Pv.Unity;
+
+try 
+{    
+    RhinoManager _rhinoManager = RhinoManager.Create(
+                                    "/path/to/context/file.rhn",
+                                    (inference) => {});
+}
+catch (Exception ex)
+{
+    // handle rhino init error
+}
+```
+
+Once you have instantiated a RhinoManager, you can start audio capture and intent inference by calling:
+
+```csharp
+_rhinoManager.Process();
+```
+
+Audio capture stops and Rhino resets once an inference result is returned via the inference callback. When you wish to result, call `.Process()` again.
+
+Once the app is done with using an instance of RhinoManager, you can explicitly release the audio resources and the resources allocated to Rhino:
+```csharp
+_rhinoManager.Delete();
+```
+
+There is no need to deal with audio capture to enable intent inference with RhinoManager.
+This is because it uses our
+[unity-voice-processor](https://github.com/Picovoice/unity-voice-processor/)
+Unity package to capture frames of audio and automatically pass it to the inference engine.
+
+#### Low-Level API
+
+[Rhino](/binding/unity/Assets/Rhino/Rhino.cs) provides low-level access to the inference engine for those who want to incorporate speech-to-intent into a already existing audio processing pipeline.
+
+To create an instance of `Rhino`, use the `.Create` static constructor and a context file.
+
+```csharp
+using Pv.Unity;
+
+try
+{    
+    Rhino _rhino = Rhino.Create("path/to/context/file.rhn");
+} 
+catch (Exception ex) 
+{
+    // handle rhino init error
+}
+```
+
+To feed Rhino your audio, you must send it frames of audio to its `Process` function until it has made an inference.
+```csharp
+short[] GetNextAudioFrame()
+{
+    // .. get audioFrame
+    return audioFrame;
+}
+
+try 
+{
+    bool isFinalized = _rhino.Process(GetNextAudioFrame());   
+    if(isFinalized)
+    {
+        Inference inference = _rhino.GetInference();
+        if(inference.IsUnderstood)
+        {
+            string intent = inference.Intent;
+            Dictionary<string, string> slots = inference.Slots;
+            // .. code to take action based on inferred intent and slot values
+        }
+        else
+        {
+            // .. code to handle unsupported commands              
+        }        
+    }
+}
+catch (Exception ex)
+{
+    Debug.LogError(ex.ToString());
+}  
+```
+
+For process to work correctly, the audio data must be in the audio format required by Picovoice.
+
+Rhino implements the `IDisposable` interface, so you can use Rhino in a `using` block. If you don't use a `using` block, resources will be released by the garbage collector automatically or you can explicitly release the resources like so:
+
+```csharp
+_rhino.Dispose();
 ```
 
 ### Flutter
