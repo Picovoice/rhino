@@ -341,7 +341,7 @@ resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn \
 ${INPUT_AUDIO_DEVICE}
 ```
 
-Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the
+Replace `${RHINO_LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the
 name of the platform you are running on (`linux`, `raspberry-pi`, or `beaglebone`), and `${INPUT_AUDIO_DEVICE}` with
 the name of your microphone device. The demo opens an audio stream and your intent from spoken commands in the context
 of a smart lighting system. For example you can say:
