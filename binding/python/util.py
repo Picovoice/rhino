@@ -59,25 +59,25 @@ _RASPBERRY_PI_MACHINES = {'arm11', 'cortex-a7', 'cortex-a53', 'cortex-a72', 'cor
 
 def pv_library_path(relative):
     if _PV_SYSTEM == 'Darwin':
-        return os.path.join(os.path.dirname(__file__), relative, 'lib/mac/x86_64/libpv_porcupine.dylib')
+        return os.path.join(os.path.dirname(__file__), relative, 'lib/mac/x86_64/libpv_rhino.dylib')
     elif _PV_SYSTEM == 'Linux':
         if _PV_MACHINE == 'x86_64':
-            return os.path.join(os.path.dirname(__file__), relative, 'lib/linux/x86_64/libpv_porcupine.so')
+            return os.path.join(os.path.dirname(__file__), relative, 'lib/linux/x86_64/libpv_rhino.so')
         elif _PV_MACHINE in _RASPBERRY_PI_MACHINES:
             return os.path.join(
                 os.path.dirname(__file__),
                 relative,
-                'lib/raspberry-pi/%s/libpv_porcupine.so' % _PV_MACHINE)
+                'lib/raspberry-pi/%s/libpv_rhino.so' % _PV_MACHINE)
         elif _PV_MACHINE == 'beaglebone':
-            return os.path.join(os.path.dirname(__file__), relative, 'lib/beaglebone/libpv_porcupine.so')
+            return os.path.join(os.path.dirname(__file__), relative, 'lib/beaglebone/libpv_rhino.so')
     elif _PV_SYSTEM == 'Windows':
-        return os.path.join(os.path.dirname(__file__), relative, 'lib/windows/amd64/libpv_porcupine.dll')
+        return os.path.join(os.path.dirname(__file__), relative, 'lib/windows/amd64/libpv_rhino.dll')
 
     raise NotImplementedError('Unsupported platform.')
 
 
 def pv_model_path(relative):
-    return os.path.join(os.path.dirname(__file__), relative, 'lib/common/porcupine_params.pv')
+    return os.path.join(os.path.dirname(__file__), relative, 'lib/common/rhino_params.pv')
 
 
 def _pv_keyword_files_subdir():
