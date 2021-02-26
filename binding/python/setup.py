@@ -31,10 +31,7 @@ include pvrhino/lib/common/rhino_params.pv
 include pvrhino/lib/beaglebone/libpv_rhino.so
 include pvrhino/lib/linux/x86_64/libpv_rhino.so
 include pvrhino/lib/mac/x86_64/libpv_rhino.dylib
-include pvrhino/lib/raspberry-pi/arm11/libpv_rhino.so
-include pvrhino/lib/raspberry-pi/cortex-a7/libpv_rhino.so
-include pvrhino/lib/raspberry-pi/cortex-a53/libpv_rhino.so
-include pvrhino/lib/raspberry-pi/cortex-a72/libpv_rhino.so
+recursive-include pvrhino/lib/raspberry-pi/raspberry-pi *
 include pvrhino/lib/windows/amd64/libpv_rhino.dll
 """
 
@@ -46,7 +43,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
 
 setuptools.setup(
     name="pvrhino",
-    version="1.6.0",
+    version="1.6.1",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Rhino Speech-to-Intent engine.",
