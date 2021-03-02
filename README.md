@@ -94,8 +94,7 @@ Rhino is the right choice if the domain of voice interactions is specific (limit
 
 ## Language Support
 
-- English and German
-- French and Spanish coming soon.
+- English, German, French and Spanish.
 - Support for additional languages is available for commercial customers on a case-by-case basis.
 
 ## Performance
