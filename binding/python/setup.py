@@ -14,7 +14,7 @@ shutil.copy(os.path.join(os.path.dirname(__file__), '__init__.py'), os.path.join
 shutil.copy(os.path.join(os.path.dirname(__file__), 'rhino.py'), os.path.join(package_folder, 'rhino.py'))
 shutil.copy(os.path.join(os.path.dirname(__file__), 'util.py'), os.path.join(package_folder, 'util.py'))
 
-platforms = ('beaglebone', 'linux', 'mac', 'raspberry-pi', 'windows')
+platforms = ('beaglebone', 'jetson', 'linux', 'mac', 'raspberry-pi', 'windows')
 
 os.mkdir(os.path.join(package_folder, 'lib'))
 for platform in ('common',) + platforms:
@@ -29,6 +29,7 @@ include pvrhino/rhino.py
 include pvrhino/util.py
 include pvrhino/lib/common/rhino_params.pv
 include pvrhino/lib/beaglebone/libpv_rhino.so
+recursive-include pvrhino/lib/jetson *
 include pvrhino/lib/linux/x86_64/libpv_rhino.so
 include pvrhino/lib/mac/x86_64/libpv_rhino.dylib
 recursive-include pvrhino/lib/raspberry-pi *
@@ -43,7 +44,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
 
 setuptools.setup(
     name="pvrhino",
-    version="1.6.1",
+    version="1.6.2",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Rhino Speech-to-Intent engine.",
