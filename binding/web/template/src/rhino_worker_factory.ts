@@ -15,6 +15,7 @@ import {
   RhinoWorkerRequestInit,
   RhinoWorkerResponseReady,
   RhinoWorkerResponseInference,
+  WorkerRequestVoid
 } from './rhino_types';
 
 export default class RhinoWorkerFactory {
@@ -54,6 +55,8 @@ export default class RhinoWorkerFactory {
           // The default inference event event logs to console
           // eslint-disable-line
           console.log(event.data.inference);
+          const workerPauseCmd: WorkerRequestVoid = { command: "pause" }
+          rhinoWorker.postMessage(workerPauseCmd)
         }
       };
     });
