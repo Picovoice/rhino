@@ -11,4 +11,4 @@
 
 import RhinoWorkerFactory from './rhino_worker_factory';
 
-export default { RhinoWorkerFactory };
+export { RhinoWorkerFactory };
