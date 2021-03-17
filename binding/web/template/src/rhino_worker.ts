@@ -9,24 +9,23 @@
     specific language governing permissions and limitations under the License.
 */
 
-import {
-  RhinoEngine,
-  RhinoWorkerRequestInit,
-  RhinoWorkerResponseReady,
-  WorkerRequestProcess,
-  WorkerRequestVoid,
-  RhinoWorkerResponseInference,
-  RhinoArgs
-} from './rhino_types';
-
-// @ts-ignore
 import Rhino from './rhino';
 
 let paused = true;
 let rhinoEngine: RhinoEngine = null;
 
 async function init(rhinoArgs: RhinoArgs): Promise<void> {
-  rhinoEngine = await Rhino.create(rhinoArgs.context);
+  try {
+    rhinoEngine = await Rhino.create(rhinoArgs.context);
+  } catch (error) {
+    const rhnErrorMessage: RhinoWorkerResponseError = {
+      command: 'rhn-error',
+      error: error
+    };
+    postMessage(rhnErrorMessage, undefined);
+    return;
+  }
+
   paused = !rhinoArgs.start;
   const rhnReadyMessage: RhinoWorkerResponseReady = {
     command: 'rhn-ready',
@@ -78,6 +77,7 @@ onmessage = function (
       release();
       break;
     default:
+      // eslint-disable-next-line no-console
       console.warn(
         'Unhandled command in rhino_worker: ' + event.data.command
       );

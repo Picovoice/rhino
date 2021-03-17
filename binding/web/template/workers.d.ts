@@ -1,4 +1,4 @@
 declare module 'web-worker:*' {
-  const WorkerFactory: new () => Worker;
+  const WorkerFactory: new () => RhinoWorker;
   export default WorkerFactory;
 }

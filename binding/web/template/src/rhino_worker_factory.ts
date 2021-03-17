@@ -10,13 +10,6 @@
 */
 
 import RhinoWorker from 'web-worker:./rhino_worker.ts';
-import {
-  RhinoArgs,
-  RhinoWorkerRequestInit,
-  RhinoWorkerResponseReady,
-  RhinoWorkerResponseInference,
-  WorkerRequestVoid
-} from './rhino_types';
 
 export default class RhinoWorkerFactory {
   private constructor() { }
@@ -31,10 +24,10 @@ export default class RhinoWorkerFactory {
    */
   public static async create(rhinoArgs: RhinoArgs
   ): Promise<Worker> {
-    // n.b. The *worker* creation is itself synchronous. But, inside the worker is an async
+    // n.b. The *Worker* creation is itself synchronous. But, inside the worker is an async
     // method of RhinoFactory which is initializing. This means the worker is not actually ready
     // for voice processing immediately after intantiation. When its initialization completes,
-    // we receive a special RhinoWorkerMessageOut message and resolve the worker promise.
+    // we receive a 'rhn-ready' message and resolve the promise with the Worker.
     const rhinoWorker = new RhinoWorker();
 
     const rhinoInitCommand: RhinoWorkerRequestInit = {
@@ -45,18 +38,39 @@ export default class RhinoWorkerFactory {
 
     const workerPromise = new Promise<Worker>((resolve, reject) => {
       rhinoWorker.onmessage = function (
-        event: MessageEvent<
-          RhinoWorkerResponseReady | RhinoWorkerResponseInference
-        >
+        event: MessageEvent<RhinoWorkerResponse>
       ): void {
-        if (event.data.command === 'rhn-ready') {
-          resolve(rhinoWorker);
-        } else if (event.data.command === 'rhn-inference') {
-          // The default inference event event logs to console
-          // eslint-disable-line
-          console.log(event.data.inference);
-          const workerPauseCmd: WorkerRequestVoid = { command: "pause" }
-          rhinoWorker.postMessage(workerPauseCmd)
+        switch (event.data.command) {
+          case 'rhn-ready': {
+            // Rhino worker is fully initialized and ready to receive audio frames
+            resolve(rhinoWorker);
+            break;
+          }
+          case 'rhn-inference': {
+            // The default inference event event logs to console
+            // eslint-disable-next-line no-console
+            console.log(event.data.inference);
+            rhinoWorker.postMessage({ command: 'pause' });
+            break;
+          }
+          case 'rhn-error-init': {
+            // The Rhino initialization failed
+            reject(event.data.error);
+            break;
+          }
+          case 'rhn-error': {
+            // The default inference event event logs to console
+            // eslint-disable-next-line no-console
+            console.error('Error reported from Rhino worker:');
+            // eslint-disable-next-line no-console
+            console.error(event.data.error);
+            break;
+          }
+          default: {
+            // eslint-disable-next-line no-console
+            console.warn('Unhandled resonse from RhinoWorker: ' + event);
+            return;
+          }
         }
       };
     });

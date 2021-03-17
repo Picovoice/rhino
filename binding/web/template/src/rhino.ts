@@ -9,8 +9,6 @@
     specific language governing permissions and limitations under the License.
 */
 
-import { RhinoContext, RhinoEngine, RhinoInference } from './rhino_types';
-
 // @ts-ignore
 import RhinoEmscriptenModule from './lang/pv_rhino_b64';
 
