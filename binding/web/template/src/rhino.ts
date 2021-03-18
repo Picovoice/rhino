@@ -11,6 +11,7 @@
 
 // @ts-ignore
 import RhinoEmscriptenModule from './lang/pv_rhino_b64';
+import { RhinoContext, RhinoEngine, RhinoInference } from './rhino_types';
 
 const DEFAULT_SENSITIVITY = 0.5;
 

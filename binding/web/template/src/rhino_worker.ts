@@ -10,6 +10,14 @@
 */
 
 import Rhino from './rhino';
+import {
+  RhinoEngine,
+  RhinoArgs,
+  RhinoWorkerResponseError,
+  RhinoWorkerResponseReady,
+  RhinoWorkerResponseInference,
+  RhinoWorkerRequest
+} from './rhino_types';
 
 let paused = true;
 let rhinoEngine: RhinoEngine = null;
@@ -56,9 +64,7 @@ function release(): void {
 }
 
 onmessage = function (
-  event: MessageEvent<
-    WorkerRequestVoid | WorkerRequestProcess | RhinoWorkerRequestInit
-  >
+  event: MessageEvent<RhinoWorkerRequest>
 ): void {
   switch (event.data.command) {
     case 'init':

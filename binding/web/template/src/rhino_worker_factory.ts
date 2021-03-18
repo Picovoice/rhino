@@ -9,7 +9,13 @@
     specific language governing permissions and limitations under the License.
 */
 
-import RhinoWorker from 'web-worker:./rhino_worker.ts';
+import Worker from 'web-worker:./rhino_worker.ts';
+import {
+  RhinoArgs,
+  RhinoWorker,
+  RhinoWorkerRequestInit,
+  RhinoWorkerResponse
+} from './rhino_types';
 
 export default class RhinoWorkerFactory {
   private constructor() { }
@@ -28,7 +34,7 @@ export default class RhinoWorkerFactory {
     // method of RhinoFactory which is initializing. This means the worker is not actually ready
     // for voice processing immediately after intantiation. When its initialization completes,
     // we receive a 'rhn-ready' message and resolve the promise with the Worker.
-    const rhinoWorker = new RhinoWorker();
+    const rhinoWorker = new Worker() as RhinoWorker;
 
     const rhinoInitCommand: RhinoWorkerRequestInit = {
       command: 'init',
