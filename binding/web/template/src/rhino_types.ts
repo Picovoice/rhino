@@ -1,8 +1,12 @@
 export type RhinoInference = {
+  /** Rhino has concluded the inference (isUnderstood is now set) */
   isFinalized: boolean
+  /** The intent was understood (it matched an expression in the context) */
   isUnderstood?: boolean
+  /** The name of the intent */
   intent?: string
-  slots?: Record<string, unknown>
+  /** Map of the slot variables and values extracted from the utterance */
+  slots?: Record<string, string>
 }
 
 export interface RhinoEngine {
@@ -14,8 +18,10 @@ export interface RhinoEngine {
 }
 
 export type RhinoContext = {
+  /** Base64 representation of a trained Rhino context (`.rhn` file) */
   base64: string,
-  sensitivty?: number
+  /** Value in range [0,1] that trades off miss rate for false alarm */
+  sensitivity?: number
 }
 
 export type WorkerRequestProcess = {

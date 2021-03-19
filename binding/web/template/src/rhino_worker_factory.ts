@@ -24,8 +24,8 @@ export default class RhinoWorkerFactory {
    * Create Rhino web worker instances. The promise resolves when the worker is ready to process
    * voice data (perhaps from WebVoiceProcessor).
    *
-   * @param rhinoArgs - Includes Base64 representations of a context and its sensitivity in [0,1],
-   * as well as whether to start processing audio immediately upon instantiation, or to start paused.
+   * @param rhinoArgs Includes `base64` representations of a context and its `sensitivity` in [0,1],
+   * as well as whether to `start` processing audio immediately upon instantiation, or to start paused.
    *
    */
   public static async create(rhinoArgs: RhinoArgs

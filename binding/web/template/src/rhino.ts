@@ -60,7 +60,7 @@ class Rhino implements RhinoEngine {
   }
 
   /**
-   * Releases resources acquired by WebAssembly module.
+   * Releases the resources acquired by the WebAssembly module.
    */
   public release(): void {
     Rhino._releaseWasm(this._handleWasm);
@@ -68,12 +68,12 @@ class Rhino implements RhinoEngine {
   }
 
   /**
-   * Processes a frame of audio. The required sample rate can be retrieved from '.sampleRate' and the length
-   * of frame (number of audio samples per frame) can be retrieved from '.frameLength'. The audio needs to be
-   * 16-bit linearly-encoded. Furthermore, the engine operates on single-channel audio.
+   * Processes a frame of audio.
    *
-   * @param pcm - A frame of audio with properties described above.
-   * @returns - The Rhino inference ('isFinalized' will always be present: when it's true the entire object will be populated)
+   * @param pcm A frame of audio. The required sample rate can be retrieved from `.sampleRate` and the length
+   * of frame (number of audio samples per frame) can be retrieved from `.frameLength`. The audio needs to be
+   * 16-bit linearly-encoded. Furthermore, the engine operates on single-channel audio.
+   * @returns the Rhino inference (`isFinalized` will always be present: when it's true the entire object will be populated)
    */
   process(pcm: Int16Array): RhinoInference {
     if (!(pcm instanceof Int16Array)) {
@@ -158,12 +158,14 @@ class Rhino implements RhinoEngine {
    * Behind the scenes, it requires the WebAssembly code to load and initialize before
    * it can create an instance.
    *
-   * @param rhinoContext - Base64 representation of context and sensitivity in [0,1]
+   * @param rhinoContext The trained model representing a domain-specific set of natural langauge commands
+   * @param rhinoContext.base64 Base64 representation of context (`.rhn` file)
+   * @param rhinoContext.sensitivity Sensitivity in [0,1]
    *
    * @returns An instance of the Rhino engine.
    */
   public static async create(rhinoContext: RhinoContext): Promise<Rhino> {
-    // WASM initialization is asynchronous: until Emscripten is done loading,
+    // WASM initialization is asynchronous; wait until Emscripten is done loading,
     // then we will be able to create an instance of Rhino.
     await Rhino._wasmPromise;
 
@@ -171,7 +173,15 @@ class Rhino implements RhinoEngine {
       c.charCodeAt(0)
     );
 
-    const sensitivity = rhinoContext.sensitivty ?? DEFAULT_SENSITIVITY;
+    const { sensitivity = DEFAULT_SENSITIVITY } = rhinoContext
+
+    if (!(typeof sensitivity !== "number")) {
+      throw new Error("Invalid Rhino sensitivity type: Must be a number (in the range [0,1])")
+    } else {
+      if (sensitivity < 0 || sensitivity > 1) {
+        throw new Error("Invalid Rhino sensitivity value: Must be in the range [0,1]")
+      }
+    }
 
     const contextSize = context.byteLength;
 
