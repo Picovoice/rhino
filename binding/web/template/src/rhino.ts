@@ -175,7 +175,7 @@ class Rhino implements RhinoEngine {
 
     const { sensitivity = DEFAULT_SENSITIVITY } = rhinoContext
 
-    if (!(typeof sensitivity !== "number")) {
+    if (!(typeof sensitivity === "number")) {
       throw new Error("Invalid Rhino sensitivity type: Must be a number (in the range [0,1])")
     } else {
       if (sensitivity < 0 || sensitivity > 1) {
