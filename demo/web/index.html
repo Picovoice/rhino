@@ -43,7 +43,7 @@
         );
 
         try {
-          let webVp = await WebVoiceProcessor.init({
+          let webVp = await WebVoiceProcessor.WebVoiceProcessor.init({
             engines: [window.rhinoClockWorker],
           });
           writeMessage(
