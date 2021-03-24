@@ -17,7 +17,7 @@ import {
   RhinoWorkerResponse
 } from './rhino_types';
 
-export default class RhinoWorkerFactory {
+export class RhinoWorkerFactory {
   private constructor() { }
 
   /**

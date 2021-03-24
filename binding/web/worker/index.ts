@@ -9,6 +9,4 @@
     specific language governing permissions and limitations under the License.
 */
 
-import RhinoWorkerFactory from './rhino_worker_factory';
-
-export { RhinoWorkerFactory };
+export { RhinoWorkerFactory } from './rhino_worker_factory';

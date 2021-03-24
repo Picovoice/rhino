@@ -13,10 +13,10 @@ import Rhino from './rhino';
 import {
   RhinoEngine,
   RhinoArgs,
-  RhinoWorkerResponseError,
   RhinoWorkerResponseReady,
   RhinoWorkerResponseInference,
-  RhinoWorkerRequest
+  RhinoWorkerRequest,
+  RhinoWorkerResponseInitError
 } from './rhino_types';
 
 let paused = true;
@@ -26,8 +26,8 @@ async function init(rhinoArgs: RhinoArgs): Promise<void> {
   try {
     rhinoEngine = await Rhino.create(rhinoArgs.context);
   } catch (error) {
-    const rhnErrorMessage: RhinoWorkerResponseError = {
-      command: 'rhn-error',
+    const rhnErrorMessage: RhinoWorkerResponseInitError = {
+      command: 'rhn-error-init',
       error: error
     };
     postMessage(rhnErrorMessage, undefined);

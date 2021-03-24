@@ -22,17 +22,21 @@ Rhino for Web is split into multiple packages due to each language including the
 
 ### Workers
 
-- @picovoice/rhino-web-en-worker
 - @picovoice/rhino-web-de-worker
+- @picovoice/rhino-web-en-worker
+- @picovoice/rhino-web-es-worker
+- @picovoice/rhino-web-fr-worker
 
 ### Factories
 
-- @picovoice/rhino-web-en-factory
 - @picovoice/rhino-web-de-factory
+- @picovoice/rhino-web-en-factory
+- @picovoice/rhino-web-es-factory
+- @picovoice/rhino-web-fr-factory
 
 ### Worker
 
-For typical cases, use the worker packages. These are compatible with the framework packages for Angular, React, and Vue. The workers are complete with everything you need to run Rhino off the main thread. If you are using the workers with the Angular/React/Vue packages, you will load them and pass them into those services/hooks/components as an argument.
+For typical cases, use the worker packages. These are compatible with the framework packages for [Angular](https://www.npmjs.com/package/@picovoice/rhino-web-angular), [React](https://www.npmjs.com/package/@picovoice/rhino-web-react), and [Vue](https://www.npmjs.com/package/@picovoice/rhino-web-vue). The workers are complete with everything you need to run Rhino off the main thread. If you are using the workers with the Angular/React/Vue packages, you will load them and pass them into those services/hooks/components as an argument.
 
 To obtain a Rhino Worker, we can use the static `create` factory method from the RhinoWorkerFactory. Here is a complete example that:
 
@@ -47,8 +51,8 @@ yarn add @picovoice/web-voice-processor @picovoice/rhino-web-en-worker
 ```
 
 ```javascript
-import WebVoiceProcessor from "@picovoice/web-voice-processor"
-import RhinoWorkerFactoryEn from "@picovoice/rhino-web-en-worker";
+import { WebVoiceProcessor } from "@picovoice/web-voice-processor"
+import { RhinoWorkerFactory } from "@picovoice/rhino-web-en-worker";
 
 const PICO_CLOCK_64 = /* Base64 string of the pico_clock.rhn file for wasm platform */
 
@@ -61,7 +65,7 @@ async startRhino()
   // Note: you receive a Worker object, _not_ an individual Rhino instance
   // Workers are communicated with via message passing/receiving functions postMessage/onmessage.
   // See https://developer.mozilla.org/en-US/docs/Web/API/Worker for more details.
-  const rhinoWorker = await RhinoWorkerFactoryEn.create(
+  const rhinoWorker = await RhinoWorkerFactory.create(
     {context: {base64: PICO_CLOCK_CONTEXT_64, sensitivity: 0.65}, start: false }
   );
 

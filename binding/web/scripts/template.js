@@ -2,7 +2,7 @@ const ncp = require("ncp");
 const path = require("path");
 const editJsonFile = require("edit-json-file");
 
-for (const language of ["en", "de"]) {
+for (const language of ["en", "de", "es", "fr"]) {
   for (const flavour of ["factory", "worker"]) {
     console.log(`Template: ${language} ${flavour}`);
 
