@@ -1,55 +1,40 @@
 import { useState, useEffect, useRef } from 'react';
 
-import WebVoiceProcessor from '@picovoice/web-voice-processor';
-
-export type RhinoFactoryArgs = {
-  /** Base64 string representation of a trained Rhino context (i.e. an `.rhn` file) */
-  base64: string
-  /** Sensitivity in [0,1] trades miss rate for false alarm.
-   * Default: 0.5. */
-  sensitivity?: number
-  /** Whether to start the Rhino engine immediately upon loading.
-   * Default: false, as typical use-case is Push-to-Talk */
-  start?: boolean
-};
-
-export interface RhinoWorkerFactory {
-  create: (rhinoFactoryArgs: RhinoFactoryArgs) => Promise<Worker>
-}
-
-export type RhinoHookArgs = {
-  /** Immediately start the microphone upon initialization */
-  start: boolean;
-  /** Arguments forwarded to RhinoWorkerFactory */
-  rhinoFactoryArgs: RhinoFactoryArgs;
-};
+import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
+import {
+  RhinoHookArgs,
+  RhinoInference,
+  RhinoWorker,
+  RhinoWorkerFactory,
+  RhinoWorkerResponse
+} from './rhino_types';
 
 export function useRhino(
-  rhinoWorkerFactory: RhinoWorkerFactory,
-  rhinoArgs: RhinoHookArgs,
-  inferenceCallback: (label: string) => void
+  rhinoWorkerFactory: RhinoWorkerFactory | null,
+  rhinoHookArgs: RhinoHookArgs,
+  inferenceCallback: (inference: RhinoInference) => void
 ): {
   isLoaded: boolean;
   isListening: boolean;
   isError: boolean;
   isTalking: boolean;
-  errorMessage: string;
+  errorMessage: string | null;
   start: () => void;
   pause: () => void;
   pushToTalk: () => void;
   resume: () => void;
 } {
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [isError, setIsError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isError, setIsError] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isTalking, setIsTalking] = useState(false);
-  const [rhinoWorker, setRhinoWorker] = useState(null);
-  const [webVoiceProcessor, setWebVoiceProcessor] = useState(null);
+  const [rhinoWorker, setRhinoWorker] = useState<RhinoWorker>();
+  const [webVoiceProcessor, setWebVoiceProcessor] = useState<WebVoiceProcessor>();
   const callback = useRef(inferenceCallback);
 
   const start = (): boolean => {
-    if (webVoiceProcessor !== null) {
+    if (webVoiceProcessor !== undefined) {
       webVoiceProcessor.start();
       setIsListening(true);
       return true;
@@ -58,7 +43,7 @@ export function useRhino(
   };
 
   const pause = (): boolean => {
-    if (webVoiceProcessor !== null) {
+    if (webVoiceProcessor !== undefined) {
       webVoiceProcessor.pause();
       setIsListening(false);
       return true;
@@ -67,7 +52,7 @@ export function useRhino(
   };
 
   const resume = (): boolean => {
-    if (webVoiceProcessor !== null) {
+    if (webVoiceProcessor !== undefined) {
       webVoiceProcessor.resume();
       setIsListening(true);
       return true;
@@ -76,7 +61,7 @@ export function useRhino(
   };
 
   const pushToTalk = (): boolean => {
-    if (webVoiceProcessor !== null && rhinoWorker !== null) {
+    if (webVoiceProcessor !== null && rhinoWorker !== undefined) {
       if (!isTalking) {
         setIsTalking(true);
         rhinoWorker.postMessage({ command: 'resume' });
@@ -87,13 +72,16 @@ export function useRhino(
   };
 
   useEffect(() => {
+    if (rhinoWorkerFactory === null) { return (): void => { /* NOOP */ }; }
+
     async function startRhino(): Promise<{
       webVp: WebVoiceProcessor;
-      rhnWorker: Worker;
+      rhnWorker: RhinoWorker;
     }> {
-      const { rhinoFactoryArgs, start: startOnInit } = rhinoArgs;
+      const { rhinoFactoryArgs, start: startOnInit } = rhinoHookArgs;
 
-      const rhnWorker: Worker = await rhinoWorkerFactory.create(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const rhnWorker = await rhinoWorkerFactory!.create(
         rhinoFactoryArgs
       );
 
@@ -102,12 +90,16 @@ export function useRhino(
         start: startOnInit,
       });
 
-      rhnWorker.onmessage = (msg: MessageEvent): void => {
+      rhnWorker.onmessage = (msg: MessageEvent<RhinoWorkerResponse>): void => {
         switch (msg.data.command) {
           case 'rhn-inference':
             callback.current(msg.data.inference);
             rhnWorker.postMessage({ command: 'pause' });
             setIsTalking(false);
+            break;
+          case 'rhn-error':
+            setIsError(true);
+            setErrorMessage(msg.data.error.toString());
             break;
           default:
             break;
@@ -147,7 +139,7 @@ export function useRhino(
     // ".... we know our data structure is relatively shallow, doesn't have cycles,
     // and is easily serializable ... doesn't have functions or weird objects like Dates.
     // ... it's acceptable to pass [JSON.stringify(variables)] as a dependency."
-    JSON.stringify(rhinoArgs),
+    JSON.stringify(rhinoHookArgs),
   ]);
 
   return {
