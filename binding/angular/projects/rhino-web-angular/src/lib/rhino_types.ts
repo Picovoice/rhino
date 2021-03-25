@@ -36,11 +36,11 @@ export type RhinoInference = {
 };
 
 export interface RhinoEngine {
-  release(): void;
-  process(frames: Int16Array): RhinoInference;
   version: string;
   sampleRate: number;
   frameLength: number;
+  release(): void;
+  process(frames: Int16Array): RhinoInference;
 }
 
 export type RhinoContext = {

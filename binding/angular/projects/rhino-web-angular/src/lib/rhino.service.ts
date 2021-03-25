@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import WebVoiceProcessor from '@picovoice/web-voice-processor';
+import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
 import type {
   RhinoInference,
   RhinoServiceArgs,
@@ -14,17 +14,22 @@ import type {
   providedIn: 'root',
 })
 export class RhinoService implements OnDestroy {
-  public webVoiceProcessor: WebVoiceProcessor;
+  public webVoiceProcessor: WebVoiceProcessor | null = null;
   public isInit = false;
   public inference$: Subject<RhinoInference> = new Subject<RhinoInference>();
-  private rhinoWorker: RhinoWorker;
-  private isTalking: boolean = false;
+  public listening$: Subject<boolean> = new Subject<boolean>();
+  public isError$: Subject<boolean> = new Subject<boolean>();
+  public isTalking$: Subject<boolean> = new Subject<boolean>();
+  public error$: Subject<Error | string> = new Subject<Error | string>();
+  private rhinoWorker: RhinoWorker | null = null;
+  private isTalking = false;
 
-  constructor() {}
+  constructor() { }
 
   public pause(): boolean {
     if (this.webVoiceProcessor !== null) {
       this.webVoiceProcessor.pause();
+      this.listening$.next(false);
       return true;
     }
     return false;
@@ -33,6 +38,7 @@ export class RhinoService implements OnDestroy {
   public start(): boolean {
     if (this.webVoiceProcessor !== null) {
       this.webVoiceProcessor.start();
+      this.listening$.next(true);
       return true;
     }
     return false;
@@ -41,6 +47,7 @@ export class RhinoService implements OnDestroy {
   public resume(): boolean {
     if (this.webVoiceProcessor !== null) {
       this.webVoiceProcessor.resume();
+      this.listening$.next(true);
       return true;
     }
     return false;
@@ -59,6 +66,7 @@ export class RhinoService implements OnDestroy {
   public pushToTalk(): boolean {
     if (!this.isTalking && this.rhinoWorker !== null) {
       this.isTalking = true;
+      this.isTalking$.next(true);
       this.rhinoWorker.postMessage({ command: 'resume' });
       return true;
     }
@@ -87,23 +95,29 @@ export class RhinoService implements OnDestroy {
           case 'rhn-inference': {
             this.inference$.next(message.data.inference);
             this.isTalking = false;
+            this.isTalking$.next(false);
           }
         }
       };
     } catch (error) {
       this.isInit = false;
+      this.isError$.next(true);
+      this.error$.next(error);
       throw error;
     }
 
     try {
       this.webVoiceProcessor = await WebVoiceProcessor.init({
         engines: [this.rhinoWorker],
-        start: start,
+        start,
       });
+      this.listening$.next(start);
     } catch (error) {
       this.rhinoWorker.postMessage({ command: 'release' });
       this.rhinoWorker = null;
       this.isInit = false;
+      this.isError$.next(true);
+      this.error$.next(error);
       throw error;
     }
   }
