@@ -9,3 +9,6 @@
 
 ## [1.6.3] - 2021-02-05
 * Rhino iOS lib to framework
+
+## [1.6.4] - 2021-03-29
+* Voice Processor updated
