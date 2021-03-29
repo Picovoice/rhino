@@ -125,8 +125,6 @@ public class RhinoManager {
         }
         
         try audioSession.setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
-        try audioSession.setMode(AVAudioSession.Mode.voiceChat)
-        try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         
         let dispatchQueue = DispatchQueue(label: "RhinoManagerWatcher", qos: .background)
         dispatchQueue.async {
@@ -134,13 +132,6 @@ public class RhinoManager {
                 usleep(10000)
             }
             self.audioInputEngine.stop()
-            
-            do {
-                try AVAudioSession.sharedInstance().setActive(false)
-            }
-            catch {
-                NSLog("Unable to explicitly deactivate AVAudioSession: \(error)");
-            }
             
             self.started = false
             self.stop = false
@@ -203,8 +194,10 @@ private class AudioInputEngine {
         guard let audioQueue = audioQueue else {
             return
         }
+        AudioQueueFlush(audioQueue)
         AudioQueueStop(audioQueue, true)
         AudioQueueDispose(audioQueue, true)
+        audioInput = nil
     }
     
     private func createAudioQueueCallback() -> AudioQueueInputCallback {
