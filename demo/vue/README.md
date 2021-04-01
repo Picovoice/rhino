@@ -17,9 +17,16 @@ yarn
 yarn serve
 ```
 
+(or)
+
+```
+npm install
+npm run serve
+```
+
 The command-line output will provide you with a localhost link and port to open in your browser.
 
-## Test the context
+## Try Rhino
 
 Use the "Push to Talk" button to start Rhino, and then speak a phrase within the "Clock" context, e.g.:
 

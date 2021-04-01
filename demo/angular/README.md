@@ -14,14 +14,21 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Use `yarn` or `npm` to install then start the demo application:
 
-```
+```bash
 yarn
 yarn start
 ```
 
+(or)
+
+```bash
+npm install
+npm run start
+```
+
 Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Speech inference
+## Try Rhino
 
 The Rhino service, used standalone, is a push-to-talk experience. With the demo application running in your browser (and microphone permissions granted), press the "Push to Talk" button, then try saying the following:
 
