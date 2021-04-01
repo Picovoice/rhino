@@ -1,19 +1,8 @@
-export type RhinoFactoryArgs = {
-  /** Base64 string representation of a trained Rhino context (i.e. an `.rhn` file) */
-  base64: string
-  /** Sensitivity in [0,1] trades miss rate for false alarm.
-   * Default: 0.5. */
-  sensitivity?: number
-  /** Whether to start the Rhino engine immediately upon loading.
-   * Default: false, as typical use-case is Push-to-Talk */
-  start?: boolean
-};
-
 export type RhinoHookArgs = {
   /** Immediately start the microphone upon initialization */
   start: boolean;
-  /** Arguments forwarded to RhinoWorkerFactory */
-  rhinoFactoryArgs: RhinoFactoryArgs;
+  /** The context to instantiate */
+  context: RhinoContext
 };
 
 export type RhinoInference = {
@@ -85,6 +74,14 @@ export type RhinoWorkerRequest = WorkerRequestVoid | WorkerRequestProcess | Rhin
 export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: RhinoWorkerRequest): void
 }
+
+export type RhinoFactoryArgs = {
+  /** The context to instantiate */
+  context: RhinoContext
+  /** Whether to start the Rhino engine immediately upon loading.
+   * Default: false, as typical use-case is Push-to-Talk */
+  start?: boolean
+};
 
 export interface RhinoWorkerFactory {
   create: (rhinoFactoryArgs: RhinoFactoryArgs) => Promise<RhinoWorker>

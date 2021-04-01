@@ -96,12 +96,10 @@ function VoiceWidget(props) {
   } = useRhino(
     // Pass in the factory to build Rhino workers. This needs to match the context language below
     RhinoWorkerFactory,
-    {
-      // Start Rhino in a paused state with the clock context
-      rhinoFactoryArgs: { context: { base64: RHN_CONTEXT_CLOCK_64 }, start: false },
-      // Immediately start processing audio, although rhino will not activate until the button is pressed
-      start: true,
-    },
+      // Start Rhino with the clock contex
+      //Immediately start processing audio,
+      // although rhino will not activate until the button is pressed
+      { context: { base64: RHN_CONTEXT_CLOCK_64 }, start: true },
     inferenceEventHandler
   );
 
@@ -126,7 +124,6 @@ If you are shipping Rhino for the Web and wish to avoid adding its ~4MB to your 
 We add a `useEffect` hook to kick off the dynamic import. We store the result of the dynamically loaded worker chunk into a `useState` hook. When `useRhino` receives a non-null/undefined value for the worker factory, it will automatically start up Rhino.
 
 See the [Webpack docs](https://webpack.js.org/guides/code-splitting/) for more information about Code Splitting.
-
 
 ```javascript
 import React, { useState, useEffect } from 'react';
@@ -170,11 +167,7 @@ function VoiceWidget(props) {
     pushToTalk,
   } = useRhino(
     workerChunk.factory,
-    {
-      rhinoFactoryArgs: { context: { base64: RHN_EN_CLOCK_64 } },
-      start: true,
-    },
+    { context: { base64: RHN_EN_CLOCK_64 } },
     inferenceEventHandler
   );
-
 ```

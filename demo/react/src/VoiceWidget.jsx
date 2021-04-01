@@ -15,9 +15,9 @@ export default function VoiceWidget() {
   useEffect(() => {
     async function loadRhino() {
       // Dynamically import the worker
-      const rhnEnWorkerFactory = (await import("@picovoice/rhino-web-en-worker"))
-        .RhinoWorkerFactory;
-        console.log(rhnEnWorkerFactory)
+      const rhnEnWorkerFactory = (
+        await import("@picovoice/rhino-web-en-worker")
+      ).RhinoWorkerFactory;
       console.log("Rhino worker (EN) chunk is loaded.");
       return rhnEnWorkerFactory;
     }
@@ -42,17 +42,16 @@ export default function VoiceWidget() {
     pushToTalk,
   } = useRhino(
     workerChunk.factory,
-    {
-      rhinoFactoryArgs: { context: { base64: RHN_EN_CLOCK_64 } },
-      start: true,
-    },
+    { context: { base64: RHN_EN_CLOCK_64 }, start: true },
     inferenceEventHandler
   );
 
   return (
     <div className="voice-widget">
       <h2>VoiceWidget</h2>
-      <h3>Dynamic Import Loaded: {JSON.stringify(workerChunk.factory !== null)}</h3>
+      <h3>
+        Dynamic Import Loaded: {JSON.stringify(workerChunk.factory !== null)}
+      </h3>
       <h3>Loaded: {JSON.stringify(isLoaded)}</h3>
       <h3>Listening: {JSON.stringify(isListening)}</h3>
       <h3>Error: {JSON.stringify(isError)}</h3>
@@ -61,7 +60,9 @@ export default function VoiceWidget() {
       )}
       <h3>Talking: {JSON.stringify(isTalking)}</h3>
 
-      <h3>Rhino Context: <i>Alarm Clock</i></h3>
+      <h3>
+        Rhino Context: <i>Alarm Clock</i>
+      </h3>
       <p>e.g. "Set a timer for two minutes"</p>
       <button
         onClick={() => pushToTalk()}
@@ -70,7 +71,7 @@ export default function VoiceWidget() {
         Push to Talk
       </button>
       <h3>Inference:</h3>
-      {JSON.stringify(inference)}
+      {inference !== null && <pre>{JSON.stringify(inference)}</pre>}
     </div>
   );
 }

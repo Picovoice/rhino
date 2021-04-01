@@ -78,16 +78,14 @@ export function useRhino(
       webVp: WebVoiceProcessor;
       rhnWorker: RhinoWorker;
     }> {
-      const { rhinoFactoryArgs, start: startOnInit } = rhinoHookArgs;
+      const { context, start = true } = rhinoHookArgs;
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const rhnWorker = await rhinoWorkerFactory!.create(
-        rhinoFactoryArgs
-      );
+      const rhnWorker = await rhinoWorkerFactory!.create({ context, start: false });
 
       const webVp = await WebVoiceProcessor.init({
         engines: [rhnWorker],
-        start: startOnInit,
+        start,
       });
 
       rhnWorker.onmessage = (msg: MessageEvent<RhinoWorkerResponse>): void => {

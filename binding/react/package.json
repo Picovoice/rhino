@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-web-react",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "React component for Rhino Web SDK",
   "entry": "src/index.ts",
   "module": "dist/esm/index.js",
