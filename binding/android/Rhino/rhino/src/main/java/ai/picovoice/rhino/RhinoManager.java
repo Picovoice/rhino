@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
+    Copyright 2018-2021 Picovoice Inc.
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
     Unless required by applicable law or agreed to in writing, software distributed under the
@@ -10,6 +10,7 @@
 
 package ai.picovoice.rhino;
 
+import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -31,29 +32,17 @@ public class RhinoManager {
     private final RhinoManagerCallback callback;
 
     /**
-     * Constructor.
+     * Private constructor.
      *
-     * @param modelPath   Absolute path to the file containing model parameters.
-     * @param contextPath Absolute path to file containing context parameters. A context represents
-     *                    the set of expressions (spoken commands), intents, and intent arguments
-     *                    (slots) within a domain of interest.
-     * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher
-     *                    sensitivity value results in fewer misses at the cost of (potentially)
-     *                    increasing the erroneous inference rate.
+     * @param rhino   Absolute path to the file containing model parameters.
      * @param callback    It is invoked upon completion of intent inference.
      * @throws RhinoException if there is an error in reading audio or intent inference.
      */
-    public RhinoManager(
-            String modelPath,
-            String contextPath,
-            float sensitivity,
-            RhinoManagerCallback callback) throws RhinoException {
-        try {
-            rhino = new Rhino(modelPath, contextPath, sensitivity);
-        } catch (RhinoException e) {
-            throw new RhinoException(e);
-        }
+    private RhinoManager(
+            Rhino rhino,
+            RhinoManagerCallback callback){
 
+        this.rhino = rhino;
         this.callback = callback;
     }
 
@@ -115,5 +104,48 @@ public class RhinoManager {
      */
     public void delete() {
         rhino.delete();
+    }
+
+    /**
+     * Builder for creating an instance of RhinoManager with a mixture of default arguments
+     */
+    public static class Builder {
+
+        private String modelPath = null;
+        private String contextPath = null;
+        private float sensitivity = 0.5f;
+
+        public RhinoManager.Builder setModelPath(String modelPath) {
+            this.modelPath = modelPath;
+            return this;
+        }
+
+        public RhinoManager.Builder setContextPath(String contextPath) {
+            this.contextPath = contextPath;
+            return this;
+        }
+
+        public RhinoManager.Builder setSensitivity(float sensitivity) {
+            this.sensitivity = sensitivity;
+            return this;
+        }
+
+        /**
+         * Creates an instance of RhinoManager.
+         *
+         * @param context  Android app context (for extracting Rhino resources)
+         * @param callback A callback function that is invoked upon intent inference.
+         * @return A RhinoManager instance
+         * @throws RhinoException if there is an error while initializing Rhino.
+         */
+        public RhinoManager build(Context context, RhinoManagerCallback callback) throws RhinoException {
+
+            Rhino rhino = new Rhino.Builder()
+                    .setModelPath(modelPath)
+                    .setContextPath(contextPath)
+                    .setSensitivity(sensitivity)
+                    .build(context);
+            return new RhinoManager(rhino, callback);
+        }
     }
 }

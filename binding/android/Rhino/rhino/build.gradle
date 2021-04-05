@@ -1,4 +1,11 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+ext {
+    PUBLISH_GROUP_ID = 'ai.picovoice'
+    PUBLISH_VERSION = '1.6.0'
+    PUBLISH_ARTIFACT_ID = 'rhino-android'
+}
 
 android {
     compileSdkVersion 30
@@ -21,6 +28,8 @@ android {
         }
     }
 }
+
+apply from: "${rootDir}/publish-mavencentral.gradle"
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])

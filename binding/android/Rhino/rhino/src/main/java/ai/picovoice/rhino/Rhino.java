@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
+    Copyright 2018-2021 Picovoice Inc.
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
     Unless required by applicable law or agreed to in writing, software distributed under the
@@ -11,6 +11,16 @@
 
 package ai.picovoice.rhino;
 
+import android.content.Context;
+import android.content.res.Resources;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,6 +34,10 @@ import java.util.Map;
  * single-channel audio.
  */
 public class Rhino {
+
+    private static String DEFAULT_MODEL_PATH;
+    private static boolean isExtracted;
+
     static {
         System.loadLibrary("pv_rhino");
     }
@@ -42,7 +56,7 @@ public class Rhino {
      *                    increasing the erroneous inference rate.
      * @throws RhinoException if there is an error while initializing Rhino.
      */
-    public Rhino(String modelPath, String contextPath, float sensitivity) throws RhinoException {
+    private Rhino(String modelPath, String contextPath, float sensitivity) throws RhinoException {
         try {
             handle = init(modelPath, contextPath, sensitivity);
         } catch (Exception e) {
@@ -164,4 +178,92 @@ public class Rhino {
     private native boolean reset(long object);
 
     private native String getContextInfo(long object);
+
+    /**
+     * Builder for creating an instance of Rhino with a mixture of default arguments
+     */
+    public static class Builder {
+
+        private String modelPath = null;
+        private String contextPath = null;
+        private float sensitivity = 0.5f;
+
+        public Builder setModelPath(String modelPath) {
+            this.modelPath = modelPath;
+            return this;
+        }
+
+        public Builder setContextPath(String contextPath) {
+            this.contextPath = contextPath;
+            return this;
+        }
+
+        public Builder setSensitivity(float sensitivity) {
+            this.sensitivity = sensitivity;
+            return this;
+        }
+
+        private void extractResources(Context context) throws RhinoException {
+            final Resources resources = context.getResources();
+
+            try {
+
+                DEFAULT_MODEL_PATH = copyResourceFile(context,
+                        R.raw.rhino_params,
+                        resources.getResourceEntryName(R.raw.rhino_params) + ".pv");
+
+                isExtracted = true;
+            } catch (IOException ex) {
+                throw new RhinoException(ex);
+            }
+        }
+
+        private String copyResourceFile(Context context, int resourceId, String filename) throws IOException {
+            InputStream is = new BufferedInputStream(context.getResources().openRawResource(resourceId), 256);
+            OutputStream os = new BufferedOutputStream(context.openFileOutput(filename, Context.MODE_PRIVATE), 256);
+            int r;
+            while ((r = is.read()) != -1) {
+                os.write(r);
+            }
+            os.flush();
+
+            is.close();
+            os.close();
+
+            return new File(context.getFilesDir(), filename).getAbsolutePath();
+        }
+
+        /**
+         * Validates properties and creates an instance of the Rhino Speech-To-Intent engine
+         *
+         * @param context Android app context (for extracting Rhino resources)
+         * @return An instance of Rhino Speech-To-Intent engine
+         * @throws RhinoException if there is an error while initializing Rhino.
+         */
+        public Rhino build(Context context) throws RhinoException {
+
+            if (!isExtracted) {
+                extractResources(context);
+            }
+
+            if (modelPath == null) {
+                modelPath = DEFAULT_MODEL_PATH;
+            }
+
+            if (this.contextPath == null) {
+                throw new RhinoException(new IllegalArgumentException("No context file (.rhn) was provided."));
+            }
+
+            if (!new File(contextPath).exists()) {
+                throw new RhinoException(new IOException(String.format("Couldn't find context file at " +
+                        "'%s'", contextPath)));
+            }
+
+            if (sensitivity < 0 || sensitivity > 1) {
+                throw new RhinoException(new IllegalArgumentException("Sensitivity value should be within [0, 1]."));
+            }
+
+            return new Rhino(modelPath, contextPath, sensitivity);
+        }
+    }
 }

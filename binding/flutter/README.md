@@ -97,7 +97,7 @@ void _infererenceCallback(Map<String, dynamic> inference){
         Map<String, String> slots = inference['slots']
         // add code to take action based on inferred intent and slot values
     }
-    else{
+    else {
         // add code to handle unsupported commands
     }    
 }
@@ -119,8 +119,7 @@ void _errorCallback(PvError error){
 ```
 
 Once you have instantiated a RhinoManager, you can start audio capture and intent inference using the `.process()` function.
-Audio capture stops and rhino resets once an inference result is returned via the inference callback. When you wish to result, 
-call `.process()` again.
+Audio capture stops and rhino resets once an inference result is returned via the inference callback.
 
 ```dart
 try{
