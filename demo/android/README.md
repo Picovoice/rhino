@@ -1,4 +1,4 @@
-# Rhino Speech-to-Intent Engine
+# Rhino Activity Demo
 
 The default context for this demo is `Smart Lighting`. Simply press start and the engine can recognize commands such as
 

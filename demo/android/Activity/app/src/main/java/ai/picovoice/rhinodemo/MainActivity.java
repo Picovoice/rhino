@@ -62,11 +62,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRhino() throws Exception {
-        rhinoManager = new RhinoManager(
-                getAbsolutePath("rhino_params.pv"),
-                getAbsolutePath("rhino_context.rhn"),
-                0.25f,
-                new RhinoManagerCallback() {
+        rhinoManager = new RhinoManager.Builder()
+                .setContextPath(getAbsolutePath("rhino_context.rhn"))
+                .setSensitivity(0.25f)
+                .build(getApplicationContext(), new RhinoManagerCallback() {
                     @Override
                     public void invoke(final RhinoInference inference) {
                         runOnUiThread(new Runnable() {
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rhino_demo);
 
         try {
-            copyResourceFile(R.raw.rhino_params, "rhino_params.pv");
             copyResourceFile(R.raw.smart_lighting_android, "rhino_context.rhn");
         } catch (IOException e) {
             Toast.makeText(this, "Failed to copy resource files.", Toast.LENGTH_SHORT).show();
