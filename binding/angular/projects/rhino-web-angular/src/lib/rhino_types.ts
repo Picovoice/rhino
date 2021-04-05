@@ -1,23 +1,16 @@
 //
 // Rhino Types
 //
-
-export interface RhinoEngine {
-  version: string;
-  sampleRate: number;
-  frameLength: number;
-  release(): void;
-  process(frames: Int16Array): RhinoInference;
-}
-
 export type RhinoFactoryArgs = {
   context: RhinoContext;
   start?: boolean;
 };
 
 export type RhinoServiceArgs = {
-  rhinoFactoryArgs: RhinoFactoryArgs;
+  /** Immediately start the microphone upon initialization */
   start?: boolean;
+  /** The context to instantiate */
+  context: RhinoContext;
 };
 
 export interface RhinoWorkerFactory {

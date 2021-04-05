@@ -27,13 +27,10 @@ export class VoiceWidget {
   errorMessage: string
   inference: RhinoInference | null = null
   rhinoServiceArgs: RhinoServiceArgs = {
-    rhinoFactoryArgs: {
-      context: {
-        base64:
-          ALARM_CLOCK_64
-      }
+    context: {
+      base64:
+        ALARM_CLOCK_64
     }
-
   }
 
   constructor(private rhinoService: RhinoService) {

@@ -9,6 +9,7 @@ This library processes naturally spoken commands in-browser, offline. All proces
 Rhino operates on speech in a bespoke constext. E.g. using the [demo "Clock" Rhino context (English langauge)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn):
 
 > "Set a timer for ten minutes"
+
 ```json
 {
   "isFinalized": true,
@@ -19,7 +20,9 @@ Rhino operates on speech in a bespoke constext. E.g. using the [demo "Clock" Rhi
   }
 }
 ```
+
 > "Tell me a joke"
+
 ```json
 {
   "isFinalized": true,
@@ -59,33 +62,46 @@ In your Angular component, add the RhinoService. The RhinoService has an inferen
 import { Subscription } from "rxjs"
 import { RhinoService } from "@picovoice/rhino-web-angular"
 
-const RHINO_CLOCK_64 = /* Base64 string representation of a trained "clock" Rhino context (`.rhn` file) */
-
 ...
 
   constructor(private rhinoService: RhinoService) {
-    // Subscribe to Rhino inference
+    // Subscribe to Rhino Keyword detections
+    // Store each detection so we can display it in an HTML list
     this.rhinoDetection = rhinoService.inference$.subscribe(
-      inference => console.log(`Rhino Inference "${inference}"`))
+      inference => console.log(`Rhino Detected "${inference}"`))
   }
 ```
 
-We need to initialize Rhino to tell it the specific context we want to listen to (and at what sensitivity). We can use the Angular lifecycle hooks `ngOnInit` and `ngOnDestroy` to start up and later tear down the Rhino engine.
-
-**Important Note** The @picovoice/rhino-web-${LANGUAGE}-\* series of packages are on the order of ~3-4MB, as they contain the entire Voice AI model. Typically, you do _not_ want to import these statically, as your application bundle will be much larger than recommended. Instead, use dynamic imports so that the chunk is lazy-loaded:
+Where inference is a `RhinoInference`:
 
 ```typescript
+export type RhinoInference = {
+  /** Rhino has concluded the inference (isUnderstood is now set) */
+  isFinalized: boolean;
+  /** The intent was understood (it matched an expression in the context) */
+  isUnderstood?: boolean;
+  /** The name of the intent */
+  intent?: string;
+  /** Map of the slot variables and values extracted from the utterance */
+  slots?: Record<string, string>;
+};
+```
+
+We need to initialize Rhino to tell it which context we want to listen to (and at what sensitivity). We can use the Angular lifecycle hooks `ngOnInit` and `ngOnDestroy` to start up and later tear down the Rhino engine.
+
+### Imports
+
+You can use Rhino by importing the worker package statically or dynamically. Static is more straightforward to implement, but will impact your initial bundle size with an additional ~4MB. Depending on your requirements, this may or may not be feasible. If you require a small bundle size, see dynamic importing below.
+
+#### Static Import
+
+```typescript
+import {RhinoWorkerFactory as RhinoWorkerFactoryEn} from'@picovoice/rhino-web-en-worker'
+
   async ngOnInit() {
-    // Load Rhino worker chunk with specific language model (large ~3-4MB chunk; dynamically imported)
-    const rhinoFactoryEn = (await import('@picovoice/rhino-web-en-worker')).RhinoWorkerFactory
     // Initialize Rhino Service
     try {
-      await this.rhinoService.init(rhinoFactoryEn,
-        {
-          rhinoFactoryArgs: {
-            context: { base64: RHINO_CLOCK_64 },
-          },
-        })
+      await this.rhinoService.init(RhinoWorkerFactoryEn, {context: { base64: RHINO_CLOCK_64 }})
       console.log("Rhino is now loaded. Press the Push-to-Talk button to activate.")
     }
     catch (error) {
@@ -104,7 +120,36 @@ We need to initialize Rhino to tell it the specific context we want to listen to
 
 ```
 
-Upon mounting, the component will request microphone permission from the user, instantiate the audio stream and start up an instance of Rhino. 
+#### Dynamic Import
+
+```typescript
+  async ngOnInit() {
+    // Load Rhino worker chunk with specific language model (large ~3-4MB chunk; dynamically imported)
+    const rhinoFactoryEn = (await import('@picovoice/rhino-web-en-worker')).RhinoWorkerFactory
+    // Initialize Rhino Service
+    try {
+      await this.rhinoService.init(rhinoFactoryEn, {context: { base64: RHINO_CLOCK_64 }})
+      console.log("Rhino is now loaded. Press the Push-to-Talk button to activate.")
+    }
+    catch (error) {
+      console.error(error)
+    }
+  }
+
+  ngOnDestroy() {
+    this.rhinoDetection.unsubscribe()
+    this.rhinoService.release()
+  }
+
+  public pushToTalk() {
+    this.rhinoService.pushToTalk();
+  }
+
+```
+
+## Microphone and Push to Talk
+
+Upon mounting, the component will request microphone permission from the user, instantiate the audio stream and start up an instance of Rhino.
 
 Rhino requires a trigger to begin listening. To start listening for natural language commands, there is a `pushToTalk` method on the RhinoService, which we can connect to a button press event, for example. If you want to trigger Rhino using voice (a wake word / trigger word / hotword), see the [Picovoice SDK for Angular](https://npmjs.com/package/@picovoice/picovoice-web-angular), which includes both the Porcupine and Rhino engines and switches between them automatically for a continuous hands-free Voice AI interaction loop. The [Porcupine SDK for Angular](https://npmjs.com/package/@picovoice/porcupine-web-angular) is also available individually.
 
