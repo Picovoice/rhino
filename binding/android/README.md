@@ -54,11 +54,11 @@ import ai.picovoice.rhino.*;
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
                         .setContextPath("/path/to/context/file.rhn")
-                        .build(context, inferenceCallback);
+                        .build(appContext, inferenceCallback);
 } catch (RhinoException e) { }
 ```
 
-The `context` parameter is the Android application context - this is used to extract Rhino resources from the APK. The `inferenceCallback` parameter is a `RhinoManagerCallback` that will be invoked when Rhino has returned an inference result.
+The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. The `inferenceCallback` parameter is a `RhinoManagerCallback` that will be invoked when Rhino has returned an inference result.
 The callback should accept a `RhinoInference` object that will contain the inference results.
 
 ```java
@@ -85,6 +85,8 @@ The model file contains the parameters for the speech-to-intent engine. To chang
 
 These optional parameters can be set through the Builder functions `setModelPath` and `setSensitivity`:
 ```java
+import ai.picovoice.rhino.*;
+
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
                         .setContextPath("/path/to/context/file.rhn")
@@ -118,7 +120,7 @@ import ai.picovoice.rhino.*;
 try {    
     Rhino rhino = new Rhino.Builder()
                         .setContextPath("/path/to/context/file.rhn")
-                        .build(context);
+                        .build(appContext);
 } catch (RhinoException e) { }
 ```
 
@@ -158,9 +160,9 @@ Once you're done with Rhino, ensure you release its resources explicitly:
 rhino.delete();
 ```
 
-## How to Integrate Custom Wake Words (.rhn files)
+## How to Integrate Custom Contexts (.rhn files)
 
-To add a custom wake word to your Android application a couple of extra steps must be taken. First, add your .rhn file to the `/res/raw` folder. All resources are compressed when the build system creates an APK, so you will have to extract your ppn file first before using it:
+To add a custom context to your Android application a couple of extra steps must be taken. First, add your .rhn file to the `/res/raw` folder. All resources are compressed when the build system creates an APK, so you will have to extract your rhn file first before using it:
 
 ```java
 // in this example our file located at '/res/raw/context.rhn'

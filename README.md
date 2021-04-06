@@ -795,6 +795,14 @@ this._rhino.delete();
 
 ### Android
 
+To include the package in your Android project, ensure you have included `mavenCentral()` in your top-level `build.gradle` file and then add the following to your app's `build.gradle`:
+
+```groovy
+dependencies {    
+    implementation 'ai.picovoice:rhino-android:1.6.0'
+}
+```
+
 There are two possibilities for integrating Rhino into an Android application: the High-level API and the Low-level API.
 
 #### High-Level API
@@ -804,22 +812,28 @@ for integrating Rhino into Android applications. It manages all activities relat
 feeding it into Rhino, and invoking a user-provided inference callback.
 
 ```java
-    final String modelPath = ... // Available at lib/common/rhino_params.pv
-    final String contextPath = ...
-    final float sensitivity = 0.5;
-
-RhinoManager manager = new RhinoManager(
-        modelPath,
-        contextPath,
-        sensitivity,
-        new RhinoManagerCallback() {
-            @Override
-            public void invoke(RhinoInference inference) {
-                // Insert infernce event logic
-            }
-        });
+try {
+    RhinoManager rhinoManager = new RhinoManager.Builder()
+                        .setContextPath("/path/to/context/file.rhn")
+                        .setModelPath("/path/to/model/file.pv")
+                        .setSensitivity(0.35f)                        
+                        .build(appContext, new RhinoManagerCallback() {
+                            @Override
+                            public void invoke(RhinoInference inference) {
+                                if (inference.getIsUnderstood()) {
+                                    final String intent = inference.getIntent()));
+                                    final Map<String, String> slots = inference.getSlots();
+                                    // add code to take action based on inferred intent and slot values
+                                }
+                                else {
+                                    // add code to handle unsupported commands
+                                }
+                            }
+                        });
+} catch (RhinoException e) { }
 ```
 
+The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. 
 Sensitivity is the parameter that enables developers to trade miss rate for false alarm. It is a floating point number within
 [0, 1]. A higher sensitivity reduces miss rate at cost of increased false alarm rate.
 
@@ -831,11 +845,13 @@ using `manager.delete()`.
 Rhino provides a binding for Android using JNI. It can be initialized using:
 
 ```java
-final String modelPath = ... // Available at lib/common/rhino_params.pv
-final String contextPath = ...
-final float sensitivity = 0.5;
+import ai.picovoice.rhino.*;
 
-Rhino handle = new Rhino(modelPath, contextPath, sensitivity);
+try {    
+    Rhino rhino = new Rhino.Builder()
+                        .setContextPath("/path/to/context/file.rhn")                        
+                        .build(appContext);
+} catch (RhinoException e) { }
 ```
 
 Once initialized, `handle` can be used for intent inference:
