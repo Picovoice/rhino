@@ -54,7 +54,44 @@ yarn add @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
 
 ## Usage
 
-Import the Rhino component and the Rhino Web Worker component. Bind the worker to Rhino like the demo `.vue` file below.
+The Rhino SDK for Vue is based on the Rhino SDK for Web. The library provides a renderless Vue component: `Rhino`. The component will take care of microphone access and audio downsampling (via `@picovoice/web-voice-processor`) and provide a wake word detection event to which your parent component can listen.
+
+The Rhino library is by default a "push-to-talk" experience. You can use a button to trigger the `isTalking` state. Rhino will listen and process frames of microphone audio until it reaches a conclusion. If the utterance matched something in your Rhino context (e.g. "make me a coffee" in a coffee maker context), the details of the inference are returned.
+
+## Parameters
+
+The `Rhino` component has two main parameters:
+
+1. The `rhinoWorkerFactory` (language-specific, imported as `RhinoWorkerFactory` from the `@picovoice/rhino-web-xx-worker` series of packages, where `xx` is the two-letter language code)
+1. The `rhinoFactoryArgs` (i.e. what specific context we want Rhino to understand)
+
+Provide a Rhino context via `rhinoFactoryArgs`:
+
+```typescript
+export type RhinoContext = {
+  /** Base64 representation of a trained Rhino context (`.rhn` file) */
+  base64: string
+  /** Value in range [0,1] that trades off miss rate for false alarm */
+  sensitivity?: number
+}
+```
+
+The `Rhino` component emits four [events](#events). The main event of interest is `rhn-inference`, emitted when Rhino concludes an inference (whether it was understood or not). The `rhn-inference` event provides a `RhinoInference` object:
+
+```typescript
+export type RhinoInference = {
+  /** Rhino has concluded the inference (isUnderstood is now set) */
+  isFinalized: boolean
+  /** The intent was understood (it matched an expression in the context) */
+  isUnderstood?: boolean
+  /** The name of the intent */
+  intent?: string
+  /** Map of the slot variables and values extracted from the utterance */
+  slots?: Record<string, string>
+}
+```
+
+Make sure you handle the possibility of errors with the `rhn-error` event. Users may not have a working microphone, and they can always decline (and revoke) permissions; your application code should anticipate these scenarios. You also want to ensure that your UI waits until `rhn-loaded` is complete before instructing them to use VUI features (i.e. the "Push to Talk" button should be disabled until this event occurs).
 
 ```html
   <Rhino
