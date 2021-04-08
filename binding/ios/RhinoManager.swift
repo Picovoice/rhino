@@ -1,5 +1,5 @@
 //
-//  Copyright 2018-2020 Picovoice Inc.
+//  Copyright 2018-2021 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -8,38 +8,20 @@
 //
 
 import AVFoundation
-import PvRhino
 
 public enum RhinoManagerError: Error {
-    case invalidArgument
-    case io
-    case outOfMemory
     case recordingDenied
-}
-
-public struct Inference {
-    let isUnderstood: Bool
-    let intent: String
-    let slots: Dictionary<String, String>
-    
-    public init(isUnderstood: Bool, intent: String, slots: Dictionary<String, String>) {
-        self.isUnderstood = isUnderstood
-        self.intent = intent
-        self.slots = slots
-    }
+    case objectDisposed
 }
 
 /// High-level iOS binding for Rhino Speech-to-Intent engine. It handles recording audio from microphone, processes it in real-time using Rhino, and notifies the client
 /// when an intent is inferred from the spoken command.
 public class RhinoManager {
     private var onInferenceCallback: ((Inference) -> Void)?
+    private var rhino: Rhino? 
+    private let audioInputEngine: AudioInputEngine    
     
-    private let audioInputEngine: AudioInputEngine
-    
-    private var rhino: OpaquePointer?
-    
-    private var started = false
-    
+    private var started = false    
     private var stop = false
     
     /// Constructor.
@@ -52,9 +34,9 @@ public class RhinoManager {
     ///   increasing the erroneous inference rate.
     ///   - onInferenceCallback: It is invoked upon completion of intent inference.
     /// - Throws: RhinoManagerError
-    public init(modelPath: String, contextPath: String, sensitivity: Float32, onInferenceCallback: ((Inference) -> Void)?) throws {
+    public init(contextPath: String, modelPath: String = Rhino.defaultModelPath, sensitivity: Float32 = 0.5, onInferenceCallback: ((Inference) -> Void)?) throws {
         self.onInferenceCallback = onInferenceCallback
-        
+        self.rhino = try Rhino(contextPath:contextPath, modelPath:modelPath, sensitivity:sensitivity)
         self.audioInputEngine = AudioInputEngine()
         
         audioInputEngine.audioInput = { [weak self] audio in
@@ -63,69 +45,62 @@ public class RhinoManager {
                 return
             }
             
-            var isFinalized: Bool = false
-            
-            pv_rhino_process(self.rhino, audio, &isFinalized)
-            
+            guard self.rhino != nil else {
+                return
+            }
+
+            let isFinalized:Bool = self.rhino!.process(pcm:audio) 
             if isFinalized {
-                var isUnderstood: Bool = false
-                var intent = ""
-                var slots = [String: String]()
-                
-                pv_rhino_is_understood(self.rhino, &isUnderstood)
-                
-                if isUnderstood {
-                    var cIntent: UnsafePointer<Int8>?
-                    var numSlots: Int32 = 0
-                    var cSlotKeys: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-                    var cSlotValues: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-                    pv_rhino_get_intent(self.rhino, &cIntent, &numSlots, &cSlotKeys, &cSlotValues)
-                    
-                    if isUnderstood {
-                        intent = String(cString: cIntent!)
-                        for i in 0...(numSlots - 1) {
-                            let slot = String(cString: cSlotKeys!.advanced(by: Int(i)).pointee!)
-                            let value = String(cString: cSlotValues!.advanced(by: Int(i)).pointee!)
-                            slots[slot] = value
-                        }
-                        
-                        pv_rhino_free_slots_and_values(self.rhino, cSlotKeys, cSlotValues)
-                    }
+                do{
+                    let inference:Inference = try self.rhino!.getInference()
+                    self.onInferenceCallback?(inference)
+                } catch {
+                    print("There was an error retrieving the inference result.")
                 }
-                
-                pv_rhino_reset(self.rhino)
-                
-                self.onInferenceCallback?(Inference(isUnderstood: isUnderstood, intent: intent, slots: slots))
                 
                 self.stop = true
             }
         }
-        
-        let status = pv_rhino_init(modelPath, contextPath, sensitivity, &rhino)
-        try checkStatus(status)
     }
     
     deinit {
-        pv_rhino_delete(rhino)
-        rhino = nil
+        self.delete()
+    }
+    
+    /// Stops recording and releases Rhino resources
+    public func delete() {
+        if self.started {
+            self.stop = true
+        }
+        
+        if self.rhino != nil {
+            self.rhino!.delete()
+            self.rhino = nil
+        }
     }
     
     /// Start recording audio from the microphone and infers the user's intent from the spoken command. Once the inference is finalized it will invoke the user
     /// provided callback and terminates recording audio.
+    ///
+    /// - Throws: AVAudioSession, AVAudioEngine errors. Additionally RhinoManagerError if
+    ///           microphone permission is not granted or Rhino has been disposed.
     public func process() throws {
         if self.started {
             return
         }
         
-        self.started = true
-        
+        if rhino == nil {
+            throw RhinoManagerError.objectDisposed
+        }
+
+        // Only check if it's denied, permission will be automatically asked.
         let audioSession = AVAudioSession.sharedInstance()
         if audioSession.recordPermission == .denied {
             throw RhinoManagerError.recordingDenied
-        }
-        
+        }        
+
         try audioSession.setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
-        
+                
         let dispatchQueue = DispatchQueue(label: "RhinoManagerWatcher", qos: .background)
         dispatchQueue.async {
             while !self.stop {
@@ -138,20 +113,9 @@ public class RhinoManager {
         }
         
         try audioInputEngine.start()
-    }
-    
-    private func checkStatus(_ status: pv_status_t) throws {
-        switch status {
-        case PV_STATUS_IO_ERROR:
-            throw RhinoManagerError.io
-        case PV_STATUS_OUT_OF_MEMORY:
-            throw RhinoManagerError.outOfMemory
-        case PV_STATUS_INVALID_ARGUMENT:
-            throw RhinoManagerError.invalidArgument
-        default:
-            return
-        }
-    }
+     
+        self.started = true        
+    }   
 }
 
 private class AudioInputEngine {
@@ -162,7 +126,7 @@ private class AudioInputEngine {
     
     func start() throws {
         var format = AudioStreamBasicDescription(
-            mSampleRate: Float64(pv_sample_rate()),
+            mSampleRate: Float64(Rhino.sampleRate),
             mFormatID: kAudioFormatLinearPCM,
             mFormatFlags: kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked,
             mBytesPerPacket: 2,
@@ -178,7 +142,7 @@ private class AudioInputEngine {
             return
         }
         
-        let bufferSize = UInt32(pv_rhino_frame_length()) * 2
+        let bufferSize = UInt32(Rhino.frameLength) * 2
         for _ in 0..<numBuffers {
             var bufferRef: AudioQueueBufferRef? = nil
             AudioQueueAllocateBuffer(queue, bufferSize, &bufferRef)

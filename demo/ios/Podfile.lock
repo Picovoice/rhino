@@ -1,0 +1,16 @@
+PODS:
+  - Rhino-iOS (1.6.0)
+
+DEPENDENCIES:
+  - Rhino-iOS
+
+SPEC REPOS:
+  "git@gitlab.com:picovoice/podspec-test.git":
+    - Rhino-iOS
+
+SPEC CHECKSUMS:
+  Rhino-iOS: 948be3a21d696614446b62fabbb287feee531d17
+
+PODFILE CHECKSUM: a59f40d59786b6c13eb57db7419cd23190184370
+
+COCOAPODS: 1.10.0

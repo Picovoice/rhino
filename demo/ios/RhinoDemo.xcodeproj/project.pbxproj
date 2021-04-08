@@ -3,13 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		02A4163025CDBD6D00082745 /* PvRhino.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02A4162D25CDBD5F00082745 /* PvRhino.xcframework */; };
-		02A4163125CDBD6D00082745 /* PvRhino.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 02A4162D25CDBD5F00082745 /* PvRhino.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1760DF18253908E500395344 /* RhinoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1760DF17253908E500395344 /* RhinoManager.swift */; };
 		BB193E922370C4EC00556136 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E912370C4EC00556136 /* AppDelegate.swift */; };
 		BB193E942370C4EC00556136 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E932370C4EC00556136 /* SceneDelegate.swift */; };
 		BB193E962370C4EC00556136 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E952370C4EC00556136 /* ContentView.swift */; };
@@ -17,8 +14,7 @@
 		BB193E9B2370C4F500556136 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9A2370C4F500556136 /* Preview Assets.xcassets */; };
 		BB193E9E2370C4F500556136 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9C2370C4F500556136 /* LaunchScreen.storyboard */; };
 		BB5334A123723091003B6FD1 /* smart_lighting_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */; };
-		BB5334A223723091003B6FD1 /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = BB5334A023723091003B6FD1 /* coffee_maker_ios.rhn */; };
-		BB5334A4237230AD003B6FD1 /* rhino_params.pv in Resources */ = {isa = PBXBuildFile; fileRef = BB5334A3237230AD003B6FD1 /* rhino_params.pv */; };
+		FB63B28C2141FEF4A95C51A6 /* libPods-RhinoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,7 +24,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				02A4163125CDBD6D00082745 /* PvRhino.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -36,8 +31,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		02A4162D25CDBD5F00082745 /* PvRhino.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PvRhino.xcframework; path = ../../../lib/ios/PvRhino.xcframework; sourceTree = "<group>"; };
-		1760DF17253908E500395344 /* RhinoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RhinoManager.swift; path = ../../../../binding/ios/RhinoManager.swift; sourceTree = "<group>"; };
+		2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.release.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.release.xcconfig"; sourceTree = "<group>"; };
 		BB193E8E2370C4EC00556136 /* RhinoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB193E912370C4EC00556136 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB193E932370C4EC00556136 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -46,9 +41,8 @@
 		BB193E9A2370C4F500556136 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BB193E9D2370C4F500556136 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB193E9F2370C4F500556136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = smart_lighting_ios.rhn; path = ../../../../resources/contexts/ios/smart_lighting_ios.rhn; sourceTree = "<group>"; };
-		BB5334A023723091003B6FD1 /* coffee_maker_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_ios.rhn; path = ../../../../resources/contexts/ios/coffee_maker_ios.rhn; sourceTree = "<group>"; };
-		BB5334A3237230AD003B6FD1 /* rhino_params.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params.pv; path = ../../../../lib/common/rhino_params.pv; sourceTree = "<group>"; };
+		BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = smart_lighting_ios.rhn; path = ../../../resources/contexts/ios/smart_lighting_ios.rhn; sourceTree = "<group>"; };
+		F5652D86CACC859DFD1FAF1F /* Pods-RhinoDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.debug.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				02A4163025CDBD6D00082745 /* PvRhino.xcframework in Frameworks */,
+				FB63B28C2141FEF4A95C51A6 /* libPods-RhinoDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +63,7 @@
 				BB193E902370C4EC00556136 /* RhinoDemo */,
 				BB193E8F2370C4EC00556136 /* Products */,
 				BB53349B2372152D003B6FD1 /* Frameworks */,
+				E1CC14E37D7D2680AFB498A7 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -83,9 +78,6 @@
 		BB193E902370C4EC00556136 /* RhinoDemo */ = {
 			isa = PBXGroup;
 			children = (
-				1760DF17253908E500395344 /* RhinoManager.swift */,
-				BB5334A3237230AD003B6FD1 /* rhino_params.pv */,
-				BB5334A023723091003B6FD1 /* coffee_maker_ios.rhn */,
 				BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */,
 				BB193E912370C4EC00556136 /* AppDelegate.swift */,
 				BB193E932370C4EC00556136 /* SceneDelegate.swift */,
@@ -109,9 +101,18 @@
 		BB53349B2372152D003B6FD1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				02A4162D25CDBD5F00082745 /* PvRhino.xcframework */,
+				2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E1CC14E37D7D2680AFB498A7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F5652D86CACC859DFD1FAF1F /* Pods-RhinoDemo.debug.xcconfig */,
+				81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -121,10 +122,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BB193EA22370C4F500556136 /* Build configuration list for PBXNativeTarget "RhinoDemo" */;
 			buildPhases = (
+				7371647E97F976B23BAD1CCC /* [CP] Check Pods Manifest.lock */,
 				BB193E8A2370C4EC00556136 /* Sources */,
 				BB193E8B2370C4EC00556136 /* Frameworks */,
 				BB193E8C2370C4EC00556136 /* Resources */,
 				02A4163225CDBD6D00082745 /* Embed Frameworks */,
+				57906AA1820E12CA3417C0D7 /* [CP] Embed Pods Frameworks */,
+				6F7654B2BF786DE74E735337 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -174,22 +178,78 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB193E9E2370C4F500556136 /* LaunchScreen.storyboard in Resources */,
-				BB5334A223723091003B6FD1 /* coffee_maker_ios.rhn in Resources */,
 				BB193E9B2370C4F500556136 /* Preview Assets.xcassets in Resources */,
 				BB5334A123723091003B6FD1 /* smart_lighting_ios.rhn in Resources */,
-				BB5334A4237230AD003B6FD1 /* rhino_params.pv in Resources */,
 				BB193E982370C4F500556136 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		57906AA1820E12CA3417C0D7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6F7654B2BF786DE74E735337 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7371647E97F976B23BAD1CCC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RhinoDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		BB193E8A2370C4EC00556136 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1760DF18253908E500395344 /* RhinoManager.swift in Sources */,
 				BB193E922370C4EC00556136 /* AppDelegate.swift in Sources */,
 				BB193E942370C4EC00556136 /* SceneDelegate.swift in Sources */,
 				BB193E962370C4EC00556136 /* ContentView.swift in Sources */,
@@ -262,7 +322,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LIBRARY_SEARCH_PATHS = "${SRCROOT}/../../../lib/ios";
+				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -319,7 +379,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LIBRARY_SEARCH_PATHS = "${SRCROOT}/../../../lib/ios";
+				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -332,6 +392,7 @@
 		};
 		BB193EA32370C4F500556136 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F5652D86CACC859DFD1FAF1F /* Pods-RhinoDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -352,6 +413,7 @@
 		};
 		BB193EA42370C4F500556136 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
