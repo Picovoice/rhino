@@ -124,13 +124,13 @@ try {
 } catch (RhinoException e) { }
 ```
 
-To feed Rhino your audio, you must send it frames of audio to its `process` function.
-Each call to `process` will return a RhinoInference object that will contain the following items:
+To feed Rhino your audio, you must send it frames of audio to its `process` function. The function returns a boolean indicating whether it has an inference ready or not. When it returns true, call `getInference` to get a `RhinoInference` object with the following structure:
 
 - `getIsUnderstood()` - whether Rhino understood what it heard based on the context
 - `getIntent()` - if understood, name of intent that were inferred
 - `getSlots()` - if understood, dictionary of slot keys and values that were inferred
 
+The process loop would look something like this:
 ```java
 short[] getNextAudioFrame(){
     // .. get audioFrame
@@ -139,14 +139,17 @@ short[] getNextAudioFrame(){
 
 while(true) {
     try {
-        RhinoInference inference = rhino.process(getNextAudioFrame());
-        if (inference.getIsUnderstood()) {
-            final String intent = inference.getIntent()));
-            final Map<String, String> slots = inference.getSlots();
-            // add code to take action based on inferred intent and slot values
-        }
-        else {
-            // add code to handle unsupported commands
+        boolean isFinalized = rhino.process(getNextAudioFrame());
+        if (isFinalized) {
+            RhinoInference inference = rhino.getInference();
+            if (inference.getIsUnderstood()) {
+                final String intent = inference.getIntent();
+                final Map<String, String> slots = inference.getSlots();
+                // add code to take action based on inferred intent and slot values
+            }
+            else {
+                // add code to handle unsupported commands
+            }
         }
     } catch (RhinoException e) { }
 }

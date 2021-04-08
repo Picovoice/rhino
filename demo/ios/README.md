@@ -1,3 +1,10 @@
+# Rhino iOS Demo
+
+Before building the demo app, run the following from this directory to install the Rhino Cocoapod:
+```ruby
+pod install
+```
+
 The default context for this demo is `Smart Lighting`. Simply press start and the engine can recognize commands such as
 
 > Turn off the lights.
