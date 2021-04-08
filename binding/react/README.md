@@ -50,11 +50,15 @@ Using the Web Audio API requires a secure context (HTTPS connection), with the e
 
 Use `npm` or `yarn` to install the package and its peer dependencies. Each spoken language (e.g. 'en', 'de') is a separate package. For this example we'll use English:
 
-`yarn add @picovoice/rhino-web-react @picovoice/rhino-web-en-worker`
+```console
+yarn add @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
+```
 
 (or)
 
-`npm install @picovoice/rhino-web-react @picovoice/rhino-web-en-worker`
+```console
+npm install @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
+```
 
 ## Usage
 

@@ -51,6 +51,7 @@ Rhino is:
     - [Android](#android-demos)
     - [iOS](#ios-demos)
     - [Web](#web-demos)
+      - [Vanilla JavaScript and HTML](#vanilla-javascript-and-html)
       - [Angular](#angular-demos)
       - [React](#react-demos)
       - [Vue](#vue-demos)
@@ -66,6 +67,8 @@ Rhino is:
     - [Android](#android)
     - [iOS](#ios)
     - [Web](#web)
+      - [Vanilla JavaScript and HTML (CDN Script Tag)](vanilla-javascript-and-html-cdn-script-tag)
+      - [Vanilla JavaScript and HTML (ES Modules)](#vanilla-javascript-and-html-es-modules)
       - [Angular](#angular)
       - [React](#react)
       - [Vue](#vue)
@@ -301,16 +304,18 @@ For more information about Android demo and the complete list of available expre
 
 ### Web Demos
 
+#### Vanilla JavaScript and HTML
+
 From [demo/web](/demo/web) run the following in the terminal:
 
-```yarn
+```console
 yarn
 yarn start
 ```
 
 (or)
 
-```
+```console
 npm install
 npm run start
 ```
@@ -321,14 +326,14 @@ Open http://localhost:5000 in your browser to try the demo.
 
 From [demo/angular](/demo/angular) run the following in the terminal:
 
-```yarn
+```console
 yarn
 yarn start
 ```
 
 (or)
 
-```
+```console
 npm install
 npm run start
 ```
@@ -339,14 +344,14 @@ Open http://localhost:4200 in your browser to try the demo.
 
 From [demo/react](/demo/react) run the following in the terminal:
 
-```yarn
+```console
 yarn
 yarn start
 ```
 
 (or)
 
-```
+```console
 npm install
 npm run start
 ```
@@ -357,14 +362,14 @@ Open http://localhost:3000 in your browser to try the demo.
 
 From [demo/vue](/demo/vue) run the following in the terminal:
 
-```yarn
+```console
 yarn
 yarn serve
 ```
 
 (or)
 
-```
+```console
 npm install
 npm run serve
 ```
@@ -1036,7 +1041,7 @@ Rhino is available on modern web browsers (i.e. not Internet Explorer) via [WebA
 
 Each spoken language is available as a dedicated npm package (e.g. @picovoice/rhino-web-en-worker). These packages can be used with the @picovoice/web-voice-processor. They can also be used with the Angular, React, and Vue bindings, which abstract and hide the web worker communication details.
 
-#### Vanilla JavaScript and HTML (CDN Script Tag / IIFE)
+#### Vanilla JavaScript and HTML (CDN Script Tag)
 
 ```html
 <!DOCTYPE html>
@@ -1045,14 +1050,14 @@ Each spoken language is available as a dedicated npm package (e.g. @picovoice/rh
     <script src="https://unpkg.com/@picovoice/rhino-web-en-worker/dist/iife/index.js"></script>
     <script src="https://unpkg.com/@picovoice/web-voice-processor/dist/iife/index.js"></script>
     <script type="application/javascript">
-      const CLOCK_CONTEXT_64 = /* Base64 representation of .rhn file  */;
+      const RHINO_CONTEXT_BASE64 = /* Base64 representation of .rhn file  */;
 
       async function startRhino() {
         console.log("Rhino is loading. Please wait...");
-        window.rhinoClockWorker = await RhinoWebEnWorker.RhinoWorkerFactory.create(
+        window.rhinoWorker = await RhinoWebEnWorker.RhinoWorkerFactory.create(
           {
             context: {
-              base64: CLOCK_CONTEXT_64,
+              base64: RHINO_CONTEXT_BASE64,
               sensitivity: 0.5,
             },
             start: false,
@@ -1061,10 +1066,10 @@ Each spoken language is available as a dedicated npm package (e.g. @picovoice/rh
 
         console.log("Rhino worker ready!");
 
-        window.rhinoClockWorker.onmessage = (msg) => {
+        window.rhinoWorker.onmessage = (msg) => {
           if (msg.data.command === "rhn-inference") {
             console.log("Inference detected: " + JSON.stringify(msg.data.inference));
-            window.rhinoClockWorker.postMessage({ command: "pause" });
+            window.rhinoWorker.postMessage({ command: "pause" });
             document.getElementById("push-to-talk").disabled = false;
             console.log("Rhino is paused. Press the 'Push to Talk' button to speak again.")
           }
@@ -1076,7 +1081,7 @@ Each spoken language is available as a dedicated npm package (e.g. @picovoice/rh
 
         try {
           let webVp = await WebVoiceProcessor.WebVoiceProcessor.init({
-            engines: [window.rhinoClockWorker],
+            engines: [window.rhinoWorker],
           });
           console.log(
             "WebVoiceProcessor ready! Press the 'Push to Talk' button to talk."
@@ -1091,7 +1096,7 @@ Each spoken language is available as a dedicated npm package (e.g. @picovoice/rh
         document.getElementById("push-to-talk").onclick = function (event) {
           console.log("Rhino is listening for your commands ...");
           this.disabled = true;
-          window.rhinoClockWorker.postMessage({ command: "resume" });
+          window.rhinoWorker.postMessage({ command: "resume" });
         };
       });
     </script>
@@ -1105,13 +1110,13 @@ Each spoken language is available as a dedicated npm package (e.g. @picovoice/rh
 
 #### Vanilla JavaScript and HTML (ES Modules)
 
-```
+```console
 yarn add @picovoice/rhino-web-en-worker @picovoice/web-voice-processor
 ```
 
 (or)
 
-```
+```console
 npm install @picovoice/rhino-web-en-worker @picovoice/web-voice-processor
 ```
 
@@ -1119,13 +1124,13 @@ npm install @picovoice/rhino-web-en-worker @picovoice/web-voice-processor
 import { WebVoiceProcessor } from "@picovoice/web-voice-processor"
 import { RhinoWorkerFactory } from "@picovoice/rhino-web-en-worker";
  
-const RHN_CONTEXT_64 = /* Base64 representation of a .rhn context */
+const RHN_CONTEXT_BASE64 = /* Base64 representation of a .rhn context */
  
 async startRhino()
   // Create a Rhino Worker (English language) to listen for
   // commands in the specified context
   const rhinoWorker = await RhinoWorkerFactory.create(
-    {context: RHN_CONTEXT_64 }
+    {context: RHN_CONTEXT_BASE64 }
   );
  
   // The worker will send a message with data.command = "rhn-inference" upon concluding
@@ -1173,13 +1178,13 @@ if (done) {
 
 #### Angular
 
-```
+```console
 yarn add @picovoice/rhino-web-angular @picovoice/rhino-web-en-worker
 ```
 
 (or)
 
-```
+```console
 npm install @picovoice/rhino-web-angular @picovoice/rhino-web-en-worker
 ```
 
@@ -1188,7 +1193,7 @@ async ngOnInit() {
   const rhinoFactoryEn = (await import('@picovoice/rhino-web-en-worker')).RhinoWorkerFactory
   // Initialize Rhino Service
   try {
-    await this.rhinoService.init(rhinoFactoryEn, {context: { base64: RHINO_CLOCK_64 }})
+    await this.rhinoService.init(rhinoFactoryEn, {context: { base64: RHN_CONTEXT_BASE64 }})
     console.log("Rhino is now loaded. Press the Push-to-Talk button to activate.")
   }
   catch (error) {
@@ -1208,13 +1213,13 @@ public pushToTalk() {
 
 #### React
 
-```
+```console
 yarn add @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
 ```
 
 (or)
 
-```
+```console
 npm install @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
 ```
 
@@ -1223,7 +1228,7 @@ mport React, { useState } from 'react';
 import { RhinoWorkerFactory } from '@picovoice/rhino-web-en-worker';
 import { useRhino } from '@picovoice/rhino-web-react';
  
-const RHN_CONTEXT_CLOCK_64 = /* Base64 representation of English language clock_wasm.rhn, omitted for brevity */
+const RHINO_CONTEXT_BASE64 = /* Base64 representation an English language .rhn file, omitted for brevity */
  
 function VoiceWidget(props) {
   const [latestInference, setLatestInference] = useState(null)
@@ -1246,11 +1251,11 @@ function VoiceWidget(props) {
   } = useRhino(
     // Pass in the factory to build Rhino workers. This needs to match the context language below
     RhinoWorkerFactory,
-    // Initialize Rhino (in a paused state) with the clock context.
+    // Initialize Rhino (in a paused state).
     // Immediately start processing microphone audio,
     // Although Rhino itself will not start listening until the Push to Talk button is pressed.
     {
-      context: { base64: RHN_EN_CLOCK_64 },
+      context: { base64: RHINO_CONTEXT_BASE64 },
       start: true,
     }
     inferenceEventHandler
@@ -1268,13 +1273,13 @@ return (
 
 #### Vue
 
-```
+```console
 yarn add @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
 ```
 
 (or)
 
-```
+```console
 npm install @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
 ```
 

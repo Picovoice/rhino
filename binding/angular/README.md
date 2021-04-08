@@ -12,14 +12,22 @@ Run `yarn` to install the Angular workspace dependencies:
 yarn
 ```
 
-Run `ng build rhino-web-angular --prod` to build the project.
+To build the project, run:
 
-## Commands
+```console
+yarn build rhino-web-angular --prod
+```
+
+## Format and Lint
 
 Format code with Prettier:
 
-`yarn format`
+```console
+yarn format
+```
 
 Lint code with ESLint:
 
-`ng lint`
+```console
+yarn lint
+```

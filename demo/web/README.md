@@ -6,14 +6,14 @@ This is a basic demo to show how to use Rhino for web browsers, using the IIFE v
 
 Use `yarn` or `npm` to install the dependencies, and the `start` script to start a local web server hosting the demo.
 
-```bash
+```console
 yarn
 yarn start
 ```
 
 (or)
 
-```bash
+```console
 npm install
 npm run start
 ```
@@ -32,8 +32,6 @@ Open `localhost:5000` in your web browser, as hinted at in the output:
    │                                                  │
    └──────────────────────────────────────────────────┘
 ```
-
-
 
 ### Try Rhino
 
