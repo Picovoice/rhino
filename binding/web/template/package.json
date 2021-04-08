@@ -16,7 +16,8 @@
     "prepack": "npm-run-all build",
     "start": "cross-env TARGET='debug' rollup --config --watch",
     "watch": "rollup --config --watch",
-    "format": "prettier --write \"**/*.{js,ts,json}\""
+    "format": "prettier --write \"**/*.{js,ts,json}\"",
+    "test": "jest"
   },
   "devDependencies": {
     "@babel/core": "^7.12.13",

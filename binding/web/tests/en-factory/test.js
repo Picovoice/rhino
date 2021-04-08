@@ -38,7 +38,6 @@ function rhinoProcessWaveFile(handle, waveFilePath) {
     const frame = frames[i];
     const inference = handle.process(frame);
     if (inference.isFinalized) {
-      console.log(inference);
       return inference;
     }
   }
