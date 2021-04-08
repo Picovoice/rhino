@@ -31,7 +31,7 @@ public class RhinoManager {
     /// - Throws: RhinoManagerError
     public init(contextPath: String, modelPath: String = Rhino.defaultModelPath, sensitivity: Float32 = 0.5, onInferenceCallback: ((Inference) -> Void)?) throws {
         self.onInferenceCallback = onInferenceCallback
-        self.rhino = try Rhino(contextPath:contextPath, modelPath:modelPath, sensitivity:sensitvity)
+        self.rhino = try Rhino(contextPath:contextPath, modelPath:modelPath, sensitivity:sensitivity)
         self.audioInputEngine = AudioInputEngine()
         
         audioInputEngine.audioInput = { [weak self] audio in
@@ -46,9 +46,13 @@ public class RhinoManager {
 
             let isFinalized:Bool = self.rhino!.process(pcm:audio) 
             if isFinalized {
-                let inference:Inference = self.rhino!.getInference()
-                self.onInferenceCallback?(inference)
-
+                do{
+                    let inference:Inference = try self.rhino!.getInference()
+                    self.onInferenceCallback?(inference)
+                } catch {
+                    print("There was an error retrieving the inference result.")
+                }
+                
                 self.stop = true
             }
         }
@@ -60,8 +64,8 @@ public class RhinoManager {
     
     /// Stops recording and releases Rhino resources
     public func delete() {
-        if isListening {
-            stop()
+        if self.started {
+            self.stop = true
         }
         
         if self.rhino != nil {
@@ -80,13 +84,14 @@ public class RhinoManager {
             return
         }
         
-        if porcupine == nil {
-            throw PorcupineError.objectDisposed
+        if rhino == nil {
+            throw RhinoError.objectDisposed
         }
 
         // Only check if it's denied, permission will be automatically asked.
-        if AVAudioSession.sharedInstance().recordPermission == .denied {
-            throw PorcupineError.recordingDenied
+        let audioSession = AVAudioSession.sharedInstance()
+        if audioSession.recordPermission == .denied {
+            throw RhinoError.recordingDenied
         }        
 
         try audioSession.setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])
@@ -127,7 +132,7 @@ private class AudioInputEngine {
             mReserved: 0)
         let userData = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
         AudioQueueNewInput(&format, createAudioQueueCallback(), userData, nil, nil, 0, &audioQueue)
-        ∂
+        
         guard let queue = audioQueue else {
             return
         }

@@ -8,9 +8,9 @@
 //
 
 import SwiftUI
-
+import Rhino
 struct ContentView: View {
-    let modelPath = Bundle.main.path(forResource: "rhino_params", ofType: "pv")
+    
     let contextPath = Bundle.main.path(forResource: "smart_lighting_ios", ofType: "rhn")
     
     @State var rhinoManager: RhinoManager!
@@ -25,9 +25,7 @@ struct ContentView: View {
                     
                     do {
                         self.rhinoManager = try RhinoManager(
-                            modelPath: self.modelPath!,
                             contextPath: self.contextPath!,
-                            sensitivity: 0.0,
                             onInferenceCallback: { x in
                                 DispatchQueue.main.async {
                                     result = "{\n"

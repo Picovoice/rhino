@@ -10,9 +10,9 @@
 import PvRhino
 
 public struct Inference {
-    let isUnderstood: Bool
-    let intent: String
-    let slots: Dictionary<String, String>
+    public let isUnderstood: Bool
+    public let intent: String
+    public let slots: Dictionary<String, String>
     
     public init(isUnderstood: Bool, intent: String, slots: Dictionary<String, String>) {
         self.isUnderstood = isUnderstood
@@ -38,7 +38,7 @@ public class Rhino {
     public static let frameLength = UInt32(pv_rhino_frame_length())
     public static let sampleRate = UInt32(pv_sample_rate())
     public static let version = String(cString: pv_rhino_version())
-    public let contextInfo:String    
+    public var contextInfo:String = ""
 
     private var isFinalized: Bool = false
 
@@ -50,7 +50,6 @@ public class Rhino {
     ///   - modelPath: Absolute path to file containing model parameters.
     ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially)
     ///   increasing the erroneous inference rate.
-    ///   - onInferenceCallback: It is invoked upon completion of intent inference.
     /// - Throws: RhinoError
     public init(contextPath: String, modelPath:String = defaultModelPath, sensitivity:Float32 = 0.5) throws {
                         
@@ -111,6 +110,9 @@ public class Rhino {
         return self.isFinalized
     }
 
+    /// Get inference result from Rhino
+    /// - Returns:An inference object
+    /// - Throws: RhinoError
     public func getInference() throws -> Inference {
         
         if !self.isFinalized {

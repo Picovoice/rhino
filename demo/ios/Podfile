@@ -1,0 +1,7 @@
+source 'git@gitlab.com:picovoice/podspec-test.git'
+# source 'https://cdn.cocoapods.org/'
+platform :ios, '9.0'
+
+target 'RhinoDemo' do    
+    pod 'Rhino-iOS'
+end
