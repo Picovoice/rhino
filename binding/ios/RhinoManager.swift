@@ -9,6 +9,11 @@
 
 import AVFoundation
 
+public enum RhinoManagerError: Error {
+    case recordingDenied
+    case objectDisposed
+}
+
 /// High-level iOS binding for Rhino Speech-to-Intent engine. It handles recording audio from microphone, processes it in real-time using Rhino, and notifies the client
 /// when an intent is inferred from the spoken command.
 public class RhinoManager {
@@ -77,21 +82,21 @@ public class RhinoManager {
     /// Start recording audio from the microphone and infers the user's intent from the spoken command. Once the inference is finalized it will invoke the user
     /// provided callback and terminates recording audio.
     ///
-    /// - Throws: AVAudioSession, AVAudioEngine errors. Additionally PorcupineError if
-    ///           microphone permission is not granted or Porcupine has been disposed.
+    /// - Throws: AVAudioSession, AVAudioEngine errors. Additionally RhinoManagerError if
+    ///           microphone permission is not granted or Rhino has been disposed.
     public func process() throws {
         if self.started {
             return
         }
         
         if rhino == nil {
-            throw RhinoError.objectDisposed
+            throw RhinoManagerError.objectDisposed
         }
 
         // Only check if it's denied, permission will be automatically asked.
         let audioSession = AVAudioSession.sharedInstance()
         if audioSession.recordPermission == .denied {
-            throw RhinoError.recordingDenied
+            throw RhinoManagerError.recordingDenied
         }        
 
         try audioSession.setCategory(AVAudioSession.Category.playAndRecord, options: [.mixWithOthers, .defaultToSpeaker, .allowBluetooth])

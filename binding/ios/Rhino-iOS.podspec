@@ -23,6 +23,7 @@ Pod::Spec.new do |s|
         * self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
     DESC
     s.homepage = 'https://picovoice.ai/'
+    s.documentation_url = 'https://picovoice.ai/docs/api/rhino-ios/'
     s.author = { 'Picovoice' => 'hello@picovoice.ai' }
     s.source = { :git => "https://github.com/Picovoice/rhino.git"}
     s.ios.deployment_target = '9.0'
