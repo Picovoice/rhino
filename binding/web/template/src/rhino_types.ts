@@ -10,11 +10,18 @@ export type RhinoInference = {
 }
 
 export interface RhinoEngine {
+  /** Release all resources acquired by Rhino */
   release(): void;
-  process(frames: Int16Array): RhinoInference;
-  version: string;
-  sampleRate: number;
-  frameLength: number;
+  /** Process a single frame of 16-bit 16kHz PCM audio */
+  process(frame: Int16Array): RhinoInference;
+  /** The version of the Rhino engine */
+  readonly version: string;
+  /** The sampling rate of audio expected by the Rhino engine */
+  readonly sampleRate: number;
+  /** The frame length of audio expected by the Rhino engine */
+  readonly frameLength: number;
+  /** The source of the Rhino context (YAML format) */
+  readonly contextInfo: string;
 }
 
 export type RhinoContext = {

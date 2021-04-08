@@ -169,17 +169,35 @@ class Rhino implements RhinoEngine {
     // then we will be able to create an instance of Rhino.
     await Rhino._wasmPromise;
 
-    const context = Uint8Array.from(atob(rhinoContext.base64), c =>
-      c.charCodeAt(0)
-    );
+    // Context parameter validation
+    if (rhinoContext === null || rhinoContext === undefined) {
+      throw new Error("Rhino context is null or undefined")
+    } else {
+      if (typeof rhinoContext !== "object") {
+        throw new Error("Rhino context argument type is invalid (should be an object, with key 'base64'): " + rhinoContext)
+      }
+      else {
+        if (rhinoContext.base64 === undefined || rhinoContext.base64 === null) {
+          throw new Error("Rhino context 'base64' value is undefined or null")
+        } else {
+          if (typeof rhinoContext.base64 !== "string") {
+            throw new Error("Rhino context 'base64' value is not a string: " + rhinoContext.base64)
+          }
+        }
+      }
+    }
 
-    const { sensitivity = DEFAULT_SENSITIVITY } = rhinoContext
+    let { sensitivity = DEFAULT_SENSITIVITY, base64 } = rhinoContext
+
+    const context = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+
+    if (sensitivity === null) { sensitivity = DEFAULT_SENSITIVITY }
 
     if (!(typeof sensitivity === "number")) {
-      throw new Error("Invalid Rhino sensitivity type: Must be a number (in the range [0,1])")
+      throw new Error("Rhino sensitivity is not a number (in the range [0,1])")
     } else {
       if (sensitivity < 0 || sensitivity > 1) {
-        throw new Error("Invalid Rhino sensitivity value: Must be in the range [0,1]")
+        throw new Error("Rhino sensitivity is outside of range [0,1]")
       }
     }
 
