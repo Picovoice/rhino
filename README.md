@@ -67,7 +67,7 @@ Rhino is:
     - [Android](#android)
     - [iOS](#ios)
     - [Web](#web)
-      - [Vanilla JavaScript and HTML (CDN Script Tag)](vanilla-javascript-and-html-cdn-script-tag)
+      - [Vanilla JavaScript and HTML (CDN Script Tag)](#vanilla-javascript-and-html-cdn-script-tag)
       - [Vanilla JavaScript and HTML (ES Modules)](#vanilla-javascript-and-html-es-modules)
       - [Angular](#angular)
       - [React](#react)
