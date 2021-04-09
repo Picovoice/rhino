@@ -88,6 +88,7 @@ function VoiceWidget(props) {
   };
 
   const {
+    contextInfo,
     isLoaded,
     isListening,
     isError,

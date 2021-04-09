@@ -14,6 +14,7 @@ export function useRhino(
   rhinoHookArgs: RhinoHookArgs,
   inferenceCallback: (inference: RhinoInference) => void
 ): {
+  contextInfo: string | null;
   isLoaded: boolean;
   isListening: boolean;
   isError: boolean;
@@ -29,6 +30,7 @@ export function useRhino(
   const [isListening, setIsListening] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isTalking, setIsTalking] = useState(false);
+  const [contextInfo, setContextInfo] = useState<string | null>(null);
   const [rhinoWorker, setRhinoWorker] = useState<RhinoWorker>();
   const [webVoiceProcessor, setWebVoiceProcessor] = useState<WebVoiceProcessor>();
   const callback = useRef(inferenceCallback);
@@ -78,15 +80,10 @@ export function useRhino(
       webVp: WebVoiceProcessor;
       rhnWorker: RhinoWorker;
     }> {
-      const { context, start = true } = rhinoHookArgs;
+      const { context, start: startWebVp = true } = rhinoHookArgs;
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const rhnWorker = await rhinoWorkerFactory!.create({ context, start: false });
-
-      const webVp = await WebVoiceProcessor.init({
-        engines: [rhnWorker],
-        start,
-      });
 
       rhnWorker.onmessage = (msg: MessageEvent<RhinoWorkerResponse>): void => {
         switch (msg.data.command) {
@@ -99,10 +96,20 @@ export function useRhino(
             setIsError(true);
             setErrorMessage(msg.data.error.toString());
             break;
+          case 'rhn-info':
+            setContextInfo(msg.data.info);
+            break;
           default:
             break;
         }
       };
+
+      rhnWorker.postMessage({ command: 'info' });
+
+      const webVp = await WebVoiceProcessor.init({
+        engines: [rhnWorker],
+        start: startWebVp,
+      });
 
       return { webVp, rhnWorker };
     }
@@ -141,6 +148,7 @@ export function useRhino(
   ]);
 
   return {
+    contextInfo,
     isLoaded,
     isListening,
     isError,

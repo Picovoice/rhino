@@ -1,10 +1,3 @@
-export type RhinoHookArgs = {
-  /** Immediately start the microphone upon initialization */
-  start: boolean;
-  /** The context to instantiate */
-  context: RhinoContext
-};
-
 export type RhinoInference = {
   /** Rhino has concluded the inference (isUnderstood is now set) */
   isFinalized: boolean
@@ -50,6 +43,10 @@ export type RhinoWorkerRequestInit = {
   rhinoArgs: RhinoArgs;
 }
 
+export type RhinoWorkerRequestInfo = {
+  command: 'info'
+}
+
 export type RhinoWorkerResponseReady = {
   command: 'rhn-ready';
 };
@@ -69,7 +66,13 @@ export type RhinoWorkerResponseInference = {
   inference: RhinoInference
 };
 
-export type RhinoWorkerRequest = WorkerRequestVoid | WorkerRequestProcess | RhinoWorkerRequestInit
+export type RhinoWorkerResponseInfo = {
+  command: 'rhn-info';
+  info: string
+};
+
+
+export type RhinoWorkerRequest = WorkerRequestVoid | WorkerRequestProcess | RhinoWorkerRequestInit | RhinoWorkerRequestInfo
 
 export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: RhinoWorkerRequest): void
@@ -87,4 +90,13 @@ export interface RhinoWorkerFactory {
   create: (rhinoFactoryArgs: RhinoFactoryArgs) => Promise<RhinoWorker>
 }
 
-export type RhinoWorkerResponse = RhinoWorkerResponseReady | RhinoWorkerResponseInference | RhinoWorkerResponseError | RhinoWorkerResponseInitError
+export type RhinoWorkerResponse = RhinoWorkerResponseReady | RhinoWorkerResponseInference | RhinoWorkerResponseError | RhinoWorkerResponseInitError | RhinoWorkerResponseInfo
+
+// React
+
+export type RhinoHookArgs = {
+  /** Immediately start the microphone upon initialization */
+  start: boolean;
+  /** The context to instantiate */
+  context: RhinoContext
+};
