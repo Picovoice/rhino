@@ -9,10 +9,10 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@picovoice/rhino-web-en-worker@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-1.6.0.tgz#4240e2902af0556d6dbcb0425f9eb3d7d5ad3753"
-  integrity sha512-7pRy+N6fFM6yJ0z/hHfRP0KAXoaJRBXWcjlnrw0ERNeFL5uIYyvh0Z9/W18E2dfr0q+8iRVB93nV5Kvcke5kCg==
+"@picovoice/rhino-web-en-worker@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-1.6.1.tgz#4fae7b61059ffca145df6603945de7d425f36621"
+  integrity sha512-y3TXUkLIJsQ18EmopbmwaeqOsHDOIvwEpV3U5KrbTP6fOQu4l7xm8BBQqUq+JkqJCSB2G8Q3ZzkqoYoyKJUb8Q==
 
 "@picovoice/web-voice-processor@^2.0.0":
   version "2.0.0"

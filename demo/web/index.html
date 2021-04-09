@@ -12,7 +12,7 @@
         let p = document.createElement("p");
         let text = document.createTextNode(message);
         p.appendChild(text);
-        document.body.appendChild(p);
+        document.getElementById("messages").appendChild(p);
       }
 
       async function startRhino() {
@@ -28,13 +28,22 @@
         );
 
         writeMessage("Rhino worker ready!");
+        rhinoClockWorker.postMessage({ command: "info" });
 
         window.rhinoClockWorker.onmessage = (msg) => {
           if (msg.data.command === "rhn-inference") {
-            writeMessage("Inference detected: " + JSON.stringify(msg.data.inference));
+            writeMessage(
+              "Inference detected: " + JSON.stringify(msg.data.inference)
+            );
             window.rhinoClockWorker.postMessage({ command: "pause" });
             document.getElementById("push-to-talk").disabled = false;
-            writeMessage("Rhino is paused. Press the 'Push to Talk' button to speak again.")
+            writeMessage(
+              "Rhino is paused. Press the 'Push to Talk' button to speak again."
+            );
+          } else if (msg.data.command === "rhn-info") {
+            writeMessage("Context info YAML received.")
+            document.getElementById("rhn-context-yaml").innerText =
+              msg.data.info;
           }
         };
 
@@ -47,7 +56,7 @@
             engines: [window.rhinoClockWorker],
           });
           writeMessage(
-            "WebVoiceProcessor ready! Press the 'Push to Talk' button to talk."
+            "WebVoiceProcessor ready! Press the 'Push to Talk' button to talk. Then say e.g. 'Set a timer for one minute'"
           );
         } catch (e) {
           writeMessage("WebVoiceProcessor failed to initialize: " + e);
@@ -69,7 +78,8 @@
     <p>This demo uses Rhino for Web and the WebVoiceProcessor to:</p>
     <ol>
       <li>
-        Create an English instance of Rhino that understands commands in the "Pico Clock" context;
+        Create an English instance of Rhino that understands commands in the
+        "Pico Clock" context;
       </li>
       <li>
         Acquire microphone (& ask permission) data stream and convert to voice
@@ -78,11 +88,19 @@
         browser: all processing is occurring via the Rhino WebAssembly code.
       </li>
       <li>
-        Await inference events from the Rhino engine and
-        output them to the page. When the inference is concluded, the push-to-talk button is enabled again.
+        Await inference events from the Rhino engine and output them to the
+        page. When the inference is concluded, the push-to-talk button is
+        enabled again.
       </li>
     </ol>
     <hr />
     <button id="push-to-talk">Push to Talk</button>
+    <div id="messages"></div>
+    <br />
+    <br />
+    <br />
+    <hr />
+    <h2>Context info:</h2>
+    <pre id="rhn-context-yaml"></pre>
   </body>
 </html>
