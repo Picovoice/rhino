@@ -34,6 +34,7 @@ export default function VoiceWidget() {
   };
 
   const {
+    contextInfo,
     isLoaded,
     isListening,
     isError,
@@ -72,6 +73,8 @@ export default function VoiceWidget() {
       </button>
       <h3>Inference:</h3>
       {inference !== null && <pre>{JSON.stringify(inference)}</pre>}
+      <h2>Context Info</h2>
+      <pre>{contextInfo}</pre>
     </div>
   );
 }

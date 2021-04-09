@@ -1418,30 +1418,30 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@picovoice/rhino-web-de-worker@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-de-worker/-/rhino-web-de-worker-1.6.0.tgz#19af4d38d0697c0ae2136c549934343cf8f1ea3f"
-  integrity sha512-e6HzH4WD69mkqJUBO9zB4bbgTx94fSXy7tQni5utt+PJ//2d0BFBj7QhvtEaWgzQrL5WZUHvMPhMwEKAbROCpQ==
+"@picovoice/rhino-web-de-worker@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-de-worker/-/rhino-web-de-worker-1.6.1.tgz#1a549b567a736d13710424268934cc4f843919cd"
+  integrity sha512-/b1kV8oQPIWKEQmo2P28a3GoUT67zqbTH9FMcBsEHunttbohJbw2TGC/jPWSzsdUyIN06rdZuGvuReNPrvgQiQ==
 
-"@picovoice/rhino-web-en-worker@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-1.6.0.tgz#4240e2902af0556d6dbcb0425f9eb3d7d5ad3753"
-  integrity sha512-7pRy+N6fFM6yJ0z/hHfRP0KAXoaJRBXWcjlnrw0ERNeFL5uIYyvh0Z9/W18E2dfr0q+8iRVB93nV5Kvcke5kCg==
+"@picovoice/rhino-web-en-worker@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-1.6.1.tgz#4fae7b61059ffca145df6603945de7d425f36621"
+  integrity sha512-y3TXUkLIJsQ18EmopbmwaeqOsHDOIvwEpV3U5KrbTP6fOQu4l7xm8BBQqUq+JkqJCSB2G8Q3ZzkqoYoyKJUb8Q==
 
-"@picovoice/rhino-web-es-worker@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-es-worker/-/rhino-web-es-worker-1.6.0.tgz#b93a3bb48a5cfbeffd9e600f79c91a13573562cb"
-  integrity sha512-T3a2ketwVWqTLv5b+LCtgOcpjHUjZ9L2EFSKIT2k6tR0eFnNK0LEObmksZ5QsNqTvhiAXyukJ0zI2MGyTbLd4g==
+"@picovoice/rhino-web-es-worker@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-es-worker/-/rhino-web-es-worker-1.6.1.tgz#dc92e284a26a915fa5c519cfa65e72cb40124536"
+  integrity sha512-sPU9o7Q5R4CTF9Q64pd4C26LuDiyvHUGQ3p18Em3KPKqWk7pqboPfI4AjiO5Iq/IJvXSgvg7XCJyE4XVwZ8gHg==
 
-"@picovoice/rhino-web-fr-worker@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-fr-worker/-/rhino-web-fr-worker-1.6.0.tgz#17b928a30210348794298c3cdea9c19f7be49063"
-  integrity sha512-AiHTu3jgPd2Hm8AcW5ye6ZQXro6FTMiqiAq66iwlW0YKbeTL5w8Knmbks2aW/n2geQOjGyH9yHd6ITIxWsN64A==
+"@picovoice/rhino-web-fr-worker@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-fr-worker/-/rhino-web-fr-worker-1.6.1.tgz#8596f304166382ad2750d10907fdd866212ffa87"
+  integrity sha512-3Jd3siv+WGMMU5G7Iyg2j9KkKItlocB6sRNFyEnq96XNd9t3TMknsXUscIEbfNGeHiwSmZnKCN35k119NRNjVQ==
 
-"@picovoice/rhino-web-react@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-react/-/rhino-web-react-1.1.0.tgz#3896a9c0cc1bf0292dabde41c9496148d4476d22"
-  integrity sha512-w5O/ymYmyuC2BE/p6KlY2lVoPtBPvbN1+v1d7zMoati0geASAnWoKi7HTFrSBgenbx3AwtNubNHjH6zRWflOng==
+"@picovoice/rhino-web-react@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-react/-/rhino-web-react-1.1.1.tgz#35c979fc09e51d1df65c671cb74e469ab09eec7e"
+  integrity sha512-IkbjzwL/Ebf19vhUN/4lx7Do+q5cY3sBFQTUY00Namml0+yszSQrFkLMKSJQYw9pGT72ctZ+MQV5po+N3f/TLw==
   dependencies:
     "@picovoice/web-voice-processor" "^2.0.0"
 
