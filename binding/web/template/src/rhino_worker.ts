@@ -16,7 +16,8 @@ import {
   RhinoWorkerResponseReady,
   RhinoWorkerResponseInference,
   RhinoWorkerRequest,
-  RhinoWorkerResponseInitError
+  RhinoWorkerResponseInitError,
+  RhinoWorkerResponseInfo
 } from './rhino_types';
 
 let paused = true;
@@ -39,6 +40,11 @@ async function init(rhinoArgs: RhinoArgs): Promise<void> {
     command: 'rhn-ready',
   };
   postMessage(rhnReadyMessage, undefined);
+}
+
+function info(): void {
+  const infoResonse: RhinoWorkerResponseInfo = { command: 'rhn-info', info: rhinoEngine.contextInfo };
+  postMessage(infoResonse, undefined);
 }
 
 function process(inputFrame: Int16Array): void {
@@ -81,6 +87,9 @@ onmessage = function (
       break;
     case 'release':
       release();
+      break;
+    case 'info':
+      info();
       break;
     default:
       // eslint-disable-next-line no-console

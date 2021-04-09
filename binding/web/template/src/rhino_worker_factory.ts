@@ -14,11 +14,11 @@ import {
   RhinoArgs,
   RhinoWorker,
   RhinoWorkerRequestInit,
-  RhinoWorkerResponse
+  RhinoWorkerResponse,
 } from './rhino_types';
 
 export class RhinoWorkerFactory {
-  private constructor() { }
+  private constructor() {}
 
   /**
    * Create Rhino web worker instances. The promise resolves when the worker is ready to process
@@ -28,8 +28,7 @@ export class RhinoWorkerFactory {
    * as well as whether to `start` processing audio immediately upon instantiation, or to start paused.
    *
    */
-  public static async create(rhinoArgs: RhinoArgs
-  ): Promise<Worker> {
+  public static async create(rhinoArgs: RhinoArgs): Promise<RhinoWorker> {
     // n.b. The *Worker* creation is itself synchronous. But, inside the worker is an async
     // method of RhinoFactory which is initializing. This means the worker is not actually ready
     // for voice processing immediately after intantiation. When its initialization completes,
@@ -38,11 +37,11 @@ export class RhinoWorkerFactory {
 
     const rhinoInitCommand: RhinoWorkerRequestInit = {
       command: 'init',
-      rhinoArgs: rhinoArgs
+      rhinoArgs: rhinoArgs,
     };
     rhinoWorker.postMessage(rhinoInitCommand);
 
-    const workerPromise = new Promise<Worker>((resolve, reject) => {
+    const workerPromise = new Promise<RhinoWorker>((resolve, reject) => {
       rhinoWorker.onmessage = function (
         event: MessageEvent<RhinoWorkerResponse>
       ): void {

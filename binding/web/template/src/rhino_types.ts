@@ -50,6 +50,10 @@ export type RhinoWorkerRequestInit = {
   rhinoArgs: RhinoArgs;
 }
 
+export type RhinoWorkerRequestInfo = {
+  command: 'info'
+}
+
 export type RhinoWorkerResponseReady = {
   command: 'rhn-ready';
 };
@@ -69,7 +73,12 @@ export type RhinoWorkerResponseInference = {
   inference: RhinoInference
 };
 
-export type RhinoWorkerRequest = WorkerRequestVoid | WorkerRequestProcess | RhinoWorkerRequestInit
+export type RhinoWorkerResponseInfo = {
+  command: 'rhn-info';
+  info: string
+};
+
+export type RhinoWorkerRequest = WorkerRequestVoid | WorkerRequestProcess | RhinoWorkerRequestInit | RhinoWorkerRequestInfo
 
 export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: RhinoWorkerRequest): void
