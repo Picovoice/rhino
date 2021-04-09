@@ -6,13 +6,6 @@ export type RhinoFactoryArgs = {
   start?: boolean;
 };
 
-export type RhinoServiceArgs = {
-  /** Immediately start the microphone upon initialization */
-  start?: boolean;
-  /** The context to instantiate */
-  context: RhinoContext;
-};
-
 export interface RhinoWorkerFactory {
   create: (factoryArgs: RhinoFactoryArgs) => Promise<RhinoWorker>;
 }
@@ -29,11 +22,18 @@ export type RhinoInference = {
 };
 
 export interface RhinoEngine {
-  version: string;
-  sampleRate: number;
-  frameLength: number;
+  /** Release all resources acquired by Rhino */
   release(): void;
-  process(frames: Int16Array): RhinoInference;
+  /** Process a single frame of 16-bit 16kHz PCM audio */
+  process(frame: Int16Array): RhinoInference;
+  /** The version of the Rhino engine */
+  readonly version: string;
+  /** The sampling rate of audio expected by the Rhino engine */
+  readonly sampleRate: number;
+  /** The frame length of audio expected by the Rhino engine */
+  readonly frameLength: number;
+  /** The source of the Rhino context (YAML format) */
+  readonly contextInfo: string;
 }
 
 export type RhinoContext = {
@@ -62,6 +62,10 @@ export type RhinoWorkerRequestInit = {
   rhinoArgs: RhinoArgs;
 };
 
+export type RhinoWorkerRequestInfo = {
+  command: 'info'
+}
+
 export type RhinoWorkerResponseReady = {
   command: 'rhn-ready';
 };
@@ -81,17 +85,25 @@ export type RhinoWorkerResponseInference = {
   inference: RhinoInference;
 };
 
-export type RhinoWorkerRequest =
-  | WorkerRequestVoid
-  | WorkerRequestProcess
-  | RhinoWorkerRequestInit;
+export type RhinoWorkerResponseInfo = {
+  command: 'rhn-info';
+  info: string
+};
+
+export type RhinoWorkerRequest = WorkerRequestVoid | WorkerRequestProcess | RhinoWorkerRequestInit | RhinoWorkerRequestInfo
+
 
 export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: RhinoWorkerRequest): void;
 }
 
-export type RhinoWorkerResponse =
-  | RhinoWorkerResponseReady
-  | RhinoWorkerResponseInference
-  | RhinoWorkerResponseError
-  | RhinoWorkerResponseInitError;
+export type RhinoWorkerResponse = RhinoWorkerResponseReady | RhinoWorkerResponseInference | RhinoWorkerResponseError | RhinoWorkerResponseInitError | RhinoWorkerResponseInfo
+
+// Angular
+
+export type RhinoServiceArgs = {
+  /** Immediately start the microphone upon initialization */
+  start?: boolean;
+  /** The context to instantiate */
+  context: RhinoContext;
+};
