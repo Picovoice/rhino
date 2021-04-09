@@ -23,7 +23,7 @@ Rhino is:
 
 ## Installation
 
-The Porcupine iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Porcupine-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`: 
+The Rhino iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`: 
 
 ```ruby
 pod 'Rhino-iOS'

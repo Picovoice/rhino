@@ -5,12 +5,12 @@ DEPENDENCIES:
   - Rhino-iOS
 
 SPEC REPOS:
-  "git@gitlab.com:picovoice/podspec-test.git":
+  trunk:
     - Rhino-iOS
 
 SPEC CHECKSUMS:
-  Rhino-iOS: 948be3a21d696614446b62fabbb287feee531d17
+  Rhino-iOS: d45df7a4896749ef95d2c5995fec8b3c93436ec4
 
-PODFILE CHECKSUM: a59f40d59786b6c13eb57db7419cd23190184370
+PODFILE CHECKSUM: ed40abfacd331006039f5c2552c8548bd6dfb836
 
 COCOAPODS: 1.10.0

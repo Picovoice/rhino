@@ -276,8 +276,12 @@ For more information about Android demo and the complete list of available expre
 
 ### iOS Demos
 
-Using [Xcode](https://developer.apple.com/xcode/), open
-[demo/ios/RhinoDemo/RhinoDemo.xcodeproj](/demo/ios/RhinoDemo/RhinoDemo.xcodeproj) and run the application. After pressing
+Before building the demo app, run the following from this directory to install the Rhino-iOS Cocoapod:
+```ruby
+pod install
+```
+
+Then, using [Xcode](https://developer.apple.com/xcode/), open the generated `RhinoDemo.xcworkspace` and run the application. After pressing
 the start button you can issue commands such as:
 
 > Turn off the lights.
@@ -286,7 +290,7 @@ or:
 
 > Set the lights in the living room to purple.
 
-For more information about Android demo and the complete list of available expressions go to [demo/ios/RhinoDemo](/demo/ios/RhinoDemo).
+For more information about Android demo and the complete list of available expressions go to [demo/ios](/demo/ios).
 
 ### JavaScript Demos
 
@@ -736,7 +740,7 @@ async createRhinoManager(){
 }
 ```
 
-Once you have instantiated a RhinoManager, you can start/stop audio capture and wake word detection by calling `.process()`.
+Once you have instantiated a RhinoManager, you can start/stop audio capture and intent inference by calling `.process()`.
 Upon receiving an inference callback, audio capture will stop automatically and Rhino will reset. To restart it you must
 call `.process()` again.
 
@@ -877,118 +881,79 @@ handle.delete()
 
 ### iOS
 
-There are two approaches for integrating Rhino into an iOS application: The High-level API and the direct approach.
+The Rhino iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`: 
+
+```ruby
+pod 'Rhino-iOS'
+```
+
+There are two approaches for integrating Rhino into an iOS application: The high-level API and the low-level API.
 
 #### High-Level API
 
-The [RhinoManager](binding/ios/RhinoManager.swift) class manages all activities related to creating an input audio stream
-feeding it into Rhino's library, and invoking a user-provided detection callback. The class can be initialized as below:
-
+[RhinoManager](/binding/ios/RhinoManager.swift) provides a high-level API
+for integrating Rhino into iOS applications. It manages all activities related to creating an input audio stream, feeding it to the engine, and invoking a user-provided inference callback.
 ```swift
-let modelPath: String = ... // It is available at lib/common/rhino_params.pv
-let contextPath: String = ...
-let onInferenceCallback: ((Inference) -> Void) = { inference in
-    // detection event callback
-}
-
-let manager = RhinoManager(
-    modelPath: modelPath,
-    contextPath: contextPath,
-    onInferenceCallback: onInferenceCallback);
+do {
+    RhinoManager manager = try RhinoManager(
+        contextPath: "/path/to/context/file.rhn", 
+        modelPath: "/path/to/model/file.pv",
+        sensitivity: 0.35,
+        onInferenceCallback: { inference in
+                if inference.isUnderstood {
+                    let intent:String = inference.intent
+                    let slots:Dictionary<String,String> = inference.slots
+                    // use inference results
+                }
+            })
+} catch { }
 ```
 
-When initialized, input audio can be processed using `manager.process()`.
+Sensitivity is the parameter that enables developers to trade miss rate for false alarm. It is a floating point number within
+[0, 1]. A higher sensitivity reduces miss rate at cost of increased false alarm rate.
 
-#### Direct
+When initialized, input audio can be processed using `manager.process()`. When done, be sure to release the resources
+using `manager.delete()`.
 
-Rhino is shipped as a precompiled ANSI C library and can directly be used in Swift using module maps. It can be
-initialized to detect multiple wake words concurrently using:
+#### Low-Level API
+
+[Rhino](/binding/ios/Rhino.swift) provides low-level access to the Speech-to-Intent engine for those who want to incorporate intent inference into a already existing audio processing pipeline.
 
 ```swift
-let modelPath: String = ... // Available at lib/common/rhino_params.pv
-let contextPath: String = "/path/to/context/file.rhn"
-let sensitivity: Float32 = 0.35
+import Rhino
 
-var handle: OpaquePointer?
-let status = pv_rhino_init(
-    modelPath,
-    contextPath,
-    sensitivity,
-    &handle)
-if status != PV_STATUS_SUCCESS {
-    // error handling logic
-}
+do {
+    Rhino handle = try Rhino(contextPath: "/path/to/context/file.rhn")
+} catch { }
 ```
 
-Then `handle` can be used to process incoming audio stream.
+Once initialized, `handle` can be used for intent inference:
 
 ```swift
-func getNextAudioFrame() -> UnsafeMutablePointer<Int16> {
-    //
+func getNextAudioFrame() -> [Int16] {
+    // .. get audioFrame
+    return audioFrame
 }
 
 while true {
-    let pcm = getNextAudioFrame()
-
-    var isFinalized: Bool = false
-    let status = pv_rhino_process(handle, pcm, &isFinalized)
-    if status != PV_STATUS_SUCCESS {
-        // error handling logic
-    }
-
-    if isFinalized {
-        var isUnderstood: Bool = false
-        var intent = ""
-        var slots = [String: String]()
-
-        status = pv_rhino_is_understood(handle, &isUnderstood)
-        if status != PV_STATUS_SUCCESS {
-            // error handling logic
-        }
-
-        if isUnderstood {
-            var cIntent: UnsafePointer<Int8>?
-            var numSlots: Int32 = 0
-            var cSlotKeys: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-            var cSlotValues: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-            status = pv_rhino_get_intent(
-                handle,
-                &cIntent,
-                &numSlots,
-                &cSlotKeys,
-                &cSlotValues)
-            if status != PV_STATUS_SUCCESS {
-                // error handling logic
-            }
-
-            if isUnderstood {
-                intent = String(cString: cIntent!)
-                for i in 0...(numSlots - 1) {
-                    let slot = String(cString: cSlotKeys!.advanced(by: Int(i)).pointee!)
-                    let value = String(cString: cSlotValues!.advanced(by: Int(i)).pointee!)
-                    slots[slot] = value
-                }
-
-                // Insert inference logic
-
-                status = pv_rhino_free_slots_and_values(handle, cSlotKeys, cSlotValues)
-                if status != PV_STATUS_SUCCESS {
-                    // error handling logic
-                }
-            } else {
-                // Insert logic for invalid commands
+    do {
+        let isFinalized = try handle.process(getNextAudioFrame())
+        if isFinalized {
+            let inference = try handle.getInference()
+            if inference.isUnderstood {
+                let intent:String = inference.intent
+                let slots:Dictionary<String, String> = inference.slots
+                // add code to take action based on inferred intent and slot values
             }
         }
-
-        pv_rhino_reset(handle)
-    }
+    } catch { }
 }
 ```
 
-When finished, release the resources:
+Finally, prior to exiting the application be sure to release resources acquired:
 
 ```swift
-pv_rhino_delete(handle)
+handle.delete()
 ```
 
 ### JavaScript
