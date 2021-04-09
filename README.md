@@ -47,10 +47,14 @@ Rhino is:
     - [Java](#java-demos)
     - [Unity](#unity-demos)
     - [Flutter](#flutter-demos)
-    - [React Native](#react-native-demos)    
+    - [React Native](#react-native-demos)
     - [Android](#android-demos)
     - [iOS](#ios-demos)
-    - [JavaScript](#javascript-demos)
+    - [Web](#web-demos)
+      - [Vanilla JavaScript and HTML](#vanilla-javascript-and-html)
+      - [Angular](#angular-demos)
+      - [React](#react-demos)
+      - [Vue](#vue-demos)
     - [NodeJS](#nodejs-demos)
     - [C](#c-demos)
   - [SDKs](#sdks)
@@ -59,10 +63,15 @@ Rhino is:
     - [Java](#java)
     - [Unity](#unity)
     - [Flutter](#flutter)
-    - [React Native](#react-native)    
+    - [React Native](#react-native)
     - [Android](#android)
     - [iOS](#ios)
-    - [JavaScript](#javascript)
+    - [Web](#web)
+      - [Vanilla JavaScript and HTML (CDN Script Tag)](#vanilla-javascript-and-html-cdn-script-tag)
+      - [Vanilla JavaScript and HTML (ES Modules)](#vanilla-javascript-and-html-es-modules)
+      - [Angular](#angular)
+      - [React](#react)
+      - [Vue](#vue)
     - [NodeJS](#nodejs)
     - [C](#c)
   - [Releases](#releases)
@@ -216,11 +225,12 @@ To browse the demo source go to [demo/unity](/demo/unity).
 
 ### Flutter Demos
 
-To run the Rhino demo on Android or iOS with Flutter, you must have the [Flutter SDK](https://flutter.dev/docs/get-started/install) installed on your system. Once installed, you can run `flutter doctor` to determine any other missing requirements for your relevant platform. Once your environment has been set up, launch a simulator or connect an Android/iOS device. 
+To run the Rhino demo on Android or iOS with Flutter, you must have the [Flutter SDK](https://flutter.dev/docs/get-started/install) installed on your system. Once installed, you can run `flutter doctor` to determine any other missing requirements for your relevant platform. Once your environment has been set up, launch a simulator or connect an Android/iOS device.
 
 Before launching the app, use the [copy_assets.sh](/demo/flutter/copy_assets.sh) script to copy the rhino demo context file into the demo project. (**NOTE**: on Windows, Git Bash or another bash shell is required, or you will have to manually copy the context into the project.).
 
 Run the following command from [demo/flutter](/demo/flutter/) to build and deploy the demo to your device:
+
 ```sh
 flutter run
 ```
@@ -292,17 +302,79 @@ or:
 
 For more information about Android demo and the complete list of available expressions go to [demo/ios](/demo/ios).
 
-### JavaScript Demos
+### Web Demos
 
-From [demo/javascript](/demo/javascript) run the following in the terminal:
+#### Vanilla JavaScript and HTML
 
-```bash
+From [demo/web](/demo/web) run the following in the terminal:
+
+```console
 yarn
 yarn start
 ```
 
-This will launch a local server running the demo. Open `http://localhost:5000` in your web browser and follow the
-instructions on the page.
+(or)
+
+```console
+npm install
+npm run start
+```
+
+Open http://localhost:5000 in your browser to try the demo.
+
+#### Angular Demos
+
+From [demo/angular](/demo/angular) run the following in the terminal:
+
+```console
+yarn
+yarn start
+```
+
+(or)
+
+```console
+npm install
+npm run start
+```
+
+Open http://localhost:4200 in your browser to try the demo.
+
+#### React Demos
+
+From [demo/react](/demo/react) run the following in the terminal:
+
+```console
+yarn
+yarn start
+```
+
+(or)
+
+```console
+npm install
+npm run start
+```
+
+Open http://localhost:3000 in your browser to try the demo.
+
+#### Vue Demos
+
+From [demo/vue](/demo/vue) run the following in the terminal:
+
+```console
+yarn
+yarn serve
+```
+
+(or)
+
+```console
+npm install
+npm run serve
+```
+
+Open http://localhost:8080 in your browser to try the demo.
 
 ### NodeJS Demos
 
@@ -515,11 +587,12 @@ The SDK provides two APIs:
 [RhinoManager](/binding/unity/Assets/Rhino/RhinoManager.cs) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
 
 Using the constructor `RhinoManager.Create` will create an instance of the RhinoManager using the provided context file.
+
 ```csharp
 using Pv.Unity;
 
-try 
-{    
+try
+{
     RhinoManager _rhinoManager = RhinoManager.Create(
                                     "/path/to/context/file.rhn",
                                     (inference) => {});
@@ -539,6 +612,7 @@ _rhinoManager.Process();
 Audio capture stops and Rhino resets once an inference result is returned via the inference callback. When you wish to result, call `.Process()` again.
 
 Once the app is done with using an instance of RhinoManager, you can explicitly release the audio resources and the resources allocated to Rhino:
+
 ```csharp
 _rhinoManager.Delete();
 ```
@@ -558,16 +632,17 @@ To create an instance of `Rhino`, use the `.Create` static constructor and a con
 using Pv.Unity;
 
 try
-{    
+{
     Rhino _rhino = Rhino.Create("path/to/context/file.rhn");
-} 
-catch (Exception ex) 
+}
+catch (Exception ex)
 {
     // handle rhino init error
 }
 ```
 
 To feed Rhino your audio, you must send it frames of audio to its `Process` function until it has made an inference.
+
 ```csharp
 short[] GetNextAudioFrame()
 {
@@ -575,9 +650,9 @@ short[] GetNextAudioFrame()
     return audioFrame;
 }
 
-try 
+try
 {
-    bool isFinalized = _rhino.Process(GetNextAudioFrame());   
+    bool isFinalized = _rhino.Process(GetNextAudioFrame());
     if(isFinalized)
     {
         Inference inference = _rhino.GetInference();
@@ -589,14 +664,14 @@ try
         }
         else
         {
-            // .. code to handle unsupported commands              
-        }        
+            // .. code to handle unsupported commands
+        }
     }
 }
 catch (Exception ex)
 {
     Debug.LogError(ex.ToString());
-}  
+}
 ```
 
 For process to work correctly, the audio data must be in the audio format required by Picovoice.
@@ -610,10 +685,12 @@ _rhino.Dispose();
 ### Flutter
 
 Add the [Rhino Flutter plugin](https://pub.dev/packages/rhino) to your pub.yaml.
+
 ```yaml
-dependencies:  
+dependencies:
   rhino: ^<version>
 ```
+
 The SDK provides two APIs:
 
 #### High-Level API
@@ -621,6 +698,7 @@ The SDK provides two APIs:
 [RhinoManager](/binding/flutter/lib/rhino_manager.dart) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
 
 The constructor `RhinoManager.create` will create an instance of the RhinoManager using a context file that you pass to it.
+
 ```dart
 import 'package:rhino/rhino_manager.dart';
 import 'package:rhino/rhino_error.dart';
@@ -648,7 +726,7 @@ void _infererence(Map<String, dynamic> inference){
     }
     else{
         // add code to handle unsupported commands
-    }    
+    }
 }
 ```
 
@@ -662,6 +740,7 @@ try{
 ```
 
 Once your app is done with using RhinoManager, be sure you explicitly release the resources allocated for it:
+
 ```dart
 _rhinoManager.delete();
 ```
@@ -670,7 +749,7 @@ Our [flutter_voice_processor](https://github.com/Picovoice/flutter-voice-process
 
 #### Low-Level API
 
-[Rhino](/binding/flutter/lib/rhino.dart) provides low-level access to the inference engine for those who want to incorporate 
+[Rhino](/binding/flutter/lib/rhino.dart) provides low-level access to the inference engine for those who want to incorporate
 speech-to-intent into a already existing audio processing pipeline.
 
 `Rhino` is created by passing a context file to its static constructor `create`:
@@ -956,40 +1035,316 @@ Finally, prior to exiting the application be sure to release resources acquired:
 handle.delete()
 ```
 
-### JavaScript
+### Web
 
-Create a new instance of the Rhino engine:
+Rhino is available on modern web browsers (i.e. not Internet Explorer) via [WebAssembly](https://webassembly.org/). Microphone audio is handled via the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and is abstracted by the WebVoiceProcessor, which also handles downsampling to the correct format. Rhino is provided pre-packaged as a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers).
 
-```javascript
-let context = new Uint8Array([...]);
+Each spoken language is available as a dedicated npm package (e.g. @picovoice/rhino-web-en-worker). These packages can be used with the @picovoice/web-voice-processor. They can also be used with the Angular, React, and Vue bindings, which abstract and hide the web worker communication details.
 
-let handle = Rhino.create(context)
+#### Vanilla JavaScript and HTML (CDN Script Tag)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://unpkg.com/@picovoice/rhino-web-en-worker/dist/iife/index.js"></script>
+    <script src="https://unpkg.com/@picovoice/web-voice-processor/dist/iife/index.js"></script>
+    <script type="application/javascript">
+      const RHINO_CONTEXT_BASE64 = /* Base64 representation of .rhn file  */;
+
+      async function startRhino() {
+        console.log("Rhino is loading. Please wait...");
+        window.rhinoWorker = await RhinoWebEnWorker.RhinoWorkerFactory.create(
+          {
+            context: {
+              base64: RHINO_CONTEXT_BASE64,
+              sensitivity: 0.5,
+            },
+            start: false,
+          }
+        );
+
+        console.log("Rhino worker ready!");
+
+        window.rhinoWorker.onmessage = (msg) => {
+          if (msg.data.command === "rhn-inference") {
+            console.log("Inference detected: " + JSON.stringify(msg.data.inference));
+            window.rhinoWorker.postMessage({ command: "pause" });
+            document.getElementById("push-to-talk").disabled = false;
+            console.log("Rhino is paused. Press the 'Push to Talk' button to speak again.")
+          }
+        };
+
+        console.log(
+          "WebVoiceProcessor initializing. Microphone permissions requested ..."
+        );
+
+        try {
+          let webVp = await WebVoiceProcessor.WebVoiceProcessor.init({
+            engines: [window.rhinoWorker],
+          });
+          console.log(
+            "WebVoiceProcessor ready! Press the 'Push to Talk' button to talk."
+          );
+        } catch (e) {
+          console.log("WebVoiceProcessor failed to initialize: " + e);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        startRhino();
+        document.getElementById("push-to-talk").onclick = function (event) {
+          console.log("Rhino is listening for your commands ...");
+          this.disabled = true;
+          window.rhinoWorker.postMessage({ command: "resume" });
+        };
+      });
+    </script>
+  </head>
+  <body>
+    <button id="push-to-talk">Push to Talk</button>
+  </body>
+</html>
+
 ```
 
-`context` is an array of 8-bit unsigned integers (i.e. `UInt8Array`) representing the domain of interest. When
-instantiated, `handle` can process audio via its `.process` method.
+#### Vanilla JavaScript and HTML (ES Modules)
+
+```console
+yarn add @picovoice/rhino-web-en-worker @picovoice/web-voice-processor
+```
+
+(or)
+
+```console
+npm install @picovoice/rhino-web-en-worker @picovoice/web-voice-processor
+```
 
 ```javascript
-    let getNextAudioFrame = function() {
-        ...
-    };
-
-    let result = {};
-    do {
-        result = handle.process(getNextAudioFrame())
-    } while (Object.keys(result).length === 0);
-
-    if (result.isUnderstood) {
-        // callback to act upon inference result
-    } else {
-        // callback to handle failed inference
+import { WebVoiceProcessor } from "@picovoice/web-voice-processor"
+import { RhinoWorkerFactory } from "@picovoice/rhino-web-en-worker";
+ 
+const RHN_CONTEXT_BASE64 = /* Base64 representation of a .rhn context */
+ 
+async startRhino()
+  // Create a Rhino Worker (English language) to listen for
+  // commands in the specified context
+  const rhinoWorker = await RhinoWorkerFactory.create(
+    {context: RHN_CONTEXT_BASE64 }
+  );
+ 
+  // The worker will send a message with data.command = "rhn-inference" upon concluding
+  // Here we tell it to log it to the console
+  rhinoWorker.onmessage = (msg) => {
+    switch (msg.data.command) {
+      case 'rhn-inference':
+        // Log the event
+        console.log("Rhino inference: " + msg.data.inference);
+        // Pause Rhino processing until the push-to-talk button is pressed again
+        rhinoWorker.postMessage({command: "pause"})
+        break;
+      default:
+        break;
     }
+  };
+ 
+  // Start up the web voice processor. It will request microphone permission
+  // It downsamples the audio to voice recognition standard format (16-bit 16kHz linear PCM, single-channel)
+  // The incoming microphone audio frames will then be forwarded to the Rhino Worker
+  // n.b. This promise will reject if the user refuses permission! Make sure you handle that possibility.
+  const webVp = await WebVoiceProcessor.init({
+    engines: [rhinoWorker],
+    start: true,
+  });
+  }
+ 
+  // Rhino is push-to-talk. We need to to tell it that we
+  // are starting a voice interaction:
+  function pushToTalk() {
+    rhinoWorker.postMessage({command: "resume"})
+  }
+ 
+}
+startRhino()
+ 
+...
+ 
+// Finished with Rhino? Release the WebVoiceProcessor and the worker.
+if (done) {
+  webVp.release()
+  rhinoWorker.sendMessage({command: "release"})
+}
 ```
 
-When done be sure to release resources acquired by WebAssembly using `.release`.
+#### Angular
+
+```console
+yarn add @picovoice/rhino-web-angular @picovoice/rhino-web-en-worker
+```
+
+(or)
+
+```console
+npm install @picovoice/rhino-web-angular @picovoice/rhino-web-en-worker
+```
+
+```typescript
+async ngOnInit() {
+  const rhinoFactoryEn = (await import('@picovoice/rhino-web-en-worker')).RhinoWorkerFactory
+  // Initialize Rhino Service
+  try {
+    await this.rhinoService.init(rhinoFactoryEn, {context: { base64: RHN_CONTEXT_BASE64 }})
+    console.log("Rhino is now loaded. Press the Push-to-Talk button to activate.")
+  }
+  catch (error) {
+    console.error(error)
+  }
+}
+ 
+ngOnDestroy() {
+  this.rhinoDetection.unsubscribe()
+  this.rhinoService.release()
+}
+ 
+public pushToTalk() {
+  this.rhinoService.pushToTalk();
+}
+```
+
+#### React
+
+```console
+yarn add @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
+```
+
+(or)
+
+```console
+npm install @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
+```
 
 ```javascript
-handle.release();
+mport React, { useState } from 'react';
+import { RhinoWorkerFactory } from '@picovoice/rhino-web-en-worker';
+import { useRhino } from '@picovoice/rhino-web-react';
+ 
+const RHINO_CONTEXT_BASE64 = /* Base64 representation an English language .rhn file, omitted for brevity */
+ 
+function VoiceWidget(props) {
+  const [latestInference, setLatestInference] = useState(null)
+ 
+  const inferenceEventHandler = (rhinoInference) => {
+    console.log(`Rhino inferred: ${rhinoInference}`);
+    setLatestInference(rhinoInference)
+  };
+ 
+  const {
+    isLoaded,
+    isListening,
+    isError,
+    isTalking,
+    errorMessage,
+    start,
+    resume,
+    pause,
+    pushToTalk,
+  } = useRhino(
+    // Pass in the factory to build Rhino workers. This needs to match the context language below
+    RhinoWorkerFactory,
+    // Initialize Rhino (in a paused state).
+    // Immediately start processing microphone audio,
+    // Although Rhino itself will not start listening until the Push to Talk button is pressed.
+    {
+      context: { base64: RHINO_CONTEXT_BASE64 },
+      start: true,
+    }
+    inferenceEventHandler
+  );
+ 
+return (
+  <div className="voice-widget">
+    <button onClick={() => pushToTalk()} disabled={isTalking || isError || !isLoaded}>
+      Push to Talk
+    </button>
+    <p>{JSON.stringify(latestInference)}</p>
+  </div>
+)
+```
+
+#### Vue
+
+```console
+yarn add @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
+```
+
+(or)
+
+```console
+npm install @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
+```
+
+```html
+<template>
+  <div class="voice-widget">
+    <Rhino
+      ref="rhino"
+      v-bind:rhinoFactoryArgs="{
+        context: {
+          base64: '...', <!-- Base64 representation of a trained Rhino context; i.e. a `.rhn` file, omitted for brevity -->
+        },
+      }"
+      v-bind:rhinoFactory="factory"
+      v-on:rhn-error="rhnErrorFn"
+      v-on:rhn-inference="rhnInferenceFn"
+      v-on:rhn-init="rhnInitFn"
+      v-on:rhn-ready="rhnReadyFn"
+    />
+  </div>
+</template>
+ 
+<script>
+import Rhino from "@picovoice/rhino-web-vue";
+import { RhinoWorkerFactory as RhinoWorkerFactoryEn } from "@picovoice/rhino-web-en-worker";
+ 
+export default {
+  name: "VoiceWidget",
+  components: {
+    Rhino,
+  },
+  data: function () {
+    return {
+      inference: null,
+      isError: false,
+      isLoaded: false,
+      isListening: false,
+      isTalking: false,
+      factory: RhinoWorkerFactoryEn,
+    };
+  },
+  methods: {
+    pushToTalk: function () {
+      if (this.$refs.rhino.pushToTalk()) {
+        this.isTalking = true;
+      }
+    },
+    rhnInitFn: function () {
+      this.isError = false;
+    },
+    rhnReadyFn: function () {
+      this.isLoaded = true;
+      this.isListening = true;
+    },
+    rhnInferenceFn: function (inference) {
+      this.inference = inference;
+      console.log("Rhino inference: " + inference)
+      this.isTalking = false;
+    },
+    rhnErrorFn: function (error) {
+      this.isError = true;
+      this.errorMessage = error.toString();
+    },
+  },
+};
 ```
 
 ### NodeJS
