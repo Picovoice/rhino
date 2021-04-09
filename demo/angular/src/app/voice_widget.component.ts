@@ -18,6 +18,7 @@ export class VoiceWidget {
   private isErrorDetection: Subscription
 
   title: "voice-widget"
+  contextInfo: string | null
   isChunkLoaded: boolean = false
   isLoaded: boolean = false
   isError: boolean = false
@@ -71,12 +72,14 @@ export class VoiceWidget {
       await this.rhinoService.init(rhinoFactoryEn, this.rhinoServiceArgs)
       console.info("Rhino is ready!")
       this.isLoaded = true;
+      this.contextInfo = this.rhinoService.contextInfo;
     }
     catch (error) {
       console.error(error)
       this.isError = true;
       this.errorMessage = error.toString();
     }
+
   }
 
   ngOnDestroy() {
