@@ -51,7 +51,7 @@ public class RhinoManager {
 
             let isFinalized:Bool = self.rhino!.process(pcm:audio) 
             if isFinalized {
-                do{
+                do {
                     let inference:Inference = try self.rhino!.getInference()
                     self.onInferenceCallback?(inference)
                 } catch {

@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name = 'Rhino-iOS'
     s.module_name = 'Rhino'
-    s.version = '1.6.0'
+    s.version = '1.6.1'
     s.license = {:type => 'Apache 2.0', :file => 'LICENSE'}
     s.summary = 'iOS SDK for Picovoice\'s Rhino Speech-to-Intent engine'
     s.description = 
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
         * compact and computationally-efficient, making it perfect for IoT.
         * self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
     DESC
-    s.homepage = 'https://picovoice.ai/'
+    s.homepage = 'https://github.com/Picovoice/rhino/tree/master/binding/ios'
     s.documentation_url = 'https://picovoice.ai/docs/api/rhino-ios/'
     s.author = { 'Picovoice' => 'hello@picovoice.ai' }
     s.source = { :git => "https://github.com/Picovoice/rhino.git"}
