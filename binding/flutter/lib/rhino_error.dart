@@ -27,27 +27,32 @@ class PvStateError extends PvError {
   PvStateError(String message) : super(message);
 }
 
-// pv_status_t error codes
+/// PV_STATUS_OUT_OF_MEMORY
 class PvStatusOutOfMemoryError extends PvError {
   PvStatusOutOfMemoryError(String message) : super(message);
 }
 
+/// PV_STATUS_IO_ERROR
 class PvStatusIoError extends PvError {
   PvStatusIoError(String message) : super(message);
 }
 
+/// PV_STATUS_INVALID_ARGUMENT
 class PvStatusInvalidArgumentError extends PvError {
   PvStatusInvalidArgumentError(String message) : super(message);
 }
 
+/// PV_STATUS_STOP_ITERATION
 class PvStatusStopIterationError extends PvError {
   PvStatusStopIterationError(String message) : super(message);
 }
 
+/// PV_STATUS_KEY_ERROR
 class PvStatusKeyError extends PvError {
   PvStatusKeyError(String message) : super(message);
 }
 
+/// PV_STATUS_INVALID_STATE
 class PvStatusInvalidStateError extends PvError {
   PvStatusInvalidStateError(String message) : super(message);
 }
@@ -62,6 +67,7 @@ enum PvStatus {
   INVALID_STATE
 }
 
+/// convert [pvStatus] to PvError type
 pvStatusToException(PvStatus pvStatus, String errorMessage) {
   switch (pvStatus) {
     case PvStatus.OUT_OF_MEMORY:

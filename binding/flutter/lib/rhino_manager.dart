@@ -16,7 +16,10 @@ import 'package:flutter_voice_processor/flutter_voice_processor.dart';
 import 'package:rhino/rhino.dart';
 import 'package:rhino/rhino_error.dart';
 
+/// type for function that receives inference result from Rhino
 typedef InferenceCallback(Map<String, dynamic> inference);
+
+/// type for PvError that occurs while recording audio
 typedef ErrorCallback(PvError error);
 
 class RhinoManager {
@@ -58,7 +61,7 @@ class RhinoManager {
   RhinoManager._(
       this._rhino, this._inferenceCallback, ErrorCallback errorCallback)
       : _voiceProcessor = VoiceProcessor.getVoiceProcessor(
-            _rhino.frameLength, _rhino.sampleRate) {
+            Rhino.frameLength, Rhino.sampleRate) {
     _removeVoiceProcessorListener = _voiceProcessor.addListener((buffer) async {
       if (_awaitingStop) {
         return;

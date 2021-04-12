@@ -25,20 +25,17 @@ class Rhino {
   static String _defaultModelPath;
 
   int _handle;
-  final int _frameLength;
-  final int _sampleRate;
-  final String _version;
   final String _contextInfo;
   final Pointer<Int16> _cFrame;
 
-  /// The required number of audio samples per frame
-  int get frameLength => _frameLength;
+  /// Rhino version string
+  static String get version => _rhinoVersion().toDartString();
 
-  /// The required audio sample rate
-  int get sampleRate => _sampleRate;
+  /// The number of audio samples per frame required by Rhino
+  static int get frameLength => _rhinoFrameLength();
 
-  /// The version of rhino
-  String get version => _version;
+  /// The audio sample rate required by Rhino
+  static int get sampleRate => _rhinoSampleRate();
 
   /// Gets the source of the Rhino context in YAML format. Shows the list of intents,
   /// which expressions map to those intents, as well as slots and their possible values.
@@ -77,9 +74,9 @@ class Rhino {
     }
 
     // generate arguments for ffi
-    Pointer<Utf8> cModelPath = Utf8.toUtf8(modelPath);
-    Pointer<Utf8> cContextPath = Utf8.toUtf8(contextPath);
-    Pointer<IntPtr> handlePtr = allocate<IntPtr>(count: 1);
+    Pointer<Utf8> cModelPath = modelPath.toNativeUtf8();
+    Pointer<Utf8> cContextPath = contextPath.toNativeUtf8();
+    Pointer<IntPtr> handlePtr = malloc<IntPtr>(1);
 
     // init rhino
     int status = _rhinoInit(cModelPath, cContextPath, sensitivity, handlePtr);
@@ -89,25 +86,21 @@ class Rhino {
     }
 
     int handle = handlePtr.value;
-    int frameLength = _rhinoFrameLength();
-    int sampleRate = _rhinoSampleRate();
-    String version = Utf8.fromUtf8(_rhinoVersion());
 
-    Pointer<Pointer<Utf8>> cContextInfo = allocate(count: 1);
+    Pointer<Pointer<Utf8>> cContextInfo = malloc(1);
     status = _rhinoContextInfo(handle, cContextInfo);
     pvStatus = PvStatus.values[status];
     if (pvStatus != PvStatus.SUCCESS) {
       pvStatusToException(pvStatus, "Failed to get Rhino context info.");
     }
-    String contextInfo = Utf8.fromUtf8(cContextInfo[0]);
+    String contextInfo = cContextInfo[0].toDartString();
 
-    return new Rhino._(handle, frameLength, sampleRate, version, contextInfo);
+    return new Rhino._(handle, contextInfo);
   }
 
   // private constructor
-  Rhino._(this._handle, this._frameLength, this._sampleRate, this._version,
-      this._contextInfo)
-      : _cFrame = allocate<Int16>(count: _frameLength);
+  Rhino._(this._handle, this._contextInfo)
+      : _cFrame = malloc<Int16>(frameLength);
 
   /// Process a frame of pcm audio with the speech-to-intent engine.
   ///
@@ -130,14 +123,14 @@ class Rhino {
           "Frame array provided to Rhino process was null.");
     }
 
-    if (frame.length != _frameLength) {
+    if (frame.length != frameLength) {
       throw new PvArgumentError(
-          "Size of frame array provided to 'process' (${frame.length}) does not match the engine 'frameLength' ($_frameLength)");
+          "Size of frame array provided to 'process' (${frame.length}) does not match the engine 'frameLength' ($frameLength)");
     }
 
     // call to process lib function
     _cFrame.asTypedList(frame.length).setAll(0, frame);
-    Pointer<Uint8> isFinalized = allocate(count: 1);
+    Pointer<Uint8> isFinalized = malloc(1);
 
     int status = _rhinoProcess(_handle, _cFrame, isFinalized);
     PvStatus pvStatus = PvStatus.values[status];
@@ -153,7 +146,7 @@ class Rhino {
     Map<String, dynamic> inference = {'isFinalized': true};
 
     // get isUnderstood
-    Pointer<Uint8> isUnderstood = allocate(count: 1);
+    Pointer<Uint8> isUnderstood = malloc(1);
     status = _rhinoIsUnderstood(_handle, isUnderstood);
     pvStatus = PvStatus.values[status];
     if (pvStatus != PvStatus.SUCCESS) {
@@ -164,22 +157,22 @@ class Rhino {
       inference['isUnderstood'] = true;
 
       // get intent
-      Pointer<Pointer<Utf8>> cIntent = allocate(count: 1);
-      Pointer<Int32> cNumSlots = allocate(count: 1);
-      Pointer<Pointer<Pointer<Utf8>>> cSlots = allocate(count: 1);
-      Pointer<Pointer<Pointer<Utf8>>> cValues = allocate(count: 1);
+      Pointer<Pointer<Utf8>> cIntent = malloc(1);
+      Pointer<Int32> cNumSlots = malloc(1);
+      Pointer<Pointer<Pointer<Utf8>>> cSlots = malloc(1);
+      Pointer<Pointer<Pointer<Utf8>>> cValues = malloc(1);
       status = _rhinoGetIntent(_handle, cIntent, cNumSlots, cSlots, cValues);
       pvStatus = PvStatus.values[status];
       if (pvStatus != PvStatus.SUCCESS) {
         pvStatusToException(pvStatus, "Rhino failed to get intent.");
       }
-      inference['intent'] = Utf8.fromUtf8(cIntent[0]);
+      inference['intent'] = cIntent[0].toDartString();
 
       // decode slot map
       Map<String, String> slots = new Map();
       for (var i = 0; i < cNumSlots.value; i++) {
-        final String slot = Utf8.fromUtf8(cSlots[0][i]);
-        final String value = Utf8.fromUtf8(cValues[0][i]);
+        final String slot = cSlots[0][i].toDartString();
+        final String value = cValues[0][i].toDartString();
         slots[slot] = value;
       }
       inference['slots'] = slots;

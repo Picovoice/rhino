@@ -10,8 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   
-  path_provider: ^1.6.24
-  rhino: ^1.6.4
+  path_provider: ^2.0.1
+  rhino: ^1.6.5    
   
 dev_dependencies:
   flutter_test:
