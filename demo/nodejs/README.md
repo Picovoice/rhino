@@ -37,7 +37,7 @@ These demos run Rhino on **NodeJS 10+** on the following platforms:
 
 ### Web Browsers
 
-These demos and the bindings upon which they are built are for NodeJS and **do not work in a browser**. Looking to run Rhino in-browser? Use the [JavaScript WebAssembly](https://github.com/Picovoice/rhino/tree/master/binding/javascript) binding instead.
+These demos and the bindings upon which they are built are for NodeJS and **do not work in a browser**. Looking to run Rhino in-browser? There are npm packages available for [Web](https://www.npmjs.com/package/@picovoice/rhino-web-en-worker), and dedicated packages for [Angular](https://www.npmjs.com/package/@picovoice/rhino-web-angular), [React](https://www.npmjs.com/package/@picovoice/rhino-web-react), and [Vue](https://www.npmjs.com/package/@picovoice/rhino-web-vue).
 
 ## Prerequisites
 
@@ -63,13 +63,13 @@ See [this quick start](https://picovoice.ai/quick-start/wake-word-raspberrypi/) 
 
 To install the demos and make them available on the command line, use either of the following `yarn` or `npm` commands:
 
-```bash
+```console
 yarn global add @picovoice/rhino-node-demo
 ```
 
 (or)
 
-```bash
+```console
 npm install -g @picovoice/rhino-node-demo
 ```
 
@@ -79,13 +79,13 @@ Using the 'global' install methods above should add `rhn-mic-demo` to your syste
 
 Here is an example which will understand commands from the "Smart Lighting" demo from the [Rhino GitHub repostiory](https://github.com/Picovoice/rhino/blob/master/resources/contexts/) (note that context files are platform-dependent; choose the appropriate one for the platform you are using; this demo uses the "mac" version)
 
-```bash
+```console
 rhn-mic-demo --context ./smart_lighting_mac.rhn
 ```
 
 The context source in YAML format will be output to show you the grammar and options that the context supports. The demo will listen for a phrase that the contexts understands, and upon reaching a conclusion (or timeout), it will output the results.
 
-```bash
+```console
 Context info:
 -------------
 context:
@@ -117,7 +117,7 @@ Inference result:
 
 Try running the mic demo again, but this time say something that it is not designed to understand, like "tell me a joke":
 
-```bash
+```console
 rhn-mic-demo --context_path ../../resources/contexts/mac/smart_lighting_mac.rhn
 
 ...
@@ -143,7 +143,7 @@ We can use a couple of test WAV files that are bundled in the [Rhino GitHub repo
 
 Run the file demo and the successful inference with the intent "orderDrink" along with the specific details are returned:
 
-```bash
+```console
 rhn-file-demo \
 --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn \
 --input_audio_file_path ../../resources/audio_samples/test_within_context.wav
@@ -166,7 +166,7 @@ Inference result of 'test_within_context.wav' using context 'coffee':
 
 Trying the file demo on a phrase that the coffee context is not designed to understand (again a sample WAV file from the Rhino GitHub repository):
 
-```bash
+```console
 rhn-file-demo \
 --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn \
 --input_audio_file_path ../../resources/audio_samples/test_out_of_context.wav
@@ -185,15 +185,15 @@ The microphone and file demos both have additional options.
 
 To see the full set of options, use `--help`:
 
-```bash
+```console
 rhn-mic-demo --help
 ```
 
-```bash
+```console
 rhn-file-demo --help
 ```
 
-```bash
+```console
 Usage: rhn-mic-demo [options]
 
 Options:
@@ -208,7 +208,7 @@ Options:
 
 The sensitivity is a floating point value in the range [0,1] which specifies the tradeoff between miss rate and false alarm. The demo defaults to 0.5. You can override this with `--sensitivity`:
 
-```bash
+```console
 rhn-mic-demo --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn --sensitivity 0.65
 ```
 
@@ -224,7 +224,7 @@ You may override the Rhino model and dynamic libraries by specifying their absol
 
 e.g. for macOS (x86_64):
 
-```bash
+```console
 rhn-file-demo \
 --input_audio_file_path ../../resources/audio_samples/test_out_of_context.wav \
 --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn \
@@ -236,14 +236,14 @@ rhn-file-demo \
 
 Use one of `yarn` or `npm` to install the package dependencies from the demo/nodejs folder:
 
-```bash
+```console
 cd demo/nodejs
 yarn
 ```
 
 (or)
 
-```bash
+```console
 cd demo/nodejs
 npm install
 ```
@@ -252,13 +252,13 @@ npm install
 
 Use `yarn mic` (or `npm run mic`) to run the mic demo from the demos/nodejs directory. For `npm run`, note the extra `--` needed before specifying commands. This is to disambiguate whether the options are intended for npm or for the demo script. As before, pick a context that matches the platform you are using (these examples use 'mac'):
 
-```bash
+```console
 yarn mic --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
 ```
 
 (or)
 
-```bash
+```console
 npm run mic -- --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
 ```
 
@@ -266,7 +266,7 @@ npm run mic -- --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
 
 Use `yarn file` or `npm run file` from the demos/nodejs directory. For `npm run`, note the extra `--` needed before specifying commands. This is to disambiguate whether the options are intended for npm itself, or for the demo script.
 
-```bash
+```console
 yarn file \
 --input_audio_file_path ../../resources/audio_samples/test_within_context.wav \
 --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
@@ -274,7 +274,7 @@ yarn file \
 
 (or)
 
-```bash
+```console
 npm run file -- \
 --input_audio_file_path ../../resources/audio_samples/test_within_context.wav \
 --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn

@@ -7,8 +7,7 @@ Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spo
 ```json
 {
   "intent": "orderDrink",
-  "slots":
-  {
+  "slots": {
     "type": "espresso",
     "size": "small",
     "numberOfShots": "2",
@@ -42,7 +41,7 @@ This binding is for running Rhino on **NodeJS 10+** on the following platforms:
 
 ### Web Browsers
 
-This binding is for NodeJS and **does not work in a browser**. Looking to run Rhino in-browser? Use the [JavaScript WebAssembly](https://github.com/Picovoice/rhino/tree/master/binding/javascript) binding instead.
+This binding is for NodeJS and **does not work in a browser**. Looking to run Rhino in-browser? There are npm packages available for [Web](https://www.npmjs.com/package/@picovoice/rhino-web-en-worker), and dedicated packages for [Angular](https://www.npmjs.com/package/@picovoice/rhino-web-angular), [React](https://www.npmjs.com/package/@picovoice/rhino-web-react), and [Vue](https://www.npmjs.com/package/@picovoice/rhino-web-vue).
 
 ## Usage
 
@@ -55,7 +54,7 @@ const Rhino = require("@picovoice/rhino-node");
 
 const coffeeMakerContextPath = "./coffee_maker.rhn";
 
-let handle = new Rhino(coffeeMakerContextPath);
+const handle = new Rhino(coffeeMakerContextPath);
 
 let isFinalized = false;
 // process each frame of audio until Rhino has concluded that it understood the phrase (or did not)
@@ -64,7 +63,7 @@ while (!isFinalized) {
   isFinalized = handle.process(frame);
   // retrieve the inference from Rhino
   if (isFinalized) {
-    let inference = handle.getInference();
+    const inference = handle.getInference();
     // inference result example:
     //
     //   {
@@ -90,7 +89,7 @@ handle.release();
 The Rhino constructor accepts three optional positional parameters for the sensitivity and the absolute paths to the model and dynamic library, should you need to override them (typically, you will not).
 
 ```javascript
-let handle = new Rhino(
+const handle = new Rhino(
   contextPath,
   sensitivity,
   modelFilePath,
