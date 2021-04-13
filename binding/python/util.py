@@ -14,9 +14,14 @@ import os
 import platform
 import subprocess
 
-
 pv_logger = logging.getLogger('picovoice logger')
 pv_logger.setLevel(logging.WARNING)
+warn_handler = logging.StreamHandler()
+warn_handler.setLevel(logging.WARNING)
+warn_format = logging.Formatter('%(levelname)s - %(message)s')
+warn_handler.setFormatter(warn_format)
+pv_logger.addHandler(warn_handler)
+
 
 def _pv_linux_machine(machine):
     if machine == 'x86_64':
@@ -28,7 +33,7 @@ def _pv_linux_machine(machine):
 
     cpu_info = subprocess.check_output(['cat', '/proc/cpuinfo']).decode()
     cpu_part_list = [x for x in cpu_info.split('\n') if 'CPU part' in x]
-    if (len(cpu_part_list) > 0):
+    if len(cpu_part_list) > 0:
         cpu_part = cpu_part_list[0].split(' ')[-1].lower()
         if '0xb76' == cpu_part:
             return 'arm11' + arch_info
@@ -43,7 +48,9 @@ def _pv_linux_machine(machine):
         elif '0xc08' == cpu_part:
             return 'beaglebone' + arch_info
         else:
-            pv_logger.warning('Please be advised that this device (CPU part = %s) is not officially supported by Picovoice. Falling back to the armv6-based library. This is not tested nor optimal.' % cpu_part)
+            pv_logger.warning(
+                'Please be advised that this device (CPU part = %s) is not officially supported by Picovoice. '
+                'Falling back to the armv6-based library. This is not tested nor optimal.' % cpu_part)
             return 'arm11' + arch_info
     else:
         raise NotImplementedError('Unsupported CPU.')
@@ -94,4 +101,3 @@ def pv_library_path(relative_path):
 
 def pv_model_path(relative_path):
     return os.path.join(os.path.dirname(__file__), relative_path, 'lib/common/rhino_params.pv')
-
