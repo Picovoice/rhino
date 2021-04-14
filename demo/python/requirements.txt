@@ -1,2 +1,2 @@
-pvrhino==1.6.0
+pvrhino==1.6.3
 pyaudio
