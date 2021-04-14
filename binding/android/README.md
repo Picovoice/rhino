@@ -163,7 +163,7 @@ Once you're done with Rhino, ensure you release its resources explicitly:
 rhino.delete();
 ```
 
-## How to Integrate Custom Contexts (.rhn files)
+## Custom Context Integration
 
 To add a custom context to your Android application a couple of extra steps must be taken. First, add your .rhn file to the `/res/raw` folder. All resources are compressed when the build system creates an APK, so you will have to extract your rhn file first before using it:
 

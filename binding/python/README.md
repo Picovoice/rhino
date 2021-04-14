@@ -84,6 +84,10 @@ When done resources have to be released explicitly:
 handle.delete()
 ```
 
+## Non-English Contexts
+
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+
 ## Demos
 
 [pvrhinodemo](https://pypi.org/project/pvrhinodemo/) provides command-line utilities for processing real-time

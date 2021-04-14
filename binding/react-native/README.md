@@ -212,6 +212,31 @@ Finally, once you no longer need the inference engine, be sure to explicitly rel
 this._rhino.delete();
 ```
 
+## Custom Context Integration
+
+To add a custom context to your React Native application you'll need to add the rhn files to your platform projects. Android contexts must be added to `./android/app/src/main/res/raw/`, while iOS contexts can be added anywhere under `./ios`, but must be included as a bundled resource in your iOS project. Then in your app code, using the [react-native-fs](https://www.npmjs.com/package/react-native-fs) package, retrieve the files like so:
+```javascript
+const RNFS = require('react-native-fs');
+
+let contextName = 'context';
+let contextFilename = contextName;
+let contextPath = '';
+
+if (Platform.OS == 'android') {
+    // for Android, extract resources from APK
+    contextFilename += '_android.rhn';
+    contextPath = `${RNFS.DocumentDirectoryPath}/${contextFilename}`;
+    await RNFS.copyFileRes(contextFilename, contextPath);
+} else if (Platform.OS == 'ios') {
+    contextFilename += '_ios.rhn';
+    contextPath = `${RNFS.MainBundlePath}/${contextFilename}`;
+}
+```
+
+## Non-English Contexts
+
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+
 ## Demo App
 
 Check out the [Rhino React Native demo](/demo/react-native) to see what it looks like to use Rhino in a cross-platform app!

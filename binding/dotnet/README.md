@@ -97,6 +97,9 @@ using(Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context"))
 }
 ```
 
+## Non-English Contexts
+
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
 ## Demos
 
 The [Rhino dotnet demo project](/demo/dotnet) is a .NET Core console app that allows for 

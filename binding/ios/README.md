@@ -150,7 +150,7 @@ Once you're done with Rhino, you can force it to release its native resources ra
 rhino.delete()
 ```
 
-## How to Integrate Custom Contexts (.rhn files)
+## Custom Context Integration
 
 To add a custom context to your iOS application you must include it in your app as a bundled resource (found by selecting in Build Phases > Copy Bundle Resources). Then in code, get its path like so:
 

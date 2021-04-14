@@ -97,6 +97,10 @@ Once you're done with Rhino, ensure you release its resources explicitly:
 handle.delete();
 ```
 
+## Non-English Contexts
+
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+
 ## Demos
 
 The [Rhino Java demo](/demo/java) is a Java command-line application that allows for 

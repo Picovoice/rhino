@@ -190,6 +190,17 @@ Rhino implements the `IDisposable` interface, so you can use Rhino in a `using` 
 _rhino.Dispose();
 ```
 
+## Custom Model Integration
+
+To add a custom context to your Unity app, you'll need to add the rhn file to your project root under `/StreamingAssets`. Then, in a script, retrieve it like so:
+```csharp
+string contextPath = Path.Combine(Application.streamingAssetsPath, "context.rhn");
+```
+
+## Non-English Contexts
+
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+
 ## Demo
 
 The Rhino Unity demo can be imported along with the SDK when you import the Rhino Unity package. Browse the source of the demo [here](/demo/unity).
