@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
 import {
@@ -6,7 +6,7 @@ import {
   RhinoInference,
   RhinoWorker,
   RhinoWorkerFactory,
-  RhinoWorkerResponse
+  RhinoWorkerResponse,
 } from './rhino_types';
 
 export function useRhino(
@@ -31,12 +31,14 @@ export function useRhino(
   const [isLoaded, setIsLoaded] = useState(false);
   const [isTalking, setIsTalking] = useState(false);
   const [contextInfo, setContextInfo] = useState<string | null>(null);
-  const [rhinoWorker, setRhinoWorker] = useState<RhinoWorker>();
-  const [webVoiceProcessor, setWebVoiceProcessor] = useState<WebVoiceProcessor>();
-  const callback = useRef(inferenceCallback);
+  const [rhinoWorker, setRhinoWorker] = useState<RhinoWorker | null>(null);
+  const [
+    webVoiceProcessor,
+    setWebVoiceProcessor,
+  ] = useState<WebVoiceProcessor | null>(null);
 
   const start = (): boolean => {
-    if (webVoiceProcessor !== undefined) {
+    if (webVoiceProcessor !== null) {
       webVoiceProcessor.start();
       setIsListening(true);
       return true;
@@ -45,7 +47,7 @@ export function useRhino(
   };
 
   const pause = (): boolean => {
-    if (webVoiceProcessor !== undefined) {
+    if (webVoiceProcessor !== null) {
       webVoiceProcessor.pause();
       setIsListening(false);
       return true;
@@ -54,7 +56,7 @@ export function useRhino(
   };
 
   const resume = (): boolean => {
-    if (webVoiceProcessor !== undefined) {
+    if (webVoiceProcessor !== null) {
       webVoiceProcessor.resume();
       setIsListening(true);
       return true;
@@ -63,7 +65,7 @@ export function useRhino(
   };
 
   const pushToTalk = (): boolean => {
-    if (webVoiceProcessor !== null && rhinoWorker !== undefined) {
+    if (webVoiceProcessor !== null && rhinoWorker !== null) {
       if (!isTalking) {
         setIsTalking(true);
         rhinoWorker.postMessage({ command: 'resume' });
@@ -73,8 +75,39 @@ export function useRhino(
     return false;
   };
 
+  /** Refresh the inference callback when it changes (avoid stale closure) */
   useEffect(() => {
-    if (rhinoWorkerFactory === null) { return (): void => { /* NOOP */ }; }
+    if (rhinoWorker !== null) {
+      rhinoWorker.onmessage = (
+        msg: MessageEvent<RhinoWorkerResponse>
+      ): void => {
+        switch (msg.data.command) {
+          case 'rhn-inference':
+            inferenceCallback(msg.data.inference);
+            rhinoWorker.postMessage({ command: 'pause' });
+            setIsTalking(false);
+            break;
+          case 'rhn-error':
+            setIsError(true);
+            setErrorMessage(msg.data.error.toString());
+            break;
+          case 'rhn-info':
+            setContextInfo(msg.data.info);
+            break;
+          default:
+            break;
+        }
+      };
+    }
+  }, [inferenceCallback]);
+
+  /** Startup (and cleanup) Rhino */
+  useEffect(() => {
+    if (rhinoWorkerFactory === null) {
+      return (): void => {
+        /* NOOP */
+      };
+    }
 
     async function startRhino(): Promise<{
       webVp: WebVoiceProcessor;
@@ -83,12 +116,15 @@ export function useRhino(
       const { context, start: startWebVp = true } = rhinoHookArgs;
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const rhnWorker = await rhinoWorkerFactory!.create({ context, start: false });
+      const rhnWorker = await rhinoWorkerFactory!.create({
+        context,
+        start: false,
+      });
 
       rhnWorker.onmessage = (msg: MessageEvent<RhinoWorkerResponse>): void => {
         switch (msg.data.command) {
           case 'rhn-inference':
-            callback.current(msg.data.inference);
+            inferenceCallback(msg.data.inference);
             rhnWorker.postMessage({ command: 'pause' });
             setIsTalking(false);
             break;

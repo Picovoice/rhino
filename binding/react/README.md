@@ -10,7 +10,7 @@ Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spo
 
 E.g. using the [demo "Clock" Rhino context (English langauge)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn):
 
-> Set a timer for ten minutes
+> "Set a timer for ten minutes"
 
 ```json
 {
@@ -23,7 +23,9 @@ E.g. using the [demo "Clock" Rhino context (English langauge)](https://github.co
 }
 ```
 
-> Tell me a joke
+Something outside of the Clock context won't be understood:
+
+> "Tell me a joke"
 
 ```json
 {
@@ -62,9 +64,9 @@ npm install @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
 
 ## Usage
 
-The Rhino library is by default a `push-to-talk` experience. You can use a button to trigger the `isTalking` state. Rhino will listen and process frames of microphone audio until it reaches a conclusion. If the utterance matched something in your Rhino context (e.g. "make me a coffee" in a coffee maker context), the details of the inference are returned.
+The Rhino library is by default a "Push-to-talk" experience. You can use a button to trigger the `isTalking` state. Rhino will listen and process frames of microphone audio until it reaches a conclusion. If the utterance matched something in your Rhino context (e.g. "make me a coffee" in a coffee maker context), the details of the inference are returned.
 
-If you wish to use a wake word with Rhino, see the picovoice-web-\* series of packages, which combine the two engines.
+If you wish to use a wake word with Rhino, see [@picovoice/picovoice-web-react](https://www.npmjs.com/package/@picovoice/picovoice-web-react) which combines Rhino with the Porcupine wake word engine.
 
 The `useRhino` hook provides a collection of fields and methods shown below. You can pass the `inferenceEventHandler` to respond to Rhino inference events. This example uses the sample "Clock" Rhino context, with a sensitivity of 0.65.
 
