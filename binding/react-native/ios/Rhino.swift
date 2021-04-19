@@ -99,7 +99,7 @@ class PvRhino: NSObject {
                 
                 let intent = String(cString: cIntent!)
                 var slots = [String: String]()
-                for i in 0...(numSlots - 1) {
+                for i in 0..<numSlots {
                     let slot = String(cString: cSlotKeys!.advanced(by: Int(i)).pointee!)
                     let value = String(cString: cSlotValues!.advanced(by: Int(i)).pointee!)
                     slots[slot] = value
