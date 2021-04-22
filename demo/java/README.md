@@ -48,7 +48,7 @@ Select "Build > Build Project" to build the two demo classes or "Build > Build A
 
 NOTE: the working directory for all dotnet commands is:
 
-```bash
+```console
 rhino/demo/java/bin
 ```
 
@@ -58,7 +58,7 @@ The file demo uses Rhino to get an inference result from an audio file. This dem
 benchmarking against a corpus of audio data. Note that only the relevant spoken command should be present in the file 
 and no other speech. There also needs to be at least one second of silence at the end of the file.
 
-```bash
+```console
 java -jar rhino-file-demo.jar -i ${AUDIO_PATH} -c ${CONTEXT_PATH}
 ```
 
@@ -66,14 +66,14 @@ java -jar rhino-file-demo.jar -i ${AUDIO_PATH} -c ${CONTEXT_PATH}
 
 The microphone demo opens an audio stream from a microphone and performs inference on spoken commands:
 
-```bash
+```console
 java -jar rhino-mic-demo.jar -c ${CONTEXT_PATH}
 ```
 
 It is possible that the default audio input device is not the one you wish to use. There are a couple
 of debugging facilities baked into the demo application to solve this. First, type the following into the console:
 
-```bash
+```console
 java -jar rhino-mic-demo.jar -sd
 ```
 
@@ -89,13 +89,13 @@ Available input devices:
 You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the Headset 
 microphone in the above example, you can invoke the demo application as below:
 
-```bash
+```console
 java -jar rhino-mic-demo.jar -c ${CONTEXT_PATH} -di 1
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved with:
 
-```bash
+```console
 java -jar rhino-mic-demo.jar -c ${CONTEXT_PATH} -di 1 -o ./test.wav
 ```
 

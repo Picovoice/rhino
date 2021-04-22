@@ -8,7 +8,7 @@ This is the Angular workspace for building the `rhino-web-angular` package.
 
 Run `yarn` to install the Angular workspace dependencies:
 
-```bash
+```console
 yarn
 ```
 

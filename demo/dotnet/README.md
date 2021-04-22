@@ -47,19 +47,19 @@ On Windows, install using the [OpenAL Windows Installer](https://openal.org/down
 
 On Linux use apt-get
 
-```bash
+```console
 sudo apt-get install libopenal-dev
 ```
 
 On Mac use Brew
 
-```bash
+```console
 brew install openal-soft
 ```
 
 Once .NET Core and OpenAL have been installed, you can build with the dotnet CLI
 
-```bash
+```console
 dotnet build -c MicDemo.Release
 dotnet build -c FileDemo.Release
 ```
@@ -68,7 +68,7 @@ dotnet build -c FileDemo.Release
 
 NOTE: File path arguments must be absolute paths. The working directory for the following dotnet commands is:
 
-```bash
+```console
 rhino/demo/dotnet/RhinoDemo
 ```
 
@@ -78,7 +78,7 @@ The file demo uses Rhino to get an inference result from an audio file. This dem
 benchmarking against a corpus of audio data. Note that only the relevant spoken command should be present in the file 
 and no other speech. There also needs to be at least one second of silence at the end of the file.
 
-```bash
+```console
 dotnet run -c FileDemo.Release -- --input_audio_path ${AUDIO_PATH} --context_path ${CONTEXT_PATH}
 ```
 
@@ -86,14 +86,14 @@ dotnet run -c FileDemo.Release -- --input_audio_path ${AUDIO_PATH} --context_pat
 
 The microphone demo opens an audio stream from a microphone and performs inference on spoken commands:
 
-```bash
+```console
 dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_PATH}
 ```
 
 It is possible that the default audio input device is not the one you wish to use. There are a couple
 of debugging facilities baked into the demo application to solve this. First, type the following into the console:
 
-```bash
+```console
 dotnet run -c MicDemo.Release -- --show_audio_devices
 ```
 
@@ -109,13 +109,13 @@ Available input devices:
 You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the Headset 
 microphone in the above example, you can invoke the demo application as below:
 
-```bash
+```console
 dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_PATH} --audio_device_index 1
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved with:
 
-```bash
+```console
 dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_PATH} --audio_device_index 1 --output_path ./test.wav
 ```
 

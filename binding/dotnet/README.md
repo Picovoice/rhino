@@ -29,7 +29,7 @@ Rhino is:
 
 You can install the latest version of Rhino by getting the latest [Rhino Nuget package](https://www.nuget.org/packages/Rhino/) in Visual Studio or using the .NET CLI:
 
-```bash
+```console
 dotnet add package Rhino
 ```
 

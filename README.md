@@ -172,7 +172,7 @@ To learn the complete expression syntax of Rhino, see the [Speech-to-Intent Synt
 
 Install [PyAudio](https://people.csail.mit.edu/hubert/pyaudio/) and then the demo package:
 
-```bash
+```console
 sudo pip3 install pvrhinodemo
 ```
 
@@ -194,7 +194,7 @@ file or on real-time microphone input.
 Make sure there is a working microphone connected to your device. From [demo/dotnet/RhinoDemo](/demo/dotnet/RhinoDemo)
 run the following in the terminal:
 
-```bash
+```console
 dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_FILE_PATH}
 ```
 
@@ -209,7 +209,7 @@ audio file or on real-time microphone input.
 
 To try the real-time demo, make sure there is a working microphone connected to your device. From the root of the repository run the following command:
 
-```bash
+```console
 java -jar demo/java/bin/rhino-mic-demo.jar -c ${CONTEXT_FILE_PATH}
 ```
 
@@ -231,7 +231,7 @@ Before launching the app, use the [copy_assets.sh](/demo/flutter/copy_assets.sh)
 
 Run the following command from [demo/flutter](/demo/flutter/) to build and deploy the demo to your device:
 
-```sh
+```console
 flutter run
 ```
 
@@ -251,14 +251,14 @@ been set up, navigate to [demo/react-native](/demo/react-native) to run the foll
 
 For Android:
 
-```sh
+```console
 yarn android-install    # sets up environment
 yarn android-run        # builds and deploys to Android
 ```
 
 For iOS:
 
-```sh
+```console
 yarn ios-install        # sets up environment
 yarn ios-run            # builds and deploys to iOS
 ```
@@ -381,13 +381,13 @@ Open http://localhost:8080 in your browser to try the demo.
 Install the [node-record-lpcm16](https://www.npmjs.com/package/node-record-lpcm16) NPM package, and follow the instructions
 there for setting up your microphone. Then install the demo package:
 
-```bash
+```console
 yarn global add @picovoice/rhino-node-demo
 ```
 
 With a working microphone connected to your device, run the following in the terminal:
 
-```shell
+```console
 rhn-mic-demo --context_path ${CONTEXT_FILE_PATH}
 ```
 
@@ -401,14 +401,14 @@ The [Microphone demo](/demo/c/rhino_demo_mic.c) runs on Linux-based systems (e.g
 
 Build the demo:
 
-```bash
+```console
 gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c -ldl -lasound
 ```
 
 Find the name of audio input device (microphone) on your computer using `arecord -L` and then from the root of the
 repository run the demo:
 
-```bash
+```console
 ./demo/c/rhino_demo_mic \
 ${RHINO_LIBRARY_PATH} \
 lib/common/rhino_params.pv \
@@ -429,7 +429,7 @@ of a smart lighting system. For example you can say:
 
 Install the Python SDK:
 
-```bash
+```console
 pip3 install pvrhino
 ```
 
@@ -476,7 +476,7 @@ Finally, when done be sure to explicitly release the resources using `handle.del
 
 Install the .NET SDK using NuGet or the dotnet CLI:
 
-```bash
+```console
 dotnet add package Rhino
 ```
 
@@ -1351,7 +1351,7 @@ export default {
 
 Install the NodeJS SDK:
 
-```bash
+```console
 yarn add @picovoice/rhino-node
 ```
 

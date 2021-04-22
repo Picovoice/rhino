@@ -46,7 +46,7 @@ To obtain a Rhino Worker, we can use the static `create` factory method from the
 
 E.g.:
 
-```bash
+```console
 yarn add @picovoice/web-voice-processor @picovoice/rhino-web-en-worker
 ```
 

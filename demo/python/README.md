@@ -42,7 +42,7 @@ Rhino is:
 Microphone demo uses [PyAudio](https://people.csail.mit.edu/hubert/pyaudio/) for recording input audio. Consult the
 installation guide at [PyAudio](https://people.csail.mit.edu/hubert/pyaudio/).
 
-```bash
+```console
 sudo pip3 install pvrhinodemo
 ```
 
@@ -55,7 +55,7 @@ benchmarking. It accepts 16kHz audio files. Rhino processes a single-channel aud
 provided it only processes the first (left) channel. Note that only the relevant spoken command should be present in the
 file and no other speech. Also there needs to be at least one second of silence at the end of the file.
 
-```bash
+```console
 rhino_demo_file --input_audio_path ${AUDIO_PATH} --context_path ${CONTEXT_PATH} 
 ```
 
@@ -63,14 +63,14 @@ rhino_demo_file --input_audio_path ${AUDIO_PATH} --context_path ${CONTEXT_PATH}
 
 It opens an audio stream from a microphone and performs inference in spoken commands:
 
-```bash
+```console
 rhino_demo_mic --context_path ${CONTEXT_PATH}
 ```
 
 It is possible that the default audio input device recognized by PyAudio is not the one being used. There are a couple
 of debugging facilities baked into the demo application to solve this. First, type the following into the console:
 
-```bash
+```console
 rhino_demo_mic --show_audio_devices
 ```
 
@@ -104,12 +104,12 @@ It provides information about various audio input devices on the box. On a Linux
 It can be seen that the last device (index 21) is considered default. But on this machine, a headset is being used as
 the input device which has an index of 10. After finding the correct index the demo application can be invoked as below
 
-```bash
+```console
 rhino_demo_mic --context_path ${CONTEXT_PATH} --audio_device_index 10
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved by
 
-```bash
+```console
 rhino_demo_mic --context_path ${CONTEXT_PATH} --audio_device_index 10 --output_path ~/test.wav
 ```

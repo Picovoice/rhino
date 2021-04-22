@@ -32,19 +32,19 @@ This binding is for running Rhino on **React Native 0.62.2+** on the following p
 
 To start install be sure you have installed yarn and cocoapods. Then add these two native modules to your react-native project.
 
-```sh
+```console
 yarn add @picovoice/react-native-voice-processor
 yarn add @picovoice/rhino-react-native
 ```
 or
-```sh
+```console
 npm i @picovoice/react-native-voice-processor --save
 npm i @picovoice/rhino-react-native --save
 ```
 
 Link the iOS package
 
-```sh
+```console
 cd ios && pod install && cd ..
 ```
 

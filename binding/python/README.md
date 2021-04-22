@@ -29,7 +29,7 @@ Rhino is:
 
 ## Installation
 
-```bash
+```console
 pip3 install pvrhino
 ```
 

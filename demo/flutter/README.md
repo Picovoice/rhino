@@ -7,7 +7,7 @@ To run the Rhino demo on Android or iOS with Flutter, you must have the [Flutter
 Before launching the app, use the copy_assets.sh script to copy the rhino demo context file into the demo project. (**NOTE**: on Windows, Git Bash or another bash shell is required, or you will have to manually copy the context into the project.).
 
 Run the following command from [demo/flutter](/demo/flutter/) to build and deploy the demo to your device:
-```sh
+```console
 flutter run
 ```
 

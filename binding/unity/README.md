@@ -39,7 +39,7 @@ The easiest way to install the Rhino Unity SDK is to import [rhino.unitypackage]
 
 ## Packaging
 To build the package from source, you have first have to clone the repo with submodules:
-```bash
+```console
 git clone --recurse-submodules git@github.com:Picovoice/rhino.git
 # or 
 git clone --recurse-submodules https://github.com/Picovoice/rhino.git
