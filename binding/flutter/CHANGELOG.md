@@ -15,3 +15,6 @@
 
 ## [1.6.5] - 2021-04-12
 * Flutter 2.0 upgrade
+
+## [1.6.6] - 2021-05-03
+* Android lib bug fix
