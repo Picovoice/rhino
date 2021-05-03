@@ -14,15 +14,6 @@ const fs = require("fs")
 const ncp = require("ncp").ncp
 const mkdirp = require("mkdirp");
 
-// copy Android resources
-fs.copyFileSync('../android/Rhino/rhino/src/main/java/ai/picovoice/rhino/Rhino.java','./android/src/main/java/ai/picovoice/reactnative/rhino/Rhino.java')
-fs.copyFileSync('../android/Rhino/rhino/src/main/java/ai/picovoice/rhino/RhinoException.java','./android/src/main/java/ai/picovoice/reactnative/rhino/RhinoException.java')
-fs.copyFileSync('../android/Rhino/rhino/src/main/java/ai/picovoice/rhino/RhinoInference.java','./android/src/main/java/ai/picovoice/reactnative/rhino/RhinoInference.java')
-mkdirp.sync("./android/src/main/jniLibs")
-ncp('../../lib/android','./android/src/main/jniLibs')
-mkdirp.sync("./android/src/main/res/raw")
-fs.copyFileSync('../../lib/common/rhino_params.pv','./android/src/main/res/raw/rhino_params.pv')
-
 // copy iOS resources
 mkdirp.sync("./ios/resources")
 fs.copyFileSync('../../lib/common/rhino_params.pv','./ios/resources/rhino_params.pv')

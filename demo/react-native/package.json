@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "@picovoice/react-native-voice-processor": "^1.0.4",
-    "@picovoice/rhino-react-native": "^1.6.7",
+    "@picovoice/rhino-react-native": "1.6.8",
     "react": "16.13.1",
     "react-native": "0.63.3",
-    "react-native-fs": "^2.16.6"
+    "react-native-fs": "^2.16.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",

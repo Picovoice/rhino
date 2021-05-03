@@ -48,12 +48,6 @@ public class RhinoModule extends ReactContextBaseJavaModule {
   public RhinoModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
-
-    try {
-      copyResourceFiles();
-    } catch (IOException e) {
-      Log.e(LOG_TAG, e.toString());
-    }
   }
 
   @Override
@@ -76,7 +70,11 @@ public class RhinoModule extends ReactContextBaseJavaModule {
   public void create(String modelPath, String contextPath, Float sensitivity, Promise promise) {
 
     try {
-      Rhino rhino = new Rhino(modelPath, contextPath, sensitivity.floatValue());
+      Rhino rhino = new Rhino.Builder()
+                      .setModelPath(modelPath)
+                      .setContextPath(contextPath)
+                      .setSensitivity(sensitivity.floatValue())
+                      .build(reactContext);
       String handle = String.valueOf(System.identityHashCode(rhino));
       rhinoPool.put(handle, rhino);
 
@@ -147,28 +145,6 @@ public class RhinoModule extends ReactContextBaseJavaModule {
 
     } catch (RhinoException e) {
       promise.reject(e.toString());
-    }
-  }
-
-  private void copyResourceFiles() throws IOException {
-    final Resources resources = reactContext.getResources();
-
-    copyResourceFile(
-      R.raw.rhino_params,
-      resources.getResourceEntryName(R.raw.rhino_params) + ".pv");
-  }
-
-  private void copyResourceFile(int resourceId, String filename) throws IOException {
-    final Resources resources = reactContext.getResources();
-    try (
-      InputStream is = new BufferedInputStream(resources.openRawResource(resourceId), 256);
-      OutputStream os = new BufferedOutputStream(reactContext.openFileOutput(filename, ReactApplicationContext.MODE_PRIVATE), 256)
-    ) {
-      int r;
-      while ((r = is.read()) != -1) {
-        os.write(r);
-      }
-      os.flush();
     }
   }
 }
