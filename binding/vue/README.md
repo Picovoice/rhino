@@ -44,12 +44,12 @@ Using the Web Audio API requires a secure context (HTTPS connection), with the e
 
 ## Installation
 
-Install the package using `npm` or `yarn`. You will also need to add one of the `@picovoice/rhino-web-**-worker` series of packages for the specific language model:
+Install the package using `npm` or `yarn`. You will also need to add `@picovoice/web-voice-processor` and one of the `@picovoice/rhino-web-**-worker` series of packages for the specific language model:
 
 E.g. English:
 
 ```console
-yarn add @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
+yarn add @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker @picovoice/web-voice-processor
 ```
 
 ## Usage
