@@ -20,7 +20,7 @@ module.exports = {
         '@typescript-eslint/no-parameter-properties': 2,
         '@typescript-eslint/no-explicit-any': 0,
         '@typescript-eslint/no-var-requires': 2,
-        '@typescript-eslint/no-non-null-assertion': 2,
+        '@typescript-eslint/no-non-null-assertion': 0,
         '@typescript-eslint/no-use-before-define': 2,
         '@typescript-eslint/camelcase': 0,
         '@typescript-eslint/no-empty-interface': 2,

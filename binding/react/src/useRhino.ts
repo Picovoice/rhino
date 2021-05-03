@@ -11,7 +11,7 @@ import {
 
 export function useRhino(
   rhinoWorkerFactory: RhinoWorkerFactory | null,
-  rhinoHookArgs: RhinoHookArgs,
+  rhinoHookArgs: RhinoHookArgs | null,
   inferenceCallback: (inference: RhinoInference) => void
 ): {
   contextInfo: string | null;
@@ -20,6 +20,7 @@ export function useRhino(
   isError: boolean;
   isTalking: boolean;
   errorMessage: string | null;
+  webVoiceProcessor: WebVoiceProcessor | null;
   start: () => void;
   pause: () => void;
   pushToTalk: () => void;
@@ -103,7 +104,13 @@ export function useRhino(
 
   /** Startup (and cleanup) Rhino */
   useEffect(() => {
-    if (rhinoWorkerFactory === null) {
+    if (rhinoWorkerFactory === null || rhinoWorkerFactory === undefined) {
+      return (): void => {
+        /* NOOP */
+      };
+    }
+
+    if (rhinoHookArgs === null || rhinoHookArgs === undefined) {
       return (): void => {
         /* NOOP */
       };
@@ -113,9 +120,8 @@ export function useRhino(
       webVp: WebVoiceProcessor;
       rhnWorker: RhinoWorker;
     }> {
-      const { context, start: startWebVp = true } = rhinoHookArgs;
+      const { context, start: startWebVp = true } = rhinoHookArgs!;
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const rhnWorker = await rhinoWorkerFactory!.create({
         context,
         start: false,
@@ -166,10 +172,10 @@ export function useRhino(
 
     return (): void => {
       startRhinoPromise.then(({ webVp, rhnWorker }) => {
-        if (webVp !== undefined) {
+        if (webVp !== null) {
           webVp.release();
         }
-        if (rhnWorker !== undefined) {
+        if (rhnWorker !== null) {
           rhnWorker.postMessage({ command: 'release' });
         }
       });
@@ -190,6 +196,7 @@ export function useRhino(
     isError,
     isTalking,
     errorMessage,
+    webVoiceProcessor,
     start,
     pause,
     pushToTalk,
