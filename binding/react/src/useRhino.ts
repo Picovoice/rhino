@@ -67,11 +67,9 @@ export function useRhino(
 
   const pushToTalk = (): boolean => {
     if (webVoiceProcessor !== null && rhinoWorker !== null) {
-      if (!isTalking) {
-        setIsTalking(true);
-        rhinoWorker.postMessage({ command: 'resume' });
-        return true;
-      }
+      setIsTalking(true);
+      rhinoWorker.postMessage({ command: 'resume' });
+      return true;
     }
     return false;
   };
@@ -84,9 +82,9 @@ export function useRhino(
       ): void => {
         switch (msg.data.command) {
           case 'rhn-inference':
-            inferenceCallback(msg.data.inference);
-            rhinoWorker.postMessage({ command: 'pause' });
             setIsTalking(false);
+            rhinoWorker.postMessage({ command: 'pause' });
+            inferenceCallback(msg.data.inference);
             break;
           case 'rhn-error':
             setIsError(true);
@@ -130,9 +128,9 @@ export function useRhino(
       rhnWorker.onmessage = (msg: MessageEvent<RhinoWorkerResponse>): void => {
         switch (msg.data.command) {
           case 'rhn-inference':
-            inferenceCallback(msg.data.inference);
-            rhnWorker.postMessage({ command: 'pause' });
             setIsTalking(false);
+            rhnWorker.postMessage({ command: 'pause' });
+            inferenceCallback(msg.data.inference);
             break;
           case 'rhn-error':
             setIsError(true);
