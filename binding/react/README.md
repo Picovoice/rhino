@@ -64,7 +64,7 @@ npm install @picovoice/rhino-web-react @picovoice/rhino-web-en-worker @picovoice
 
 ## Usage
 
-The Rhino library is by default a "Push-to-talk" experience. You can use a button to trigger the `isTalking` state. Rhino will listen and process frames of microphone audio until it reaches a conclusion. If the utterance matched something in your Rhino context (e.g. "make me a coffee" in a coffee maker context), the details of the inference are returned.
+The Rhino library is by default a "Push-to-talk" experience. You can use a button to trigger the `pushToTalk` function. Rhino will listen and process frames of microphone audio until it reaches a conclusion. If the utterance matched something in your Rhino context (e.g. "make me a coffee" in a coffee maker context), the details of the inference are returned.
 
 If you wish to use a wake word with Rhino, see [@picovoice/picovoice-web-react](https://www.npmjs.com/package/@picovoice/picovoice-web-react) which combines Rhino with the Porcupine wake word engine.
 

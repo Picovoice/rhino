@@ -114,4 +114,6 @@ export type RhinoHookArgs = {
   start: boolean;
   /** The context to instantiate */
   context: RhinoContext;
+  /** Immediately put Rhino in an active isTalking state upon initialization (as if pushToTalk() was called) (default: false) */
+  isTalking?: boolean;
 };

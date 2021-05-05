@@ -102,6 +102,13 @@ export function useRhino(
 
   /** Startup (and cleanup) Rhino */
   useEffect(() => {
+    // Reset hook state, since we're rebooting Rhino and WebVoiceProcessor
+    setIsTalking(rhinoHookArgs?.isTalking === true);
+    setIsListening(false);
+    setIsLoaded(false);
+    setIsError(false);
+    setErrorMessage(null);
+
     if (rhinoWorkerFactory === null || rhinoWorkerFactory === undefined) {
       return (): void => {
         /* NOOP */
@@ -120,9 +127,11 @@ export function useRhino(
     }> {
       const { context, start: startWebVp = true } = rhinoHookArgs!;
 
+      const initIsTalking = rhinoHookArgs?.isTalking === true;
+
       const rhnWorker = await rhinoWorkerFactory!.create({
         context,
-        start: false,
+        start: initIsTalking,
       });
 
       rhnWorker.onmessage = (msg: MessageEvent<RhinoWorkerResponse>): void => {

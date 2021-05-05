@@ -1,6 +1,6 @@
 {
   "name": "rhino-web-react-demo",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "private": true,
   "description": "Rhino React demo (made with Create React App)",
   "dependencies": {
@@ -8,7 +8,7 @@
     "@picovoice/rhino-web-en-worker": "^1.6.1",
     "@picovoice/rhino-web-es-worker": "^1.6.1",
     "@picovoice/rhino-web-fr-worker": "^1.6.1",
-    "@picovoice/rhino-web-react": "^1.2.1",
+    "@picovoice/rhino-web-react": "^1.2.2",
     "@picovoice/web-voice-processor": "^2.0.3",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
