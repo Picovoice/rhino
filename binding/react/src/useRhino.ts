@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
 import {
   RhinoHookArgs,
-  RhinoInference,
+  RhinoInferenceFinalized,
   RhinoWorker,
   RhinoWorkerFactory,
   RhinoWorkerResponse,
@@ -12,7 +12,7 @@ import {
 export function useRhino(
   rhinoWorkerFactory: RhinoWorkerFactory | null,
   rhinoHookArgs: RhinoHookArgs | null,
-  inferenceCallback: (inference: RhinoInference) => void
+  inferenceCallback: (inference: RhinoInferenceFinalized) => void
 ): {
   contextInfo: string | null;
   isLoaded: boolean;
@@ -76,6 +76,11 @@ export function useRhino(
 
   /** Refresh the inference callback when it changes (avoid stale closure) */
   useEffect(() => {
+    if (typeof inferenceCallback !== 'function') {
+      // eslint-disable-next-line no-console
+      console.warn('useRhino: inferenceCallback is not a function');
+    }
+
     if (rhinoWorker !== null) {
       rhinoWorker.onmessage = (
         msg: MessageEvent<RhinoWorkerResponse>
@@ -84,7 +89,8 @@ export function useRhino(
           case 'rhn-inference':
             setIsTalking(false);
             rhinoWorker.postMessage({ command: 'pause' });
-            inferenceCallback(msg.data.inference);
+            // We know this inference isFinalized, so assert to more specific type
+            inferenceCallback(msg.data.inference as RhinoInferenceFinalized);
             break;
           case 'rhn-error':
             setIsError(true);
@@ -139,7 +145,8 @@ export function useRhino(
           case 'rhn-inference':
             setIsTalking(false);
             rhnWorker.postMessage({ command: 'pause' });
-            inferenceCallback(msg.data.inference);
+            // We know this inference isFinalized, so assert to more specific type
+            inferenceCallback(msg.data.inference as RhinoInferenceFinalized);
             break;
           case 'rhn-error':
             setIsError(true);

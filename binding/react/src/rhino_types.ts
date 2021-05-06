@@ -9,6 +9,17 @@ export type RhinoInference = {
   slots?: Record<string, string>;
 };
 
+export type RhinoInferenceFinalized = {
+  /** This is a finalized inference, so isUnderstood is now conclusively set to true/false */
+  isFinalized: true;
+  /** The intent was understood (it matched an expression in the context) */
+  isUnderstood: boolean;
+  /** The name of the intent */
+  intent?: string;
+  /** Map of the slot variables and values extracted from the utterance */
+  slots?: Record<string, string>;
+};
+
 export interface RhinoEngine {
   /** Release all resources acquired by Rhino */
   release(): void;
@@ -31,6 +42,14 @@ export type RhinoContext = {
   sensitivity?: number;
 };
 
+export type RhinoArgs = {
+  /** The context to instantiate */
+  context: RhinoContext;
+  /** Whether to start the Rhino engine immediately upon loading.
+   * Default: false, as typical use-case is Push-to-Talk */
+  start: boolean;
+};
+
 export type WorkerRequestProcess = {
   command: 'process';
   inputFrame: Int16Array;
@@ -38,11 +57,6 @@ export type WorkerRequestProcess = {
 
 export type WorkerRequestVoid = {
   command: 'reset' | 'pause' | 'resume' | 'release';
-};
-
-export type RhinoArgs = {
-  context: RhinoContext;
-  start: boolean;
 };
 
 export type RhinoWorkerRequestInit = {
@@ -88,16 +102,8 @@ export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: RhinoWorkerRequest): void;
 }
 
-export type RhinoFactoryArgs = {
-  /** The context to instantiate */
-  context: RhinoContext;
-  /** Whether to start the Rhino engine immediately upon loading.
-   * Default: false, as typical use-case is Push-to-Talk */
-  start?: boolean;
-};
-
 export interface RhinoWorkerFactory {
-  create: (rhinoFactoryArgs: RhinoFactoryArgs) => Promise<RhinoWorker>;
+  create: (rhinoArgs: RhinoArgs) => Promise<RhinoWorker>;
 }
 
 export type RhinoWorkerResponse =

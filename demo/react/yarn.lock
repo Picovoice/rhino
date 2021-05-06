@@ -1438,10 +1438,10 @@
   resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-fr-worker/-/rhino-web-fr-worker-1.6.1.tgz#8596f304166382ad2750d10907fdd866212ffa87"
   integrity sha512-3Jd3siv+WGMMU5G7Iyg2j9KkKItlocB6sRNFyEnq96XNd9t3TMknsXUscIEbfNGeHiwSmZnKCN35k119NRNjVQ==
 
-"@picovoice/rhino-web-react@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-react/-/rhino-web-react-1.2.2.tgz#8c1fbb11ace9487f1244f90c25951f6da144f8e7"
-  integrity sha512-TPGInMsG7ShpWUhII0IFug3viHK/i37kGzmAQ+AwcW+5ZI79qSxUrdfq3SK6RURLFGqhLa5Hv/wGTbqCxJrf7A==
+"@picovoice/rhino-web-react@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-react/-/rhino-web-react-1.3.0.tgz#b7c1f9aaf17a034877fe75d6fea6d176b062a50b"
+  integrity sha512-jerLaqRdub/cu17ebxEkarWNeqlDN86uCMLXgh49w5V0Bcr1fnvtj1WtUIGJgFNasOrjaLvHablCYYdvOBqs5A==
 
 "@picovoice/web-voice-processor@^2.0.3":
   version "2.0.3"
