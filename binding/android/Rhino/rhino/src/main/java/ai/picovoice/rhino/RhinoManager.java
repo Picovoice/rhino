@@ -15,6 +15,7 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Process;
+import android.util.Log;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -66,6 +67,7 @@ public class RhinoManager {
 
                 short[] buffer = new short[rhino.getFrameLength()];
 
+                boolean isFinalized = false;
                 try {
                     audioRecord = new AudioRecord(
                             MediaRecorder.AudioSource.MIC,
@@ -75,23 +77,21 @@ public class RhinoManager {
                             bufferSize);
                     audioRecord.startRecording();
 
-                    boolean isFinalized = false;
-
                     while (!isFinalized) {
                         if (audioRecord.read(buffer, 0, buffer.length) == buffer.length) {
                             isFinalized = rhino.process(buffer);
-                            if (isFinalized) {
-                                callback.invoke(rhino.getInference());
-                            }
                         }
                     }
-
                     audioRecord.stop();
                 } catch (Exception e) {
                     throw new RhinoException(e);
                 } finally {
                     if (audioRecord != null) {
                         audioRecord.release();
+                    }
+                    
+                    if (isFinalized) {
+                        callback.invoke(rhino.getInference());
                     }
                 }
                 return null;

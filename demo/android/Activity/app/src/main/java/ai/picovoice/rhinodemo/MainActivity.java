@@ -137,7 +137,9 @@ public class MainActivity extends AppCompatActivity {
             recordButton.setText("START");
             recordButton.toggle();
         } else {
-                rhinoManager.process();
+            recordButton.setEnabled(false);
+            recordButton.setText("...");
+            rhinoManager.process();
         }
     }
 
