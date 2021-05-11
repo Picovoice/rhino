@@ -1,5 +1,5 @@
 /*
-    Copyright 2020 Picovoice Inc.
+    Copyright 2020-2021 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -133,9 +133,13 @@ namespace RhinoTest
         }
 
         private static string _relativeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        
+        private static Architecture _arch => RuntimeInformation.ProcessArchitecture;
         private static string _env => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "mac" :
-                                                 RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "linux" :
-                                                 RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "windows" : "";
+                                                 RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "windows" :
+                                                 RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && _arch == Architecture.X64 ? "linux" :
+                                                 RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
+                                                    (_arch == Architecture.Arm || _arch == Architecture.Arm64) ? "raspberry-pi" : "";
 
         private Rhino SetUpClass() => Rhino.Create(Path.Combine(_relativeDir, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));        
     }

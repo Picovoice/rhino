@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <IsPackable>false</IsPackable>
-    <Platforms>x64</Platforms>
+    <IsPackable>false</IsPackable>    
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,19 +20,20 @@
 			<Link>resources\audio_samples\%(Filename)%(Extension)</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="..\..\..\resources\contexts\windows\*">
-			<PackagePath>build/netstandard2.0/content/resources/contexts/windows</PackagePath>
+		<Content Include="..\..\..\resources\contexts\windows\*">			
 			<Link>resources\contexts\windows\%(Filename)%(Extension)</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="..\..\..\resources\contexts\mac\*">
-			<PackagePath>build/netstandard2.0/content/resources/contexts/mac</PackagePath>
+		<Content Include="..\..\..\resources\contexts\mac\*">			
 			<Link>resources\contexts\mac\%(Filename)%(Extension)</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="..\..\..\resources\contexts\linux\*">
-			<PackagePath>build/netstandard2.0/content/resources/contexts/linux</PackagePath>
+		<Content Include="..\..\..\resources\contexts\linux\*">			
 			<Link>resources\contexts\linux\%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\..\..\resources\contexts\raspberry-pi\*">
+			<Link>resources\contexts\raspberry-pi\%(Filename)%(Extension)</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
