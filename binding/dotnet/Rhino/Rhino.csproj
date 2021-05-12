@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>netstandard2.0</TargetFrameworks>
-	  <Version>1.6.0</Version>
+	  <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
+	  <Version>1.6.1</Version>
 	  <Authors>Picovoice</Authors>
 	  <Company />
 	  <Product>Rhino Speech-to-Intent Engine</Product>
@@ -12,7 +12,7 @@
 	  <RepositoryType>git</RepositoryType>
 	  <PackageTags>nlu, intent, inference, speech recognition, voice commands, offline, private, voice, ai, voice assistant</PackageTags>
 	  <PackageReleaseNotes>See https://github.com/Picovoice/rhino/ </PackageReleaseNotes>
-	  <Copyright>Picovoice 2020</Copyright>
+	  <Copyright>Picovoice 2020-2021</Copyright>
 	  <Description>Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of interest, in real-time. 
 
 For example, given a spoken command "Can I have a small double-shot espresso?", Rhino infers that the user wants to order a drink with these specifications:  { "type": "espresso", "size": "small", "numberOfShots": "2" }
@@ -28,30 +28,56 @@ Rhino is:
 </Description>
 	  <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 	  <PackageIcon>pv_circle_512.png</PackageIcon>
-	  <Platforms>x64</Platforms>	 
   </PropertyGroup>
 	<ItemGroup>		
 		<Content Include="Rhino.targets">
-			<PackagePath>build\netstandard2.0</PackagePath>
+			<PackagePath>
+				build/netstandard2.0;
+				build/netcoreapp3.1
+			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="..\..\..\lib\windows\amd64\libpv_rhino.dll">
-			<PackagePath>build/netstandard2.0/lib/libpv_rhino.dll</PackagePath>
+			<PackagePath>
+				build/netstandard2.0/lib/windows/amd64/libpv_rhino.dll;
+				build/netcoreapp3.1/lib/windows/amd64/libpv_rhino.dll
+			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>lib\windows\amd64\libpv_rhino.dll</Link>
 			<Visible>false</Visible>
 		</Content>
 		<Content Include="..\..\..\lib\linux\x86_64\libpv_rhino.so">
-			<PackagePath>build/netstandard2.0/lib/libpv_rhino.so</PackagePath>
+			<PackagePath>
+				build/netstandard2.0/lib/linux/x86_64/libpv_rhino.so;
+				build/netcoreapp3.1/lib/linux/x86_64/libpv_rhino.so
+			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>lib\linux\x86_64\libpv_rhino.so</Link>
+			<Visible>false</Visible>
+		</Content>
+		<Content Include="..\..\..\lib\raspberry-pi\**\*">
+			<PackagePath>
+				build/netstandard2.0/lib/raspberry-pi;
+				build/netcoreapp3.1/lib/raspberry-pi
+			</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>lib\raspberry-pi\%(RecursiveDir)%(Filename)%(Extension)</Link>
 			<Visible>false</Visible>
 		</Content>
 		<Content Include="..\..\..\lib\mac\x86_64\libpv_rhino.dylib">
-			<PackagePath>build/netstandard2.0/lib/libpv_rhino.dylib</PackagePath>
+			<PackagePath>
+				build/netstandard2.0/lib/mac/x86_64/libpv_rhino.dylib;
+				build/netcoreapp3.1/lib/mac/x86_64/libpv_rhino.dylib;
+			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>lib\mac\x86_64\libpv_rhino.dylib</Link>
 			<Visible>false</Visible>
 		</Content>
 		<Content Include="..\..\..\lib\common\rhino_params.pv">
-			<PackagePath>build/netstandard2.0/content/lib/common/rhino_params.pv</PackagePath>
+			<PackagePath>
+				build/netstandard2.0/lib/common/rhino_params.pv;
+				build/netcoreapp3.1/lib/common/rhino_params.pv;
+			</PackagePath>
 			<Link>lib\common\rhino_params.pv</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>			
 		</Content>
