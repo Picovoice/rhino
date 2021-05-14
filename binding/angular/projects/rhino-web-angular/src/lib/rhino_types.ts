@@ -21,11 +21,29 @@ export type RhinoInference = {
   slots?: Record<string, string>;
 };
 
+export type RhinoInferenceFinalized = {
+  /** Rhino has concluded the inference (isUnderstood is now set) */
+  isFinalized: true;
+  /** The intent was understood (it matched an expression in the context) */
+  isUnderstood: boolean;
+  /** The name of the intent */
+  intent?: string;
+  /** Map of the slot variables and values extracted from the utterance */
+  slots?: Record<string, string>;
+};
+
+export type RhinoInferenceUnderstood = {
+  /** Rhino has concluded the inference (isUnderstood is now true) */
+  isFinalized: true;
+  /** The intent was understood (it matched an expression in the context) */
+  isUnderstood: true;
+  /** The name of the intent */
+  intent: string;
+  /** Map of the slot variables and values extracted from the utterance */
+  slots?: Record<string, string>;
+};
+
 export interface RhinoEngine {
-  /** Release all resources acquired by Rhino */
-  release(): void;
-  /** Process a single frame of 16-bit 16kHz PCM audio */
-  process(frame: Int16Array): RhinoInference;
   /** The version of the Rhino engine */
   readonly version: string;
   /** The sampling rate of audio expected by the Rhino engine */
@@ -34,6 +52,10 @@ export interface RhinoEngine {
   readonly frameLength: number;
   /** The source of the Rhino context (YAML format) */
   readonly contextInfo: string;
+  /** Release all resources acquired by Rhino */
+  release(): void;
+  /** Process a single frame of 16-bit 16kHz PCM audio */
+  process(frame: Int16Array): RhinoInference;
 }
 
 export type RhinoContext = {
@@ -63,8 +85,8 @@ export type RhinoWorkerRequestInit = {
 };
 
 export type RhinoWorkerRequestInfo = {
-  command: 'info'
-}
+  command: 'info';
+};
 
 export type RhinoWorkerResponseReady = {
   command: 'rhn-ready';
@@ -87,17 +109,25 @@ export type RhinoWorkerResponseInference = {
 
 export type RhinoWorkerResponseInfo = {
   command: 'rhn-info';
-  info: string
+  info: string;
 };
 
-export type RhinoWorkerRequest = WorkerRequestVoid | WorkerRequestProcess | RhinoWorkerRequestInit | RhinoWorkerRequestInfo
-
+export type RhinoWorkerRequest =
+  | WorkerRequestVoid
+  | WorkerRequestProcess
+  | RhinoWorkerRequestInit
+  | RhinoWorkerRequestInfo;
 
 export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: RhinoWorkerRequest): void;
 }
 
-export type RhinoWorkerResponse = RhinoWorkerResponseReady | RhinoWorkerResponseInference | RhinoWorkerResponseError | RhinoWorkerResponseInitError | RhinoWorkerResponseInfo
+export type RhinoWorkerResponse =
+  | RhinoWorkerResponseReady
+  | RhinoWorkerResponseInference
+  | RhinoWorkerResponseError
+  | RhinoWorkerResponseInitError
+  | RhinoWorkerResponseInfo;
 
 // Angular
 
