@@ -2,7 +2,7 @@ import { Component } from "@angular/core"
 import { Subscription } from "rxjs"
 
 import { RhinoService } from "@picovoice/rhino-web-angular"
-import { RhinoInference, RhinoServiceArgs } from "@picovoice/rhino-web-angular/lib/rhino_types"
+import { RhinoInferenceFinalized, RhinoServiceArgs } from "@picovoice/rhino-web-angular/lib/rhino_types"
 import { ALARM_CLOCK_64 } from "./rhino_context"
 
 @Component({
@@ -26,7 +26,7 @@ export class VoiceWidget {
   isListening: boolean | null = null
   isTalking: boolean = false
   errorMessage: string
-  inference: RhinoInference | null = null
+  inference: RhinoInferenceFinalized | null = null
   rhinoServiceArgs: RhinoServiceArgs = {
     context: {
       base64:
@@ -35,8 +35,7 @@ export class VoiceWidget {
   }
 
   constructor(private rhinoService: RhinoService) {
-    // Subscribe to Rhino Keyword detections
-    // Store each detection so we can display it in an HTML list
+    // Subscribe to Rhino inference events
     this.inferenceDetection = rhinoService.inference$.subscribe(
       inference => {
         this.inference = inference
