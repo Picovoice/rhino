@@ -1,8 +1,4 @@
 import { useState, useEffect } from "react";
-import { RhinoWorkerFactory as RhinoWorkerFactoryEn } from "@picovoice/rhino-web-en-worker";
-import { RhinoWorkerFactory as RhinoWorkerFactoryFr } from "@picovoice/rhino-web-fr-worker";
-import { RhinoWorkerFactory as RhinoWorkerFactoryEs } from "@picovoice/rhino-web-es-worker";
-import { RhinoWorkerFactory as RhinoWorkerFactoryDe } from "@picovoice/rhino-web-de-worker";
 import { useRhino } from "@picovoice/rhino-web-react";
 
 const RHN_EN_CLOCK_64 =
@@ -13,19 +9,25 @@ export default function VoiceWidget() {
   const [workerChunk, setWorkerChunk] = useState({ factory: null });
 
   useEffect(() => {
-    async function loadRhino() {
-      // Dynamically import the worker
-      const rhnEnWorkerFactory = (
-        await import("@picovoice/rhino-web-en-worker")
-      ).RhinoWorkerFactory;
-      console.log("Rhino worker (EN) chunk is loaded.");
-      return rhnEnWorkerFactory;
-    }
-
     if (workerChunk.factory === null) {
-      loadRhino().then((workerFactory) => {
-        setWorkerChunk({ factory: workerFactory });
-      });
+      let isCanceled = false;
+      const loadRhino = async () => {
+        // Dynamically import the worker
+        const rhnEnWorkerFactory = (
+          await import("@picovoice/rhino-web-en-worker")
+        ).RhinoWorkerFactory;
+
+        // If the component unmounted while loading, don't attempt to update it
+        if (!isCanceled) {
+          setWorkerChunk({ factory: rhnEnWorkerFactory });
+        }
+      };
+
+      loadRhino();
+
+      return () => {
+        isCanceled = true;
+      };
     }
   }, [workerChunk]);
 
