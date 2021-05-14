@@ -24,7 +24,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "base64": "node scripts/base64.js"
+    "base64": "node scripts/base64.js",
+    "postinstall": "node scripts/base64.js"
   },
   "eslintConfig": {
     "extends": [

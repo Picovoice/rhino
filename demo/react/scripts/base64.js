@@ -2,6 +2,8 @@ import fs, { readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
+console.log("Converting .rhn wasm file(s) to base64 ...");
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const rhnContextDirectoryWasm = join(
@@ -29,3 +31,5 @@ writeFileSync(
   join(outputDirectory, `rhn_contexts_base64.js`),
   jsSourceFileOutput
 );
+
+console.log("Done!");
