@@ -946,10 +946,10 @@
   resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-1.6.1.tgz#4fae7b61059ffca145df6603945de7d425f36621"
   integrity sha512-y3TXUkLIJsQ18EmopbmwaeqOsHDOIvwEpV3U5KrbTP6fOQu4l7xm8BBQqUq+JkqJCSB2G8Q3ZzkqoYoyKJUb8Q==
 
-"@picovoice/rhino-web-vue@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-vue/-/rhino-web-vue-1.1.0.tgz#0a9a647df2864e77674569badc5b82feb01d254e"
-  integrity sha512-eQtgKdzDxNe4suT9UE+DmEU14aZbT1WlgeteNGpBoZr2hO9fQBO6wkiPslcq5KDRkSETf5V2mDu99fQDr96zog==
+"@picovoice/rhino-web-vue@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-vue/-/rhino-web-vue-1.1.1.tgz#4caf4770e0d80b2cb0483355149d94f8821b86c2"
+  integrity sha512-rxO3G9wjfQ4yOYddEl/ezacQBtSIkWjlF3bDiYYbyZJ7xPmHjs0mMu/O2IH+oYPygX/7m8/p+cGqfRiM2QSYtA==
 
 "@picovoice/web-voice-processor@2.0.3":
   version "2.0.3"

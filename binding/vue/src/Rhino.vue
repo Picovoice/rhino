@@ -14,7 +14,7 @@ export default {
     rhinoFactory: [Function],
   },
   data: function () {
-    return { webVp: null, rhnWorker: null };
+    return { webVp: null, rhnWorker: null, contextInfo: null };
   },
   methods: {
     start() {
@@ -64,8 +64,14 @@ export default {
             // Reset Push-to-Talk
             this.rhnWorker.postMessage({ command: 'pause' });
             break;
+          case 'rhn-info':
+            const info = messageEvent.data.info;
+            this.contextInfo = info;
+            this.$emit('rhn-info', info);
+            break;
         }
       };
+      this.rhnWorker.postMessage({ command: 'info' });
     } catch (error) {
       this.$emit('rhn-error', error);
     }

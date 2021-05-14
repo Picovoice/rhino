@@ -16,7 +16,7 @@
   <br />
   <button
     (click)="pushToTalk()"
-    [disabled]="isError || !isListening || isTalking"
+    [disabled]="isError || !isListening || isTalking || !isLoaded"
   >
     Push to Talk
   </button>
