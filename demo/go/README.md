@@ -11,7 +11,7 @@ MicDemo uses [malgo](https://github.com/gen2brain/malgo) for cross-platform audi
 NOTE: The working directory for the following go commands is:
 
 ```console
-rhino/demo/go
+cd rhino/demo/go
 ```
 
 ### File Demo

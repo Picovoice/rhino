@@ -66,7 +66,7 @@ func pvStatusToString(status PvStatus) string {
 	}
 }
 
-type RhinoInferece struct {
+type RhinoInference struct {
 	// Indicates whether Rhino understood what it heard based on the context
 	IsUnderstood bool
 
@@ -79,6 +79,7 @@ type RhinoInferece struct {
 
 // Rhino struct
 type Rhino struct {
+	// pointer to native rhino instance
 	handle uintptr
 
 	// whether Rhino has made an inference
@@ -147,7 +148,7 @@ var (
 )
 
 // Init function for Rhino. Must be called before attempting process
-func (rhino *Rhino) Init() (err error) {
+func (rhino *Rhino) Init() error {
 	if rhino.ModelPath == "" {
 		rhino.ModelPath = defaultModelFile
 	}
@@ -216,14 +217,14 @@ func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 // that was inferred, and (if applicable) slot keys and specific slot values. Should only be called after the
 // process function returns true, otherwise Rhino has not yet reached an inference conclusion.
 // Returns an inference struct with `.IsUnderstood`, '.Intent` , and `.Slots`.
-func (rhino *Rhino) GetInference() (inference RhinoInferece, err error) {
+func (rhino *Rhino) GetInference() (inference RhinoInference, err error) {
 	if !rhino.isFinalized {
-		return RhinoInferece{}, fmt.Errorf("GetInference called before rhino had finalized. Call GetInference only after Process has returned true.")
+		return RhinoInference{}, fmt.Errorf("GetInference called before rhino had finalized. Call GetInference only after Process has returned true.")
 	}
 
 	status, isUnderstood := nativeRhino.nativeIsUnderstood(rhino)
 	if PvStatus(status) != SUCCESS {
-		return RhinoInferece{}, fmt.Errorf("GetInference failed at IsUnderstood with PvStatus: %d", status)
+		return RhinoInference{}, fmt.Errorf("GetInference failed at IsUnderstood with PvStatus: %d", status)
 	}
 
 	var intent string
@@ -231,21 +232,21 @@ func (rhino *Rhino) GetInference() (inference RhinoInferece, err error) {
 	if isUnderstood {
 		status, intent, slots = nativeRhino.nativeGetIntent(rhino)
 		if PvStatus(status) != SUCCESS {
-			return RhinoInferece{}, fmt.Errorf("GetInference failed at GetIntent with PvStatus: %d", status)
+			return RhinoInference{}, fmt.Errorf("GetInference failed at GetIntent with PvStatus: %d", status)
 		}
 
 		status = nativeRhino.nativeFreeSlotsAndValues(rhino)
 		if PvStatus(status) != SUCCESS {
-			return RhinoInferece{}, fmt.Errorf("GetInference failed at FreeSlotsAndValues with PvStatus: %d", status)
+			return RhinoInference{}, fmt.Errorf("GetInference failed at FreeSlotsAndValues with PvStatus: %d", status)
 		}
 	}
 
 	status = nativeRhino.nativeReset(rhino)
 	if PvStatus(status) != SUCCESS {
-		return RhinoInferece{}, fmt.Errorf("GetInference failed at Reset with PvStatus: %d", status)
+		return RhinoInference{}, fmt.Errorf("GetInference failed at Reset with PvStatus: %d", status)
 	}
 
-	return RhinoInferece{IsUnderstood: isUnderstood, Intent: intent, Slots: slots}, nil
+	return RhinoInference{IsUnderstood: isUnderstood, Intent: intent, Slots: slots}, nil
 }
 
 func extractDefaultModel() string {
@@ -276,7 +277,11 @@ func extractFile(srcFile string, dstDir string) string {
 	}
 
 	extractedFilepath := filepath.Join(dstDir, srcFile)
-	os.MkdirAll(filepath.Dir(extractedFilepath), 0777)
+	err := os.MkdirAll(filepath.Dir(extractedFilepath), 0777)
+	if err != nil {
+		log.Fatalf("Could not create rhino directory: %v", err)
+	}
+
 	writeErr := ioutil.WriteFile(extractedFilepath, bytes, 0777)
 	if writeErr != nil {
 		log.Fatalf("%v", writeErr)
