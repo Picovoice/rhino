@@ -9,6 +9,12 @@
 // limitations under the License.
 //
 
+// Go binding for Rhino Speech-to-Intent engine. It directly infers the user's intent from spoken commands in
+// real-time. Rhino processes incoming audio in consecutive frames and indicates if the inference is finalized. When
+// finalized, the inferred intent can be retrieved as structured data in the form of an intent string and pairs of
+// slots and values. The number of samples per frame can be attained by from the `FrameLength` property. The incoming audio
+// needs to have a sample rate equal to `SampleRate` property and be 16-bit linearly-encoded. Rhino operates on single-channel audio.
+
 package rhino
 
 import (
