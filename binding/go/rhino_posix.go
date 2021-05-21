@@ -91,7 +91,6 @@ import (
 	"unsafe"
 )
 
-// private vars
 var (
 	lib                                = C.dlopen(C.CString(libName), C.RTLD_NOW)
 	pv_rhino_init_ptr                  = C.dlsym(lib, C.CString("pv_rhino_init"))
@@ -172,7 +171,6 @@ func (nr *nativeRhinoType) nativeGetIntent(rhino *Rhino) (status PvStatus, inten
 		(***C.char)(unsafe.Pointer(&slotValuesPtr)))
 	intentRet = C.GoString((*C.char)(unsafe.Pointer(intentPtr)))
 
-	// do slots
 	for i := 0; i < numSlots; i++ {
 		offset := uintptr(i) * unsafe.Sizeof(uintptr(0))
 		slotKeyPtr := (**C.char)(unsafe.Pointer(slotKeysPtr + offset))

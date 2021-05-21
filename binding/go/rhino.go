@@ -61,10 +61,13 @@ func pvStatusToString(status PvStatus) string {
 }
 
 type RhinoInferece struct {
+	// Indicates whether Rhino understood what it heard based on the context
 	IsUnderstood bool
 
+	// If IsUnderstood, name of intent that was inferred
 	Intent string
 
+	// If isUnderstood, dictionary of slot keys and values that were inferred
 	Slots map[string]string
 }
 
@@ -72,22 +75,31 @@ type RhinoInferece struct {
 type Rhino struct {
 	handle uintptr
 
+	// whether Rhino has made an inference
 	isFinalized bool
 
 	// Absolute path to the file containing model parameters.
 	ModelPath string
 
+	// Inference sensitivity. A higher sensitivity value results in
+	// fewer misses at the cost of (potentially) increasing the erroneous inference rate.
+	// Sensitivity should be a floating-point number within 0 and 1.
 	Sensitivity float32
 
+	// Absolute path to the Rhino context file (.rhn).
 	ContextPath string
 
+	// Once initialized, stores the source of the Rhino context in YAML format. Shows the list of intents,
+	// which expressions map to those intents, as well as slots and their possible values.
 	ContextInfo string
 }
 
+// Returns a Rhino struct with the given context file and default parameters
 func NewRhino(contextPath string) Rhino {
 	return Rhino{ContextPath: contextPath, Sensitivity: 0.5, ModelPath: defaultModelFile}
 }
 
+// native interface
 type nativeRhinoInterface interface {
 	nativeInit(*Rhino)
 	nativeProcess(*Rhino, []int)
@@ -174,6 +186,8 @@ func (rhino *Rhino) Delete() error {
 	return nil
 }
 
+// Process a frame of pcm audio with the speech-to-intent engine.
+// isFinalized returns true when Rhino has an inference ready to return
 func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 
 	if rhino.handle == 0 {
@@ -184,7 +198,6 @@ func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 		return false, fmt.Errorf("Input data frame size (%d) does not match required size of %d", len(pcm), FrameLength)
 	}
 
-	// call process
 	status, isFinalized := nativeRhino.nativeProcess(rhino, pcm)
 	if PvStatus(status) != SUCCESS {
 		return false, fmt.Errorf("Process audio frame failed with PvStatus: %d", status)
@@ -193,6 +206,10 @@ func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 	return isFinalized, nil
 }
 
+// Gets inference results from Rhino. If the spoken command was understood, it includes the specific intent name
+// that was inferred, and (if applicable) slot keys and specific slot values. Should only be called after the
+// process function returns true, otherwise Rhino has not yet reached an inference conclusion.
+// Returns an inference struct with `.IsUnderstood`, '.Intent` , and `.Slots`.
 func (rhino *Rhino) GetInference() (inference RhinoInferece, err error) {
 	if !rhino.isFinalized {
 		return RhinoInferece{}, fmt.Errorf("GetInference called before rhino had finalized. Call GetInference only after Process has returned true.")

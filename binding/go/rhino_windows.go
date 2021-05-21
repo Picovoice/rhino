@@ -22,7 +22,6 @@ import (
 	"golang.org/x/sys/windows"
 )
 
-// private vars
 var (
 	lib                        = windows.NewLazyDLL(libName)
 	init_func                  = lib.NewProc("pv_rhino_init")

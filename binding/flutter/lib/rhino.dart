@@ -43,12 +43,12 @@ class Rhino {
 
   /// Static creator for initializing Rhino
   ///
-  /// [contextPath] (Optional) Absolute path to the Rhino context file (.rhn).
+  /// [contextPath] Absolute path to the Rhino context file (.rhn).
   ///
   /// [modelPath] (Optional) Path to the file containing model parameters.
   /// If not set it will be set to the default location.
   ///
-  /// [sensitivity] Inference sensitivity. A higher sensitivity value results in
+  /// [sensitivity] (Optional) Inference sensitivity. A higher sensitivity value results in
   /// fewer misses at the cost of (potentially) increasing the erroneous inference rate.
   /// Sensitivity should be a floating-point number within 0 and 1.
   ///
@@ -110,7 +110,7 @@ class Rhino {
   /// returns a map object with the following fields:
   ///   - isFinalized: whether Rhino has made an inference
   ///   - isUnderstood: if isFinalized, whether Rhino understood what it heard based on the context
-  ///   - intent: if isUnderstood, name of intent that were inferred
+  ///   - intent: if isUnderstood, name of intent that was inferred
   ///   - slots: if isUnderstood, dictionary of slot keys and values that were inferred
   Map<String, dynamic> process(List<int> frame) {
     if (_handle == null) {
