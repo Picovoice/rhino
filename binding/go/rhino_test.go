@@ -27,7 +27,7 @@ var osName = getOS()
 var r Rhino
 
 func TestMain(m *testing.M) {
-	// call flag.Parse() here if TestMain uses flags
+
 	contextFile, _ := filepath.Abs(fmt.Sprintf("../../resources/contexts/%s/coffee_maker_%s.rhn", osName, osName))
 	r = NewRhino(contextFile)
 	err := r.Init()
