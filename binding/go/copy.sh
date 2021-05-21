@@ -10,7 +10,4 @@ cp ../../lib/mac/x86_64/libpv_rhino.dylib ./embedded/lib/mac/x86_64/libpv_rhino.
 echo "Copying Windows lib..."
 cp ../../lib/windows/amd64/libpv_rhino.dll ./embedded/lib/windows/amd64/libpv_rhino.dll
 
-echo "Copying RPi libs..."
-cp -rp ../../lib/raspberry-pi/* ./embedded/lib/raspberry-pi
-
 echo "Copy complete!"
