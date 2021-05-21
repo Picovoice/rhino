@@ -2,6 +2,8 @@ github.com/Picovoice/rhino/binding/go v0.0.0-20210521011506-0888d331100f h1:149f
 github.com/Picovoice/rhino/binding/go v0.0.0-20210521011506-0888d331100f/go.mod h1:ezrmZbTY/NN0y8Lu5uQTM82Z5jYe3AkyMLDes/amUIU=
 github.com/Picovoice/rhino/binding/go v0.0.0-20210521013428-88b4dc4b0f91 h1:eH5Wz6czBcMg5H06YnSLUUY2Mt8/TjZIBvEFb0WV6Cw=
 github.com/Picovoice/rhino/binding/go v0.0.0-20210521013428-88b4dc4b0f91/go.mod h1:ezrmZbTY/NN0y8Lu5uQTM82Z5jYe3AkyMLDes/amUIU=
+github.com/Picovoice/rhino/binding/go v0.0.0-20210521185849-cadce02808cb h1:PS6Y4huYNXGk2XNEFoNl/aPDES/Nf7qvJxIM2JqkBvc=
+github.com/Picovoice/rhino/binding/go v0.0.0-20210521185849-cadce02808cb/go.mod h1:ezrmZbTY/NN0y8Lu5uQTM82Z5jYe3AkyMLDes/amUIU=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/gen2brain/malgo v0.10.35 h1:D6aNo/Q0SnzQLHomTydTXxj4AJFdGJcVoE7I8JxPoUo=
