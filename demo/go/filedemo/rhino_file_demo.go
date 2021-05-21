@@ -50,7 +50,6 @@ func main() {
 	}
 
 	r := Rhino{}
-	defer r.Delete()
 
 	// validate model
 	if *modelPathArg != "" {

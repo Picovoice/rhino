@@ -57,6 +57,7 @@ func (nr nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
 
 func (nr nativeRhinoType) nativeDelete(rhino *Rhino) {
 	delete_func.Call(rhino.handle)
+	rhino.handle = uintptr(0)
 }
 
 func (nr nativeRhinoType) nativeProcess(rhino *Rhino, pcm []int16) (status PvStatus, isFinalized bool) {

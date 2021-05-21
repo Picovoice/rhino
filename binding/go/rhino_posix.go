@@ -131,6 +131,7 @@ func (nr nativeRhinoType) nativeDelete(rhino *Rhino) {
 	C.pv_rhino_delete_wrapper(
 		pv_rhino_delete_ptr,
 		unsafe.Pointer(rhino.handle))
+	rhino.handle = uintptr(0)
 }
 
 func (nr nativeRhinoType) nativeProcess(rhino *Rhino, pcm []int16) (status PvStatus, isFinalized bool) {
