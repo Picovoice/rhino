@@ -45,6 +45,7 @@ Rhino is:
     - [Python](#python-demos)
     - [.NET](#net-demos)
     - [Java](#java-demos)
+    - [Go](#go-demos)
     - [Unity](#unity-demos)
     - [Flutter](#flutter-demos)
     - [React Native](#react-native-demos)
@@ -61,6 +62,7 @@ Rhino is:
     - [Python](#python)
     - [.NET](#net)
     - [Java](#java)
+    - [Go](#go)
     - [Unity](#unity)
     - [Flutter](#flutter)
     - [React Native](#react-native)
@@ -216,6 +218,19 @@ java -jar demo/java/bin/rhino-mic-demo.jar -c ${CONTEXT_FILE_PATH}
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
 For more information about Java demos go to [demo/java](/demo/java).
+
+### Go Demos
+
+The Go mic demo uses [malgo](https://github.com/gen2brain/malgo) for cross-platform audio capture. It requires `cgo`, which on Windows may mean that you need to install a gcc compiler like [Mingw](http://mingw-w64.org/doku.php) to build it properly. 
+
+From [demo/go](/demo/go) run the following command to build and run the following command from the terminal:
+```console
+go run micdemo/rhino_mic_demo.go -context_path ${CONTEXT_FILE_PATH}
+```
+
+Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
+
+For more information about Go demos go to [demo/go](/demo/go).
 
 ### Unity Demos
 
@@ -574,6 +589,55 @@ Once you are done with Rhino, ensure you release its resources explicitly:
 
 ```java
 handle.delete();
+```
+
+### Go
+
+To install the Rhino Go module to your project, use the command:
+```console
+go get github.com/Picovoice/rhino/binding/go
+```
+
+To create an instance of the engine with default parameters, pass a path to a Rhino context file (.rhn) to the `NewRhino` function and then make a call to `.Init()`.
+
+```go
+import . "github.com/Picovoice/rhino/binding/go"
+
+rhino = NewRhino("/path/to/context/file.rhn")
+err := rhino.Init()
+if err != nil {
+    // handle error
+}
+```
+
+Once initialized, you can start passing in frames of audio for processing. The engine accepts 16-bit linearly-encoded PCM and operates on
+single-channel audio. The sample rate that is required by the engine is given by `SampleRate` and number of samples per frame is `FrameLength`.
+
+To feed audio into Rhino, use the `Process` function in your capture loop. You must have called `Init()` before calling `Process`.
+```go
+func getNextFrameAudio() []int16{
+    // get audio frame
+}
+
+for {
+    isFinalized, err := rhino.Process(getNextFrameAudio())
+    if isFinalized {
+        inference, err := rhino.GetInference()
+        if inference.IsUnderstood {
+            intent := inference.Intent
+            slots := inference.Slots
+            // add code to take action based on inferred intent and slot values
+        } else {
+            // add code to handle unsupported commands
+        }
+    }
+}
+```
+
+When done resources have to be released explicitly.
+
+```go
+rhino.Delete()
 ```
 
 ### Unity
