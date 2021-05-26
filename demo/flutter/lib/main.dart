@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
   bool isButtonDisabled = false;
   bool isProcessing = false;
   String rhinoText = "";
-  RhinoManager _rhinoManager;
+  RhinoManager? _rhinoManager;
 
   @override
   void initState() {
@@ -121,7 +121,10 @@ class _MyAppState extends State<MyApp> {
     });
 
     try {
-      await _rhinoManager.process();
+      if (_rhinoManager == null) {
+        throw PvAudioException("_rhinoManager not initialized.");
+      }
+      await _rhinoManager!.process();
       this.setState(() {
         isProcessing = true;
         rhinoText = "Listening...";

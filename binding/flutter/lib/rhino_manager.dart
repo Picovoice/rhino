@@ -23,11 +23,11 @@ typedef InferenceCallback(Map<String, dynamic> inference);
 typedef ErrorCallback(PvError error);
 
 class RhinoManager {
-  VoiceProcessor _voiceProcessor;
-  Rhino _rhino;
+  VoiceProcessor? _voiceProcessor;
+  Rhino? _rhino;
 
   final InferenceCallback _inferenceCallback;
-  RemoveListener _removeVoiceProcessorListener;
+  RemoveListener? _removeVoiceProcessorListener;
 
   bool _awaitingStop = false;
 
@@ -49,9 +49,9 @@ class RhinoManager {
   /// returns an instance of the speech-to-intent engine
   static Future<RhinoManager> create(
       String contextPath, InferenceCallback inferenceCallback,
-      {String modelPath,
+      {String? modelPath,
       double sensitivity = 0.5,
-      ErrorCallback errorCallback}) async {
+      ErrorCallback? errorCallback}) async {
     Rhino rhino = await Rhino.create(contextPath,
         modelPath: modelPath, sensitivity: sensitivity);
     return new RhinoManager._(rhino, inferenceCallback, errorCallback);
@@ -59,10 +59,13 @@ class RhinoManager {
 
   // private constructor
   RhinoManager._(
-      this._rhino, this._inferenceCallback, ErrorCallback errorCallback)
+      this._rhino, this._inferenceCallback, ErrorCallback? errorCallback)
       : _voiceProcessor = VoiceProcessor.getVoiceProcessor(
             Rhino.frameLength, Rhino.sampleRate) {
-    _removeVoiceProcessorListener = _voiceProcessor.addListener((buffer) async {
+    if (_voiceProcessor == null) {
+      throw new PvError("flutter_voice_processor not available.");
+    }
+    _removeVoiceProcessorListener = _voiceProcessor!.addListener((buffer) async {
       if (_awaitingStop) {
         return;
       }
@@ -82,15 +85,15 @@ class RhinoManager {
 
       // process frame with Rhino
       try {
-        Map<String, dynamic> rhinoResult = _rhino.process(rhinoFrame);
-        if (rhinoResult['isFinalized']) {
+        Map<String, dynamic>? rhinoResult = _rhino?.process(rhinoFrame);
+        if (rhinoResult?['isFinalized']) {
           _awaitingStop = true;
 
           // send inference minus isFinalized
-          rhinoResult.remove('isFinalized');
+          rhinoResult!.remove('isFinalized');
           _inferenceCallback(rhinoResult);
           // stop audio processing
-          await _voiceProcessor.stop();
+          await _voiceProcessor?.stop();
         }
       } on PvError catch (error) {
         errorCallback == null ? print(error.message) : errorCallback(error);
@@ -109,9 +112,9 @@ class RhinoManager {
           "Cannot start RhinoManager - resources have already been released");
     }
 
-    if (await _voiceProcessor.hasRecordAudioPermission()) {
+    if (await _voiceProcessor?.hasRecordAudioPermission() == true) {
       try {
-        await _voiceProcessor.start();
+        await _voiceProcessor!.start();
       } on PlatformException {
         throw new PvAudioException(
             "Audio engine failed to start. Hardware may not be supported.");
@@ -125,15 +128,15 @@ class RhinoManager {
   /// Releases Rhino and audio resouces
   void delete() async {
     if (_voiceProcessor != null) {
-      if (_voiceProcessor.isRecording) {
-        await _voiceProcessor.stop();
+      if (_voiceProcessor!.isRecording) {
+        await _voiceProcessor!.stop();
       }
       _removeVoiceProcessorListener?.call();
       _voiceProcessor = null;
     }
 
     if (_rhino != null) {
-      _rhino.delete();
+      _rhino!.delete();
       _rhino = null;
     }
   }

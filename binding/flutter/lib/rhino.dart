@@ -22,9 +22,9 @@ import 'package:rhino/rhino_error.dart';
 
 class Rhino {
   static bool _resourcesExtracted = false;
-  static String _defaultModelPath;
+  static String? _defaultModelPath;
 
-  int _handle;
+  int? _handle;
   final String _contextInfo;
   final Pointer<Int16> _cFrame;
 
@@ -56,7 +56,7 @@ class Rhino {
   ///
   /// returns an instance of the speech-to-intent engine
   static Future<Rhino> create(String contextPath,
-      {String modelPath, double sensitivity = 0.5}) async {
+      {String? modelPath, double sensitivity = 0.5}) async {
     if (!_resourcesExtracted) {
       await _extractRhinoResources();
       _resourcesExtracted = true;
@@ -66,6 +66,9 @@ class Rhino {
       throw new PvArgumentError("No context file provided.");
     }
 
+    if (modelPath == null && _defaultModelPath == null) {
+      throw new PvError("No model file provided and default model file not available.");
+    }
     modelPath ??= _defaultModelPath;
 
     if (sensitivity < 0 || sensitivity > 1 || sensitivity.isNaN) {
@@ -74,7 +77,7 @@ class Rhino {
     }
 
     // generate arguments for ffi
-    Pointer<Utf8> cModelPath = modelPath.toNativeUtf8();
+    Pointer<Utf8> cModelPath = modelPath!.toNativeUtf8();
     Pointer<Utf8> cContextPath = contextPath.toNativeUtf8();
     Pointer<IntPtr> handlePtr = malloc<IntPtr>(1);
 
@@ -112,7 +115,7 @@ class Rhino {
   ///   - isUnderstood: if isFinalized, whether Rhino understood what it heard based on the context
   ///   - intent: if isUnderstood, name of intent that was inferred
   ///   - slots: if isUnderstood, dictionary of slot keys and values that were inferred
-  Map<String, dynamic> process(List<int> frame) {
+  Map<String, dynamic> process(List<int>? frame) {
     if (_handle == null) {
       throw new PvStateError(
           "Attempted to process an audio frame after Rhino was been deleted.");
@@ -132,7 +135,7 @@ class Rhino {
     _cFrame.asTypedList(frame.length).setAll(0, frame);
     Pointer<Uint8> isFinalized = malloc(1);
 
-    int status = _rhinoProcess(_handle, _cFrame, isFinalized);
+    int status = _rhinoProcess(_handle!, _cFrame, isFinalized);
     PvStatus pvStatus = PvStatus.values[status];
     if (pvStatus != PvStatus.SUCCESS) {
       pvStatusToException(pvStatus, "Rhino failed to process an audio frame.");
@@ -147,7 +150,7 @@ class Rhino {
 
     // get isUnderstood
     Pointer<Uint8> isUnderstood = malloc(1);
-    status = _rhinoIsUnderstood(_handle, isUnderstood);
+    status = _rhinoIsUnderstood(_handle!, isUnderstood);
     pvStatus = PvStatus.values[status];
     if (pvStatus != PvStatus.SUCCESS) {
       pvStatusToException(pvStatus, "Rhino failed to get IsUnderstood value.");
@@ -161,7 +164,7 @@ class Rhino {
       Pointer<Int32> cNumSlots = malloc(1);
       Pointer<Pointer<Pointer<Utf8>>> cSlots = malloc(1);
       Pointer<Pointer<Pointer<Utf8>>> cValues = malloc(1);
-      status = _rhinoGetIntent(_handle, cIntent, cNumSlots, cSlots, cValues);
+      status = _rhinoGetIntent(_handle!, cIntent, cNumSlots, cSlots, cValues);
       pvStatus = PvStatus.values[status];
       if (pvStatus != PvStatus.SUCCESS) {
         pvStatusToException(pvStatus, "Rhino failed to get intent.");
@@ -178,7 +181,7 @@ class Rhino {
       inference['slots'] = slots;
 
       // free slots
-      status = _rhinoFreeSlotsAndValues(_handle, cSlots[0], cValues[0]);
+      status = _rhinoFreeSlotsAndValues(_handle!, cSlots[0], cValues[0]);
       pvStatus = PvStatus.values[status];
       if (pvStatus != PvStatus.SUCCESS) {
         pvStatusToException(pvStatus, "Rhino failed to free slots.");
@@ -188,7 +191,7 @@ class Rhino {
     }
 
     // reset Rhino
-    status = _rhinoReset(_handle);
+    status = _rhinoReset(_handle!);
     pvStatus = PvStatus.values[status];
     if (pvStatus != PvStatus.SUCCESS) {
       pvStatusToException(pvStatus, "Rhino failed to reset.");
@@ -200,7 +203,7 @@ class Rhino {
   /// Frees memory that was allocated for Rhino
   void delete() {
     if (_handle != null) {
-      _rhinoDelete(_handle);
+      _rhinoDelete(_handle!);
       _handle = null;
     }
   }
