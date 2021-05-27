@@ -62,12 +62,13 @@ class Rhino {
       _resourcesExtracted = true;
     }
 
-    if (contextPath == null || contextPath.isEmpty) {
+    if (contextPath.isEmpty) {
       throw new PvArgumentError("No context file provided.");
     }
 
     if (modelPath == null && _defaultModelPath == null) {
-      throw new PvError("No model file provided and default model file not available.");
+      throw new PvError(
+          "No model file provided and default model file not available.");
     }
     modelPath ??= _defaultModelPath;
 

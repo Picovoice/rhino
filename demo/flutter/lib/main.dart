@@ -121,9 +121,6 @@ class _MyAppState extends State<MyApp> {
     });
 
     try {
-      if (_rhinoManager == null) {
-        throw PvAudioException("_rhinoManager not initialized.");
-      }
       await _rhinoManager!.process();
       this.setState(() {
         isProcessing = true;

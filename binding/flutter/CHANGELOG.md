@@ -18,3 +18,6 @@
 
 ## [1.6.6] - 2021-05-03
 * Android lib bug fix
+
+## [1.6.7] - 2021-05-03
+* Migrate to null safety

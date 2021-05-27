@@ -65,7 +65,8 @@ class RhinoManager {
     if (_voiceProcessor == null) {
       throw new PvError("flutter_voice_processor not available.");
     }
-    _removeVoiceProcessorListener = _voiceProcessor!.addListener((buffer) async {
+    _removeVoiceProcessorListener =
+        _voiceProcessor!.addListener((buffer) async {
       if (_awaitingStop) {
         return;
       }
