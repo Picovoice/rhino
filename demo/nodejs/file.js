@@ -16,6 +16,7 @@ const fs = require("fs");
 
 const WaveFile = require("wavefile").WaveFile;
 const Rhino = require("@picovoice/rhino-node");
+const { PvArgumentError } = require("@picovoice/rhino-node/errors");
 const {
   getInt16Frames,
   checkWaveFile,

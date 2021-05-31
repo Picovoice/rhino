@@ -14,6 +14,7 @@
 const fs = require("fs");
 const { program } = require("commander");
 const Rhino = require("@picovoice/rhino-node");
+const { PvArgumentError } = require("@picovoice/rhino-node/errors");
 const { getPlatform } = require("@picovoice/rhino-node/platforms");
 
 const PLATFORM_RECORDER_MAP = new Map();
