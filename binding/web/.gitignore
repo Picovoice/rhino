@@ -5,5 +5,4 @@ dist/
 *.log
 .DS_Store
 rhino-web-*
-en/dist
-de/dist
+**/pv-rhino-*
