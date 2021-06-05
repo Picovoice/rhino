@@ -20,7 +20,5 @@ dev_dependencies:
 flutter:
   assets:
     - assets/contexts/android/smart_lighting_android.rhn
-    - assets/contexts/ios/smart_lighting_ios.rhn
-    - assets/rhino_params_de.pv
-    - assets/kaffee_de_android.rhn
+    - assets/contexts/ios/smart_lighting_ios.rhn    
   uses-material-design: true
