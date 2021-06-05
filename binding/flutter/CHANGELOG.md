@@ -21,3 +21,6 @@
 
 ## [1.6.7] - 2021-05-03
 * Migrate to null safety
+
+## [1.6.8] - 2021-06-04
+* Android lib update
