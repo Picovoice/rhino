@@ -14,14 +14,11 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Handler;
 import android.os.Process;
-import android.util.Log;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
-
-import ai.picovoice.rhino.Rhino;
-import ai.picovoice.rhino.RhinoException;
 
 /**
  * High-level Android binding for Rhino Speech-to-Intent engine. It handles recording audio from
@@ -31,17 +28,17 @@ import ai.picovoice.rhino.RhinoException;
 public class RhinoManager {
     private final Rhino rhino;
     private final RhinoManagerCallback callback;
+    private final Handler callbackHandler = new Handler();
 
     /**
      * Private constructor.
      *
-     * @param rhino   Absolute path to the file containing model parameters.
-     * @param callback    It is invoked upon completion of intent inference.
-     * @throws RhinoException if there is an error in reading audio or intent inference.
+     * @param rhino    Absolute path to the file containing model parameters.
+     * @param callback It is invoked upon completion of intent inference.
      */
     private RhinoManager(
             Rhino rhino,
-            RhinoManagerCallback callback){
+            RhinoManagerCallback callback) {
 
         this.rhino = rhino;
         this.callback = callback;
@@ -89,9 +86,15 @@ public class RhinoManager {
                     if (audioRecord != null) {
                         audioRecord.release();
                     }
-                    
+
                     if (isFinalized) {
-                        callback.invoke(rhino.getInference());
+                        final RhinoInference inference = rhino.getInference();
+                        callbackHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.invoke(inference);
+                            }
+                        });
                     }
                 }
                 return null;
