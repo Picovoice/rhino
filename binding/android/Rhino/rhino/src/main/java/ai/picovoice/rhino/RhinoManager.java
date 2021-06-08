@@ -15,6 +15,7 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Process;
 
 import java.util.concurrent.Callable;
@@ -28,7 +29,7 @@ import java.util.concurrent.Executors;
 public class RhinoManager {
     private final Rhino rhino;
     private final RhinoManagerCallback callback;
-    private final Handler callbackHandler = new Handler();
+    private final Handler callbackHandler = new Handler(Looper.getMainLooper());
 
     /**
      * Private constructor.
