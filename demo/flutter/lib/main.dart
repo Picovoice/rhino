@@ -44,7 +44,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initRhino() async {
-    String platform = Platform.isAndroid ? "android" : "ios";
+    String platform = Platform.isAndroid
+        ? "android"
+        : Platform.isIOS
+            ? "ios"
+            : throw new PvError("This demo supports iOS and Android only.");
     String contextPath =
         "assets/contexts/$platform/smart_lighting_$platform.rhn";
 
