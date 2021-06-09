@@ -10,15 +10,14 @@ dependencies:
   flutter:
     sdk: flutter
   
-  path_provider: ^2.0.1
-  rhino: ^1.6.8
+  rhino: ^1.6.9
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-flutter:
+flutter:  
+  uses-material-design: true
   assets:
     - assets/contexts/android/smart_lighting_android.rhn
     - assets/contexts/ios/smart_lighting_ios.rhn    
-  uses-material-design: true

@@ -201,26 +201,13 @@ flutter:
     - assets/context.rhn
 ```
 
-In your Flutter code, using the [path_provider](https://pub.dev/packages/path_provider) plugin, extract the asset files to your device like so:
+You can then pass it directly to Rhino's `create` constructor:
 ```dart
 String contextAsset = "assets/context.rhn"
-String extractedContextPath = await _extractAsset(contextAsset);
-// create Rhino
-// ...
-
-Future<String> _extractAsset(String resourcePath) async {
-    // extraction destination
-    String resourceDirectory = (await getApplicationDocumentsDirectory()).path;
-    String outputPath = '$resourceDirectory/$resourcePath';
-    File outputFile = new File(outputPath);
-
-    ByteData data = await rootBundle.load(resourcePath);
-    final buffer = data.buffer;
-
-    await outputFile.create(recursive: true);
-    await outputFile.writeAsBytes(
-        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
-    return outputPath;
+try{
+    _rhino = await Rhino.create(contextAsset);
+} on PvError catch (err) {
+    // handle rhino init error
 }
 ```
 

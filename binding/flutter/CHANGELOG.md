@@ -24,3 +24,6 @@
 
 ## [1.6.8] - 2021-06-04
 * Android lib update
+
+## [1.6.9] - 2021-06-09
+* Handle extraction of assets internally

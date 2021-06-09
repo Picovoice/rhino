@@ -4,7 +4,7 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - rhino (1.6.3):
+  - rhino (1.6.9):
     - Flutter
 
 DEPENDENCIES:
@@ -24,11 +24,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/rhino/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_voice_processor: f563048750dd0dcdca5aac253fa57e86f83a6e54
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  rhino: 711fb79c3af66044ba74e38f01f284c69c762e92
+  rhino: 7bb93c8fd1eec8c75369cbc357d836aa536ee4db
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1
