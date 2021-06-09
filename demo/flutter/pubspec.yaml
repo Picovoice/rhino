@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   
-  rhino: ^1.6.9
+  rhino: ^1.6.10
   
 dev_dependencies:
   flutter_test:

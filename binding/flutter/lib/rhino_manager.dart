@@ -127,18 +127,13 @@ class RhinoManager {
   }
 
   /// Releases Rhino and audio resouces
-  void delete() async {
-    if (_voiceProcessor != null) {
-      if (_voiceProcessor!.isRecording) {
-        await _voiceProcessor!.stop();
-      }
-      _removeVoiceProcessorListener?.call();
-      _voiceProcessor = null;
+  Future<void> delete() async {
+    if (_voiceProcessor?.isRecording ?? false) {
+      await _voiceProcessor!.stop();
     }
+    _removeVoiceProcessorListener?.call();
 
-    if (_rhino != null) {
-      _rhino!.delete();
-      _rhino = null;
-    }
+    _rhino?.delete();
+    _rhino = null;
   }
 }

@@ -27,3 +27,6 @@
 
 ## [1.6.9] - 2021-06-09
 * Handle extraction of assets internally
+
+## [1.6.10] - 2021-06-09
+* Explicit async delete added
