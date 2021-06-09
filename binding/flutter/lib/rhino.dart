@@ -66,11 +66,27 @@ class Rhino {
       throw new PvArgumentError("No context file provided.");
     }
 
-    if (modelPath == null && _defaultModelPath == null) {
-      throw new PvError(
-          "No model file provided and default model file not available.");
+    if (!await File(contextPath).exists()) {
+      try {
+        contextPath = await _extractResource(contextPath);
+      } catch (_) {
+        throw new PvArgumentError(
+            "Could not find context file at path '$contextPath'. If this is a packaged asset, ensure you have added it to your pubspec.yaml file.");
+      }
     }
-    modelPath ??= _defaultModelPath;
+
+    if (modelPath == null || modelPath == "") {
+      modelPath = _defaultModelPath;
+    }
+
+    if (!await File(modelPath!).exists()) {
+      try {
+        modelPath = await _extractResource(modelPath);
+      } catch (_) {
+        throw new PvArgumentError(
+            "Could not find model file at path '$modelPath'. If this is a packaged asset, ensure you have added it to your pubspec.yaml file.");
+      }
+    }
 
     if (sensitivity < 0 || sensitivity > 1 || sensitivity.isNaN) {
       throw new PvArgumentError(
@@ -78,7 +94,7 @@ class Rhino {
     }
 
     // generate arguments for ffi
-    Pointer<Utf8> cModelPath = modelPath!.toNativeUtf8();
+    Pointer<Utf8> cModelPath = modelPath.toNativeUtf8();
     Pointer<Utf8> cContextPath = contextPath.toNativeUtf8();
     Pointer<IntPtr> handlePtr = malloc<IntPtr>(1);
 

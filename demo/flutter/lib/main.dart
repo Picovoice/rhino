@@ -11,11 +11,7 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-
-import 'package:path_provider/path_provider.dart';
 import 'package:rhino/rhino_manager.dart';
 import 'package:rhino/rhino_error.dart';
 
@@ -48,7 +44,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initRhino() async {
-    String contextPath = await _extractDemoContext();
+    String platform = Platform.isAndroid ? "android" : "ios";
+    String contextPath =
+        "assets/contexts/$platform/smart_lighting_$platform.rhn";
 
     try {
       _rhinoManager = await RhinoManager.create(contextPath, inferenceCallback,
@@ -90,25 +88,6 @@ class _MyAppState extends State<MyApp> {
     }
     printText += '}';
     return printText;
-  }
-
-  Future<String> _extractDemoContext() async {
-    // file to extract
-    String platform = Platform.isAndroid ? "android" : "ios";
-    String filePath = "assets/contexts/$platform/smart_lighting_$platform.rhn";
-
-    // extraction destination
-    String resourceDirectory = (await getApplicationDocumentsDirectory()).path;
-    String outputPath = '$resourceDirectory/$filePath';
-    File outputFile = new File(outputPath);
-
-    ByteData data = await rootBundle.load(filePath);
-    final buffer = data.buffer;
-
-    await outputFile.create(recursive: true);
-    await outputFile.writeAsBytes(
-        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
-    return outputPath;
   }
 
   Future<void> _startProcessing() async {
