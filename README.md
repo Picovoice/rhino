@@ -1,8 +1,25 @@
 # Rhino
 
 [![GitHub release](https://img.shields.io/github/release/Picovoice/rhino.svg)](https://github.com/Picovoice/rhino/releases)
+![GitHub](https://img.shields.io/github/license/Picovoice/rhino)
+![GitHub language count](https://img.shields.io/github/languages/count/Picovoice/rhino)
+
+[![PyPI](https://img.shields.io/pypi/v/pvrhino)](https://pypi.org/project/pvrhino/)
+[![Nuget](https://img.shields.io/nuget/v/rhino)](https://www.nuget.org/packages/Rhino/)
+[![Go Reference](https://pkg.go.dev/badge/github.com/Picovoice/rhino/binding/go.svg)](https://pkg.go.dev/github.com/Picovoice/rhino/binding/go)
+[![Pub Version](https://img.shields.io/pub/v/rhino)](https://pub.dev/packages/rhino)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-react-native?label=npm%20%5Breact-native%5D)](https://www.npmjs.com/package/@picovoice/rhino-react-native)
+[![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-android?label=maven%20central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-android/)
+[![Cocoapods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://github.com/Picovoice/rhino/tree/master/binding/ios)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-angular?label=npm%20%5Bangular%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-angular)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-react)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-vue)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/AiPicovoice)](https://twitter.com/AiPicovoice)
+[![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCAdi9sTCXLosG1XeqDwLx7w?style=social)](https://www.youtube.com/channel/UCAdi9sTCXLosG1XeqDwLx7w)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
 interest, in real-time. For example, given a spoken command:
