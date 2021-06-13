@@ -1,8 +1,8 @@
 # Rhino
 
 [![GitHub release](https://img.shields.io/github/release/Picovoice/rhino.svg)](https://github.com/Picovoice/rhino/releases)
-[![GitHub](https://img.shields.io/github/license/Picovoice/rhino)]()
-[![GitHub language count](https://img.shields.io/github/languages/count/Picovoice/rhino)]()
+[![GitHub](https://img.shields.io/github/license/Picovoice/rhino)](https://github.com/Picovoice/rhino/)
+[![GitHub language count](https://img.shields.io/github/languages/count/Picovoice/rhino)](https://github.com/Picovoice/rhino/)
 
 [![PyPI](https://img.shields.io/pypi/v/pvrhino)](https://pypi.org/project/pvrhino/)
 [![Nuget](https://img.shields.io/nuget/v/rhino)](https://www.nuget.org/packages/Rhino/)
