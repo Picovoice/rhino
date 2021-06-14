@@ -18,8 +18,8 @@
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/AiPicovoice)](https://twitter.com/AiPicovoice)
-[![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCAdi9sTCXLosG1XeqDwLx7w?style=social)](https://www.youtube.com/channel/UCAdi9sTCXLosG1XeqDwLx7w)
+[![Twitter URL](https://img.shields.io/twitter/url?label=%40AiPicovoice&style=social&url=https%3A%2F%2Ftwitter.com%2FAiPicovoice)](https://twitter.com/AiPicovoice)
+[![YouTube Channel Views](https://img.shields.io/youtube/channel/views/UCAdi9sTCXLosG1XeqDwLx7w?label=YouTube&style=social)](https://www.youtube.com/channel/UCAdi9sTCXLosG1XeqDwLx7w)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
 interest, in real-time. For example, given a spoken command:
