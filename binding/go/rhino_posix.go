@@ -18,6 +18,7 @@ package rhino
 #include <dlfcn.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef int32_t (*pv_rhino_init_func)(const char *, const char *, float, void **);
 
