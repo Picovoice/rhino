@@ -16,6 +16,7 @@ package rhino
 /*
 #cgo LDFLAGS: -ldl
 #include <dlfcn.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
