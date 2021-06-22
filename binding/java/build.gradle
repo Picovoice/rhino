@@ -28,8 +28,9 @@ sourceSets {
     }
 }
 
-def outputDir = "$buildDir/classes/java/main"
+javadoc.options.addStringOption('Xdoclint:none', '-quiet')
 
+def outputDir = "$buildDir/classes/java/main"
 
 task copyDefaultModel(type: Copy) {
     from('../../lib/common/rhino_params.pv') into "${outputDir}/rhino/lib/common/"
