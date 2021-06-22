@@ -39,17 +39,18 @@ Rhino is:
 
 ## Installation
 
-You can get the latest Java demo executable JARs [here](/demo/java/bin).
-
-If you wish, you can build the demos from source by opening the project with the [IntelliJ IDE](https://www.jetbrains.com/idea/download/).
-Select "Build > Build Project" to build the two demo classes or "Build > Build Artifacts" to create the executable JARs.
+Build the demo jars with Gradle:
+```console
+cd rhino/demo/java
+./gradlew build
+```
 
 ## Usage
 
-NOTE: the working directory for all dotnet commands is:
+Navigate to the output directory to use the demos:
 
 ```console
-rhino/demo/java/bin
+cd rhino/demo/java/build/libs
 ```
 
 ### File Demo
