@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+ext {
+    PUBLISH_GROUP_ID = 'ai.picovoice'
+    PUBLISH_VERSION = '1.6.2'
+    PUBLISH_ARTIFACT_ID = 'rhino-java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['test']
+        }
+    }
+}
+
+def outputDir = "$buildDir/classes/java/main"
+
+
+task copyDefaultModel(type: Copy) {
+    from('../../lib/common/rhino_params.pv') into "${outputDir}/rhino/lib/common/"
+}
+task copyLinuxLib(type: Copy) {
+    from('../../lib/java/linux/x86_64/libpv_rhino_jni.so') into "${outputDir}/rhino/lib/java/linux/x86_64/"
+}
+task copyMacLib(type: Copy) {
+    from('../../lib/java/mac/x86_64/libpv_rhino_jni.dylib') into "${outputDir}/rhino/lib/java/mac/x86_64/"
+}
+task copyWindowsLib(type: Copy) {
+    from('../../lib/java/windows/amd64/pv_rhino_jni.dll') into "${outputDir}/rhino/lib/java/windows/amd64/"
+}
+
+assemble {
+    dependsOn 'copyDefaultModel'
+    dependsOn 'copyLinuxLib'
+    dependsOn 'copyMacLib'
+    dependsOn 'copyWindowsLib'
+}
+
+if (file("${rootDir}/publish-mavencentral.gradle").exists()) {
+    apply from: "${rootDir}/publish-mavencentral.gradle"
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+}
+
+test {
+    useJUnitPlatform()
+}
