@@ -226,9 +226,12 @@ For more information about .NET demos, go to [demo/dotnet](/demo/dotnet).
 The [Rhino Java demo](/demo/java) is a command-line application that lets you choose between running Rhino on a
 audio file or on real-time microphone input.
 
-To try the real-time demo, make sure there is a working microphone connected to your device. From the root of the repository run the following command:
+To try the real-time demo, make sure there is a working microphone connected to your device. Then invoke the following commands from the terminal:
 
 ```console
+cd demo/java
+./gradlew build
+cd build/libs
 java -jar demo/java/bin/rhino-mic-demo.jar -c ${CONTEXT_FILE_PATH}
 ```
 
@@ -563,7 +566,7 @@ using(Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context"))
 
 ### Java
 
-You can install the Rhino Java SDK by downloading and referencing the latest [Rhino JAR file](/binding/java/bin).
+The Rhino Java binding is available from the Maven Central Repository at `ai.picovoice:rhino-java:${version}`.
 
 The SDK exposes a Builder that allows you to create an instance of the engine:
 
