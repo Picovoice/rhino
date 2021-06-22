@@ -232,7 +232,7 @@ To try the real-time demo, make sure there is a working microphone connected to 
 cd demo/java
 ./gradlew build
 cd build/libs
-java -jar demo/java/bin/rhino-mic-demo.jar -c ${CONTEXT_FILE_PATH}
+java -jar rhino-mic-demo.jar -c ${CONTEXT_FILE_PATH}
 ```
 
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
