@@ -26,12 +26,30 @@ Rhino is:
 
 ## Installation
 
-You can install the Rhino Java SDK by downloading and referencing the latest [Rhino JAR file](/binding/java/bin).
+The latest Java bindings are available from the Maven Central Repository at:
+
+```console
+ai.picovoice:rhino-java:${version}
+```
+
+If you're using Gradle for your Java project, include the following line in your `build.gradle` file to add Rhino:
+```console
+implementation 'ai.picovoice:rhino-java:${version}'
+```
+
+If you're using IntelliJ, open the Project Structure dialog (`File > Project Structure`) and go to the `Libraries` section.
+Click the plus button at the top to add a new project library and select `From Maven...`. Search for `ai.picovoice:rhino-java`
+in the search box and add the latest version to your project.
 
 ## Build
 
-To build from source, we recommend using the [IntelliJ IDE](https://www.jetbrains.com/idea/download/). Open the .iml file with IntelliJ and
-click "Build > Build Project" to build or "Build > Build Artifacts" to package as a JAR file.
+To build from source, invoke the Gradle build task from the command-line:
+```console
+cd rhino/binding/java
+./gradlew build
+```
+
+Once the task is complete, the output JAR can be found in `rhino/binding/java/build/libs`.
 
 ## Usage
 
