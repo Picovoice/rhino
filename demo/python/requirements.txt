@@ -1,2 +1,5 @@
-pvrhino==1.6.3
+enum34
+numpy
+pvrhino==1.6.4
 pyaudio
+soundfile
