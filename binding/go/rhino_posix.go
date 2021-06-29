@@ -80,10 +80,10 @@ int32_t pv_rhino_frame_length_wrapper(void* f) {
      return ((pv_rhino_frame_length_func) f)();
 }
 
-typedef int32_t (*pv_sample_rate_func)();
+typedef int32_t (*pv_rhino_sample_rate_func)();
 
-int32_t pv_sample_rate_wrapper(void *f) {
-     return ((pv_sample_rate_func) f)();
+int32_t pv_rhino_sample_rate_wrapper(void *f) {
+     return ((pv_rhino_sample_rate_func) f)();
 }
 */
 import "C"
@@ -222,5 +222,5 @@ func (nr nativeRhinoType) nativeFrameLength() (frameLength int) {
 }
 
 func (nr nativeRhinoType) nativeSampleRate() (sampleRate int) {
-	return int(C.pv_sample_rate_wrapper(pv_sample_rate_ptr))
+	return int(C.pv_rhino_sample_rate_wrapper(pv_sample_rate_ptr))
 }

@@ -38,7 +38,7 @@ func TestMain(m *testing.M) {
 
 	fmt.Printf("Rhino Version: %s\n", Version)
 	fmt.Printf("Frame Length: %d\n", FrameLength)
-	fmt.Printf("Samples Rate: %d\n", SampleRate)
+	fmt.Printf("Sample Rate: %d\n", SampleRate)
 
 	os.Exit(m.Run())
 }
