@@ -1,2 +1,2 @@
 include ':rhino'
-include ':app'
+include ':rhino-activity-demo-app'

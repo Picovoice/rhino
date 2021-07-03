@@ -15,6 +15,5 @@ build/*
 *.perspective
 *.perspectivev3
 *.pbxuser
-*.xcworkspace
 xcuserdata
 Pods

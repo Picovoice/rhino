@@ -247,9 +247,9 @@ PODS:
     - React-Core (= 0.63.3)
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
-  - rhino-react-native (1.6.7):
+  - rhino-react-native (1.6.9):
     - React
-  - RNFS (2.16.6):
+  - RNFS (2.17.0):
     - React
   - Yoga (1.14.0)
 
@@ -378,8 +378,8 @@ SPEC CHECKSUMS:
   React-RCTText: 65a6de06a7389098ce24340d1d3556015c38f746
   React-RCTVibration: 8e9fb25724a0805107fc1acc9075e26f814df454
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
-  rhino-react-native: 3f5f149b7ad3f6566724b20ffbe901aff34e7f25
-  RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
+  rhino-react-native: 5535bb3ac0f8f7b5fbd279a85b7ead7d362e2bf4
+  RNFS: 93d5b5535eb39d98e6b19009faa8fe717f7ea45d
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
 
 PODFILE CHECKSUM: 78c436c7fa624e01b9c3a3425f02617ffb7f8f1d
