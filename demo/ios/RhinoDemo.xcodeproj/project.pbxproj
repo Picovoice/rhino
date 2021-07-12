@@ -15,6 +15,10 @@
 		0251C343269CC42900B77F69 /* test_out_of_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0251C341269CC42900B77F69 /* test_out_of_context.wav */; };
 		0251C349269CC6AA00B77F69 /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C348269CC6AA00B77F69 /* coffee_maker_ios.rhn */; };
 		0251C34B269CC6C000B77F69 /* coffee_maker_linux.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C34A269CC6C000B77F69 /* coffee_maker_linux.rhn */; };
+		0251C355269CF02000B77F69 /* test_fr_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C354269CF02000B77F69 /* test_fr_ios.rhn */; };
+		0251C357269CF02800B77F69 /* test_es_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C356269CF02800B77F69 /* test_es_ios.rhn */; };
+		0251C359269CF02F00B77F69 /* test_de_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C358269CF02F00B77F69 /* test_de_ios.rhn */; };
+		0663534B6ED4A931060FD3D9 /* libPods-RhinoDemoUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */; };
 		BB193E922370C4EC00556136 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E912370C4EC00556136 /* AppDelegate.swift */; };
 		BB193E942370C4EC00556136 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E932370C4EC00556136 /* SceneDelegate.swift */; };
 		BB193E962370C4EC00556136 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E952370C4EC00556136 /* ContentView.swift */; };
@@ -59,8 +63,13 @@
 		0251C341269CC42900B77F69 /* test_out_of_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context.wav; path = ../../../resources/audio_samples/test_out_of_context.wav; sourceTree = "<group>"; };
 		0251C348269CC6AA00B77F69 /* coffee_maker_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_ios.rhn; path = ../../../resources/contexts/ios/coffee_maker_ios.rhn; sourceTree = "<group>"; };
 		0251C34A269CC6C000B77F69 /* coffee_maker_linux.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_linux.rhn; path = ../../../resources/contexts/linux/coffee_maker_linux.rhn; sourceTree = "<group>"; };
+		0251C354269CF02000B77F69 /* test_fr_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_fr_ios.rhn; sourceTree = "<group>"; };
+		0251C356269CF02800B77F69 /* test_es_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_es_ios.rhn; sourceTree = "<group>"; };
+		0251C358269CF02F00B77F69 /* test_de_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_de_ios.rhn; sourceTree = "<group>"; };
 		2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemoUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.release.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.release.xcconfig"; sourceTree = "<group>"; };
+		8F4E55F466C02D38156A6586 /* Pods-RhinoDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		BB193E8E2370C4EC00556136 /* RhinoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB193E912370C4EC00556136 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB193E932370C4EC00556136 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -70,6 +79,7 @@
 		BB193E9D2370C4F500556136 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB193E9F2370C4F500556136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = smart_lighting_ios.rhn; path = ../../../resources/contexts/ios/smart_lighting_ios.rhn; sourceTree = "<group>"; };
+		D3368C9D35E7379BF386625E /* Pods-RhinoDemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemoUITests.release.xcconfig"; path = "Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F5652D86CACC859DFD1FAF1F /* Pods-RhinoDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.debug.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0663534B6ED4A931060FD3D9 /* libPods-RhinoDemoUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +156,7 @@
 		0251C344269CC62400B77F69 /* de */ = {
 			isa = PBXGroup;
 			children = (
+				0251C358269CF02F00B77F69 /* test_de_ios.rhn */,
 			);
 			name = de;
 			sourceTree = "<group>";
@@ -161,6 +173,7 @@
 		0251C346269CC63300B77F69 /* es */ = {
 			isa = PBXGroup;
 			children = (
+				0251C356269CF02800B77F69 /* test_es_ios.rhn */,
 			);
 			name = es;
 			sourceTree = "<group>";
@@ -168,6 +181,7 @@
 		0251C347269CC63A00B77F69 /* fr */ = {
 			isa = PBXGroup;
 			children = (
+				0251C354269CF02000B77F69 /* test_fr_ios.rhn */,
 			);
 			name = fr;
 			sourceTree = "<group>";
@@ -219,6 +233,7 @@
 			isa = PBXGroup;
 			children = (
 				2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */,
+				6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -228,6 +243,8 @@
 			children = (
 				F5652D86CACC859DFD1FAF1F /* Pods-RhinoDemo.debug.xcconfig */,
 				81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */,
+				8F4E55F466C02D38156A6586 /* Pods-RhinoDemoUITests.debug.xcconfig */,
+				D3368C9D35E7379BF386625E /* Pods-RhinoDemoUITests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -239,9 +256,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0251C332269CC25A00B77F69 /* Build configuration list for PBXNativeTarget "RhinoDemoUITests" */;
 			buildPhases = (
+				69B54B371D68E85AFEA39B6F /* [CP] Check Pods Manifest.lock */,
 				0251C325269CC25A00B77F69 /* Sources */,
 				0251C326269CC25A00B77F69 /* Frameworks */,
 				0251C327269CC25A00B77F69 /* Resources */,
+				D3374541BD75FE2A5513135A /* [CP] Embed Pods Frameworks */,
+				E7F7F9BA0F519FE4BA9E34B0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -319,11 +339,14 @@
 			files = (
 				0251C33E269CC3BB00B77F69 /* rhino_params_es.pv in Resources */,
 				0251C342269CC42900B77F69 /* test_within_context.wav in Resources */,
+				0251C357269CF02800B77F69 /* test_es_ios.rhn in Resources */,
 				0251C33D269CC3BB00B77F69 /* rhino_params_de.pv in Resources */,
 				0251C349269CC6AA00B77F69 /* coffee_maker_ios.rhn in Resources */,
 				0251C343269CC42900B77F69 /* test_out_of_context.wav in Resources */,
 				0251C34B269CC6C000B77F69 /* coffee_maker_linux.rhn in Resources */,
+				0251C355269CF02000B77F69 /* test_fr_ios.rhn in Resources */,
 				0251C33F269CC3BB00B77F69 /* rhino_params_fr.pv in Resources */,
+				0251C359269CF02F00B77F69 /* test_de_ios.rhn in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +379,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		69B54B371D68E85AFEA39B6F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RhinoDemoUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6F7654B2BF786DE74E735337 /* [CP] Copy Pods Resources */ = {
@@ -395,6 +440,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D3374541BD75FE2A5513135A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E7F7F9BA0F519FE4BA9E34B0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -442,6 +521,7 @@
 /* Begin XCBuildConfiguration section */
 		0251C330269CC25A00B77F69 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8F4E55F466C02D38156A6586 /* Pods-RhinoDemoUITests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 65723695GD;
@@ -462,6 +542,7 @@
 		};
 		0251C331269CC25A00B77F69 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D3368C9D35E7379BF386625E /* Pods-RhinoDemoUITests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 65723695GD;
