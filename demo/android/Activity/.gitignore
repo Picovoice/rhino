@@ -10,7 +10,3 @@
 /rhino/build
 /captures
 .externalNativeBuild
-test_resources/audio_samples
-test_resources/model_files
-context_files/coffee_maker_android.rhn
-context_files/coffee_maker_linux.rhn
