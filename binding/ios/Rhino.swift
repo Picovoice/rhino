@@ -32,7 +32,6 @@ public enum RhinoError: Error {
 public class Rhino {
     
     private var handle: OpaquePointer?
-    public static let defaultModelPath = Bundle.main.path(forResource: "rhino_params", ofType: "pv") ?? ""
     public static let frameLength = UInt32(pv_rhino_frame_length())
     public static let sampleRate = UInt32(pv_sample_rate())
     public static let version = String(cString: pv_rhino_version())
@@ -49,26 +48,36 @@ public class Rhino {
     ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially)
     ///   increasing the erroneous inference rate.
     /// - Throws: RhinoError
-    public init(contextPath: String, modelPath:String = defaultModelPath, sensitivity:Float32 = 0.5) throws {
+    public init(contextPath: String, modelPath:String? = nil, sensitivity:Float32 = 0.5) throws {
                         
         if !FileManager().fileExists(atPath: contextPath){
             throw RhinoError.invalidArgument(message: "Context file at does not exist at '\(contextPath)'")
         }
 
-        if !FileManager().fileExists(atPath: modelPath){
-            throw RhinoError.invalidArgument(message: "Model file at does not exist at '\(modelPath)'")
+        var modelPathArg = modelPath
+        if (modelPathArg == nil){
+            let bundle = Bundle(for: type(of: self))
+            modelPathArg  = bundle.path(forResource: "rhino_params", ofType: "pv")
+            if modelPathArg == nil {
+                throw RhinoError.io
+            }
+        }
+        
+        if !FileManager().fileExists(atPath: modelPathArg!) {
+            throw RhinoError.invalidArgument(message: "Model file at does not exist at '\(modelPathArg!)'")
         }
 
         if sensitivity < 0 || sensitivity > 1 {
             throw RhinoError.invalidArgument(message: "Provided sensitivity \(sensitivity) is not a floating-point value between [0,1]")
         }
         
-        let status = pv_rhino_init(modelPath, contextPath, sensitivity, &self.handle)
+        var status = pv_rhino_init(modelPathArg, contextPath, sensitivity, &self.handle)
         try checkStatus(status)
         
         // get context info from lib and set in binding
         var cContextInfo: UnsafePointer<Int8>?
-        pv_rhino_context_info(self.handle, &cContextInfo);
+        status = pv_rhino_context_info(self.handle, &cContextInfo);
+        try checkStatus(status)
         self.contextInfo = String(cString: cContextInfo!)
     }
 
@@ -88,9 +97,15 @@ public class Rhino {
     ///
     /// - Parameters:
     ///   - pcm: A pointer to a frame of 16-bit pcm
+    /// - Throws: RhinoError
     /// - Returns:A boolean indicating whether Rhino has a result ready or not
-    public func process(pcm:UnsafePointer<Int16>) -> Bool {        
-        pv_rhino_process(self.handle, pcm, &self.isFinalized)
+    public func process(pcm:UnsafePointer<Int16>) throws -> Bool {
+        if handle == nil {
+            throw RhinoError.invalidState
+        }
+        
+        let status = pv_rhino_process(self.handle, pcm, &self.isFinalized)
+        try checkStatus(status)
         return self.isFinalized
     }
 
@@ -98,13 +113,19 @@ public class Rhino {
     ///
     /// - Parameters:
     ///   - pcm: An array of 16-bit pcm samples
+    /// - Throws: RhinoError
     /// - Returns:A boolean indicating whether Rhino has a result ready or not
     public func process(pcm:[Int16]) throws -> Bool {
+        if handle == nil {
+            throw RhinoError.invalidState
+        }
+        
         if pcm.count != Rhino.frameLength {
             throw RhinoError.invalidArgument(message: "Frame of audio data must contain \(Rhino.frameLength) samples - given frame contained \(pcm.count)")
         }
 
-        pv_rhino_process(self.handle, pcm, &self.isFinalized)
+        let status = pv_rhino_process(self.handle, pcm, &self.isFinalized)
+        try checkStatus(status)
         return self.isFinalized
     }
 
@@ -112,6 +133,10 @@ public class Rhino {
     /// - Returns:An inference object
     /// - Throws: RhinoError
     public func getInference() throws -> Inference {
+        
+        if handle == nil {
+            throw RhinoError.invalidState
+        }
         
         if !self.isFinalized {
             throw RhinoError.invalidState
@@ -121,14 +146,16 @@ public class Rhino {
         var intent = ""
         var slots = [String: String]()
         
-        pv_rhino_is_understood(self.handle, &isUnderstood)
+        var status = pv_rhino_is_understood(self.handle, &isUnderstood)
+        try checkStatus(status)
         
         if isUnderstood {
             var cIntent: UnsafePointer<Int8>?
             var numSlots: Int32 = 0
             var cSlotKeys: UnsafeMutablePointer<UnsafePointer<Int8>?>?
             var cSlotValues: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-            pv_rhino_get_intent(self.handle, &cIntent, &numSlots, &cSlotKeys, &cSlotValues)
+            status = pv_rhino_get_intent(self.handle, &cIntent, &numSlots, &cSlotKeys, &cSlotValues)
+            try checkStatus(status)
             
             if isUnderstood {
                 intent = String(cString: cIntent!)
@@ -138,11 +165,13 @@ public class Rhino {
                     slots[slot] = value
                 }
                 
-                pv_rhino_free_slots_and_values(self.handle, cSlotKeys, cSlotValues)
+                status = pv_rhino_free_slots_and_values(self.handle, cSlotKeys, cSlotValues)
+                try checkStatus(status)
             }
         }
         
-        pv_rhino_reset(self.handle)      
+        status = pv_rhino_reset(self.handle)
+        try checkStatus(status)
 
         return Inference(isUnderstood: isUnderstood, intent: intent, slots: slots)
     }
@@ -155,6 +184,8 @@ public class Rhino {
                 throw RhinoError.outOfMemory
             case PV_STATUS_INVALID_ARGUMENT:
                 throw RhinoError.invalidArgument(message:"Rhino rejected one of the provided arguments.")
+            case PV_STATUS_INVALID_STATE:
+                throw RhinoError.invalidState
             default:
                 return
         }

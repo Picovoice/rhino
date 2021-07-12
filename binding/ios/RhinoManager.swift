@@ -34,7 +34,7 @@ public class RhinoManager {
     ///   increasing the erroneous inference rate.
     ///   - onInferenceCallback: It is invoked upon completion of intent inference.
     /// - Throws: RhinoManagerError
-    public init(contextPath: String, modelPath: String = Rhino.defaultModelPath, sensitivity: Float32 = 0.5, onInferenceCallback: ((Inference) -> Void)?) throws {
+    public init(contextPath: String, modelPath: String? = nil, sensitivity: Float32 = 0.5, onInferenceCallback: ((Inference) -> Void)?) throws {
         self.onInferenceCallback = onInferenceCallback
         self.rhino = try Rhino(contextPath:contextPath, modelPath:modelPath, sensitivity:sensitivity)
         self.audioInputEngine = AudioInputEngine()
@@ -49,16 +49,20 @@ public class RhinoManager {
                 return
             }
 
-            let isFinalized:Bool = self.rhino!.process(pcm:audio) 
-            if isFinalized {
-                do {
-                    let inference:Inference = try self.rhino!.getInference()
-                    self.onInferenceCallback?(inference)
-                } catch {
-                    print("There was an error retrieving the inference result.")
+            do {
+                let isFinalized:Bool = try self.rhino!.process(pcm:audio)
+                if isFinalized {
+                    do {
+                        let inference:Inference = try self.rhino!.getInference()
+                        self.onInferenceCallback?(inference)
+                    } catch {
+                        print("There was an error retrieving the inference result.")
+                    }
+                    
+                    self.stop = true
                 }
-                
-                self.stop = true
+            } catch {
+                print("\(error)")
             }
         }
     }
