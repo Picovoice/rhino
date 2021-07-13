@@ -4,6 +4,7 @@ Before building the demo app, run the following from this directory to install t
 ```ruby
 pod install
 ```
+Open `RhinoDemo.xcworkspace` and run the demo.
 
 The default context for this demo is `Smart Lighting`. Simply press start and the engine can recognize commands such as
 
@@ -64,3 +65,7 @@ context:
       - "living room"
       - "pantry"
 ```
+
+## Running the On-Device Unit Tests
+
+Open `RhinoDemo.xcworkspace` with XCode and run the tests with `Product > Test`.

@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0251C32C269CC25A00B77F69 /* RhinoDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0251C32B269CC25A00B77F69 /* RhinoDemoUITests.swift */; };
+		0251C33D269CC3BB00B77F69 /* rhino_params_de.pv in Resources */ = {isa = PBXBuildFile; fileRef = 0251C33A269CC3BB00B77F69 /* rhino_params_de.pv */; };
+		0251C33E269CC3BB00B77F69 /* rhino_params_es.pv in Resources */ = {isa = PBXBuildFile; fileRef = 0251C33B269CC3BB00B77F69 /* rhino_params_es.pv */; };
+		0251C33F269CC3BB00B77F69 /* rhino_params_fr.pv in Resources */ = {isa = PBXBuildFile; fileRef = 0251C33C269CC3BB00B77F69 /* rhino_params_fr.pv */; };
+		0251C342269CC42900B77F69 /* test_within_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0251C340269CC42900B77F69 /* test_within_context.wav */; };
+		0251C343269CC42900B77F69 /* test_out_of_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0251C341269CC42900B77F69 /* test_out_of_context.wav */; };
+		0251C349269CC6AA00B77F69 /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C348269CC6AA00B77F69 /* coffee_maker_ios.rhn */; };
+		0251C34B269CC6C000B77F69 /* coffee_maker_linux.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C34A269CC6C000B77F69 /* coffee_maker_linux.rhn */; };
+		0251C355269CF02000B77F69 /* test_fr_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C354269CF02000B77F69 /* test_fr_ios.rhn */; };
+		0251C357269CF02800B77F69 /* test_es_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C356269CF02800B77F69 /* test_es_ios.rhn */; };
+		0251C359269CF02F00B77F69 /* test_de_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C358269CF02F00B77F69 /* test_de_ios.rhn */; };
+		0663534B6ED4A931060FD3D9 /* libPods-RhinoDemoUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */; };
 		BB193E922370C4EC00556136 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E912370C4EC00556136 /* AppDelegate.swift */; };
 		BB193E942370C4EC00556136 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E932370C4EC00556136 /* SceneDelegate.swift */; };
 		BB193E962370C4EC00556136 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E952370C4EC00556136 /* ContentView.swift */; };
@@ -16,6 +28,16 @@
 		BB5334A123723091003B6FD1 /* smart_lighting_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */; };
 		FB63B28C2141FEF4A95C51A6 /* libPods-RhinoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0251C32E269CC25A00B77F69 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BB193E862370C4EC00556136 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BB193E8D2370C4EC00556136;
+			remoteInfo = RhinoDemo;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		02A4163225CDBD6D00082745 /* Embed Frameworks */ = {
@@ -31,8 +53,23 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0251C329269CC25A00B77F69 /* RhinoDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RhinoDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0251C32B269CC25A00B77F69 /* RhinoDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RhinoDemoUITests.swift; sourceTree = "<group>"; };
+		0251C32D269CC25A00B77F69 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0251C33A269CC3BB00B77F69 /* rhino_params_de.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params_de.pv; path = ../../../lib/common/rhino_params_de.pv; sourceTree = "<group>"; };
+		0251C33B269CC3BB00B77F69 /* rhino_params_es.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params_es.pv; path = ../../../lib/common/rhino_params_es.pv; sourceTree = "<group>"; };
+		0251C33C269CC3BB00B77F69 /* rhino_params_fr.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params_fr.pv; path = ../../../lib/common/rhino_params_fr.pv; sourceTree = "<group>"; };
+		0251C340269CC42900B77F69 /* test_within_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context.wav; path = ../../../resources/audio_samples/test_within_context.wav; sourceTree = "<group>"; };
+		0251C341269CC42900B77F69 /* test_out_of_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context.wav; path = ../../../resources/audio_samples/test_out_of_context.wav; sourceTree = "<group>"; };
+		0251C348269CC6AA00B77F69 /* coffee_maker_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_ios.rhn; path = ../../../resources/contexts/ios/coffee_maker_ios.rhn; sourceTree = "<group>"; };
+		0251C34A269CC6C000B77F69 /* coffee_maker_linux.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_linux.rhn; path = ../../../resources/contexts/linux/coffee_maker_linux.rhn; sourceTree = "<group>"; };
+		0251C354269CF02000B77F69 /* test_fr_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_fr_ios.rhn; sourceTree = "<group>"; };
+		0251C356269CF02800B77F69 /* test_es_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_es_ios.rhn; sourceTree = "<group>"; };
+		0251C358269CF02F00B77F69 /* test_de_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_de_ios.rhn; sourceTree = "<group>"; };
 		2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemoUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.release.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.release.xcconfig"; sourceTree = "<group>"; };
+		8F4E55F466C02D38156A6586 /* Pods-RhinoDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		BB193E8E2370C4EC00556136 /* RhinoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB193E912370C4EC00556136 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB193E932370C4EC00556136 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -42,10 +79,19 @@
 		BB193E9D2370C4F500556136 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB193E9F2370C4F500556136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = smart_lighting_ios.rhn; path = ../../../resources/contexts/ios/smart_lighting_ios.rhn; sourceTree = "<group>"; };
+		D3368C9D35E7379BF386625E /* Pods-RhinoDemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemoUITests.release.xcconfig"; path = "Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F5652D86CACC859DFD1FAF1F /* Pods-RhinoDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.debug.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0251C326269CC25A00B77F69 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0663534B6ED4A931060FD3D9 /* libPods-RhinoDemoUITests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BB193E8B2370C4EC00556136 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -57,10 +103,94 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0251C32A269CC25A00B77F69 /* RhinoDemoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				0251C335269CC37400B77F69 /* test_resources */,
+				0251C32B269CC25A00B77F69 /* RhinoDemoUITests.swift */,
+				0251C32D269CC25A00B77F69 /* Info.plist */,
+			);
+			path = RhinoDemoUITests;
+			sourceTree = "<group>";
+		};
+		0251C335269CC37400B77F69 /* test_resources */ = {
+			isa = PBXGroup;
+			children = (
+				0251C339269CC39700B77F69 /* audio_samples */,
+				0251C338269CC38B00B77F69 /* context_files */,
+				0251C336269CC37900B77F69 /* model_files */,
+			);
+			name = test_resources;
+			sourceTree = "<group>";
+		};
+		0251C336269CC37900B77F69 /* model_files */ = {
+			isa = PBXGroup;
+			children = (
+				0251C33A269CC3BB00B77F69 /* rhino_params_de.pv */,
+				0251C33B269CC3BB00B77F69 /* rhino_params_es.pv */,
+				0251C33C269CC3BB00B77F69 /* rhino_params_fr.pv */,
+			);
+			name = model_files;
+			sourceTree = "<group>";
+		};
+		0251C338269CC38B00B77F69 /* context_files */ = {
+			isa = PBXGroup;
+			children = (
+				0251C347269CC63A00B77F69 /* fr */,
+				0251C346269CC63300B77F69 /* es */,
+				0251C345269CC62A00B77F69 /* en */,
+				0251C344269CC62400B77F69 /* de */,
+			);
+			name = context_files;
+			sourceTree = "<group>";
+		};
+		0251C339269CC39700B77F69 /* audio_samples */ = {
+			isa = PBXGroup;
+			children = (
+				0251C341269CC42900B77F69 /* test_out_of_context.wav */,
+				0251C340269CC42900B77F69 /* test_within_context.wav */,
+			);
+			name = audio_samples;
+			sourceTree = "<group>";
+		};
+		0251C344269CC62400B77F69 /* de */ = {
+			isa = PBXGroup;
+			children = (
+				0251C358269CF02F00B77F69 /* test_de_ios.rhn */,
+			);
+			name = de;
+			sourceTree = "<group>";
+		};
+		0251C345269CC62A00B77F69 /* en */ = {
+			isa = PBXGroup;
+			children = (
+				0251C34A269CC6C000B77F69 /* coffee_maker_linux.rhn */,
+				0251C348269CC6AA00B77F69 /* coffee_maker_ios.rhn */,
+			);
+			name = en;
+			sourceTree = "<group>";
+		};
+		0251C346269CC63300B77F69 /* es */ = {
+			isa = PBXGroup;
+			children = (
+				0251C356269CF02800B77F69 /* test_es_ios.rhn */,
+			);
+			name = es;
+			sourceTree = "<group>";
+		};
+		0251C347269CC63A00B77F69 /* fr */ = {
+			isa = PBXGroup;
+			children = (
+				0251C354269CF02000B77F69 /* test_fr_ios.rhn */,
+			);
+			name = fr;
+			sourceTree = "<group>";
+		};
 		BB193E852370C4EC00556136 = {
 			isa = PBXGroup;
 			children = (
 				BB193E902370C4EC00556136 /* RhinoDemo */,
+				0251C32A269CC25A00B77F69 /* RhinoDemoUITests */,
 				BB193E8F2370C4EC00556136 /* Products */,
 				BB53349B2372152D003B6FD1 /* Frameworks */,
 				E1CC14E37D7D2680AFB498A7 /* Pods */,
@@ -71,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				BB193E8E2370C4EC00556136 /* RhinoDemo.app */,
+				0251C329269CC25A00B77F69 /* RhinoDemoUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,6 +233,7 @@
 			isa = PBXGroup;
 			children = (
 				2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */,
+				6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -111,6 +243,8 @@
 			children = (
 				F5652D86CACC859DFD1FAF1F /* Pods-RhinoDemo.debug.xcconfig */,
 				81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */,
+				8F4E55F466C02D38156A6586 /* Pods-RhinoDemoUITests.debug.xcconfig */,
+				D3368C9D35E7379BF386625E /* Pods-RhinoDemoUITests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -118,6 +252,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0251C328269CC25A00B77F69 /* RhinoDemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0251C332269CC25A00B77F69 /* Build configuration list for PBXNativeTarget "RhinoDemoUITests" */;
+			buildPhases = (
+				69B54B371D68E85AFEA39B6F /* [CP] Check Pods Manifest.lock */,
+				0251C325269CC25A00B77F69 /* Sources */,
+				0251C326269CC25A00B77F69 /* Frameworks */,
+				0251C327269CC25A00B77F69 /* Resources */,
+				D3374541BD75FE2A5513135A /* [CP] Embed Pods Frameworks */,
+				E7F7F9BA0F519FE4BA9E34B0 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0251C32F269CC25A00B77F69 /* PBXTargetDependency */,
+			);
+			name = RhinoDemoUITests;
+			productName = RhinoDemoUITests;
+			productReference = 0251C329269CC25A00B77F69 /* RhinoDemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		BB193E8D2370C4EC00556136 /* RhinoDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BB193EA22370C4F500556136 /* Build configuration list for PBXNativeTarget "RhinoDemo" */;
@@ -145,10 +300,14 @@
 		BB193E862370C4EC00556136 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1100;
+				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Picovoice Inc";
 				TargetAttributes = {
+					0251C328269CC25A00B77F69 = {
+						CreatedOnToolsVersion = 12.5;
+						TestTargetID = BB193E8D2370C4EC00556136;
+					};
 					BB193E8D2370C4EC00556136 = {
 						CreatedOnToolsVersion = 11.0;
 					};
@@ -168,11 +327,29 @@
 			projectRoot = "";
 			targets = (
 				BB193E8D2370C4EC00556136 /* RhinoDemo */,
+				0251C328269CC25A00B77F69 /* RhinoDemoUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0251C327269CC25A00B77F69 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0251C33E269CC3BB00B77F69 /* rhino_params_es.pv in Resources */,
+				0251C342269CC42900B77F69 /* test_within_context.wav in Resources */,
+				0251C357269CF02800B77F69 /* test_es_ios.rhn in Resources */,
+				0251C33D269CC3BB00B77F69 /* rhino_params_de.pv in Resources */,
+				0251C349269CC6AA00B77F69 /* coffee_maker_ios.rhn in Resources */,
+				0251C343269CC42900B77F69 /* test_out_of_context.wav in Resources */,
+				0251C34B269CC6C000B77F69 /* coffee_maker_linux.rhn in Resources */,
+				0251C355269CF02000B77F69 /* test_fr_ios.rhn in Resources */,
+				0251C33F269CC3BB00B77F69 /* rhino_params_fr.pv in Resources */,
+				0251C359269CF02F00B77F69 /* test_de_ios.rhn in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BB193E8C2370C4EC00556136 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -202,6 +379,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		69B54B371D68E85AFEA39B6F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RhinoDemoUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6F7654B2BF786DE74E735337 /* [CP] Copy Pods Resources */ = {
@@ -243,9 +442,51 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D3374541BD75FE2A5513135A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E7F7F9BA0F519FE4BA9E34B0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0251C325269CC25A00B77F69 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0251C32C269CC25A00B77F69 /* RhinoDemoUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BB193E8A2370C4EC00556136 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -257,6 +498,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0251C32F269CC25A00B77F69 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BB193E8D2370C4EC00556136 /* RhinoDemo */;
+			targetProxy = 0251C32E269CC25A00B77F69 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		BB193E9C2370C4F500556136 /* LaunchScreen.storyboard */ = {
@@ -270,6 +519,48 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0251C330269CC25A00B77F69 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8F4E55F466C02D38156A6586 /* Pods-RhinoDemoUITests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 65723695GD;
+				INFOPLIST_FILE = RhinoDemoUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.RhinoDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RhinoDemo;
+			};
+			name = Debug;
+		};
+		0251C331269CC25A00B77F69 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D3368C9D35E7379BF386625E /* Pods-RhinoDemoUITests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 65723695GD;
+				INFOPLIST_FILE = RhinoDemoUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.RhinoDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RhinoDemo;
+			};
+			name = Release;
+		};
 		BB193EA02370C4F500556136 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -435,6 +726,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0251C332269CC25A00B77F69 /* Build configuration list for PBXNativeTarget "RhinoDemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0251C330269CC25A00B77F69 /* Debug */,
+				0251C331269CC25A00B77F69 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		BB193E892370C4EC00556136 /* Build configuration list for PBXProject "RhinoDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

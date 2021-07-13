@@ -59,3 +59,15 @@ context:
       - "living room"
       - "pantry"
 ```
+
+## Running the Instrumented Unit Tests
+
+Ensure you have an Android device connected or simulator running. Then run the following from the terminal:
+
+```console
+cd demo/android/Activity
+./copy_test_resources.sh
+./gradlew connectedAndroidTest
+```
+
+The test results are stored in `rhino-activity-demo-app/build/reports`.
