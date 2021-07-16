@@ -53,7 +53,7 @@ import ai.picovoice.rhino.*;
 
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
-                        .setContextPath("sub_folder/context.rhn")
+                        .setContextPath("assets_sub_folder/context.rhn")
                         .build(appContext, inferenceCallback);
 } catch (RhinoException e) { }
 ```
@@ -91,8 +91,8 @@ import ai.picovoice.rhino.*;
 
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
-                        .setContextPath("sub_folder/context.rhn")
-                        .setContextPath("sub_folder/model.pv")
+                        .setContextPath("assets_sub_folder/context.rhn")
+                        .setContextPath("assets_sub_folder/model.pv")
                         .setSensitivity(0.35f)
                         .setErrorCallback(new PorcupineManagerErrorCallback() {
                             @Override
@@ -127,7 +127,7 @@ import ai.picovoice.rhino.*;
 
 try {    
     Rhino rhino = new Rhino.Builder()
-                        .setContextPath("/path/to/context/file.rhn")
+                        .setContextPath("assets_sub_folder/file.rhn")
                         .build(appContext);
 } catch (RhinoException e) { }
 ```
