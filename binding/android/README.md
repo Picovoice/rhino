@@ -28,7 +28,7 @@ Rhino can be found on Maven Central. To include the package in your Android proj
 ```groovy
 dependencies {
     // ...
-    implementation 'ai.picovoice:rhino-android:1.6.0'
+    implementation 'ai.picovoice:rhino-android:1.6.*'
 }
 ```
 
@@ -53,12 +53,12 @@ import ai.picovoice.rhino.*;
 
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
-                        .setContextPath("/path/to/context/file.rhn")
+                        .setContextPath("sub_folder/context.rhn")
                         .build(appContext, inferenceCallback);
 } catch (RhinoException e) { }
 ```
 
-The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. The `inferenceCallback` parameter is a `RhinoManagerCallback` that will be invoked when Rhino has returned an inference result.
+The context file is an .rhn file obtained from the [Picovoice Console](https://picovoice.ai/console/) that you can store in your Android assets folder (`src/main/assets`) and pass into the Rhino Builder. The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. The `inferenceCallback` parameter is a `RhinoManagerCallback` that will be invoked when Rhino has returned an inference result.
 The callback should accept a `RhinoInference` object that will contain the inference results.
 
 ```java
@@ -81,7 +81,9 @@ You can override the default Rhino model file and/or the inference sensitivity.
 
 Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating-point number within [0, 1]. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate. 
 
-The model file contains the parameters for the speech-to-intent engine. To change the language that Rhino understands, you'll pass in a different model file. 
+The model file contains the parameters for the speech-to-intent engine. To change the language that Rhino understands, you'll pass in a different model file. This should also be place in the `assets` folder. 
+
+There is also the option to pass an error callback, which will be invoked if an error is encountered while RhinoManager is processing audio.
 
 These optional parameters can be set through the Builder functions `setModelPath` and `setSensitivity`:
 ```java
@@ -89,9 +91,15 @@ import ai.picovoice.rhino.*;
 
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
-                        .setContextPath("/path/to/context/file.rhn")
-                        .setModelPath("/path/to/model/file.pv")
-                        .setSensitivity(0.35f)                        
+                        .setContextPath("sub_folder/context.rhn")
+                        .setContextPath("sub_folder/model.pv")
+                        .setSensitivity(0.35f)
+                        .setErrorCallback(new PorcupineManagerErrorCallback() {
+                            @Override
+                            public void invoke(PorcupineExcpetion e) {
+                                // process error
+                            }
+                        })                        
                         .build(context, inferenceCallback);
 } catch (RhinoException e) { }
 ```
@@ -165,22 +173,17 @@ rhino.delete();
 
 ## Custom Context Integration
 
-To add a custom context to your Android application a couple of extra steps must be taken. First, add your .rhn file to the `/res/raw` folder. All resources are compressed when the build system creates an APK, so you will have to extract your rhn file first before using it:
+To add a custom context or model file to your application, add the files to your assets folder (`src/main/assets`) and then pass the path to the Rhino Builder:
+
 
 ```java
-// in this example our file located at '/res/raw/context.rhn'
-try (
-        InputStream is = new BufferedInputStream(
-            getResources().openRawResource(R.raw.keyword), 256);
-        OutputStream os = new BufferedOutputStream(
-            openFileOutput("context.rhn", Context.MODE_PRIVATE), 256)
-) {
-    int r;
-    while ((r = is.read()) != -1) {
-        os.write(r);
-    }
-    os.flush();
-}
+// in this example our files are located at '/assets/picovoice_files/context.rhn' and '/assets/picovoice_files/model.pv' 
+try {    
+    Rhino rhino = new Rhino.Builder()
+                        .setContextPath("picovoice_files/context.rhn")
+                        .setModelPath("picovoice_files/model.pv")
+                        .build(appContext);
+} catch (RhinoException e) { }
 ```
 
 ## Non-English Contexts

@@ -42,7 +42,7 @@ public class Rhino {
         System.loadLibrary("pv_rhino");
     }
 
-    private final long handle;
+    private long handle;
 
     /**
      * Constructor.
@@ -68,7 +68,10 @@ public class Rhino {
      * Releases resources acquired by Rhino.
      */
     public void delete() {
-        delete(handle);
+        if (handle != 0) {
+            delete(handle);
+            handle = 0;
+        }
     }
 
     /**
@@ -84,6 +87,22 @@ public class Rhino {
      * @throws RhinoException if there is an error while processing the audio frame.
      */
     public boolean process(short[] pcm) throws RhinoException {
+        if (handle == 0) {
+            throw new RhinoException(
+                    new IllegalStateException("Attempted to call Rhino process after delete."));
+        }
+        if (pcm == null) {
+            throw new RhinoException(
+                    new IllegalArgumentException("Passed null frame to Rhino process."));
+        }
+
+        if (pcm.length != getFrameLength()) {
+            throw new RhinoException(
+                    new IllegalArgumentException(
+                            String.format("Rhino process requires frames of length %d. " +
+                                    "Received frame of size %d.", getFrameLength(), pcm.length)));
+        }
+
         try {
             return process(handle, pcm);
         } catch (Exception e) {
@@ -101,38 +120,35 @@ public class Rhino {
      * @throws RhinoException if inference retrieval fails.
      */
     public RhinoInference getInference() throws RhinoException {
-        try {
-            final boolean isUnderstood = isUnderstood(handle);
 
-            RhinoInference inference;
+        final boolean isUnderstood = isUnderstood(handle);
 
-            if (isUnderstood) {
-                final String intentPacked = getIntent(handle);
-                String[] parts = intentPacked.split(",");
-                if (parts.length == 0) {
-                    throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
-                }
+        RhinoInference inference;
 
-                Map<String, String> slots = new LinkedHashMap<>();
-                for (int i = 1; i < parts.length; i++) {
-                    String[] slotAndValue = parts[i].split(":");
-                    if (slotAndValue.length != 2) {
-                        throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
-                    }
-                    slots.put(slotAndValue[0], slotAndValue[1]);
-                }
-
-                inference = new RhinoInference(true, parts[0], slots);
-            } else {
-                inference = new RhinoInference(false, null, null);
+        if (isUnderstood) {
+            final String intentPacked = getIntent(handle);
+            String[] parts = intentPacked.split(",");
+            if (parts.length == 0) {
+                throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
             }
 
-            reset(handle);
+            Map<String, String> slots = new LinkedHashMap<>();
+            for (int i = 1; i < parts.length; i++) {
+                String[] slotAndValue = parts[i].split(":");
+                if (slotAndValue.length != 2) {
+                    throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
+                }
+                slots.put(slotAndValue[0], slotAndValue[1]);
+            }
 
-            return inference;
-        } catch (Exception e) {
-            throw new RhinoException(e);
+            inference = new RhinoInference(true, parts[0], slots);
+        } else {
+            inference = new RhinoInference(false, null, null);
         }
+
+        reset(handle);
+
+        return inference;
     }
 
     /**
@@ -203,13 +219,13 @@ public class Rhino {
             return this;
         }
 
-        private void extractResources(Context context) throws RhinoException {
+        private void extractPackageResources(Context context) throws RhinoException {
             final Resources resources = context.getResources();
 
             try {
 
-                DEFAULT_MODEL_PATH = copyResourceFile(context,
-                        R.raw.rhino_params,
+                DEFAULT_MODEL_PATH = extractResource(context,
+                        resources.openRawResource(R.raw.rhino_params),
                         resources.getResourceEntryName(R.raw.rhino_params) + ".pv");
 
                 isExtracted = true;
@@ -218,9 +234,9 @@ public class Rhino {
             }
         }
 
-        private String copyResourceFile(Context context, int resourceId, String filename) throws IOException {
-            InputStream is = new BufferedInputStream(context.getResources().openRawResource(resourceId), 256);
-            OutputStream os = new BufferedOutputStream(context.openFileOutput(filename, Context.MODE_PRIVATE), 256);
+        private String extractResource(Context context, InputStream srcFileStream, String dstFilename) throws IOException {
+            InputStream is = new BufferedInputStream(srcFileStream, 256);
+            OutputStream os = new BufferedOutputStream(context.openFileOutput(dstFilename, Context.MODE_PRIVATE), 256);
             int r;
             while ((r = is.read()) != -1) {
                 os.write(r);
@@ -229,8 +245,7 @@ public class Rhino {
 
             is.close();
             os.close();
-
-            return new File(context.getFilesDir(), filename).getAbsolutePath();
+            return new File(context.getFilesDir(), dstFilename).getAbsolutePath();
         }
 
         /**
@@ -243,20 +258,39 @@ public class Rhino {
         public Rhino build(Context context) throws RhinoException {
 
             if (!isExtracted) {
-                extractResources(context);
+                extractPackageResources(context);
             }
 
             if (modelPath == null) {
                 modelPath = DEFAULT_MODEL_PATH;
+            } else {
+                File modelFile = new File(modelPath);
+                String modelFilename = modelFile.getName();
+                if (!modelFile.exists() && !modelFilename.equals("")) {
+                    try {
+                        modelPath = extractResource(context,
+                                context.getAssets().open(modelPath),
+                                modelFilename);
+                    } catch (IOException ex) {
+                        throw new RhinoException(ex);
+                    }
+                }
             }
 
             if (this.contextPath == null) {
                 throw new RhinoException(new IllegalArgumentException("No context file (.rhn) was provided."));
             }
 
-            if (!new File(contextPath).exists()) {
-                throw new RhinoException(new IOException(String.format("Couldn't find context file at " +
-                        "'%s'", contextPath)));
+            File contextFile = new File(contextPath);
+            String contextFilename = contextFile.getName();
+            if (!contextFile.exists() && !contextFilename.equals("")) {
+                try {
+                    contextPath = extractResource(context,
+                            context.getAssets().open(contextPath),
+                            contextFilename);
+                } catch (IOException ex) {
+                    throw new RhinoException(ex);
+                }
             }
 
             if (sensitivity < 0 || sensitivity > 1) {
