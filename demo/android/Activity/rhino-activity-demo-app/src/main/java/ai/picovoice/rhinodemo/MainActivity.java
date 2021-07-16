@@ -13,9 +13,7 @@
 package ai.picovoice.rhinodemo;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -26,12 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
 import ai.picovoice.rhino.RhinoInference;
@@ -44,26 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView intentTextView;
     private RhinoManager rhinoManager;
 
-    private void copyResourceFile(int resourceID, String filename) throws IOException {
-        final Resources resources = getResources();
-        try (
-                InputStream is = new BufferedInputStream(resources.openRawResource(resourceID), 256);
-                OutputStream os = new BufferedOutputStream(openFileOutput(filename, Context.MODE_PRIVATE), 256)) {
-            int r;
-            while ((r = is.read()) != -1) {
-                os.write(r);
-            }
-            os.flush();
-        }
-    }
-
-    private String getAbsolutePath(String filename) {
-        return new File(this.getFilesDir(), filename).getAbsolutePath();
-    }
-
     private void initRhino() throws Exception {
         rhinoManager = new RhinoManager.Builder()
-                .setContextPath(getAbsolutePath("rhino_context.rhn"))
+                .setContextPath("smart_lighting_android.rhn")
                 .setSensitivity(0.25f)
                 .build(getApplicationContext(), new RhinoManagerCallback() {
                     @Override
@@ -98,12 +73,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rhino_demo);
-
-        try {
-            copyResourceFile(R.raw.smart_lighting_android, "rhino_context.rhn");
-        } catch (IOException e) {
-            Toast.makeText(this, "Failed to copy resource files.", Toast.LENGTH_SHORT).show();
-        }
 
         recordButton = findViewById(R.id.startButton);
         intentTextView = findViewById(R.id.intentView);

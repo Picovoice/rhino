@@ -17,6 +17,7 @@ import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Process;
+import android.util.Log;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -29,20 +30,24 @@ import java.util.concurrent.Executors;
 public class RhinoManager {
     private final Rhino rhino;
     private final RhinoManagerCallback callback;
+    private final RhinoManagerErrorCallback errorCallback;
     private final Handler callbackHandler = new Handler(Looper.getMainLooper());
 
     /**
      * Private constructor.
      *
-     * @param rhino    Absolute path to the file containing model parameters.
-     * @param callback It is invoked upon completion of intent inference.
+     * @param rhino         Absolute path to the file containing model parameters.
+     * @param callback      It is invoked upon completion of intent inference.
+     * @param errorCallback A callback that reports errors encountered while processing audio.
      */
     private RhinoManager(
             Rhino rhino,
-            RhinoManagerCallback callback) {
+            RhinoManagerCallback callback,
+            RhinoManagerErrorCallback errorCallback) {
 
         this.rhino = rhino;
         this.callback = callback;
+        this.errorCallback = errorCallback;
     }
 
     /**
@@ -53,7 +58,7 @@ public class RhinoManager {
     public void process() {
         Executors.newSingleThreadExecutor().submit(new Callable<Void>() {
             @Override
-            public Void call() throws RhinoException {
+            public Void call() {
                 android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
                 final int minBufferSize = AudioRecord.getMinBufferSize(
                         rhino.getSampleRate(),
@@ -81,21 +86,43 @@ public class RhinoManager {
                         }
                     }
                     audioRecord.stop();
-                } catch (Exception e) {
-                    throw new RhinoException(e);
+                } catch (final Exception e) {
+                    if (errorCallback != null) {
+                        callbackHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                errorCallback.invoke(new RhinoException(e));
+                            }
+                        });
+                    } else {
+                        Log.e("RhinoManager", e.toString());
+                    }
                 } finally {
                     if (audioRecord != null) {
                         audioRecord.release();
                     }
 
                     if (isFinalized) {
-                        final RhinoInference inference = rhino.getInference();
-                        callbackHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                callback.invoke(inference);
+                        try {
+                            final RhinoInference inference = rhino.getInference();
+                            callbackHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callback.invoke(inference);
+                                }
+                            });
+                        } catch (final RhinoException e) {
+                            if (errorCallback != null) {
+                                callbackHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        errorCallback.invoke(new RhinoException(e));
+                                    }
+                                });
+                            } else {
+                                Log.e("RhinoManager", e.toString());
                             }
-                        });
+                        }
                     }
                 }
                 return null;
@@ -118,6 +145,7 @@ public class RhinoManager {
         private String modelPath = null;
         private String contextPath = null;
         private float sensitivity = 0.5f;
+        private RhinoManagerErrorCallback errorCallback = null;
 
         public RhinoManager.Builder setModelPath(String modelPath) {
             this.modelPath = modelPath;
@@ -131,6 +159,11 @@ public class RhinoManager {
 
         public RhinoManager.Builder setSensitivity(float sensitivity) {
             this.sensitivity = sensitivity;
+            return this;
+        }
+
+        public RhinoManager.Builder setErrorCallback(RhinoManagerErrorCallback errorCallback) {
+            this.errorCallback = errorCallback;
             return this;
         }
 
@@ -149,7 +182,7 @@ public class RhinoManager {
                     .setContextPath(contextPath)
                     .setSensitivity(sensitivity)
                     .build(context);
-            return new RhinoManager(rhino, callback);
+            return new RhinoManager(rhino, callback, errorCallback);
         }
     }
 }
