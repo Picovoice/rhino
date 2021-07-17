@@ -94,9 +94,9 @@ try {
                         .setContextPath("assets_sub_folder/context.rhn")
                         .setContextPath("assets_sub_folder/model.pv")
                         .setSensitivity(0.35f)
-                        .setErrorCallback(new PorcupineManagerErrorCallback() {
+                        .setErrorCallback(new RhinoManagerErrorCallback() {
                             @Override
-                            public void invoke(PorcupineExcpetion e) {
+                            public void invoke(RhinoExcpetion e) {
                                 // process error
                             }
                         })                        
