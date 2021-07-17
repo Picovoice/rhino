@@ -81,7 +81,7 @@ You can override the default Rhino model file and/or the inference sensitivity.
 
 Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating-point number within [0, 1]. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate. 
 
-The model file contains the parameters for the speech-to-intent engine. To change the language that Rhino understands, you'll pass in a different model file. This should also be place in the `assets` folder. 
+The model file contains the parameters for the speech-to-intent engine. To change the language that Rhino understands, you'll pass in a different model file. This should also be placed in the `assets` folder. 
 
 There is also the option to pass an error callback, which will be invoked if an error is encountered while RhinoManager is processing audio.
 
