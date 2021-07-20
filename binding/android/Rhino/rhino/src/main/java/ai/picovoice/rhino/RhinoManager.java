@@ -138,24 +138,6 @@ public class RhinoManager {
     }
 
     /**
-     * Getter for audio sample rate accepted by Picovoice.
-     *
-     * @return Audio sample rate accepted by Picovoice.
-     */
-    public int getSampleRate() {
-        return rhino.getSampleRate();
-    }
-
-    /**
-     * Getter for number of audio samples per frame.
-     *
-     * @return Number of audio samples per frame.
-     */
-    public int getFrameLength() {
-        return rhino.getFrameLength();
-    }
-
-    /**
      * Getter for version.
      *
      * @return Version.
