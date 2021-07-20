@@ -23,7 +23,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 /**
- * High-level Android binding for Rhino Speech-to-Intent engine. It handles recording audio from
+ * High-level Android binding for Rhino Speech-to-Intent engotgine. It handles recording audio from
  * microphone, processes it in real-time using Rhino, and notifies the client when an intent is
  * inferred from the spoken command. For detailed information about Rhino refer to ${@link Rhino}.
  */
@@ -135,6 +135,42 @@ public class RhinoManager {
      */
     public void delete() {
         rhino.delete();
+    }
+
+    /**
+     * Getter for audio sample rate accepted by Picovoice.
+     *
+     * @return Audio sample rate accepted by Picovoice.
+     */
+    public int getSampleRate() {
+        return rhino.getSampleRate();
+    }
+
+    /**
+     * Getter for number of audio samples per frame.
+     *
+     * @return Number of audio samples per frame.
+     */
+    public int getFrameLength() {
+        return rhino.getFrameLength();
+    }
+
+    /**
+     * Getter for version.
+     *
+     * @return Version.
+     */
+    public String getVersion() {
+        return rhino.getVersion();
+    }
+
+    /**
+     * Getter for Rhino context information.
+     *
+     * @return Context information.
+     */
+    public String getContextInformation() {
+        return rhino.getContextInformation();
     }
 
     /**

@@ -15,6 +15,7 @@ package ai.picovoice.rhinodemo;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         });
                     }
                 });
+
+        Log.i("RhinoManager", rhinoManager.getContextInformation());
     }
 
     @Override
