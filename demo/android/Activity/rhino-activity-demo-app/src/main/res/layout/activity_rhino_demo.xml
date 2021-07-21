@@ -6,104 +6,135 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/contextLabel"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/startGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/textGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.33"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/buttonGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.65"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/endGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/topGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.01"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bottomGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.97"/>
+
+    <TextView
+        android:id="@+id/contextLabel"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
         android:text="@string/context_label"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="32dp"
         android:textSize="14sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/topGuideline"
+        app:layout_constraintBottom_toBottomOf="@id/cheatSheetButton"
+        app:layout_constraintStart_toStartOf="@id/startGuideline"
+        app:layout_constraintEnd_toEndOf="@id/textGuideline"
         app:layout_constraintHorizontal_bias="0" />
 
     <TextView
         android:id="@+id/contextName"
-        android:layout_width="wrap_content"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:text="@string/context_name"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
         android:textSize="14sp"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/phraseLabel"
+        app:layout_constraintTop_toTopOf="@id/topGuideline"
+        app:layout_constraintBottom_toBottomOf="@id/cheatSheetButton"
+        app:layout_constraintStart_toEndOf="@+id/textGuideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0" />
 
     <TextView
         android:id="@+id/phraseLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:text="@string/phrase_label"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="32dp"
         android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@+id/contextLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cheatSheetButton"
+        app:layout_constraintStart_toStartOf="@id/startGuideline"
+        app:layout_constraintEnd_toEndOf="@id/textGuideline"
         app:layout_constraintHorizontal_bias="0" />
 
     <TextView
         android:id="@+id/phraseText"
-        android:layout_width="wrap_content"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:text="@string/phrase_text"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
         android:textSize="14sp"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@+id/contextName"
-        app:layout_constraintStart_toEndOf="@+id/phraseLabel"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cheatSheetButton"
+        app:layout_constraintStart_toEndOf="@+id/textGuideline"
+        app:layout_constraintEnd_toEndOf="@id/endGuideline"
         app:layout_constraintHorizontal_bias="0" />
 
     <ToggleButton
         android:id="@+id/startButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="8dp"
         android:background="@drawable/button_background"
         android:onClick="onClick"
         android:textColor="@android:color/white"
         android:textOff="Start"
         android:textOn="Stop"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintEnd_toEndOf="@id/endGuideline"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/startGuideline"
+        app:layout_constraintBottom_toBottomOf="@id/bottomGuideline"/>
 
     <TextView
         android:id="@+id/intentView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="32dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="32dp"
         android:layout_marginBottom="20dp"
         android:background="@color/colorPrimaryDark"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@id/startButton"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/endGuideline"
         app:layout_constraintHorizontal_bias="0.507"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/startGuideline"
         app:layout_constraintTop_toBottomOf="@+id/phraseText" />
 
     <Button
         android:id="@+id/cheatSheetButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="32dp"
-        android:text="@string/button_text"
         android:onClick="showContextCheatSheet"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:text="@string/button_text"
+        app:layout_constraintEnd_toEndOf="@id/endGuideline"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@id/buttonGuideline"
+        app:layout_constraintTop_toTopOf="@id/topGuideline" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
