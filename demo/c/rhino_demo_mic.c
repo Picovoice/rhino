@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 
-#if defined(_WIN32) && defined(_WIN32)
+#if defined(_WIN32) && defined(_WIN64)
 
 #include <windows.h>
 
@@ -36,7 +36,7 @@ typedef struct {
 } frame_buffer_t;
 
 typedef struct {
-    frame_buffer_t  frame_buffer;
+    frame_buffer_t frame_buffer;
     const char *(*pv_status_to_string_func)(pv_status_t);
     pv_status_t (*pv_rhino_process_func)(pv_rhino_t *, const int16_t *, bool *);
     pv_status_t (*pv_rhino_is_understood_func)(const pv_rhino_t *, bool *);
@@ -109,7 +109,7 @@ static void print_usage(const char *program) {
                     "        %s --show_audio_devices\n", program, program);
 }
 
-static void rhino_process_callback(const pv_rhino_data_t *pv_rhino_data, const int16_t *pcm){
+static void rhino_process_callback(const pv_rhino_data_t *pv_rhino_data, const int16_t *pcm) {
     bool is_finalized = false;
 
     pv_status_t status = pv_rhino_data->pv_rhino_process_func(
@@ -182,7 +182,7 @@ static void rhino_process_callback(const pv_rhino_data_t *pv_rhino_data, const i
     is_done = true;
 }
 
-static void mic_callback(ma_device* device, void* output, const void* input, ma_uint32 frame_count) {
+static void mic_callback(ma_device *device, void *output, const void *input, ma_uint32 frame_count) {
     (void) output;
 
     pv_rhino_data_t *pv_rhino_data = (pv_rhino_data_t *) device->pUserData;
@@ -308,7 +308,8 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    pv_status_t (*pv_rhino_get_intent_func)(const pv_rhino_t *, const char **, int *, const char ***, const char ***) = NULL;
+    pv_status_t
+    (*pv_rhino_get_intent_func)(const pv_rhino_t *, const char **, int *, const char ***, const char ***) = NULL;
     pv_rhino_get_intent_func = load_symbol(rhino_library, "pv_rhino_get_intent");
     if (!pv_rhino_get_intent_func) {
         print_dl_error("failed to load 'pv_rhino_get_intent'");

@@ -445,7 +445,7 @@ For more information about NodeJS demos go to [demo/nodejs](/demo/nodejs).
 
 ### C Demos
 
-The [Microphone demo](/demo/c/rhino_demo_mic.c) required [miniaudio](https://github.com/mackron/miniaudio) for accessing microphone audio data.
+The [Microphone demo](/demo/c/rhino_demo_mic.c) requires [miniaudio](https://github.com/mackron/miniaudio) for accessing microphone audio data.
 
 #### Linux (x86_64), macOS (x86_64) and Raspberry Pi
 
@@ -500,9 +500,11 @@ resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn ${INPUT_AUDIO_DEVICE}
 Replace `${RHINO_LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the
 name of the platform you are running on (`linux`, `raspberry-pi`, `mac` or `windows`), and `${INPUT_AUDIO_DEVICE}` with
 the name of your microphone device. The demo opens an audio stream and your intent from spoken commands in the context
-of a smart lighting system. For example you can say:
+of a smart lighting system. For example, you can say:
 
 > Turn on the lights in the bedroom.
+
+For more information about C demos go to [demo/c](demo/c).
 
 ## SDKs
 
