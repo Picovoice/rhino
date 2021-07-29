@@ -10,7 +10,6 @@ You need a C99-compatible compiler to build these demos.
 
 **For Windows, MingW is required to run the demo.**
 
-
 The microphone based demo requires [miniaudio](https://github.com/mackron/miniaudio) for accessing microphone audio data.
 
 ## Build
@@ -29,7 +28,9 @@ gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c
 
 ## Run
 
-Running the executable without any commandline arguments prints the usage info to the console:
+Running the executable without any commandline arguments prints the usage info to the console.
+
+For Linux, macOS, and Raspberry Pi:
 
 ```console
 ./demo/c/rhino_demo_mic
@@ -37,10 +38,24 @@ usage : ./demo/c/rhino_demo_mic library_path model_path context_path input_audio
         ./demo/c/rhino_demo_mic --show_audio_devices
 ```
 
+on Windows:
+
+```console
+./demo/c/rhino_demo_mic.exe
+usage : ./demo/c/rhino_demo_mic.exe library_path model_path context_path input_audio_device
+        ./demo/c/rhino_demo_mic.exe --show_audio_devices
+```
+
 To show the available audio input devices, on Linux, macOS, Raspberry Pi run:
 
 ```console
-./demo/c/porcupine_demo_mic --show_audio_devices
+./demo/c/rhino_demo_mic --show_audio_devices
+```
+
+on Windows run:
+
+```console
+./demo/c/rhino_demo_mic.exe --show_audio_devices
 ```
 
 Replace `${AUDIO_DEVICE_INDEX}` with the index of the audio device. The following commands start up a microphone audio 

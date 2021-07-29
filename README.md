@@ -468,12 +468,6 @@ Run the demo using:
 resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn ${INPUT_AUDIO_DEVICE}
 ```
 
-Build the demo:
-
-```console
-gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c -ldl -lasound
-```
-
 #### Windows
 
 **Requires MingW to run the demo.**
