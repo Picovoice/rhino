@@ -465,7 +465,7 @@ Run the demo using:
 
 ```console
 ./demo/c/rhino_demo_mic ${RHINO_LIBRARY_PATH} lib/common/rhino_params.pv \
-resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn ${INPUT_AUDIO_DEVICE}
+resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn ${AUDIO_DEVICE_INDEX}
 ```
 
 #### Windows
@@ -488,12 +488,12 @@ Run the demo using:
 
 ```console
 ./demo/c/rhino_demo_mic.exe ${RHINO_LIBRARY_PATH} lib/common/rhino_params.pv \
-resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn ${INPUT_AUDIO_DEVICE}
+resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn ${AUDIO_DEVICE_INDEX}
 ```
 
 Replace `${RHINO_LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the
-name of the platform you are running on (`linux`, `raspberry-pi`, `mac` or `windows`), and `${INPUT_AUDIO_DEVICE}` with
-the name of your microphone device. The demo opens an audio stream and your intent from spoken commands in the context
+name of the platform you are running on (`linux`, `raspberry-pi`, `mac` or `windows`), and `${AUDIO_DEVICE_INDEX}` with
+the index of your audio device. The demo opens an audio stream and infers your intent from spoken commands in the context
 of a smart lighting system. For example, you can say:
 
 > Turn on the lights in the bedroom.
