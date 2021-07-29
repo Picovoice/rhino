@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
+    Copyright 2018-2021 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -9,210 +9,128 @@
     specific language governing permissions and limitations under the License.
 */
 
-#include <alsa/asoundlib.h>
+#if !defined(_WIN32) && !defined(_WIN64)
+
 #include <dlfcn.h>
+
+#endif
+
 #include <stdio.h>
+
+#if defined(_WIN32) && defined(_WIN32)
+
+#include <windows.h>
+
+#endif
+
+#define MINIAUDIO_IMPLEMENTATION
+
+#include "miniaudio/miniaudio.h"
 
 #include "pv_rhino.h"
 
-int main(int argc, char *argv[]) {
-    if (argc != 5) {
-        fprintf(stderr, "usage : %s library_path model_path context_path input_audio_device\n", argv[0]);
-        exit(1);
-    }
+typedef struct {
+    int16_t *buffer;
+    int32_t max_size;
+    int32_t filled;
+} frame_buffer_t;
 
-    const char *library_path = argv[1];
-    const char *model_path = argv[2];
-    const char *context_path = argv[3];
-    const char *input_audio_device = argv[4];
+typedef struct {
+    frame_buffer_t  frame_buffer;
+    const char *(*pv_status_to_string_func)(pv_status_t);
+    pv_status_t (*pv_rhino_process_func)(pv_rhino_t *, const int16_t *, bool *);
+    pv_status_t (*pv_rhino_is_understood_func)(const pv_rhino_t *, bool *);
+    pv_status_t (*pv_rhino_get_intent_func)(const pv_rhino_t *, const char **, int *, const char ***, const char ***);
+    pv_status_t (*pv_rhino_free_slots_and_values_func)(const pv_rhino_t *, const char **, const char **);
+    pv_status_t (*pv_rhino_reset_func)(pv_rhino_t *);
+    pv_rhino_t *rhino;
+} pv_rhino_data_t;
 
-    void *rhino_library = dlopen(library_path, RTLD_NOW);
-    if (!rhino_library) {
-        fprintf(stderr, "failed to open Rhino's library");
-        exit(1);
-    }
+static volatile bool is_done = false;
 
-    char *error = NULL;
+static void *open_dl(const char *dl_path) {
 
-    const char *(*pv_status_to_string_func)(pv_status_t) = dlsym(rhino_library, "pv_status_to_string");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_status_to_string' with '%s'.\n", error);
-        exit(1);
-    }
+#if defined(_WIN32) || defined(_WIN64)
 
-    int32_t (*pv_sample_rate_func)() = dlsym(rhino_library, "pv_sample_rate");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_sample_rate' with '%s'.\n", error);
-        exit(1);
-    }
+    return LoadLibrary(dl_path);
 
-    pv_status_t (*pv_rhino_init_func)(const char *, const char *, float, pv_rhino_t **) = NULL;
-    pv_rhino_init_func = dlsym(rhino_library, "pv_rhino_init");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_init' with '%s'.\n", error);
-        exit(1);
-    }
+#else
 
-    void (*pv_rhino_delete_func)(pv_rhino_t *) = NULL;
-    pv_rhino_delete_func = dlsym(rhino_library, "pv_rhino_delete");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_delete' with '%s'.\n", error);
-        exit(1);
-    }
+    return dlopen(dl_path, RTLD_NOW);
 
-    pv_status_t (*pv_rhino_process_func)(pv_rhino_t *, const int16_t *, bool *) = NULL;
-    pv_rhino_process_func = dlsym(rhino_library, "pv_rhino_process");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_process' with '%s'.\n", error);
-        exit(1);
-    }
+#endif
 
-    pv_status_t (*pv_rhino_is_understood_func)(const pv_rhino_t *, bool *) = NULL;
-    pv_rhino_is_understood_func = dlsym(rhino_library, "pv_rhino_is_understood");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_is_understood' with '%s'.\n", error);
-        exit(1);
-    }
+}
 
-    pv_status_t (*pv_rhino_get_intent_func)(const pv_rhino_t *, const char **, int *, const char ***, const char ***) = NULL;
-    pv_rhino_get_intent_func = dlsym(rhino_library, "pv_rhino_get_intent");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_get_intent' with '%s'.\n", error);
-        exit(1);
-    }
+static void *load_symbol(void *handle, const char *symbol) {
 
-    pv_status_t (*pv_rhino_free_slots_and_values_func)(const pv_rhino_t *, const char **, const char **) = NULL;
-    pv_rhino_free_slots_and_values_func = dlsym(rhino_library, "pv_rhino_free_slots_and_values");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_free_slots_and_values' with '%s'.\n", error);
-        exit(1);
-    }
+#if defined(_WIN32) || defined(_WIN64)
 
-    pv_status_t (*pv_rhino_reset_func)(pv_rhino_t *) = NULL;
-    pv_rhino_reset_func = dlsym(rhino_library, "pv_rhino_reset");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_reset' with '%s'.\n", error);
-        exit(1);
-    }
+    return GetProcAddress((HMODULE) handle, symbol);
 
-    pv_status_t (*pv_rhino_context_info_func)(const pv_rhino_t *, const char **) = NULL;
-    pv_rhino_context_info_func = dlsym(rhino_library, "pv_rhino_context_info");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_context_info' with '%s'.\n", error);
-        exit(1);
-    }
+#else
 
-    int32_t (*pv_rhino_frame_length_func)() = NULL;
-    pv_rhino_frame_length_func = dlsym(rhino_library, "pv_rhino_frame_length");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_frame_length' with '%s'.\n", error);
-        exit(1);
-    }
+    return dlsym(handle, symbol);
 
-    pv_rhino_t *rhino = NULL;
-    pv_status_t status = pv_rhino_init_func(model_path, context_path, 0.5f, &rhino);
-    if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "'pv_rhino_init' failed with '%s'\n", pv_status_to_string_func(status));
-        exit(1);
-    }
+#endif
 
-    snd_pcm_t *alsa_handle = NULL;
-    int error_code = snd_pcm_open(&alsa_handle, input_audio_device, SND_PCM_STREAM_CAPTURE, 0);
-    if (error_code != 0) {
-        fprintf(stderr, "'snd_pcm_open' failed with '%s'\n", snd_strerror(error_code));
-        exit(1);
-    }
+}
 
-    snd_pcm_hw_params_t *hardware_params = NULL;
-    error_code = snd_pcm_hw_params_malloc(&hardware_params);
-    if (error_code != 0) {
-        fprintf(stderr, "'snd_pcm_hw_params_malloc' failed with '%s'\n", snd_strerror(error_code));
-        exit(1);
-    }
+static void close_dl(void *handle) {
 
-    error_code = snd_pcm_hw_params_any(alsa_handle, hardware_params);
-    if (error_code != 0) {
-        fprintf(stderr, "'snd_pcm_hw_params_any' failed with '%s'\n", snd_strerror(error_code));
-        exit(1);
-    }
+#if defined(_WIN32) || defined(_WIN64)
 
-    error_code = snd_pcm_hw_params_set_access(alsa_handle, hardware_params, SND_PCM_ACCESS_RW_INTERLEAVED);
-    if (error_code != 0) {
-        fprintf(stderr, "'snd_pcm_hw_params_set_access' failed with '%s'\n", snd_strerror(error_code));
-        exit(1);
-    }
+    FreeLibrary((HMODULE) handle);
 
-    error_code = snd_pcm_hw_params_set_format(alsa_handle, hardware_params, SND_PCM_FORMAT_S16_LE);
-    if (error_code != 0) {
-        fprintf(stderr, "'snd_pcm_hw_params_set_format' failed with '%s'\n", snd_strerror(error_code));
-        exit(1);
-    }
+#else
 
-    error_code = snd_pcm_hw_params_set_rate(alsa_handle, hardware_params, pv_sample_rate_func(), 0);
-    if (error_code != 0) {
-        fprintf(stderr, "'snd_pcm_hw_params_set_rate' failed with '%s'\n", snd_strerror(error_code));
-        exit(1);
-    }
+    dlclose(handle);
 
-    error_code = snd_pcm_hw_params_set_channels(alsa_handle, hardware_params, 1);
-    if (error_code != 0) {
-        fprintf(stderr, "'snd_pcm_hw_params_set_channels' failed with '%s'\n", snd_strerror(error_code));
-        exit(1);
-    }
+#endif
 
-    error_code = snd_pcm_hw_params(alsa_handle, hardware_params);
-    if (error_code != 0) {
-        fprintf(stderr, "'snd_pcm_hw_params' failed with '%s'\n", snd_strerror(error_code));
-        exit(1);
-    }
+}
 
-    snd_pcm_hw_params_free(hardware_params);
+static void print_dl_error(const char *message) {
 
-    error_code = snd_pcm_prepare(alsa_handle);
-    if (error_code != 0) {
-        fprintf(stderr, "'snd_pcm_prepare' failed with '%s'\n", snd_strerror(error_code));
-        exit(1);
-    }
+#if defined(_WIN32) || defined(_WIN64)
 
-    const int32_t frame_length = pv_rhino_frame_length_func();
+    fprintf(stderr, "%s with code '%lu'.\n", message, GetLastError());
 
-    int16_t *pcm = malloc(sizeof(int16_t) * frame_length);
-    if (!pcm) {
-        printf("failed to allocate memory for audio buffer\n");
-        return 1;
-    }
+#else
 
-    const char *context_info = NULL;
-    status = pv_rhino_context_info_func(rhino, &context_info);
-    if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "'pv_rhino_context_info' failed with '%s'\n", pv_status_to_string_func(status));
-        exit(1);
-    }
-    fprintf(stdout, "%s\n\n", context_info);
+    fprintf(stderr, "%s with '%s'.\n", message, dlerror());
 
+#endif
+
+}
+
+static void print_usage(const char *program) {
+    fprintf(stderr, "usage : %s library_path model_path context_path input_audio_device\n"
+                    "        %s --show_audio_devices\n", program, program);
+}
+
+static void rhino_process_callback(const pv_rhino_data_t *pv_rhino_data, const int16_t *pcm){
     bool is_finalized = false;
 
-    while (!is_finalized) {
-        const int count = snd_pcm_readi(alsa_handle, pcm, frame_length);
-        if (count < 0) {
-            fprintf(stderr, "'snd_pcm_readi' failed with '%s'\n", snd_strerror(count));
-            exit(1);
-        } else if (count != frame_length) {
-            fprintf(stderr, "read %d frames instead of %d\n", count, frame_length);
-            exit(1);
-        }
+    pv_status_t status = pv_rhino_data->pv_rhino_process_func(
+            pv_rhino_data->rhino,
+            pcm,
+            &is_finalized);
 
-        status = pv_rhino_process_func(rhino, pcm, &is_finalized);
-        if (status != PV_STATUS_SUCCESS) {
-            fprintf(stderr, "'pv_rhino_process' failed with '%s'\n", pv_status_to_string_func(status));
-            exit(1);
-        }
+    if (status != PV_STATUS_SUCCESS) {
+        fprintf(stderr, "'pv_rhino_process' failed with '%s'\n", pv_rhino_data->pv_status_to_string_func(status));
+        exit(1);
+    }
+
+    if (!is_finalized) {
+        return;
     }
 
     bool is_understood = false;
-    status = pv_rhino_is_understood_func(rhino, &is_understood);
+    status = pv_rhino_data->pv_rhino_is_understood_func(pv_rhino_data->rhino, &is_understood);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "'pv_rhino_is_understood' failed with '%s'\n", pv_status_to_string_func(status));
+        fprintf(stderr, "'pv_rhino_is_understood' failed with '%s'\n",
+                pv_rhino_data->pv_status_to_string_func(status));
         exit(1);
     }
 
@@ -222,9 +140,10 @@ int main(int argc, char *argv[]) {
     const char **values = NULL;
 
     if (is_understood) {
-        status = pv_rhino_get_intent_func(rhino, &intent, &num_slots, &slots, &values);
+        status = pv_rhino_data->pv_rhino_get_intent_func(pv_rhino_data->rhino, &intent, &num_slots, &slots, &values);
         if (status != PV_STATUS_SUCCESS) {
-            fprintf(stderr, "'pv_rhino_get_intent' failed with '%s'\n", pv_status_to_string_func(status));
+            fprintf(stderr, "'pv_rhino_get_intent' failed with '%s'\n",
+                    pv_rhino_data->pv_status_to_string_func(status));
             exit(1);
         }
     }
@@ -242,26 +161,259 @@ int main(int argc, char *argv[]) {
         }
     }
     fprintf(stdout, "}\n");
+    fflush(stdout);
 
     if (is_understood) {
-        status = pv_rhino_free_slots_and_values_func(rhino, slots, values);
+        status = pv_rhino_data->pv_rhino_free_slots_and_values_func(pv_rhino_data->rhino, slots, values);
         if (status != PV_STATUS_SUCCESS) {
             fprintf(stderr, "'pv_rhino_free_slots_and_values' failed with '%s'\n",
-                    pv_status_to_string_func(status));
+                    pv_rhino_data->pv_status_to_string_func(status));
             exit(1);
         }
     }
 
-    status = pv_rhino_reset_func(rhino);
+    status = pv_rhino_data->pv_rhino_reset_func(pv_rhino_data->rhino);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "'pv_rhino_reset' failed with '%s'\n", pv_status_to_string_func(status));
+        fprintf(stderr, "'pv_rhino_reset' failed with '%s'\n",
+                pv_rhino_data->pv_status_to_string_func(status));
         exit(1);
     }
 
-    free(pcm);
-    snd_pcm_close(alsa_handle);
+    is_done = true;
+}
+
+static void mic_callback(ma_device* device, void* output, const void* input, ma_uint32 frame_count) {
+    (void) output;
+
+    pv_rhino_data_t *pv_rhino_data = (pv_rhino_data_t *) device->pUserData;
+
+    frame_buffer_t *frame_buffer = &pv_rhino_data->frame_buffer;
+
+    int16_t *buffer_ptr = &frame_buffer->buffer[frame_buffer->filled];
+    int16_t *input_ptr = (int16_t *) input;
+
+    int32_t processed_frames = 0;
+
+    while (processed_frames < frame_count) {
+        const int32_t remaining_frames = (int32_t) frame_count - processed_frames;
+        const int32_t available_frames = frame_buffer->max_size - frame_buffer->filled;
+
+        if (available_frames > 0) {
+            const int32_t frames_to_read = (remaining_frames < available_frames) ? remaining_frames : available_frames;
+
+            memcpy(buffer_ptr, input_ptr, frames_to_read * sizeof(int16_t));
+            buffer_ptr += frames_to_read;
+            input_ptr += frames_to_read;
+
+            processed_frames += frames_to_read;
+            frame_buffer->filled += frames_to_read;
+        } else {
+            rhino_process_callback(pv_rhino_data, frame_buffer->buffer);
+
+            buffer_ptr = frame_buffer->buffer;
+            frame_buffer->filled = 0;
+        }
+    }
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 2 && argc != 5) {
+        print_usage(argv[0]);
+        exit(1);
+    }
+
+    ma_context context;
+    ma_result result;
+
+    result = ma_context_init(NULL, 0, NULL, &context);
+    if (result != MA_SUCCESS) {
+        fprintf(stderr, "failed to initialize the input audio device list.\n");
+        exit(1);
+    }
+
+    ma_device_info *capture_info;
+    ma_uint32 capture_count;
+
+    result = ma_context_get_devices(&context, NULL, NULL, &capture_info, &capture_count);
+    if (result != MA_SUCCESS) {
+        fprintf(stderr, "failed to get the available input devices.\n");
+        exit(1);
+    }
+
+    if (argc == 2) {
+        if (strcmp(argv[1], "--show_audio_devices") == 0) {
+            for (ma_uint32 device = 0; device < capture_count; device++) {
+                fprintf(stdout, "index: %d, name: %s\n", device, capture_info[device].name);
+            }
+            return 0;
+        } else {
+            print_usage(argv[0]);
+            exit(1);
+        }
+    }
+
+    const char *library_path = argv[1];
+    const char *model_path = argv[2];
+    const char *context_path = argv[3];
+    const int32_t device_index = strtol(argv[4], NULL, 10);
+
+    if (device_index >= capture_count) {
+        fprintf(stderr, "no device available given audio device index.\n");
+        exit(1);
+    }
+
+    void *rhino_library = open_dl(library_path);
+    if (!rhino_library) {
+        fprintf(stderr, "failed to open Rhino's library");
+        exit(1);
+    }
+
+    const char *(*pv_status_to_string_func)(pv_status_t) = load_symbol(rhino_library, "pv_status_to_string");
+    if (!pv_status_to_string_func) {
+        print_dl_error("failed to load 'pv_status_to_string'");
+        exit(1);
+    }
+
+    int32_t (*pv_sample_rate_func)() = load_symbol(rhino_library, "pv_sample_rate");
+    if (!pv_sample_rate_func) {
+        print_dl_error("failed to load 'pv_sample_rate'");
+        exit(1);
+    }
+
+    pv_status_t (*pv_rhino_init_func)(const char *, const char *, float, pv_rhino_t **) = NULL;
+    pv_rhino_init_func = load_symbol(rhino_library, "pv_rhino_init");
+    if (!pv_rhino_init_func) {
+        print_dl_error("failed to load 'pv_rhino_init'");
+        exit(1);
+    }
+
+    void (*pv_rhino_delete_func)(pv_rhino_t *) = NULL;
+    pv_rhino_delete_func = load_symbol(rhino_library, "pv_rhino_delete");
+    if (!pv_rhino_delete_func) {
+        print_dl_error("failed to load 'pv_rhino_delete'");
+        exit(1);
+    }
+
+    pv_status_t (*pv_rhino_process_func)(pv_rhino_t *, const int16_t *, bool *) = NULL;
+    pv_rhino_process_func = load_symbol(rhino_library, "pv_rhino_process");
+    if (!pv_rhino_process_func) {
+        print_dl_error("failed to load 'pv_rhino_process'");
+        exit(1);
+    }
+
+    pv_status_t (*pv_rhino_is_understood_func)(const pv_rhino_t *, bool *) = NULL;
+    pv_rhino_is_understood_func = load_symbol(rhino_library, "pv_rhino_is_understood");
+    if (!pv_rhino_is_understood_func) {
+        print_dl_error("failed to load 'pv_rhino_is_understood'");
+        exit(1);
+    }
+
+    pv_status_t (*pv_rhino_get_intent_func)(const pv_rhino_t *, const char **, int *, const char ***, const char ***) = NULL;
+    pv_rhino_get_intent_func = load_symbol(rhino_library, "pv_rhino_get_intent");
+    if (!pv_rhino_get_intent_func) {
+        print_dl_error("failed to load 'pv_rhino_get_intent'");
+        exit(1);
+    }
+
+    pv_status_t (*pv_rhino_free_slots_and_values_func)(const pv_rhino_t *, const char **, const char **) = NULL;
+    pv_rhino_free_slots_and_values_func = load_symbol(rhino_library, "pv_rhino_free_slots_and_values");
+    if (!pv_rhino_free_slots_and_values_func) {
+        print_dl_error("failed to load 'pv_rhino_free_slots_and_values'");
+        exit(1);
+    }
+
+    pv_status_t (*pv_rhino_reset_func)(pv_rhino_t *) = NULL;
+    pv_rhino_reset_func = load_symbol(rhino_library, "pv_rhino_reset");
+    if (!pv_rhino_reset_func) {
+        print_dl_error("failed to load 'pv_rhino_reset'");
+        exit(1);
+    }
+
+    pv_status_t (*pv_rhino_context_info_func)(const pv_rhino_t *, const char **) = NULL;
+    pv_rhino_context_info_func = load_symbol(rhino_library, "pv_rhino_context_info");
+    if (!pv_rhino_context_info_func) {
+        print_dl_error("failed to load 'pv_rhino_context_info'");
+        exit(1);
+    }
+
+    int32_t (*pv_rhino_frame_length_func)() = NULL;
+    pv_rhino_frame_length_func = load_symbol(rhino_library, "pv_rhino_frame_length");
+    if (!pv_rhino_frame_length_func) {
+        print_dl_error("failed to load 'pv_rhino_frame_length'");
+        exit(1);
+    }
+
+    pv_rhino_t *rhino = NULL;
+    pv_status_t status = pv_rhino_init_func(model_path, context_path, 0.5f, &rhino);
+    if (status != PV_STATUS_SUCCESS) {
+        fprintf(stderr, "'pv_rhino_init' failed with '%s'\n", pv_status_to_string_func(status));
+        exit(1);
+    }
+
+    const int32_t frame_length = pv_rhino_frame_length_func();
+
+    pv_rhino_data_t pv_rhino_data;
+    pv_rhino_data.frame_buffer.buffer = malloc(frame_length * sizeof(int16_t));
+    if (!pv_rhino_data.frame_buffer.buffer) {
+        fprintf(stderr, "failed to allocate memory using 'malloc'\n");
+        exit(1);
+    }
+
+    pv_rhino_data.frame_buffer.max_size = frame_length;
+    pv_rhino_data.frame_buffer.filled = 0;
+
+    pv_rhino_data.pv_status_to_string_func = pv_status_to_string_func;
+    pv_rhino_data.pv_rhino_process_func = pv_rhino_process_func;
+    pv_rhino_data.pv_rhino_is_understood_func = pv_rhino_is_understood_func;
+    pv_rhino_data.pv_rhino_get_intent_func = pv_rhino_get_intent_func;
+    pv_rhino_data.pv_rhino_free_slots_and_values_func = pv_rhino_free_slots_and_values_func;
+    pv_rhino_data.pv_rhino_reset_func = pv_rhino_reset_func;
+    pv_rhino_data.rhino = rhino;
+
+    ma_device_config device_config;
+    ma_device device;
+
+    device_config = ma_device_config_init(ma_device_type_capture);
+    device_config.capture.format = ma_format_s16;
+    device_config.capture.pDeviceID = &capture_info[device_index].id;
+    device_config.capture.channels = 1;
+    device_config.sampleRate = pv_sample_rate_func();
+    device_config.dataCallback = mic_callback;
+    device_config.pUserData = &pv_rhino_data;
+
+    result = ma_device_init(&context, &device_config, &device);
+    if (result != MA_SUCCESS) {
+        fprintf(stderr, "failed to initialize capture device.\n");
+        exit(1);
+    }
+
+    result = ma_device_start(&device);
+    if (result != MA_SUCCESS) {
+        fprintf(stderr, "failed to start device.\n");
+        exit(1);
+    }
+
+    fprintf(stdout, "Using device: %s\n", device.capture.name);
+    fflush(stdout);
+
+    const char *context_info = NULL;
+    status = pv_rhino_context_info_func(rhino, &context_info);
+    if (status != PV_STATUS_SUCCESS) {
+        fprintf(stderr, "'pv_rhino_context_info' failed with '%s'\n", pv_status_to_string_func(status));
+        exit(1);
+    }
+    fprintf(stdout, "%s\n\n", context_info);
+    fflush(stdout);
+
+    while (!is_done);
+
+    ma_device_uninit(&device);
+    ma_context_uninit(&context);
+
+    free(pv_rhino_data.frame_buffer.buffer);
     pv_rhino_delete_func(rhino);
-    dlclose(rhino_library);
+
+    close_dl(rhino_library);
 
     return 0;
 }

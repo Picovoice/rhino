@@ -188,6 +188,18 @@ To learn the complete expression syntax of Rhino, see the [Speech-to-Intent Synt
 
 ## Demos
 
+If using SSH, clone the repository with:
+
+```console
+git clone --recurse-submodules git@github.com:Picovoice/rhino.git
+```
+
+If using HTTPS, clone the repository with:
+
+```console
+git clone --recurse-submodules https://github.com/Picovoice/rhino.git
+```
+
 ### Python Demos
 
 Install [PyAudio](https://people.csail.mit.edu/hubert/pyaudio/) and then the demo package:
@@ -433,7 +445,28 @@ For more information about NodeJS demos go to [demo/nodejs](/demo/nodejs).
 
 ### C Demos
 
-The [Microphone demo](/demo/c/rhino_demo_mic.c) runs on Linux-based systems (e.g. Ubuntu, Raspberry Pi, and BeagleBone).
+The [Microphone demo](/demo/c/rhino_demo_mic.c) required [miniaudio](https://github.com/mackron/miniaudio) for accessing microphone audio data.
+
+#### Linux (x86_64), macOS (x86_64) and Raspberry Pi
+
+At the root of the repository, build with:
+
+```console
+gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c -ldl -lpthread -lm
+```
+
+List input audio devices with:
+
+```console
+./demo/c/rhino_demo_mic --show_audio_devices
+```
+
+Run the demo using:
+
+```console
+./demo/c/rhino_demo_mic ${RHINO_LIBRARY_PATH} lib/common/rhino_params.pv \
+resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn ${INPUT_AUDIO_DEVICE}
+```
 
 Build the demo:
 
@@ -441,19 +474,31 @@ Build the demo:
 gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c -ldl -lasound
 ```
 
-Find the name of audio input device (microphone) on your computer using `arecord -L` and then from the root of the
-repository run the demo:
+#### Windows
+
+**Requires MingW to run the demo.**
+
+At the root of the repository, build with:
 
 ```console
-./demo/c/rhino_demo_mic \
-${RHINO_LIBRARY_PATH} \
-lib/common/rhino_params.pv \
-resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn \
-${INPUT_AUDIO_DEVICE}
+gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c -ldl -lpthread -lm
+```
+
+List input audio devices with:
+
+```console
+./demo/c/rhino_demo_mic.exe --show_audio_devices
+```
+
+Run the demo using:
+
+```console
+./demo/c/rhino_demo_mic.exe ${RHINO_LIBRARY_PATH} lib/common/rhino_params.pv \
+resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn ${INPUT_AUDIO_DEVICE}
 ```
 
 Replace `${RHINO_LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the
-name of the platform you are running on (`linux`, `raspberry-pi`, or `beaglebone`), and `${INPUT_AUDIO_DEVICE}` with
+name of the platform you are running on (`linux`, `raspberry-pi`, `mac` or `windows`), and `${INPUT_AUDIO_DEVICE}` with
 the name of your microphone device. The demo opens an audio stream and your intent from spoken commands in the context
 of a smart lighting system. For example you can say:
 
