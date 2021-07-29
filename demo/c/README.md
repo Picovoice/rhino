@@ -58,10 +58,7 @@ on Windows run:
 ./demo/c/rhino_demo_mic.exe --show_audio_devices
 ```
 
-Replace `${AUDIO_DEVICE_INDEX}` with the index of the audio device. The following commands start up a microphone audio 
-steam and infers follow-on commands within the context of a smart lighting system. For example, you can say
-
-> "turn on the lights".
+The following commands start up a microphone audio steam and infers follow-on commands within the context of a smart lighting system:
 
 ### Linux
 
@@ -93,6 +90,11 @@ resources/contexts/raspberry-pi/smart_lighting_raspberry-pi.rhn ${AUDIO_DEVICE_I
 ./demo/c/rhino_demo_mic.exe lib/windows/amd64/libpv_rhino.dll lib/common/rhino_params.pv \
 resources/contexts/windows/smart_lighting_windows.rhn ${AUDIO_DEVICE_INDEX}
 ```
+
+Replace `${AUDIO_DEVICE_INDEX}` with the index of the audio device. Once the demo is running, it will start listening
+for context. For example, you can say:
+
+> "turn on the lights".
 
 ## File Demo
 
