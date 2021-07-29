@@ -475,7 +475,7 @@ resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn ${INPUT_AUDIO_DEVICE}
 At the root of the repository, build with:
 
 ```console
-gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c -ldl -lpthread -lm
+gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c
 ```
 
 List input audio devices with:
