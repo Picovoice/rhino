@@ -1,0 +1,42 @@
+name: .NET
+
+on:
+  push:
+    branches: [ master ]
+    paths: 
+      - binding/dotnet/Rhino/**
+      - binding/dotnet/RhinoTest/**
+      - lib/linux/**
+      - lib/mac/**
+      - lib/raspberry-pi/**
+      - lib/windows/**
+  pull_request:
+    branches: [ master ]
+    paths: 
+      - binding/dotnet/Rhino/**
+      - binding/dotnet/RhinoTest/**
+      - lib/linux/**
+      - lib/mac/**
+      - lib/raspberry-pi/**
+      - lib/windows/**
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: binding/dotnet/Rhino
+    - name: Build
+      run: dotnet build --no-restore
+      working-directory: binding/dotnet/Rhino
+    - name: Test
+      run: dotnet test
+      working-directory: binding/dotnet/RhinoTest
