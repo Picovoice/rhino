@@ -4,21 +4,23 @@ on:
   push:
     branches: [ master ]
     paths: 
-      - binding/dotnet/Rhino/**
-      - binding/dotnet/RhinoTest/**
+      - binding/dotnet/**
       - lib/linux/**
       - lib/mac/**
       - lib/raspberry-pi/**
       - lib/windows/**
+    paths-ignore:
+      - binding/dotnet/README.md
   pull_request:
     branches: [ master ]
     paths: 
-      - binding/dotnet/Rhino/**
-      - binding/dotnet/RhinoTest/**
+      - binding/dotnet/**
       - lib/linux/**
       - lib/mac/**
       - lib/raspberry-pi/**
       - lib/windows/**
+    paths-ignore:
+      - binding/dotnet/README.md
 
 jobs:
   build:
