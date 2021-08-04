@@ -445,60 +445,91 @@ For more information about NodeJS demos go to [demo/nodejs](/demo/nodejs).
 
 ### C Demos
 
-The [Microphone demo](/demo/c/rhino_demo_mic.c) requires [miniaudio](https://github.com/mackron/miniaudio) for accessing microphone audio data.
+The C demo requires [CMake](https://cmake.org/) version 3.4 or higher.
 
-#### Linux (x86_64), macOS (x86_64) and Raspberry Pi
+The [Microphone demo](/demo/c/rhino_demo_mic.c) requires  [miniaudio](https://github.com/mackron/miniaudio) for accessing microphone audio data.
+
+**Windows Requires [MinGW](http://mingw-w64.org/doku.php) to build the demo.**
+
+#### Microphone Demo
 
 At the root of the repository, build with:
 
 ```console
-gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c -ldl -lpthread -lm
+cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_demo_mic
 ```
+
+#### Linux (x86_64), macOS (x86_64), Raspberry Pi, BeagleBone, and Jetson
 
 List input audio devices with:
 
 ```console
-./demo/c/rhino_demo_mic --show_audio_devices
+$ ./demo/c/rhino_demo_mic --show_audio_devices
 ```
 
 Run the demo using:
 
 ```console
 ./demo/c/rhino_demo_mic ${RHINO_LIBRARY_PATH} lib/common/rhino_params.pv \
-resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn ${AUDIO_DEVICE_INDEX}
+resources/contexts/${PLATFORM}/smart_lighting_${PLATFORM}.rhn ${AUDIO_DEVICE_INDEX}
 ```
+
+Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${PLATFORM}` with the
+name of the platform you are running on (`linux`, `raspberry-pi`, `mac`, `beaglebone`, or `jetson`), and `${AUDIO_DEVICE_INDEX}` with
+the index of your audio device.
 
 #### Windows
-
-**Requires MingW to run the demo.**
-
-At the root of the repository, build with:
-
-```console
-gcc -std=c99 -O3 -o demo/c/rhino_demo_mic -I include demo/c/rhino_demo_mic.c
-```
 
 List input audio devices with:
 
 ```console
-./demo/c/rhino_demo_mic.exe --show_audio_devices
+$ .\\demo\\c\\rhino_demo_mic.exe --show_audio_devices
 ```
 
 Run the demo using:
 
 ```console
-./demo/c/rhino_demo_mic.exe ${RHINO_LIBRARY_PATH} lib/common/rhino_params.pv \
-resources/contexts/${SYSTEM}/smart_lighting_${SYSTEM}.rhn ${AUDIO_DEVICE_INDEX}
+.\\demo\\c\\rhino_demo_mic.exe lib/windows/amd64/libpv_rhino.dll lib/common/rhino_params.pv resources/contexts/windows/smart_lighting_windows.rhn ${AUDIO_DEVICE_INDEX}
 ```
 
-Replace `${RHINO_LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${SYSTEM}` with the
-name of the platform you are running on (`linux`, `raspberry-pi`, `mac` or `windows`), and `${AUDIO_DEVICE_INDEX}` with
-the index of your audio device. The demo opens an audio stream and infers your intent from spoken commands in the context
-of a smart lighting system. For example, you can say:
+Replace `${AUDIO_DEVICE_INDEX}` with the index of your audio device.
 
-> Turn on the lights in the bedroom.
+The demo opens an audio stream and infers your intent from spoken commands in the context of a smart lighting system. 
+For example, you can say:
 
-For more information about C demos go to [demo/c](demo/c).
+> "Turn on the lights in the bedroom."
+
+#### File Demo
+
+At the root of the repository, build with:
+
+```console
+cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_demo_file
+```
+
+#### Linux (x86_64), macOS (x86_64), Raspberry Pi, BeagleBone, and Jetson
+
+Run the demo using:
+
+```console
+./demo/c/rhino_demo_file ${LIBRARY_PATH} lib/common/rhino_params.pv \
+resources/contexts/${PLATFORM}/coffee_maker_${PLATFORM}.rhn resources/audio_samples/test_within_context.wav 
+```
+
+Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${PLATFORM}` with the
+name of the platform you are running on (`linux`, `raspberry-pi`, `mac`, `beaglebone`, or `jetson`).
+
+#### Windows
+
+Run the demo using:
+
+```console
+.\\demo\\c\\rhino_demo_file.exe lib/windows/amd64/libpv_rhino.dll lib/common/rhino_params.pv resources/contexts/windows/coffee_maker_windows.rhn resources/audio_samples/test_within_context.wav
+```
+
+The demo opens up the WAV file and infers the intent in the context of a coffee maker system.
+
+For more information about C demos go to [demo/c](/demo/c).
 
 ## SDKs
 
