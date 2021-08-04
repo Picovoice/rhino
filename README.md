@@ -464,7 +464,7 @@ cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_d
 List input audio devices with:
 
 ```console
-$ ./demo/c/build/rhino_demo_mic --show_audio_devices
+./demo/c/build/rhino_demo_mic --show_audio_devices
 ```
 
 Run the demo using:
@@ -483,7 +483,7 @@ the index of your audio device.
 List input audio devices with:
 
 ```console
-$ .\\demo\\c\\build\\rhino_demo_mic.exe --show_audio_devices
+.\\demo\\c\\build\\rhino_demo_mic.exe --show_audio_devices
 ```
 
 Run the demo using:
