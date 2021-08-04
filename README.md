@@ -464,13 +464,13 @@ cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_d
 List input audio devices with:
 
 ```console
-$ ./demo/c/rhino_demo_mic --show_audio_devices
+$ ./demo/c/build/rhino_demo_mic --show_audio_devices
 ```
 
 Run the demo using:
 
 ```console
-./demo/c/rhino_demo_mic ${RHINO_LIBRARY_PATH} lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_mic ${RHINO_LIBRARY_PATH} lib/common/rhino_params.pv \
 resources/contexts/${PLATFORM}/smart_lighting_${PLATFORM}.rhn ${AUDIO_DEVICE_INDEX}
 ```
 
@@ -483,13 +483,13 @@ the index of your audio device.
 List input audio devices with:
 
 ```console
-$ .\\demo\\c\\rhino_demo_mic.exe --show_audio_devices
+$ .\\demo\\c\\build\\rhino_demo_mic.exe --show_audio_devices
 ```
 
 Run the demo using:
 
 ```console
-.\\demo\\c\\rhino_demo_mic.exe lib/windows/amd64/libpv_rhino.dll lib/common/rhino_params.pv resources/contexts/windows/smart_lighting_windows.rhn ${AUDIO_DEVICE_INDEX}
+.\\demo\\c\\build\\rhino_demo_mic.exe lib/windows/amd64/libpv_rhino.dll lib/common/rhino_params.pv resources/contexts/windows/smart_lighting_windows.rhn ${AUDIO_DEVICE_INDEX}
 ```
 
 Replace `${AUDIO_DEVICE_INDEX}` with the index of your audio device.
@@ -512,7 +512,7 @@ cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_d
 Run the demo using:
 
 ```console
-./demo/c/rhino_demo_file ${LIBRARY_PATH} lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_file ${LIBRARY_PATH} lib/common/rhino_params.pv \
 resources/contexts/${PLATFORM}/coffee_maker_${PLATFORM}.rhn resources/audio_samples/test_within_context.wav 
 ```
 
@@ -524,7 +524,7 @@ name of the platform you are running on (`linux`, `raspberry-pi`, `mac`, `beagle
 Run the demo using:
 
 ```console
-.\\demo\\c\\rhino_demo_file.exe lib/windows/amd64/libpv_rhino.dll lib/common/rhino_params.pv resources/contexts/windows/coffee_maker_windows.rhn resources/audio_samples/test_within_context.wav
+.\\demo\\c\\build\\rhino_demo_file.exe lib/windows/amd64/libpv_rhino.dll lib/common/rhino_params.pv resources/contexts/windows/coffee_maker_windows.rhn resources/audio_samples/test_within_context.wav
 ```
 
 The demo opens up the WAV file and infers the intent in the context of a coffee maker system.
