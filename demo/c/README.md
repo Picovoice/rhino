@@ -27,7 +27,7 @@ Running the executable without any commandline arguments prints the usage info t
 #### Linux, macOS, Raspberry Pi, BeagleBone, Jetson
 
 ```console
-./demo/c/rhino_demo_mic
+./demo/c/build/rhino_demo_mic
 usage : ./demo/c/rhino_demo_mic library_path model_path context_path audio_device_index
         ./demo/c/rhino_demo_mic --show_audio_devices
 ```
@@ -64,13 +64,13 @@ lighting system. Replace `${AUDIO_DEVICE_INDEX}` with the index of the audio dev
 #### Linux
 
 ```console
-./demo/c/rhino_demo_mic lib/linux/x86_64/libpv_rhino.so lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_mic lib/linux/x86_64/libpv_rhino.so lib/common/rhino_params.pv \
 resources/contexts/linux/smart_lighting_linux.rhn ${AUDIO_DEVICE_INDEX}
 ```
 #### macOS
 
 ```console
-./demo/c/rhino_demo_mic lib/mac/x86_64/libpv_rhino.dylib lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_mic lib/mac/x86_64/libpv_rhino.dylib lib/common/rhino_params.pv \
 resources/contexts/mac/smart_lighting_mac.rhn ${AUDIO_DEVICE_INDEX}
 ```
 
@@ -80,21 +80,21 @@ Replace `${PROCESSOR}` with one of the Raspberry Pi processors defined [here](..
 (e.g., for Raspberry Pi 4 this would be "cortex-a72") and run:
 
 ```console
-./demo/c/rhino_demo_mic lib/raspberry-pi/${PROCESSOR}/libpv_rhino.so lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_mic lib/raspberry-pi/${PROCESSOR}/libpv_rhino.so lib/common/rhino_params.pv \
 resources/contexts/raspberry-pi/smart_lighting_raspberry-pi.rhn ${AUDIO_DEVICE_INDEX}
 ```
 
 #### BeagleBone
 
 ```console
-./demo/c/rhino_demo_mic lib/beaglebone/libpv_rhino.so lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_mic lib/beaglebone/libpv_rhino.so lib/common/rhino_params.pv \
 resources/contexts/beaglebone/smart_lighting_raspberry-pi.rhn ${AUDIO_DEVICE_INDEX}
 ```
 
 #### Jetson
 
 ```console
-./demo/c/rhino_demo_mic lib/jetson/cortex-a57-aarch64/libpv_rhino.so lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_mic lib/jetson/cortex-a57-aarch64/libpv_rhino.so lib/common/rhino_params.pv \
 resources/contexts/jetson/smart_lighting_raspberry-pi.rhn ${AUDIO_DEVICE_INDEX}
 ```
 
@@ -159,14 +159,14 @@ in the context of a smart lighting system.
 #### Linux
 
 ```console
-./demo/c/rhino_demo_file lib/linux/x86_64/libpv_rhino.so lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_file lib/linux/x86_64/libpv_rhino.so lib/common/rhino_params.pv \
 resources/contexts/linux/coffee_maker_linux.rhn resources/audio_samples/test_within_context.wav 
 ```
 
 #### macOS
 
 ```console
-./demo/c/rhino_demo_file lib/mac/x86_64/libpv_rhino.dylib lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_file lib/mac/x86_64/libpv_rhino.dylib lib/common/rhino_params.pv \
 resources/contexts/mac/coffee_maker_mac.rhn resources/audio_samples/test_within_context.wav 
 ```
 
@@ -176,21 +176,21 @@ Replace `${PROCESSOR}` with one of the Raspberry Pi processors defined [here](..
 (e.g., for Raspberry Pi 4 this would be "cortex-a72") and run:
 
 ```console
-./demo/c/rhino_demo_file lib/raspberry-pi/${PROCESSOR}/libpv_rhino.so lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_file lib/raspberry-pi/${PROCESSOR}/libpv_rhino.so lib/common/rhino_params.pv \
 resources/contexts/raspberry-pi/coffee_maker_raspberry-pi.rhn resources/audio_samples/test_within_context.wav 
 ```
 
 #### BeagleBone
 
 ```console
-./demo/c/rhino_demo_file lib/beaglebone/libpv_rhino.so lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_file lib/beaglebone/libpv_rhino.so lib/common/rhino_params.pv \
 resources/contexts/beaglebone/coffee_maker_beaglebone.rhn resources/audio_samples/test_within_context.wav 
 ```
 
 #### Jetson
 
 ```console
-./demo/c/rhino_demo_file lib/jetson/cortex-a57-aarch64/libpv_rhino.so lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_file lib/jetson/cortex-a57-aarch64/libpv_rhino.so lib/common/rhino_params.pv \
 resources/contexts/jetson/coffee_maker_jetson.rhn resources/audio_samples/test_within_context.wav 
 ```
 
