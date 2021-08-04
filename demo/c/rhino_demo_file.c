@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
 
     void *rhino_library = open_dl(library_path);
     if (!rhino_library) {
-        fprintf(stderr, "failed to open library");
+        fprintf(stderr, "failed to open library.\n");
         exit(1);
     }
 
