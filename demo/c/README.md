@@ -88,14 +88,14 @@ resources/contexts/raspberry-pi/smart_lighting_raspberry-pi.rhn ${AUDIO_DEVICE_I
 
 ```console
 ./demo/c/build/rhino_demo_mic lib/beaglebone/libpv_rhino.so lib/common/rhino_params.pv \
-resources/contexts/beaglebone/smart_lighting_raspberry-pi.rhn ${AUDIO_DEVICE_INDEX}
+resources/contexts/beaglebone/smart_lighting_beaglebone.rhn ${AUDIO_DEVICE_INDEX}
 ```
 
 #### Jetson
 
 ```console
 ./demo/c/build/rhino_demo_mic lib/jetson/cortex-a57-aarch64/libpv_rhino.so lib/common/rhino_params.pv \
-resources/contexts/jetson/smart_lighting_raspberry-pi.rhn ${AUDIO_DEVICE_INDEX}
+resources/contexts/jetson/smart_lighting_jetson.rhn ${AUDIO_DEVICE_INDEX}
 ```
 
 #### Windows
