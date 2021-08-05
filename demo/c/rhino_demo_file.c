@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
+    Copyright 2018-2021 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -9,12 +9,79 @@
     specific language governing permissions and limitations under the License.
 */
 
+#if !defined(_WIN32) && !defined(_WIN64)
+
 #include <dlfcn.h>
+
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
 
+#if defined(_WIN32) || defined(_WIN64)
+
+#include <windows.h>
+
+#endif
+
 #include "pv_rhino.h"
+
+static void *open_dl(const char *dl_path) {
+
+#if defined(_WIN32) || defined(_WIN64)
+
+    return LoadLibrary(dl_path);
+
+#else
+
+    return dlopen(dl_path, RTLD_NOW);
+
+#endif
+
+}
+
+static void *load_symbol(void *handle, const char *symbol) {
+
+#if defined(_WIN32) || defined(_WIN64)
+
+    return GetProcAddress((HMODULE) handle, symbol);
+
+#else
+
+    return dlsym(handle, symbol);
+
+#endif
+
+}
+
+static void close_dl(void *handle) {
+
+#if defined(_WIN32) || defined(_WIN64)
+
+    FreeLibrary((HMODULE) handle);
+
+#else
+
+    dlclose(handle);
+
+#endif
+
+}
+
+static void print_dl_error(const char *message) {
+
+#if defined(_WIN32) || defined(_WIN64)
+
+    fprintf(stderr, "%s with code '%lu'.\n", message, GetLastError());
+
+#else
+
+    fprintf(stderr, "%s with '%s'.\n", message, dlerror());
+
+#endif
+
+}
 
 int main(int argc, char *argv[]) {
     if (argc != 5) {
@@ -27,76 +94,74 @@ int main(int argc, char *argv[]) {
     const char *context_path = argv[3];
     const char *wav_path = argv[4];
 
-    void *rhino_library = dlopen(library_path, RTLD_NOW);
+    void *rhino_library = open_dl(library_path);
     if (!rhino_library) {
-        fprintf(stderr, "failed to open library");
+        fprintf(stderr, "failed to open library.\n");
         exit(1);
     }
 
-    char *error = NULL;
-
-    const char *(*pv_status_to_string_func)(pv_status_t) = dlsym(rhino_library, "pv_status_to_string");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_status_to_string' with '%s'.\n", error);
+    const char *(*pv_status_to_string_func)(pv_status_t) = load_symbol(rhino_library, "pv_status_to_string");
+    if (!pv_status_to_string_func) {
+        print_dl_error("failed to load 'pv_status_to_string'");
         exit(1);
     }
 
-    int32_t (*pv_sample_rate_func)() = dlsym(rhino_library, "pv_sample_rate");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_sample_rate' with '%s'.\n", error);
+    int32_t (*pv_sample_rate_func)() = load_symbol(rhino_library, "pv_sample_rate");
+    if (!pv_sample_rate_func) {
+        print_dl_error("failed to load 'pv_sample_rate'");
         exit(1);
     }
 
     pv_status_t (*pv_rhino_init_func)(const char *, const char *, float, pv_rhino_t **) =
-            dlsym(rhino_library, "pv_rhino_init");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_init' with '%s'.\n", error);
+            load_symbol(rhino_library, "pv_rhino_init");
+    if (!pv_rhino_init_func) {
+        print_dl_error("failed to load 'pv_rhino_init'");
         exit(1);
     }
 
-    void (*pv_rhino_delete_func)(pv_rhino_t *) = dlsym(rhino_library, "pv_rhino_delete");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_delete' with '%s'.\n", error);
+    void (*pv_rhino_delete_func)(pv_rhino_t *) = load_symbol(rhino_library, "pv_rhino_delete");
+    if (!pv_rhino_delete_func) {
+        print_dl_error("failed to load 'pv_rhino_delete'");
         exit(1);
     }
 
     pv_status_t (*pv_rhino_process_func)(pv_rhino_t *, const int16_t *, bool *) =
-            dlsym(rhino_library, "pv_rhino_process");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_process' with '%s'.\n", error);
+            load_symbol(rhino_library, "pv_rhino_process");
+    if (!pv_rhino_process_func) {
+        print_dl_error("failed to load 'pv_rhino_process'");
         exit(1);
     }
 
     pv_status_t (*pv_rhino_is_understood_func)(const pv_rhino_t *, bool *) =
-            dlsym(rhino_library, "pv_rhino_is_understood");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_is_understood' with '%s'.\n", error);
+            load_symbol(rhino_library, "pv_rhino_is_understood");
+    if (!pv_rhino_is_understood_func) {
+        print_dl_error("failed to load 'pv_rhino_is_understood'");
         exit(1);
     }
 
     pv_status_t (*pv_rhino_get_intent_func)(const pv_rhino_t *, const char **, int32_t *, const char ***, const char ***) =
-            dlsym(rhino_library, "pv_rhino_get_intent");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_get_intent' with '%s'.\n", error);
+            load_symbol(rhino_library, "pv_rhino_get_intent");
+    if (!pv_rhino_get_intent_func) {
+        print_dl_error("failed to load 'pv_rhino_get_intent'");
         exit(1);
     }
 
     pv_status_t (*pv_rhino_free_slots_and_values_func)(const pv_rhino_t *, const char **, const char **) =
-            dlsym(rhino_library, "pv_rhino_free_slots_and_values");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_free_slots_and_values' with '%s'.\n", error);
+            load_symbol(rhino_library, "pv_rhino_free_slots_and_values");
+    if (!pv_rhino_free_slots_and_values_func) {
+        print_dl_error("failed to load 'pv_rhino_free_slots_and_values'");
         exit(1);
     }
 
-    int32_t (*pv_rhino_frame_length_func)() = dlsym(rhino_library, "pv_rhino_frame_length");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_frame_length' with '%s'.\n", error);
+    int32_t (*pv_rhino_frame_length_func)() = load_symbol(rhino_library, "pv_rhino_frame_length");
+    if (!pv_rhino_frame_length_func) {
+        print_dl_error("failed to load 'pv_rhino_frame_length'n");
         exit(1);
     }
 
-    const char *(*pv_rhino_version_func)() = dlsym(rhino_library, "pv_rhino_version");
-    if ((error = dlerror()) != NULL) {
-        fprintf(stderr, "failed to load 'pv_rhino_version' with '%s'.\n", error);
+    const char *(*pv_rhino_version_func)() = load_symbol(rhino_library, "pv_rhino_version");
+    if (!pv_rhino_version_func) {
+        print_dl_error("failed to load 'pv_rhino_version'");
         exit(1);
     }
 
@@ -202,7 +267,7 @@ int main(int argc, char *argv[]) {
     free(pcm);
     fclose(wav);
     pv_rhino_delete_func(rhino);
-    dlclose(rhino_library);
+    close_dl(rhino_library);
 
     return 0;
 }

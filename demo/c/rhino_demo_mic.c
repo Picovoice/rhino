@@ -23,9 +23,15 @@
 
 #endif
 
+#pragma GCC diagnostic push
+
+#pragma GCC diagnostic ignored "-Wunused-result"
+
 #define MINIAUDIO_IMPLEMENTATION
 
 #include "miniaudio/miniaudio.h"
+
+#pragma GCC diagnostic pop
 
 #include "pv_rhino.h"
 
@@ -105,7 +111,7 @@ static void print_dl_error(const char *message) {
 }
 
 static void print_usage(const char *program) {
-    fprintf(stderr, "usage : %s library_path model_path context_path input_audio_device\n"
+    fprintf(stderr, "usage : %s library_path model_path context_path audio_device_index\n"
                     "        %s --show_audio_devices\n", program, program);
 }
 
