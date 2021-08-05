@@ -154,7 +154,7 @@ usage : .\\demo\\c\\build\\rhino_demo_file.exe library_path model_path context_p
 provide a file with incorrect format the demo does not perform any format validation and simply outputs incorrect results.**
 
 The following processes a WAV file under the [audio_samples](/resources/audio_samples/) directory and infers the intent 
-in the context of a smart lighting system.
+in the context of a coffee maker system.
 
 #### Linux
 
