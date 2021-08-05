@@ -28,8 +28,8 @@ Running the executable without any commandline arguments prints the usage info t
 
 ```console
 ./demo/c/build/rhino_demo_mic
-usage : ./demo/c/rhino_demo_mic library_path model_path context_path audio_device_index
-        ./demo/c/rhino_demo_mic --show_audio_devices
+usage : ./demo/c/build/rhino_demo_mic library_path model_path context_path audio_device_index
+        ./demo/c/build/rhino_demo_mic --show_audio_devices
 ```
 
 #### Windows
