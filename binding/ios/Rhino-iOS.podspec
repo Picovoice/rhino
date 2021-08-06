@@ -31,5 +31,5 @@ Pod::Spec.new do |s|
     s.resources = 'lib/common/rhino_params.pv'
     s.source_files = 'binding/ios/*.{swift}'
     
-    s.dependency 'ios-voice-processor'
+    s.dependency 'ios-voice-processor', '~> 1.0.1'
   end
