@@ -18,8 +18,8 @@ public enum RhinoManagerError: Error {
 /// when an intent is inferred from the spoken command.
 public class RhinoManager {
     private var onInferenceCallback: ((Inference) -> Void)?
+    private var errorCallback: ((Error) -> Void)?
     private var rhino: Rhino?
-    private let voiceProcessor: VoiceProcessor
     
     private var started = false    
     private var stop = false
@@ -33,11 +33,17 @@ public class RhinoManager {
     ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially)
     ///   increasing the erroneous inference rate.
     ///   - onInferenceCallback: It is invoked upon completion of intent inference.
+    ///   - errorCallback: Invoked if an error occurs while processing frames. If missing, error will be printed to console.
     /// - Throws: RhinoManagerError
-    public init(contextPath: String, modelPath: String? = nil, sensitivity: Float32 = 0.5, onInferenceCallback: ((Inference) -> Void)?) throws {
+    public init(
+        contextPath: String,
+        modelPath: String? = nil,
+        sensitivity: Float32 = 0.5,
+        onInferenceCallback: ((Inference) -> Void)?,
+        errorCallback: ((Error) -> Void)? = nil) throws {
         self.onInferenceCallback = onInferenceCallback
+        self.errorCallback = errorCallback
         self.rhino = try Rhino(contextPath:contextPath, modelPath:modelPath, sensitivity:sensitivity)
-        self.voiceProcessor = VoiceProcessor()
     }
     
     deinit {
@@ -57,12 +63,8 @@ public class RhinoManager {
     }
     
     /// Callback to run after after voice processor processes frames.
-    private func audioCallback(frameLength: UInt32, pcm: UnsafePointer<Int16>) {
+    private func audioCallback(pcm: [Int16]) {
         guard self.rhino != nil else {
-            return
-        }
-        
-        guard frameLength == Rhino.frameLength else {
             return
         }
 
@@ -79,7 +81,11 @@ public class RhinoManager {
                 self.stop = true
             }
         } catch {
-            print("\(error)")
+            if self.errorCallback != nil {
+                self.errorCallback!(error)
+            } else {
+                print("\(error)")
+            }
         }
     }
     
@@ -98,7 +104,7 @@ public class RhinoManager {
         }
 
         // Only check if it's denied, permission will be automatically asked.
-        guard try voiceProcessor.hasPermissions() else {
+        guard try VoiceProcessor.shared.hasPermissions() else {
             throw RhinoManagerError.recordingDenied
         }
                 
@@ -107,13 +113,13 @@ public class RhinoManager {
             while !self.stop {
                 usleep(10000)
             }
-            self.voiceProcessor.stop()
+            VoiceProcessor.shared.stop()
             
             self.started = false
             self.stop = false
         }
         
-        try voiceProcessor.start(
+        try VoiceProcessor.shared.start(
             frameLength: Rhino.frameLength,
             sampleRate: Rhino.sampleRate,
             audioCallback: self.audioCallback

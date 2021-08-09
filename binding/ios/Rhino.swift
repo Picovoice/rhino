@@ -96,22 +96,6 @@ public class Rhino {
     /// Process a frame of audio with the inference engine
     ///
     /// - Parameters:
-    ///   - pcm: A pointer to a frame of 16-bit pcm
-    /// - Throws: RhinoError
-    /// - Returns:A boolean indicating whether Rhino has a result ready or not
-    public func process(pcm:UnsafePointer<Int16>) throws -> Bool {
-        if handle == nil {
-            throw RhinoError.invalidState
-        }
-        
-        let status = pv_rhino_process(self.handle, pcm, &self.isFinalized)
-        try checkStatus(status)
-        return self.isFinalized
-    }
-
-    /// Process a frame of audio with the inference engine
-    ///
-    /// - Parameters:
     ///   - pcm: An array of 16-bit pcm samples
     /// - Throws: RhinoError
     /// - Returns:A boolean indicating whether Rhino has a result ready or not
