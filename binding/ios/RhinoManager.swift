@@ -110,13 +110,8 @@ public class RhinoManager {
         do {
             let isFinalized:Bool = try self.rhino!.process(pcm: pcm)
             if isFinalized {
-                do {
-                    let inference:Inference = try self.rhino!.getInference()
-                    self.onInferenceCallback?(inference)
-                } catch {
-                    print("There was an error retrieving the inference result.")
-                }
-                
+                let inference:Inference = try self.rhino!.getInference()
+                self.onInferenceCallback?(inference)
                 self.stop = true
             }
         } catch {
