@@ -62,33 +62,6 @@ public class RhinoManager {
         }
     }
     
-    /// Callback to run after after voice processor processes frames.
-    private func audioCallback(pcm: [Int16]) {
-        guard self.rhino != nil else {
-            return
-        }
-
-        do {
-            let isFinalized:Bool = try self.rhino!.process(pcm: pcm)
-            if isFinalized {
-                do {
-                    let inference:Inference = try self.rhino!.getInference()
-                    self.onInferenceCallback?(inference)
-                } catch {
-                    print("There was an error retrieving the inference result.")
-                }
-                
-                self.stop = true
-            }
-        } catch {
-            if self.errorCallback != nil {
-                self.errorCallback!(error)
-            } else {
-                print("\(error)")
-            }
-        }
-    }
-    
     /// Start recording audio from the microphone and infers the user's intent from the spoken command. Once the inference is finalized it will invoke the user
     /// provided callback and terminates recording audio.
     ///
@@ -126,5 +99,32 @@ public class RhinoManager {
         )
      
         self.started = true        
-    }   
+    }
+    
+    /// Callback to run after after voice processor processes frames.
+    private func audioCallback(pcm: [Int16]) {
+        guard self.rhino != nil else {
+            return
+        }
+
+        do {
+            let isFinalized:Bool = try self.rhino!.process(pcm: pcm)
+            if isFinalized {
+                do {
+                    let inference:Inference = try self.rhino!.getInference()
+                    self.onInferenceCallback?(inference)
+                } catch {
+                    print("There was an error retrieving the inference result.")
+                }
+                
+                self.stop = true
+            }
+        } catch {
+            if self.errorCallback != nil {
+                self.errorCallback!(error)
+            } else {
+                print("\(error)")
+            }
+        }
+    }
 }
