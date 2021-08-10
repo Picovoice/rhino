@@ -1,16 +1,31 @@
-# Rhino Wake Word Engine
+# Rhino Speech-to-Intent Engine
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-Rhino is a highly-accurate and lightweight wake word engine. It enables building always-listening voice-enabled
-applications. It is
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
+interest, in real-time. For example, given a spoken command:
 
-- using deep neural networks trained in real-world environments.
-- compact and computationally-efficient. It is perfect for IoT.
-- cross-platform. Raspberry Pi, BeagleBone, Android, iOS, Linux (x86_64), macOS (x86_64), Windows (x86_64), and web
-browsers are supported. Additionally, enterprise customers have access to ARM Cortex-M SDK.
-- scalable. It can detect multiple always-listening voice commands with no added runtime footprint.
-- self-service. Developers can train custom wake word models using [Picovoice Console](https://picovoice.ai/console/).
+> Can I have a small double-shot espresso?
+
+Rhino infers that the user would like to order a drink and emits the following inference result:
+
+```json
+{
+  "isUnderstood": "true",
+  "intent": "orderBeverage",
+  "slots": {
+    "beverage": "espresso",
+    "size": "small",
+    "numberOfShots": "2"
+  }
+}
+```
+
+Rhino is:
+
+* using deep neural networks trained in real-world environments.
+* compact and computationally-efficient, making it perfect for IoT.
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
 ## Compatibility
 
@@ -23,7 +38,7 @@ First you will need [Rust and Cargo](https://rustup.rs/) installed on your syste
 To add the rhino library into your app, add `pv_rhino` to your apps `Cargo.toml` manifest:
 ```toml
 [dependencies]
-pv_rhino = "1.9.1"
+pv_rhino = "1.6.0"
 ```
 
 If you prefer to clone the repo and use it locally, first run `copy.sh` (**NOTE:** on Windows, Git Bash or another bash shell is required, or you will have to manually copy the libs into the project.). Then you can reference the local binding location:
@@ -34,35 +49,31 @@ pv_rhino = { path = "/path/to/rust/binding" }
 
 ## Usage
 
-To create an instance of the engine you first create a RhinoBuilder instance with the configuration parameters for the wake word engine and then make a call to `.init()`.
+To create an instance of the engine you first create a `RhinoBuilder` instance with the configuration parameters for the speech to intent engine and then make a call to `.init()`.
 
 ```rust
-use rhino::{BuiltinKeywords, RhinoBuilder};
+use rhino::RhinoBuilder;
 
-let rhino: Rhino = RhinoBuilder::new_with_keywords(&[BuiltinKeywords::Rhino]).init().expect("Unable to create Rhino");
+let rhino: Rhino = RhinoBuilder::new("/path/to/context/file.rhn").init().expect("Unable to create Rhino");
 ```
-In the above example, we've initialzed the engine to detect the built-in wake word "Rhino". Built-in keywords are contained in the package with the `BuiltinKeywords` enum type.
-
-Rhino can detect multiple keywords concurrently:
+The context file is a Speech-to-Intent context created either using
+[Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository:
 ```rust
-let rhino: Rhino = RhinoBuilder::new_with_keywords(&[BuiltinKeywords::Rhino, BuiltinKeywords::Blueberry, BuiltinKeywords::Bumblebee])
+use rhino::{BuiltinContexts, RhinoBuilder};
+
+let rhino: Rhino = RhinoBuilder::new_with_builtin(BuiltinContext::CoffeeMaker).init().expect("Unable to create Rhino");
+```
+
+The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating point number within
+[0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous
+inference rate. You can also override the default Rhino model (.pv), which is needs to be done when using a non-English context.
+
+```rust
+let rhino: Rhino = RhinoBuilder::RhinoBuilder::new("/path/to/context/file.rhn")
+    .sensitivities(0.42f32)
+    .model_path("/path/to/rhino/params.pv")
     .init().expect("Unable to create Rhino");
 ```
-
-To detect non-default keywords, use `PorupineBuilder`'s `new_with_keyword_paths` method instead:
-```rust
-let rhino: Rhino = RhinoBuilder::new_with_keyword_paths(&["/absolute/path/to/keyword/one", "/absolute/path/to/keyword/two"])
-    .init().expect("Unable to create Rhino");
-```
-
-The sensitivity of the engine can be tuned per keyword using the `sensitivities` method:
-```rust
-let rhino: Rhino = RhinoBuilder::new_with_keywords(&[BuiltinKeywords::Rhino, BuiltinKeywords::Bumblebee])
-    .sensitivities(&[0.2f32, 0.42f32])
-    .init().expect("Unable to create Rhino");
-```
-
-Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating point number within `[0, 1]`. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate.
 
 When initialized, the valid sample rate is given by `sample_rate()`. Expected frame length (number of audio samples in an input array) is given by `frame_length()`. The engine accepts 16-bit linearly-encoded PCM and operates on single-channel audio.
 
@@ -73,17 +84,25 @@ fn next_audio_frame() -> Vec<i16> {
 }
 
 loop {
-    if let Ok(keyword_index) = rhino.process(&next_audio_frame()) {
-        if keyword_index >= 0 {
-            // wake word detected!
+    if let Ok(is_finalized) = rhino.process(&next_audio_frame()) {
+        if is_finalized {
+            if let Ok(inference) = rhino.get_inference() {
+                if inference.is_understood {
+                    let intent = inference.intnet.unwrap();
+                    let slots = inference.slots;
+                    // add code to take action based on inferred intent and slot values
+                } else {
+                    // add code to handle unsupported commands
+                }
+            }
         }   
     }
 }
 ```
 
-## Non-English Wake Words
+## Non-English Contexts
 
-In order to detect non-English wake words you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+In order to detect non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
 
 ## Demos
 

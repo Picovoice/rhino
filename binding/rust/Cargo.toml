@@ -1,13 +1,13 @@
 [package]
 name = "pv_rhino"
-version = "1.9.1"
+version = "0.0.1"
 edition = "2018"
 description = "The Rust bindings for Picovoice's Rhino library"
 license-file = "../../LICENSE"
 homepage = "https://picovoice.ai/platform/rhino/"
 repository = "https://github.com/Picovoice/rhino"
 keywords = ["machine-learning", "audio"]
-publish = true
+publish = false
 
 include = [
 	".gitignore",
