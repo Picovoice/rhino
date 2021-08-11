@@ -10,9 +10,9 @@
 */
 
 use chrono::Duration;
-use clap::{App, Arg, ArgGroup};
+use clap::{App, Arg};
 use itertools::Itertools;
-use rhino::{BuiltinContexts, RhinoBuilder};
+use rhino::RhinoBuilder;
 use rodio::{source::Source, Decoder};
 use std::fs::File;
 use std::io::BufReader;
@@ -20,18 +20,14 @@ use std::path::PathBuf;
 
 fn rhino_demo(
     input_audio_path: PathBuf,
-    context_path: Option<&str>,
-    context_builtin: Option<BuiltinContexts>,
+    context_path: &str,
     sensitivity: Option<f32>,
     model_path: Option<&str>,
 ) {
     let soundfile = BufReader::new(File::open(input_audio_path).unwrap());
     let audiosource = Decoder::new(soundfile).unwrap();
 
-    let mut rhino_builder = match context_path {
-        Some(context_path) => RhinoBuilder::new(context_path),
-        None => RhinoBuilder::new_with_builtin(context_builtin.unwrap()),
-    };
+    let mut rhino_builder = RhinoBuilder::new(context_path);
 
     if let Some(sensitivity) = sensitivity {
         rhino_builder.sensitivity(sensitivity);
@@ -93,26 +89,13 @@ fn main() {
             .takes_value(true)
             .required(true)
         )
-        .group(
-            ArgGroup::with_name("contexts_group")
-            .arg("context_path")
-            .arg("context_builtin")
-            .required(true)
-        )
         .arg(
             Arg::with_name("context_path")
             .long("context_path")
             .value_name("PATH")
             .help("Path to Rhino context file (.rhn)")
             .takes_value(true)
-        )
-        .arg(
-            Arg::with_name("context_builtin")
-            .long("context")
-            .value_name("CONTEXT")
-            .help("The name of a builtin Rhino context")
-            .takes_value(true)
-            .possible_values(&BuiltinContexts::options())
+            .required(true)
         )
         .arg(
             Arg::with_name("model_path")
@@ -132,22 +115,14 @@ fn main() {
 
     let input_audio_path = PathBuf::from(matches.value_of("input_audio_path").unwrap());
 
-    let context_path = matches.value_of("context_path");
-    let context_builtin = match matches.value_of("context_builtin") {
-        Some(builtin) => Some(BuiltinContexts::from_str(builtin).unwrap()),
-        None => None,
-    };
+    let context_path = matches.value_of("context_path").unwrap();
+
     let sensitivity = match matches.value_of("sensitivity") {
         Some(sensitivity) => Some(sensitivity.parse().unwrap()),
         None => None,
     };
+
     let model_path = matches.value_of("model_path");
 
-    rhino_demo(
-        input_audio_path,
-        context_path,
-        context_builtin,
-        sensitivity,
-        model_path,
-    );
+    rhino_demo(input_audio_path, context_path, sensitivity, model_path);
 }

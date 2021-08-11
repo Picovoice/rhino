@@ -16,7 +16,6 @@ include = [
 	"data/",
 	"README.md",
 	"src/",
-	"tests/",
 ]
 
 [lib]

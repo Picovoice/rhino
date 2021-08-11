@@ -612,7 +612,7 @@ dependencies = [
 
 [[package]]
 name = "pv_rhino"
-version = "1.9.1"
+version = "0.0.1"
 dependencies = [
  "itertools",
  "libc",

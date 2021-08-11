@@ -22,21 +22,7 @@ benchmarking against a corpus of audio data. Note that only the relevant spoken 
 and no other speech. There also needs to be at least one second of silence at the end of the file.
 
 ```console
-cargo run --release -- --input_audio_path "path/to/input.wav" --context coffee_maker
-```
-
-`context` is a shorthand for using default context files shipped with the package. The list of default context files
-can be seen in the usage string:
-
-```console
-cargo run --release -- --help
-```
-
-To detect a non-default context (e.g. models created using [Picovoice Console](https://picovoice.ai/console/)) use the `context_path` argument:
-
-```console
-cargo run --release -- --input_audio_path "path/to/input.wav" \
---context_path "/path/to/context/one.rhn"
+cargo run --release -- --input_audio_path "path/to/input.wav" --context_path "/path/to/context/file.rhn"
 ```
 
 The sensitivity of the engine can be tuned using the `sensitivity` input argument:
@@ -54,21 +40,7 @@ Sensitivity is the parameter that enables trading miss rate for the false alarm 
 The microphone demo opens an audio stream from a microphone and performs inference on spoken commands:
 
 ```console
-cargo run --release -- --context coffee_maker
-```
-
-`context` is a shorthand for using default context files shipped with the package. The list of default context files
-can be seen in the usage string:
-
-```console
-cargo run --release -- --help
-```
-
-To detect a non-default context (e.g. models created using [Picovoice Console](https://picovoice.ai/console/)) use the `context_path` argument:
-
-```console
-cargo run --release -- --input_audio_path "path/to/input.wav" \
---context_path "/path/to/context/one.rhn"
+cargo run --release -- --context_path "/path/to/context/file.rhn"
 ```
 
 It is possible that the default audio input device is not the one you wish to use. There are a couple

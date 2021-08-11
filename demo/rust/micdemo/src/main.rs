@@ -14,7 +14,7 @@ use clap::{App, Arg, ArgGroup};
 use ctrlc;
 use hound;
 use miniaudio;
-use rhino::{BuiltinContexts, Rhino, RhinoBuilder};
+use rhino::{Rhino, RhinoBuilder};
 use std::collections::VecDeque;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
@@ -48,18 +48,14 @@ fn process_audio_chunk(samples: &[i16], rhino: &Rhino, buffer: &mut VecDeque<i16
 fn rhino_demo(
     miniaudio_backend: &[miniaudio::Backend],
     audio_device_index: usize,
-    context_path: Option<&str>,
-    context_builtin: Option<BuiltinContexts>,
+    context_path: &str,
     sensitivity: Option<f32>,
     model_path: Option<&str>,
     output_path: Option<&str>,
 ) {
     let mut buffer: VecDeque<i16> = VecDeque::new();
 
-    let mut rhino_builder = match context_path {
-        Some(context_path) => RhinoBuilder::new(context_path),
-        None => RhinoBuilder::new_with_builtin(context_builtin.unwrap()),
-    };
+    let mut rhino_builder = RhinoBuilder::new(context_path);
 
     if let Some(sensitivity) = sensitivity {
         rhino_builder.sensitivity(sensitivity);
@@ -159,7 +155,6 @@ fn main() {
         .group(
             ArgGroup::with_name("contexts_group")
             .arg("context_path")
-            .arg("context_builtin")
             .arg("show_audio_devices")
             .required(true)
         )
@@ -169,14 +164,6 @@ fn main() {
             .value_name("PATH")
             .help("Path to Rhino context file (.rhn)")
             .takes_value(true)
-        )
-        .arg(
-            Arg::with_name("context_builtin")
-            .long("context")
-            .value_name("CONTEXT")
-            .help("The name of a builtin Rhino context")
-            .takes_value(true)
-            .possible_values(&BuiltinContexts::options())
         )
         .arg(
             Arg::with_name("model_path")
@@ -251,11 +238,8 @@ fn main() {
         .parse()
         .unwrap();
 
-    let context_path = matches.value_of("context_path");
-    let context_builtin = match matches.value_of("context_builtin") {
-        Some(builtin) => Some(BuiltinContexts::from_str(builtin).unwrap()),
-        None => None,
-    };
+    let context_path = matches.value_of("context_path").unwrap();
+
     let sensitivity = match matches.value_of("sensitivity") {
         Some(sensitivity) => Some(sensitivity.parse().unwrap()),
         None => None,
@@ -267,7 +251,6 @@ fn main() {
         &miniaudio_backend,
         audio_device_index,
         context_path,
-        context_builtin,
         sensitivity,
         model_path,
         output_path,

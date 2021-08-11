@@ -27,48 +27,6 @@ use libloading::os::windows::Symbol as RawSymbol;
 
 use crate::util::*;
 
-#[derive(Clone, PartialEq, Debug)]
-pub enum BuiltinContexts {
-    Alarm,
-    Clock,
-    CoffeeMaker,
-    SmartLighting,
-    VideoPlayer,
-}
-
-impl BuiltinContexts {
-    pub fn to_str(&self) -> &'static str {
-        match self {
-            Self::Alarm => "alarm",
-            Self::Clock => "clock",
-            Self::CoffeeMaker => "coffee_maker",
-            Self::SmartLighting => "smart_lighting",
-            Self::VideoPlayer => "video_player",
-        }
-    }
-
-    pub fn from_str(str_option: &str) -> Option<Self> {
-        match str_option {
-            "alarm" => Some(Self::Alarm),
-            "clock" => Some(Self::Clock),
-            "coffee_maker" => Some(Self::CoffeeMaker),
-            "smart_lighting" => Some(Self::SmartLighting),
-            "video_player" => Some(Self::VideoPlayer),
-            _ => None,
-        }
-    }
-
-    pub fn options() -> Vec<&'static str> {
-        vec![
-            "alarm",
-            "clock",
-            "coffee_maker",
-            "smart_lighting",
-            "video_player",
-        ]
-    }
-}
-
 #[repr(C)]
 struct CRhino {}
 
@@ -171,15 +129,6 @@ impl RhinoBuilder {
             context_path: PathBuf::from(context_path.as_ref()),
             sensitivity: 0.5f32,
         };
-    }
-
-    pub fn new_with_builtin(context: BuiltinContexts) -> Self {
-        let default_context_paths = pv_context_paths();
-        let context_path = default_context_paths
-            .get(context.to_str())
-            .expect("Unable to find context file for specified context")
-            .clone();
-        return Self::new(context_path);
     }
 
     pub fn library_path<'a, P: AsRef<Path>>(&'a mut self, library_path: P) -> &'a mut Self {

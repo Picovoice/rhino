@@ -60,8 +60,4 @@ fn main() {
     let lib_base_dir = base_dir.clone().join("lib/");
     let lib_out_dir = out_dir.clone().join("lib/");
     copy_dir(lib_base_dir, lib_out_dir).unwrap();
-
-    let resources_base_dir = base_dir.clone().join("resources/");
-    let resources_out_dir = out_dir.clone().join("resources/");
-    copy_dir(resources_base_dir, resources_out_dir).unwrap();
 }

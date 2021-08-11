@@ -15,14 +15,11 @@ use log::*;
 #[allow(unused_imports)]
 use std::process::Command;
 
-use std::collections::HashMap;
 use std::ffi::CString;
-use std::fs;
 use std::path::{Path, PathBuf};
 
 const DEFAULT_RELATIVE_LIBRARY_DIR: &str = "lib/";
 const DEFAULT_RELATIVE_MODEL_PATH: &str = "lib/common/rhino_params.pv";
-const DEFAULT_RELATIVE_CONTEXT_DIR: &str = "resources/contexts/";
 
 #[allow(dead_code)]
 const RPI_MACHINES: [&str; 4] = ["arm11", "cortex-a7", "cortex-a53", "cortex-a72"];
@@ -111,65 +108,6 @@ pub fn pv_library_path() -> PathBuf {
 
 pub fn pv_model_path() -> PathBuf {
     return PathBuf::from(env!("OUT_DIR")).join(DEFAULT_RELATIVE_MODEL_PATH);
-}
-
-#[cfg(target_os = "macos")]
-fn pv_platform() -> String {
-    return String::from("mac");
-}
-
-#[cfg(target_os = "windows")]
-fn pv_platform() -> String {
-    return String::from("windows");
-}
-
-#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
-fn pv_platform() -> String {
-    return String::from("linux");
-}
-
-#[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))]
-fn pv_platform() -> String {
-    let machine = find_machine_type();
-    return match machine.as_str() {
-        machine if RPI_MACHINES.contains(&machine) => String::from("raspberry-pi"),
-        machine if JETSON_MACHINES.contains(&machine) => String::from("jetson"),
-        "beaglebone" => String::from("beaglebone"),
-        _ => {
-            panic!("ERROR: Please be advised that this device is not officially supported by Picovoice");
-        }
-    };
-}
-
-pub fn pv_context_paths() -> HashMap<String, String> {
-    let pv_platform = pv_platform();
-    let context_file_pattern = format!("_{}.rhn", pv_platform);
-
-    let dir = PathBuf::from(env!("OUT_DIR"))
-        .join(DEFAULT_RELATIVE_CONTEXT_DIR)
-        .join(pv_platform.clone());
-
-    let mut context_paths = HashMap::new();
-    let dir_entries = fs::read_dir(dir.clone()).expect(&format!(
-        "Can't find default context_paths dir: {}",
-        dir.display()
-    ));
-
-    for entry in dir_entries {
-        if let Ok(entry) = entry {
-            let path = entry.path();
-            let mut keyword_string = entry.file_name().into_string().unwrap();
-
-            if keyword_string.contains(&context_file_pattern)
-                && keyword_string.len() > context_file_pattern.len()
-            {
-                keyword_string.truncate(keyword_string.len() - context_file_pattern.len());
-                context_paths.insert(keyword_string, path.into_os_string().into_string().unwrap());
-            }
-        }
-    }
-
-    return context_paths;
 }
 
 pub fn pathbuf_to_cstring<P: AsRef<Path>>(pathbuf: P) -> CString {
