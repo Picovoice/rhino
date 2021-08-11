@@ -4,18 +4,16 @@ version = "0.0.1"
 edition = "2018"
 description = "The Rust bindings for Picovoice's Rhino library"
 license = "Apache-2.0"
-license-file = "../../LICENSE"
 homepage = "https://picovoice.ai/platform/rhino/"
 repository = "https://github.com/Picovoice/rhino"
 keywords = [
-	"audio",
 	"Speech-to-Intent",
-	"voice commands",
-	"voice control",
-	"speech recognition",
-	"natural language understanding",
+	"voice-commands",
+	"voice-control",
+	"speech-recognition",
+	"natural-language",
 ]
-publish = false
+publish = true
 
 include = [
 	".gitignore",
