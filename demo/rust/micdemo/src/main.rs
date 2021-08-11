@@ -30,14 +30,15 @@ fn process_audio_chunk(samples: &[i16], rhino: &Rhino, buffer: &mut VecDeque<i16
         if is_finalized {
             let inference = rhino.get_inference().unwrap();
             if inference.is_understood {
-                println!("[{}] Detected {{", Local::now().format("%F %T"));
+                println!("\n[{}] Detected:", Local::now().format("%F %T"));
+                println!("{{");
                 println!("\tintent : '{}'", inference.intent.unwrap());
                 println!("\tslots : {{");
                 for (slot, value) in inference.slots.iter() {
                     println!("\t\t{} : {}", slot, value);
                 }
                 println!("\t}}");
-                println!("}}");
+                println!("}}\n");
             } else {
                 println!("Did not understand the command");
             }

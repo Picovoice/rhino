@@ -6,7 +6,14 @@ description = "The Rust bindings for Picovoice's Rhino library"
 license-file = "../../LICENSE"
 homepage = "https://picovoice.ai/platform/rhino/"
 repository = "https://github.com/Picovoice/rhino"
-keywords = ["machine-learning", "audio"]
+keywords = [
+	"audio",
+	"Speech-to-Intent",
+	"voice commands",
+	"voice control",
+	"speech recognition",
+	"natural language understanding",
+]
 publish = false
 
 include = [

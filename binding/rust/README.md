@@ -38,7 +38,7 @@ First you will need [Rust and Cargo](https://rustup.rs/) installed on your syste
 To add the rhino library into your app, add `pv_rhino` to your apps `Cargo.toml` manifest:
 ```toml
 [dependencies]
-pv_rhino = "1.6.0"
+pv_rhino = "${version}"
 ```
 
 If you prefer to clone the repo and use it locally, first run `copy.sh` (**NOTE:** on Windows, Git Bash or another bash shell is required, or you will have to manually copy the libs into the project.). Then you can reference the local binding location:

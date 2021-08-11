@@ -59,18 +59,19 @@ fn rhino_demo(
                 let inference = rhino.get_inference().unwrap();
                 if inference.is_understood {
                     println!(
-                        "[{}:{}:{}] Detected {{",
+                        "\n[{}:{}:{}] Detected:",
                         timestamp.num_minutes(),
                         timestamp.num_seconds() - (timestamp.num_minutes() * 60),
                         timestamp.num_milliseconds() - (timestamp.num_seconds() * 1000),
                     );
+                    println!("{{");
                     println!("\tintent : '{}'", inference.intent.unwrap());
                     println!("\tslots : {{");
                     for (slot, value) in inference.slots.iter() {
                         println!("\t\t{} : {}", slot, value);
                     }
                     println!("\t}}");
-                    println!("}}");
+                    println!("}}\n");
                 } else {
                     println!("Did not understand the command");
                 }
