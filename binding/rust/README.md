@@ -70,7 +70,7 @@ inference rate. You can also override the default Rhino model (.pv), which is ne
 
 ```rust
 let rhino: Rhino = RhinoBuilder::RhinoBuilder::new("/path/to/context/file.rhn")
-    .sensitivities(0.42f32)
+    .sensitivity(0.42f32)
     .model_path("/path/to/rhino/params.pv")
     .init().expect("Unable to create Rhino");
 ```
@@ -88,7 +88,7 @@ loop {
         if is_finalized {
             if let Ok(inference) = rhino.get_inference() {
                 if inference.is_understood {
-                    let intent = inference.intnet.unwrap();
+                    let intent = inference.intent.unwrap();
                     let slots = inference.slots;
                     // add code to take action based on inferred intent and slot values
                 } else {
