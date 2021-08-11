@@ -57,7 +57,7 @@ use rhino::RhinoBuilder;
 let rhino: Rhino = RhinoBuilder::new("/path/to/context/file.rhn").init().expect("Unable to create Rhino");
 ```
 The context file is a Speech-to-Intent context created either using
-[Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository.
+[Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on [Rhino's GitHub repository](/resources/contexts).
 
 The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating point number within
 [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous
