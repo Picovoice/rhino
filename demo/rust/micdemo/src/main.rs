@@ -70,7 +70,7 @@ fn rhino_demo(
 
     let wavspec = hound::WavSpec {
         channels: 1,
-        sample_rate: 16000,
+        sample_rate: rhino.sample_rate(),
         bits_per_sample: 16,
         sample_format: hound::SampleFormat::Int,
     };
@@ -163,14 +163,14 @@ fn main() {
             Arg::with_name("context_path")
             .long("context_path")
             .value_name("PATH")
-            .help("Path to Rhino context file (.rhn)")
+            .help("Path to Rhino context file (.rhn).")
             .takes_value(true)
         )
         .arg(
             Arg::with_name("model_path")
             .long("model_path")
             .value_name("PATH")
-            .help("Path to Rhino model file (.pv)")
+            .help("Path to Rhino model file (.pv).")
             .takes_value(true)
         )
         .arg(
@@ -200,7 +200,7 @@ fn main() {
             Arg::with_name("output_path")
             .long("output_path")
             .value_name("PATH")
-            .help("Path to recorded audio (for debugging)")
+            .help("Path to recorded audio (for debugging).")
             .takes_value(true)
         )
         .arg(

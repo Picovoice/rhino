@@ -41,7 +41,9 @@ To add the rhino library into your app, add `pv_rhino` to your apps `Cargo.toml`
 pv_rhino = "${version}"
 ```
 
-If you prefer to clone the repo and use it locally, first run `copy.sh` (**NOTE:** on Windows, Git Bash or another bash shell is required, or you will have to manually copy the libs into the project.). Then you can reference the local binding location:
+If you prefer to clone the repo and use it locally, first run `copy.sh`.
+(**NOTE:** on Windows, Git Bash or another bash shell is required, or you will have to manually copy the libs into the project).
+Then you can reference the local binding location:
 ```toml
 [dependencies]
 pv_rhino = { path = "/path/to/rust/binding" }
@@ -49,7 +51,7 @@ pv_rhino = { path = "/path/to/rust/binding" }
 
 ## Usage
 
-To create an instance of the engine you first create a `RhinoBuilder` instance with the configuration parameters for the speech to intent engine and then make a call to `.init()`.
+To create an instance of the engine you first create a `RhinoBuilder` instance with the configuration parameters for the speech to intent engine and then make a call to `.init()`:
 
 ```rust
 use rhino::RhinoBuilder;
@@ -59,9 +61,10 @@ let rhino: Rhino = RhinoBuilder::new("/path/to/context/file.rhn").init().expect(
 The context file is a Speech-to-Intent context created either using
 [Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on [Rhino's GitHub repository](/resources/contexts).
 
-The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating point number within
-[0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous
-inference rate. You can also override the default Rhino model (.pv), which is needs to be done when using a non-English context.
+The sensitivity of the engine can be tuned using the `sensitivity` parameter.
+It is a floating point number within [0, 1].
+A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
+You can also override the default Rhino model (.pv), which is needs to be done when using a non-English context:
 
 ```rust
 let rhino: Rhino = RhinoBuilder::RhinoBuilder::new("/path/to/context/file.rhn")
@@ -70,9 +73,11 @@ let rhino: Rhino = RhinoBuilder::RhinoBuilder::new("/path/to/context/file.rhn")
     .init().expect("Unable to create Rhino");
 ```
 
-When initialized, the valid sample rate is given by `sample_rate()`. Expected frame length (number of audio samples in an input array) is given by `frame_length()`. The engine accepts 16-bit linearly-encoded PCM and operates on single-channel audio.
+When initialized, the valid sample rate is given by `sample_rate()`.
+Expected frame length (number of audio samples in an input array) is given by `frame_length()`.
+The engine accepts 16-bit linearly-encoded PCM and operates on single-channel audio.
 
-To feed audio into Rhino, use the `process` function in your capture loop.
+To feed audio into Rhino, use the `process` function in your capture loop:
 ```rust
 fn next_audio_frame() -> Vec<i16> {
     // get audio frame
@@ -97,7 +102,8 @@ loop {
 
 ## Non-English Contexts
 
-In order to detect non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+In order to detect non-English contexts you need to use the corresponding model file.
+The model files for all supported languages are available [here](/lib/common).
 
 ## Demos
 

@@ -16,6 +16,7 @@
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-react)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-vue)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
+[![Crates.io](https://img.shields.io/crates/v/pv_rhino)](https://crates.io/crates/pv_rhino)
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
@@ -75,6 +76,7 @@ Rhino is:
       - [React](#react-demos)
       - [Vue](#vue-demos)
     - [NodeJS](#nodejs-demos)
+    - [Rust](#rust-demos)
     - [C](#c-demos)
   - [SDKs](#sdks)
     - [Python](#python)
@@ -93,6 +95,7 @@ Rhino is:
       - [React](#react)
       - [Vue](#vue)
     - [NodeJS](#nodejs)
+    - [Rust](#rust)
     - [C](#c)
   - [Releases](#releases)
   - [FAQ](#faq)
@@ -442,6 +445,23 @@ rhn-mic-demo --context_path ${CONTEXT_FILE_PATH}
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
 For more information about NodeJS demos go to [demo/nodejs](/demo/nodejs).
+
+### Rust Demos
+
+The microphone demo uses [miniaudio-rs](https://github.com/ExPixel/miniaudio-rs) for cross-platform audio capture.
+It uses `bindgen` and therefore requires `clang` to be installed and on the path.
+Use the [`Bindgen` docs](https://rust-lang.github.io/rust-bindgen/requirements.html) for instructions on how to install `clang` for various Operating Systems and distros.
+
+This demo opens an audio stream from a microphone and performs inference on spoken commands.
+From [demo/rust/micdemo](/demo/rust/micdemo) run the following:
+
+```console
+cargo run --release -- --context_path ${CONTEXT_FILE_PATH}
+```
+
+Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
+
+For more information about Rust demos go to [demo/rust](/demo/rust).
 
 ### C Demos
 
@@ -1541,6 +1561,47 @@ When done, be sure to release resources acquired by WebAssembly using `release()
 
 ```javascript
 handle.release();
+```
+
+### Rust
+
+First you will need [Rust and Cargo](https://rustup.rs/) installed on your system.
+
+To add the porcupine library into your app, add `pv_rhino` to your apps `Cargo.toml` manifest:
+```toml
+[dependencies]
+pv_rhino = "${version}"
+```
+
+To create an instance of the engine you first create a `RhinoBuilder` instance with the configuration parameters for the speech to intent engine and then make a call to `.init()`:
+
+```rust
+use rhino::RhinoBuilder;
+
+let rhino: Rhino = RhinoBuilder::new("/path/to/context/file.rhn").init().expect("Unable to create Rhino");
+```
+
+To feed audio into Rhino, use the `process` function in your capture loop:
+```rust
+fn next_audio_frame() -> Vec<i16> {
+    // get audio frame
+}
+
+loop {
+    if let Ok(is_finalized) = rhino.process(&next_audio_frame()) {
+        if is_finalized {
+            if let Ok(inference) = rhino.get_inference() {
+                if inference.is_understood {
+                    let intent = inference.intent.unwrap();
+                    let slots = inference.slots;
+                    // add code to take action based on inferred intent and slot values
+                } else {
+                    // add code to handle unsupported commands
+                }
+            }
+        }
+    }
+}
 ```
 
 ### C
