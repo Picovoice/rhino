@@ -10,4 +10,6 @@ cp -r ../../lib/mac ./data/lib/
 cp -r ../../lib/raspberry-pi ./data/lib/
 cp -r ../../lib/windows ./data/lib/
 
+echo "Test trip!"
+
 echo "Copy complete!"
