@@ -24,8 +24,10 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 //go:embed embedded
@@ -158,7 +160,7 @@ func (rhino *Rhino) Init() error {
 	}
 
 	if rhino.ContextPath == "" {
-		return fmt.Errorf("%s: No valid context was provided.", pvStatusToString(INVALID_ARGUMENT))
+		return fmt.Errorf("%s: No valid context was provided", pvStatusToString(INVALID_ARGUMENT))
 	}
 
 	if _, err := os.Stat(rhino.ContextPath); os.IsNotExist(err) {
@@ -166,7 +168,7 @@ func (rhino *Rhino) Init() error {
 	}
 
 	if rhino.Sensitivity < 0 || rhino.Sensitivity > 1 {
-		return fmt.Errorf("%s: Sensitivity value of %f is invalid. Must be between [0, 1].",
+		return fmt.Errorf("%s: Sensitivity value of %f is invalid. Must be between [0, 1]",
 			pvStatusToString(INVALID_ARGUMENT), rhino.Sensitivity)
 	}
 
@@ -177,7 +179,7 @@ func (rhino *Rhino) Init() error {
 
 	status, rhino.ContextInfo = nativeRhino.nativeContextInfo(rhino)
 	if PvStatus(status) != SUCCESS {
-		return fmt.Errorf("%s: Could not get context from rhino instance.", pvStatusToString(INVALID_ARGUMENT))
+		return fmt.Errorf("%s: Could not get context from rhino instance", pvStatusToString(INVALID_ARGUMENT))
 	}
 
 	return nil
@@ -186,7 +188,7 @@ func (rhino *Rhino) Init() error {
 // Releases resources acquired by Rhino
 func (rhino *Rhino) Delete() error {
 	if rhino.handle == 0 {
-		return fmt.Errorf("Rhino has not been initialized or has already been deleted.")
+		return fmt.Errorf("Rhino has not been initialized or has already been deleted")
 	}
 
 	nativeRhino.nativeDelete(rhino)
@@ -198,16 +200,16 @@ func (rhino *Rhino) Delete() error {
 func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 
 	if rhino.handle == 0 {
-		return false, fmt.Errorf("Rhino has not been initialized or has been deleted.")
+		return false, fmt.Errorf("Rhino has not been initialized or has been deleted")
 	}
 
 	if len(pcm) != FrameLength {
-		return false, fmt.Errorf("Input data frame size (%d) does not match required size of %d", len(pcm), FrameLength)
+		return false, fmt.Errorf("input data frame size (%d) does not match required size of %d", len(pcm), FrameLength)
 	}
 
 	status, isFinalized := nativeRhino.nativeProcess(rhino, pcm)
 	if PvStatus(status) != SUCCESS {
-		return false, fmt.Errorf("Process audio frame failed with PvStatus: %d", status)
+		return false, fmt.Errorf("process audio frame failed with PvStatus: %d", status)
 	}
 	rhino.isFinalized = isFinalized
 	return isFinalized, nil
@@ -219,7 +221,7 @@ func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 // Returns an inference struct with `.IsUnderstood`, '.Intent` , and `.Slots`.
 func (rhino *Rhino) GetInference() (inference RhinoInference, err error) {
 	if !rhino.isFinalized {
-		return RhinoInference{}, fmt.Errorf("GetInference called before rhino had finalized. Call GetInference only after Process has returned true.")
+		return RhinoInference{}, fmt.Errorf("GetInference called before rhino had finalized. Call GetInference only after Process has returned true")
 	}
 
 	status, isUnderstood := nativeRhino.nativeIsUnderstood(rhino)
@@ -249,6 +251,52 @@ func (rhino *Rhino) GetInference() (inference RhinoInference, err error) {
 	return RhinoInference{IsUnderstood: isUnderstood, Intent: intent, Slots: slots}, nil
 }
 
+func getLinuxDetails() (string, string) {
+	var archInfo = ""
+
+	if runtime.GOARCH == "amd64" {
+		return "linux", "x86_64"
+	} else if runtime.GOARCH == "arm64" {
+		archInfo = "-aarch64"
+	}
+
+	cmd := exec.Command("cat", "/proc/cpuinfo")
+	cpuInfo, err := cmd.Output()
+
+	if err != nil {
+		log.Fatalf("Failed to get CPU details: %s", err.Error())
+	}
+
+	var cpuPart = ""
+	for _, line := range strings.Split(string(cpuInfo), "\n") {
+		if strings.Contains(line, "CPU part") {
+			split := strings.Split(line, " ")
+			cpuPart = strings.ToLower(split[len(split) - 1])
+			break
+		}
+	}
+
+	switch cpuPart {
+	case "0xb76":
+		return "raspberry-pi", "arm11" + archInfo
+	case "0xc07":
+		return "raspberry-pi", "cortex-a7" + archInfo
+	case "0xd03":
+		return "raspberry-pi", "cortex-a53" + archInfo
+	case "0xd07":
+		return "jetson", "cortex-a57" + archInfo
+	case "0xd08":
+		return "raspberry-pi", "cortex-a72" + archInfo
+	case "0xc08":
+		return "beaglebone", ""
+	default:
+		log.Printf(
+			`WARNING: Please be advised that this device (CPU part = %s) is not officially supported by Picovoice.\n
+			Falling back to the armv6-based (Raspberry Pi Zero) library. This is not tested nor optimal.\n For the model, use Raspberry Pi\'s models`, cpuPart)
+		return "raspberry-pi", "arm11" + archInfo
+	}
+}
+
 func extractDefaultModel() string {
 	modelPath := "embedded/lib/common/rhino_params.pv"
 	return extractFile(modelPath, extractionDir)
@@ -258,11 +306,17 @@ func extractLib() string {
 	var libPath string
 	switch os := runtime.GOOS; os {
 	case "darwin":
-		libPath = fmt.Sprintf("embedded/lib/mac/x86_64/libpv_rhino.dylib")
+		libPath = "embedded/lib/mac/x86_64/libpv_rhino.dylib"
 	case "linux":
-		libPath = fmt.Sprintf("embedded/lib/linux/x86_64/libpv_rhino.so")
+		osName, cpu := getLinuxDetails()
+		log.Printf("os: %s, cpu: %s", osName, cpu)
+		if cpu == "" {
+			libPath = fmt.Sprintf("embedded/lib/%s/libpv_rhino.so", osName)
+		} else {
+			libPath = fmt.Sprintf("embedded/lib/%s/%s/libpv_rhino.so", osName, cpu)
+		}
 	case "windows":
-		libPath = fmt.Sprintf("embedded/lib/windows/amd64/libpv_rhino.dll")
+		libPath = "embedded/lib/windows/amd64/libpv_rhino.dll"
 	default:
 		log.Fatalf("%s is not a supported OS", os)
 	}
