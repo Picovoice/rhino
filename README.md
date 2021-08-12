@@ -1570,7 +1570,7 @@ First you will need [Rust and Cargo](https://rustup.rs/) installed on your syste
 To add the porcupine library into your app, add `pv_rhino` to your apps `Cargo.toml` manifest:
 ```toml
 [dependencies]
-pv_rhino = "${version}"
+pv_rhino = "*"
 ```
 
 To create an instance of the engine you first create a `RhinoBuilder` instance with the configuration parameters for the speech to intent engine and then make a call to `.init()`:
