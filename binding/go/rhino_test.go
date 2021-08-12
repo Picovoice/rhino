@@ -149,7 +149,8 @@ func getOS() string {
 	case "darwin":
 		return "mac"
 	case "linux":
-		return "linux"
+		linuxName, _ := getLinuxDetails()
+		return linuxName
 	case "windows":
 		return "windows"
 	default:
@@ -157,3 +158,4 @@ func getOS() string {
 		return ""
 	}
 }
+
