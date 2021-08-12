@@ -309,7 +309,6 @@ func extractLib() string {
 		libPath = "embedded/lib/mac/x86_64/libpv_rhino.dylib"
 	case "linux":
 		osName, cpu := getLinuxDetails()
-		log.Printf("os: %s, cpu: %s", osName, cpu)
 		if cpu == "" {
 			libPath = fmt.Sprintf("embedded/lib/%s/libpv_rhino.so", osName)
 		} else {
