@@ -11,11 +11,9 @@
 
 use chrono::Duration;
 use clap::{App, Arg};
+use hound;
 use itertools::Itertools;
 use rhino::RhinoBuilder;
-use rodio::{source::Source, Decoder};
-use std::fs::File;
-use std::io::BufReader;
 use std::path::PathBuf;
 
 fn rhino_demo(
@@ -24,9 +22,6 @@ fn rhino_demo(
     sensitivity: Option<f32>,
     model_path: Option<&str>,
 ) {
-    let soundfile = BufReader::new(File::open(input_audio_path).unwrap());
-    let audiosource = Decoder::new(soundfile).unwrap();
-
     let mut rhino_builder = RhinoBuilder::new(context_path);
 
     if let Some(sensitivity) = sensitivity {
@@ -39,17 +34,39 @@ fn rhino_demo(
 
     let rhino = rhino_builder.init().expect("Failed to create Rhino");
 
-    if rhino.sample_rate() != audiosource.sample_rate() {
+    let mut wav_reader = match hound::WavReader::open(input_audio_path.clone()) {
+        Ok(reader) => reader,
+        Err(err) => panic!(
+            "Failed to open .wav audio file {}: {}",
+            input_audio_path.display(),
+            err
+        ),
+    };
+
+    if wav_reader.spec().sample_rate != rhino.sample_rate() {
         panic!(
             "Audio file should have the expected sample rate of {}, got {}",
             rhino.sample_rate(),
-            audiosource.sample_rate()
+            wav_reader.spec().sample_rate
         );
     }
 
+    if wav_reader.spec().channels != 1u16 {
+        panic!(
+            "Audio file should have the expected number of channels 1, got {}",
+            wav_reader.spec().channels
+        );
+    }
+
+    if wav_reader.spec().bits_per_sample != 16u16
+        || wav_reader.spec().sample_format != hound::SampleFormat::Int
+    {
+        panic!("WAV format should be in the signed 16 bit format",);
+    }
+
     let mut timestamp = Duration::zero();
-    for frame in &audiosource.chunks(rhino.frame_length() as usize) {
-        let frame = frame.collect_vec();
+    for frame in &wav_reader.samples().chunks(rhino.frame_length() as usize) {
+        let frame: Vec<i16> = frame.map(|s| s.unwrap()).collect_vec();
         timestamp = timestamp
             + Duration::milliseconds(((1000 * frame.len()) / rhino.sample_rate() as usize) as i64);
 
@@ -86,7 +103,7 @@ fn main() {
             Arg::with_name("input_audio_path")
             .long("input_audio_path")
             .value_name("PATH")
-            .help("Path to input audio file (mono, WAV, 16-bit, 16kHz)")
+            .help("Path to input audio file (mono, WAV, 16-bit, 16kHz).")
             .takes_value(true)
             .required(true)
         )
@@ -94,7 +111,7 @@ fn main() {
             Arg::with_name("context_path")
             .long("context_path")
             .value_name("PATH")
-            .help("Path to Rhino context file (.rhn)")
+            .help("Path to Rhino context file (.rhn).")
             .takes_value(true)
             .required(true)
         )
@@ -102,7 +119,7 @@ fn main() {
             Arg::with_name("model_path")
             .long("model_path")
             .value_name("PATH")
-            .help("Path to Rhino model file (.pv)")
+            .help("Path to Rhino model file (.pv).")
             .takes_value(true)
         )
         .arg(
