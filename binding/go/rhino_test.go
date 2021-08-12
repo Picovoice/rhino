@@ -19,11 +19,10 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
-	"runtime"
 	"testing"
 )
 
-var osName = getOS()
+var osName, _ = getLinuxDetails()
 var r Rhino
 
 func TestMain(m *testing.M) {
@@ -141,19 +140,5 @@ func TestOutOfContext(t *testing.T) {
 
 	if inference.IsUnderstood {
 		t.Fatalf("Rhino understood a command outside of its context. %v", inference)
-	}
-}
-
-func getOS() string {
-	switch os := runtime.GOOS; os {
-	case "darwin":
-		return "mac"
-	case "linux":
-		return "linux"
-	case "windows":
-		return "windows"
-	default:
-		log.Fatalf("%s is not a supported OS", os)
-		return ""
 	}
 }
