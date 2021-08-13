@@ -31,13 +31,13 @@ class Utils {
 
     private static final Path RESOURCE_DIRECTORY;
     private static final String ENVIRONMENT_NAME;
+    private static final String ARCHITECTURE;
     private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
-    private static String linuxArch;
 
     static {
         RESOURCE_DIRECTORY = getResourceDirectory();
         ENVIRONMENT_NAME = getEnvironmentName();
+        ARCHITECTURE = getArchitecture();
     }
 
     public static boolean isResourcesAvailable() {
@@ -48,7 +48,7 @@ class Utils {
         return ENVIRONMENT_NAME != null;
     }
 
-    private static Path getResourceDirectory() {
+    private static Path getResourceDirectory() throws RuntimeException {
         // location of resources, either a JAR file or a directory
         final URL resourceURL = Rhino.class.getProtectionDomain().getCodeSource().getLocation();
         Path resourcePath;
@@ -63,9 +63,7 @@ class Utils {
             try {
                 resourcePath = extractResources(resourcePath);
             } catch (IOException e) {
-                logger.severe("Failed to extract resources from Rhino JAR.");
-                e.printStackTrace();
-                return null;
+                throw new RuntimeException("Failed to extract resources from Rhino JAR.");
             }
         }
 
@@ -121,67 +119,78 @@ class Utils {
     }
 
     private static String getEnvironmentName() throws RuntimeException {
-        String arch = System.getProperty("os.arch");
         String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
-        if (arch.equals("amd64") || arch.equals("x86_64")) {
-            if (os.contains("mac") || os.contains("darwin")) {
-                return "mac";
-            } else if (os.contains("win")) {
-                return "windows";
-            } else if (os.contains("linux")) {
-                linuxArch = "x86_64";
-                return "linux";
-            } else {
-                logger.severe("Execution environment not supported. " +
-                        "Rhino Java is supported on macOS, Linux and Windows");
-                return null;
+        if (os.contains("mac") || os.contains("darwin")) {
+            return "mac";
+        } else if (os.contains("win")) {
+            return "windows";
+        } else if (os.contains("linux")) {
+            String arch = System.getProperty("os.arch");
+            if (arch.equals("arm") || arch.equals("aarch64")) {
+                String cpuPart = getCpuPart();
+                switch (cpuPart) {
+                    case "0xc07":
+                    case "0xd03":
+                    case "0xd08":
+                        return "raspberry-pi";
+                    case "0xd07":
+                        return "jetson";
+                    case "0xc08":
+                        return "beaglebone";
+                    default:
+                        throw new RuntimeException(String.format("Execution environment not supported. " +
+                                "Rhino Java does not support CPU Part (%s).", cpuPart));
+                }
             }
-        } else if (os.contains("linux") && (arch.equals("arm") || arch.equals("aarch64"))) {
-            return getLinuxArch();
+            return "linux";
         } else {
-            logger.severe(String.format("Platform architecture (%s) not supported. " +
-                    "Rhino Java is only supported on amd64 and x86_64 architectures.", arch));
-            return null;
+            throw new RuntimeException("Execution environment not supported. " +
+                    "Rhino Java is supported on MacOS, Linux and Windows");
         }
     }
 
-    private static String getLinuxArch() {
-        String cpuPart;
+    private static String getArchitecture() throws RuntimeException {
+        String arch = System.getProperty("os.arch");
+        if (arch.equals("amd64") || arch.equals("x86_64")) {
+            if (ENVIRONMENT_NAME.equals("windows")) {
+                return "amd64";
+            } else {
+                return "x86_64";
+            }
+        } else if (arch.equals("arm") || arch.equals("aarch64")) {
+            String cpuPart = getCpuPart();
+            String archInfo = (arch.equals("aarch64")) ? "-aarch64" : "";
+
+            switch (cpuPart) {
+                case "0xc07":
+                    return "cortex-a7" + archInfo;
+                case "0xd03":
+                    return "cortex-a53" + archInfo;
+                case "0xd07":
+                    return "cortex-a57" + archInfo;
+                case "0xd08":
+                    return "cortex-a72" + archInfo;
+                case "0xc08":
+                    return "";
+                default:
+                    throw new RuntimeException(
+                            String.format("Platform architecture with CPU Part (%s) is not supported by Rhino.", cpuPart)
+                    );
+            }
+        } else {
+            throw new RuntimeException(String.format("Platform architecture (%s) is not supported by Rhino.", arch));
+        }
+    }
+
+    private static String getCpuPart() throws RuntimeException {
         try {
-            cpuPart = Files.lines(Paths.get("/proc/cpuinfo"))
+            return Files.lines(Paths.get("/proc/cpuinfo"))
                     .filter(line -> line.startsWith("CPU part"))
                     .map(line -> line.substring(line.lastIndexOf(" ") + 1))
                     .findFirst()
                     .orElse("");
         } catch (IOException e) {
-            logger.severe("Could not get CPU information.");
-            return null;
-        }
-
-        String archInfo = (System.getProperty("os.arch").equals("aarch64")) ? "-aarch64" : "";
-
-        switch (cpuPart) {
-            case "0xb76":
-                linuxArch = "arm11" + archInfo;
-                return "raspberry-pi";
-            case "0xc07":
-                linuxArch = "cortex-a7" + archInfo;
-                return "raspberry-pi";
-            case "0xd03":
-                linuxArch = "cortex-a53" + archInfo;
-                return "raspberry-pi";
-            case "0xd07":
-                linuxArch = "cortex-a57" + archInfo;
-                return "jetson";
-            case "0xd08":
-                linuxArch = "cortex-a72" + archInfo;
-                return "raspberry-pi";
-            case "0xc08":
-                linuxArch = "";
-                return "beaglebone";
-            default:
-                logger.severe(String.format("CPU Part (%s) not supported.", cpuPart));
-                return null;
+            throw new RuntimeException("Rhino failed to get get CPU information.");
         }
     }
 
@@ -190,10 +199,6 @@ class Utils {
     }
 
     public static String getPackagedLibraryPath() {
-        if (ENVIRONMENT_NAME == null) {
-            return null;
-        }
-
         switch (ENVIRONMENT_NAME) {
             case "windows":
                 return RESOURCE_DIRECTORY.resolve("lib/java/windows/amd64/pv_rhino_jni.dll").toString();
@@ -203,10 +208,9 @@ class Utils {
             case "beaglebone":
             case "raspberry-pi":
             case "linux":
-                logger.severe(String.format("os: %s, cpu: %s", ENVIRONMENT_NAME, linuxArch));
                 return RESOURCE_DIRECTORY.resolve("lib/java")
                         .resolve(ENVIRONMENT_NAME)
-                        .resolve(linuxArch)
+                        .resolve(ARCHITECTURE)
                         .resolve("libpv_rhino_jni.so").toString();
             default:
                 return null;
