@@ -32,10 +32,19 @@ Rhino is:
 - compact and computationally-efficient. It is perfect for IoT.
 - self-service. Developers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
-## Compatibility
+
+## Requirements
 
 - Java 11+
-- Runs on Linux (x86_64), macOS (x86_64) and Windows (x86_64)
+
+## Compatibility
+
+- Linux (x86_64)
+- macOS (x86_64)
+- Windows (x86_64)
+- Raspberry Pi 2, Raspberry Pi 3 (32 and 64 bit), Raspberry Pi 4 (32 and 64 bit)
+- Jetson Nano
+- BeagleBone
 
 ## Installation
 

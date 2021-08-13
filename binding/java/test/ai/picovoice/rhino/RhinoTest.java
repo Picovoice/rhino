@@ -90,7 +90,7 @@ public class RhinoTest {
         assertTrue(inference.getIsUnderstood());
         assertEquals("orderBeverage", inference.getIntent());
 
-        Map<String, String> expectedSlotValues  = new HashMap<>() {{
+        Map<String, String> expectedSlotValues  = new HashMap<String, String>() {{
             put("size", "medium");
             put("numberOfShots", "double shot");
             put("beverage", "americano");
