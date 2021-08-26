@@ -46,4 +46,4 @@ jobs:
       run: yarn build
 
     - name: Test
-      run: for i in porcupine-web*; do cd $i; yarn && yarn build && yarn test --passWithNoTests || exit 1; cd ..; done
+      run: for i in rhino-web*; do cd $i; yarn && yarn build && yarn test --passWithNoTests || exit 1; cd ..; done
