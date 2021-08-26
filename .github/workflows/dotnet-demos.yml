@@ -16,7 +16,7 @@ on:
 
 defaults:
   run:
-    working-directory: binding/dotnet/RhinoDemo
+    working-directory: demo/dotnet/RhinoDemo
 
 jobs:
   build-micdemo:
