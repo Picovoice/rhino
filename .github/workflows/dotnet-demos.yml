@@ -16,7 +16,7 @@ on:
 
 defaults:
   run:
-    working-directory: binding/dotnet/Porcupine
+    working-directory: binding/dotnet/RhinoDemo
 
 jobs:
   build-micdemo:

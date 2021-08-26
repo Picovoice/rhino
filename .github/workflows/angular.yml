@@ -37,7 +37,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Pre-build dependencies
-      run: npm install yarn
+      run: npm install yarn --force
 
     - name: Install dependencies
       run: yarn install
