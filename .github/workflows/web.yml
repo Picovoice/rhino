@@ -2,14 +2,14 @@ name: Web
 
 on:
   push:
-    branches: [ github-actions ]
+    branches: [ master ]
     paths:
       - 'binding/web/**'
       - '!binding/web/README.md'
       - 'lib/**'
       - 'resources/**'
   pull_request:
-    branches: [ github-actions ]
+    branches: [ master ]
     paths:
       - 'binding/web/**'
       - '!binding/web/README.md'
