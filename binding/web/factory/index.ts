@@ -9,5 +9,5 @@
     specific language governing permissions and limitations under the License.
 */
 
-import Rhino from './Rhino';
+import Rhino from './rhino';
 export { Rhino };
