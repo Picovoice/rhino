@@ -28,6 +28,7 @@ class RhinoManager {
 
   final InferenceCallback _inferenceCallback;
   RemoveListener? _removeVoiceProcessorListener;
+  RemoveListener? _removeErrorListener;
 
   bool _awaitingStop = false;
 
@@ -102,6 +103,13 @@ class RhinoManager {
         _awaitingStop = false;
       }
     });
+
+    _removeErrorListener = _voiceProcessor!.addErrorListener((errorMsg) {
+      PvError nativeError = new PvError(errorMsg as String);
+      errorCallback == null
+          ? print(nativeError.message)
+          : errorCallback(nativeError);
+    });
   }
 
   /// Opens audio input stream and sends audio frames to Rhino until a inference
@@ -113,7 +121,7 @@ class RhinoManager {
           "Cannot start RhinoManager - resources have already been released");
     }
 
-    if (await _voiceProcessor?.hasRecordAudioPermission() == true) {
+    if (await _voiceProcessor?.hasRecordAudioPermission() ?? false) {
       try {
         await _voiceProcessor!.start();
       } on PlatformException {
@@ -132,7 +140,7 @@ class RhinoManager {
       await _voiceProcessor!.stop();
     }
     _removeVoiceProcessorListener?.call();
-
+    _removeErrorListener?.call();
     _rhino?.delete();
     _rhino = null;
   }
