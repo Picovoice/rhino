@@ -30,3 +30,6 @@
 
 ## [1.6.10] - 2021-06-09
 * Explicit async delete added
+
+## [1.6.11] - 2021-09-01
+* Updated flutter-voice-processor
