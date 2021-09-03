@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -101,13 +100,13 @@ namespace RhinoDemo
                             totalSamplesWritten += pcm.Length;
                         }
 
-
                         Thread.Yield();
                     }
                 }
             }
             finally
             {
+                Console.WriteLine("Stopping...");
                 if (outputFileWriter != null)
                 {
                     // write size to header and clean up
