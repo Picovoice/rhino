@@ -66,20 +66,16 @@ rhn-mic-demo --show_audio_devices
 This command prints a list of the available devices and its inputs:
 
 ```console
-index: 0, device name: Monitor of sof-hda-dsp HDMI3/DP3 Output
-index: 1, device name: Monitor of sof-hda-dsp HDMI2/DP2 Output
-index: 2, device name: Monitor of sof-hda-dsp HDMI1/DP1 Output
-index: 3, device name: Monitor of sof-hda-dsp Speaker + Headphones
-index: 4, device name: sof-hda-dsp Headset Mono Microphone + Headphones Stereo Microphone
-index: 5, device name: sof-hda-dsp Digital Microphone
+index: 0, device name: USB Audio Device
+index: 1, device name: MacBook Air Microphone
 ```
 
 Specify the input audio device with `--audio_device_index` and the Speech-to-Intent context (.rhn file) with `--context`:
 
-Here is an example using Digital Microphone and commands from the "Smart Lighting" demo from the [Rhino GitHub repostiory](https://github.com/Picovoice/rhino/blob/master/resources/contexts/) (note that context files are platform-dependent; choose the appropriate one for the platform you are using; this demo uses the "mac" version)
+Here is an example using USB Audio Device and commands from the "Smart Lighting" demo from the [Rhino GitHub repostiory](https://github.com/Picovoice/rhino/blob/master/resources/contexts/) (note that context files are platform-dependent; choose the appropriate one for the platform you are using; this demo uses the "mac" version)
 
 ```console
-rhn-mic-demo --context ./smart_lighting_mac.rhn --audio_device_index 5
+rhn-mic-demo --context ./smart_lighting_mac.rhn --audio_device_index 0
 ```
 
 The context source in YAML format will be output to show you the grammar and options that the context supports. The demo will listen for a phrase that the contexts understands, and upon reaching a conclusion (or timeout), it will output the results.
@@ -117,7 +113,7 @@ Inference result:
 Try running the mic demo again, but this time say something that it is not designed to understand, like "tell me a joke":
 
 ```console
-rhn-mic-demo --context_path ../../resources/contexts/mac/smart_lighting_mac.rhn  --audio_device_index 5
+rhn-mic-demo --context_path ../../resources/contexts/mac/smart_lighting_mac.rhn  --audio_device_index 0
 
 ...
 
@@ -252,13 +248,13 @@ npm install
 Use `yarn mic` (or `npm run mic`) to run the mic demo from the demos/nodejs directory. For `npm run`, note the extra `--` needed before specifying commands. This is to disambiguate whether the options are intended for npm or for the demo script. As before, pick a context that matches the platform you are using (these examples use 'mac'):
 
 ```console
-yarn mic --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn  --audio_device_index 5
+yarn mic --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
 ```
 
 (or)
 
 ```console
-npm run mic -- --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn  --audio_device_index 5
+npm run mic -- --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
 ```
 
 ### File demo
