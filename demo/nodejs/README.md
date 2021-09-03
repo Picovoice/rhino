@@ -29,7 +29,7 @@ To learn more about Rhino, see the [product](https://picovoice.ai/products/rhino
 
 ## Compatibility
 
-These demos run Rhino on **NodeJS 10+** on the following platforms:
+These demos run Rhino on **NodeJS 12+** on the following platforms:
 
 - Linux (x86_64)
 - macOS (x86_64)
@@ -38,26 +38,6 @@ These demos run Rhino on **NodeJS 10+** on the following platforms:
 ### Web Browsers
 
 These demos and the bindings upon which they are built are for NodeJS and **do not work in a browser**. Looking to run Rhino in-browser? There are npm packages available for [Web](https://www.npmjs.com/package/@picovoice/rhino-web-en-worker), and dedicated packages for [Angular](https://www.npmjs.com/package/@picovoice/rhino-web-angular), [React](https://www.npmjs.com/package/@picovoice/rhino-web-react), and [Vue](https://www.npmjs.com/package/@picovoice/rhino-web-vue).
-
-## Prerequisites
-
-If you only wish to use the file-based demo, you may skip ahead to [installing the NPM package](#install-npm-package).
-
-### Microphone demo
-
-The microphone demo allows you try Rhino by speaking a phrase and seeing the resulting inference. Note: **the microphone demo requires you to install/setup software that is not included by npm**. For microphone access, the [node-record-lpm16](https://www.npmjs.com/package/node-record-lpcm16) package is used. Please follow that documentation for troubleshooting.
-
-The [node-record-lpm16](https://www.npmjs.com/package/node-record-lpcm16) library spawns a different microphone recording process depending on the OS used. The microphone program (SoX or Arecord) must be setup manually and is not included with yarn/npm.
-
-#### Setup SoX / Arecord
-
-##### macOS
-
-See [the documentation for node-record-lpm16](https://www.npmjs.com/package/node-record-lpcm16#dependencies) for instructions on installing [SoX](http://sox.sourceforge.net/).
-
-##### Raspberry Pi
-
-See [this quick start](https://picovoice.ai/quick-start/wake-word-raspberrypi/) for instructions on setting up the microphone / default device.
 
 ## Install NPM package
 
@@ -75,17 +55,37 @@ npm install -g @picovoice/rhino-node-demo
 
 ### Run the mic demo
 
-Using the 'global' install methods above should add `rhn-mic-demo` to your system path, which we can use to run the mic demo. Specify the Speech-to-Intent context (.rhn file) with `--context`:
+Using the 'global' install methods above should add `rhn-mic-demo` to your system path, which we can use to run the mic demo. 
 
-Here is an example which will understand commands from the "Smart Lighting" demo from the [Rhino GitHub repostiory](https://github.com/Picovoice/rhino/blob/master/resources/contexts/) (note that context files are platform-dependent; choose the appropriate one for the platform you are using; this demo uses the "mac" version)
+Select the input audio device to start recording audio:
 
 ```console
-rhn-mic-demo --context ./smart_lighting_mac.rhn
+rhn-mic-demo --show_audio_devices
+```
+
+This command prints a list of the available devices and its inputs:
+
+```console
+index: 0, device name: Monitor of sof-hda-dsp HDMI3/DP3 Output
+index: 1, device name: Monitor of sof-hda-dsp HDMI2/DP2 Output
+index: 2, device name: Monitor of sof-hda-dsp HDMI1/DP1 Output
+index: 3, device name: Monitor of sof-hda-dsp Speaker + Headphones
+index: 4, device name: sof-hda-dsp Headset Mono Microphone + Headphones Stereo Microphone
+index: 5, device name: sof-hda-dsp Digital Microphone
+```
+
+Specify the input audio device with `--audio_device_index` and the Speech-to-Intent context (.rhn file) with `--context`:
+
+Here is an example using Digital Microphone and commands from the "Smart Lighting" demo from the [Rhino GitHub repostiory](https://github.com/Picovoice/rhino/blob/master/resources/contexts/) (note that context files are platform-dependent; choose the appropriate one for the platform you are using; this demo uses the "mac" version)
+
+```console
+rhn-mic-demo --context ./smart_lighting_mac.rhn --audio_device_index 5
 ```
 
 The context source in YAML format will be output to show you the grammar and options that the context supports. The demo will listen for a phrase that the contexts understands, and upon reaching a conclusion (or timeout), it will output the results.
 
 ```console
+Using device: sof-hda-dsp Digital Microphone
 Context info:
 -------------
 context:
@@ -96,7 +96,6 @@ context:
       - (please) [change, set, switch] (the) $location:location lights (to) $color:color
       ... (etc.) ...
 
-Platform: 'mac'; attempting to use 'sox' to access microphone ...
 Listening for speech within the context of 'smart_lighting_mac'. Please speak your phrase into the microphone.
 
 # (say e.g. "please turn on the lights in the kitchen")
@@ -118,11 +117,11 @@ Inference result:
 Try running the mic demo again, but this time say something that it is not designed to understand, like "tell me a joke":
 
 ```console
-rhn-mic-demo --context_path ../../resources/contexts/mac/smart_lighting_mac.rhn
+rhn-mic-demo --context_path ../../resources/contexts/mac/smart_lighting_mac.rhn  --audio_device_index 5
 
 ...
 
-Platform: 'mac'; attempting to use 'sox' to access microphone ...
+Using device: sof-hda-dsp Digital Microphone
 Listening for speech within the context of 'smart_lighting_mac'. Please speak your phrase into the microphone.
 
 # (say e.g. "tell me a joke")
