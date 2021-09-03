@@ -57,7 +57,7 @@ npm install -g @picovoice/rhino-node-demo
 
 Using the 'global' install methods above should add `rhn-mic-demo` to your system path, which we can use to run the mic demo. 
 
-Select the input audio device to start recording audio:
+Select an input audio device to start recording audio:
 
 ```console
 rhn-mic-demo --show_audio_devices
@@ -252,13 +252,13 @@ npm install
 Use `yarn mic` (or `npm run mic`) to run the mic demo from the demos/nodejs directory. For `npm run`, note the extra `--` needed before specifying commands. This is to disambiguate whether the options are intended for npm or for the demo script. As before, pick a context that matches the platform you are using (these examples use 'mac'):
 
 ```console
-yarn mic --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
+yarn mic --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn  --audio_device_index 5
 ```
 
 (or)
 
 ```console
-npm run mic -- --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
+npm run mic -- --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn  --audio_device_index 5
 ```
 
 ### File demo
