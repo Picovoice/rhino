@@ -64,8 +64,8 @@ It opens an audio stream from a microphone and performs inference in spoken comm
 rhino_demo_mic --context_path ${CONTEXT_PATH}
 ```
 
-First, type the following into the console:
-
+It is possible that the default audio input device recognized by the demo is not the one being used. There are a couple 
+of debugging facilities baked into the demo application to solve this. First, type the following into the console:
 
 ```console
 rhino_demo_mic --show_audio_devices
@@ -89,7 +89,7 @@ output above. In this example we will use the device at index 5.
 rhino_demo_mic --context_path ${CONTEXT_PATH} --audio_device_index 5
 ```
 
-If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved by
+If a problem occurs, we suggest storing the recorded audio into a file for inspection. This can be achieved by:
 
 ```console
 rhino_demo_mic --context_path ${CONTEXT_PATH} --audio_device_index 5 --output_path ~/test.wav
