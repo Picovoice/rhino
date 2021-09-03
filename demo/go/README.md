@@ -73,7 +73,7 @@ index: 4, device name: sof-hda-dsp Headset Mono Microphone + Headphones Stereo M
 index: 5, device name: sof-hda-dsp Digital Microphone
 ``` 
 
-You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the USB microphone in the above example, you can invoke the demo application as below:
+You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the Digital microphone in the above example, you can invoke the demo application as below:
 
 ```console
 go run micdemo/rhino_mic_demo.go -context_path "/path/to/context/file.rhn" -audio_device_index 5
