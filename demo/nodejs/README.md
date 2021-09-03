@@ -81,7 +81,7 @@ rhn-mic-demo --context ./smart_lighting_mac.rhn --audio_device_index 0
 The context source in YAML format will be output to show you the grammar and options that the context supports. The demo will listen for a phrase that the contexts understands, and upon reaching a conclusion (or timeout), it will output the results.
 
 ```console
-Using device: sof-hda-dsp Digital Microphone
+Using device: USB Audio Device
 Context info:
 -------------
 context:
