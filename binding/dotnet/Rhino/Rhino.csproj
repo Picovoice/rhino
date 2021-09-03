@@ -91,7 +91,6 @@ Rhino is:
 			<Link>lib\mac\x86_64\libpv_rhino.dylib</Link>
 			<Visible>false</Visible>
 		</Content>
-        
 		<Content Include="..\..\..\lib\common\rhino_params.pv">
 			<PackagePath>
 				build/netstandard2.0/lib/common/rhino_params.pv;
