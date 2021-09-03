@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2020 Picovoice Inc.
+# Copyright 2018-2021 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -11,13 +11,12 @@
 
 import argparse
 import os
-import struct
 from threading import Thread
 
 import numpy as np
 import pvrhino
-import pyaudio
 import soundfile
+from pvrecorder import PvRecorder
 
 
 class RhinoDemo(Thread):
@@ -60,8 +59,7 @@ class RhinoDemo(Thread):
          """
 
         rhino = None
-        pa = None
-        audio_stream = None
+        recorder = None
 
         try:
             rhino = pvrhino.create(
@@ -69,22 +67,16 @@ class RhinoDemo(Thread):
                 model_path=self._model_path,
                 context_path=self._context_path)
 
-            pa = pyaudio.PyAudio()
+            recorder = PvRecorder(device_index=self._audio_device_index, frame_length=rhino.frame_length)
+            recorder.start()
 
-            audio_stream = pa.open(
-                rate=rhino.sample_rate,
-                channels=1,
-                format=pyaudio.paInt16,
-                input=True,
-                frames_per_buffer=rhino.frame_length,
-                input_device_index=self._audio_device_index)
+            print(f"Using device: {recorder.selected_device}")
 
             print(rhino.context_info)
             print()
 
             while True:
-                pcm = audio_stream.read(rhino.frame_length)
-                pcm = struct.unpack_from("h" * rhino.frame_length, pcm)
+                pcm = recorder.read()
 
                 if self._output_path is not None:
                     self._recorded_frames.append(pcm)
@@ -107,11 +99,8 @@ class RhinoDemo(Thread):
             print('Stopping ...')
 
         finally:
-            if audio_stream is not None:
-                audio_stream.close()
-
-            if pa is not None:
-                pa.terminate()
+            if recorder is not None:
+                recorder.delete()
 
             if rhino is not None:
                 rhino.delete()
@@ -126,15 +115,10 @@ class RhinoDemo(Thread):
 
     @classmethod
     def show_audio_devices(cls):
-        fields = ('index', 'name', 'defaultSampleRate', 'maxInputChannels')
+        devices = PvRecorder.get_audio_devices()
 
-        pa = pyaudio.PyAudio()
-
-        for i in range(pa.get_device_count()):
-            info = pa.get_device_info_by_index(i)
-            print(', '.join("'%s': '%s'" % (k, str(info[k])) for k in fields))
-
-        pa.terminate()
+        for i in range(len(devices)):
+            print(f'index: {i}, device name: {devices[i]}')
 
 
 def main():
@@ -149,7 +133,7 @@ def main():
         help="Absolute path to the file containing model parameters.",
         default=pvrhino.MODEL_PATH)
 
-    parser.add_argument('--audio_device_index', help='Index of input audio device.', type=int, default=None)
+    parser.add_argument('--audio_device_index', help='Index of input audio device.', type=int, default=-1)
 
     parser.add_argument('--output_path', help='Absolute path to recorded audio for debugging.', default=None)
 

@@ -205,7 +205,7 @@ git clone --recurse-submodules https://github.com/Picovoice/rhino.git
 
 ### Python Demos
 
-Install [PyAudio](https://people.csail.mit.edu/hubert/pyaudio/) and then the demo package:
+Install the demo package:
 
 ```console
 sudo pip3 install pvrhinodemo
@@ -214,10 +214,10 @@ sudo pip3 install pvrhinodemo
 With a working microphone connected to your device run the following in the terminal:
 
 ```
-rhino_demo_mic --context_path ${CONTEXT_FILE_PATH}
+rhino_demo_mic --context_path ${CONTEXT_PATH}
 ```
 
-Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
+Replace `${CONTEXT_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
 For more information about Python demos, go to [demo/python](/demo/python).
 
