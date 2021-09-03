@@ -67,11 +67,13 @@ class RhinoDemo(Thread):
                 model_path=self._model_path,
                 context_path=self._context_path)
 
-            print(rhino.context_info)
-            print()
-
             recorder = PvRecorder(device_index=self._audio_device_index, frame_length=rhino.frame_length)
             recorder.start()
+
+            print(f"Using device: {recorder.selected_device}")
+
+            print(rhino.context_info)
+            print()
 
             while True:
                 pcm = recorder.read()
