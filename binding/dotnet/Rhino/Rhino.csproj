@@ -66,11 +66,11 @@ Rhino is:
 		</Content>
         <Content Include="..\..\..\lib\jetson\cortex-a57-aarch64\libpv_rhino.so">
 			<PackagePath>
-				build/netstandard2.0/lib/jeton/cortex-a57-aarch64/libpv_rhino.so;
-				build/netcoreapp3.1/lib/jeton/cortex-a57-aarch64/libpv_rhino.so
+				build/netstandard2.0/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
+				build/netcoreapp3.1/lib/jetson/cortex-a57-aarch64/libpv_rhino.so
 			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<Link>lib\jeton\cortex-a57-aarch64\libpv_rhino.so</Link>
+			<Link>lib\jetson\cortex-a57-aarch64\libpv_rhino.so</Link>
 			<Visible>false</Visible>
 		</Content>
         <Content Include="..\..\..\lib\beaglebone\libpv_rhino.so">
