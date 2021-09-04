@@ -2,7 +2,7 @@
 
   <PropertyGroup>
 	  <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
-	  <Version>1.6.1</Version>
+	  <Version>1.6.2</Version>
 	  <Authors>Picovoice</Authors>
 	  <Company />
 	  <Product>Rhino Speech-to-Intent Engine</Product>
@@ -55,13 +55,31 @@ Rhino is:
 			<Link>lib\linux\x86_64\libpv_rhino.so</Link>
 			<Visible>false</Visible>
 		</Content>
-		<Content Include="..\..\..\lib\raspberry-pi\**\*">
+		<Content Include="..\..\..\lib\raspberry-pi\**\*" Exclude="..\..\..\lib\raspberry-pi\arm11\*">
 			<PackagePath>
 				build/netstandard2.0/lib/raspberry-pi;
 				build/netcoreapp3.1/lib/raspberry-pi
 			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>lib\raspberry-pi\%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<Visible>false</Visible>
+		</Content>
+        <Content Include="..\..\..\lib\jetson\cortex-a57-aarch64\libpv_rhino.so">
+			<PackagePath>
+				build/netstandard2.0/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
+				build/netcoreapp3.1/lib/jetson/cortex-a57-aarch64/libpv_rhino.so
+			</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>lib\jetson\cortex-a57-aarch64\libpv_rhino.so</Link>
+			<Visible>false</Visible>
+		</Content>
+        <Content Include="..\..\..\lib\beaglebone\libpv_rhino.so">
+			<PackagePath>
+				build/netstandard2.0/lib/beaglebone/libpv_rhino.so;
+				build/netcoreapp3.1/lib/beaglebone/libpv_rhino.so
+			</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>lib\beaglebone\libpv_rhino.so</Link>
 			<Visible>false</Visible>
 		</Content>
 		<Content Include="..\..\..\lib\mac\x86_64\libpv_rhino.dylib">

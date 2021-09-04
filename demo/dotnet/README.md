@@ -32,32 +32,27 @@ Rhino is:
 - compact and computationally-efficient. It is perfect for IoT.
 - self-service. Developers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
-## Compatibility
+## Requirements
 
 - .NET Core 3.1
-- Runs on Linux (x86_64), macOS (x86_64), Windows (x86_64) and Raspberry Pi
+
+## Compatibility
+
+- Linux (x86_64)
+- macOS (x86_64)
+- Windows (x86_64)
+- Raspberry Pi:
+  - 2
+  - 3 (32 and 64 bit)
+  - 4 (32 and 64 bit)
+- NVIDIA Jetson Nano
+- BeagleBone
 
 ## Installation
 
 Both demos use [Microsoft's .NET Core framework](https://dotnet.microsoft.com/download).
 
-MicDemo uses [OpenAL](https://openal.org/). 
-
-On Windows, install using the [OpenAL Windows Installer](https://openal.org/downloads/oalinst.zip).
-
-On Linux use apt-get
-
-```console
-sudo apt-get install libopenal-dev
-```
-
-On Mac use Brew
-
-```console
-brew install openal-soft
-```
-
-Once .NET Core and OpenAL have been installed, you can build with the dotnet CLI
+Build with the dotnet CLI:
 
 ```console
 dotnet build -c MicDemo.Release
@@ -97,26 +92,24 @@ of debugging facilities baked into the demo application to solve this. First, ty
 dotnet run -c MicDemo.Release -- --show_audio_devices
 ```
 
-It provides information about various audio input devices on the box. On a Windows PC, this is the output:
+It provides information about various audio input devices on the box. This is an example of the output:
 
 ```
-Available input devices:
-
-    Device 0: Microphone Array (Realtek(R) Au
-    Device 1: Microphone Headset USB	
+index: 0, device name: USB Audio Device
+index: 1, device name: MacBook Air Microphone
 ``` 
 
-You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the Headset 
-microphone in the above example, you can invoke the demo application as below:
+You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the USB Audio Device 
+in the above example, you can invoke the demo application as below:
 
 ```console
-dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_PATH} --audio_device_index 1
+dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_PATH} --audio_device_index 0
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved with:
 
 ```console
-dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_PATH} --audio_device_index 1 --output_path ./test.wav
+dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_PATH} --audio_device_index 0 --output_path ./test.wav
 ```
 
 If after listening to stored file there is no apparent problem detected please open an issue.

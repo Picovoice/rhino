@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2020 Picovoice Inc.
+    Copyright 2020-2021 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -12,11 +12,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 
-using OpenTK.Audio.OpenAL;
 using Pv;
 
 namespace RhinoDemo
@@ -42,7 +40,7 @@ namespace RhinoDemo
         /// </param>
         /// <param name="audioDeviceIndex">Optional argument. If provided, audio is recorded from this input device. Otherwise, the default audio input device is used.</param>        
         /// <param name="outputPath">Optional argument. If provided, recorded audio will be stored in this location at the end of the run.</param>                
-        public static void RunDemo(string contextPath, string modelPath, float sensitivity, int? audioDeviceIndex = null, string outputPath = null)
+        public static void RunDemo(string contextPath, string modelPath, float sensitivity, int audioDeviceIndex, string outputPath = null)
         {
             Rhino rhino = null;
             BinaryWriter outputFileWriter = null;
@@ -59,78 +57,56 @@ namespace RhinoDemo
                     WriteWavHeader(outputFileWriter, 1, 16, 16000, 0);
                 }
 
-                // choose audio device
-                string deviceName = null;
-                if (audioDeviceIndex != null)
-                {
-                    List<string> captureDeviceList = ALC.GetStringList(GetEnumerationStringList.CaptureDeviceSpecifier).ToList();
-                    if (captureDeviceList != null && audioDeviceIndex.Value < captureDeviceList.Count)
-                    {
-                        deviceName = captureDeviceList[audioDeviceIndex.Value];
-                    }
-                    else
-                    {
-                        throw new ArgumentException("No input device found with the specified index. Use --show_audio_devices to show" +
-                                                    "available inputs", "--audio_device_index");
-                    }
-                }
-
-                Console.WriteLine(rhino.ContextInfo);
-                Console.WriteLine("Listening...\n");
-
                 // create and start recording
-                short[] recordingBuffer = new short[rhino.FrameLength];
-                ALCaptureDevice captureDevice = ALC.CaptureOpenDevice(deviceName, 16000, ALFormat.Mono16, rhino.FrameLength * 2);
+                using(PvRecorder recorder = PvRecorder.Create(audioDeviceIndex, rhino.FrameLength)) 
                 {
-                    ALC.CaptureStart(captureDevice);
-                    while (!Console.KeyAvailable)
-                    {
-                        int samplesAvailable = ALC.GetAvailableSamples(captureDevice);
-                        if (samplesAvailable > rhino.FrameLength)
-                        {
-                            ALC.CaptureSamples(captureDevice, ref recordingBuffer[0], rhino.FrameLength);
-                            bool isFinalized = rhino.Process(recordingBuffer);
-                            if (isFinalized)
-                            {
-                                Inference inference = rhino.GetInference();
-                                if (inference.IsUnderstood)
-                                {
-                                    Console.WriteLine("{");
-                                    Console.WriteLine($"  intent : '{inference.Intent}'");
-                                    Console.WriteLine("  slots : {");
-                                    foreach (KeyValuePair<string, string> slot in inference.Slots)
-                                    {
-                                        Console.WriteLine($"    {slot.Key} : '{slot.Value}'");
-                                    }
-                                    Console.WriteLine("  }");
-                                    Console.WriteLine("}");
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Didn't understand the command.");
-                                }
-                            }
+                    recorder.Start();
+                    Console.WriteLine($"Using device: {recorder.SelectedDevice}");
 
-                            if (outputFileWriter != null)
+                    Console.WriteLine(rhino.ContextInfo);
+                    Console.WriteLine("Listening...\n");
+
+                    while (!Console.KeyAvailable) 
+                    {
+                        short[] pcm = recorder.Read();
+                        bool isFinalized = rhino.Process(pcm);
+                        if (isFinalized)
+                        {
+                            Inference inference = rhino.GetInference();
+                            if (inference.IsUnderstood)
                             {
-                                foreach (short sample in recordingBuffer)
+                                Console.WriteLine("{");
+                                Console.WriteLine($"  intent : '{inference.Intent}'");
+                                Console.WriteLine("  slots : {");
+                                foreach (KeyValuePair<string, string> slot in inference.Slots)
                                 {
-                                    outputFileWriter.Write(sample);
+                                    Console.WriteLine($"    {slot.Key} : '{slot.Value}'");
                                 }
-                                totalSamplesWritten += recordingBuffer.Length;
+                                Console.WriteLine("  }");
+                                Console.WriteLine("}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Didn't understand the command.");
                             }
                         }
+
+                        if (outputFileWriter != null)
+                        {
+                            foreach (short sample in pcm)
+                            {
+                                outputFileWriter.Write(sample);
+                            }
+                            totalSamplesWritten += pcm.Length;
+                        }
+
                         Thread.Yield();
                     }
-
-                    // stop and clean up resources
-                    Console.WriteLine("Stopping...");
-                    ALC.CaptureStop(captureDevice);
-                    ALC.CaptureCloseDevice(captureDevice);
                 }
             }
             finally
             {
+                Console.WriteLine("Stopping...");
                 if (outputFileWriter != null)
                 {
                     // write size to header and clean up
@@ -176,11 +152,9 @@ namespace RhinoDemo
         /// </summary>
         public static void ShowAudioDevices()
         {
-            Console.WriteLine("Available audio devices: \n");
-            List<string> captureDeviceList = ALC.GetStringList(GetEnumerationStringList.CaptureDeviceSpecifier).ToList();
-            for(int i=0; i<captureDeviceList.Count; i++)
-            {            
-                Console.WriteLine($"\tDevice {i}: {captureDeviceList[i]}");
+            string[] devices = PvRecorder.GetAudioDevices();
+            for (int i = 0; i < devices.Length; i++) {
+                Console.WriteLine($"index: {i}, device name: {devices[i]}");
             }
         }
 
@@ -196,7 +170,7 @@ namespace RhinoDemo
 
             string contextPath = null;
             string modelPath = null;
-            int? audioDeviceIndex = null;
+            int audioDeviceIndex = -1;
             float sensitivity = 0.5f;
             string outputPath = null;
             bool showAudioDevices = false;

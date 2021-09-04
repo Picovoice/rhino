@@ -20,10 +20,30 @@ Rhino is:
 * compact and computationally-efficient, making it perfect for IoT.
 * self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
 
+## Requirements
+
+- .NET Core 3.1
+
 ## Compatibility
 
-- .NET Standard 2.0, .NET Core 3.0+, .NET Framework 4.6.1+
-- Runs on Linux (x86_64), macOS (x86_64), Windows (x86_64) and Raspberry Pi (.NET Core 3.1+)
+Platform compatible with .NET Framework 4.6.1+:
+
+- Windows (x86_64)
+
+Platforms compatible with .NET Core 2.0+:
+
+- Linux (x86_64)
+- macOS (x86_64)
+- Windows (x86_64)
+
+Platforms compatible with .NET Core 3.1+:
+
+- Raspberry Pi:
+  - 2
+  - 3 (32 and 64 bit)
+  - 4 (32 and 64 bit)
+- NVIDIA Jetson Nano
+- BeagleBone
 
 ## Installation
 
