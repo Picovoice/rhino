@@ -2,9 +2,23 @@
 
 This Go module contains demos for processing real-time audio (i.e. microphone) and audio files using the Rhino Speech-to-Intent engine.
 
-## Installation
+## Requirements
 
-MicDemo uses [malgo](https://github.com/gen2brain/malgo) for cross-platform audio capture. It requires `cgo`, which on Windows may mean that you need to install a gcc compiler like [Mingw](http://mingw-w64.org/doku.php) to build it properly. 
+- go 1.16+
+- **Windows**: The demo requires `cgo`, which means that you need to install a gcc compiler like [Mingw](http://mingw-w64.org/doku.php) to build it properly. 
+
+## Compatibility
+
+- Linux (x86_64)
+- macOS (x86_64)
+- Windows (x86_64)
+- Raspberry Pi:
+  - Zero
+  - 2
+  - 3 (32 and 64 bit)
+  - 4 (32 and 64 bit)
+- NVIDIA Jetson Nano
+- BeagleBone
 
 ## Usage
 
@@ -48,24 +62,24 @@ of debugging facilities baked into the demo application to solve this. First, ty
 go run micdemo/rhino_mic_demo.go -show_audio_devices
 ```
 
-It provides information about various audio input devices on the box. On a is an example output from a Windows machine:
+It provides information about various audio input devices on the box. Here is an example output:
 
 ```console
-Capture Devices
-    0: Microphone Array (Realtek(R) Audio)
-    1: Microphone (USB Audio Device)
+index: 0, device name: USB Audio Device
+index: 1, device name: MacBook Air Microphone
 ``` 
 
-You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the USB microphone in the above example, you can invoke the demo application as below:
+You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the USB Audio Device
+in the above example, you can invoke the demo application as below:
 
 ```console
-go run micdemo/rhino_mic_demo.go -context_path "/path/to/context/file.rhn" -audio_device_index 1
+go run micdemo/rhino_mic_demo.go -context_path "/path/to/context/file.rhn" -audio_device_index 0
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved with:
 
 ```console
-go run micdemo/rhino_mic_demo.go -context_path "/path/to/context/file.rhn" -audio_device_index 1 -output_path ./test.wav
+go run micdemo/rhino_mic_demo.go -context_path "/path/to/context/file.rhn" -audio_device_index 0 -output_path ./test.wav
 ```
 
 If after listening to stored file there is no apparent problem detected please open an issue.
