@@ -1,6 +1,6 @@
 [package]
 name = "pv_rhino_micdemo"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2018"
 
 [dependencies]
@@ -8,6 +8,6 @@ clap = "2.33.3"
 ctrlc = "3.1.9"
 hound = "3.4.0"
 itertools = "0.10.1"
-miniaudio = "0.10.0"
 pv_rhino = "1.6"
 chrono = "0.4.19"
+pv_recorder = "1.0.0"
