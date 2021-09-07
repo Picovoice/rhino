@@ -54,11 +54,7 @@ fn rhino_demo(
     println!("Listening for commands...");
 
     let mut audio_data = Vec::new();
-    // Spin loop until we receive the ctrlc handler
     while LISTENING.load(Ordering::SeqCst) {
-        std::hint::spin_loop();
-        std::thread::sleep(std::time::Duration::from_millis(10));
-
         let mut pcm = vec![0; recorder.frame_length()];
         recorder.read(&mut pcm).expect("Failed to read audio frame");
 
@@ -88,22 +84,16 @@ fn rhino_demo(
     println!("\nStopping...");
     recorder.stop().expect("Failed to stop audio recording");
 
-    if !output_path.is_none() {
+    if let Some(output_path) = output_path {
         let wavspec = hound::WavSpec {
             channels: 1,
             sample_rate: rhino.sample_rate(),
             bits_per_sample: 16,
             sample_format: hound::SampleFormat::Int,
         };
-        match output_path {
-            Some(output_path) => {
-                let mut writer = hound::WavWriter::create(output_path, wavspec).expect("Failed to open output audio file");
-                for sample in audio_data {
-                    writer.write_sample(sample).unwrap();
-                }
-                return
-            },
-            None => return,
+        let mut writer = hound::WavWriter::create(output_path, wavspec).expect("Failed to open output audio file");
+        for sample in audio_data {
+            writer.write_sample(sample).unwrap();
         };
     }
 }
