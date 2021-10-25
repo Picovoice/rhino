@@ -18,6 +18,10 @@ const { PvArgumentError } = require("@picovoice/rhino-node/errors");
 const PvRecorder = require("@picovoice/pvrecorder-node");
 
 program
+  .requiredOption(
+    "-a, --access_key <string>",
+    "AccessKey obtain from the Picovoice Console (https://console.picovoice.ai/)"
+  )
   .option(
     "-c, --context_path <string>",
     `absolute path to rhino context (.rhn extension)`
@@ -38,7 +42,7 @@ program
     Number,
     -1
   ).option(
-    "-a, --show_audio_devices",
+    "-d, --show_audio_devices",
     "show the list of available devices"
   );
 
@@ -50,6 +54,7 @@ program.parse(process.argv);
 let isInterrupted = false;
 
 async function micDemo() {
+  let accessKey = program["access_key"]  
   let contextPath = program["context_path"];
   let libraryFilePath = program["library_file_path"];
   let modelFilePath = program["model_file_path"];
@@ -84,6 +89,7 @@ async function micDemo() {
     .split("_")[0];
 
   let handle = new Rhino(
+    accessKey,
     contextPath,
     sensitivity,
     modelFilePath,

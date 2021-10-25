@@ -24,6 +24,10 @@ const {
 
 program
   .requiredOption(
+    "-a, --access_key <string>",
+    "AccessKey obtain from the Picovoice Console (https://console.picovoice.ai/)"
+  )
+  .requiredOption(
     "-i, --input_audio_file_path <string>",
     "input audio wave file in 16-bit 16KHz linear PCM format (mono)"
   )
@@ -50,6 +54,7 @@ program.parse(process.argv);
 
 function fileDemo() {
   let audioPath = program["input_audio_file_path"];
+  let access_key = program["access_key"]
   let contextPath = program["context_path"];
   let libraryFilePath = program["library_file_path"];
   let modelFilePath = program["model_file_path"];
@@ -67,6 +72,7 @@ function fileDemo() {
   }
 
   let engineInstance = new Rhino(
+    access_key,
     contextPath,
     sensitivity,
     modelFilePath,
