@@ -1,5 +1,5 @@
 //
-// Copyright 2020 Picovoice Inc.
+// Copyright 2020-2021 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -29,6 +29,10 @@ const platform = getPlatform();
 const libraryPath = getSystemLibraryPath();
 
 const contextPathCoffeeMaker = `../../resources/contexts/${platform}/coffee_maker_${platform}.rhn`;
+
+const ACCESS_KEY = process.argv
+  .filter((x) => x.startsWith("--access_key="))[0]
+  .split("--access_key=")[1];
 
 function rhinoProcessWaveFile(
   engineInstance,
@@ -60,7 +64,7 @@ function rhinoProcessWaveFile(
 
 describe("intent detection (coffee maker)", () => {
   test("successful inference", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
 
     let inference = rhinoProcessWaveFile(
       rhinoEngine,
@@ -75,7 +79,7 @@ describe("intent detection (coffee maker)", () => {
   });
 
   test("out-of-context phrase is not understood", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
 
     let inference = rhinoProcessWaveFile(
       rhinoEngine,
@@ -89,7 +93,7 @@ describe("intent detection (coffee maker)", () => {
   });
 
   test("getInference throws PvStateError if called before isFinalized is true", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
 
     expect(() => {
       let inference = rhinoProcessWaveFile(
@@ -103,7 +107,7 @@ describe("intent detection (coffee maker)", () => {
   });
 
   test("process method returns boolean", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
     let isFinalized = rhinoEngine.process(
       new Int16Array(rhinoEngine.frameLength)
     );
@@ -112,7 +116,7 @@ describe("intent detection (coffee maker)", () => {
   });
 
   test("successful inference object does not contain extraneous junk", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
     let inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_COFFEE_MAKER_IN_CONTEXT
@@ -131,7 +135,12 @@ describe("intent detection (coffee maker)", () => {
 
 describe("manual paths", () => {
   test("manual model path", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker, 0.5, MODEL_PATH);
+    let rhinoEngine = new Rhino(
+      ACCESS_KEY,
+      contextPathCoffeeMaker,
+      0.5,
+      MODEL_PATH
+    );
 
     let inference = rhinoProcessWaveFile(
       rhinoEngine,
@@ -147,6 +156,7 @@ describe("manual paths", () => {
 
   test("manual model and library path", () => {
     let rhinoEngine = new Rhino(
+      ACCESS_KEY,
       contextPathCoffeeMaker,
       0.5,
       MODEL_PATH,
@@ -168,7 +178,7 @@ describe("manual paths", () => {
 
 describe("basic parameter validation", () => {
   test("custom sensitivity", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker, 0.65);
+    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker, 0.65);
 
     let inference = rhinoProcessWaveFile(
       rhinoEngine,
@@ -182,13 +192,14 @@ describe("basic parameter validation", () => {
 
   test("invalid sensitivity range", () => {
     expect(() => {
-      let rhinoEngine = new Rhino(contextPathCoffeeMaker, 2.99);
+      let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker, 2.99);
     }).toThrow(RangeError);
   });
 
   test("invalid sensitivity type", () => {
     expect(() => {
       let rhinoEngine = new Rhino(
+        ACCESS_KEY,
         contextPathCoffeeMaker,
         "they told me I was daft to build a castle on a swamp"
       );
@@ -198,7 +209,7 @@ describe("basic parameter validation", () => {
 
 describe("frame validation", () => {
   test("mismatched frameLength throws error", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
     expect(() => {
       rhinoEngine.process([1, 2, 3]);
     }).toThrow(PvArgumentError);
@@ -206,7 +217,7 @@ describe("frame validation", () => {
   });
 
   test("null/undefined frames throws error", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
     expect(() => {
       rhinoEngine.process(null);
     }).toThrow(PvArgumentError);
@@ -217,7 +228,7 @@ describe("frame validation", () => {
   });
 
   test("passing floating point frame values throws PvArgumentError", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
     let floatFrames = Array.from({ length: rhinoEngine.frameLength }).map(
       (x) => 3.1415
     );
@@ -230,7 +241,7 @@ describe("frame validation", () => {
 
 describe("getContextInfo", () => {
   test("coffee maker expressions and slots are returned", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
 
     let contextInfo = rhinoEngine.getContextInfo();
 
@@ -248,7 +259,7 @@ describe("getContextInfo", () => {
 
 describe("invalid state", () => {
   test("attempt to process after release throws PvStateError", () => {
-    let rhinoEngine = new Rhino(contextPathCoffeeMaker);
+    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
 
     let inference = rhinoProcessWaveFile(
       rhinoEngine,
