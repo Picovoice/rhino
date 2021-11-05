@@ -20,6 +20,8 @@ If you are using this library with the [@picovoice/web-voice-processor](https://
 
 Rhino for Web is split into multiple packages due to each language including the entire Voice AI model which is of nontrivial size. There are separate worker and factory packages as well, due to the complexities with bundling an "all-in-one" web workers without bloating bundle sizes. Import each as required.
 
+Any Rhino context files (`.rhn` files) generated from [Picovoice Console](https://picovoice.ai/console/) must be trained for the WebAssembly (WASM) platform and match the language of the instance you create. The `.zip` file containes a `.rhn` file and a `_b64.txt` file which containes the binary model encoded with Base64. The base64 encoded model can then be passed into the Rhino `create` function as an argument.
+
 ### Workers
 
 - @picovoice/rhino-web-de-worker

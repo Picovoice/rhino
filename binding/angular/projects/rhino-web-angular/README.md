@@ -157,4 +157,4 @@ Rhino requires a trigger to begin listening. To start listening for natural lang
 
 Custom contexts are generated using [Picovoice Console](https://picovoice.ai/console/). They are trained from text using transfer learning into bespoke Rhino context files with a `.rhn` extension. The target platform is WebAssembly (WASM), as that is what backs the Angular library.
 
-Convert the `.rhn` file to base64 and provide it as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.
+The `.zip` file containes a `.rhn` file and a `_b64.txt` file which containes the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.
