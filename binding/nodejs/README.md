@@ -27,7 +27,9 @@ To learn more about Rhino, see the [platform](https://picovoice.ai/platform/rhin
 
 ### Creating a context
 
-To design contexts and train into RHN files, see the [Picovoice Console](https://picovoice.ai/console/).
+Custom contexts are generated using [Picovoice Console](https://picovoice.ai/console/). They are trained from text using transfer learning into bespoke Rhino context files with a `.rhn` extension. The target platform is WebAssembly (WASM), as that is what backs the NodeJS library.
+
+The `.zip` file containes a `.rhn` file and a `_b64.txt` file which containes the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the example below. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.
 
 Files generated with the Picovoice Console carry restrictions including (but not limited to): training allowance, time limits, available platforms, and commercial usage.
 
