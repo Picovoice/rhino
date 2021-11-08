@@ -25,7 +25,11 @@ let rhinoEngine: RhinoEngine = null;
 
 async function init(rhinoArgs: RhinoArgs): Promise<void> {
   try {
-    rhinoEngine = await Rhino.create(rhinoArgs.context);
+    rhinoEngine = await Rhino.create(
+      rhinoArgs.accessKey,
+      rhinoArgs.context,
+      rhinoArgs.requireEndpoint
+    );
   } catch (error) {
     const rhnErrorMessage: RhinoWorkerResponseInitError = {
       command: 'rhn-error-init',
@@ -47,9 +51,9 @@ function info(): void {
   postMessage(infoResonse, undefined);
 }
 
-function process(inputFrame: Int16Array): void {
+async function process(inputFrame: Int16Array): Promise<void> {
   if (rhinoEngine !== null && !paused) {
-    const inference = rhinoEngine.process(inputFrame);
+    const inference = await rhinoEngine.process(inputFrame);
     if (inference.isFinalized) {
       const rhinoInferenceMessage: RhinoWorkerResponseInference = {
         command: 'rhn-inference',

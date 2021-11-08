@@ -13,7 +13,7 @@ export interface RhinoEngine {
   /** Release all resources acquired by Rhino */
   release(): void;
   /** Process a single frame of 16-bit 16kHz PCM audio */
-  process(frame: Int16Array): RhinoInference;
+  process(frame: Int16Array): Promise<RhinoInference>;
   /** The version of the Rhino engine */
   readonly version: string;
   /** The sampling rate of audio expected by the Rhino engine */
@@ -41,7 +41,9 @@ export type WorkerRequestVoid = {
 };
 
 export type RhinoArgs = {
+  accessKey: string;
   context: RhinoContext;
+  requireEndpoint?: boolean;
   start: boolean;
 }
 
