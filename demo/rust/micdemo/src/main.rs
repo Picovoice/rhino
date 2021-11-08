@@ -13,20 +13,21 @@ use chrono::prelude::*;
 use clap::{App, Arg, ArgGroup};
 use ctrlc;
 use hound;
-use rhino::{RhinoBuilder};
 use pv_recorder::{Recorder, RecorderBuilder};
+use rhino::RhinoBuilder;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 static LISTENING: AtomicBool = AtomicBool::new(false);
 
 fn rhino_demo(
     audio_device_index: i32,
+    access_key: &str,
     context_path: &str,
     sensitivity: Option<f32>,
     model_path: Option<&str>,
     output_path: Option<&str>,
 ) {
-    let mut rhino_builder = RhinoBuilder::new(context_path);
+    let mut rhino_builder = RhinoBuilder::new(access_key, context_path);
 
     if let Some(sensitivity) = sensitivity {
         rhino_builder.sensitivity(sensitivity);
@@ -91,10 +92,11 @@ fn rhino_demo(
             bits_per_sample: 16,
             sample_format: hound::SampleFormat::Int,
         };
-        let mut writer = hound::WavWriter::create(output_path, wavspec).expect("Failed to open output audio file");
+        let mut writer = hound::WavWriter::create(output_path, wavspec)
+            .expect("Failed to open output audio file");
         for sample in audio_data {
             writer.write_sample(sample).unwrap();
-        };
+        }
     }
 }
 
@@ -113,10 +115,19 @@ fn show_audio_devices() {
 fn main() {
     let matches = App::new("Picovoice Rhino Rust Mic Demo")
         .group(
-            ArgGroup::with_name("contexts_group")
+            ArgGroup::with_name("actions_group")
+            .arg("access_key")
             .arg("context_path")
             .arg("show_audio_devices")
             .required(true)
+            .multiple(true)
+        )
+        .arg(
+            Arg::with_name("access_key")
+                .long("access_key")
+                .value_name("ACCESS_KEY")
+                .help("AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)")
+                .takes_value(true)
         )
         .arg(
             Arg::with_name("context_path")
@@ -179,8 +190,13 @@ fn main() {
     let model_path = matches.value_of("model_path");
     let output_path = matches.value_of("output_path");
 
+    let access_key = matches
+        .value_of("access_key")
+        .expect("AccessKey is REQUIRED for Porcupine operation");
+
     rhino_demo(
         audio_device_index,
+        access_key,
         context_path,
         sensitivity,
         model_path,

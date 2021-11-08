@@ -18,11 +18,12 @@ use std::path::PathBuf;
 
 fn rhino_demo(
     input_audio_path: PathBuf,
+    access_key: &str,
     context_path: &str,
     sensitivity: Option<f32>,
     model_path: Option<&str>,
 ) {
-    let mut rhino_builder = RhinoBuilder::new(context_path);
+    let mut rhino_builder = RhinoBuilder::new(access_key, context_path);
 
     if let Some(sensitivity) = sensitivity {
         rhino_builder.sensitivity(sensitivity);
@@ -108,6 +109,14 @@ fn main() {
             .required(true)
         )
         .arg(
+            Arg::with_name("access_key")
+                .long("access_key")
+                .value_name("ACCESS_KEY")
+                .help("AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)")
+                .takes_value(true)
+                .required(true),
+        )
+        .arg(
             Arg::with_name("context_path")
             .long("context_path")
             .value_name("PATH")
@@ -142,5 +151,15 @@ fn main() {
 
     let model_path = matches.value_of("model_path");
 
-    rhino_demo(input_audio_path, context_path, sensitivity, model_path);
+    let access_key = matches
+        .value_of("access_key")
+        .expect("AccessKey is REQUIRED for Rhino operation");
+
+    rhino_demo(
+        input_audio_path,
+        access_key,
+        context_path,
+        sensitivity,
+        model_path,
+    );
 }
