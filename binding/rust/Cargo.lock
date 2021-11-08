@@ -615,6 +615,7 @@ name = "pv_rhino"
 version = "1.6.0"
 dependencies = [
  "itertools",
+ "lazy_static",
  "libc",
  "libloading",
  "log",
