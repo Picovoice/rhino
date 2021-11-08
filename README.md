@@ -451,7 +451,7 @@ This demo opens an audio stream from a microphone and performs inference on spok
 From [demo/rust/micdemo](/demo/rust/micdemo) run the following:
 
 ```console
-cargo run --release -- --context_path ${CONTEXT_FILE_PATH}
+cargo run --release -- --access_key ${ACCESS_KEY} --context_path ${CONTEXT_FILE_PATH}
 ```
 
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
@@ -1573,7 +1573,9 @@ To create an instance of the engine you first create a `RhinoBuilder` instance w
 ```rust
 use rhino::RhinoBuilder;
 
-let rhino: Rhino = RhinoBuilder::new("/path/to/context/file.rhn").init().expect("Unable to create Rhino");
+let access_key = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
+let rhino: Rhino = RhinoBuilder::new(access_key, "/path/to/context/file.rhn").init().expect("Unable to create Rhino");
 ```
 
 To feed audio into Rhino, use the `process` function in your capture loop:
