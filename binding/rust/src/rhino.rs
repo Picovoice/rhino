@@ -329,15 +329,12 @@ impl RhinoInner {
 
             let pv_rhino_init: Symbol<PvRhinoInitFn> = load_library_fn(b"pv_rhino_init")?;
 
-            let access_key = match CString::new(access_key.into()) {
-                Ok(access_key) => access_key,
-                Err(err) => {
-                    return Err(RhinoError::new(
-                        RhinoErrorStatus::ArgumentError,
-                        &format!("AccessKey is not a valid C string {}", err),
-                    ))
-                }
-            };
+            let access_key = CString::new(access_key.into()).map_err(|err| {
+                RhinoError::new(
+                    RhinoErrorStatus::ArgumentError,
+                    &format!("AccessKey is not a valid C string {}", err),
+                )
+            })?;
             let pv_model_path = pathbuf_to_cstring(&model_path);
             let pv_context_path = pathbuf_to_cstring(&context_path);
             let mut crhino = std::ptr::null_mut();
