@@ -48,6 +48,15 @@ All modern browsers (Chrome/Edge/Opera, Firefox, Safari) are supported, includin
 
 Using the Web Audio API requires a secure context (HTTPS connection), with the exception of `localhost`, for local development.
 
+## AccessKey
+
+The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
 ## Installation
 
 Use `npm` or `yarn` to install the package and its peer dependencies. Each spoken language (e.g. 'en', 'de') is a separate package. For this example we'll use English:
@@ -79,6 +88,7 @@ import React, { useState } from 'react';
 import { RhinoWorkerFactory } from '@picovoice/rhino-web-en-worker';
 import { useRhino } from '@picovoice/rhino-web-react';
 
+const ACCESS_KEY = /* AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
 const RHN_CONTEXT_CLOCK_64 = /* Base64 representation of English language clock_wasm.rhn, omitted for brevity */
 
 function VoiceWidget(props) {
@@ -90,6 +100,7 @@ function VoiceWidget(props) {
   };
 
   const {
+    accessKey,
     contextInfo,
     isLoaded,
     isListening,
@@ -106,7 +117,7 @@ function VoiceWidget(props) {
       // Start Rhino with the clock contex
       //Immediately start processing audio,
       // although rhino will not activate until the button is pressed
-      { context: { base64: RHN_CONTEXT_CLOCK_64 }, start: true },
+      { accessKey: ACCESS_KEY, context: { base64: RHN_CONTEXT_CLOCK_64 }, start: true },
     inferenceEventHandler
   );
 
@@ -137,6 +148,7 @@ import React, { useState, useEffect } from 'react';
 import { RhinoWorkerFactory } from '@picovoice/rhino-web-en-worker';
 import { useRhino } from '@picovoice/rhino-web-react';
 
+const ACCESS_KEY = /* AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
 const RHN_CONTEXT_CLOCK_64 = /* Base64 representation of English language clock_wasm.rhn, omitted for brevity */
 
 function VoiceWidget(props) {
@@ -174,7 +186,7 @@ function VoiceWidget(props) {
     pushToTalk,
   } = useRhino(
     workerChunk.factory,
-    { context: { base64: RHN_EN_CLOCK_64 } },
+    { accessKey: ACCESS_KEY, context: { base64: RHN_EN_CLOCK_64 } },
     inferenceEventHandler
   );
 ```

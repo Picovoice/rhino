@@ -14,6 +14,7 @@ export function useRhino(
   rhinoHookArgs: RhinoHookArgs | null,
   inferenceCallback: (inference: RhinoInferenceFinalized) => void
 ): {
+  accessKey: string | null;
   contextInfo: string | null;
   isLoaded: boolean;
   isListening: boolean;
@@ -31,6 +32,7 @@ export function useRhino(
   const [isListening, setIsListening] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isTalking, setIsTalking] = useState(false);
+  const [accessKey, setAccessKey] = useState<string | null>(null);
   const [contextInfo, setContextInfo] = useState<string | null>(null);
   const [rhinoWorker, setRhinoWorker] = useState<RhinoWorker | null>(null);
   const [
@@ -131,11 +133,12 @@ export function useRhino(
       webVp: WebVoiceProcessor;
       rhnWorker: RhinoWorker;
     }> {
-      const { context, start: startWebVp = true } = rhinoHookArgs!;
+      const { accessKey, context, start: startWebVp = true } = rhinoHookArgs!;
 
       const initIsTalking = rhinoHookArgs?.isTalking === true;
 
       const rhnWorker = await rhinoWorkerFactory!.create({
+        accessKey,
         context,
         start: initIsTalking,
       });
@@ -204,6 +207,7 @@ export function useRhino(
   ]);
 
   return {
+    accessKey,
     contextInfo,
     isLoaded,
     isListening,

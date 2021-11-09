@@ -6,6 +6,7 @@ import { CLOCK_EN_64 } from "./dist/rhn_contexts_base64";
 export default function VoiceWidget() {
   const [inference, setInference] = useState(null);
   const [workerChunk, setWorkerChunk] = useState({ factory: null });
+  const [accessKey, setAccessKey] = useState("");
 
   useEffect(() => {
     if (workerChunk.factory === null) {
@@ -44,13 +45,29 @@ export default function VoiceWidget() {
     pushToTalk,
   } = useRhino(
     workerChunk.factory,
-    { context: { base64: CLOCK_EN_64 }, start: true },
+    {
+      accessKey,
+      context: { base64: CLOCK_EN_64 },
+      start: true
+    },
     inferenceEventHandler
   );
 
   return (
     <div className="voice-widget">
       <h2>VoiceWidget</h2>
+      <h3>
+        <label>
+          AccessKey obtained from{" "}
+          <a href="https://picovoice.ai/console/">Picovoice Console</a>:
+          <input
+            type="text"
+            name="accessKey"
+            onChange={(value) => setAccessKey(value.target.value)}
+            disabled={isLoaded}
+          />
+        </label>
+      </h3>
       <h3>
         Dynamic Import Loaded: {JSON.stringify(workerChunk.factory !== null)}
       </h3>
