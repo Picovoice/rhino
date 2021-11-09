@@ -9,12 +9,7 @@
     specific language governing permissions and limitations under the License.
 */
 
-#if !defined(_WIN32) && !defined(_WIN64)
-
-#include <dlfcn.h>
-
-#endif
-
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -23,7 +18,15 @@
 
 #include <windows.h>
 
+#else
+
+#include <dlfcn.h>
+
 #endif
+
+#define DR_WAV_IMPLEMENTATION
+
+#include "dr_wav.h"
 
 #include "pv_rhino.h"
 
@@ -83,16 +86,62 @@ static void print_dl_error(const char *message) {
 
 }
 
+static struct option long_options[] = {
+        {"library_path",       required_argument, NULL, 'l'},
+        {"model_path",         required_argument, NULL, 'm'},
+        {"context_path",       required_argument, NULL, 'c'},
+        {"sensitivity",        required_argument, NULL, 't'},
+        {"access_key",         required_argument, NULL, 'a'},
+        {"wav_path",           required_argument, NULL, 'w'},
+        {"require_endpoint",   no_argument, NULL, 'e'}
+};
+
+void print_usage(const char *program_name) {
+    fprintf(stderr, "Usage : %s -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -t SENSTIVITY -a ACCESS_KEY -w WAV_PATH --require_endpoint\n", program_name);
+}
+
 int main(int argc, char *argv[]) {
-    if (argc != 5) {
-        fprintf(stderr, "usage : %s library_path model_path context_path wav_path\n", argv[0]);
-        exit(1);
+    const char *library_path = NULL;
+    const char *model_path = NULL;
+    const char *context_path = NULL;
+    const char *access_key = NULL;
+    const char *wav_path = NULL;
+    float sensitivity = 0.5f;
+    bool require_endpoint = false;
+
+    int c = 0;
+    while ((c = getopt_long(argc, argv, "l:m:c:t:a:w:e", long_options, NULL)) != -1) {
+        switch (c) {
+            case 'l':
+                library_path = optarg;
+                break;
+            case 'm':
+                model_path = optarg;
+                break;
+            case 'c':
+                context_path = optarg;
+                break;
+            case 'a':
+                access_key = optarg;
+                break;
+            case 'w':
+                wav_path = optarg;
+                break;
+            case 't':
+                sensitivity = strtof(optarg, NULL);
+                break;
+            case 'e':
+                require_endpoint = true;
+                break;
+            default:
+                exit(1);
+        }
     }
 
-    const char *library_path = argv[1];
-    const char *model_path = argv[2];
-    const char *context_path = argv[3];
-    const char *wav_path = argv[4];
+    if (!library_path || !model_path || !context_path || !access_key) {
+        print_usage(argv[0]);
+        exit(1);
+    }
 
     void *rhino_library = open_dl(library_path);
     if (!rhino_library) {
@@ -112,7 +161,13 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    pv_status_t (*pv_rhino_init_func)(const char *, const char *, float, pv_rhino_t **) =
+    pv_status_t (*pv_rhino_init_func)(
+            const char *access_key,
+            const char *model_path,
+            const char *context_path,
+            float sensitivity,
+            bool require_endpoint,
+            pv_rhino_t **) =
             load_symbol(rhino_library, "pv_rhino_init");
     if (!pv_rhino_init_func) {
         print_dl_error("failed to load 'pv_rhino_init'");
@@ -165,38 +220,54 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    drwav f;
+
+    if (!drwav_init_file(&f, wav_path, NULL)) {
+        fprintf(stderr, "failed to open wav file at '%s'.", wav_path);
+        exit(1);
+    }
+
+    if (f.sampleRate != (uint32_t) pv_sample_rate_func()) {
+        fprintf(stderr, "audio sample rate should be %d\n.", pv_sample_rate_func());
+        exit(1);
+    }
+
+    if (f.bitsPerSample != 16) {
+        fprintf(stderr, "audio format should be 16-bit\n.");
+        exit(1);
+    }
+
+    if (f.channels != 1) {
+        fprintf(stderr, "audio should be single-channel.\n");
+        exit(1);
+    }
+
+    int16_t *pcm = calloc(pv_rhino_frame_length_func(), sizeof(int16_t));
+    if (!pcm) {
+        fprintf(stderr, "failed to allocate memory for audio frame.\n");
+        exit(1);
+    }
+
     pv_rhino_t *rhino = NULL;
-    pv_status_t status = pv_rhino_init_func(model_path, context_path, 0.5f, &rhino);
+    pv_status_t status = pv_rhino_init_func(
+            access_key,
+            model_path,
+            context_path,
+            0.5f,
+            require_endpoint,
+            &rhino);
     if (status != PV_STATUS_SUCCESS) {
         fprintf(stderr, "'pv_rhino_init' failed with '%s'\n", pv_status_to_string_func(status));
         exit(1);
     }
 
-    FILE *wav = fopen(wav_path, "rb");
-    if (!wav) {
-        fprintf(stderr, "failed to open wav file\n");
-        exit(1);
-    }
-
-    if (fseek(wav, 44, SEEK_SET) != 0) {
-        printf("failed to skip the wav header\n");
-        exit(1);
-    }
-
-    const int32_t frame_length = pv_rhino_frame_length_func();
-
-    int16_t *pcm = malloc(sizeof(int16_t) * frame_length);
-    if (!pcm) {
-        fprintf(stderr, "failed to allocate memory for audio buffer\n");
-        exit(1);
-    }
+    fprintf(stdout, "Picovoice Rhino Speech-to-Intent (%s) :\n\n", pv_rhino_version_func());
 
     double total_cpu_time_usec = 0;
     double total_processed_time_usec = 0;
+    int32_t frame_index = 0;
 
-    fprintf(stdout, "Picovoice Rhino Speech-to-Intent (%s) :\n\n", pv_rhino_version_func());
-
-    while (fread(pcm, sizeof(int16_t), frame_length, wav) == (size_t) frame_length) {
+    while ((int32_t) drwav_read_pcm_frames_s16(&f, pv_rhino_frame_length_func(), pcm) == pv_rhino_frame_length_func()) {
         struct timeval before;
         gettimeofday(&before, NULL);
 
@@ -258,14 +329,15 @@ int main(int argc, char *argv[]) {
 
         total_cpu_time_usec +=
                 (double) (after.tv_sec - before.tv_sec) * 1e6 + (double) (after.tv_usec - before.tv_usec);
-        total_processed_time_usec += (frame_length * 1e6) / pv_sample_rate_func();
+        total_processed_time_usec += (pv_rhino_frame_length_func() * 1e6) / pv_sample_rate_func();
+        frame_index++;
     }
 
     const double real_time_factor = total_cpu_time_usec / total_processed_time_usec;
     fprintf(stdout, "real time factor : %.3f\n", real_time_factor);
 
     free(pcm);
-    fclose(wav);
+    drwav_uninit(&f);
     pv_rhino_delete_func(rhino);
     close_dl(rhino_library);
 
