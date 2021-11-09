@@ -1614,12 +1614,13 @@ Rhino is implemented in ANSI C and therefore can be directly linked to C applica
 header file contains relevant information. An instance of the Rhino object can be constructed as follows:
 
 ```c
+const char *access_key = "${ACCESS_KEY}" // obtained from the Picovoice Console (https://picovoice.ai/console/)
 const char *model_path = ... // Available at lib/common/rhino_params.pv
 const char *context_path = ... // absolute path to context file for the domain of interest
 const float sensitivity = 0.5f;
 
 pv_rhino_t *handle = NULL;
-const pv_status_t status = pv_rhino_init(model_path, context_path, sensitivity, &handle);
+const pv_status_t status = pv_rhino_init(access_key, model_path, context_path, sensitivity, &handle);
 if (status != PV_STATUS_SUCCESS) {
     // add error handling code
 }
