@@ -18,7 +18,7 @@ import { Mutex } from 'async-mutex';
 import { RhinoInference, RhinoContext, RhinoEngine } from './rhino_types';
 
 // @ts-ignore
-import { RHINO_WASM_BASE64 } from './lang/pv_rhino_b64';
+import { RHINO_WASM_BASE64 } from './lang/rhino_b64';
 import { wasiSnapshotPreview1Emulator } from './wasi_snapshot';
 
 import {
@@ -51,6 +51,7 @@ type RhinoWasmOutput = {
   frameLength: number;
   sampleRate: number;
   version: string;
+  contextInfo: string;
 
   objectAddress: number;
   inputBufferAddress: number;
@@ -97,6 +98,7 @@ export class Rhino implements RhinoEngine {
   private static _frameLength: number;
   private static _sampleRate: number;
   private static _version: string;
+  private static _contextInfo: string;
 
   private static _resolvePromise: EmptyPromise | null;
   private static _rejectPromise: EmptyPromise | null;
@@ -106,6 +108,7 @@ export class Rhino implements RhinoEngine {
     Rhino._frameLength = handleWasm.frameLength;
     Rhino._sampleRate = handleWasm.sampleRate;
     Rhino._version = handleWasm.version;
+    Rhino._contextInfo = handleWasm.contextInfo;
 
     this._pvRhinoDelete = handleWasm.pvRhinoDelete;
     this._pvRhinoFreeSlotsAndValues = handleWasm.pvRhinoFreeSlotsAndValues;
@@ -128,6 +131,8 @@ export class Rhino implements RhinoEngine {
     this._numSlotsAddress = handleWasm.numSlotsAddress;
     this._slotsAddressAddressAddress = handleWasm.slotsAddressAddressAddress;
     this._valuesAddressAddressAddress = handleWasm.valuesAddressAddressAddress;
+
+    this._processMutex = new Mutex();
   }
 
   /**
@@ -294,7 +299,7 @@ export class Rhino implements RhinoEngine {
   }
 
   get contextInfo(): string {
-    return "TODO!";
+    return Rhino._contextInfo;
   }
 
   /**
@@ -336,6 +341,23 @@ export class Rhino implements RhinoEngine {
       });
     });
     return returnPromise;
+  }
+
+  public static clearFilePromises(): void {
+    Rhino._rejectPromise = null;
+    Rhino._resolvePromise = null;
+  }
+
+  // eslint-disable-next-line
+  public static resolveFilePromise(args: any): void {
+    // @ts-ignore
+    Rhino._resolvePromise(args);
+  }
+
+  // eslint-disable-next-line
+  public static rejectFilePromise(args: any): void {
+    // @ts-ignore
+    Rhino._rejectPromise(args);
   }
 
   private static async initWasm(
@@ -728,7 +750,7 @@ export class Rhino implements RhinoEngine {
       contextAddress / Uint8Array.BYTES_PER_ELEMENT
     );
 
-    const status = await pv_rhino_init(
+    let status = await pv_rhino_init(
       accessKeyAddress,
       contextAddress,
       context.length,
@@ -755,6 +777,34 @@ export class Rhino implements RhinoEngine {
     const version = arrayBufferToStringAtIndex(
       memoryBufferUint8,
       versionAddress
+    );
+
+    const contextInfoAddressAddress = await aligned_alloc(
+      Uint8Array.BYTES_PER_ELEMENT,
+      Uint8Array.BYTES_PER_ELEMENT
+    )
+    if (contextAddress === 0) {
+      throw new Error('malloc failed: Cannot allocate memory');
+    }
+    status = await pv_rhino_context_info(
+      objectAddress,
+      contextInfoAddressAddress
+    );
+    if (status !== PV_STATUS_SUCCESS) {
+      throw new Error(
+        `'pv_rhino_context_info' failed with status ${arrayBufferToStringAtIndex(
+          memoryBufferUint8,
+          await pv_status_to_string(status)
+        )}`
+      );
+    }
+    const contextInfoAddress = memoryBufferView.getInt32(
+      contextInfoAddressAddress,
+      true
+    );
+    const contextInfo = arrayBufferToStringAtIndex(
+      memoryBufferUint8,
+      contextInfoAddress
     );
 
     const inputBufferAddress = await aligned_alloc(
@@ -818,6 +868,7 @@ export class Rhino implements RhinoEngine {
       frameLength: frameLength,
       sampleRate: sampleRate,
       version: version,
+      contextInfo: contextInfo,
 
       objectAddress: objectAddress,
       inputBufferAddress: inputBufferAddress,

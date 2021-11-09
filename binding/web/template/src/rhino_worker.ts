@@ -77,6 +77,38 @@ onmessage = function (
   event: MessageEvent<RhinoWorkerRequest>
 ): void {
   switch (event.data.command) {
+    case 'file-save-succeeded':
+      Rhino.resolveFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-save-failed':
+      Rhino.rejectFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-load-succeeded':
+      Rhino.resolveFilePromise(event.data.content);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-load-failed':
+      Rhino.rejectFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-exists-succeeded':
+      Rhino.resolveFilePromise(event.data.content);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-exists-failed':
+      Rhino.rejectFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-delete-succeeded':
+      Rhino.resolveFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-delete-failed':
+      Rhino.rejectFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
     case 'init':
       init(event.data.rhinoArgs);
       break;
