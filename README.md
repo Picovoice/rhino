@@ -1562,7 +1562,7 @@ handle.release();
 
 First you will need [Rust and Cargo](https://rustup.rs/) installed on your system.
 
-To add the porcupine library into your app, add `pv_rhino` to your apps `Cargo.toml` manifest:
+To add the rhino library into your app, add `pv_rhino` to your apps `Cargo.toml` manifest:
 ```toml
 [dependencies]
 pv_rhino = "*"

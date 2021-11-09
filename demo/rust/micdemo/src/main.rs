@@ -192,7 +192,7 @@ fn main() {
 
     let access_key = matches
         .value_of("access_key")
-        .expect("AccessKey is REQUIRED for Porcupine operation");
+        .expect("AccessKey is REQUIRED for Rhino operation");
 
     rhino_demo(
         audio_device_index,
