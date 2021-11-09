@@ -1228,6 +1228,7 @@ Each spoken language is available as a dedicated npm package (e.g. @picovoice/rh
         console.log("Rhino is loading. Please wait...");
         window.rhinoWorker = await RhinoWebEnWorker.RhinoWorkerFactory.create(
           {
+            accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
             context: {
               base64: RHINO_CONTEXT_BASE64,
               sensitivity: 0.5,
@@ -1302,7 +1303,10 @@ async startRhino()
   // Create a Rhino Worker (English language) to listen for
   // commands in the specified context
   const rhinoWorker = await RhinoWorkerFactory.create(
-    {context: RHN_CONTEXT_BASE64 }
+    {
+      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+      context: RHN_CONTEXT_BASE64
+    }
   );
  
   // The worker will send a message with data.command = "rhn-inference" upon concluding

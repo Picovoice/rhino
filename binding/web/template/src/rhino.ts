@@ -303,16 +303,15 @@ export class Rhino implements RhinoEngine {
   }
 
   /**
-   * Creates an instance of the Porcupine wake word engine.
+   * Creates an instance of the Rhino speech-to-intent engine.
    * Behind the scenes, it requires the WebAssembly code to load and initialize before
    * it can create an instance.
    *
-   * @param accessKey - AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
-   * @param keywords - Built-in or Base64
-   * representations of keywords and their sensitivities.
-   * Can be provided as an array or a single keyword.
+   * @param accessKey - AccessKey obtained from Picovoice Console (https://picovoice.ai/console/).
+   * @param contextInfo - Base64 representation of the context and it's sensitivity.
+   * @param requireEndpoint - Boolean. If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
    *
-   * @returns An instance of the Porcupine engine.
+   * @returns An instance of the Rhino engine.
    */
   public static async create(
     accessKey: string,
