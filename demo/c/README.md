@@ -110,8 +110,7 @@ Replace `${PROCESSOR}` with one of the Raspberry Pi processors defined [here](..
 #### Windows
 
 ```console
-.\\demo\\c\\build\\rhino_demo_mic.exe -l lib/windows/amd64/libpv_rhino.dll -m lib/common/rhino_params.pv \
--c resources/contexts/windows/smart_lighting_windows.rhn -d ${AUDIO_DEVICE_INDEX} -a ${ACCESS_KEY}
+.\\demo\\c\\build\\rhino_demo_mic.exe -l lib/windows/amd64/libpv_rhino.dll -m lib/common/rhino_params.pv -c resources/contexts/windows/smart_lighting_windows.rhn -d ${AUDIO_DEVICE_INDEX} -a ${ACCESS_KEY}
 ```
 
 Once the demo is running, it will start listening for context. For example, you can say:
@@ -207,8 +206,7 @@ Replace `${PROCESSOR}` with one of the Raspberry Pi processors defined [here](..
 #### Windows
 
 ```console
-.\\demo\\c\\build\\rhino_demo_file.exe -l lib/windows/amd64/libpv_rhino.dll -m lib/common/rhino_params.pv \
--c resources/contexts/windows/coffee_maker_windows.rhn -w resources/audio_samples/test_within_context.wav -a ${ACCESS_KEY}
+.\\demo\\c\\build\\rhino_demo_file.exe -l lib/windows/amd64/libpv_rhino.dll -m lib/common/rhino_params.pv -c resources/contexts/windows/coffee_maker_windows.rhn -w resources/audio_samples/test_within_context.wav -a ${ACCESS_KEY}
 ```
 
 The following prints to the console:
