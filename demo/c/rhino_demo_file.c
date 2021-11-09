@@ -87,13 +87,13 @@ static void print_dl_error(const char *message) {
 }
 
 static struct option long_options[] = {
-        {"library_path", required_argument, NULL, 'l'},
-        {"model_path", required_argument, NULL, 'm'},
-        {"context_path", required_argument, NULL, 'c'},
-        {"sensitivity", required_argument, NULL, 't'},
-        {"require_endpoint", no_argument, NULL, 'e'},
-        {"access_key", required_argument, NULL, 'a'},
-        {"wav_path", required_argument, NULL, 'w'}
+        {"library_path",     required_argument, NULL, 'l'},
+        {"model_path",       required_argument, NULL, 'm'},
+        {"context_path",     required_argument, NULL, 'c'},
+        {"sensitivity",      required_argument, NULL, 't'},
+        {"require_endpoint", no_argument,       NULL, 'e'},
+        {"access_key",       required_argument, NULL, 'a'},
+        {"wav_path",         required_argument, NULL, 'w'}
 };
 
 void print_usage(const char *program_name) {
