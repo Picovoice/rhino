@@ -33,7 +33,7 @@ async function init(rhinoArgs: RhinoArgs): Promise<void> {
   } catch (error) {
     const rhnErrorMessage: RhinoWorkerResponseInitError = {
       command: 'rhn-error-init',
-      error: error
+      error: error.toString()
     };
     postMessage(rhnErrorMessage, undefined);
     return;

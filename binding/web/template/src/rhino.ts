@@ -37,7 +37,7 @@ const PV_STATUS_SUCCESS = 10000;
 type EmptyPromise = (value: void) => void;
 
 /**
- * JavaScript/WebAssembly Binding for the Picovoice Rhino wake word engine.
+ * JavaScript/WebAssembly Binding for the Picovoice Rhino Speech-to-Intent engine.
  *
  * It initializes the WebAssembly module and exposes an async factory method `create` for creating
  * new instances of the engine.

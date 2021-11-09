@@ -16,17 +16,22 @@
       }
 
       async function startRhino(accessKey) {
-        writeMessage("Rhino is loading. Please wait...");
-        window.rhinoClockWorker = await RhinoWebEnWorker.RhinoWorkerFactory.create(
-          {
-            accessKey,
-            context: {
-              base64: CLOCK_CONTEXT_64,
-              sensitivity: 0.5,
-            },
-            start: false,
-          }
-        );
+        try {
+          writeMessage("Rhino is loading. Please wait...");
+          window.rhinoClockWorker = await RhinoWebEnWorker.RhinoWorkerFactory.create(
+            {
+              accessKey,
+              context: {
+                base64: CLOCK_CONTEXT_64,
+                sensitivity: 0.5,
+              },
+              start: false,
+            }
+          );
+        } catch (e) {
+          writeMessage("Rhino failed to initialize: " + e);
+          return;
+        }
 
         writeMessage("Rhino worker ready!");
         document.getElementById("push-to-talk").disabled = false;
