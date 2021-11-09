@@ -18,11 +18,13 @@ use std::path::PathBuf;
 
 fn rhino_demo(
     input_audio_path: PathBuf,
+    access_key: &str,
     context_path: &str,
     sensitivity: Option<f32>,
     model_path: Option<&str>,
+    require_endpoint: Option<bool>,
 ) {
-    let mut rhino_builder = RhinoBuilder::new(context_path);
+    let mut rhino_builder = RhinoBuilder::new(access_key, context_path);
 
     if let Some(sensitivity) = sensitivity {
         rhino_builder.sensitivity(sensitivity);
@@ -30,6 +32,10 @@ fn rhino_demo(
 
     if let Some(model_path) = model_path {
         rhino_builder.model_path(model_path);
+    }
+
+    if let Some(require_endpoint) = require_endpoint {
+        rhino_builder.require_endpoint(require_endpoint);
     }
 
     let rhino = rhino_builder.init().expect("Failed to create Rhino");
@@ -65,7 +71,7 @@ fn rhino_demo(
     }
 
     let mut timestamp = Duration::zero();
-    for frame in &wav_reader.samples().chunks(rhino.frame_length() as usize) {
+    'process: for frame in &wav_reader.samples().chunks(rhino.frame_length() as usize) {
         let frame: Vec<i16> = frame.map(|s| s.unwrap()).collect_vec();
         timestamp = timestamp
             + Duration::milliseconds(((1000 * frame.len()) / rhino.sample_rate() as usize) as i64);
@@ -92,6 +98,7 @@ fn rhino_demo(
                 } else {
                     println!("Did not understand the command");
                 }
+                break 'process;
             }
         }
     }
@@ -106,6 +113,14 @@ fn main() {
             .help("Path to input audio file (mono, WAV, 16-bit, 16kHz).")
             .takes_value(true)
             .required(true)
+        )
+        .arg(
+            Arg::with_name("access_key")
+            .long("access_key")
+            .value_name("ACCESS_KEY")
+            .help("AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)")
+            .takes_value(true)
+            .required(true),
         )
         .arg(
             Arg::with_name("context_path")
@@ -129,18 +144,42 @@ fn main() {
             .help("Inference sensitivity. The value should be a number within [0, 1]. A higher sensitivity results in fewer misses at the cost of increasing the false alarm rate. If not set 0.5 will be used.")
             .takes_value(true)
         )
+        .arg(
+            Arg::with_name("require_endpoint")
+            .long("require_endpoint")
+            .value_name("BOOL")
+            .help("If set, Rhino requires an endpoint (chunk of silence) before finishing inference.")
+            .takes_value(true)
+            .possible_values(&["TRUE", "true", "FALSE", "false"])
+        )
         .get_matches();
 
     let input_audio_path = PathBuf::from(matches.value_of("input_audio_path").unwrap());
 
     let context_path = matches.value_of("context_path").unwrap();
 
-    let sensitivity = match matches.value_of("sensitivity") {
-        Some(sensitivity) => Some(sensitivity.parse().unwrap()),
-        None => None,
-    };
+    let sensitivity = matches
+        .value_of("sensitivity")
+        .map(|sensitivity| sensitivity.parse().unwrap());
 
     let model_path = matches.value_of("model_path");
 
-    rhino_demo(input_audio_path, context_path, sensitivity, model_path);
+    let access_key = matches
+        .value_of("access_key")
+        .expect("AccessKey is REQUIRED for Rhino operation");
+
+    let require_endpoint = matches.value_of("require_endpoint").map(|req| match req {
+        "TRUE" | "true" => true,
+        "FALSE" | "false" => false,
+        _ => unreachable!(),
+    });
+
+    rhino_demo(
+        input_audio_path,
+        access_key,
+        context_path,
+        sensitivity,
+        model_path,
+        require_endpoint,
+    );
 }
