@@ -1612,9 +1612,10 @@ const char *access_key = "${ACCESS_KEY}" // obtained from the Picovoice Console 
 const char *model_path = ... // Available at lib/common/rhino_params.pv
 const char *context_path = ... // absolute path to context file for the domain of interest
 const float sensitivity = 0.5f;
+bool require_endpoint = false;
 
 pv_rhino_t *handle = NULL;
-const pv_status_t status = pv_rhino_init(access_key, model_path, context_path, sensitivity, &handle);
+const pv_status_t status = pv_rhino_init(access_key, model_path, context_path, sensitivity, require_endpoint, &handle);
 if (status != PV_STATUS_SUCCESS) {
     // add error handling code
 }
