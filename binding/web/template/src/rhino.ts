@@ -166,6 +166,14 @@ export class Rhino implements RhinoEngine {
           this._inputBufferAddress,
           this._isFinalizedAddress
         );
+        if (status !== PV_STATUS_SUCCESS) {
+          throw new Error(
+            `'pv_rhino_process' failed with status ${arrayBufferToStringAtIndex(
+              this._memoryBufferUint8,
+              await this._pvStatusToString(status)
+            )}`
+          );
+        }
 
         const isFinalized = this._memoryBufferView.getUint8(
           this._isFinalizedAddress
@@ -176,6 +184,14 @@ export class Rhino implements RhinoEngine {
             this._objectAddress,
             this._isUnderstoodAddress
           );
+          if (status !== PV_STATUS_SUCCESS) {
+            throw new Error(
+              `'pv_rhino_is_understood' failed with status ${arrayBufferToStringAtIndex(
+                this._memoryBufferUint8,
+                await this._pvStatusToString(status)
+              )}`
+            );
+          }
 
           const isUnderstood = this._memoryBufferView.getUint8(
             this._isUnderstoodAddress
@@ -195,6 +211,14 @@ export class Rhino implements RhinoEngine {
               this._slotsAddressAddressAddress,
               this._valuesAddressAddressAddress,
             );
+            if (status !== PV_STATUS_SUCCESS) {
+              throw new Error(
+                `'pv_rhino_get_intent' failed with status ${arrayBufferToStringAtIndex(
+                  this._memoryBufferUint8,
+                  await this._pvStatusToString(status)
+                )}`
+              );
+            }
 
             const intentAddress = this._memoryBufferView.getInt32(
               this._intentAddressAddress,
@@ -224,9 +248,41 @@ export class Rhino implements RhinoEngine {
               }
               slots[slot] = value;
             }
+
+            const slotsAddressAddress = this._memoryBufferView.getInt32(
+              this._slotsAddressAddressAddress,
+              true
+            );
+
+            const valuesAddressAddress = this._memoryBufferView.getInt32(
+              this._valuesAddressAddressAddress,
+              true
+            );
+
+            status = await this._pvRhinoFreeSlotsAndValues(
+              this._objectAddress,
+              slotsAddressAddress,
+              valuesAddressAddress,
+            );
+            if (status !== PV_STATUS_SUCCESS) {
+              throw new Error(
+                `'pv_rhino_free_slots_values' failed with status ${arrayBufferToStringAtIndex(
+                  this._memoryBufferUint8,
+                  await this._pvStatusToString(status)
+                )}`
+              );
+            }
           }
 
           status = await this._pvRhinoReset(this._objectAddress);
+          if (status !== PV_STATUS_SUCCESS) {
+            throw new Error(
+              `'pv_rhino_process' failed with status ${arrayBufferToStringAtIndex(
+                this._memoryBufferUint8,
+                await this._pvStatusToString(status)
+              )}`
+            );
+          }
 
           return {
             isFinalized: true,

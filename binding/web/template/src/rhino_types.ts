@@ -116,4 +116,5 @@ export type RhinoWorkerResponse =
   | RhinoWorkerResponseInference
   | RhinoWorkerResponseError
   | RhinoWorkerResponseInitError
+  | RhinoWorkerResponseInfo
   | RhinoWorkerResponseFileOperation
