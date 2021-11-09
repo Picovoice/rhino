@@ -26,6 +26,7 @@ fn rhino_demo(
     sensitivity: Option<f32>,
     model_path: Option<&str>,
     output_path: Option<&str>,
+    require_endpoint: Option<bool>,
 ) {
     let mut rhino_builder = RhinoBuilder::new(access_key, context_path);
 
@@ -35,6 +36,10 @@ fn rhino_demo(
 
     if let Some(model_path) = model_path {
         rhino_builder.model_path(model_path);
+    }
+
+    if let Some(require_endpoint) = require_endpoint {
+        rhino_builder.require_endpoint(require_endpoint);
     }
 
     let rhino = rhino_builder.init().expect("Failed to create Rhino");
@@ -151,6 +156,14 @@ fn main() {
             .takes_value(true)
         )
         .arg(
+            Arg::with_name("require_endpoint")
+            .long("require_endpoint")
+            .value_name("BOOL")
+            .help("If set, Rhino requires an endpoint (chunk of silence) before finishing inference.")
+            .takes_value(true)
+            .possible_values(&["TRUE", "true", "FALSE", "false"])
+        )
+        .arg(
             Arg::with_name("audio_device_index")
             .long("audio_device_index")
             .value_name("INDEX")
@@ -183,16 +196,21 @@ fn main() {
 
     let context_path = matches.value_of("context_path").unwrap();
 
-    let sensitivity = match matches.value_of("sensitivity") {
-        Some(sensitivity) => Some(sensitivity.parse().unwrap()),
-        None => None,
-    };
+    let sensitivity = matches
+        .value_of("sensitivity")
+        .map(|sensitivity| sensitivity.parse().unwrap());
     let model_path = matches.value_of("model_path");
     let output_path = matches.value_of("output_path");
 
     let access_key = matches
         .value_of("access_key")
         .expect("AccessKey is REQUIRED for Rhino operation");
+
+    let require_endpoint = matches.value_of("require_endpoint").map(|req| match req {
+        "TRUE" | "true" => true,
+        "FALSE" | "false" => false,
+        _ => unreachable!(),
+    });
 
     rhino_demo(
         audio_device_index,
@@ -201,5 +219,6 @@ fn main() {
         sensitivity,
         model_path,
         output_path,
+        require_endpoint,
     );
 }

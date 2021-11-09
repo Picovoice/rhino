@@ -140,14 +140,17 @@ pub struct RhinoBuilder {
 }
 
 impl RhinoBuilder {
+    const DEFAULT_SENSITIVITY: f32 = 0.5;
+    const DEFAULT_REQUIRE_ENDPOINT: bool = true;
+
     pub fn new<S: Into<String>, P: Into<PathBuf>>(access_key: S, context_path: P) -> Self {
         return Self {
             access_key: access_key.into(),
             library_path: pv_library_path(),
             model_path: pv_model_path(),
             context_path: context_path.into(),
-            sensitivity: 0.5f32,
-            require_endpoint: true,
+            sensitivity: RhinoBuilder::DEFAULT_SENSITIVITY,
+            require_endpoint: RhinoBuilder::DEFAULT_REQUIRE_ENDPOINT,
         };
     }
 
@@ -282,9 +285,17 @@ impl RhinoInner {
         require_endpoint: bool,
     ) -> Result<Self, RhinoError> {
         unsafe {
+            let access_key: String = access_key.into();
             let library_path: PathBuf = library_path.into();
             let model_path: PathBuf = model_path.into();
             let context_path: PathBuf = context_path.into();
+
+            if access_key.len() == 0 {
+                return Err(RhinoError::new(
+                    RhinoErrorStatus::ArgumentError,
+                    "AccessKey is required for Rhino initialization",
+                ));
+            }
 
             if !library_path.exists() {
                 return Err(RhinoError::new(
@@ -329,7 +340,7 @@ impl RhinoInner {
 
             let pv_rhino_init: Symbol<PvRhinoInitFn> = load_library_fn(b"pv_rhino_init")?;
 
-            let access_key = CString::new(access_key.into()).map_err(|err| {
+            let pv_access_key = CString::new(access_key).map_err(|err| {
                 RhinoError::new(
                     RhinoErrorStatus::ArgumentError,
                     &format!("AccessKey is not a valid C string {}", err),
@@ -340,7 +351,7 @@ impl RhinoInner {
             let mut crhino = std::ptr::null_mut();
 
             let status = pv_rhino_init(
-                access_key.as_ptr(),
+                pv_access_key.as_ptr(),
                 pv_model_path.as_ptr(),
                 pv_context_path.as_ptr(),
                 sensitivity,

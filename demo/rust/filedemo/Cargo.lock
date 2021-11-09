@@ -150,7 +150,7 @@ dependencies = [
 
 [[package]]
 name = "pv_rhino"
-version = "1.6.0"
+version = "2.0.0"
 dependencies = [
  "lazy_static",
  "libc",
