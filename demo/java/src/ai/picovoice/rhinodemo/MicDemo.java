@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
+    Copyright 2018-2021 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -25,7 +25,7 @@ import java.util.Map;
 import javax.sound.sampled.*;
 
 public class MicDemo {
-    public static void runDemo(String contextPath, String libraryPath, String modelPath,
+    public static void runDemo(String accessKey, String contextPath, String libraryPath, String modelPath,
                                float sensitivity, int audioDeviceIndex, String outputPath) {
 
         // for file output
@@ -51,6 +51,7 @@ public class MicDemo {
         try {
 
             rhino = new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setContextPath(contextPath)
                     .setLibraryPath(libraryPath)
                     .setModelPath(modelPath)
@@ -212,12 +213,17 @@ public class MicDemo {
             return;
         }
 
+        String accessKey = cmd.getOptionValue("access_key");
         String libraryPath = cmd.getOptionValue("library_path");
         String modelPath = cmd.getOptionValue("model_path");
         String contextPath = cmd.getOptionValue("context_path");
         String sensitivityStr = cmd.getOptionValue("sensitivity");
         String audioDeviceIndexStr = cmd.getOptionValue("audio_device_index");
         String outputPath = cmd.getOptionValue("output_path");
+
+        if (accessKey == null || accessKey.length() == 0) {
+            throw new IllegalArgumentException("AccessKey is required for Porcupine.");
+        }
 
         // parse sensitivity
         float sensitivity = 0.5f;
@@ -270,6 +276,12 @@ public class MicDemo {
 
     private static Options BuildCommandLineOptions() {
         Options options = new Options();
+
+        options.addOption(Option.builder("a")
+                .longOpt("access_key")
+                .hasArg(true)
+                .desc("AccessKey obtained from Picovoice Console (https://picovoice.ai/console/).")
+                .build());
 
         options.addOption(Option.builder("c")
                 .longOpt("context_path")

@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
+    Copyright 2018-2021 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -43,6 +43,7 @@ public class Rhino {
     /**
      * Constructor.
      *
+     * @param accessKey     AccessKey obtained from Picovoice Console.
      * @param libraryPath Absolute path to the native Rhino library.
      * @param modelPath   Absolute path to the file containing model parameters.
      * @param contextPath Absolute path to file containing context parameters. A context represents
@@ -53,14 +54,14 @@ public class Rhino {
      *                    increasing the erroneous inference rate.
      * @throws RhinoException if there is an error while initializing Rhino.
      */
-    public Rhino(String libraryPath, String modelPath, String contextPath, float sensitivity) throws RhinoException {
+    public Rhino(String accessKey, String libraryPath, String modelPath, String contextPath, float sensitivity) throws RhinoException {
 
         try {
             System.load(libraryPath);
-            libraryHandle = init(modelPath, contextPath, sensitivity);
-        } catch (Exception e) {
-            throw new RhinoException(e);
+        } catch (Exception exception) {
+            throw new PorcupineException(exception);
         }
+        libraryHandle = init(accessKey, modelPath, contextPath, sensitivity);
     }
 
     /**
@@ -83,11 +84,7 @@ public class Rhino {
      * @throws RhinoException if there is an error while processing the audio frame.
      */
     public boolean process(short[] pcm) throws RhinoException {
-        try {
-            return process(libraryHandle, pcm);
-        } catch (Exception e) {
-            throw new RhinoException(e);
-        }
+        return process(libraryHandle, pcm);
     }
 
     /**
@@ -164,7 +161,7 @@ public class Rhino {
      */
     public native String getVersion();
 
-    private native long init(String modelPath, String contextPath, float sensitivity);
+    private native long init(String accessKey, String modelPath, String contextPath, float sensitivity);
 
     private native void delete(long object);
 
@@ -183,10 +180,16 @@ public class Rhino {
      */
     public static class Builder {
 
+        private String accessKey = null;
         private String libraryPath = null;
         private String modelPath = null;
         private String contextPath = null;
         private float sensitivity = 0.5f;
+
+        public Builder setAccessKey(String accessKey) {
+            this.accessKey = accessKey;
+            return this;
+        }
 
         public Builder setLibraryPath(String libraryPath) {
             this.libraryPath = libraryPath;
@@ -217,14 +220,21 @@ public class Rhino {
         public Rhino build() throws RhinoException {
 
             if (!Utils.isEnvironmentSupported()) {
-                throw new RhinoException(new RuntimeException("Could not initialize Rhino. " +
-                        "Execution environment not currently supported by Rhino Java."));
+                throw new RhinoRuntimeException("Could not initialize Rhino. " +
+                        "Execution environment not currently supported by Rhino Java.");
+            }
+
+            if (accessKey == null) {
+                throw new RhinoInvalidArgumentException("AccessKey is required for Rhino initialization.");
             }
 
             if (libraryPath == null) {
                 if (Utils.isResourcesAvailable()) {
                     libraryPath = LIBRARY_PATH;
                 } else {
+                    throw new RhinoInvalidArgumentException("Default library unavailable. Please " +
+                            "provide a native Rhino library path (-l <library_path>).");
+
                     throw new RhinoException(new IllegalArgumentException("Default library unavailable. Please " +
                             "provide a native Rhino library path (-l <library_path>)."));
                 }
@@ -238,8 +248,9 @@ public class Rhino {
                 if (Utils.isResourcesAvailable()) {
                     modelPath = MODEL_PATH;
                 } else {
-                    throw new RhinoException(new IllegalArgumentException("Default model unavailable. Please provide a " +
-                            "valid Rhino model path (-m <model_path>)."));
+                    throw new RhinoInvalidArgumentException("Default model unavailable. Please provide a " +
+                            "valid Rhino model path (-m <model_path>).");
+                }
                 }
                 if (!new File(modelPath).exists()) {
                     throw new RhinoException(new IOException(String.format("Couldn't find model file at " +
@@ -248,7 +259,7 @@ public class Rhino {
             }
 
             if (contextPath == null) {
-                throw new RhinoException(new IllegalArgumentException("No context file provided."));
+                throw new RhinoInvalidArgumentException("No context file provided");
             }
 
             if (!new File(contextPath).exists()) {
@@ -260,7 +271,7 @@ public class Rhino {
                 throw new RhinoException(new IllegalArgumentException("Sensitivity value should be within [0, 1]."));
             }
 
-            return new Rhino(libraryPath, modelPath, contextPath, sensitivity);
+            return new Rhino(accessKey, libraryPath, modelPath, contextPath, sensitivity);
         }
     }
 }

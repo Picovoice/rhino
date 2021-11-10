@@ -248,7 +248,7 @@ To try the real-time demo, make sure there is a working microphone connected to 
 cd demo/java
 ./gradlew build
 cd build/libs
-java -jar rhino-mic-demo.jar -c ${CONTEXT_FILE_PATH}
+java -jar rhino-mic-demo.jar -a ${ACCESS_KEY} -c ${CONTEXT_FILE_PATH}
 ```
 
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
@@ -662,8 +662,11 @@ The SDK exposes a Builder that allows you to create an instance of the engine:
 ```java
 import ai.picovoice.rhino.*;
 
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try{
     Rhino handle = new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setContextPath("/absolute/path/to/context")
                     .build();
 } catch (RhinoException e) { }
