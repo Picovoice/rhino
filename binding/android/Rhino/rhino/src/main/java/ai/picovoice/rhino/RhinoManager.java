@@ -160,10 +160,17 @@ public class RhinoManager {
      */
     public static class Builder {
 
+        private String accessKey = null;
         private String modelPath = null;
         private String contextPath = null;
         private float sensitivity = 0.5f;
+        private boolean requireEndpoint = true;
         private RhinoManagerErrorCallback errorCallback = null;
+
+        public RhinoManager.Builder setAccessKey(String accessKey) {
+            this.accessKey = accessKey;
+            return this;
+        }
 
         public RhinoManager.Builder setModelPath(String modelPath) {
             this.modelPath = modelPath;
@@ -177,6 +184,11 @@ public class RhinoManager {
 
         public RhinoManager.Builder setSensitivity(float sensitivity) {
             this.sensitivity = sensitivity;
+            return this;
+        }
+
+        public RhinoManager.Builder setRequireEndpoint(boolean requireEndpoint) {
+            this.requireEndpoint = requireEndpoint;
             return this;
         }
 
@@ -194,11 +206,12 @@ public class RhinoManager {
          * @throws RhinoException if there is an error while initializing Rhino.
          */
         public RhinoManager build(Context context, RhinoManagerCallback callback) throws RhinoException {
-
             Rhino rhino = new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setModelPath(modelPath)
                     .setContextPath(contextPath)
                     .setSensitivity(sensitivity)
+                    .setRequireEndpoint(requireEndpoint)
                     .build(context);
             return new RhinoManager(rhino, callback, errorCallback);
         }

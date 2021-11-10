@@ -44,6 +44,7 @@ public class RhinoTest {
     Context appContext;
     AssetManager assetManager;
     String testResourcesPath;
+    String accessKey;
 
     @After
     public void TearDown() {
@@ -57,12 +58,15 @@ public class RhinoTest {
         assetManager = testContext.getAssets();
         extractAssetsRecursively("test_resources");
         testResourcesPath = new File(appContext.getFilesDir(), "test_resources").getAbsolutePath();
+
+        accessKey = appContext.getString(R.string.pvTestingAccessKey);
     }
 
     @Test
     public void testInitSuccessSimple() throws RhinoException {
         File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
         Rhino r = new Rhino.Builder()
+                .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
                 .build(appContext);
 
@@ -79,6 +83,7 @@ public class RhinoTest {
         File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
         File modelPath = new File(testResourcesPath, "model_files/rhino_params.pv");
         Rhino r = new Rhino.Builder()
+                .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
                 .setModelPath(modelPath.getAbsolutePath())
                 .build(appContext);
@@ -91,8 +96,22 @@ public class RhinoTest {
     public void testInitSuccessWithCustomSensitivity() throws RhinoException {
         File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
         Rhino r = new Rhino.Builder()
+                .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
                 .setSensitivity(0.7f)
+                .build(appContext);
+
+        assertTrue(r.getContextInformation() != null && !r.getContextInformation().equals(""));
+        r.delete();
+    }
+
+    @Test
+    public void testInitSuccessWithRequireEndpointFalse() throws RhinoException {
+        File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+        Rhino r = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(contextPath.getAbsolutePath())
+                .setRequireEndpoint(false)
                 .build(appContext);
 
         assertTrue(r.getContextInformation() != null && !r.getContextInformation().equals(""));
@@ -104,6 +123,7 @@ public class RhinoTest {
         File contextPath = new File(testResourcesPath, "context_files/test_de_android.rhn");
         File modelPath = new File(testResourcesPath, "model_files/rhino_params_de.pv");
         Rhino r = new Rhino.Builder()
+                .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
                 .setModelPath(modelPath.getAbsolutePath())
                 .build(appContext);
@@ -117,6 +137,7 @@ public class RhinoTest {
         File contextPath = new File(testResourcesPath, "context_files/test_es_android.rhn");
         File modelPath = new File(testResourcesPath, "model_files/rhino_params_es.pv");
         Rhino r = new Rhino.Builder()
+                .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
                 .setModelPath(modelPath.getAbsolutePath())
                 .build(appContext);
@@ -130,6 +151,7 @@ public class RhinoTest {
         File contextPath = new File(testResourcesPath, "context_files/test_fr_android.rhn");
         File modelPath = new File(testResourcesPath, "model_files/rhino_params_fr.pv");
         Rhino r = new Rhino.Builder()
+                .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
                 .setModelPath(modelPath.getAbsolutePath())
                 .build(appContext);
@@ -145,8 +167,24 @@ public class RhinoTest {
         File modelPath = new File(testResourcesPath, "model_files/rhino_params.pv");
         try {
             new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setContextPath(contextPath.getAbsolutePath())
                     .setModelPath(modelPath.getAbsolutePath())
+                    .build(appContext);
+        } catch (RhinoException e) {
+            didFail = true;
+        }
+
+        assertTrue(didFail);
+    }
+
+    @Test
+    public void testInitFailWithNoAccessKey() {
+        boolean didFail = false;
+        File contextPath = new File(testResourcesPath, "context_files/test_fr_android.rhn");
+        try {
+            new Rhino.Builder()
+                    .setContextPath(contextPath.getAbsolutePath())
                     .build(appContext);
         } catch (RhinoException e) {
             didFail = true;
@@ -159,7 +197,9 @@ public class RhinoTest {
     public void testInitFailWithNoContext() {
         boolean didFail = false;
         try {
-            new Rhino.Builder().build(appContext);
+            new Rhino.Builder()
+                    .setAccessKey(accessKey)
+                    .build(appContext);
         } catch (RhinoException e) {
             didFail = true;
         }
@@ -173,6 +213,7 @@ public class RhinoTest {
         File contextPath = new File(testResourcesPath, "bad_path/bad_path.rhn");
         try {
             new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setContextPath(contextPath.getAbsolutePath())
                     .build(appContext);
         } catch (RhinoException e) {
@@ -189,6 +230,7 @@ public class RhinoTest {
         File modelPath = new File(testResourcesPath, "bad_path/bad_path.pv");
         try {
             new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setContextPath(contextPath.getAbsolutePath())
                     .setModelPath(modelPath.getAbsolutePath())
                     .build(appContext);
@@ -205,6 +247,7 @@ public class RhinoTest {
         File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
         try {
             new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setContextPath(contextPath.getAbsolutePath())
                     .setSensitivity(10)
                     .build(appContext);
@@ -221,6 +264,7 @@ public class RhinoTest {
         File contextPath = new File(testResourcesPath, "context_files/coffee_maker_linux.rhn");
         try {
             new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setContextPath(contextPath.getAbsolutePath())
                     .build(appContext);
         } catch (RhinoException e) {
@@ -235,6 +279,7 @@ public class RhinoTest {
 
         File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
         Rhino r = new Rhino.Builder()
+                .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
                 .build(appContext);
 
@@ -278,6 +323,7 @@ public class RhinoTest {
 
         File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
         Rhino r = new Rhino.Builder()
+                .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
                 .build(appContext);
 
