@@ -13,7 +13,7 @@ export interface RhinoEngine {
   /** Release all resources acquired by Rhino */
   release(): void;
   /** Process a single frame of 16-bit 16kHz PCM audio */
-  process(frame: Int16Array): RhinoInference;
+  process(frame: Int16Array): Promise<RhinoInference>;
   /** The version of the Rhino engine */
   readonly version: string;
   /** The sampling rate of audio expected by the Rhino engine */
@@ -41,7 +41,9 @@ export type WorkerRequestVoid = {
 };
 
 export type RhinoArgs = {
+  accessKey: string;
   context: RhinoContext;
+  requireEndpoint?: boolean;
   start: boolean;
 }
 
@@ -78,10 +80,41 @@ export type RhinoWorkerResponseInfo = {
   info: string
 };
 
-export type RhinoWorkerRequest = WorkerRequestVoid | WorkerRequestProcess | RhinoWorkerRequestInit | RhinoWorkerRequestInfo
+export type RhinoWorkerRequestFileOperation = {
+  command:
+    | 'file-save-succeeded'
+    | 'file-save-failed'
+    | 'file-load-succeeded'
+    | 'file-load-failed'
+    | 'file-exists-succeeded'
+    | 'file-exists-failed'
+    | 'file-delete-succeeded'
+    | 'file-delete-failed';
+  message?: string;
+  content?: string;
+};
+
+export type RhinoWorkerRequest =
+  | WorkerRequestVoid
+  | WorkerRequestProcess
+  | RhinoWorkerRequestInit
+  | RhinoWorkerRequestInfo
+  | RhinoWorkerRequestFileOperation
 
 export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: RhinoWorkerRequest): void
 }
 
-export type RhinoWorkerResponse = RhinoWorkerResponseReady | RhinoWorkerResponseInference | RhinoWorkerResponseError | RhinoWorkerResponseInitError
+export type RhinoWorkerResponseFileOperation = {
+  command: 'file-save' | 'file-load' | 'file-exists' | 'file-delete';
+  path: string;
+  content?: string;
+};
+
+export type RhinoWorkerResponse =
+  | RhinoWorkerResponseReady
+  | RhinoWorkerResponseInference
+  | RhinoWorkerResponseError
+  | RhinoWorkerResponseInitError
+  | RhinoWorkerResponseInfo
+  | RhinoWorkerResponseFileOperation
