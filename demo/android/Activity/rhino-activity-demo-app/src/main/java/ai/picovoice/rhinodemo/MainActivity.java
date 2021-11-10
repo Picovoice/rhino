@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private final String ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
 
     private ToggleButton recordButton;
+    private Button cheatSheetButton;
     private TextView intentTextView;
     private TextView errorTextView;
     private Guideline errorGuideline;
@@ -119,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
                 getApplicationContext(),
                 R.drawable.button_disabled));
 
+        cheatSheetButton.setEnabled(false);
+
         errorTextView.setText(errorMessage);
         errorTextView.setVisibility(View.VISIBLE);
 
@@ -133,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rhino_demo);
 
         recordButton = findViewById(R.id.startButton);
+        cheatSheetButton = findViewById(R.id.cheatSheetButton);
         intentTextView = findViewById(R.id.intentView);
         errorTextView = findViewById(R.id.errorView);
         errorGuideline = findViewById(R.id.errorGuideLine);
