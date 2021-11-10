@@ -17,6 +17,37 @@ export default {
     return { webVp: null, rhnWorker: null, contextInfo: null };
   },
   methods: {
+    initEngine: async function () {
+      this.$emit('rhn-loading');
+      try {
+        const { accessKey, context } = this.rhinoFactoryArgs;
+        this.rhnWorker = await this.rhinoFactory.create({accessKey, context: JSON.parse(JSON.stringify(context))});
+        this.webVp = await WebVoiceProcessor.init({
+          engines: [this.rhnWorker],
+        });
+        let _this = this;
+
+        this.rhnWorker.onmessage = messageEvent => {
+          switch (messageEvent.data.command) {
+            case 'rhn-inference':
+              _this.$emit('rhn-inference', messageEvent.data.inference);
+              // Reset Push-to-Talk
+              this.rhnWorker.postMessage({ command: 'pause' });
+              break;
+            case 'rhn-info':
+              const info = messageEvent.data.info;
+              this.contextInfo = info;
+              this.$emit('rhn-info', info);
+              break;
+          }
+        };
+        this.rhnWorker.postMessage({ command: 'info' });
+        this.$emit('rhn-ready');
+
+      } catch (error) {
+        this.$emit('rhn-error', error);
+      }
+    },
     start() {
       if (this.webVp !== null) {
         this.webVp.start();
@@ -46,37 +77,6 @@ export default {
       }
       return false;
     },
-  },
-  async created() {
-    this.$emit('rhn-loading');
-
-    try {
-      this.rhnWorker = await this.rhinoFactory.create(this.rhinoFactoryArgs);
-      this.webVp = await WebVoiceProcessor.init({
-        engines: [this.rhnWorker],
-      });
-      let _this = this;
-
-      this.rhnWorker.onmessage = messageEvent => {
-        switch (messageEvent.data.command) {
-          case 'rhn-inference':
-            _this.$emit('rhn-inference', messageEvent.data.inference);
-            // Reset Push-to-Talk
-            this.rhnWorker.postMessage({ command: 'pause' });
-            break;
-          case 'rhn-info':
-            const info = messageEvent.data.info;
-            this.contextInfo = info;
-            this.$emit('rhn-info', info);
-            break;
-        }
-      };
-      this.rhnWorker.postMessage({ command: 'info' });
-    } catch (error) {
-      this.$emit('rhn-error', error);
-    }
-
-    this.$emit('rhn-ready');
   },
   beforeUnmount: function () {
     if (this.webVp !== null) {
