@@ -1,5 +1,18 @@
 <div class="voice-widget">
   <h1>VoiceWidget</h1>
+    <h3>
+    <label>
+      AccessKey obtained from
+      <a href="https://picovoice.ai/console/">Picovoice Console</a>:
+      <input
+        type="text"
+        name="accessKey"
+        [disabled]="isLoaded"
+        #accessKey
+        (input)="initEngine(accessKey.value)"
+      />
+    </label>
+  </h3>
   <h3>Dynamic Import Loaded: {{ isChunkLoaded }}</h3>
   <h3>Rhino Loaded: {{ isLoaded }}</h3>
   <h3>Listening: {{ isListening }}</h3>
