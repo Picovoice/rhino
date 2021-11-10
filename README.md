@@ -451,7 +451,7 @@ This demo opens an audio stream from a microphone and performs inference on spok
 From [demo/rust/micdemo](/demo/rust/micdemo) run the following:
 
 ```console
-cargo run --release -- --context_path ${CONTEXT_FILE_PATH}
+cargo run --release -- --access_key ${ACCESS_KEY} --context_path ${CONTEXT_FILE_PATH}
 ```
 
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
@@ -1231,6 +1231,7 @@ Each spoken language is available as a dedicated npm package (e.g. @picovoice/rh
         console.log("Rhino is loading. Please wait...");
         window.rhinoWorker = await RhinoWebEnWorker.RhinoWorkerFactory.create(
           {
+            accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
             context: {
               base64: RHINO_CONTEXT_BASE64,
               sensitivity: 0.5,
@@ -1305,7 +1306,10 @@ async startRhino()
   // Create a Rhino Worker (English language) to listen for
   // commands in the specified context
   const rhinoWorker = await RhinoWorkerFactory.create(
-    {context: RHN_CONTEXT_BASE64 }
+    {
+      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+      context: RHN_CONTEXT_BASE64
+    }
   );
  
   // The worker will send a message with data.command = "rhn-inference" upon concluding
@@ -1565,7 +1569,7 @@ handle.release();
 
 First you will need [Rust and Cargo](https://rustup.rs/) installed on your system.
 
-To add the porcupine library into your app, add `pv_rhino` to your apps `Cargo.toml` manifest:
+To add the rhino library into your app, add `pv_rhino` to your apps `Cargo.toml` manifest:
 ```toml
 [dependencies]
 pv_rhino = "*"
@@ -1576,7 +1580,9 @@ To create an instance of the engine you first create a `RhinoBuilder` instance w
 ```rust
 use rhino::RhinoBuilder;
 
-let rhino: Rhino = RhinoBuilder::new("/path/to/context/file.rhn").init().expect("Unable to create Rhino");
+let access_key = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
+let rhino: Rhino = RhinoBuilder::new(access_key, "/path/to/context/file.rhn").init().expect("Unable to create Rhino");
 ```
 
 To feed audio into Rhino, use the `process` function in your capture loop:

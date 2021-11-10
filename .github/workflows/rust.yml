@@ -1,8 +1,9 @@
 name: Rust
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'binding/rust/**'
       - '!binding/rust/README.md'
@@ -21,7 +22,7 @@ on:
       - 'resources/keyword_files/raspberry-pi/**'
       - 'resources/keyword_files/windows/**'
   pull_request:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'binding/rust/**'
       - '!binding/rust/README.md'
@@ -40,6 +41,10 @@ on:
       - 'resources/keyword_files/raspberry-pi/**'
       - 'resources/keyword_files/windows/**'
 
+defaults:
+  run:
+    working-directory: binding/rust
+
 env:
   CARGO_TERM_COLOR: always
 
@@ -55,12 +60,9 @@ jobs:
 
     - name: Rust pre-build
       run: ./copy.sh
-      working-directory: binding/rust
 
     - name: Rust build
       run: cargo build --verbose
-      working-directory: binding/rust
 
     - name: Rust run tests
-      run: cargo test --verbose
-      working-directory: binding/rust
+      run: PV_ACCESS_KEY=${{secrets.PV_VALID_ACCESS_KEY}} cargo test --verbose

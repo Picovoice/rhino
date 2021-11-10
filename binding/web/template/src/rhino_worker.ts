@@ -25,11 +25,15 @@ let rhinoEngine: RhinoEngine = null;
 
 async function init(rhinoArgs: RhinoArgs): Promise<void> {
   try {
-    rhinoEngine = await Rhino.create(rhinoArgs.context);
+    rhinoEngine = await Rhino.create(
+      rhinoArgs.accessKey,
+      rhinoArgs.context,
+      rhinoArgs.requireEndpoint
+    );
   } catch (error) {
     const rhnErrorMessage: RhinoWorkerResponseInitError = {
       command: 'rhn-error-init',
-      error: error
+      error: error.toString()
     };
     postMessage(rhnErrorMessage, undefined);
     return;
@@ -47,9 +51,9 @@ function info(): void {
   postMessage(infoResonse, undefined);
 }
 
-function process(inputFrame: Int16Array): void {
+async function process(inputFrame: Int16Array): Promise<void> {
   if (rhinoEngine !== null && !paused) {
-    const inference = rhinoEngine.process(inputFrame);
+    const inference = await rhinoEngine.process(inputFrame);
     if (inference.isFinalized) {
       const rhinoInferenceMessage: RhinoWorkerResponseInference = {
         command: 'rhn-inference',
@@ -73,6 +77,38 @@ onmessage = function (
   event: MessageEvent<RhinoWorkerRequest>
 ): void {
   switch (event.data.command) {
+    case 'file-save-succeeded':
+      Rhino.resolveFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-save-failed':
+      Rhino.rejectFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-load-succeeded':
+      Rhino.resolveFilePromise(event.data.content);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-load-failed':
+      Rhino.rejectFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-exists-succeeded':
+      Rhino.resolveFilePromise(event.data.content);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-exists-failed':
+      Rhino.rejectFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-delete-succeeded':
+      Rhino.resolveFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
+    case 'file-delete-failed':
+      Rhino.rejectFilePromise(event.data.message);
+      Rhino.clearFilePromises();
+      break;
     case 'init':
       init(event.data.rhinoArgs);
       break;

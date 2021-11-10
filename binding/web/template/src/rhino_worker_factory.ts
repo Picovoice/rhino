@@ -46,36 +46,90 @@ export class RhinoWorkerFactory {
         event: MessageEvent<RhinoWorkerResponse>
       ): void {
         switch (event.data.command) {
-          case 'rhn-ready': {
+          case 'rhn-ready':
             // Rhino worker is fully initialized and ready to receive audio frames
             resolve(rhinoWorker);
             break;
-          }
-          case 'rhn-inference': {
+          case 'rhn-inference':
             // The default inference event event logs to console
             // eslint-disable-next-line no-console
             console.log(event.data.inference);
             rhinoWorker.postMessage({ command: 'pause' });
             break;
-          }
-          case 'rhn-error-init': {
+          case 'rhn-error-init':
             // The Rhino initialization failed
             reject(event.data.error);
             break;
-          }
-          case 'rhn-error': {
+          case 'rhn-error':
             // The default inference event event logs to console
             // eslint-disable-next-line no-console
             console.error('Error reported from Rhino worker:');
             // eslint-disable-next-line no-console
             console.error(event.data.error);
             break;
-          }
-          default: {
+          case 'file-save':
+            try {
+              localStorage.setItem(event.data.path, event.data.content || '');
+              rhinoWorker.postMessage({
+                command: 'file-save-succeeded',
+                message: `Saved ${event.data.path} successfully`,
+              });
+            } catch (error) {
+              rhinoWorker.postMessage({
+                command: 'file-save-failed',
+                message: `${error}`,
+              });
+            }
+            break;
+          case 'file-load':
+            try {
+              const content = localStorage.getItem(event.data.path);
+              if (content === null) {
+                throw new Error('file does not exist.');
+              }
+              rhinoWorker.postMessage({
+                command: 'file-load-succeeded',
+                content: content,
+              });
+            } catch (error) {
+              rhinoWorker.postMessage({
+                command: 'file-load-failed',
+                message: `${error}`,
+              });
+            }
+            break;
+          case 'file-exists':
+            try {
+              const content = localStorage.getItem(event.data.path);
+              rhinoWorker.postMessage({
+                command: 'file-exists-succeeded',
+                content: content,
+              });
+            } catch (error) {
+              rhinoWorker.postMessage({
+                command: 'file-exists-failed',
+                message: `${error}`,
+              });
+            }
+            break;
+          case 'file-delete':
+            try {
+              localStorage.removeItem(event.data.path);
+              rhinoWorker.postMessage({
+                command: 'file-delete-succeeded',
+                message: `Deleted ${event.data.path} successfully`,
+              });
+            } catch (error) {
+              rhinoWorker.postMessage({
+                command: 'file-delete-failed',
+                message: `${error}`,
+              });
+            }
+            break;
+          default:
             // eslint-disable-next-line no-console
-            console.warn('Unhandled resonse from RhinoWorker: ' + event);
-            return;
-          }
+            console.warn(`Unhandled message in main.js: ${event.data}`);
+            break;
         }
       };
     });

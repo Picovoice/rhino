@@ -9,18 +9,23 @@ for (const language of ["en"]) {
   for (const flavour of ["factory"]) {
     console.log(`Template: ${language} ${flavour}`);
 
+    // Workers
+    // 1. Copy test files into applicable project
     const projectRootPath = join(__dirname, "..");
-    const testFile = join(projectRootPath, "tests", `${language}-${flavour}`);
+    const testFile = join(
+      projectRootPath,
+      "tests",
+      `${language}-${flavour}`
+    );
     const projectLocation = join(
       projectRootPath,
       `rhino-web-${language}-${flavour}`,
       "test"
     );
 
-    // 1 Create the output directory structure, if it doesn't exist
+    // Create the output directory structure, if it doesn't exist
     fs.mkdirSync(projectLocation, { recursive: true });
 
-    // 2. Copy test files into applicable project
     ncp(testFile, projectLocation, (err) => {
       if (err) {
         console.error(err);

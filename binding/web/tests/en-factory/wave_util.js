@@ -28,7 +28,7 @@ export function checkWaveFile(waveFile, engineSampleRate) {
 
   if (waveFile.fmt.sampleRate !== engineSampleRate) {
     console.error(
-      `Audio sample rate ${waveFile.sampleRate} does not match Porcupine sample rate ${engineSampleRate}`
+      `Audio sample rate ${waveFile.sampleRate} does not match Rhino sample rate ${engineSampleRate}`
     );
     valid = false;
   }

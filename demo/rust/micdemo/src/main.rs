@@ -13,20 +13,22 @@ use chrono::prelude::*;
 use clap::{App, Arg, ArgGroup};
 use ctrlc;
 use hound;
-use rhino::{RhinoBuilder};
 use pv_recorder::{Recorder, RecorderBuilder};
+use rhino::RhinoBuilder;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 static LISTENING: AtomicBool = AtomicBool::new(false);
 
 fn rhino_demo(
     audio_device_index: i32,
+    access_key: &str,
     context_path: &str,
     sensitivity: Option<f32>,
     model_path: Option<&str>,
     output_path: Option<&str>,
+    require_endpoint: Option<bool>,
 ) {
-    let mut rhino_builder = RhinoBuilder::new(context_path);
+    let mut rhino_builder = RhinoBuilder::new(access_key, context_path);
 
     if let Some(sensitivity) = sensitivity {
         rhino_builder.sensitivity(sensitivity);
@@ -34,6 +36,10 @@ fn rhino_demo(
 
     if let Some(model_path) = model_path {
         rhino_builder.model_path(model_path);
+    }
+
+    if let Some(require_endpoint) = require_endpoint {
+        rhino_builder.require_endpoint(require_endpoint);
     }
 
     let rhino = rhino_builder.init().expect("Failed to create Rhino");
@@ -91,10 +97,11 @@ fn rhino_demo(
             bits_per_sample: 16,
             sample_format: hound::SampleFormat::Int,
         };
-        let mut writer = hound::WavWriter::create(output_path, wavspec).expect("Failed to open output audio file");
+        let mut writer = hound::WavWriter::create(output_path, wavspec)
+            .expect("Failed to open output audio file");
         for sample in audio_data {
             writer.write_sample(sample).unwrap();
-        };
+        }
     }
 }
 
@@ -113,10 +120,19 @@ fn show_audio_devices() {
 fn main() {
     let matches = App::new("Picovoice Rhino Rust Mic Demo")
         .group(
-            ArgGroup::with_name("contexts_group")
+            ArgGroup::with_name("actions_group")
+            .arg("access_key")
             .arg("context_path")
             .arg("show_audio_devices")
             .required(true)
+            .multiple(true)
+        )
+        .arg(
+            Arg::with_name("access_key")
+                .long("access_key")
+                .value_name("ACCESS_KEY")
+                .help("AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)")
+                .takes_value(true)
         )
         .arg(
             Arg::with_name("context_path")
@@ -138,6 +154,14 @@ fn main() {
             .value_name("SENSITIVITY")
             .help("Inference sensitivity. The value should be a number within [0, 1]. A higher sensitivity results in fewer misses at the cost of increasing the false alarm rate. If not set 0.5 will be used.")
             .takes_value(true)
+        )
+        .arg(
+            Arg::with_name("require_endpoint")
+            .long("require_endpoint")
+            .value_name("BOOL")
+            .help("If set, Rhino requires an endpoint (chunk of silence) before finishing inference.")
+            .takes_value(true)
+            .possible_values(&["TRUE", "true", "FALSE", "false"])
         )
         .arg(
             Arg::with_name("audio_device_index")
@@ -172,18 +196,29 @@ fn main() {
 
     let context_path = matches.value_of("context_path").unwrap();
 
-    let sensitivity = match matches.value_of("sensitivity") {
-        Some(sensitivity) => Some(sensitivity.parse().unwrap()),
-        None => None,
-    };
+    let sensitivity = matches
+        .value_of("sensitivity")
+        .map(|sensitivity| sensitivity.parse().unwrap());
     let model_path = matches.value_of("model_path");
     let output_path = matches.value_of("output_path");
 
+    let access_key = matches
+        .value_of("access_key")
+        .expect("AccessKey is REQUIRED for Rhino operation");
+
+    let require_endpoint = matches.value_of("require_endpoint").map(|req| match req {
+        "TRUE" | "true" => true,
+        "FALSE" | "false" => false,
+        _ => unreachable!(),
+    });
+
     rhino_demo(
         audio_device_index,
+        access_key,
         context_path,
         sensitivity,
         model_path,
         output_path,
+        require_endpoint,
     );
 }

@@ -1,8 +1,7 @@
 node_modules
 .rts2_cache/
 .idea/
-dist/
 *.log
 .DS_Store
 rhino-web-*
-**/pv-rhino-*
+**/rhino_b64.ts
