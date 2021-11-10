@@ -31,13 +31,25 @@ To learn more about Rhino, see the [product](https://picovoice.ai/products/rhino
 
 These demos run Rhino on **NodeJS 12+** on the following platforms:
 
+- Windows (x86_64)
 - Linux (x86_64)
-- macOS (x86_64)
+- macOS (x86_64, arm64)
 - Raspberry Pi (2,3,4)
+- NVIDIA Jetson (Nano)
+- BeagleBone
 
 ### Web Browsers
 
 These demos and the bindings upon which they are built are for NodeJS and **do not work in a browser**. Looking to run Rhino in-browser? There are npm packages available for [Web](https://www.npmjs.com/package/@picovoice/rhino-web-en-worker), and dedicated packages for [Angular](https://www.npmjs.com/package/@picovoice/rhino-web-angular), [React](https://www.npmjs.com/package/@picovoice/rhino-web-react), and [Vue](https://www.npmjs.com/package/@picovoice/rhino-web-vue).
+
+## AccessKey
+
+Rhino requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
 ## Install NPM package
 
@@ -70,12 +82,12 @@ index: 0, device name: USB Audio Device
 index: 1, device name: MacBook Air Microphone
 ```
 
-Specify the input audio device with `--audio_device_index` and the Speech-to-Intent context (.rhn file) with `--context`:
+Specify the input audio device with `--audio_device_index` and the Speech-to-Intent context (.rhn file) with `--context` and provide your Picovoice AccessKey with `--access_key`.
 
 Here is an example using USB Audio Device and commands from the "Smart Lighting" demo from the [Rhino GitHub repostiory](https://github.com/Picovoice/rhino/blob/master/resources/contexts/) (note that context files are platform-dependent; choose the appropriate one for the platform you are using; this demo uses the "mac" version)
 
 ```console
-rhn-mic-demo --context ./smart_lighting_mac.rhn --audio_device_index 0
+rhn-mic-demo --access_key ${ACCESS_KEY}--context ./smart_lighting_mac.rhn --audio_device_index 0
 ```
 
 The context source in YAML format will be output to show you the grammar and options that the context supports. The demo will listen for a phrase that the contexts understands, and upon reaching a conclusion (or timeout), it will output the results.
@@ -113,7 +125,7 @@ Inference result:
 Try running the mic demo again, but this time say something that it is not designed to understand, like "tell me a joke":
 
 ```console
-rhn-mic-demo --context_path ../../resources/contexts/mac/smart_lighting_mac.rhn  --audio_device_index 0
+rhn-mic-demo access_key ${ACCESS_KEY} --context_path ../../resources/contexts/mac/smart_lighting_mac.rhn  --audio_device_index 0
 
 ...
 
@@ -140,6 +152,7 @@ Run the file demo and the successful inference with the intent "orderDrink" alon
 
 ```console
 rhn-file-demo \
+access_key ${ACCESS_KEY} \
 --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn \
 --input_audio_file_path ../../resources/audio_samples/test_within_context.wav
 
@@ -163,6 +176,7 @@ Trying the file demo on a phrase that the coffee context is not designed to unde
 
 ```console
 rhn-file-demo \
+access_key ${ACCESS_KEY} \
 --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn \
 --input_audio_file_path ../../resources/audio_samples/test_out_of_context.wav
 
@@ -193,6 +207,7 @@ Usage: rhn-mic-demo [options]
 
 Options:
   -c, --context_path <string>       absolute path to rhino context (.rhn extension)
+  -a, --access_key <string>         AccessKey obtain from the Picovoice Console (https://console.picovoice.ai/)
   -l, --library_file_path <string>  absolute path to rhino dynamic library
   -m, --model_file_path <string>    absolute path to rhino model
   -s, --sensitivity <number>        sensitivity value between 0 and 1 (default: 0.5)
@@ -221,6 +236,7 @@ e.g. for macOS (x86_64):
 
 ```console
 rhn-file-demo \
+--access_key ${ACCESS_KEY} \
 --input_audio_file_path ../../resources/audio_samples/test_out_of_context.wav \
 --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn \
 --library_file_path ../../lib/mac/x86_64/libpv_rhino.dylib \
@@ -248,13 +264,13 @@ npm install
 Use `yarn mic` (or `npm run mic`) to run the mic demo from the demos/nodejs directory. For `npm run`, note the extra `--` needed before specifying commands. This is to disambiguate whether the options are intended for npm or for the demo script. As before, pick a context that matches the platform you are using (these examples use 'mac'):
 
 ```console
-yarn mic --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
+yarn mic --access_key ${ACCESS_KEY} --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
 ```
 
 (or)
 
 ```console
-npm run mic -- --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
+npm run mic -- --access_key ${ACCESS_KEY} --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
 ```
 
 ### File demo
@@ -263,6 +279,7 @@ Use `yarn file` or `npm run file` from the demos/nodejs directory. For `npm run`
 
 ```console
 yarn file \
+--access_key ${ACCESS_KEY} \
 --input_audio_file_path ../../resources/audio_samples/test_within_context.wav \
 --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
 ```
@@ -271,6 +288,7 @@ yarn file \
 
 ```console
 npm run file -- \
+--access_key ${ACCESS_KEY} \
 --input_audio_file_path ../../resources/audio_samples/test_within_context.wav \
 --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn
 ```

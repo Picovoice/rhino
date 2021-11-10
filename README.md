@@ -438,7 +438,7 @@ yarn global add @picovoice/rhino-node-demo
 With a working microphone connected to your device, run the following in the terminal:
 
 ```console
-rhn-mic-demo --context_path ${CONTEXT_FILE_PATH}
+rhn-mic-demo --access_key ${ACCESS_KEY} --context_path ${CONTEXT_FILE_PATH}
 ```
 
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
@@ -1544,8 +1544,8 @@ Create instances of the Rhino class by specifying the path to the context file:
 
 ```javascript
 const Rhino = require("@picovoice/rhino-node");
-
-let handle = new Rhino("/path/to/context/file.rhn");
+const accessKey = "${ACCESS_KEY}" // Obtained from the Picovoice Console (https://console.picovoice.ai/)
+let handle = new Rhino(accessKey, "/path/to/context/file.rhn");
 ```
 
 When instantiated, `handle` can process audio via its `.process` method:
