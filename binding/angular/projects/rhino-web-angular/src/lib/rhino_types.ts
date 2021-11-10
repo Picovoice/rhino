@@ -4,6 +4,7 @@
 export type RhinoFactoryArgs = {
   accessKey: string;
   context: RhinoContext;
+  requireEndpoint?: boolean;
   start?: boolean;
 };
 
@@ -157,8 +158,10 @@ export type RhinoWorkerResponse =
 export type RhinoServiceArgs = {
   /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
   accessKey: string;
-  /** Immediately start the microphone upon initialization */
-  start?: boolean;
   /** The context to instantiate */
   context: RhinoContext;
+  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  requireEndpoint?: boolean;
+  /** Immediately start the microphone upon initialization */
+  start?: boolean;
 };

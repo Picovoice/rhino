@@ -20,8 +20,12 @@ export default {
     initEngine: async function () {
       this.$emit('rhn-loading');
       try {
-        const { accessKey, context } = this.rhinoFactoryArgs;
-        this.rhnWorker = await this.rhinoFactory.create({accessKey, context: JSON.parse(JSON.stringify(context))});
+        const { accessKey, context, requireEndpoint } = this.rhinoFactoryArgs;
+        this.rhnWorker = await this.rhinoFactory.create({
+          accessKey,
+          context: JSON.parse(JSON.stringify(context))
+          requireEndpoint,
+        });
         this.webVp = await WebVoiceProcessor.init({
           engines: [this.rhnWorker],
         });

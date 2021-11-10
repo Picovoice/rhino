@@ -42,6 +42,15 @@ All modern browsers (Chrome/Edge/Opera, Firefox, Safari) are supported, includin
 
 Using the Web Audio API requires a secure context (HTTPS connection), with the exception of `localhost`, for local development.
 
+## AccessKey
+
+The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
 ## Installation
 
 Install the package using `npm` or `yarn`. You will also need to add `@picovoice/web-voice-processor` and one of the `@picovoice/rhino-web-**-worker` series of packages for the specific language model:
@@ -74,6 +83,16 @@ export type RhinoContext = {
   /** Value in range [0,1] that trades off miss rate for false alarm */
   sensitivity?: number
 }
+
+export type RhinoFactoryArgs = {
+  /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+  accessKey: string;
+  /** The context to instantiate */
+  context: RhinoContext;
+  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  requireEndpoint?: boolean;
+};
+
 ```
 
 The `Rhino` component emits four [events](#events). The main event of interest is `rhn-inference`, emitted when Rhino concludes an inference (whether it was understood or not). The `rhn-inference` event provides a `RhinoInference` object:
@@ -97,6 +116,7 @@ Make sure you handle the possibility of errors with the `rhn-error` event. Users
   <Rhino
     ref="rhino"
     v-bind:rhinoFactoryArgs="{
+      accessKey: '${ACCESS_KEY}',  <!-- AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) -->
       context: {
         base64: RHINO_TRAINED_CONTEXT_BASE_64_STRING
       },

@@ -131,13 +131,14 @@ export function useRhino(
       webVp: WebVoiceProcessor;
       rhnWorker: RhinoWorker;
     }> {
-      const { accessKey, context, start: startWebVp = true } = rhinoHookArgs!;
+      const { accessKey, context, requireEndpoint, start: startWebVp = true } = rhinoHookArgs!;
 
       const initIsTalking = rhinoHookArgs?.isTalking === true;
 
       const rhnWorker = await rhinoWorkerFactory!.create({
         accessKey,
         context,
+        requireEndpoint,
         start: initIsTalking,
       });
 

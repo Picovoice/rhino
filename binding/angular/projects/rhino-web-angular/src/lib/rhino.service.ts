@@ -81,13 +81,14 @@ export class RhinoService implements OnDestroy {
     if (this.isInit) {
       throw new Error('Rhino is already initialized');
     }
-    const { accessKey, context, start = true } = rhinoServiceArgs;
+    const { accessKey, context, requireEndpoint, start = true } = rhinoServiceArgs;
     this.isInit = true;
 
     try {
       this.rhinoWorker = await rhinoWorkerFactory.create({
         accessKey,
         context,
+        requireEndpoint,
         start: false,
       });
       this.rhinoWorker.onmessage = (

@@ -47,6 +47,8 @@ export type RhinoArgs = {
   accessKey: string;
   /** The context to instantiate */
   context: RhinoContext;
+  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  requireEndpoint?: boolean;
   /** Whether to start the Rhino engine immediately upon loading.
    * Default: false, as typical use-case is Push-to-Talk */
   start: boolean;
@@ -142,10 +144,12 @@ export type RhinoWorkerResponse =
 export type RhinoHookArgs = {
   /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
   accessKey: string;
-  /** Immediately start the microphone upon initialization */
-  start: boolean;
   /** The context to instantiate */
   context: RhinoContext;
+  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  requireEndpoint?: boolean;
+  /** Immediately start the microphone upon initialization */
+  start: boolean;
   /** Immediately put Rhino in an active isTalking state upon initialization (as if pushToTalk() was called) (default: false) */
   isTalking?: boolean;
 };
