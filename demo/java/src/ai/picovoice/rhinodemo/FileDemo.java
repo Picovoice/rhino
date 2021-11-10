@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class FileDemo {
 
-    public static void runDemo(File inputAudioFile, String libraryPath, String modelPath,
+    public static void runDemo(String accessKey, File inputAudioFile, String libraryPath, String modelPath,
                                String contextPath, float sensitivity) {
 
         AudioInputStream audioInputStream;
@@ -45,6 +45,7 @@ public class FileDemo {
         Rhino rhino = null;
         try {
             rhino = new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setLibraryPath(libraryPath)
                     .setModelPath(modelPath)
                     .setContextPath(contextPath)
@@ -132,12 +133,16 @@ public class FileDemo {
             return;
         }
 
+        String accessKey = cmd.getOptionValue("access_key");
         String inputAudioPath = cmd.getOptionValue("input_audio_path");
         String libraryPath = cmd.getOptionValue("library_path");
         String modelPath = cmd.getOptionValue("model_path");
         String contextPath = cmd.getOptionValue("context_path");
         String sensitivityStr = cmd.getOptionValue("sensitivity");
 
+        if (accessKey == null || accessKey.length() == 0) {
+            throw new IllegalArgumentException("AccessKey is required for Porcupine.");
+        }
         // parse sensitivity
         float sensitivity = 0.5f;
         if (sensitivityStr != null) {
@@ -178,11 +183,17 @@ public class FileDemo {
             modelPath = Rhino.MODEL_PATH;
         }
 
-        runDemo(inputAudioFile, libraryPath, modelPath, contextPath, sensitivity);
+        runDemo(accessKey, inputAudioFile, libraryPath, modelPath, contextPath, sensitivity);
     }
 
     private static Options BuildCommandLineOptions() {
         Options options = new Options();
+
+        options.addOption(Option.builder("a")
+                .longOpt("access_key")
+                .hasArg(true)
+                .desc("AccessKey obtained from Picovoice Console (https://picovoice.ai/console/).")
+                .build());
 
         options.addOption(Option.builder("i")
                 .longOpt("input_audio_path")

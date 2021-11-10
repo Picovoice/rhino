@@ -84,5 +84,6 @@ dependencies {
 }
 
 test {
+    systemProperty 'pvTestingAccessKey', System.getProperty('pvTestingAccessKey')
     useJUnitPlatform()
 }
