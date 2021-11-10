@@ -26,8 +26,8 @@ const ARM_64 = "arm64";
 
 const PLATFORM_BEAGLEBONE = "beaglebone";
 const PLATFORM_JETSON = "jetson";
-const PLATFORM_MAC = "mac";
 const PLATFORM_LINUX = "linux";
+const PLATFORM_MAC = "mac";
 const PLATFORM_RASPBERRY_PI = "raspberry-pi";
 const PLATFORM_WINDOWS = "windows";
 
@@ -40,7 +40,7 @@ const ARM_CPU_CORTEX_A72 = "cortex-a72";
 const SUPPORTED_NODEJS_SYSTEMS = new Set([
   SYSTEM_LINUX,
   SYSTEM_MAC,
-  SYSTEM_WINDOWS
+  SYSTEM_WINDOWS,
 ]);
 
 const LIBRARY_PATH_PREFIX = "lib/";
@@ -98,7 +98,7 @@ function getCpuPart() {
   const cpuInfo = fs.readFileSync("/proc/cpuinfo", "ascii");
   for (let infoLine of cpuInfo.split("\n")) {
     if (infoLine.includes("CPU part")) {
-      let infoLineSplit = infoLine.split(' ')
+      let infoLineSplit = infoLine.split(" ");
       return infoLineSplit[infoLineSplit.length - 1].toLowerCase();
     }
   }
@@ -106,33 +106,41 @@ function getCpuPart() {
 }
 
 function getLinuxPlatform() {
-  var cpuPart = getCpuPart(); 
-  switch(cpuPart) {
-      case "0xc07": 
-      case "0xd03": 
-      case "0xd08": return PLATFORM_RASPBERRY_PI;
-      case "0xd07": return PLATFORM_JETSON;
-      case "0xc08": return PLATFORM_BEAGLEBONE;
-      default: 
-          throw PvUnsupportedPlatformError(`Unsupported CPU: '${cpuPart}'`);
+  var cpuPart = getCpuPart();
+  switch (cpuPart) {
+    case "0xc07":
+    case "0xd03":
+    case "0xd08":
+      return PLATFORM_RASPBERRY_PI;
+    case "0xd07":
+      return PLATFORM_JETSON;
+    case "0xc08":
+      return PLATFORM_BEAGLEBONE;
+    default:
+      throw PvUnsupportedPlatformError(`Unsupported CPU: '${cpuPart}'`);
   }
 }
 
 function getLinuxMachine(arch) {
-  let archInfo = ""
-  if(arch == ARM_64) {
+  let archInfo = "";
+  if (arch == ARM_64) {
     archInfo = ARM_CPU_64;
-  } 
+  }
 
-  var cpuPart = getCpuPart(); 
-  switch(cpuPart) {
-      case "0xc07": return ARM_CPU_CORTEX_A7 + archInfo;
-      case "0xd03": return ARM_CPU_CORTEX_A53 + archInfo;
-      case "0xd07": return ARM_CPU_CORTEX_A57 + archInfo;
-      case "0xd08": return ARM_CPU_CORTEX_A72 + archInfo;
-      case "0xc08": return PLATFORM_BEAGLEBONE;
-      default: 
-          throw PvUnsupportedPlatformError(`Unsupported CPU: '${cpuPart}'`);
+  var cpuPart = getCpuPart();
+  switch (cpuPart) {
+    case "0xc07":
+      return ARM_CPU_CORTEX_A7 + archInfo;
+    case "0xd03":
+      return ARM_CPU_CORTEX_A53 + archInfo;
+    case "0xd07":
+      return ARM_CPU_CORTEX_A57 + archInfo;
+    case "0xd08":
+      return ARM_CPU_CORTEX_A72 + archInfo;
+    case "0xc08":
+      return PLATFORM_BEAGLEBONE;
+    default:
+      throw PvUnsupportedPlatformError(`Unsupported CPU: '${cpuPart}'`);
   }
 }
 
@@ -172,8 +180,8 @@ function getSystemLibraryPath() {
           );
         } else if (arch == ARM_64) {
           return absoluteLibraryPath(
-              SYSTEM_TO_LIBRARY_PATH.get(`${SYSTEM_MAC}/${ARM_64}`)
-          )
+            SYSTEM_TO_LIBRARY_PATH.get(`${SYSTEM_MAC}/${ARM_64}`)
+          );
         }
       }
       case SYSTEM_LINUX: {
@@ -197,8 +205,8 @@ function getSystemLibraryPath() {
       case SYSTEM_WINDOWS: {
         if (arch == X86_64) {
           return absoluteLibraryPath(
-              SYSTEM_TO_LIBRARY_PATH.get(`${SYSTEM_WINDOWS}/${X86_64}`)
-            );
+            SYSTEM_TO_LIBRARY_PATH.get(`${SYSTEM_WINDOWS}/${X86_64}`)
+          );
         }
       }
     }
