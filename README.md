@@ -1057,7 +1057,7 @@ To include the package in your Android project, ensure you have included `mavenC
 
 ```groovy
 dependencies {    
-    implementation 'ai.picovoice:rhino-android:1.6.0'
+    implementation 'ai.picovoice:rhino-android:${LATEST_VERSION}'
 }
 ```
 
@@ -1070,8 +1070,11 @@ for integrating Rhino into Android applications. It manages all activities relat
 feeding it into Rhino, and invoking a user-provided inference callback.
 
 ```java
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
+                        .setAccessKey(accessKey)
                         .setContextPath("/path/to/context/file.rhn")
                         .setModelPath("/path/to/model/file.pv")
                         .setSensitivity(0.35f)                        
@@ -1105,8 +1108,11 @@ Rhino provides a binding for Android using JNI. It can be initialized using:
 ```java
 import ai.picovoice.rhino.*;
 
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try {    
     Rhino rhino = new Rhino.Builder()
+                        .setAccessKey(accessKey)
                         .setContextPath("/path/to/context/file.rhn")                        
                         .build(appContext);
 } catch (RhinoException e) { }

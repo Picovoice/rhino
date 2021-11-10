@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
+    Copyright 2018-2021 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -19,60 +19,116 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Guideline;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.Map;
 
-import ai.picovoice.rhino.RhinoInference;
-import ai.picovoice.rhino.RhinoManager;
-import ai.picovoice.rhino.RhinoManagerCallback;
+import ai.picovoice.rhino.*;
 
 
 public class MainActivity extends AppCompatActivity {
+    private final String ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
     private ToggleButton recordButton;
+    private Button cheatSheetButton;
     private TextView intentTextView;
+    private TextView errorTextView;
+    private Guideline errorGuideline;
     private RhinoManager rhinoManager;
 
-    private void initRhino() throws Exception {
-        rhinoManager = new RhinoManager.Builder()
-                .setContextPath("smart_lighting_android.rhn")
-                .setSensitivity(0.25f)
-                .build(getApplicationContext(), new RhinoManagerCallback() {
-                    @Override
-                    public void invoke(final RhinoInference inference) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                recordButton.setEnabled(true);
-                                recordButton.setText("START");
-                                recordButton.toggle();
-                                intentTextView.setText("\n    {\n");
-                                intentTextView.append(String.format("        \"isUnderstood\" : \"%b\",\n", inference.getIsUnderstood()));
-                                if (inference.getIsUnderstood()) {
-                                    intentTextView.append(String.format("        \"intent\" : \"%s\",\n", inference.getIntent()));
-                                    final Map<String, String> slots = inference.getSlots();
-                                    if (slots.size() > 0) {
-                                        intentTextView.append("        \"slots\" : {\n");
-                                        for (String key : slots.keySet()) {
-                                            intentTextView.append(String.format("            \"%s\" : \"%s\",\n", key, slots.get(key)));
-                                        }
-                                        intentTextView.append("        }\n");
-                                    }
-                                }
-                                intentTextView.append("    }\n");
-                            }
-                        });
-                    }
-                });
+    private void initRhino() {
+        try {
+            rhinoManager = new RhinoManager.Builder()
+                    .setAccessKey(ACCESS_KEY)
+                    .setContextPath("smart_lighting_android.rhn")
+                    .setSensitivity(0.25f)
+                    .setErrorCallback(rhinoManagerErrorCallback)
+                    .build(getApplicationContext(), rhinoManagerCallback);
 
-        Log.i("RhinoManager", rhinoManager.getContextInformation());
+            Log.i("RhinoManager", rhinoManager.getContextInformation());
+        } catch (RhinoInvalidArgumentException e) {
+            onRhinoError(
+                    String.format(
+                            "%s\nMake sure your AccessKey '%s' is a valid access key.",
+                            e.getMessage(),
+                            ACCESS_KEY));
+        } catch (RhinoActivationException e) {
+            onRhinoError("AccessKey activation error");
+        } catch (RhinoActivationLimitException e) {
+            onRhinoError("AccessKey reached its device limit");
+        } catch (RhinoActivationRefusedException e) {
+            onRhinoError("AccessKey refused");
+        } catch (RhinoActivationThrottledException e) {
+            onRhinoError("AccessKey has been throttled");
+        } catch (RhinoException e) {
+            onRhinoError("Failed to initialize Porcupine " + e.getMessage());
+        }
+    }
+
+    private final RhinoManagerCallback rhinoManagerCallback = new RhinoManagerCallback() {
+        @Override
+        public void invoke(final RhinoInference inference) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recordButton.setEnabled(true);
+                    recordButton.setText("START");
+                    recordButton.toggle();
+                    intentTextView.setText("\n    {\n");
+                    intentTextView.append(String.format("        \"isUnderstood\" : \"%b\",\n", inference.getIsUnderstood()));
+                    if (inference.getIsUnderstood()) {
+                        intentTextView.append(String.format("        \"intent\" : \"%s\",\n", inference.getIntent()));
+                        final Map<String, String> slots = inference.getSlots();
+                        if (slots.size() > 0) {
+                            intentTextView.append("        \"slots\" : {\n");
+                            for (String key : slots.keySet()) {
+                                intentTextView.append(String.format("            \"%s\" : \"%s\",\n", key, slots.get(key)));
+                            }
+                            intentTextView.append("        }\n");
+                        }
+                    }
+                    intentTextView.append("    }\n");
+                }
+            });
+        }
+    };
+
+    private final RhinoManagerErrorCallback rhinoManagerErrorCallback = new RhinoManagerErrorCallback() {
+        @Override
+        public void invoke(final RhinoException error) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onRhinoError(error.getMessage());
+                }
+            });
+        }
+    };
+
+    private void onRhinoError(String errorMessage) {
+        recordButton.setEnabled(false);
+        recordButton.setBackground(ContextCompat.getDrawable(
+                getApplicationContext(),
+                R.drawable.button_disabled));
+
+        cheatSheetButton.setEnabled(false);
+
+        errorTextView.setText(errorMessage);
+        errorTextView.setVisibility(View.VISIBLE);
+
+        ConstraintLayout.LayoutParams intentParam = (ConstraintLayout.LayoutParams) intentTextView.getLayoutParams();
+        intentParam.bottomToTop = errorGuideline.getId();
+        intentTextView.requestLayout();
     }
 
     @Override
@@ -81,13 +137,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rhino_demo);
 
         recordButton = findViewById(R.id.startButton);
+        cheatSheetButton = findViewById(R.id.cheatSheetButton);
         intentTextView = findViewById(R.id.intentView);
+        errorTextView = findViewById(R.id.errorView);
+        errorGuideline = findViewById(R.id.errorGuideLine);
 
-        try {
-            initRhino();
-        } catch (Exception e) {
-            Toast.makeText(this, "Failed to initialize Rhino.", Toast.LENGTH_SHORT).show();
-        }
+        initRhino();
     }
 
     @Override
@@ -128,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
             if (hasRecordPermission()) {
                 rhinoManager.process();
             } else {
-                recordButton.toggle();
                 requestRecordPermission();
             }
         }
