@@ -47,10 +47,12 @@ class Rhino {
     manualModelPath,
     manualLibraryPath
   ) {
-    if(accessKey === null || accessKey === undefined || accessKey.length === 0) {
-      throw new PvArgumentError(
-          `No AccessKey provided to Rhino`
-        );
+    if (
+      accessKey === null ||
+      accessKey === undefined ||
+      accessKey.length === 0
+    ) {
+      throw new PvArgumentError(`No AccessKey provided to Rhino`);
     }
 
     let modelPath = manualModelPath;
@@ -197,7 +199,7 @@ class Rhino {
 
     const packed = pvRhino.get_inference(this.handle);
 
-    const parts = packed.slice(0,-1).split(",");
+    const parts = packed.slice(0, -1).split(",");
     const status = parseInt(parts[0]);
     if (status !== PV_STATUS_T.SUCCESS) {
       pvStatusToException(status, `Rhino failed to get inference: ${status}`);

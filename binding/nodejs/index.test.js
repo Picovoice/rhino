@@ -30,7 +30,9 @@ const libraryPath = getSystemLibraryPath();
 
 const contextPathCoffeeMaker = `../../resources/contexts/${platform}/coffee_maker_${platform}.rhn`;
 
-const ACCESS_KEY = process.argv.filter((x) => x.startsWith('--access_key='))[0].split('--access_key=')[1];
+const ACCESS_KEY = process.argv
+  .filter((x) => x.startsWith("--access_key="))[0]
+  .split("--access_key=")[1];
 
 function rhinoProcessWaveFile(
   engineInstance,
@@ -133,7 +135,12 @@ describe("intent detection (coffee maker)", () => {
 
 describe("manual paths", () => {
   test("manual model path", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker, 0.5, MODEL_PATH);
+    let rhinoEngine = new Rhino(
+      ACCESS_KEY,
+      contextPathCoffeeMaker,
+      0.5,
+      MODEL_PATH
+    );
 
     let inference = rhinoProcessWaveFile(
       rhinoEngine,
