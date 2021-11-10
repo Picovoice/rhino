@@ -139,6 +139,7 @@ describe("manual paths", () => {
       ACCESS_KEY,
       contextPathCoffeeMaker,
       0.5,
+      true,
       MODEL_PATH
     );
 
@@ -159,6 +160,7 @@ describe("manual paths", () => {
       ACCESS_KEY,
       contextPathCoffeeMaker,
       0.5,
+      true,
       MODEL_PATH,
       libraryPath
     );
