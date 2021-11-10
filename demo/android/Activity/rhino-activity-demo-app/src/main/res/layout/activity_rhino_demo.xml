@@ -104,7 +104,7 @@
         android:onClick="onClick"
         android:textColor="@android:color/white"
         android:textOff="Start"
-        android:textOn="Stop"
+        android:textOn="..."
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="@id/endGuideline"
         app:layout_constraintHorizontal_bias="0.5"

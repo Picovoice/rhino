@@ -183,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
             if (hasRecordPermission()) {
                 rhinoManager.process();
             } else {
-                recordButton.toggle();
                 requestRecordPermission();
             }
         }
