@@ -18,6 +18,10 @@ const { PvArgumentError } = require("@picovoice/rhino-node/errors");
 const PvRecorder = require("@picovoice/pvrecorder-node");
 
 program
+  .requiredOption(
+    "-a, --access_key <string>",
+    "AccessKey obtain from the Picovoice Console (https://console.picovoice.ai/)"
+  )
   .option(
     "-c, --context_path <string>",
     `absolute path to rhino context (.rhn extension)`
@@ -38,9 +42,9 @@ program
     Number,
     -1
   ).option(
-    "-a, --show_audio_devices",
+    "-d, --show_audio_devices",
     "show the list of available devices"
-  );
+  ).option("-e, --requires_endpoint", "If set, Rhino requires an endpoint (chunk of silence) before finishing inference");
 
 if (process.argv.length < 3) {
   program.help();
@@ -50,12 +54,14 @@ program.parse(process.argv);
 let isInterrupted = false;
 
 async function micDemo() {
+  let accessKey = program["access_key"]  
   let contextPath = program["context_path"];
   let libraryFilePath = program["library_file_path"];
   let modelFilePath = program["model_file_path"];
   let sensitivity = program["sensitivity"];
   let audioDeviceIndex = program["audio_device_index"];
   let showAudioDevices = program["show_audio_devices"];
+  let requiresEndpoint = program["requires_endpoint"] !== undefined ? true : false ;
 
   let showAudioDevicesDefined = showAudioDevices !== undefined;
 
@@ -84,8 +90,10 @@ async function micDemo() {
     .split("_")[0];
 
   let handle = new Rhino(
+    accessKey,
     contextPath,
     sensitivity,
+    requiresEndpoint,
     modelFilePath,
     libraryFilePath
   );

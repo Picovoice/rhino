@@ -1,5 +1,5 @@
 //
-// Copyright 2020 Picovoice Inc.
+// Copyright 2020-2021 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -28,12 +28,8 @@ ncp(
   }
 );
 
-ncp(
-  "../../lib/node",
-  "./lib",
-  function (err) {
-    if (err) {
-      return console.error(err);
-    }
+ncp("../../lib/node", "./lib", function (err) {
+  if (err) {
+    return console.error(err);
   }
-);
+});

@@ -1,5 +1,5 @@
 //
-// Copyright 2020 Picovoice Inc.
+// Copyright 2020-2021 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -34,18 +34,29 @@ const MODEL_PATH_DEFAULT = "lib/common/rhino_params.pv";
 class Rhino {
   /**
    * Creates an instance of Rhino with a specific context.
-   *
+   * @param {string} accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
    * @param {string} contextPath the path to the Rhino context file (.rhn extension)
    * @param {number} sensitivity [0.5] the sensitivity in the range [0,1]
+   * @param {boolean} requireEndpoint If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
    * @param {string} manualModelPath the path to the Rhino model (.pv extension)
    * @param {string} manualLibraryPath the path to the Rhino dynamic library (platform-dependent extension)
    */
   constructor(
+    accessKey,
     contextPath,
     sensitivity = 0.5,
+    requireEndpoint = true,
     manualModelPath,
     manualLibraryPath
   ) {
+    if (
+      accessKey === null ||
+      accessKey === undefined ||
+      accessKey.length === 0
+    ) {
+      throw new PvArgumentError(`No AccessKey provided to Rhino`);
+    }
+
     let modelPath = manualModelPath;
     if (modelPath === undefined) {
       modelPath = path.resolve(__dirname, MODEL_PATH_DEFAULT);
@@ -78,7 +89,7 @@ class Rhino {
       );
     }
 
-    const packed = pvRhino.init(modelPath, contextPath, sensitivity);
+    const packed = pvRhino.init(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
     const status = Number(packed % 10n);
     this.handle = status == PV_STATUS_T.SUCCESS ? packed / 10n : 0;
     if (status !== PV_STATUS_T.SUCCESS) {
@@ -190,7 +201,7 @@ class Rhino {
 
     const packed = pvRhino.get_inference(this.handle);
 
-    const parts = packed.slice(0,-1).split(",");
+    const parts = packed.slice(0, -1).split(",");
     const status = parseInt(parts[0]);
     if (status !== PV_STATUS_T.SUCCESS) {
       pvStatusToException(status, `Rhino failed to get inference: ${status}`);
