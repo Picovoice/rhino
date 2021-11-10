@@ -462,8 +462,6 @@ For more information about Rust demos go to [demo/rust](/demo/rust).
 
 The C demo requires [CMake](https://cmake.org/) version 3.4 or higher.
 
-The [Microphone demo](/demo/c/rhino_demo_mic.c) requires  [miniaudio](https://github.com/mackron/miniaudio) for accessing microphone audio data.
-
 **Windows Requires [MinGW](http://mingw-w64.org/doku.php) to build the demo.**
 
 #### Microphone Demo
@@ -474,7 +472,7 @@ At the root of the repository, build with:
 cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_demo_mic
 ```
 
-#### Linux (x86_64), macOS (x86_64), Raspberry Pi, BeagleBone, and Jetson
+##### Linux (x86_64), macOS (x86_64, arm64), Raspberry Pi, BeagleBone, and Jetson
 
 List input audio devices with:
 
@@ -485,15 +483,16 @@ List input audio devices with:
 Run the demo using:
 
 ```console
-./demo/c/build/rhino_demo_mic ${RHINO_LIBRARY_PATH} lib/common/rhino_params.pv \
-resources/contexts/${PLATFORM}/smart_lighting_${PLATFORM}.rhn ${AUDIO_DEVICE_INDEX}
+./demo/c/build/rhino_demo_mic -l ${RHINO_LIBRARY_PATH} -m lib/common/rhino_params.pv \
+-c resources/contexts/${PLATFORM}/smart_lighting_${PLATFORM}.rhn \
+-d ${AUDIO_DEVICE_INDEX} -a ${ACCESS_KEY}
 ```
 
 Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${PLATFORM}` with the
-name of the platform you are running on (`linux`, `raspberry-pi`, `mac`, `beaglebone`, or `jetson`), and `${AUDIO_DEVICE_INDEX}` with
-the index of your audio device.
+name of the platform you are running on (`linux`, `raspberry-pi`, `mac`, `beaglebone`, or `jetson`), `${AUDIO_DEVICE_INDEX}` with
+the index of your audio device and `${ACCESS_KEY}` with your Picovoice AccessKey.
 
-#### Windows
+##### Windows
 
 List input audio devices with:
 
@@ -504,10 +503,10 @@ List input audio devices with:
 Run the demo using:
 
 ```console
-.\\demo\\c\\build\\rhino_demo_mic.exe lib/windows/amd64/libpv_rhino.dll lib/common/rhino_params.pv resources/contexts/windows/smart_lighting_windows.rhn ${AUDIO_DEVICE_INDEX}
+.\\demo\\c\\build\\rhino_demo_mic.exe -l lib/windows/amd64/libpv_rhino.dll -c lib/common/rhino_params.pv -c resources/contexts/windows/smart_lighting_windows.rhn -d ${AUDIO_DEVICE_INDEX} -a ${ACCESS_KEY}
 ```
 
-Replace `${AUDIO_DEVICE_INDEX}` with the index of your audio device.
+Replace `${AUDIO_DEVICE_INDEX}` with the index of your audio device and `${ACCESS_KEY}` with your Picovoice AccessKey.
 
 The demo opens an audio stream and infers your intent from spoken commands in the context of a smart lighting system. 
 For example, you can say:
@@ -522,27 +521,31 @@ At the root of the repository, build with:
 cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_demo_file
 ```
 
-#### Linux (x86_64), macOS (x86_64), Raspberry Pi, BeagleBone, and Jetson
+##### Linux (x86_64), macOS (x86_64, arm64), Raspberry Pi, BeagleBone, and Jetson
 
 Run the demo using:
 
 ```console
-./demo/c/build/rhino_demo_file ${LIBRARY_PATH} lib/common/rhino_params.pv \
-resources/contexts/${PLATFORM}/coffee_maker_${PLATFORM}.rhn resources/audio_samples/test_within_context.wav 
+./demo/c/build/rhino_demo_file -l ${LIBRARY_PATH} -m lib/common/rhino_params.pv \
+-c resources/contexts/${PLATFORM}/coffee_maker_${PLATFORM}.rhn -w resources/audio_samples/test_within_context.wav \
+-a ${ACCESS_KEY} 
 ```
 
 Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${PLATFORM}` with the
-name of the platform you are running on (`linux`, `raspberry-pi`, `mac`, `beaglebone`, or `jetson`).
+name of the platform you are running on (`linux`, `raspberry-pi`, `mac`, `beaglebone`, or `jetson`) and `${ACCESS_KEY}`
+with your Picovoice AccessKey.
 
-#### Windows
+##### Windows
 
 Run the demo using:
 
 ```console
-.\\demo\\c\\build\\rhino_demo_file.exe lib/windows/amd64/libpv_rhino.dll lib/common/rhino_params.pv resources/contexts/windows/coffee_maker_windows.rhn resources/audio_samples/test_within_context.wav
+.\\demo\\c\\build\\rhino_demo_file.exe -l lib/windows/amd64/libpv_rhino.dll -m lib/common/rhino_params.pv -c resources/contexts/windows/coffee_maker_windows.rhn -w resources/audio_samples/test_within_context.wav -a ${ACCESS_KEY}
 ```
 
-The demo opens up the WAV file and infers the intent in the context of a coffee maker system.
+Replace `${ACCESS_KEY}` with your Picovoice AccessKey.
+
+The demo opens up the WAV file and infers the intent in the context of a coffee-maker system.
 
 For more information about C demos go to [demo/c](/demo/c).
 
@@ -1611,12 +1614,14 @@ Rhino is implemented in ANSI C and therefore can be directly linked to C applica
 header file contains relevant information. An instance of the Rhino object can be constructed as follows:
 
 ```c
+const char *access_key = "${ACCESS_KEY}" // obtained from the Picovoice Console (https://picovoice.ai/console/)
 const char *model_path = ... // Available at lib/common/rhino_params.pv
 const char *context_path = ... // absolute path to context file for the domain of interest
 const float sensitivity = 0.5f;
+bool require_endpoint = false;
 
 pv_rhino_t *handle = NULL;
-const pv_status_t status = pv_rhino_init(model_path, context_path, sensitivity, &handle);
+const pv_status_t status = pv_rhino_init(access_key, model_path, context_path, sensitivity, require_endpoint, &handle);
 if (status != PV_STATUS_SUCCESS) {
     // add error handling code
 }
