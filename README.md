@@ -472,7 +472,7 @@ At the root of the repository, build with:
 cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_demo_mic
 ```
 
-#### Linux (x86_64), macOS (x86_64), Raspberry Pi, BeagleBone, and Jetson
+##### Linux (x86_64), macOS (x86_64, arm64), Raspberry Pi, BeagleBone, and Jetson
 
 List input audio devices with:
 
@@ -492,7 +492,7 @@ Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib]
 name of the platform you are running on (`linux`, `raspberry-pi`, `mac`, `beaglebone`, or `jetson`), `${AUDIO_DEVICE_INDEX}` with
 the index of your audio device and `${ACCESS_KEY}` with your Picovoice AccessKey.
 
-#### Windows
+##### Windows
 
 List input audio devices with:
 
@@ -521,7 +521,7 @@ At the root of the repository, build with:
 cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_demo_file
 ```
 
-#### Linux (x86_64), macOS (x86_64), Raspberry Pi, BeagleBone, and Jetson
+##### Linux (x86_64), macOS (x86_64, arm64), Raspberry Pi, BeagleBone, and Jetson
 
 Run the demo using:
 
@@ -535,7 +535,7 @@ Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib]
 name of the platform you are running on (`linux`, `raspberry-pi`, `mac`, `beaglebone`, or `jetson`) and `${ACCESS_KEY}`
 with your Picovoice AccessKey.
 
-#### Windows
+##### Windows
 
 Run the demo using:
 

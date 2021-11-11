@@ -76,10 +76,10 @@ Picovoice AccessKey.
 ./demo/c/build/rhino_demo_mic -l lib/linux/x86_64/libpv_rhino.so -m lib/common/rhino_params.pv \
 -c resources/contexts/linux/smart_lighting_linux.rhn -d ${AUDIO_DEVICE_INDEX} -a ${ACCESS_KEY}
 ```
-#### macOS
+#### macOS (x86_64, arm64)
 
 ```console
-./demo/c/build/rhino_demo_mic -l lib/mac/x86_64/libpv_rhino.dylib -m lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_mic -l lib/mac/${PROCESSOR}/libpv_rhino.dylib -m lib/common/rhino_params.pv \
 -c resources/contexts/mac/smart_lighting_mac.rhn -d ${AUDIO_DEVICE_INDEX} -a ${ACCESS_KEY}
 ```
 
@@ -172,10 +172,10 @@ in the context of a coffee-maker system. Replace `${ACCESS_KEY}` with your Picov
 -c resources/contexts/linux/coffee_maker_linux.rhn -w resources/audio_samples/test_within_context.wav -a ${ACCESS_KEY}
 ```
 
-#### macOS
+#### macOS (x86_64, arm64)
 
 ```console
-./demo/c/build/rhino_demo_file -l lib/mac/x86_64/libpv_rhino.dylib -m lib/common/rhino_params.pv \
+./demo/c/build/rhino_demo_file -l lib/mac/${PROCESSOR}/libpv_rhino.dylib -m lib/common/rhino_params.pv \
 -c resources/contexts/mac/coffee_maker_mac.rhn -w resources/audio_samples/test_within_context.wav -a ${ACCESS_KEY}
 ```
 
