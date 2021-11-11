@@ -4,8 +4,8 @@ on:
   push:
     branches: [ master, v2.0 ]
     paths:
-      - 'binding/rust/**'
-      - '!binding/rust/README.md'
+      - 'binding/go/**'
+      - '!binding/go/README.md'
       - 'lib/beaglebone/**'
       - 'lib/common/**'
       - 'lib/jetson/**'
@@ -23,8 +23,8 @@ on:
   pull_request:
     branches: [ master, v2.0 ]
     paths:
-      - 'binding/rust/**'
-      - '!binding/rust/README.md'
+      - 'binding/go/**'
+      - '!binding/go/README.md'
       - 'lib/beaglebone/**'
       - 'lib/common/**'
       - 'lib/jetson/**'

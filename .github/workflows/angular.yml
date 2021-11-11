@@ -1,15 +1,16 @@
 name: Angular
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'binding/angular/**'
       - '!binding/angular/README.md'
       - 'lib/**'
       - 'resources/**'
   pull_request:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'binding/angular/**'
       - '!binding/angular/README.md'
@@ -37,7 +38,14 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Pre-build dependencies
-      run: npm install yarn --force
+      run: npm install yarn
+
+    - name: Local package dependencies
+      run: |
+        yarn
+        yarn build
+        for i in rhino-web*; do cd $i; yarn && yarn build || exit 1; cd ..; done
+      working-directory: binding/web
 
     - name: Install dependencies
       run: yarn install
