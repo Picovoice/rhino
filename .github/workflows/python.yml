@@ -20,7 +20,7 @@ on:
       - 'resources/keyword_files/mac/**'
       - 'resources/keyword_files/raspberry-pi/**'
       - 'resources/keyword_files/windows/**'
-      
+
   pull_request:
     branches: [ master, v2.0 ]
     paths:
@@ -70,4 +70,4 @@ jobs:
       run: pip install -r requirements.txt
 
     - name: Test
-      run: python test_porcupine.py ${{secrets.PV_VALID_ACCESS_KEY}}
+      run: python test_rhino.py ${{secrets.PV_VALID_ACCESS_KEY}}
