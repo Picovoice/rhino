@@ -26,7 +26,8 @@ class RhinoDemo(Thread):
     debugging.
     """
 
-    def __init__(self, access_key, library_path, model_path, context_path, require_endpoint, audio_device_index=None, output_path=None):
+    def __init__(self, access_key, library_path, model_path, context_path, require_endpoint, audio_device_index=None,
+                 output_path=None):
         """
         Constructor.
 

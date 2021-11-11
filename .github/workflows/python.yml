@@ -20,6 +20,7 @@ on:
       - 'resources/keyword_files/mac/**'
       - 'resources/keyword_files/raspberry-pi/**'
       - 'resources/keyword_files/windows/**'
+      
   pull_request:
     branches: [ master, v2.0 ]
     paths:
