@@ -214,7 +214,7 @@ sudo pip3 install pvrhinodemo
 With a working microphone connected to your device run the following in the terminal:
 
 ```
-rhino_demo_mic --context_path ${CONTEXT_PATH}
+rhino_demo_mic --access_key ${ACCESS_KEY} --context_path ${CONTEXT_PATH}
 ```
 
 Replace `${CONTEXT_PATH}` with either a context file created using Picovoice Console or one within the repository.
@@ -564,7 +564,9 @@ The SDK exposes a factory method to create instances of the engine:
 ```python
 import pvrhino
 
-handle = pvrhino.create(context_path='/absolute/path/to/context')
+access_key = "${ACCESS_KEY}" # AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
+handle = pvrhino.create(access_key=access_key, context_path='/absolute/path/to/context')
 ```
 
 Where `context_path` is the absolute path to the Speech-to-Intent context created either using Picovoice Console or one of
@@ -575,10 +577,6 @@ When initialized, the required sample rate can be obtained using `rhino.sample_r
 commands as below:
 
 ```python
-import pvrhino
-
-handle = pvrhino.create(context_path='/absolute/path/to/context')
-
 def get_next_audio_frame():
     pass
 

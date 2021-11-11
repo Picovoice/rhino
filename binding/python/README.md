@@ -30,13 +30,22 @@ Rhino is:
 ## Compatibility
 
 - Python 3
-- Runs on Linux (x86_64), Mac (x86_64), Windows (x86_64), Raspberry Pi (all variants), and BeagleBone.
+- Runs on Linux (x86_64), Mac (x86_64, arm64), Windows (x86_64), Raspberry Pi (all variants), and BeagleBone.
 
 ## Installation
 
 ```console
 pip3 install pvrhino
 ```
+
+## AccessKey
+
+Rhino requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
 ## Usage
 
@@ -45,7 +54,9 @@ Create an instance of the engine:
 ```python
 import pvrhino
 
-handle = pvrhino.create(context_path='/absolute/path/to/context')
+access_key = "${ACCESS_KEY}" # AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
+handle = pvrhino.create(access_key=access_key, context_path='/absolute/path/to/context')
 ```
 
 Where `context_path` is the absolute path to Speech-to-Intent context created either using
@@ -58,7 +69,9 @@ inference rate.
 ```python
 import pvrhino
 
-handle = pvrhino.create(context_path='/absolute/path/to/context', sensitivity=0.25)
+access_key = "${ACCESS_KEY}" # AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
+handle = pvrhino.create(access_key=access_key, context_path='/absolute/path/to/context', sensitivity=0.25)
 ```
 
 When initialized, the valid sample rate is given by `handle.sample_rate`. Expected frame length (number of audio samples

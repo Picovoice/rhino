@@ -35,13 +35,22 @@ Rhino is:
 ## Compatibility
 
 - Python 3
-- Runs on Linux (x86_64), Mac (x86_64), Windows (x86_64), Raspberry Pi (all variants), NVIDIA Jetson Nano and BeagleBone.
+- Runs on Linux (x86_64), Mac (x86_64, arm64), Windows (x86_64), Raspberry Pi (all variants), NVIDIA Jetson Nano and BeagleBone.
 
 ## Installation
 
 ```console
 sudo pip3 install pvrhinodemo
 ```
+
+## AccessKey
+
+Rhino requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
 ## Usage
 
@@ -53,7 +62,7 @@ provided it only processes the first (left) channel. Note that only the relevant
 file and no other speech. Also there needs to be at least one second of silence at the end of the file.
 
 ```console
-rhino_demo_file --input_audio_path ${AUDIO_PATH} --context_path ${CONTEXT_PATH} 
+rhino_demo_file --input_audio_path ${AUDIO_PATH} --access_key ${ACCESS_KEY} --context_path ${CONTEXT_PATH} 
 ```
 
 ### Microphone Demo
@@ -61,7 +70,7 @@ rhino_demo_file --input_audio_path ${AUDIO_PATH} --context_path ${CONTEXT_PATH}
 It opens an audio stream from a microphone and performs inference in spoken commands:
 
 ```console
-rhino_demo_mic --context_path ${CONTEXT_PATH}
+rhino_demo_mic --access_key ${ACCESS_KEY} --context_path ${CONTEXT_PATH}
 ```
 
 It is possible that the default audio input device recognized by the demo is not the one being used. There are a couple 
@@ -74,23 +83,19 @@ rhino_demo_mic --show_audio_devices
 It provides information about various audio input devices on the box. On a Linux box, this is the console output
 
 ```
-index: 0, device name: Monitor of sof-hda-dsp HDMI3/DP3 Output
-index: 1, device name: Monitor of sof-hda-dsp HDMI2/DP2 Output
-index: 2, device name: Monitor of sof-hda-dsp HDMI1/DP1 Output
-index: 3, device name: Monitor of sof-hda-dsp Speaker + Headphones
-index: 4, device name: sof-hda-dsp Headset Mono Microphone + Headphones Stereo Microphone
-index: 5, device name: sof-hda-dsp Digital Microphone
+index: 0, device name: USB Audio Device
+index: 1, device name: MacBook Air Microphone
 ``` 
 
-If you would like to use the default device, leave `audio_device_index` empty, else select the device index from the
-output above. In this example we will use the device at index 5.
+You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the USB Audio Device
+in the above example, you can invoke the demo application as below:
 
 ```console
-rhino_demo_mic --context_path ${CONTEXT_PATH} --audio_device_index 5
+rhino_demo_mic --access_key ${ACCESS_KEY} --context_path ${CONTEXT_PATH} --audio_device_index 0
 ```
 
 If a problem occurs, we suggest storing the recorded audio into a file for inspection. This can be achieved by:
 
 ```console
-rhino_demo_mic --context_path ${CONTEXT_PATH} --audio_device_index 5 --output_path ~/test.wav
+rhino_demo_mic --access_key ${ACCESS_KEY} --context_path ${CONTEXT_PATH} --audio_device_index 0 --output_path ~/test.wav
 ```

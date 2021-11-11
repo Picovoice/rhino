@@ -2,19 +2,43 @@ name: Python
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'binding/python/**'
       - '!binding/python/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/beaglebone/**'
+      - 'lib/common/**'
+      - 'lib/jetson/**'
+      - 'lib/linux/**'
+      - 'lib/mac/**'
+      - 'lib/raspberry-pi/**'
+      - 'lib/windows/**'
+      - 'resources/keyword_files/beaglebone/**'
+      - 'resources/keyword_files/common/**'
+      - 'resources/keyword_files/jetson/**'
+      - 'resources/keyword_files/linux/**'
+      - 'resources/keyword_files/mac/**'
+      - 'resources/keyword_files/raspberry-pi/**'
+      - 'resources/keyword_files/windows/**'
   pull_request:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'binding/python/**'
       - '!binding/python/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/beaglebone/**'
+      - 'lib/common/**'
+      - 'lib/jetson/**'
+      - 'lib/linux/**'
+      - 'lib/mac/**'
+      - 'lib/raspberry-pi/**'
+      - 'lib/windows/**'
+      - 'resources/keyword_files/beaglebone/**'
+      - 'resources/keyword_files/common/**'
+      - 'resources/keyword_files/jetson/**'
+      - 'resources/keyword_files/linux/**'
+      - 'resources/keyword_files/mac/**'
+      - 'resources/keyword_files/raspberry-pi/**'
+      - 'resources/keyword_files/windows/**'
 
 defaults:
   run:
@@ -45,4 +69,4 @@ jobs:
       run: pip install -r requirements.txt
 
     - name: Test
-      run: python setup.py test
+      run: python test_porcupine.py ${{secrets.PV_VALID_ACCESS_KEY}}
