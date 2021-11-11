@@ -23,8 +23,8 @@ export default {
         const { accessKey, context, requireEndpoint } = this.rhinoFactoryArgs;
         this.rhnWorker = await this.rhinoFactory.create({
           accessKey,
-          context: JSON.parse(JSON.stringify(context))
-          requireEndpoint,
+          context: JSON.parse(JSON.stringify(context)),
+          requireEndpoint
         });
         this.webVp = await WebVoiceProcessor.init({
           engines: [this.rhnWorker],

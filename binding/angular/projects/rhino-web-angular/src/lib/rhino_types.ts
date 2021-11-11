@@ -133,7 +133,7 @@ export type RhinoWorkerRequest =
   | WorkerRequestProcess
   | RhinoWorkerRequestInit
   | RhinoWorkerRequestInfo
-  | RhinoWorkerRequestFileOperation
+  | RhinoWorkerRequestFileOperation;
 
 export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: RhinoWorkerRequest): void;
@@ -151,7 +151,7 @@ export type RhinoWorkerResponse =
   | RhinoWorkerResponseError
   | RhinoWorkerResponseInitError
   | RhinoWorkerResponseInfo
-  | RhinoWorkerResponseFileOperation
+  | RhinoWorkerResponseFileOperation;
 
 // Angular
 
