@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2020 Picovoice Inc.
+# Copyright 2018-2021 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -9,9 +9,11 @@
 # specific language governing permissions and limitations under the License.
 #
 
+import sys
 import unittest
 
 import soundfile
+
 from rhino import Rhino
 from util import *
 
@@ -27,19 +29,25 @@ class RhinoTestCase(unittest.TestCase):
             if platform.machine() == 'x86_64':
                 return os.path.join(os.path.dirname(__file__), '../../resources/contexts/linux/coffee_maker_linux.rhn')
             else:
-                cpu_info = subprocess.check_output(['cat', '/proc/cpuinfo']).decode()
-                hardware_info = [x for x in cpu_info.split('\n') if 'Hardware' in x][0]
+                cpu_info = ''
+                try:
+                    cpu_info = subprocess.check_output(['cat', '/proc/cpuinfo']).decode()
+                    cpu_part_list = [x for x in cpu_info.split('\n') if 'CPU part' in x]
+                    cpu_part = cpu_part_list[0].split(' ')[-1].lower()
+                except Exception as error:
+                    raise RuntimeError("Failed to identify the CPU with '%s'\nCPU info: %s" % (error, cpu_info))
 
-                if 'BCM' in hardware_info:
-                    return os.path.join(
-                        os.path.dirname(__file__),
-                        '../../resources/contexts/raspberry-pi/coffee_maker_raspberry-pi.rhn')
-                elif 'AM33' in hardware_info:
-                    return os.path.join(
-                        os.path.dirname(__file__),
-                        '../../resources/contexts/beaglebone/coffee_maker_beaglebone.rhn')
+                if '0xb76' == cpu_part or '0xc07' == cpu_part or '0xd03' == cpu_part or '0xd08' == cpu_part:
+                    return os.path.join(os.path.dirname(__file__),
+                                        '../../resources/contexts/raspberry-pi/coffee_maker_raspberry-pi.rhn')
+                elif '0xd07' == cpu_part:
+                    return os.path.join(os.path.dirname(__file__),
+                                        '../../resources/contexts/jetson/coffee_maker_jetson.rhn')
+                elif '0xc08' == cpu_part:
+                    return os.path.join(os.path.dirname(__file__),
+                                        '../../resources/contexts/beaglebone/coffee_maker_beaglebone.rhn')
                 else:
-                    raise NotImplementedError('Unsupported CPU.')
+                    raise NotImplementedError("Unsupported CPU: '%s'." % cpu_part)
         elif system == 'Windows':
             return os.path.join(os.path.dirname(__file__), '../../resources/contexts/windows/coffee_maker_windows.rhn')
         else:
@@ -50,6 +58,7 @@ class RhinoTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.rhino = Rhino(
+            access_key=sys.argv[1],
             library_path=pv_library_path('../..'),
             model_path=pv_model_path('../..'),
             context_path=cls._context_path())
@@ -104,4 +113,8 @@ class RhinoTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    if len(sys.argv) != 2:
+        print("usage: test_rhino.py ${ACCESS_KEY}")
+        exit(1)
+
+    unittest.main(argv=sys.argv[:1])

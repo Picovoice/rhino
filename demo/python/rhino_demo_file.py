@@ -18,7 +18,12 @@ import soundfile
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--input_audio_path', help='Absolute path to input audio file.', required=True)
+    parser.add_argument('--input_audio_path', help='Absolute path to input audio file.',
+                        required=True)
+
+    parser.add_argument('--access_key',
+                        help='AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)',
+                        required=True)
 
     parser.add_argument('--context_path', help="Absolute path to context file.", required=True)
 
@@ -33,15 +38,23 @@ def main():
         '--sensitivity',
         help="Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
              "fewer misses at the cost of (potentially) increasing the erroneous inference rate.",
+        type=float,
         default=0.5)
+
+    parser.add_argument(
+        '--require_endpoint',
+        help="If set, Rhino requires an endpoint (chunk of silence) before finishing inference",
+        action='store_true')
 
     args = parser.parse_args()
 
     rhino = pvrhino.create(
+        access_key=args.access_key,
         library_path=args.library_path,
         model_path=args.model_path,
         context_path=args.context_path,
-        sensitivity=args.sensitivity)
+        sensitivity=args.sensitivity,
+        require_endpoint=args.require_endpoint)
 
     audio, sample_rate = soundfile.read(args.input_audio_path, dtype='int16')
     if audio.ndim == 2:
