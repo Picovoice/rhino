@@ -709,7 +709,7 @@ To install the Rhino Go module to your project, use the command:
 go get github.com/Picovoice/rhino/binding/go
 ```
 
-To create an instance of the engine with default parameters, pass pass an `AccessKey` and a path to a Rhino context file (.rhn) to the `NewRhino` function and then make a call to `.Init()`.
+To create an instance of the engine with default parameters, pass an `AccessKey` and a path to a Rhino context file (.rhn) to the `NewRhino` function and then make a call to `.Init()`.
 
 ```go
 import . "github.com/Picovoice/rhino/binding/go"
