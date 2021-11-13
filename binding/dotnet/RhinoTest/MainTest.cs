@@ -24,6 +24,17 @@ namespace RhinoTest
     [TestClass]
     public class MainTest
     {
+        private static string ACCESS_KEY;
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext)
+        {
+            if (testContext.Properties.Contains("pvTestAccessKey"))
+            {
+                ACCESS_KEY = testContext.Properties["pvTestAccessKey"].ToString();
+            }
+        }
+
         [TestMethod]
         public void TestFrameLength() 
         {
@@ -139,8 +150,29 @@ namespace RhinoTest
                                                  RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "windows" :
                                                  RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && _arch == Architecture.X64 ? "linux" :
                                                  RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
-                                                    (_arch == Architecture.Arm || _arch == Architecture.Arm64) ? "raspberry-pi" : "";
+                                                    (_arch == Architecture.Arm || _arch == Architecture.Arm64) ? PvLinuxEnv() : "";
 
-        private Rhino SetUpClass() => Rhino.Create(Path.Combine(_relativeDir, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));        
+        private Rhino SetUpClass() => Rhino.Create(ACCESS_KEY, Path.Combine(_relativeDir, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
+
+        public static string PvLinuxEnv()
+        {
+            string cpuInfo = File.ReadAllText("/proc/cpuinfo");
+            string[] cpuPartList = cpuInfo.Split('\n').Where(x => x.Contains("CPU part")).ToArray();
+            if (cpuPartList.Length == 0)
+                throw new PlatformNotSupportedException($"Unsupported CPU.\n{cpuInfo}");
+
+            string cpuPart = cpuPartList[0].Split(' ').Last().ToLower();
+            
+            switch (cpuPart)
+            {
+                case "0xc07":
+                case "0xd03":
+                case "0xd08": return "raspberry-pi";
+                case "0xd07": return "jetson";
+                case "0xc08": return "beaglebone";
+                default:
+                    throw new PlatformNotSupportedException($"This device (CPU part = {cpuPart}) is not supported by Picovoice.");
+            }
+        }
     }
 }
