@@ -257,14 +257,14 @@ For more information about Java demos go to [demo/java](/demo/java).
 
 ### Go Demos
 
-The demo requires `cgo`, which on Windows may mean that you need to install a gcc compiler like [Mingw](http://mingw-w64.org/doku.php) to build it properly. 
+The demo requires `cgo`, which on Windows may mean that you need to install a gcc compiler like [Mingw](http://mingw-w64.org/doku.php) to build it properly.
 
 From [demo/go](/demo/go) run the following command from the terminal to build and run the mic demo:
 ```console
-go run micdemo/rhino_mic_demo.go -context_path ${CONTEXT_FILE_PATH}
+go run micdemo/rhino_mic_demo.go -access_key ${ACCESS_KEY} -context_path ${CONTEXT_FILE_PATH}
 ```
 
-Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
+Replace `${ACCESS_KEY}` with your Picovoice AccessKey and `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one from the Rhino GitHub repository.
 
 For more information about Go demos go to [demo/go](/demo/go).
 
@@ -709,12 +709,14 @@ To install the Rhino Go module to your project, use the command:
 go get github.com/Picovoice/rhino/binding/go
 ```
 
-To create an instance of the engine with default parameters, pass a path to a Rhino context file (.rhn) to the `NewRhino` function and then make a call to `.Init()`.
+To create an instance of the engine with default parameters, pass pass an `AccessKey` and a path to a Rhino context file (.rhn) to the `NewRhino` function and then make a call to `.Init()`.
 
 ```go
 import . "github.com/Picovoice/rhino/binding/go"
 
-rhino = NewRhino("/path/to/context/file.rhn")
+const accessKey = "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
+
+rhino = NewRhino(accessKey, "/path/to/context/file.rhn")
 err := rhino.Init()
 if err != nil {
     // handle error
