@@ -79,9 +79,9 @@ _JETSON_MACHINES = {'cortex-a57-aarch64'}
 def pv_library_path(relative_path):
     if _PV_SYSTEM == 'Darwin':
         if _PV_MACHINE == 'x86_64':
-            return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/x86_64/libpv_porcupine.dylib')
+            return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/x86_64/libpv_rhino.dylib')
         elif _PV_MACHINE == 'arm64':
-            return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/arm64/libpv_porcupine.dylib')
+            return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/arm64/libpv_rhino.dylib')
     elif _PV_SYSTEM == 'Linux':
         if _PV_MACHINE == 'x86_64':
             return os.path.join(os.path.dirname(__file__), relative_path, 'lib/linux/x86_64/libpv_rhino.so')
