@@ -22,21 +22,18 @@
         />
       </label>
     </h3>
-    <h3>Loaded: {{ isLoaded }}</h3>
+    <h3>Rhino Loaded: {{ isLoaded }}</h3>
     <h3>Listening: {{ isListening }}</h3>
-    <h3>Talking: {{ isTalking }}</h3>
     <h3>Error: {{ isError }}</h3>
     <p class="error-message" v-if="isError">
       {{ JSON.stringify(errorMessage) }}
     </p>
+    <h3>Talking: {{ isTalking }}</h3>
     <button v-on:click="start" :disabled="!isLoaded || isError || isListening">
       Start
     </button>
     <button v-on:click="pause" :disabled="!isLoaded || isError || !isListening">
       Pause
-    </button>
-    <button v-on:click="resume" :disabled="!isLoaded || isError || isListening">
-      Resume
     </button>
     <button
       v-on:click="pushToTalk"
@@ -45,12 +42,10 @@
       Push to Talk
     </button>
     <h3>Inference:</h3>
-    <code v-if="inference !== null">
-      {{ inference }}
-    </code>
-    <br />
+    <pre v-if="inference !== null">{{ JSON.stringify(inference, null, 2) }}</pre>
+    <hr />
     <div>
-      <h2>Context Info</h2>
+      <h3>Context Info:</h3>
       <pre>
       {{ contextInfo }}
       </pre>

@@ -66,13 +66,6 @@ export default {
       }
       return false;
     },
-    resume() {
-      if (this.webVp !== null) {
-        this.webVp.resume();
-        return true;
-      }
-      return false;
-    },
     pushToTalk() {
       if (this.webVp !== null) {
         this.webVp.resume();

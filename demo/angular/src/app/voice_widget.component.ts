@@ -72,10 +72,6 @@ export class VoiceWidget {
     this.rhinoService.pause();
   }
 
-  public resume() {
-    this.rhinoService.resume();
-  }
-
   public start() {
     this.rhinoService.start();
   }

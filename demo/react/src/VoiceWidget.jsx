@@ -6,6 +6,7 @@ import { CLOCK_EN_64 } from "./dist/rhn_contexts_base64";
 export default function VoiceWidget() {
   const [inference, setInference] = useState(null);
   const [workerChunk, setWorkerChunk] = useState({ factory: null });
+  const [isChunkLoaded, setIsChunkLoaded] = useState(false);
   const [accessKey, setAccessKey] = useState("");
 
   useEffect(() => {
@@ -20,6 +21,7 @@ export default function VoiceWidget() {
         // If the component unmounted while loading, don't attempt to update it
         if (!isCanceled) {
           setWorkerChunk({ factory: rhnEnWorkerFactory });
+          setIsChunkLoaded(true);
         }
       };
 
@@ -43,6 +45,8 @@ export default function VoiceWidget() {
     isTalking,
     errorMessage,
     pushToTalk,
+    start,
+    pause
   } = useRhino(
     workerChunk.factory,
     {
@@ -68,10 +72,8 @@ export default function VoiceWidget() {
           />
         </label>
       </h3>
-      <h3>
-        Dynamic Import Loaded: {JSON.stringify(workerChunk.factory !== null)}
-      </h3>
-      <h3>Loaded: {JSON.stringify(isLoaded)}</h3>
+      <h3>Dynamic Import Loaded: {JSON.stringify(isChunkLoaded)}</h3>
+      <h3>Rhino Loaded: {JSON.stringify(isLoaded)}</h3>
       <h3>Listening: {JSON.stringify(isListening)}</h3>
       <h3>Error: {JSON.stringify(isError)}</h3>
       {isError && (
@@ -79,10 +81,19 @@ export default function VoiceWidget() {
       )}
       <h3>Talking: {JSON.stringify(isTalking)}</h3>
 
-      <h3>
-        Rhino Context: <i>Alarm Clock</i>
-      </h3>
-      <p>e.g. "Set a timer for two minutes"</p>
+      <br />
+      <button
+        onClick={() => start()}
+        disabled={isError || isListening || !isLoaded}
+      >
+        Start
+      </button>
+      <button
+        onClick={() => pause()}
+        disabled={isError || !isListening || !isLoaded}
+      >
+        Pause
+      </button>
       <button
         onClick={() => pushToTalk()}
         disabled={!isListening || isTalking || isError || !isLoaded}
@@ -90,8 +101,9 @@ export default function VoiceWidget() {
         Push to Talk
       </button>
       <h3>Inference:</h3>
-      {inference !== null && <pre>{JSON.stringify(inference)}</pre>}
-      <h2>Context Info</h2>
+      {inference !== null && <pre>{JSON.stringify(inference, null, 2)}</pre>}
+      <hr />
+      <h3>Context Info:</h3>
       <pre>{contextInfo}</pre>
     </div>
   );

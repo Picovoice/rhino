@@ -46,15 +46,6 @@ export class RhinoService implements OnDestroy {
     return false;
   }
 
-  public resume(): boolean {
-    if (this.webVoiceProcessor !== null) {
-      this.webVoiceProcessor.resume();
-      this.listening$.next(true);
-      return true;
-    }
-    return false;
-  }
-
   public async release(): Promise<void> {
     if (this.rhinoWorker !== null) {
       this.rhinoWorker.postMessage({ command: 'release' });
