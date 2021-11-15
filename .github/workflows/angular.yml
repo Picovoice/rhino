@@ -7,15 +7,15 @@ on:
     paths:
       - 'binding/angular/**'
       - '!binding/angular/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/wasm/**'
+      - 'resources/contexts/wasm/**'
   pull_request:
     branches: [ master, v2.0 ]
     paths:
       - 'binding/angular/**'
       - '!binding/angular/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/wasm/**'
+      - 'resources/contexts/wasm/**'
 
 defaults:
   run:

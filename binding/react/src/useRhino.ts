@@ -117,8 +117,12 @@ export function useRhino(
       };
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { accessKey } = rhinoHookArgs!;
+    const {
+      accessKey,
+      context,
+      requireEndpoint,
+      start: startWebVp = true,
+    } = rhinoHookArgs!;
     if (accessKey === null || accessKey === '') {
       return (): void => {
         /* NOOP */
@@ -129,13 +133,6 @@ export function useRhino(
       webVp: WebVoiceProcessor;
       rhnWorker: RhinoWorker;
     }> {
-      const {
-        accessKey,
-        context,
-        requireEndpoint,
-        start: startWebVp = true,
-      } = rhinoHookArgs!;
-
       const initIsTalking = rhinoHookArgs?.isTalking === true;
 
       const rhnWorker = await rhinoWorkerFactory!.create({
