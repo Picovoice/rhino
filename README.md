@@ -766,9 +766,12 @@ Using the constructor `RhinoManager.Create` will create an instance of the Rhino
 ```csharp
 using Pv.Unity;
 
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try
 {
     RhinoManager _rhinoManager = RhinoManager.Create(
+                                    accessKey,
                                     "/path/to/context/file.rhn",
                                     (inference) => {});
 }
@@ -806,11 +809,13 @@ To create an instance of `Rhino`, use the `.Create` static constructor and a con
 ```csharp
 using Pv.Unity;
 
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try
 {
-    Rhino _rhino = Rhino.Create("path/to/context/file.rhn");
+    Rhino _rhino = Rhino.Create(accessKey, "path/to/context/file.rhn");
 }
-catch (Exception ex)
+catch (RhinoException ex)
 {
     // handle rhino init error
 }
@@ -843,7 +848,7 @@ try
         }
     }
 }
-catch (Exception ex)
+catch (RhinoException ex)
 {
     Debug.LogError(ex.ToString());
 }

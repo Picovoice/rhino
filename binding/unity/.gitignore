@@ -67,3 +67,4 @@ Assets/Rhino/Plugins/**/*.dylib
 Assets/Rhino/Plugins/**/*.dll
 Assets/Rhino/VoiceProcessor/**
 Assets/Rhino/Demo/**
+.vsconfig
