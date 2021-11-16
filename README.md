@@ -337,7 +337,7 @@ For more information about Android demo and the complete list of available expre
 
 ### iOS Demos
 
-Before building the demo app, run the following from this directory to install the Rhino-iOS Cocoapod:
+Copy your `AccessKey` into the `ACCESS_KEY` variable in `RhinoDemo/ContentView.swift` before building the demo. Then, run the following from this directory to install the Rhino-iOS Cocoapod:
 ```ruby
 pod install
 ```
@@ -1159,8 +1159,12 @@ There are two approaches for integrating Rhino into an iOS application: The high
 [RhinoManager](/binding/ios/RhinoManager.swift) provides a high-level API
 for integrating Rhino into iOS applications. It manages all activities related to creating an input audio stream, feeding it to the engine, and invoking a user-provided inference callback.
 ```swift
+import Rhino
+
+let accessKey = "${ACCESS_KEY}" // Obtained from Picovoice Console (https://console.picovoice.ai)
 do {
-    RhinoManager manager = try RhinoManager(
+    let manager = try RhinoManager(
+        accessKey: accessKey, 
         contextPath: "/path/to/context/file.rhn", 
         modelPath: "/path/to/model/file.pv",
         sensitivity: 0.35,
@@ -1187,8 +1191,11 @@ using `manager.delete()`.
 ```swift
 import Rhino
 
+let accessKey = "${ACCESS_KEY}" // Obtained from Picovoice Console (https://console.picovoice.ai)
 do {
-    Rhino handle = try Rhino(contextPath: "/path/to/context/file.rhn")
+    let handle = try Rhino(
+      accessKey: accessKey,
+      contextPath: "/path/to/context/file.rhn")
 } catch { }
 ```
 
