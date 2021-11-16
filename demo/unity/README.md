@@ -17,7 +17,7 @@ To obtain your `AccessKey`:
 1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
 2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
-Replace the `AccessKey` in [`PorcupineDemo.cs`](PorcupineDemo.cs) with the `AccessKey` obatined above:
+Replace the `AccessKey` in [`RhinoDemo.cs`](RhinoDemo.cs) with the `AccessKey` obatined above:
 
 ```csharp
 private const string ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
