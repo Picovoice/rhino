@@ -37,6 +37,15 @@ The easiest way to install the Rhino Unity SDK is to import [rhino.unitypackage]
 
 **NOTE:** On macOS, the Rhino library may get flagged as having come from an unverified source if you've downloaded the  `.unitypackage` directly from github. This should only come up when running your project in the Editor. To disable this warning, go to Security & Preferences and choose to allow pv_rhino.dylib to run.
 
+## AccessKey
+
+All bindings require a valid Picovoice `AccessKey` at initialization. `AccessKey`s act as your credentials when using Porcupine SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
 ## Packaging
 To build the package from source, you have first have to clone the repo with submodules:
 ```console
@@ -61,13 +70,16 @@ Using the constructor `RhinoManager.Create` will create an instance of the Rhino
 ```csharp
 using Pv.Unity;
 
+string accessKey = "${ACCESS_KEY}"; // // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try 
 {    
     RhinoManager _rhinoManager = RhinoManager.Create(
+                                    accessKey,
                                     "/path/to/context/file.rhn",
                                     OnInferenceResult);
 }
-catch (Exception ex)
+catch (RhinoException ex)
 {
     // handle rhino init error
 }
@@ -91,17 +103,22 @@ private void OnInferenceResult(Inference inference)
 }
 ```
 
-You can override the default Rhino model file and/or the inference sensitivity. There is also an optional errorCallback that is called if there is a problem encountered while processing audio. These optional parameters can be passed in like so:
+You can override the default Rhino model file and/or the inference sensitivity. You can set requireEndpoint parameter to false if you do not wish to wait for silence before Rhino infers context. There is also an optional errorCallback that is called if there is a problem encountered while processing audio. These optional parameters can be passed in like so:
 
 ```csharp
+
+string accessKey = "${ACCESS_KEY}"; // // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 RhinoManager _rhinoManager = RhinoManager.Create(
+                                        accessKey,
                                         "/path/to/context/file.rhn",
                                         OnInferenceResult,
                                         modelPath: "/path/to/model/file.pv",
                                         sensitivity: 0.75f,
+                                        requireEndpoint: false,
                                         errorCallback: OnError);
 
-void OnError(Exception ex){
+void OnError(RhinoException ex){
     Debug.LogError(ex.ToString());
 }
 ```
@@ -133,11 +150,13 @@ To create an instance of `Rhino`, use the `.Create` static constructor and a con
 ```csharp
 using Pv.Unity;
 
+string accessKey = "${ACCESS_KEY}"; // // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try
 {    
-    Rhino _rhino = Rhino.Create("path/to/context/file.rhn");
+    Rhino _rhino = Rhino.Create(accessKey, "path/to/context/file.rhn");
 } 
-catch (Exception ex) 
+catch (RhinoException ex) 
 {
     // handle rhino init error
 }
