@@ -37,10 +37,9 @@ namespace Pv.Unity
         /// Sensitivity should be a floating-point number within 0 and 1.
         /// </param>
         /// <param name="requireEndpoint">
-        /// Boolean variable to indicate if Rhino should wait for a chunk of silence before finishing inference.
+        /// (Optional) Boolean variable to indicate if Rhino should wait for a chunk of silence before finishing inference.
         /// </param>
-        /// <param name="processErrorCallback">(Optional) Callback that triggers is the engine experiences a problem while processing audio.</param>
-        /// <returns>An instance of RhinoManager.</returns>                             
+        /// <param name="processErrorCallback">(Optional) Reports errors that are encountered while the engine is processing audio.</returns>                             
         public static RhinoManager Create(
             string accessKey,
             string contextPath,
