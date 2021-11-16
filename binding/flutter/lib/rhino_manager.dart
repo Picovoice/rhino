@@ -13,17 +13,17 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_voice_processor/flutter_voice_processor.dart';
-import 'package:rhino/rhino.dart';
-import 'package:rhino/rhino_error.dart';
+import 'package:rhino_flutter/rhino.dart';
+import 'package:rhino_flutter/rhino_error.dart';
 
 /// type for function that receives inference result from Rhino
-typedef InferenceCallback(Map<String, dynamic> inference);
+typedef InferenceCallback = Function(Map<String, dynamic> inference);
 
-/// type for PvError that occurs while recording audio
-typedef ErrorCallback(PvError error);
+/// type for RhinoExceeption that occurs while recording audio
+typedef ProcessErrorCallback = Function(RhinoException error);
 
 class RhinoManager {
-  VoiceProcessor? _voiceProcessor;
+  final VoiceProcessor? _voiceProcessor;
   Rhino? _rhino;
 
   final InferenceCallback _inferenceCallback;
@@ -33,6 +33,8 @@ class RhinoManager {
   bool _awaitingStop = false;
 
   /// Static creator for initializing Rhino
+  /// 
+  /// [accessKey] AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
   ///
   /// [contextPath] Absolute path to the Rhino context file (.rhn).
   ///
@@ -44,27 +46,34 @@ class RhinoManager {
   /// [sensitivity] (Optional) Inference sensitivity. A higher sensitivity value results in
   /// fewer misses at the cost of (potentially) increasing the erroneous inference rate.
   /// Sensitivity should be a floating-point number within 0 and 1.
+  /// 
+  /// [requireEndpoint] (Optional) Boolean variable to indicate if Rhino should wait 
+  /// for a chunk of silence before finishing inference.
+  /// 
+  /// [processErrorCallback] (Optional) Reports errors that are encountered while 
+  /// the engine is processing audio.
   ///
-  /// Thows a `PvError` if not initialized correctly
+  /// Thows a `RhinoException` if not initialized correctly
   ///
   /// returns an instance of the speech-to-intent engine
   static Future<RhinoManager> create(
-      String contextPath, InferenceCallback inferenceCallback,
-      {String? modelPath,
-      double sensitivity = 0.5,
-      ErrorCallback? errorCallback}) async {
-    Rhino rhino = await Rhino.create(contextPath,
-        modelPath: modelPath, sensitivity: sensitivity);
-    return new RhinoManager._(rhino, inferenceCallback, errorCallback);
+      String accessKey,
+      String contextPath, 
+      InferenceCallback inferenceCallback,
+      {String? modelPath, double sensitivity = 0.5,
+      bool requireEndpoint = true, ProcessErrorCallback? processErrorCallback}) async {
+    Rhino rhino = await Rhino.create(accessKey, contextPath,
+        modelPath: modelPath, sensitivity: sensitivity, requireEndpoint: requireEndpoint);
+    return RhinoManager._(rhino, inferenceCallback, processErrorCallback);
   }
 
   // private constructor
   RhinoManager._(
-      this._rhino, this._inferenceCallback, ErrorCallback? errorCallback)
+      this._rhino, this._inferenceCallback, ProcessErrorCallback? processErrorCallback)
       : _voiceProcessor = VoiceProcessor.getVoiceProcessor(
-            Rhino.frameLength, Rhino.sampleRate) {
+            _rhino!.frameLength, _rhino.sampleRate) {
     if (_voiceProcessor == null) {
-      throw new PvError("flutter_voice_processor not available.");
+      throw RhinoRuntimeException("flutter_voice_processor not available.");
     }
     _removeVoiceProcessorListener =
         _voiceProcessor!.addListener((buffer) async {
@@ -77,17 +86,17 @@ class RhinoManager {
       try {
         rhinoFrame = (buffer as List<dynamic>).cast<int>();
       } on Error {
-        PvError castError = new PvError(
+        RhinoException castError = RhinoException(
             "flutter_voice_processor sent an unexpected data type.");
-        errorCallback == null
+        processErrorCallback == null
             ? print(castError.message)
-            : errorCallback(castError);
+            : processErrorCallback(castError);
         return;
       }
 
       // process frame with Rhino
       try {
-        Map<String, dynamic>? rhinoResult = _rhino?.process(rhinoFrame);
+        Map<String, dynamic>? rhinoResult = await _rhino?.process(rhinoFrame);
         if (rhinoResult?['isFinalized']) {
           _awaitingStop = true;
 
@@ -97,39 +106,39 @@ class RhinoManager {
           // stop audio processing
           await _voiceProcessor?.stop();
         }
-      } on PvError catch (error) {
-        errorCallback == null ? print(error.message) : errorCallback(error);
+      } on RhinoException catch (error) {
+        processErrorCallback == null ? print(error.message) : processErrorCallback(error);
       } finally {
         _awaitingStop = false;
       }
     });
 
     _removeErrorListener = _voiceProcessor!.addErrorListener((errorMsg) {
-      PvError nativeError = new PvError(errorMsg as String);
-      errorCallback == null
+      RhinoException nativeError = RhinoException(errorMsg as String);
+      processErrorCallback == null
           ? print(nativeError.message)
-          : errorCallback(nativeError);
+          : processErrorCallback(nativeError);
     });
   }
 
   /// Opens audio input stream and sends audio frames to Rhino until a inference
   /// result is sent via inference callback
-  /// Throws a `PvAudioException` if there was a problem starting the audio engine
+  /// Throws a `RhinoException` if there was a problem starting the audio engine
   Future<void> process() async {
     if (_rhino == null || _voiceProcessor == null) {
-      throw new PvStateError(
-          "Cannot start RhinoManager - resources have already been released");
+      throw RhinoInvalidStateException(
+          "Cannot start Porcupine - resources have already been released");
     }
 
     if (await _voiceProcessor?.hasRecordAudioPermission() ?? false) {
       try {
         await _voiceProcessor!.start();
       } on PlatformException {
-        throw new PvAudioException(
+        throw RhinoRuntimeException(
             "Audio engine failed to start. Hardware may not be supported.");
       }
     } else {
-      throw new PvAudioException(
+      throw RhinoRuntimeException(
           "User did not give permission to record audio.");
     }
   }
