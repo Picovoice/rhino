@@ -61,7 +61,7 @@ public class RhinoDemo : MonoBehaviour
         
         try
         {
-            _rhinoManager = RhinoManager.Create(ACCESS_KEY, _contextPath, OnInferenceResult, errorCallback: ErrorCallback);
+            _rhinoManager = RhinoManager.Create(ACCESS_KEY, _contextPath, OnInferenceResult, processErrorCallback: ErrorCallback);
         }
         catch (RhinoInvalidArgumentException ex)
         {

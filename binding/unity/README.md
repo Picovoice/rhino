@@ -103,7 +103,7 @@ private void OnInferenceResult(Inference inference)
 }
 ```
 
-You can override the default Rhino model file and/or the inference sensitivity. You can set requireEndpoint parameter to false if you do not wish to wait for silence before Rhino infers context. There is also an optional errorCallback that is called if there is a problem encountered while processing audio. These optional parameters can be passed in like so:
+You can override the default Rhino model file and/or the inference sensitivity. You can set `requireEndpoint` parameter to false if you do not wish to wait for silence before Rhino infers context. There is also an optional `processErrorCallba`ck` that is called if there is a problem encountered while processing audio. These optional parameters can be passed in like so:
 
 ```csharp
 
@@ -116,7 +116,7 @@ RhinoManager _rhinoManager = RhinoManager.Create(
                                         modelPath: "/path/to/model/file.pv",
                                         sensitivity: 0.75f,
                                         requireEndpoint: false,
-                                        errorCallback: OnError);
+                                        processErrorCallback: OnError);
 
 void OnError(RhinoException ex){
     Debug.LogError(ex.ToString());
