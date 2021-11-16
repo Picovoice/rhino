@@ -22,10 +22,18 @@ public struct Inference {
 }
 
 public enum RhinoError: Error {
-    case invalidArgument(message:String)
-    case io
-    case outOfMemory
-    case invalidState
+    case RhinoOutOfMemoryError(_ message:String)
+    case RhinoIOError(_ message:String)
+    case RhinoInvalidArgumentError(_ message:String)
+    case RhinoStopIterationError(_ message:String)
+    case RhinoKeyError(_ message:String)
+    case RhinoInvalidStateError(_ message:String)
+    case RhinoRuntimeError(_ message:String)
+    case RhinoActivationError(_ message:String)
+    case RhinoActivationLimitError(_ message:String)
+    case RhinoActivationThrottledError(_ message:String)
+    case RhinoActivationRefusedError(_ message:String)
+    case RhinoInternalError(_ message:String)
 }
 
 /// Low-level iOS binding for Rhino wake word engine. Provides a Swift interface to the Rhino library.
@@ -42,15 +50,21 @@ public class Rhino {
     /// Constructor.
     ///
     /// - Parameters:
+    ///   - accessKey: AccessKey obtained from Picovoice Console (https://console.picovoice.ai).
     ///   - contextPath: Absolute path to file containing context parameters. A context represents the set of expressions (spoken commands), intents, and
     ///   intent arguments (slots) within a domain of interest.
     ///   - modelPath: Absolute path to file containing model parameters.
     ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially)
     ///   increasing the erroneous inference rate.
+    ///   - requireEndpoint: If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
     /// - Throws: RhinoError
-    public init(contextPath: String, modelPath:String? = nil, sensitivity:Float32 = 0.5) throws {
-                        
-        if !FileManager().fileExists(atPath: contextPath){
+    public init(accessKey: String, contextPath: String, modelPath:String? = nil, sensitivity:Float32 = 0.5, requireEndpoint: Bool = true) throws {
+
+        if accessKey.isEmpty {
+            throw RhinoError.RhinoInvalidArgumentError(message: "")
+        }  
+
+        if !FileManager().fileExists(atPath: contextPath) {
             throw RhinoError.invalidArgument(message: "Context file at does not exist at '\(contextPath)'")
         }
 
