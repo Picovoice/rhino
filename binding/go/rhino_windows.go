@@ -39,17 +39,21 @@ var (
 
 func (nr nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
 	var (
+		accessKeyC   = C.CString(rhino.AccessKey)
 		modelPathC   = C.CString(rhino.ModelPath)
 		contextPathC = C.CString(rhino.ContextPath)
 	)
+	defer C.free(unsafe.Pointer(accessKeyC))
 	defer C.free(unsafe.Pointer(modelPathC))
 	defer C.free(unsafe.Pointer(contextPathC))
 
 	ret, _, _ := init_func.Call(
+		uintptr(unsafe.Pointer(accessKeyC)),
 		uintptr(unsafe.Pointer(modelPathC)),
 		uintptr(unsafe.Pointer(contextPathC)),
 		uintptr(rhino.Sensitivity),
-		uintptr(unsafe.Pointer(&rhino.handle)))
+		uintptr(unsafe.Pointer(&rhino.handle)),
+		uintptr(rhino.IsEndpointRequired))
 
 	return PvStatus(ret)
 }

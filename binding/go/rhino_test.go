@@ -12,6 +12,7 @@ package rhino
 
 import (
 	"encoding/binary"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -19,17 +20,19 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
-	"runtime"
 	"testing"
 )
 
-var osName = getOS()
 var r Rhino
+var pvTestAccessKey string
 
 func TestMain(m *testing.M) {
 
+	flag.StringVar(&pvTestAccessKey, "access_key", "", "AccessKey for testing")
+	flag.Parse()
+
 	contextFile, _ := filepath.Abs(fmt.Sprintf("../../resources/contexts/%s/coffee_maker_%s.rhn", osName, osName))
-	r = NewRhino(contextFile)
+	r = NewRhino(pvTestAccessKey, contextFile)
 	err := r.Init()
 	if err != nil {
 		log.Fatalf("%v", err)
@@ -143,19 +146,3 @@ func TestOutOfContext(t *testing.T) {
 		t.Fatalf("Rhino understood a command outside of its context. %v", inference)
 	}
 }
-
-func getOS() string {
-	switch os := runtime.GOOS; os {
-	case "darwin":
-		return "mac"
-	case "linux":
-		linuxName, _ := getLinuxDetails()
-		return linuxName
-	case "windows":
-		return "windows"
-	default:
-		log.Fatalf("%s is not a supported OS", os)
-		return ""
-	}
-}
-

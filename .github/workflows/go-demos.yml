@@ -2,12 +2,12 @@ name: Go Demos
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'demo/go/**'
       - '!demo/go/README.md'
   pull_request:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'demo/go/**'
       - '!demo/go/README.md'
@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        go: [ '1.16' ]
+        go: [ '1.16', '1.17' ]
 
     steps:
     - uses: actions/checkout@v2
@@ -42,7 +42,7 @@ jobs:
 
     strategy:
       matrix:
-        go: [ '1.16' ]
+        go: [ '1.16', '1.17' ]
 
     steps:
     - uses: actions/checkout@v2

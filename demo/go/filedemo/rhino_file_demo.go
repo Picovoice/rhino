@@ -16,21 +16,23 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strconv"
 
-	. "github.com/Picovoice/rhino/binding/go"
+	rhino "github.com/Picovoice/rhino/binding/go"
 	"github.com/go-audio/audio"
 	"github.com/go-audio/wav"
 )
 
 func main() {
 	inputAudioPathArg := flag.String("input_audio_path", "", "Path to input audio file (mono, WAV, 16-bit, 16kHz)")
+	accessKeyArg := flag.String("access_key", "", "AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)")
 	contextPathArg := flag.String("context_path", "", "Path to Rhino context file (.rhn)")
 	modelPathArg := flag.String("model_path", "", "Path to Rhino model file (.pv)")
-	sensitivityArg := flag.String("sensitivity", "", "Inference sensitivity. "+
+	sensitivityArg := flag.Float64("sensitivity", 0.5, "Inference sensitivity. "+
 		"The value should be a number within [0, 1]. A higher sensitivity value results in "+
 		"fewer misses at the cost of (potentially) increasing the erroneous inference rate. "+
 		"If not set, 0.5 will be used.")
+	endpointRequiredArg := flag.Bool("endpoint_required", false,
+		"If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.")
 	flag.Parse()
 
 	// validate input audio
@@ -49,7 +51,14 @@ func main() {
 		log.Fatal("Invalid WAV file. File must contain mono, 16-bit, 16kHz linearly encoded PCM.")
 	}
 
-	r := Rhino{}
+	r := rhino.Rhino{
+		IsEndpointRequired: *endpointRequiredArg,
+	}
+
+	if *accessKeyArg == "" {
+		log.Fatalf("AccessKey is required.")
+	}
+	r.AccessKey = *accessKeyArg
 
 	// validate model
 	if *modelPathArg != "" {
@@ -71,17 +80,12 @@ func main() {
 		r.ContextPath = contextPath
 	}
 
-	// validate sensitivities
-	if *sensitivityArg == "" {
-		r.Sensitivity = 0.5
-
-	} else {
-		sensitivityFloat, err := strconv.ParseFloat(*sensitivityArg, 32)
-		if err != nil || sensitivityFloat < 0 || sensitivityFloat > 1 {
-			log.Fatalf("Senstivity value of '%s' is invalid. Must be a float32 between [0, 1].", *sensitivityArg)
-		}
-		r.Sensitivity = float32(sensitivityFloat)
+	// validate sensitivity
+	sensitivityFloat := float32(*sensitivityArg)
+	if sensitivityFloat < 0 || sensitivityFloat > 1 {
+		log.Fatalf("Senstivity value of '%f' is invalid. Must be between [0, 1].", sensitivityFloat)
 	}
+	r.Sensitivity = sensitivityFloat
 
 	err = r.Init()
 	if err != nil {
@@ -94,11 +98,11 @@ func main() {
 			NumChannels: 1,
 			SampleRate:  16000,
 		},
-		Data:           make([]int, FrameLength),
+		Data:           make([]int, rhino.FrameLength),
 		SourceBitDepth: 16,
 	}
 
-	shortBuf := make([]int16, FrameLength)
+	shortBuf := make([]int16, rhino.FrameLength)
 	var n int
 	totalRead := 0
 	isFinalized := false

@@ -21,52 +21,123 @@ package rhino
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef int32_t (*pv_rhino_init_func)(const char *, const char *, float, void **);
+typedef int32_t (*pv_rhino_init_func)(
+	const char *access_key,
+	const char *model_path,
+	const char *context_path,
+	float sensitivity,
+	bool endpoint_required,
+	void **object);
 
-int32_t pv_rhino_init_wrapper(void *f, const char *model_path, const char *context_path, float sensitivity, void **object) {
-	return ((pv_rhino_init_func) f)(model_path, context_path, sensitivity, object);
+int32_t pv_rhino_init_wrapper(
+	void *f,
+	const char *access_key,
+	const char *model_path,
+	const char *context_path,
+	float sensitivity,
+	bool endpoint_required,
+	void **object) {
+	return ((pv_rhino_init_func) f)(
+		access_key,
+		model_path,
+		context_path,
+		sensitivity,
+		endpoint_required,
+		object);
 }
 
-typedef void (*pv_rhino_delete_func)(void *);
+typedef void (*pv_rhino_delete_func)(void *object);
 
 void pv_rhino_delete_wrapper(void *f, void *object) {
 	return ((pv_rhino_delete_func) f)(object);
 }
 
-typedef int32_t (*pv_rhino_process_func)(void *, const int16_t *, bool *);
+typedef int32_t (*pv_rhino_process_func)(
+	void *object,
+	const int16_t *pcm,
+	bool *is_finalized);
 
-int32_t pv_rhino_process_wrapper(void *f, void *object, const int16_t *pcm, bool *is_finalized) {
-	return ((pv_rhino_process_func) f)(object, pcm, is_finalized);
+int32_t pv_rhino_process_wrapper(
+	void *f,
+	void *object,
+	const int16_t *pcm,
+	bool *is_finalized) {
+	return ((pv_rhino_process_func) f)(
+		object,
+		pcm,
+		is_finalized);
 }
 
-typedef int32_t (*pv_rhino_is_understood_func)(const void *, bool *);
+typedef int32_t (*pv_rhino_is_understood_func)(
+	const void *object,
+	bool *is_understood);
 
-int32_t pv_rhino_is_understood_wrapper(void *f, const void *object, bool *is_understood) {
-	return ((pv_rhino_is_understood_func) f)(object, is_understood);
+int32_t pv_rhino_is_understood_wrapper(
+	void *f,
+	const void *object,
+	bool *is_understood) {
+	return ((pv_rhino_is_understood_func) f)(
+		object,
+		is_understood);
 }
 
-typedef int32_t (*pv_rhino_get_intent_func)(const void *, const char **, int32_t *, const char ***, const char ***);
+typedef int32_t (*pv_rhino_get_intent_func)(
+	const void *object,
+	const char **intent,
+	int32_t *num_slots,
+	const char ***slots,
+	const char ***values);
 
-int32_t pv_rhino_get_intent_wrapper(void *f, const void *object, const char **intent, int32_t *num_slots, const char ***slots, const char ***values) {
-	return ((pv_rhino_get_intent_func) f)(object, intent, num_slots, slots, values);
+int32_t pv_rhino_get_intent_wrapper(
+	void *f,
+	const void *object,
+	const char **intent,
+	int32_t *num_slots,
+	const char ***slots,
+	const char ***values) {
+	return ((pv_rhino_get_intent_func) f)(
+		object,
+		intent,
+		num_slots,
+		slots,
+		values);
 }
 
-typedef int32_t (*pv_rhino_free_slots_and_values_func)(const void *, const char **, const char **);
+typedef int32_t (*pv_rhino_free_slots_and_values_func)(
+	const void *object,
+	const char **slots,
+	const char **values);
 
-int32_t pv_rhino_free_slots_and_values_wrapper(void *f, const void *object, const char **slots, const char **values) {
-	return ((pv_rhino_free_slots_and_values_func) f)(object, slots, values);
+int32_t pv_rhino_free_slots_and_values_wrapper(
+	void *f,
+	const void *object,
+	const char **slots,
+	const char **values) {
+	return ((pv_rhino_free_slots_and_values_func) f)(
+		object,
+		slots,
+		values);
 }
 
-typedef int32_t (*pv_rhino_reset_func)(void *);
+typedef int32_t (*pv_rhino_reset_func)(void *object);
 
-int32_t pv_rhino_reset_wrapper(void *f, void *object) {
+int32_t pv_rhino_reset_wrapper(
+	void *f,
+	void *object) {
 	return ((pv_rhino_reset_func) f)(object);
 }
 
-typedef int32_t (*pv_rhino_context_info_func)(const void *, const char **);
+typedef int32_t (*pv_rhino_context_info_func)(
+	const void *object,
+	const char **context_info);
 
-int32_t pv_rhino_context_info_wrapper(void *f, const void *object, const char **context_info) {
-	return ((pv_rhino_context_info_func) f)(object, context_info);
+int32_t pv_rhino_context_info_wrapper(
+	void *f,
+	const void *object,
+	const char **context_info) {
+	return ((pv_rhino_context_info_func) f)(
+		object,
+		context_info);
 }
 
 typedef char* (*pv_rhino_version_func)();
@@ -110,18 +181,22 @@ var (
 
 func (nr nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
 	var (
+		accessKeyC   = C.CString(rhino.AccessKey)
 		modelPathC   = C.CString(rhino.ModelPath)
 		contextPathC = C.CString(rhino.ContextPath)
 		ptrC         = make([]unsafe.Pointer, 1)
 	)
+	defer C.free(unsafe.Pointer(accessKeyC))
 	defer C.free(unsafe.Pointer(modelPathC))
 	defer C.free(unsafe.Pointer(contextPathC))
 
 	var ret = C.pv_rhino_init_wrapper(
 		pv_rhino_init_ptr,
+		accessKeyC,
 		modelPathC,
 		contextPathC,
 		(C.float)(rhino.Sensitivity),
+		(C.bool)(rhino.IsEndpointRequired),
 		&ptrC[0])
 
 	rhino.handle = uintptr(ptrC[0])

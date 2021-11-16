@@ -10,7 +10,7 @@ This Go module contains demos for processing real-time audio (i.e. microphone) a
 ## Compatibility
 
 - Linux (x86_64)
-- macOS (x86_64)
+- macOS (x86_64, arm64)
 - Windows (x86_64)
 - Raspberry Pi:
   - Zero
@@ -19,6 +19,15 @@ This Go module contains demos for processing real-time audio (i.e. microphone) a
   - 4 (32 and 64 bit)
 - NVIDIA Jetson Nano
 - BeagleBone
+
+## AccessKey
+
+Rhino requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
 ## Usage
 
@@ -35,15 +44,21 @@ benchmarking against a corpus of audio data. Note that only the relevant spoken 
 and no other speech. There also needs to be at least one second of silence at the end of the file.
 
 ```console
-go run filedemo/rhino_file_demo.go -input_audio_path "path/to/input.wav" \
+go run filedemo/rhino_file_demo.go \ 
+-input_audio_path "path/to/input.wav" \
+-access_key "${ACCESS_KEY}" \
 -context_path "/path/to/context/file.rhn"
 ```
 
-The sensitivity of the engine can be tuned using the `sensitivity` input argument and pass in a model file using the `model_path` argument:
+The sensitivity of the engine can be tuned using the `sensitivity` input argument. You can also override the default Rhino model (.pv), which is required when using a non-English context. 
 
 ```console
-go run filedemo/rhino_file_demo.go -input_audio_path "path/to/input.wav" \
--context_path "/path/to/context/file.rhn" -sensitivity 0.4
+go run filedemo/rhino_file_demo.go \
+-input_audio_path "path/to/input.wav" \
+-access_key "${ACCESS_KEY}" \
+-context_path "/path/to/context/file.rhn" \
+-sensitivity 0.4
+-model_path "/path/to/model.pv"
 ```
 
 Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating point number within `[0, 1]`. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate.
@@ -53,7 +68,9 @@ Sensitivity is the parameter that enables trading miss rate for the false alarm 
 The microphone demo opens an audio stream from a microphone and performs inference on spoken commands:
 
 ```console
-go run micdemo/rhino_mic_demo.go -context_path "/path/to/context/file.rhn"
+go run micdemo/rhino_mic_demo.go \
+-access_key "${ACCESS_KEY}" \
+-context_path "/path/to/context/file.rhn"
 ```
 
 It is possible that the default audio input device is not the one you wish to use. There are a couple
@@ -65,21 +82,28 @@ go run micdemo/rhino_mic_demo.go -show_audio_devices
 It provides information about various audio input devices on the box. Here is an example output:
 
 ```console
-index: 0, device name: USB Audio Device
-index: 1, device name: MacBook Air Microphone
+Index: 0, device name: USB Audio Device
+Index: 1, device name: MacBook Air Microphone
 ``` 
 
 You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the USB Audio Device
 in the above example, you can invoke the demo application as below:
 
 ```console
-go run micdemo/rhino_mic_demo.go -context_path "/path/to/context/file.rhn" -audio_device_index 0
+go run micdemo/rhino_mic_demo.go \
+-access_key "${ACCESS_KEY}" \
+-context_path "/path/to/context/file.rhn" \
+-audio_device_index 0
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved with:
 
 ```console
-go run micdemo/rhino_mic_demo.go -context_path "/path/to/context/file.rhn" -audio_device_index 0 -output_path ./test.wav
+go run micdemo/rhino_mic_demo.go \
+-access_key "${ACCESS_KEY}" \
+-context_path "/path/to/context/file.rhn" \
+-audio_device_index 0 \
+-output_path ./test.wav
 ```
 
 If after listening to stored file there is no apparent problem detected please open an issue.
