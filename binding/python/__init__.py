@@ -1,5 +1,5 @@
 #
-# Copyright 2020 Picovoice Inc.
+# Copyright 2020-2021 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -17,10 +17,11 @@ LIBRARY_PATH = pv_library_path('')
 MODEL_PATH = pv_model_path('')
 
 
-def create(context_path, library_path=None, model_path=None, sensitivity=0.5):
+def create(access_key, context_path, library_path=None, model_path=None, sensitivity=0.5, require_endpoint=True):
     """
     Factory method for Rhino Speech-to-Intent engine.
 
+    :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
     :param context_path: Absolute path to file containing context model (file with `.rhn` extension. A context
     represents the set of expressions (spoken commands), intents, and intent arguments (slots) within a domain of
     interest.
@@ -30,6 +31,8 @@ def create(context_path, library_path=None, model_path=None, sensitivity=0.5):
     location.
     :param sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value
     results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
+    :param require_endpoint If set to `False`, Rhino does not require an endpoint (chunk of silence) before
+        finishing inference.
     :return An instance of Rhino Speech-to-Intent engine.
     """
 
@@ -39,4 +42,10 @@ def create(context_path, library_path=None, model_path=None, sensitivity=0.5):
     if model_path is None:
         model_path = MODEL_PATH
 
-    return Rhino(library_path=library_path, model_path=model_path, context_path=context_path, sensitivity=sensitivity)
+    return Rhino(
+        access_key=access_key,
+        library_path=library_path,
+        model_path=model_path,
+        context_path=context_path,
+        sensitivity=sensitivity,
+        require_endpoint=require_endpoint)

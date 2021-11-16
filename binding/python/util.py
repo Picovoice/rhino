@@ -37,9 +37,9 @@ def _pv_linux_machine(machine):
         raise RuntimeError("Failed to identify the CPU with '%s'\nCPU info: %s" % (error, cpu_info))
 
     if '0xb76' == cpu_part:
-        return 'arm11' + arch_info
+        return 'arm11'
     elif '0xc07' == cpu_part:
-        return 'cortex-a7' + arch_info
+        return 'cortex-a7'
     elif '0xd03' == cpu_part:
         return 'cortex-a53' + arch_info
     elif '0xd07' == cpu_part:
@@ -47,7 +47,7 @@ def _pv_linux_machine(machine):
     elif '0xd08' == cpu_part:
         return 'cortex-a72' + arch_info
     elif '0xc08' == cpu_part:
-        return 'beaglebone' + arch_info
+        return 'beaglebone'
     elif machine == 'armv7l':
         log.warning(
             'WARNING: Please be advised that this device (CPU part = %s) is not officially supported by Picovoice. '
@@ -78,7 +78,10 @@ _JETSON_MACHINES = {'cortex-a57-aarch64'}
 
 def pv_library_path(relative_path):
     if _PV_SYSTEM == 'Darwin':
-        return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/x86_64/libpv_rhino.dylib')
+        if _PV_MACHINE == 'x86_64':
+            return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/x86_64/libpv_rhino.dylib')
+        elif _PV_MACHINE == 'arm64':
+            return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/arm64/libpv_rhino.dylib')
     elif _PV_SYSTEM == 'Linux':
         if _PV_MACHINE == 'x86_64':
             return os.path.join(os.path.dirname(__file__), relative_path, 'lib/linux/x86_64/libpv_rhino.so')
@@ -97,7 +100,7 @@ def pv_library_path(relative_path):
     elif _PV_SYSTEM == 'Windows':
         return os.path.join(os.path.dirname(__file__), relative_path, 'lib/windows/amd64/libpv_rhino.dll')
 
-    raise NotImplementedError('Unsupported platform.')
+    raise NotImplementedError("Unsupported platform ('%s', '%s').", _PV_SYSTEM, _PV_MACHINE)
 
 
 def pv_model_path(relative_path):

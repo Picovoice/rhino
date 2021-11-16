@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2020 Picovoice Inc.
+# Copyright 2018-2021 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -33,6 +33,11 @@ class Rhino(object):
         STOP_ITERATION = 4
         KEY_ERROR = 5
         INVALID_STATE = 6
+        RUNTIME_ERROR = 7
+        ACTIVATION_ERROR = 8
+        ACTIVATION_LIMIT_REACHED = 9
+        ACTIVATION_THROTTLED = 10
+        ACTIVATION_REFUSED = 11
 
     _PICOVOICE_STATUS_TO_EXCEPTION = {
         PicovoiceStatuses.OUT_OF_MEMORY: MemoryError,
@@ -40,23 +45,34 @@ class Rhino(object):
         PicovoiceStatuses.INVALID_ARGUMENT: ValueError,
         PicovoiceStatuses.STOP_ITERATION: StopIteration,
         PicovoiceStatuses.KEY_ERROR: KeyError,
-        PicovoiceStatuses.INVALID_STATE: RuntimeError
+        PicovoiceStatuses.INVALID_STATE: ValueError,
+        PicovoiceStatuses.RUNTIME_ERROR: RuntimeError,
+        PicovoiceStatuses.ACTIVATION_ERROR: RuntimeError,
+        PicovoiceStatuses.ACTIVATION_LIMIT_REACHED: PermissionError,
+        PicovoiceStatuses.ACTIVATION_THROTTLED: PermissionError,
+        PicovoiceStatuses.ACTIVATION_REFUSED: PermissionError
     }
 
     class CRhino(Structure):
         pass
 
-    def __init__(self, library_path, model_path, context_path, sensitivity=0.5):
+    def __init__(self, access_key, library_path, model_path, context_path, sensitivity=0.5, require_endpoint=True):
         """
         Constructor.
 
+        :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
         :param library_path: Absolute path to Rhino's dynamic library.
         :param model_path: Absolute path to file containing model parameters.
         :param context_path: Absolute path to file containing context parameters. A context represents the set of
         expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
         :param sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value
         results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
+        :param require_endpoint If set to `False`, Rhino does not require an endpoint (chunk of silence) before
+        finishing inference.
         """
+
+        if not access_key:
+            raise ValueError("access_key should be a non-empty string.")
 
         if not os.path.exists(library_path):
             raise IOError("Couldn't find Rhino's dynamic library at '%s'." % library_path)
@@ -73,12 +89,24 @@ class Rhino(object):
             raise ValueError("Sensitivity should be within [0, 1].")
 
         init_func = library.pv_rhino_init
-        init_func.argtypes = [c_char_p, c_char_p, c_float, POINTER(POINTER(self.CRhino))]
+        init_func.argtypes = [
+            c_char_p,
+            c_char_p,
+            c_char_p,
+            c_float,
+            c_bool,
+            POINTER(POINTER(self.CRhino))]
         init_func.restype = self.PicovoiceStatuses
 
         self._handle = POINTER(self.CRhino)()
 
-        status = init_func(model_path.encode('utf-8'), context_path.encode('utf-8'), sensitivity, byref(self._handle))
+        status = init_func(
+            access_key.encode('utf-8'),
+            model_path.encode('utf-8'),
+            context_path.encode('utf-8'),
+            sensitivity,
+            require_endpoint,
+            byref(self._handle))
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
