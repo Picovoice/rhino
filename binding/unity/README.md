@@ -70,7 +70,7 @@ Using the constructor `RhinoManager.Create` will create an instance of the Rhino
 ```csharp
 using Pv.Unity;
 
-string accessKey = "${ACCESS_KEY}"; // // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
 
 try 
 {    
@@ -107,7 +107,7 @@ You can override the default Rhino model file and/or the inference sensitivity. 
 
 ```csharp
 
-string accessKey = "${ACCESS_KEY}"; // // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
 
 RhinoManager _rhinoManager = RhinoManager.Create(
                                         accessKey,
@@ -150,7 +150,7 @@ To create an instance of `Rhino`, use the `.Create` static constructor and a con
 ```csharp
 using Pv.Unity;
 
-string accessKey = "${ACCESS_KEY}"; // // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
 
 try
 {    

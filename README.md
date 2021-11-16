@@ -766,7 +766,7 @@ Using the constructor `RhinoManager.Create` will create an instance of the Rhino
 ```csharp
 using Pv.Unity;
 
-string accessKey = "${ACCESS_KEY}"; // // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
 
 try
 {
@@ -811,7 +811,7 @@ using Pv.Unity;
 
 
 
-string accessKey = "${ACCESS_KEY}"; // // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
 
 try
 {
