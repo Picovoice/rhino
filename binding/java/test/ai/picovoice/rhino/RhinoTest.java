@@ -33,11 +33,19 @@ public class RhinoTest {
     private Rhino rhino;
     private String accessKey = System.getProperty("pvTestingAccessKey");
 
+    public static String getTestContextPath() {
+        return String.format(
+                "../../resources/contexts/%s/coffee_maker_%s.rhn",
+                Utils.getEnvironmentName(),
+                Utils.getEnvironmentName()
+        );
+    }
+
     @BeforeEach
     void setUp() throws RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(Utils.getTestContextPath())
+                .setContextPath(getTestContextPath())
                 .build();
     }
 

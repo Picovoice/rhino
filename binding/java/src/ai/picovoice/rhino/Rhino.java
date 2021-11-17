@@ -43,7 +43,7 @@ public class Rhino {
     /**
      * Constructor.
      *
-     * @param accessKey     AccessKey obtained from Picovoice Console.
+     * @param accessKey   AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
      * @param libraryPath Absolute path to the native Rhino library.
      * @param modelPath   Absolute path to the file containing model parameters.
      * @param contextPath Absolute path to file containing context parameters. A context represents
@@ -52,8 +52,8 @@ public class Rhino {
      * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher
      *                    sensitivity value results in fewer misses at the cost of (potentially)
      *                    increasing the erroneous inference rate.
-     * @param requireEndpoint If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
-     * @throws RhinoException if there is an error while initializing Rhino.
+     * @param requireEndpoint If set, Rhino requires an endpoint (chunk of silence) before finishing inference.
+     * @throws RhinoException If there is an error while initializing Rhino.
      */
     public Rhino(String accessKey, String libraryPath, String modelPath, String contextPath, float sensitivity, boolean requireEndpoint) throws RhinoException {
 
@@ -127,7 +127,7 @@ public class Rhino {
             reset(libraryHandle);
 
             return inference;
-        } catch (Exception e) {
+        } catch (RhinoException e) {
             throw new RhinoException(e);
         }
     }
@@ -242,7 +242,7 @@ public class Rhino {
                             "provide a native Rhino library path (-l <library_path>).");
                 }
                 if (!new File(libraryPath).exists()) {
-                    throw new RhinoException(String.format("Couldn't find library file at " +
+                    throw new RhinoIOException(String.format("Couldn't find library file at " +
                             "'%s'", libraryPath));
                 }
             }
@@ -255,7 +255,7 @@ public class Rhino {
                             "valid Rhino model path (-m <model_path>).");
                 }
                 if (!new File(modelPath).exists()) {
-                    throw new RhinoException(String.format("Couldn't find model file at " +
+                    throw new RhinoIOException(String.format("Couldn't find model file at " +
                             "'%s'", modelPath));
                 }
             }
@@ -265,12 +265,12 @@ public class Rhino {
             }
 
             if (!new File(contextPath).exists()) {
-                throw new RhinoException(new IOException(String.format("Couldn't find context file at " +
-                        "'%s'", contextPath)));
+                throw new RhinoIOException(String.format("Couldn't find context file at " +
+                        "'%s'", contextPath));
             }
 
             if (sensitivity < 0 || sensitivity > 1) {
-                throw new RhinoException(new IllegalArgumentException("Sensitivity value should be within [0, 1]."));
+                throw new RhinoInvalidArgumentException("Sensitivity value should be within [0, 1].");
             }
 
             return new Rhino(accessKey, libraryPath, modelPath, contextPath, sensitivity, requireEndpoint);

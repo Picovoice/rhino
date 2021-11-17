@@ -118,7 +118,7 @@ class Utils {
         return resourceDirectoryPath;
     }
 
-    private static String getEnvironmentName() throws RuntimeException {
+    public static String getEnvironmentName() throws RuntimeException {
         String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
         if (os.contains("mac") || os.contains("darwin")) {
             return "mac";
@@ -215,9 +215,5 @@ class Utils {
             default:
                 return null;
         }
-    }
-
-    public static String getTestContextPath() {
-        return String.format("../../resources/contexts/%s/coffee_maker_%s.rhn", ENVIRONMENT_NAME, ENVIRONMENT_NAME);
     }
 }
