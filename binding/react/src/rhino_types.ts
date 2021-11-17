@@ -149,7 +149,7 @@ export type RhinoHookArgs = {
   /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
   requireEndpoint?: boolean;
   /** Immediately start the microphone upon initialization */
-  start: boolean;
+  start?: boolean;
   /** Immediately put Rhino in an active isTalking state upon initialization (as if pushToTalk() was called) (default: false) */
   isTalking?: boolean;
 };
