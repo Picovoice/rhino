@@ -17,7 +17,8 @@ export class RhinoService implements OnDestroy {
   public webVoiceProcessor: WebVoiceProcessor | null = null;
   public isInit = false;
   public contextInfo: string | null = null;
-  public inference$: Subject<RhinoInferenceFinalized> = new Subject<RhinoInferenceFinalized>();
+  public inference$: Subject<RhinoInferenceFinalized> =
+    new Subject<RhinoInferenceFinalized>();
   public listening$: Subject<boolean> = new Subject<boolean>();
   public isError$: Subject<boolean> = new Subject<boolean>();
   public isTalking$: Subject<boolean> = new Subject<boolean>();
@@ -25,7 +26,7 @@ export class RhinoService implements OnDestroy {
   private rhinoWorker: RhinoWorker | null = null;
   private isTalking = false;
 
-  constructor() { }
+  constructor() {}
 
   public pause(): boolean {
     if (this.webVoiceProcessor !== null) {
@@ -39,15 +40,6 @@ export class RhinoService implements OnDestroy {
   public start(): boolean {
     if (this.webVoiceProcessor !== null) {
       this.webVoiceProcessor.start();
-      this.listening$.next(true);
-      return true;
-    }
-    return false;
-  }
-
-  public resume(): boolean {
-    if (this.webVoiceProcessor !== null) {
-      this.webVoiceProcessor.resume();
       this.listening$.next(true);
       return true;
     }
@@ -81,12 +73,19 @@ export class RhinoService implements OnDestroy {
     if (this.isInit) {
       throw new Error('Rhino is already initialized');
     }
-    const { context, start = true } = rhinoServiceArgs;
+    const {
+      accessKey,
+      context,
+      requireEndpoint,
+      start = true,
+    } = rhinoServiceArgs;
     this.isInit = true;
 
     try {
       this.rhinoWorker = await rhinoWorkerFactory.create({
+        accessKey,
         context,
+        requireEndpoint,
         start: false,
       });
       this.rhinoWorker.onmessage = (
@@ -94,7 +93,9 @@ export class RhinoService implements OnDestroy {
       ) => {
         switch (message.data.command) {
           case 'rhn-inference': {
-            this.inference$.next(message.data.inference as RhinoInferenceFinalized);
+            this.inference$.next(
+              message.data.inference as RhinoInferenceFinalized
+            );
             this.isTalking = false;
             this.isTalking$.next(false);
             break;

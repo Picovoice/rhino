@@ -13,8 +13,8 @@
     "postinstall": "node scripts/base64.mjs"
   },
   "dependencies": {
-    "@picovoice/rhino-web-en-worker": "^1.6.1",
-    "@picovoice/rhino-web-vue": "^1.1.1",
+    "@picovoice/rhino-web-en-worker": "file:../../binding/web/rhino-web-en-worker",
+    "@picovoice/rhino-web-vue": "file:../../binding/vue",
     "@picovoice/web-voice-processor": "2.0.3",
     "core-js": "^3.6.5",
     "vue": "^3.0.0"

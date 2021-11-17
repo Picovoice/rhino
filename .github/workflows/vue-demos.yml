@@ -1,13 +1,14 @@
 name: Vue Demos
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'demo/vue/**'
       - '!demo/vue/README.md'
   pull_request:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'demo/vue/**'
       - '!demo/vue/README.md'
@@ -34,6 +35,19 @@ jobs:
 
     - name: Pre-build dependencies
       run: npm install yarn
+
+    - name: Local package dependencies
+      run: |
+        yarn
+        yarn build
+        for i in rhino-web*; do cd $i; yarn && yarn build || exit 1; cd ..; done
+      working-directory: binding/web
+
+    - name: Local package dependencies
+      run: |
+        yarn install
+        yarn build
+      working-directory: binding/vue
 
     - name: Install dependencies
       run: yarn install

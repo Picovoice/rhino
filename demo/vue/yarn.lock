@@ -941,15 +941,11 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
-"@picovoice/rhino-web-en-worker@^1.6.1":
+"@picovoice/rhino-web-en-worker@file:../../binding/web/rhino-web-en-worker":
   version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-1.6.1.tgz#4fae7b61059ffca145df6603945de7d425f36621"
-  integrity sha512-y3TXUkLIJsQ18EmopbmwaeqOsHDOIvwEpV3U5KrbTP6fOQu4l7xm8BBQqUq+JkqJCSB2G8Q3ZzkqoYoyKJUb8Q==
 
-"@picovoice/rhino-web-vue@^1.1.1":
+"@picovoice/rhino-web-vue@file:../../binding/vue":
   version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-vue/-/rhino-web-vue-1.1.1.tgz#4caf4770e0d80b2cb0483355149d94f8821b86c2"
-  integrity sha512-rxO3G9wjfQ4yOYddEl/ezacQBtSIkWjlF3bDiYYbyZJ7xPmHjs0mMu/O2IH+oYPygX/7m8/p+cGqfRiM2QSYtA==
 
 "@picovoice/web-voice-processor@2.0.3":
   version "2.0.3"

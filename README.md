@@ -1392,7 +1392,10 @@ async ngOnInit() {
   const rhinoFactoryEn = (await import('@picovoice/rhino-web-en-worker')).RhinoWorkerFactory
   // Initialize Rhino Service
   try {
-    await this.rhinoService.init(rhinoFactoryEn, {context: { base64: RHN_CONTEXT_BASE64 }})
+    await this.rhinoService.init(rhinoFactoryEn, {
+      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+      context: { base64: RHN_CONTEXT_BASE64 }
+    })
     console.log("Rhino is now loaded. Press the Push-to-Talk button to activate.")
   }
   catch (error) {
@@ -1454,6 +1457,7 @@ function VoiceWidget(props) {
     // Immediately start processing microphone audio,
     // Although Rhino itself will not start listening until the Push to Talk button is pressed.
     {
+      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
       context: { base64: RHINO_CONTEXT_BASE64 },
       start: true,
     }
@@ -1488,6 +1492,7 @@ npm install @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
     <Rhino
       ref="rhino"
       v-bind:rhinoFactoryArgs="{
+        accessKey: '${ACCESS_KEY}', <!-- AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) -->
         context: {
           base64: '...', <!-- Base64 representation of a trained Rhino context; i.e. a `.rhn` file, omitted for brevity -->
         },

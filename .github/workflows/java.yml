@@ -6,15 +6,39 @@ on:
     paths:
       - 'binding/java/**'
       - '!binding/java/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/beaglebone/**'
+      - 'lib/common/**'
+      - 'lib/jetson/**'
+      - 'lib/linux/**'
+      - 'lib/mac/**'
+      - 'lib/raspberry-pi/**'
+      - 'lib/windows/**'
+      - 'resources/contexts/beaglebone/**'
+      - 'resources/contexts/common/**'
+      - 'resources/contexts/jetson/**'
+      - 'resources/contexts/linux/**'
+      - 'resources/contexts/mac/**'
+      - 'resources/contexts/raspberry-pi/**'
+      - 'resources/contexts/windows/**'
   pull_request:
     branches: [ master ]
     paths:
       - 'binding/java/**'
       - '!binding/java/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/beaglebone/**'
+      - 'lib/common/**'
+      - 'lib/jetson/**'
+      - 'lib/linux/**'
+      - 'lib/mac/**'
+      - 'lib/raspberry-pi/**'
+      - 'lib/windows/**'
+      - 'resources/contexts/beaglebone/**'
+      - 'resources/contexts/common/**'
+      - 'resources/contexts/jetson/**'
+      - 'resources/contexts/linux/**'
+      - 'resources/contexts/mac/**'
+      - 'resources/contexts/raspberry-pi/**'
+      - 'resources/contexts/windows/**'
 
 defaults:
   run:

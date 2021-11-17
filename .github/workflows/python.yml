@@ -13,14 +13,13 @@ on:
       - 'lib/mac/**'
       - 'lib/raspberry-pi/**'
       - 'lib/windows/**'
-      - 'resources/keyword_files/beaglebone/**'
-      - 'resources/keyword_files/common/**'
-      - 'resources/keyword_files/jetson/**'
-      - 'resources/keyword_files/linux/**'
-      - 'resources/keyword_files/mac/**'
-      - 'resources/keyword_files/raspberry-pi/**'
-      - 'resources/keyword_files/windows/**'
-
+      - 'resources/contexts/beaglebone/**'
+      - 'resources/contexts/common/**'
+      - 'resources/contexts/jetson/**'
+      - 'resources/contexts/linux/**'
+      - 'resources/contexts/mac/**'
+      - 'resources/contexts/raspberry-pi/**'
+      - 'resources/contexts/windows/**'
   pull_request:
     branches: [ master, v2.0 ]
     paths:
@@ -33,13 +32,13 @@ on:
       - 'lib/mac/**'
       - 'lib/raspberry-pi/**'
       - 'lib/windows/**'
-      - 'resources/keyword_files/beaglebone/**'
-      - 'resources/keyword_files/common/**'
-      - 'resources/keyword_files/jetson/**'
-      - 'resources/keyword_files/linux/**'
-      - 'resources/keyword_files/mac/**'
-      - 'resources/keyword_files/raspberry-pi/**'
-      - 'resources/keyword_files/windows/**'
+      - 'resources/contexts/beaglebone/**'
+      - 'resources/contexts/common/**'
+      - 'resources/contexts/jetson/**'
+      - 'resources/contexts/linux/**'
+      - 'resources/contexts/mac/**'
+      - 'resources/contexts/raspberry-pi/**'
+      - 'resources/contexts/windows/**'
 
 defaults:
   run:

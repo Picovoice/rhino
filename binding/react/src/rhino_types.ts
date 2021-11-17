@@ -43,8 +43,12 @@ export type RhinoContext = {
 };
 
 export type RhinoArgs = {
+  /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+  accessKey: string;
   /** The context to instantiate */
   context: RhinoContext;
+  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  requireEndpoint?: boolean;
   /** Whether to start the Rhino engine immediately upon loading.
    * Default: false, as typical use-case is Push-to-Talk */
   start: boolean;
@@ -92,11 +96,26 @@ export type RhinoWorkerResponseInfo = {
   info: string;
 };
 
+export type RhinoWorkerRequestFileOperation = {
+  command:
+    | 'file-save-succeeded'
+    | 'file-save-failed'
+    | 'file-load-succeeded'
+    | 'file-load-failed'
+    | 'file-exists-succeeded'
+    | 'file-exists-failed'
+    | 'file-delete-succeeded'
+    | 'file-delete-failed';
+  message?: string;
+  content?: string;
+};
+
 export type RhinoWorkerRequest =
   | WorkerRequestVoid
   | WorkerRequestProcess
   | RhinoWorkerRequestInit
-  | RhinoWorkerRequestInfo;
+  | RhinoWorkerRequestInfo
+  | RhinoWorkerRequestFileOperation;
 
 export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: RhinoWorkerRequest): void;
@@ -106,20 +125,31 @@ export interface RhinoWorkerFactory {
   create: (rhinoArgs: RhinoArgs) => Promise<RhinoWorker>;
 }
 
+export type RhinoWorkerResponseFileOperation = {
+  command: 'file-save' | 'file-load' | 'file-exists' | 'file-delete';
+  path: string;
+  content?: string;
+};
+
 export type RhinoWorkerResponse =
   | RhinoWorkerResponseReady
   | RhinoWorkerResponseInference
   | RhinoWorkerResponseError
   | RhinoWorkerResponseInitError
-  | RhinoWorkerResponseInfo;
+  | RhinoWorkerResponseInfo
+  | RhinoWorkerResponseFileOperation;
 
 // React
 
 export type RhinoHookArgs = {
-  /** Immediately start the microphone upon initialization */
-  start: boolean;
+  /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+  accessKey: string;
   /** The context to instantiate */
   context: RhinoContext;
+  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  requireEndpoint?: boolean;
+  /** Immediately start the microphone upon initialization */
+  start?: boolean;
   /** Immediately put Rhino in an active isTalking state upon initialization (as if pushToTalk() was called) (default: false) */
   isTalking?: boolean;
 };

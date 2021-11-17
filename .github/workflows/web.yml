@@ -1,20 +1,21 @@
 name: Web
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master ]
     paths:
       - 'binding/web/**'
       - '!binding/web/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/wasm/**'
+      - 'resources/contexts/wasm/**'
   pull_request:
     branches: [ master ]
     paths:
       - 'binding/web/**'
       - '!binding/web/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/wasm/**'
+      - 'resources/contexts/wasm/**'
 
 defaults:
   run:
