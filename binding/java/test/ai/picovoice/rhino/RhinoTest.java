@@ -34,10 +34,11 @@ public class RhinoTest {
     private String accessKey = System.getProperty("pvTestingAccessKey");
 
     private static String getTestContextPath() {
+        String environmentName = Utils.getEnvironmentName();
         return String.format(
                 "../../resources/contexts/%s/coffee_maker_%s.rhn",
-                Utils.getEnvironmentName(),
-                Utils.getEnvironmentName()
+                environmentName,
+                environmentName
         );
     }
 
