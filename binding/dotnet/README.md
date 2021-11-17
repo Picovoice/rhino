@@ -1,4 +1,6 @@
-# Rhino Speech-to-Intent Engine
+# Rhino Binding for .NET
+
+## Rhino Speech-to-Intent Engine
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
@@ -53,6 +55,15 @@ You can install the latest version of Rhino by getting the latest [Rhino Nuget p
 dotnet add package Rhino
 ```
 
+## AccessKey
+
+Rhino requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
 ## Usage
 
 Create an instance of the engine:
@@ -60,25 +71,30 @@ Create an instance of the engine:
 ```csharp
 using Pv;
 
-Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context");
+const string accessKey = "${ACCESS_KEY}";
+string contextPath = "/absolute/path/to/context.rhn";
+Rhino handle = Rhino.Create(accessKey, contextPath);
 ```
 
-Where `context_path` is the absolute path to Speech-to-Intent context created either using
-[Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository.
+Where `contextPath` is the absolute path to Speech-to-Intent context created either using [Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository.
 
 The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating point number within
 [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous
 inference rate.
 
-```csharp
-using Pv;
+The model file contains the parameters for the Rhino engine. To change the language that Rhino understands, pass in the relevant model file.
 
-Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context", sensitivity: 0.25f);
+```csharp
+const string accessKey = "${ACCESS_KEY}";
+string contextPath = "/absolute/path/to/context.rhn";
+
+Rhino handle = Rhino.Create(
+    accessKey
+    contextPath, 
+    sensitivity: 0.25f);
 ```
 
-When initialized, the valid sample rate is given by `handle.SampleRate`. Expected frame length (number of audio samples
-in an input array) is `handle.FrameLength`. The engine accepts 16-bit linearly-encoded PCM and operates on
-single-channel audio.
+When initialized, the valid sample rate is given by `handle.SampleRate`. Expected frame length (number of audio samples in an input array) is `handle.FrameLength`. The engine accepts 16-bit linearly-encoded PCM and operates on single-channel audio.
 
 ```csharp
 short[] GetNextAudioFrame()
@@ -107,11 +123,10 @@ while(true)
 }
 ```
 
-Rhino will have its resources freed by the garbage collector, but to have resources freed 
-immediately after use, wrap it in a using statement: 
+Rhino will have its resources freed by the garbage collector, but to have resources freed immediately after use, wrap it in a using statement: 
 
 ```csharp
-using(Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context"))
+using(Rhino handle = Rhino.Create(accessKey, contextPath))
 {
     // .. Rhino usage here
 }
@@ -120,7 +135,7 @@ using(Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context"))
 ## Non-English Contexts
 
 In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+
 ## Demos
 
-The [Rhino dotnet demo project](/demo/dotnet) is a .NET Core console app that allows for 
-processing real-time audio (i.e. microphone) and files using Rhino.
+The [Rhino dotnet demo project](/demo/dotnet) is a .NET Core console app that allows for processing real-time audio (i.e. microphone) and files using Rhino.

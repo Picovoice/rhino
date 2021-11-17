@@ -230,10 +230,10 @@ Make sure there is a working microphone connected to your device. From [demo/dot
 run the following in the terminal:
 
 ```console
-dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_FILE_PATH}
+dotnet run -c MicDemo.Release -- --access_key ${ACCESS_KEY} --context_path ${CONTEXT_FILE_PATH}
 ```
 
-Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
+Replace `${ACCESS_KEY}` with your Picovoice `AccessKey` and `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
 For more information about .NET demos, go to [demo/dotnet](/demo/dotnet).
 
@@ -611,7 +611,9 @@ The SDK exposes a factory method to create instances of the engine as below:
 ```csharp
 using Pv
 
-Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context");
+const string accessKey = "${ACCESS_KEY}";
+string contextPath = "/absolute/path/to/context.rhn";
+Rhino handle = Rhino.Create(accessKey, contextPath);
 ```
 
 When initialized, the valid sample rate is given by `handle.SampleRate`. The expected frame length (number of audio samples
@@ -649,7 +651,7 @@ Rhino will have its resources freed by the garbage collector, but to have resour
 immediately after use, wrap it in a `using` statement:
 
 ```csharp
-using(Rhino handle = Rhino.Create(contextPath:"/absolute/path/to/context"))
+using(Rhino handle = Rhino.Create(accessKey, contextPath))
 {
     // .. Rhino usage here
 }
