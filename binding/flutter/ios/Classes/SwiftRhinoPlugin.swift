@@ -70,7 +70,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
             } catch let error as RhinoError {
                 result(errorToFlutterError(error))
             } catch {
-                result(errorToFlutterError(RhinoError.RhinoInternalError(error.localizedDescription)))
+                result(errorToFlutterError(RhinoError.RhinoError(error.localizedDescription)))
             }
             break
         case .PROCESS:
@@ -103,7 +103,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
             } catch let error as RhinoError {
                 result(errorToFlutterError(error))
             } catch {
-                result(errorToFlutterError(RhinoError.RhinoInternalError(error.localizedDescription)))
+                result(errorToFlutterError(RhinoError.RhinoError(error.localizedDescription)))
             }
             break
         case .DELETE:
