@@ -18,7 +18,7 @@ public enum RhinoManagerError: Error {
 /// when an intent is inferred from the spoken command.
 public class RhinoManager {
     private var onInferenceCallback: ((Inference) -> Void)?
-    private var errorCallback: ((Error) -> Void)?
+    private var processErrorCallback: ((Error) -> Void)?
     private var rhino: Rhino?
     
     private var started = false    
@@ -27,23 +27,32 @@ public class RhinoManager {
     /// Constructor.
     ///
     /// - Parameters:
+    ///   - accessKey: AccessKey obtained from Picovoice Console (https://console.picovoice.ai).
     ///   - modelPath: Absolute path to file containing model parameters.
     ///   - contextPath: Absolute path to file containing context parameters. A context represents the set of expressions (spoken commands), intents, and
     ///   intent arguments (slots) within a domain of interest.
     ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially)
     ///   increasing the erroneous inference rate.
+    ///   - requireEndpoint: If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
     ///   - onInferenceCallback: It is invoked upon completion of intent inference.
-    ///   - errorCallback: Invoked if an error occurs while processing frames. If missing, error will be printed to console.
+    ///   - processErrorCallback: Invoked if an error occurs while processing frames. If missing, error will be printed to console.
     /// - Throws: RhinoManagerError
     public init(
+        accessKey: String,
         contextPath: String,
         modelPath: String? = nil,
         sensitivity: Float32 = 0.5,
+        requireEndpoint: Bool = true,
         onInferenceCallback: ((Inference) -> Void)?,
-        errorCallback: ((Error) -> Void)? = nil) throws {
+        processErrorCallback: ((Error) -> Void)? = nil) throws {
         self.onInferenceCallback = onInferenceCallback
-        self.errorCallback = errorCallback
-        self.rhino = try Rhino(contextPath:contextPath, modelPath:modelPath, sensitivity:sensitivity)
+        self.processErrorCallback = processErrorCallback
+        self.rhino = try Rhino(
+            accessKey: accessKey,
+            contextPath: contextPath,
+            modelPath: modelPath,
+            sensitivity: sensitivity,
+            requireEndpoint: requireEndpoint)
     }
     
     deinit {
@@ -115,8 +124,8 @@ public class RhinoManager {
                 self.stop = true
             }
         } catch {
-            if self.errorCallback != nil {
-                self.errorCallback!(error)
+            if self.processErrorCallback != nil {
+                self.processErrorCallback!(error)
             } else {
                 print("\(error)")
             }

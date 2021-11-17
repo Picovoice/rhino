@@ -4,7 +4,8 @@ import XCTest
 import Rhino
 
 class RhinoDemoUITests: XCTestCase {
-
+    let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
+    
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
@@ -17,7 +18,9 @@ class RhinoDemoUITests: XCTestCase {
     func testInitSuccessSimple() throws {
         let bundle = Bundle(for: type(of: self))
         let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
-        let r = try Rhino.init(contextPath: contextPath)
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath)
         
         XCTAssert(Rhino.version != "")
         XCTAssert(Rhino.frameLength > 0)
@@ -31,7 +34,10 @@ class RhinoDemoUITests: XCTestCase {
         let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params", ofType: "pv")!
         
-        let r = try Rhino.init(contextPath: contextPath, modelPath: modelPath)
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath,
+            modelPath: modelPath)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
@@ -40,7 +46,22 @@ class RhinoDemoUITests: XCTestCase {
         let bundle = Bundle(for: type(of: self))
         let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
         
-        let r = try Rhino.init(contextPath: contextPath, sensitivity: 0.7)
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath,
+            sensitivity: 0.7)
+        XCTAssert(r.contextInfo != "")
+        r.delete()
+    }
+    
+    func testInitSuccessWithRequireEndpointOff() throws {
+        let bundle = Bundle(for: type(of: self))
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+        
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath,
+            requireEndpoint: false)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
@@ -50,7 +71,10 @@ class RhinoDemoUITests: XCTestCase {
         let contextPath = bundle.path(forResource: "test_de_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params_de", ofType: "pv")!
         
-        let r = try Rhino.init(contextPath: contextPath, modelPath: modelPath)
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath,
+            modelPath: modelPath)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
@@ -60,7 +84,10 @@ class RhinoDemoUITests: XCTestCase {
         let contextPath = bundle.path(forResource: "test_es_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params_es", ofType: "pv")!
         
-        let r = try Rhino.init(contextPath: contextPath, modelPath: modelPath)
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath,
+            modelPath: modelPath)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
@@ -70,7 +97,10 @@ class RhinoDemoUITests: XCTestCase {
         let contextPath = bundle.path(forResource: "test_fr_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params_fr", ofType: "pv")!
         
-        let r = try Rhino.init(contextPath: contextPath, modelPath: modelPath)
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath,
+            modelPath: modelPath)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
@@ -82,7 +112,10 @@ class RhinoDemoUITests: XCTestCase {
         
         var didFail = false
         do {
-            _ = try Rhino.init(contextPath: contextPath, modelPath: modelPath)
+            _ = try Rhino.init(
+                accessKey: accessKey,
+                contextPath: contextPath,
+                modelPath: modelPath)
         } catch {
             didFail = true
         }
@@ -95,7 +128,9 @@ class RhinoDemoUITests: XCTestCase {
         
         var didFail = false
         do {
-            _ = try Rhino.init(contextPath: contextPath)
+            _ = try Rhino.init(
+                accessKey: accessKey,
+                contextPath: contextPath)
         } catch {
             didFail = true
         }
@@ -110,7 +145,10 @@ class RhinoDemoUITests: XCTestCase {
         
         var didFail = false
         do {
-            _ = try Rhino.init(contextPath: contextPath, modelPath: modelPath)
+            _ = try Rhino.init(
+                accessKey: accessKey,
+                contextPath: contextPath,
+                modelPath: modelPath)
         } catch {
             didFail = true
         }
@@ -124,7 +162,10 @@ class RhinoDemoUITests: XCTestCase {
         
         var didFail = false
         do {
-            _ = try Rhino.init(contextPath: contextPath, sensitivity: 10)
+            _ = try Rhino.init(
+                accessKey: accessKey,
+                contextPath: contextPath,
+                sensitivity: 10)
         } catch {
             didFail = true
         }
@@ -138,7 +179,9 @@ class RhinoDemoUITests: XCTestCase {
         
         var didFail = false
         do {
-            _ = try Rhino.init(contextPath: contextPath)
+            _ = try Rhino.init(
+                accessKey: accessKey,
+                contextPath: contextPath)
         } catch {
             didFail = true
         }
@@ -149,7 +192,9 @@ class RhinoDemoUITests: XCTestCase {
     func testProcWithinContext() throws {
         let bundle = Bundle(for: type(of: self))
         let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
-        let r = try Rhino.init(contextPath: contextPath)
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath)
         
         let fileURL:URL = bundle.url(forResource: "test_within_context", withExtension: "wav")!
         let data = try Data(contentsOf: fileURL)
@@ -187,7 +232,9 @@ class RhinoDemoUITests: XCTestCase {
     func testProcOutOfContext() throws {
         let bundle = Bundle(for: type(of: self))
         let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
-        let r = try Rhino.init(contextPath: contextPath)
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath)
         
         let fileURL:URL = bundle.url(forResource: "test_out_of_context", withExtension: "wav")!
         let data = try Data(contentsOf: fileURL)
