@@ -82,7 +82,7 @@ export class VoiceWidget {
   }
 
   public async initEngine(accessKey: string) {
-    if (accessKey.length === 56) {
+    if (accessKey.length >= 0) {
       this.rhinoService.release();
       const rhinoServiceArgs: RhinoServiceArgs = {accessKey: accessKey, context: {base64: CLOCK_EN_64}};
 
@@ -94,6 +94,7 @@ export class VoiceWidget {
       try {
         await this.rhinoService.init(rhinoFactoryEn, rhinoServiceArgs);
         console.info("Rhino is ready!");
+        this.isError = false;
         this.isLoaded = true;
         this.contextInfo = this.rhinoService.contextInfo;
       }
