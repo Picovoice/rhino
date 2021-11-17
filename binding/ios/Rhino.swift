@@ -22,7 +22,8 @@ public struct Inference {
 }
 
 public enum RhinoError: Error {
-    case RhinoOutOfMemoryError(_ message:String)
+    case RhinoError(_ message:String)
+    case RhinoMemoryError(_ message:String)
     case RhinoIOError(_ message:String)
     case RhinoInvalidArgumentError(_ message:String)
     case RhinoStopIterationError(_ message:String)
@@ -33,7 +34,6 @@ public enum RhinoError: Error {
     case RhinoActivationLimitError(_ message:String)
     case RhinoActivationThrottledError(_ message:String)
     case RhinoActivationRefusedError(_ message:String)
-    case RhinoInternalError(_ message:String)
 }
 
 /// Low-level iOS binding for Rhino wake word engine. Provides a Swift interface to the Rhino library.
@@ -199,7 +199,7 @@ public class Rhino {
     private func pvStatusToRhinoError(_ status: pv_status_t, _ message: String) -> RhinoError {
         switch status {
         case PV_STATUS_OUT_OF_MEMORY:
-            return RhinoError.RhinoOutOfMemoryError(message)
+            return RhinoError.RhinoMemoryError(message)
         case PV_STATUS_IO_ERROR:
             return RhinoError.RhinoIOError(message)
         case PV_STATUS_INVALID_ARGUMENT:
@@ -222,7 +222,7 @@ public class Rhino {
             return RhinoError.RhinoActivationRefusedError(message)
         default:
             let pvStatusString = String(cString: pv_status_to_string(status))
-            return RhinoError.RhinoInternalError("\(pvStatusString): \(message)")
+            return RhinoError.RhinoError("\(pvStatusString): \(message)")
         }
     }
 }
