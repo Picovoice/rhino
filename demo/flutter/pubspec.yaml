@@ -10,11 +10,13 @@ dependencies:
   flutter:
     sdk: flutter
   
-  rhino: ^1.6.11
+  rhino_flutter:
+    path: ../../binding/flutter
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  lints: ^1.0.1
 
 flutter:  
   uses-material-design: true

@@ -35,15 +35,24 @@ To start, you must have the [Flutter SDK](https://flutter.dev/docs/get-started/i
 To add the Rhino plugin to your app project, you can reference it in your pub.yaml:
 ```yaml
 dependencies:  
-  rhino: ^<version>
+  rhino_flutter: ^<version>
 ```
 
 If you prefer to clone the repo and use it locally, first run `copy_resources.sh` (**NOTE:** on Windows, Git Bash or another bash shell is required, or you will have to manually copy the libs into the project.). Then you can reference the local binding location:
 ```yaml
 dependencies:  
-  rhino:
+  rhino_flutter:
     path: /path/to/rhino/flutter/binding
 ```
+
+## AccessKey
+
+All bindings require a valid Picovoice `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
 ## Permissions
 
@@ -58,6 +67,7 @@ On iOS, open your Info.plist and add the following line:
 On Android, open your AndroidManifest.xml and add the following line:
 ```xml
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.INTERNET" />
 ```
 
 **NOTE:** When archiving for release on iOS, you may have to change the build settings of your project in order to prevent stripping of the Rhino library. To do this open the Runner project in XCode and change build setting Deployment -> Strip Style to 'Non-Global Symbols'.
@@ -75,12 +85,14 @@ The constructor `RhinoManager.create` will create an instance of the RhinoManage
 import 'package:rhino/rhino_manager.dart';
 import 'package:rhino/rhino_error.dart';
 
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 void createRhinoManager() async {
     try{
         _rhinoManager = await RhinoManager.create(
             "/path/to/context/file.rhn",
             _inferenceCallback);
-    } on PvError catch (err) {
+    } on RhinoException catch (err) {
         // handle rhino init error
     }
 }
@@ -88,13 +100,13 @@ void createRhinoManager() async {
 NOTE: the call is asynchronous and therefore should be called in an async block with a try/catch.
 
 The `inferenceCallback` parameter is a function that you want to execute when Rhino makes an inference.
-The function should accept a map that represents the inference result.
+The function should accept a `RhinoInference` instance that represents the inference result.
 
 ```dart
-void _infererenceCallback(Map<String, dynamic> inference){
-    if(inference['isUnderstood']){
-        String intent = inference['intent']
-        Map<String, String> slots = inference['slots']
+void _infererenceCallback(RhinoInference inference) {
+    if(inference.isUnderstood!){
+        String intent = inference.intent!
+        Map<String, String> slots = inference.slots!
         // add code to take action based on inferred intent and slot values
     }
     else {
@@ -103,15 +115,21 @@ void _infererenceCallback(Map<String, dynamic> inference){
 }
 ```
 
-You can override the default Rhino model file and/or the inference sensitivity. There is also an optional errorCallback
+You can override the default Rhino model file and/or the inference sensitivity. You can set `requireEndpoint` parameter to 
+false if you do not wish to wait for silence before Rhino infers context. There is also an optional `processErrorCallback`
 that is called if there is a problem encountered while processing audio. These optional parameters can be passed in like so:
+
 ```dart
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 _rhinoManager = await RhinoManager.create(
+    accessCallback
     "/path/to/context/file.rhn",
     _inferenceCallback,
     modelPath: 'path/to/model/file.pv',
     sensitivity: 0.75,
-    errorCallback: _errorCallback);
+    requireEndpoint: false,
+    processErrorCallback: _errorCallback);
 
 void _errorCallback(PvError error){
     // handle error
@@ -124,7 +142,7 @@ Audio capture stops and rhino resets once an inference result is returned via th
 ```dart
 try{
     await _rhinoManager.process();
-} on PvAudioException catch (ex) {
+} on RhinoException catch (ex) {
     // deal with either audio exception     
 }
 ```
@@ -148,9 +166,11 @@ speech-to-intent into a already existing audio processing pipeline.
 import 'package:rhino/rhino_manager.dart';
 import 'package:rhino/rhino_error.dart';
 
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 void createRhino() async {
     try{
-        _rhino = await Rhino.create('/path/to/context/file.rhn');
+        _rhino = await Rhino.create(accessKey, '/path/to/context/file.rhn');
     } on PvError catch (err) {
         // handle rhino init error
     }
@@ -158,26 +178,26 @@ void createRhino() async {
 ```
 
 To feed Rhino your audio, you must send it frames of audio to its `process` function.
-Each call to `process` will return a Map object that will contain the following items:
+Each call to `process` will return a `RhinoInference` instance that with following variables:
 
-- isFinalized - whether Rhino has made an inference
-- isUnderstood - if isFinalized, whether Rhino understood what it heard based on the context
-- intent - if isUnderstood, name of intent that were inferred
-- slots - if isUnderstood, dictionary of slot keys and values that were inferred
+- isFinalized - true if Rhino has made an inference, false otherwise
+- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if Rhino did not understood context
+- intent - **null** if `isUnderstood` is not true, otherwise name of intent that were inferred
+- slots - **null** if `isUnderstood` is not true, otherwise the dictionary of slot keys and values that were inferred
 
 ```dart
 List<int> buffer = getAudioFrame();
 
 try {
-    Map<String, dynamic> inference = _rhino.process(buffer);
-    if(inference['isFinalized']){
-        if(inference['isUnderstood']){
-            String intent = inference['intent']
-            Map<String, String> = inference['slots']
+    RhinoInference inference = await _rhino.process(buffer);
+    if(inference.isFinalized){
+        if(inference.isUnderstood!){
+            String intent = inference.intent!
+            Map<String, String> = inference.slots!
             // add code to take action based on inferred intent and slot values
         }
     }
-} on PvError catch (error) {
+} on RhinoException catch (error) {
     // handle error
 }
 ```
@@ -203,10 +223,12 @@ flutter:
 
 You can then pass it directly to Rhino's `create` constructor:
 ```dart
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 String contextAsset = "assets/context.rhn"
 try{
-    _rhino = await Rhino.create(contextAsset);
-} on PvError catch (err) {
+    _rhino = await Rhino.create(accessKey, contextAsset);
+} on RhinoException catch (err) {
     // handle rhino init error
 }
 ```
