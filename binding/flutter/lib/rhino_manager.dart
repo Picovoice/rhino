@@ -125,7 +125,7 @@ class RhinoManager {
   Future<void> process() async {
     if (_rhino == null || _voiceProcessor == null) {
       throw RhinoInvalidStateException(
-          "Cannot start Porcupine - resources have already been released");
+          "Cannot start Rhino - resources have already been released");
     }
 
     if (await _voiceProcessor?.hasRecordAudioPermission() ?? false) {

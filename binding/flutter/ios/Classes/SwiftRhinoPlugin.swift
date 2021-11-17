@@ -95,7 +95,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                         
                         result(param)
                     } else {
-                        result(errorToFlutterError(RhinoError.RhinoRuntimeError("Invalid handle provided to Rhino 'process'")))
+                        result(errorToFlutterError(RhinoError.RhinoInvalidStateError("Invalid handle provided to Rhino 'process'")))
                     }
                 } else {
                     result(errorToFlutterError(RhinoError.RhinoInvalidArgumentError("missing required arguments 'frame'")))
@@ -108,8 +108,8 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
             break
         case .DELETE:
             if let handle = args["handle"] as? String {
-                if let Rhino = rhinoPool.removeValue(forKey: handle) {
-                    Rhino.delete()
+                if let rhino = rhinoPool.removeValue(forKey: handle) {
+                    rhino.delete()
                 }
             }
             break
@@ -118,40 +118,30 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
     
     private func errorToFlutterError(_ error: RhinoError) -> FlutterError {
         switch(error) {
-        case .RhinoOutOfMemoryError:
-            return FlutterError(code: "RhinoMemoryException", message: extractMessage("\(error)"), details: nil)
-        case .RhinoIOError:
-            return FlutterError(code: "RhinoIOException", message: extractMessage("\(error)"), details: nil)
-        case .RhinoInvalidArgumentError:
-            return FlutterError(code: "RhinoInvalidArgumentException", message: extractMessage("\(error)"), details: nil)
-        case .RhinoStopIterationError:
-            return FlutterError(code: "RhinoStopIterationException", message: extractMessage("\(error)"), details: nil)
-        case .RhinoKeyError:
-            return FlutterError(code: "RhinoKeyException", message: extractMessage("\(error)"), details: nil)
-        case .RhinoInvalidStateError:
-            return FlutterError(code: "RhinoInvalidStateException", message: extractMessage("\(error)"), details: nil)
-        case .RhinoRuntimeError:
-            return FlutterError(code: "RhinoRuntimeException", message: extractMessage("\(error)"), details: nil)
-        case .RhinoActivationError:
-            return FlutterError(code: "RhinoActivationException", message: extractMessage("\(error)"), details: nil)
-        case .RhinoActivationLimitError:
-            return FlutterError(code: "RhinoActivationLimitException", message: extractMessage("\(error)"), details: nil)
-        case .RhinoActivationThrottledError:
-            return FlutterError(code: "RhinoActivationThrottledException", message: extractMessage("\(error)"), details: nil)
-        case .RhinoActivationRefusedError:
-            return FlutterError(code: "RhinoActivationRefusedException", message: extractMessage("\(error)"), details: nil)
-        case .RhinoInternalError:
-            return FlutterError(code: "RhinoException", message: extractMessage("\(error)"), details: nil)
+        case .RhinoOutOfMemoryError (let message):
+            return FlutterError(code: "RhinoMemoryException", message: message, details: nil)
+        case .RhinoIOError (let message):
+            return FlutterError(code: "RhinoIOException", message: message, details: nil)
+        case .RhinoInvalidArgumentError (let message):
+            return FlutterError(code: "RhinoInvalidArgumentException", message: message, details: nil)
+        case .RhinoStopIterationError (let message):
+            return FlutterError(code: "RhinoStopIterationException", message: message, details: nil)
+        case .RhinoKeyError (let message):
+            return FlutterError(code: "RhinoKeyException", message: message, details: nil)
+        case .RhinoInvalidStateError (let message):
+            return FlutterError(code: "RhinoInvalidStateException", message: message, details: nil)
+        case .RhinoRuntimeError (let message):
+            return FlutterError(code: "RhinoRuntimeException", message: message, details: nil)
+        case .RhinoActivationError (let message):
+            return FlutterError(code: "RhinoActivationException", message: message, details: nil)
+        case .RhinoActivationLimitError (let message):
+            return FlutterError(code: "RhinoActivationLimitException", message: message, details: nil)
+        case .RhinoActivationThrottledError (let message):
+            return FlutterError(code: "RhinoActivationThrottledException", message: message, details: nil)
+        case .RhinoActivationRefusedError (let message):
+            return FlutterError(code: "RhinoActivationRefusedException", message: message, details: nil)
+        case .RhinoInternalError (let message):
+            return FlutterError(code: "RhinoException", message: message, details: nil)
         }
-    }
-        
-    private func extractMessage(_ errorMessage: String) -> String {
-        let parts = errorMessage.components(separatedBy: "\"")
-        if (parts.count > 2) {
-            if let message = parts.dropFirst().first {
-                return message
-            }
-        }
-        return errorMessage
     }
 }

@@ -57,7 +57,7 @@ public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
     } catch (IllegalArgumentException e) {
       result.error(
               RhinoRuntimeException.class.getSimpleName(),
-              String.format("Porcupine method '%s' is not a valid function", call.method),
+              String.format("Rhino method '%s' is not a valid function", call.method),
               null);
       return;
     }
@@ -108,8 +108,8 @@ public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
 
           if (!rhinoPool.containsKey(handle)) {
             result.error(
-                    RhinoInvalidArgumentException.class.getSimpleName(),
-                    "Invalid Porcupine handle provided to native module",
+                    RhinoInvalidStateException.class.getSimpleName(),
+                    "Invalid rhino handle provided to native module",
                     null);
             return;
           }
@@ -152,13 +152,13 @@ public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
         if (!rhinoPool.containsKey(handle)) {
           result.error(
                   RhinoInvalidArgumentException.class.getSimpleName(),
-                  "Invalid Porcupine handle provided to native module.",
+                  "Invalid Rhino handle provided to native module.",
                   null);
           return;
         }
 
-        Rhino porcupine = rhinoPool.get(handle);
-        porcupine.delete();
+        Rhino rhino = rhinoPool.get(handle);
+        rhino.delete();
         rhinoPool.remove(handle);
 
         result.success(null);

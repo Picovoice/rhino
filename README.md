@@ -955,10 +955,10 @@ void createRhino() async {
 To deliver audio to the engine, you must send audio frames to its `process` function.
 Each call to `process` will return a `RhinoInference` instance with following variables:
 
-- isFinalized - whether Rhino has made an inference
-- isUnderstood - if isFinalized, whether Rhino understood what it heard based on the context
-- intent - if isUnderstood, name of intent that were inferred
-- slots - if isUnderstood, dictionary of slot keys and values that were inferred
+- isFinalized - true if Rhino has made an inference, false otherwise
+- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if Rhino did not understood context
+- intent - **null** if `isUnderstood` is false, otherwise name of intent that were inferred
+- slots - **null** if `isUnderstood` is false, otherwise the dictionary of slot keys and values that were inferred
 
 ```dart
 List<int> buffer = getAudioFrame();

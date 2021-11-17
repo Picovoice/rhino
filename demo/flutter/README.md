@@ -4,7 +4,7 @@ To run the Rhino demo on Android or iOS with Flutter, you must have the [Flutter
 
 ## AccessKey
 
-All demos require a valid Picovoice `AccessKey` at initialization. `AccessKey`s act as your credentials when using Porcupine SDKs.
+All demos require a valid Picovoice `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
 You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 
 To obtain your `AccessKey`:
