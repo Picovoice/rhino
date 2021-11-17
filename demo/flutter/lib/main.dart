@@ -12,6 +12,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:rhino_flutter/rhino.dart';
 import 'package:rhino_flutter/rhino_manager.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 
@@ -85,7 +86,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void inferenceCallback(Map<String, dynamic> inference) {
+  void inferenceCallback(RhinoInference inference) {
     setState(() {
       rhinoText = prettyPrintInference(inference);
       isButtonDisabled = false;
@@ -100,14 +101,14 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  String prettyPrintInference(Map<String, dynamic> inference) {
+  String prettyPrintInference(RhinoInference inference) {
     String printText =
-        "{\n    \"isUnderstood\" : \"${inference['isUnderstood']}\",\n";
-    if (inference['isUnderstood']) {
-      printText += "    \"intent\" : \"${inference['intent']}\",\n";
-      if (inference['slots'].length > 0) {
+        "{\n    \"isUnderstood\" : \"${inference.isUnderstood}\",\n";
+    if (inference.isUnderstood!) {
+      printText += "    \"intent\" : \"${inference.intent}\",\n";
+      if (inference.slots!.isNotEmpty) {
         printText += '    "slots" : {\n';
-        Map<String, String> slots = inference['slots'];
+        Map<String, String> slots = inference.slots!;
         for (String key in slots.keys) {
           printText += "        \"$key\" : \"${slots[key]}\",\n";
         }
@@ -185,6 +186,19 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  buildRhinoTextArea(BuildContext context) {
+    return Expanded(
+        flex: !isError ? 4 : 2,
+        child: Container(
+            alignment: Alignment.center,
+            color: Color(0xff25187e),
+            margin: EdgeInsets.all(20),
+            child: Text(
+              rhinoText,
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            )));
+  }
+
   buildErrorMessage(BuildContext context) {
     return Expanded(
         flex: isError ? 2 : 0,
@@ -202,19 +216,6 @@ class _MyAppState extends State<MyApp> {
                     errorMessage,
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   )));
-  }
-
-  buildRhinoTextArea(BuildContext context) {
-    return Expanded(
-        flex: 4,
-        child: Container(
-            alignment: Alignment.center,
-            color: Color(0xff25187e),
-            margin: EdgeInsets.all(20),
-            child: Text(
-              rhinoText,
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            )));
   }
 
   Widget footer = Expanded(

@@ -17,7 +17,7 @@ import 'package:rhino_flutter/rhino.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 
 /// type for function that receives inference result from Rhino
-typedef InferenceCallback = Function(Map<String, dynamic> inference);
+typedef InferenceCallback = Function(RhinoInference inference);
 
 /// type for RhinoExceeption that occurs while recording audio
 typedef ProcessErrorCallback = Function(RhinoException error);
@@ -96,12 +96,10 @@ class RhinoManager {
 
       // process frame with Rhino
       try {
-        Map<String, dynamic>? rhinoResult = await _rhino?.process(rhinoFrame);
-        if (rhinoResult?['isFinalized']) {
+        RhinoInference? rhinoResult = await _rhino?.process(rhinoFrame);
+        if ((rhinoResult != null) && (rhinoResult.isFinalized)) {
           _awaitingStop = true;
 
-          // send inference minus isFinalized
-          rhinoResult!.remove('isFinalized');
           _inferenceCallback(rhinoResult);
           // stop audio processing
           await _voiceProcessor?.stop();

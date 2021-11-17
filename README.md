@@ -868,7 +868,7 @@ Add the [Rhino Flutter plugin](https://pub.dev/packages/rhino) to your pub.yaml.
 
 ```yaml
 dependencies:
-  rhino: ^<version>
+  rhino_flutter: ^<version>
 ```
 
 The SDK provides two APIs:
@@ -880,28 +880,31 @@ The SDK provides two APIs:
 The constructor `RhinoManager.create` will create an instance of the RhinoManager using a context file that you pass to it.
 
 ```dart
-import 'package:rhino/rhino_manager.dart';
-import 'package:rhino/rhino_error.dart';
+import 'package:rhino_flutter/rhino_manager.dart';
+import 'package:rhino_flutter/rhino_error.dart';
+
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
 
 void createRhinoManager() async {
     try{
         _rhinoManager = await RhinoManager.create(
+            accessKey,
             "/path/to/context/file.rhn",
             _inferenceCallback);
-    } on PvError catch (err) {
+    } on RhinoException catch (err) {
         // handle rhino init error
     }
 }
 ```
 
 The `inferenceCallback` parameter is a function that you want to execute when Rhino makes an inference.
-The function should accept a map that represents the inference result.
+The function should accept a `RhinoInference` instance that represents the inference result.
 
 ```dart
-void _infererence(Map<String, dynamic> inference){
-    if(inference['isUnderstood']){
-        String intent = inference['intent']
-        Map<String, String> = inference['slots']
+void _infererence(RhinoInference inference){
+    if(inference.isUnderstood!){
+        String intent = inference.intent!
+        Map<String, String> = inference.slots!
         // add code to take action based on inferred intent and slot values
     }
     else{
@@ -916,7 +919,7 @@ Audio capture stops and rhino resets once an inference result is returned via th
 ```dart
 try{
     await _rhinoManager.process();
-} on PvAudioException catch (ex) { }
+} on RhinoException catch (ex) { }
 ```
 
 Once your app is done with using RhinoManager, be sure you explicitly release the resources allocated for it:
@@ -935,20 +938,22 @@ speech-to-intent into a already existing audio processing pipeline.
 `Rhino` is created by passing a context file to its static constructor `create`:
 
 ```dart
-import 'package:rhino/rhino_manager.dart';
-import 'package:rhino/rhino_error.dart';
+import 'package:rhino_flutter/rhino_manager.dart';
+import 'package:rhino_flutter/rhino_error.dart';
+
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
 
 void createRhino() async {
     try{
-        _rhino = await Rhino.create('/path/to/context/file.rhn');
-    } on PvError catch (err) {
+        _rhino = await Rhino.create(accessKey, '/path/to/context/file.rhn');
+    } on RhinoException catch (err) {
         // handle rhino init error
     }
 }
 ```
 
 To deliver audio to the engine, you must send audio frames to its `process` function.
-Each call to `process` will return a Map object that will contain the following items:
+Each call to `process` will return a `RhinoInference` instance with following getters:
 
 - isFinalized - whether Rhino has made an inference
 - isUnderstood - if isFinalized, whether Rhino understood what it heard based on the context
@@ -959,15 +964,15 @@ Each call to `process` will return a Map object that will contain the following 
 List<int> buffer = getAudioFrame();
 
 try {
-    Map<String, dynamic> inference = _rhino.process(buffer);
-    if(inference['isFinalized']){
-        if(inference['isUnderstood']){
-            String intent = inference['intent']
-            Map<String, String> = inference['slots']
+    RhinoInference inference = _rhino.process(buffer);
+    if(inference.isFinalized) {
+        if(inference.isUnderstood!){
+            String intent = inference.intent!
+            Map<String, String> = inference.slots!
             // add code to take action based on inferred intent and slot values
         }
     }
-} on PvError catch (error) {
+} on RhinoException catch (error) {
     // handle error
 }
 

@@ -45,12 +45,12 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                     let sensitivity = args["sensitivity"] as? Float
                     let requireEndpoint = args["requireEndpoint"] as? Bool
                     
-                    let rhino = Rhino(
+                    let rhino = try Rhino(
                         accessKey: accessKey,
                         contextPath: contextPath,
                         modelPath: modelPath,
-                        sensitivity: sensitivity,
-                        requireEndpoint: requireEndpoint
+                        sensitivity: sensitivity ?? 0.5,
+                        requireEndpoint: requireEndpoint ?? true
                     )
                     
                     let handle: String = String(describing: rhino)
@@ -84,7 +84,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                         param["isFinalized"] = isFinalized
                         
                         if isFinalized {
-                            let inference = rhino.getInference()
+                            let inference = try rhino.getInference()
                             param["isUnderstood"] = inference.isUnderstood
                             
                             if inference.isUnderstood {

@@ -19,16 +19,39 @@ import 'package:path_provider/path_provider.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 
 class RhinoInference {
-  final bool _isUnderstood;
+  final bool _isFinalized;
+  final bool? _isUnderstood;
   final String? _intent;
   final Map<String, String>? _slots;
 
-  RhinoInference(this._isUnderstood, this._intent, this._slots);
+  /// private constructor + basic checks
+  RhinoInference(
+      this._isFinalized, this._isUnderstood, this._intent, this._slots) {
+    if (isFinalized) {
+      if (_isUnderstood == null) {
+        throw RhinoInvalidStateException(
+            "field 'isUnderstood' must be present if inference was finalized.");
+      }
 
-  bool get isUnderstood => _isUnderstood;
+      if (_isUnderstood!) {
+        if (_intent == null || _slots == null) {
+          throw RhinoInvalidStateException(
+              "fields 'intent' and 'slots' must be present if inference was understood");
+        }
+      }
+    }
+  }
 
+  /// whether Rhino has made an inference
+  bool get isFinalized => _isFinalized;
+
+  /// if isFinalized, whether Rhino understood what it heard based on the context
+  bool? get isUnderstood => _isUnderstood;
+
+  /// if isUnderstood, name of intent that was inferred
   String? get intent => _intent;
 
+  /// if isUnderstood, dictionary of slot keys and values that were inferred
   Map<String, String>? get slots => _slots;
 }
 
@@ -111,23 +134,23 @@ class Rhino {
   /// [frame] frame of 16-bit integers of 16kHz linear PCM mono audio.
   /// The specific array length is obtained from Rhino via the frameLength field.
   ///
-  /// returns a map object with the following fields:
-  ///   - isFinalized: whether Rhino has made an inference
-  ///   - isUnderstood: if isFinalized, whether Rhino understood what it heard based on the context
-  ///   - intent: if isUnderstood, name of intent that was inferred
-  ///   - slots: if isUnderstood, dictionary of slot keys and values that were inferred
-  Future<Map<String, dynamic>> process(List<int>? frame) async {
+  /// returns RhinoInference object.
+  Future<RhinoInference> process(List<int>? frame) async {
     try {
       Map<String, dynamic> inference = Map<String, dynamic>.from(await _channel
           .invokeMethod('process', {'handle': _handle, 'frame': frame}));
 
-      if (inference['isFinalized']) {
-        if (inference['isUnderstood']) {
-          inference['slots'] = Map<String, String>.from(inference['slots']);
-        }
+      if (inference['isFinalized'] == null) {
+        throw RhinoInvalidStateException(
+            "field 'isFinalized' must be always present");
       }
 
-      return inference;
+      if (inference['slots'] != null) {
+        inference['slots'] = Map<String, String>.from(inference['slots']);
+      }
+
+      return RhinoInference(inference['isFinalized'], inference['isUnderstood'],
+          inference['intent'], inference['slots']);
     } on PlatformException catch (error) {
       throw rhinoStatusToException(error.code, error.message);
     } on Exception catch (error) {
