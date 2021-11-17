@@ -181,7 +181,7 @@ namespace Pv
         /// <param name="requireEndpoint">
         /// If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
         /// </param>
-        public Rhino(
+        private Rhino(
             string accessKey,
             string modelPath,
             string contextPath,
