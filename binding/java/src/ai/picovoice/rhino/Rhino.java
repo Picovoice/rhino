@@ -52,7 +52,7 @@ public class Rhino {
      * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher
      *                    sensitivity value results in fewer misses at the cost of (potentially)
      *                    increasing the erroneous inference rate.
-     * @param requireEndpoint If set, Rhino requires an endpoint (chunk of silence) before finishing inference.
+     * @param requireEndpoint If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
      * @throws RhinoException If there is an error while initializing Rhino.
      */
     public Rhino(String accessKey, String libraryPath, String modelPath, String contextPath, float sensitivity, boolean requireEndpoint) throws RhinoException {
@@ -98,38 +98,34 @@ public class Rhino {
      * @throws RhinoException if inference retrieval fails.
      */
     public RhinoInference getInference() throws RhinoException {
-        try {
-            final boolean isUnderstood = isUnderstood(libraryHandle);
+        final boolean isUnderstood = isUnderstood(libraryHandle);
 
-            RhinoInference inference;
+        RhinoInference inference;
 
-            if (isUnderstood) {
-                final String intentPacked = getIntent(libraryHandle);
-                String[] parts = intentPacked.split(",");
-                if (parts.length == 0) {
-                    throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
-                }
-
-                Map<String, String> slots = new LinkedHashMap<>();
-                for (int i = 1; i < parts.length; i++) {
-                    String[] slotAndValue = parts[i].split(":");
-                    if (slotAndValue.length != 2) {
-                        throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
-                    }
-                    slots.put(slotAndValue[0], slotAndValue[1]);
-                }
-
-                inference = new RhinoInference(true, parts[0], slots);
-            } else {
-                inference = new RhinoInference(false, null, null);
+        if (isUnderstood) {
+            final String intentPacked = getIntent(libraryHandle);
+            String[] parts = intentPacked.split(",");
+            if (parts.length == 0) {
+                throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
             }
 
-            reset(libraryHandle);
+            Map<String, String> slots = new LinkedHashMap<>();
+            for (int i = 1; i < parts.length; i++) {
+                String[] slotAndValue = parts[i].split(":");
+                if (slotAndValue.length != 2) {
+                    throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
+                }
+                slots.put(slotAndValue[0], slotAndValue[1]);
+            }
 
-            return inference;
-        } catch (RhinoException e) {
-            throw new RhinoException(e);
+            inference = new RhinoInference(true, parts[0], slots);
+        } else {
+            inference = new RhinoInference(false, null, null);
         }
+
+        reset(libraryHandle);
+
+        return inference;
     }
 
     /**

@@ -311,8 +311,8 @@ public class MicDemo {
                         "If not set 0.5 will be used.")
                 .build());
 
-        options.addOption(new Option("e", "require_endpoint", false, "If set to `False`, Rhino does not require an " +
-                "endpoint (chunk of silence) before finishing inference."));
+        options.addOption(new Option("e", "require_endpoint", false, "If set, Rhino requires an endpoint " +
+                "(chunk of silence) before finishing inference."));
 
         options.addOption(Option.builder("o")
                 .longOpt("output_path")
