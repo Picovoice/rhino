@@ -174,8 +174,8 @@ class _MyAppState extends State<MyApp> {
       flex: 2,
       child: Container(
           child: SizedBox(
-              width: 150,
-              height: 150,
+              width: 130,
+              height: 130,
               child: ElevatedButton(
                 style: buttonStyle,
                 onPressed:
@@ -188,7 +188,7 @@ class _MyAppState extends State<MyApp> {
 
   buildRhinoTextArea(BuildContext context) {
     return Expanded(
-        flex: !isError ? 4 : 2,
+        flex: 4,
         child: Container(
             alignment: Alignment.center,
             color: Color(0xff25187e),

@@ -103,7 +103,7 @@ The `inferenceCallback` parameter is a function that you want to execute when Rh
 The function should accept a `RhinoInference` instance that represents the inference result.
 
 ```dart
-void _infererenceCallback(RhinoInference inference){
+void _infererenceCallback(RhinoInference inference) {
     if(inference.isUnderstood!){
         String intent = inference.intent!
         Map<String, String> slots = inference.slots!
@@ -178,7 +178,7 @@ void createRhino() async {
 ```
 
 To feed Rhino your audio, you must send it frames of audio to its `process` function.
-Each call to `process` will return a `RhinoInference` instance that with following getters:
+Each call to `process` will return a `RhinoInference` instance that with following variables:
 
 - isFinalized - whether Rhino has made an inference
 - isUnderstood - if isFinalized, whether Rhino understood what it heard based on the context
@@ -189,7 +189,7 @@ Each call to `process` will return a `RhinoInference` instance that with followi
 List<int> buffer = getAudioFrame();
 
 try {
-    RhinoInference inference = _rhino.process(buffer);
+    RhinoInference inference = await _rhino.process(buffer);
     if(inference.isFinalized){
         if(inference.isUnderstood!){
             String intent = inference.intent!

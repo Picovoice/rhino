@@ -953,7 +953,7 @@ void createRhino() async {
 ```
 
 To deliver audio to the engine, you must send audio frames to its `process` function.
-Each call to `process` will return a `RhinoInference` instance with following getters:
+Each call to `process` will return a `RhinoInference` instance with following variables:
 
 - isFinalized - whether Rhino has made an inference
 - isUnderstood - if isFinalized, whether Rhino understood what it heard based on the context
@@ -964,7 +964,7 @@ Each call to `process` will return a `RhinoInference` instance with following ge
 List<int> buffer = getAudioFrame();
 
 try {
-    RhinoInference inference = _rhino.process(buffer);
+    RhinoInference inference = await _rhino.process(buffer);
     if(inference.isFinalized) {
         if(inference.isUnderstood!){
             String intent = inference.intent!
