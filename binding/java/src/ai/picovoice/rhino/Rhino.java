@@ -52,16 +52,17 @@ public class Rhino {
      * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher
      *                    sensitivity value results in fewer misses at the cost of (potentially)
      *                    increasing the erroneous inference rate.
+     * @param requireEndpoint If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
      * @throws RhinoException if there is an error while initializing Rhino.
      */
-    public Rhino(String accessKey, String libraryPath, String modelPath, String contextPath, float sensitivity) throws RhinoException {
+    public Rhino(String accessKey, String libraryPath, String modelPath, String contextPath, float sensitivity, boolean requireEndpoint) throws RhinoException {
 
         try {
             System.load(libraryPath);
         } catch (Exception exception) {
-            throw new PorcupineException(exception);
+            throw new RhinoException(exception);
         }
-        libraryHandle = init(accessKey, modelPath, contextPath, sensitivity);
+        libraryHandle = init(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
     }
 
     /**
@@ -161,7 +162,7 @@ public class Rhino {
      */
     public native String getVersion();
 
-    private native long init(String accessKey, String modelPath, String contextPath, float sensitivity);
+    private native long init(String accessKey, String modelPath, String contextPath, float sensitivity, boolean requireEndpoint);
 
     private native void delete(long object);
 
@@ -185,6 +186,7 @@ public class Rhino {
         private String modelPath = null;
         private String contextPath = null;
         private float sensitivity = 0.5f;
+        private boolean requireEndpoint = false;
 
         public Builder setAccessKey(String accessKey) {
             this.accessKey = accessKey;
@@ -211,6 +213,10 @@ public class Rhino {
             return this;
         }
 
+        public Builder setRequireEndpoint(boolean requireEndpoint) {
+            this.requireEndpoint = requireEndpoint;
+            return this;
+        }
         /**
          * Validates properties and creates an instance of the Rhino Speech-to-Intent engine.
          *
@@ -234,13 +240,10 @@ public class Rhino {
                 } else {
                     throw new RhinoInvalidArgumentException("Default library unavailable. Please " +
                             "provide a native Rhino library path (-l <library_path>).");
-
-                    throw new RhinoException(new IllegalArgumentException("Default library unavailable. Please " +
-                            "provide a native Rhino library path (-l <library_path>)."));
                 }
                 if (!new File(libraryPath).exists()) {
-                    throw new RhinoException(new IOException(String.format("Couldn't find library file at " +
-                            "'%s'", libraryPath)));
+                    throw new RhinoException(String.format("Couldn't find library file at " +
+                            "'%s'", libraryPath));
                 }
             }
 
@@ -251,10 +254,9 @@ public class Rhino {
                     throw new RhinoInvalidArgumentException("Default model unavailable. Please provide a " +
                             "valid Rhino model path (-m <model_path>).");
                 }
-                }
                 if (!new File(modelPath).exists()) {
-                    throw new RhinoException(new IOException(String.format("Couldn't find model file at " +
-                            "'%s'", modelPath)));
+                    throw new RhinoException(String.format("Couldn't find model file at " +
+                            "'%s'", modelPath));
                 }
             }
 
@@ -271,7 +273,7 @@ public class Rhino {
                 throw new RhinoException(new IllegalArgumentException("Sensitivity value should be within [0, 1]."));
             }
 
-            return new Rhino(accessKey, libraryPath, modelPath, contextPath, sensitivity);
+            return new Rhino(accessKey, libraryPath, modelPath, contextPath, sensitivity, requireEndpoint);
         }
     }
 }
