@@ -76,7 +76,7 @@ export default function VoiceWidget() {
       <h3>Rhino Loaded: {JSON.stringify(isLoaded)}</h3>
       <h3>Listening: {JSON.stringify(isListening)}</h3>
       <h3>Error: {JSON.stringify(isError)}</h3>
-      {isError && (
+      {isError && accessKey && (
         <p className="error-message">{JSON.stringify(errorMessage)}</p>
       )}
       <h3>Talking: {JSON.stringify(isTalking)}</h3>

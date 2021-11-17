@@ -117,22 +117,17 @@ export function useRhino(
       };
     }
 
-    const {
-      accessKey,
-      context,
-      requireEndpoint,
-      start: startWebVp = true,
-    } = rhinoHookArgs!;
-    if (accessKey === null || accessKey === '') {
-      return (): void => {
-        /* NOOP */
-      };
-    }
-
     async function startRhino(): Promise<{
       webVp: WebVoiceProcessor;
       rhnWorker: RhinoWorker;
     }> {
+      const {
+        accessKey,
+        context,
+        requireEndpoint,
+        start: startWebVp = true,
+      } = rhinoHookArgs!;
+
       const initIsTalking = rhinoHookArgs?.isTalking === true;
 
       const rhnWorker = await rhinoWorkerFactory!.create({
