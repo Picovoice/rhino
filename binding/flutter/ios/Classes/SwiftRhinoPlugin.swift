@@ -118,7 +118,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
     
     private func errorToFlutterError(_ error: RhinoError) -> FlutterError {
         switch(error) {
-        case .RhinoOutOfMemoryError (let message):
+        case .RhinoMemoryError (let message):
             return FlutterError(code: "RhinoMemoryException", message: message, details: nil)
         case .RhinoIOError (let message):
             return FlutterError(code: "RhinoIOException", message: message, details: nil)
@@ -140,7 +140,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
             return FlutterError(code: "RhinoActivationThrottledException", message: message, details: nil)
         case .RhinoActivationRefusedError (let message):
             return FlutterError(code: "RhinoActivationRefusedException", message: message, details: nil)
-        case .RhinoInternalError (let message):
+        case .RhinoError (let message):
             return FlutterError(code: "RhinoException", message: message, details: nil)
         }
     }
