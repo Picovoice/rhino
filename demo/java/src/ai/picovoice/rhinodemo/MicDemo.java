@@ -224,7 +224,7 @@ public class MicDemo {
         boolean requireEndpoint = cmd.hasOption("require_endpoint");
 
         if (accessKey == null || accessKey.length() == 0) {
-            throw new IllegalArgumentException("AccessKey is required for Porcupine.");
+            throw new IllegalArgumentException("AccessKey is required for Rhino.");
         }
 
         // parse sensitivity
