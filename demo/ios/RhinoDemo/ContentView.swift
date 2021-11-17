@@ -18,13 +18,14 @@ struct ContentView: View {
     @State var result: String = ""
     @State var errorMessage: String = ""
     
-    let ACCESS_KEY = "{YOUR_ACCESS_KEY_HERE}" // Obtained from Picovoice Console (https://console.picovoice.ai)
+    let ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}" // Obtained from Picovoice Console (https://console.picovoice.ai)
     
     var body: some View {
         VStack {
             Spacer()
             Spacer()
             Text("\(result)")
+                .foregroundColor(Color.black)
                 .padding()
             
             Text(errorMessage)
@@ -91,9 +92,9 @@ struct ContentView: View {
                     
             }.disabled(!errorMessage.isEmpty)
         }
+        .padding()
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         .background(Color.white)
-        .padding()
     }
 }
 
