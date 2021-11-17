@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2020 Picovoice Inc.
+    Copyright 2020-2021 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -30,16 +30,31 @@ namespace RhinoDemo
         /// Reads through input file and prints the inference result returned by Rhino.
         /// </summary>
         /// <param name="inputAudioPath">Required argument. Absolute path to input audio file.</param>
+        /// <param name="accessKey">AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).</param>
         /// <param name="contextPath">Required argument. Absolute path to the Rhino context file.</param>
         /// <param name="modelPath">Absolute path to the file containing model parameters. If not set it will be set to the default location.</param>
         /// <param name="sensitivity">
         /// Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in 
         /// fewer misses at the cost of (potentially) increasing the erroneous inference rate. If not set, the default value of 0.5 will be used.
         /// </param>
-        public static void RunDemo(string inputAudioPath, string contextPath, string modelPath, float sensitivity)
-        {                        
+        /// <param name="requireEndpoint">
+        /// If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+        /// </param>
+        public static void RunDemo(
+            string accessKey,
+            string inputAudioPath,
+            string contextPath,
+            string modelPath,
+            float sensitivity,
+            bool requireEndpoint)
+        {
             // init rhino speech-to-intent engine
-            using Rhino rhino = Rhino.Create(contextPath, modelPath, sensitivity);
+            using Rhino rhino = Rhino.Create(
+                accessKey,
+                contextPath,
+                modelPath,
+                sensitivity,
+                requireEndpoint);
 
             // open and validate wav file
             using BinaryReader reader = new BinaryReader(File.Open(inputAudioPath, FileMode.Open));
@@ -47,15 +62,15 @@ namespace RhinoDemo
 
             // read audio and send frames to rhino
             short[] rhinoFrame = new short[rhino.FrameLength];
-            int frameIndex = 0;            
+            int frameIndex = 0;
             while (reader.BaseStream.Position != reader.BaseStream.Length)
-            {                
+            {
                 rhinoFrame[frameIndex++] = reader.ReadInt16();
 
                 if (frameIndex == rhinoFrame.Length)
                 {
                     bool isFinalized = rhino.Process(rhinoFrame);
-                    if (isFinalized) 
+                    if (isFinalized)
                     {
                         Inference inference = rhino.GetInference();
                         if (inference.IsUnderstood)
@@ -70,9 +85,9 @@ namespace RhinoDemo
                             Console.WriteLine("  }");
                             Console.WriteLine("}");
                         }
-                        else 
+                        else
                         {
-                            Console.WriteLine("Didn't understand the command.");                            
+                            Console.WriteLine("Didn't understand the command.");
                         }
                         return;
                     }
@@ -84,7 +99,7 @@ namespace RhinoDemo
                 if (numChannels == 2)
                 {
                     reader.ReadInt16();
-                }                
+                }
             }
 
             Console.WriteLine("Reached end of audio file before Rhino returned an inference.");
@@ -98,8 +113,8 @@ namespace RhinoDemo
         /// <param name="requiredSampleRate">Required sample rate in Hz</param>     
         /// <param name="requiredBitDepth">Required number of bits per sample</param>             
         /// <param name="numChannels">Number of channels can be returned by function</param>
-        public static void ValidateWavFile(BinaryReader reader, int requiredSampleRate, short requiredBitDepth, out short numChannels) 
-        {                        
+        public static void ValidateWavFile(BinaryReader reader, int requiredSampleRate, short requiredBitDepth, out short numChannels)
+        {
             byte[] riffHeader = reader?.ReadBytes(44);
 
             int riff = BitConverter.ToInt32(riffHeader, 0);
@@ -127,17 +142,19 @@ namespace RhinoDemo
         public static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
-            if (args.Length == 0) 
+            if (args.Length == 0)
             {
                 Console.WriteLine(HELP_STR);
-                Console.ReadKey();
+                Console.Read();
                 return;
             }
-            
-            string inputAudioPath = null;            
-            string contextPath = null;            
+
+            string inputAudioPath = null;
+            string accessKey = null;
+            string contextPath = null;
             string modelPath = null;
             float sensitivity = 0.5f;
+            bool requireEndpoint = false;
             bool showHelp = false;
 
             // parse command line arguments
@@ -149,6 +166,13 @@ namespace RhinoDemo
                     if (++argIndex < args.Length)
                     {
                         inputAudioPath = args[argIndex++];
+                    }
+                }
+                else if (args[argIndex] == "--access_key")
+                {
+                    if (++argIndex < args.Length)
+                    {
+                        accessKey = args[argIndex++];
                     }
                 }
                 else if (args[argIndex] == "--context_path")
@@ -167,12 +191,17 @@ namespace RhinoDemo
                 }
                 else if (args[argIndex] == "--sensitivity")
                 {
-                    argIndex++;                                        
-                    if(argIndex < args.Length && float.TryParse(args[argIndex], out sensitivity))
-                    {                        
+                    argIndex++;
+                    if (argIndex < args.Length && float.TryParse(args[argIndex], out sensitivity))
+                    {
                         argIndex++;
                     }
-                }                
+                }
+                else if (args[argIndex] == "--require_endpoint")
+                {
+                    requireEndpoint = true;
+                    argIndex++;
+                }
                 else if (args[argIndex] == "-h" || args[argIndex] == "--help")
                 {
                     showHelp = true;
@@ -188,7 +217,7 @@ namespace RhinoDemo
             if (showHelp)
             {
                 Console.WriteLine(HELP_STR);
-                Console.ReadKey();
+                Console.Read();
                 return;
             }
 
@@ -197,41 +226,28 @@ namespace RhinoDemo
             {
                 throw new ArgumentNullException("input_audio_path");
             }
-            if (!File.Exists(inputAudioPath)) 
+            if (!File.Exists(inputAudioPath))
             {
                 throw new ArgumentException($"Audio file at path {inputAudioPath} does not exist", "--input_audio_path");
             }
-            
-            if (string.IsNullOrEmpty(contextPath))
-            {
-                throw new ArgumentNullException("context_path");
-            }
-            if (!File.Exists(contextPath))
-            {
-                throw new ArgumentException($"Context file at path {contextPath} does not exist", "--context_path");
-            }
-            
-            if (sensitivity < 0 || sensitivity > 1)
-            {
-                throw new ArgumentException($"Sensitivity value of {sensitivity} is not valid. Value must be with [0, 1].");
-            }
 
-
-            RunDemo(inputAudioPath, contextPath, modelPath, sensitivity);
+            RunDemo(accessKey, inputAudioPath, contextPath, modelPath, sensitivity, requireEndpoint);
         }
 
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Console.WriteLine(e.ExceptionObject.ToString());
-            Console.ReadKey();
-            Environment.Exit(-1);
+            Console.Read();
+            Environment.Exit(1);
         }
 
         private static readonly string HELP_STR = "Available options: \n" +
             "\t--input_audio_path (required): Absolute path to input audio file.\n" +
+            "\t--access_key (required): AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)\n" +
             "\t--context_path (required): Absolute path to context file.\n" +
             "\t--model_path: Absolute path to the file containing model parameters.\n" +
             "\t--sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
-            "fewer misses at the cost of (potentially) increasing the erroneous inference rate.";
+            "fewer misses at the cost of (potentially) increasing the erroneous inference rate.\n" +
+            "\t--require_endpoint: If set, Rhino requires an endpoint (chunk of silence) before finishing inference.\n";
     }
 }

@@ -41,7 +41,7 @@ namespace Pv
     /// </summary>
     public class Inference
     {
-        public Inference(bool isUnderstood, string intent, Dictionary<string,string> slots)
+        public Inference(bool isUnderstood, string intent, Dictionary<string, string> slots)
         {
             IsUnderstood = isUnderstood;
             Intent = intent;
@@ -61,11 +61,11 @@ namespace Pv
     public class Rhino : IDisposable
     {
         private const string LIBRARY = "libpv_rhino";
-        private IntPtr _libraryPointer = IntPtr.Zero;        
+        private IntPtr _libraryPointer = IntPtr.Zero;
 
         public static readonly string DEFAULT_MODEL_PATH;
 
-        static Rhino() 
+        static Rhino()
         {
 #if NETCOREAPP3_1
             NativeLibrary.SetDllImportResolver(typeof(Rhino).Assembly, ImportResolver);
@@ -74,9 +74,9 @@ namespace Pv
         }
 
 #if NETCOREAPP3_1
-        private static IntPtr ImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath) 
+        private static IntPtr ImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
         {
-            IntPtr libHandle = IntPtr.Zero;                                   
+            IntPtr libHandle = IntPtr.Zero;
             NativeLibrary.TryLoad(Utils.PvLibraryPath(libraryName), out libHandle);
             return libHandle;
         }
@@ -98,27 +98,27 @@ namespace Pv
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern RhinoStatus pv_rhino_process(
-            IntPtr handle, 
-            short[] pcm, 
+            IntPtr handle,
+            short[] pcm,
             out bool isFinalized);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern RhinoStatus pv_rhino_is_understood(
-            IntPtr handle, 
+            IntPtr handle,
             out bool isUnderstood);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern RhinoStatus pv_rhino_get_intent(
-            IntPtr handle, 
-            out IntPtr intent, 
-            out int numSlots, 
-            out IntPtr slots, 
+            IntPtr handle,
+            out IntPtr intent,
+            out int numSlots,
+            out IntPtr slots,
             out IntPtr values);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern RhinoStatus pv_rhino_free_slots_and_values(
-            IntPtr handle, 
-            IntPtr slots, 
+            IntPtr handle,
+            IntPtr slots,
             IntPtr values);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
@@ -126,7 +126,7 @@ namespace Pv
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern RhinoStatus pv_rhino_context_info(
-            IntPtr handle, 
+            IntPtr handle,
             out IntPtr contextInfo);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
@@ -157,7 +157,7 @@ namespace Pv
         /// If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
         /// </param>
         /// <returns>An instance of Rhino Speech-to-Intent engine.</returns>                             
-        public static Rhino Create(string accessKey, string contextPath, string modelPath = null, float sensitivity=0.5f, bool requireEndpoint=true)
+        public static Rhino Create(string accessKey, string contextPath, string modelPath = null, float sensitivity = 0.5f, bool requireEndpoint = true)
         {
             return new Rhino(accessKey, modelPath ?? DEFAULT_MODEL_PATH, contextPath, sensitivity, requireEndpoint);
         }
@@ -182,11 +182,11 @@ namespace Pv
         /// If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
         /// </param>
         public Rhino(
-            string accessKey, 
-            string modelPath, 
-            string contextPath, 
-            float sensitivity=0.5f, 
-            bool requireEndpoint=true)
+            string accessKey,
+            string modelPath,
+            string contextPath,
+            float sensitivity = 0.5f,
+            bool requireEndpoint = true)
         {
             if (string.IsNullOrEmpty(accessKey))
             {
@@ -209,11 +209,11 @@ namespace Pv
             }
 
             RhinoStatus status = pv_rhino_init(
-                accessKey, 
-                modelPath, 
-                contextPath, 
-                sensitivity, 
-                requireEndpoint, 
+                accessKey,
+                modelPath,
+                contextPath,
+                sensitivity,
+                requireEndpoint,
                 out _libraryPointer);
             if (status != RhinoStatus.SUCCESS)
             {
@@ -226,7 +226,7 @@ namespace Pv
             {
                 throw RhinoStatusToException(status, "Rhino init failed.");
             }
-            
+
             ContextInfo = Marshal.PtrToStringAnsi(contextInfoPtr);
             Version = Marshal.PtrToStringAnsi(pv_rhino_version());
             SampleRate = pv_sample_rate();
@@ -252,7 +252,7 @@ namespace Pv
                 throw new RhinoInvalidArgumentException($"Input audio frame size ({pcm.Length}) was not the size specified by Rhino engine ({FrameLength}). " +
                     $"Use rhino.FrameLength to get the correct size.");
             }
-            
+
             RhinoStatus status = pv_rhino_process(_libraryPointer, pcm, out _isFinalized);
             if (status != RhinoStatus.SUCCESS)
             {
@@ -272,7 +272,7 @@ namespace Pv
         /// </returns>
         public Inference GetInference()
         {
-            if (!_isFinalized) 
+            if (!_isFinalized)
             {
                 throw RhinoStatusToException(RhinoStatus.INVALID_STATE, "GetInference was called before Rhino had finalized");
             }
@@ -288,7 +288,7 @@ namespace Pv
             }
 
             if (isUnderstood)
-            {                
+            {
                 IntPtr intentPtr, slotKeysPtr, slotValuesPtr;
                 int numSlots;
 
@@ -302,10 +302,10 @@ namespace Pv
 
                 int elementSize = Marshal.SizeOf(typeof(IntPtr));
                 slots = new Dictionary<string, string>();
-                for (int i = 0; i < numSlots; i++) 
+                for (int i = 0; i < numSlots; i++)
                 {
                     string slotKey = Marshal.PtrToStringAnsi(Marshal.ReadIntPtr(slotKeysPtr, i * elementSize));
-                    string slotValue = Marshal.PtrToStringAnsi(Marshal.ReadIntPtr(slotValuesPtr, i * elementSize));                    
+                    string slotValue = Marshal.PtrToStringAnsi(Marshal.ReadIntPtr(slotValuesPtr, i * elementSize));
                     slots[slotKey] = slotValue;
                 }
 
@@ -315,7 +315,7 @@ namespace Pv
                     throw RhinoStatusToException(status, "GetInference failed at pv_rhino_free_slots_and_values");
                 }
             }
-            else 
+            else
             {
                 intent = null;
                 slots = new Dictionary<string, string>();
@@ -341,7 +341,7 @@ namespace Pv
         /// Gets the version number of the Rhino library.
         /// </summary>
         /// <returns>Version of Rhino</returns>
-        public string Version { get; private set; }        
+        public string Version { get; private set; }
 
         /// <summary>
         /// Gets the required number of audio samples per frame.
@@ -389,7 +389,7 @@ namespace Pv
                 default:
                     return new RhinoException("Unmapped error code returned from Rhino.");
             }
-        }        
+        }
 
         /// <summary>
         /// Frees memory that was allocated for Rhino

@@ -36,7 +36,7 @@ namespace RhinoTest
         }
 
         [TestMethod]
-        public void TestFrameLength() 
+        public void TestFrameLength()
         {
             using Rhino r = SetUpClass();
             Assert.IsTrue(r?.FrameLength > 0, "Specified frame length was not a valid number.");
@@ -46,14 +46,14 @@ namespace RhinoTest
         public void TestVersion()
         {
             using Rhino r = SetUpClass();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(r?.Version), "Rhino did not return a valid version number.");            
+            Assert.IsFalse(string.IsNullOrWhiteSpace(r?.Version), "Rhino did not return a valid version number.");
         }
 
         [TestMethod]
         public void TestContextInfo()
         {
             using Rhino r = SetUpClass();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(r?.ContextInfo), "Rhino did not return any context information.");            
+            Assert.IsFalse(string.IsNullOrWhiteSpace(r?.ContextInfo), "Rhino did not return any context information.");
         }
 
         [TestMethod]
@@ -91,9 +91,9 @@ namespace RhinoTest
                 {"numberOfShots", "double shot"},
                 {"beverage", "americano"},
             };
-            Assert.IsTrue(inference.Slots.All((keyValuePair) => 
-                                          expectedSlotValues.ContainsKey(keyValuePair.Key) && 
-                                          expectedSlotValues[keyValuePair.Key] == keyValuePair.Value));            
+            Assert.IsTrue(inference.Slots.All((keyValuePair) =>
+                                          expectedSlotValues.ContainsKey(keyValuePair.Key) &&
+                                          expectedSlotValues[keyValuePair.Key] == keyValuePair.Value));
         }
 
         [TestMethod]
@@ -122,10 +122,10 @@ namespace RhinoTest
             Assert.IsTrue(isFinalized, "Failed to finalize.");
 
             Inference inference = r.GetInference();
-            Assert.IsFalse(inference.IsUnderstood, "Shouldn't be able to understand.");            
+            Assert.IsFalse(inference.IsUnderstood, "Shouldn't be able to understand.");
         }
 
-        private List<short> GetPcmFromFile(string audioFilePath, int expectedSampleRate) 
+        private List<short> GetPcmFromFile(string audioFilePath, int expectedSampleRate)
         {
             List<short> data = new List<short>();
             using (BinaryReader reader = new BinaryReader(File.Open(audioFilePath, FileMode.Open)))
@@ -144,7 +144,7 @@ namespace RhinoTest
         }
 
         private static string _relativeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        
+
         private static Architecture _arch => RuntimeInformation.ProcessArchitecture;
         private static string _env => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "mac" :
                                                  RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "windows" :
@@ -162,7 +162,7 @@ namespace RhinoTest
                 throw new PlatformNotSupportedException($"Unsupported CPU.\n{cpuInfo}");
 
             string cpuPart = cpuPartList[0].Split(' ').Last().ToLower();
-            
+
             switch (cpuPart)
             {
                 case "0xc07":
