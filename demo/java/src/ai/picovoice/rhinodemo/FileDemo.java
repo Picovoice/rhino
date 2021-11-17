@@ -29,7 +29,7 @@ import java.util.Map;
 public class FileDemo {
 
     public static void runDemo(String accessKey, File inputAudioFile, String libraryPath, String modelPath,
-                               String contextPath, float sensitivity) {
+                               String contextPath, float sensitivity, boolean requireEndpoint) {
 
         AudioInputStream audioInputStream;
         try {
@@ -50,6 +50,7 @@ public class FileDemo {
                     .setModelPath(modelPath)
                     .setContextPath(contextPath)
                     .setSensitivity(sensitivity)
+                    .setRequireEndpoint(requireEndpoint)
                     .build();
 
             AudioFormat audioFormat = audioInputStream.getFormat();
@@ -139,6 +140,7 @@ public class FileDemo {
         String modelPath = cmd.getOptionValue("model_path");
         String contextPath = cmd.getOptionValue("context_path");
         String sensitivityStr = cmd.getOptionValue("sensitivity");
+        boolean requireEndpoint = cmd.hasOption("require_endpoint");
 
         if (accessKey == null || accessKey.length() == 0) {
             throw new IllegalArgumentException("AccessKey is required for Porcupine.");
@@ -183,7 +185,7 @@ public class FileDemo {
             modelPath = Rhino.MODEL_PATH;
         }
 
-        runDemo(accessKey, inputAudioFile, libraryPath, modelPath, contextPath, sensitivity);
+        runDemo(accessKey, inputAudioFile, libraryPath, modelPath, contextPath, sensitivity, requireEndpoint);
     }
 
     private static Options BuildCommandLineOptions() {
@@ -226,6 +228,10 @@ public class FileDemo {
                         "fewer misses at the cost of (potentially) increasing the erroneous inference rate. " +
                         "If not set 0.5 will be used.")
                 .build());
+
+        options.addOption(new Option("e", "require_endpoint", false, "If set to `False`, Rhino does not require an " +
+                "endpoint (chunk of silence) before finishing inference."));
+
         options.addOption(new Option("h", "help", false, ""));
 
         return options;

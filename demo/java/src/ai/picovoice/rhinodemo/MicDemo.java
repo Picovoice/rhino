@@ -26,7 +26,7 @@ import javax.sound.sampled.*;
 
 public class MicDemo {
     public static void runDemo(String accessKey, String contextPath, String libraryPath, String modelPath,
-                               float sensitivity, int audioDeviceIndex, String outputPath) {
+                               float sensitivity, int audioDeviceIndex, String outputPath, boolean requireEndpoint) {
 
         // for file output
         File outputFile = null;
@@ -56,6 +56,7 @@ public class MicDemo {
                     .setLibraryPath(libraryPath)
                     .setModelPath(modelPath)
                     .setSensitivity(sensitivity)
+                    .setRequireEndpoint(requireEndpoint)
                     .build();
 
             if (outputPath != null) {
@@ -220,6 +221,7 @@ public class MicDemo {
         String sensitivityStr = cmd.getOptionValue("sensitivity");
         String audioDeviceIndexStr = cmd.getOptionValue("audio_device_index");
         String outputPath = cmd.getOptionValue("output_path");
+        boolean requireEndpoint = cmd.hasOption("require_endpoint");
 
         if (accessKey == null || accessKey.length() == 0) {
             throw new IllegalArgumentException("AccessKey is required for Porcupine.");
@@ -271,7 +273,7 @@ public class MicDemo {
             }
         }
 
-        runDemo(contextPath, libraryPath, modelPath, sensitivity, audioDeviceIndex, outputPath);
+        runDemo(accessKey, contextPath, libraryPath, modelPath, sensitivity, audioDeviceIndex, outputPath, requireEndpoint);
     }
 
     private static Options BuildCommandLineOptions() {
@@ -308,6 +310,9 @@ public class MicDemo {
                         "fewer misses at the cost of (potentially) increasing the erroneous inference rate. " +
                         "If not set 0.5 will be used.")
                 .build());
+
+        options.addOption(new Option("e", "require_endpoint", false, "If set to `False`, Rhino does not require an " +
+                "endpoint (chunk of silence) before finishing inference."));
 
         options.addOption(Option.builder("o")
                 .longOpt("output_path")
