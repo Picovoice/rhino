@@ -24,8 +24,19 @@ namespace RhinoTest
     [TestClass]
     public class MainTest
     {
+        private static string ACCESS_KEY;
+
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext testContext)
+        {
+            if (testContext.Properties.Contains("pvTestAccessKey"))
+            {
+                ACCESS_KEY = testContext.Properties["pvTestAccessKey"].ToString();
+            }
+        }
+
         [TestMethod]
-        public void TestFrameLength() 
+        public void TestFrameLength()
         {
             using Rhino r = SetUpClass();
             Assert.IsTrue(r?.FrameLength > 0, "Specified frame length was not a valid number.");
@@ -35,14 +46,14 @@ namespace RhinoTest
         public void TestVersion()
         {
             using Rhino r = SetUpClass();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(r?.Version), "Rhino did not return a valid version number.");            
+            Assert.IsFalse(string.IsNullOrWhiteSpace(r?.Version), "Rhino did not return a valid version number.");
         }
 
         [TestMethod]
         public void TestContextInfo()
         {
             using Rhino r = SetUpClass();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(r?.ContextInfo), "Rhino did not return any context information.");            
+            Assert.IsFalse(string.IsNullOrWhiteSpace(r?.ContextInfo), "Rhino did not return any context information.");
         }
 
         [TestMethod]
@@ -80,9 +91,9 @@ namespace RhinoTest
                 {"numberOfShots", "double shot"},
                 {"beverage", "americano"},
             };
-            Assert.IsTrue(inference.Slots.All((keyValuePair) => 
-                                          expectedSlotValues.ContainsKey(keyValuePair.Key) && 
-                                          expectedSlotValues[keyValuePair.Key] == keyValuePair.Value));            
+            Assert.IsTrue(inference.Slots.All((keyValuePair) =>
+                                          expectedSlotValues.ContainsKey(keyValuePair.Key) &&
+                                          expectedSlotValues[keyValuePair.Key] == keyValuePair.Value));
         }
 
         [TestMethod]
@@ -111,10 +122,10 @@ namespace RhinoTest
             Assert.IsTrue(isFinalized, "Failed to finalize.");
 
             Inference inference = r.GetInference();
-            Assert.IsFalse(inference.IsUnderstood, "Shouldn't be able to understand.");            
+            Assert.IsFalse(inference.IsUnderstood, "Shouldn't be able to understand.");
         }
 
-        private List<short> GetPcmFromFile(string audioFilePath, int expectedSampleRate) 
+        private List<short> GetPcmFromFile(string audioFilePath, int expectedSampleRate)
         {
             List<short> data = new List<short>();
             using (BinaryReader reader = new BinaryReader(File.Open(audioFilePath, FileMode.Open)))
@@ -133,14 +144,35 @@ namespace RhinoTest
         }
 
         private static string _relativeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        
+
         private static Architecture _arch => RuntimeInformation.ProcessArchitecture;
         private static string _env => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "mac" :
                                                  RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "windows" :
                                                  RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && _arch == Architecture.X64 ? "linux" :
                                                  RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
-                                                    (_arch == Architecture.Arm || _arch == Architecture.Arm64) ? "raspberry-pi" : "";
+                                                    (_arch == Architecture.Arm || _arch == Architecture.Arm64) ? PvLinuxEnv() : "";
 
-        private Rhino SetUpClass() => Rhino.Create(Path.Combine(_relativeDir, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));        
+        private Rhino SetUpClass() => Rhino.Create(ACCESS_KEY, Path.Combine(_relativeDir, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
+
+        public static string PvLinuxEnv()
+        {
+            string cpuInfo = File.ReadAllText("/proc/cpuinfo");
+            string[] cpuPartList = cpuInfo.Split('\n').Where(x => x.Contains("CPU part")).ToArray();
+            if (cpuPartList.Length == 0)
+                throw new PlatformNotSupportedException($"Unsupported CPU.\n{cpuInfo}");
+
+            string cpuPart = cpuPartList[0].Split(' ').Last().ToLower();
+
+            switch (cpuPart)
+            {
+                case "0xc07":
+                case "0xd03":
+                case "0xd08": return "raspberry-pi";
+                case "0xd07": return "jetson";
+                case "0xc08": return "beaglebone";
+                default:
+                    throw new PlatformNotSupportedException($"This device (CPU part = {cpuPart}) is not supported by Picovoice.");
+            }
+        }
     }
 }
