@@ -957,8 +957,8 @@ Each call to `process` will return a `RhinoInference` instance with following va
 
 - isFinalized - true if Rhino has made an inference, false otherwise
 - isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if Rhino did not understood context
-- intent - **null** if `isUnderstood` is false, otherwise name of intent that were inferred
-- slots - **null** if `isUnderstood` is false, otherwise the dictionary of slot keys and values that were inferred
+- intent - **null** if `isUnderstood` is not true, otherwise name of intent that were inferred
+- slots - **null** if `isUnderstood` is not true, otherwise the dictionary of slot keys and values that were inferred
 
 ```dart
 List<int> buffer = getAudioFrame();
