@@ -405,14 +405,16 @@ export class Rhino implements RhinoEngine {
 
   // eslint-disable-next-line
   public static resolveFilePromise(args: any): void {
-    // @ts-ignore
-    Rhino._resolvePromise(args);
+    if (Rhino._resolvePromise != null) {
+      Rhino._resolvePromise(args);
+    }
   }
 
   // eslint-disable-next-line
   public static rejectFilePromise(args: any): void {
-    // @ts-ignore
-    Rhino._rejectPromise(args);
+    if (Rhino._rejectPromise != null) {
+      Rhino._rejectPromise(args);
+    }
   }
 
   private static async initWasm(
