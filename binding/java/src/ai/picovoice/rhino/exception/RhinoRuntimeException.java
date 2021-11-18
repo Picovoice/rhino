@@ -1,9 +1,7 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
-
+    Copyright 2021 Picovoice Inc.
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
-
     Unless required by applicable law or agreed to in writing, software distributed under the
     License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
     express or implied. See the License for the specific language governing permissions and
@@ -12,12 +10,12 @@
 
 package ai.picovoice.rhino;
 
-public class RhinoException extends Exception {
-    RhinoException(Throwable cause) {
+public class RhinoRuntimeException extends RhinoException {
+    public RhinoRuntimeException(Throwable cause) {
         super(cause);
     }
 
-    RhinoException(String message) {
+    public RhinoRuntimeException(String message) {
         super(message);
     }
 }

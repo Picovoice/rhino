@@ -28,8 +28,8 @@ import java.util.Map;
 
 public class FileDemo {
 
-    public static void runDemo(File inputAudioFile, String libraryPath, String modelPath,
-                               String contextPath, float sensitivity) {
+    public static void runDemo(String accessKey, File inputAudioFile, String libraryPath, String modelPath,
+                               String contextPath, float sensitivity, boolean requireEndpoint) {
 
         AudioInputStream audioInputStream;
         try {
@@ -45,10 +45,12 @@ public class FileDemo {
         Rhino rhino = null;
         try {
             rhino = new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setLibraryPath(libraryPath)
                     .setModelPath(modelPath)
                     .setContextPath(contextPath)
                     .setSensitivity(sensitivity)
+                    .setRequireEndpoint(requireEndpoint)
                     .build();
 
             AudioFormat audioFormat = audioInputStream.getFormat();
@@ -132,12 +134,17 @@ public class FileDemo {
             return;
         }
 
+        String accessKey = cmd.getOptionValue("access_key");
         String inputAudioPath = cmd.getOptionValue("input_audio_path");
         String libraryPath = cmd.getOptionValue("library_path");
         String modelPath = cmd.getOptionValue("model_path");
         String contextPath = cmd.getOptionValue("context_path");
         String sensitivityStr = cmd.getOptionValue("sensitivity");
+        String requireEndpointValue = cmd.getOptionValue("require_endpoint");
 
+        if (accessKey == null || accessKey.length() == 0) {
+            throw new IllegalArgumentException("AccessKey is required for Rhino.");
+        }
         // parse sensitivity
         float sensitivity = 0.5f;
         if (sensitivityStr != null) {
@@ -178,11 +185,22 @@ public class FileDemo {
             modelPath = Rhino.MODEL_PATH;
         }
 
-        runDemo(inputAudioFile, libraryPath, modelPath, contextPath, sensitivity);
+        boolean requireEndpoint = true;
+        if (requireEndpointValue != null && requireEndpointValue.toLowerCase().equals("false")) {
+            requireEndpoint = false;
+        }
+
+        runDemo(accessKey, inputAudioFile, libraryPath, modelPath, contextPath, sensitivity, requireEndpoint);
     }
 
     private static Options BuildCommandLineOptions() {
         Options options = new Options();
+
+        options.addOption(Option.builder("a")
+                .longOpt("access_key")
+                .hasArg(true)
+                .desc("AccessKey obtained from Picovoice Console (https://picovoice.ai/console/).")
+                .build());
 
         options.addOption(Option.builder("i")
                 .longOpt("input_audio_path")
@@ -215,6 +233,14 @@ public class FileDemo {
                         "fewer misses at the cost of (potentially) increasing the erroneous inference rate. " +
                         "If not set 0.5 will be used.")
                 .build());
+
+        options.addOption(Option.builder("e")
+                .longOpt("require_endpoint")
+                .hasArg(true)
+                .desc("If set to `false`, Rhino does not require an endpoint (chunk of silence) before " +
+                        "finishing inference.")
+                .build());
+
         options.addOption(new Option("h", "help", false, ""));
 
         return options;

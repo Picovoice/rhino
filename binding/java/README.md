@@ -60,15 +60,26 @@ cd rhino/binding/java
 
 Once the task is complete, the output JAR can be found in `rhino/binding/java/build/libs`.
 
+## AccessKey
+
+The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
+
 ## Usage
 
 The easiest way to create an instance of the engine is with the Rhino Builder:
 
 ```java
 import ai.picovoice.rhino.*;
-
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
 try{
     Rhino handle = new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setContextPath("/absolute/path/to/context")
                     .build();
 } catch (RhinoException e) { }
@@ -84,9 +95,10 @@ inference rate.
 
 ```java
 import ai.picovoice.rhino.*;
-
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
 try{
     Rhino handle = new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setContextPath("/absolute/path/to/context")
                     .setSensitivity(0.25f)
                     .build();
