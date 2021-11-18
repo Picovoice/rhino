@@ -140,7 +140,7 @@ public class FileDemo {
         String modelPath = cmd.getOptionValue("model_path");
         String contextPath = cmd.getOptionValue("context_path");
         String sensitivityStr = cmd.getOptionValue("sensitivity");
-        boolean requireEndpoint = cmd.hasOption("require_endpoint");
+        String requireEndpointValue = cmd.getOptionValue("require_endpoint");
 
         if (accessKey == null || accessKey.length() == 0) {
             throw new IllegalArgumentException("AccessKey is required for Rhino.");
@@ -183,6 +183,11 @@ public class FileDemo {
 
         if (modelPath == null) {
             modelPath = Rhino.MODEL_PATH;
+        }
+
+        boolean requireEndpoint = true;
+        if (requireEndpointValue != null && requireEndpointValue.toLowerCase().equals("false")) {
+            requireEndpoint = false;
         }
 
         runDemo(accessKey, inputAudioFile, libraryPath, modelPath, contextPath, sensitivity, requireEndpoint);
@@ -229,8 +234,12 @@ public class FileDemo {
                         "If not set 0.5 will be used.")
                 .build());
 
-        options.addOption(new Option("e", "require_endpoint", false, "If set, Rhino requires an endpoint " +
-                "(chunk of silence) before finishing inference."));
+        options.addOption(Option.builder("e")
+                .longOpt("require_endpoint")
+                .hasArg(true)
+                .desc("If set to `false`, Rhino does not require an endpoint (chunk of silence) before " +
+                        "finishing inference.")
+                .build());
 
         options.addOption(new Option("h", "help", false, ""));
 
