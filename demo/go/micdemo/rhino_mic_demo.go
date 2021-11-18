@@ -31,7 +31,7 @@ func main() {
 		"The value should be a number within [0, 1]. A higher sensitivity value results in "+
 		"fewer misses at the cost of (potentially) increasing the erroneous inference rate. "+
 		"If not set, 0.5 will be used.")
-	endpointRequiredArg := flag.Bool("endpoint_required", false,
+	requireEndpointArg := flag.Bool("require_endpoint", false,
 		"If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.")
 	audioDeviceIndex := flag.Int("audio_device_index", -1, "Index of capture device to use.")
 	outputPathArg := flag.String("output_path", "", "Path to recorded audio (for debugging)")
@@ -57,7 +57,7 @@ func main() {
 	}
 
 	r := rhino.Rhino{
-		IsEndpointRequired: *endpointRequiredArg,
+		RequireEndpoint: *requireEndpointArg,
 	}
 
 	if *accessKeyArg == "" {
