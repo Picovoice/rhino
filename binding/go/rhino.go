@@ -126,7 +126,7 @@ type Rhino struct {
 	ContextPath string
 
 	// If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
-	IsEndpointRequired bool
+	RequireEndpoint bool
 
 	// Once initialized, stores the source of the Rhino context in YAML format. Shows the list of intents,
 	// which expressions map to those intents, as well as slots and their possible values.
@@ -136,11 +136,11 @@ type Rhino struct {
 // Returns a Rhino struct with the given context file and default parameters
 func NewRhino(accessKey string, contextPath string) Rhino {
 	return Rhino{
-		AccessKey:          accessKey,
-		ContextPath:        contextPath,
-		Sensitivity:        0.5,
-		ModelPath:          defaultModelFile,
-		IsEndpointRequired: true,
+		AccessKey:       accessKey,
+		ContextPath:     contextPath,
+		Sensitivity:     0.5,
+		ModelPath:       defaultModelFile,
+		RequireEndpoint: true,
 	}
 }
 

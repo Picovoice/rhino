@@ -196,7 +196,7 @@ func (nr nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
 		modelPathC,
 		contextPathC,
 		(C.float)(rhino.Sensitivity),
-		(C.bool)(rhino.IsEndpointRequired),
+		(C.bool)(rhino.RequireEndpoint),
 		&ptrC[0])
 
 	rhino.handle = uintptr(ptrC[0])
