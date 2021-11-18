@@ -19,11 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import ai.picovoice.rhino.Rhino;
-import ai.picovoice.rhino.RhinoException;
-import ai.picovoice.rhino.RhinoInference;
-import ai.picovoice.rhino.RhinoInvalidArgumentException;
-import ai.picovoice.rhino.RhinoRuntimeException;
+import ai.picovoice.rhino.*;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
