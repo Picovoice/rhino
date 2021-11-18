@@ -57,8 +57,8 @@ func (nr nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
 		uintptr(unsafe.Pointer(modelPathC)),
 		uintptr(unsafe.Pointer(contextPathC)),
 		uintptr(rhino.Sensitivity),
-		uintptr(unsafe.Pointer(&rhino.handle)),
-		uintptr(requireEndpointC))
+		uintptr(requireEndpointC),
+		uintptr(unsafe.Pointer(&rhino.handle)))
 
 	return PvStatus(ret)
 }
