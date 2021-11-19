@@ -43,10 +43,15 @@ def main():
 
     parser.add_argument(
         '--require_endpoint',
-        help="If set, Rhino requires an endpoint (chunk of silence) before finishing inference",
-        action='store_true')
+        help="If set to `False`, Rhino does not require an endpoint (chunk of silence) before finishing inference.",
+        default='true')
 
     args = parser.parse_args()
+
+    if args.require_endpoint.lower() == 'false':
+        require_endpoint = False
+    else:
+        require_endpoint = True
 
     rhino = pvrhino.create(
         access_key=args.access_key,
@@ -54,7 +59,7 @@ def main():
         model_path=args.model_path,
         context_path=args.context_path,
         sensitivity=args.sensitivity,
-        require_endpoint=args.require_endpoint)
+        require_endpoint=require_endpoint)
 
     audio, sample_rate = soundfile.read(args.input_audio_path, dtype='int16')
     if audio.ndim == 2:

@@ -155,8 +155,8 @@ def main():
 
     parser.add_argument(
         '--require_endpoint',
-        help="If set, Rhino requires an endpoint (chunk of silence) before finishing inference",
-        action='store_true')
+        help="If set to `False`, Rhino does not require an endpoint (chunk of silence) before finishing inference.",
+        default='true')
 
     parser.add_argument('--audio_device_index', help='Index of input audio device.', type=int, default=-1)
 
@@ -165,6 +165,11 @@ def main():
     parser.add_argument('--show_audio_devices', action='store_true')
 
     args = parser.parse_args()
+
+    if args.require_endpoint.lower() == 'false':
+        require_endpoint = False
+    else:
+        require_endpoint = True
 
     if args.show_audio_devices:
         RhinoDemo.show_audio_devices()
@@ -177,7 +182,7 @@ def main():
             library_path=args.library_path,
             model_path=args.model_path,
             context_path=args.context_path,
-            require_endpoint=args.require_endpoint,
+            require_endpoint=require_endpoint,
             audio_device_index=args.audio_device_index,
             output_path=args.output_path).run()
 
