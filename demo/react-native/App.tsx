@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
 import { PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
-import { RhinoManager } from '@picovoice/rhino-react-native';
+import { RhinoManager, RhinoInference, RhinoExceptions } from '@picovoice/rhino-react-native';
 
 const RNFS = require('react-native-fs')
 
 type Props = {};
 type State = {
   buttonText: string;
+  buttonDisabled: boolean;
   rhinoText: string;
   isListening: boolean;
+  isError: boolean;
+  errorMessage: string;
 };
 
 export default class App extends Component<Props, State> {
-  _rhinoManager: RhinoManager | undefined;  
+  readonly _accessKey: string = "${YOUR_ACCESS_KEY_HERE}" // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
+  _rhinoManager: RhinoManager | undefined;
 
   constructor(props: Props) {
     super(props);
@@ -21,45 +26,80 @@ export default class App extends Component<Props, State> {
       buttonText: 'Start',
       buttonDisabled: false,
       rhinoText: '',
-      isListening: false
+      isListening: false,
+      isError: false,
+      errorMessage: ''
     };
   }
 
   async componentDidMount() {
-    let contextName = 'smart_lighting';
-    let contextFilename = contextName;
-    let contextPath = ''
-    if(Platform.OS == 'android'){
-      contextFilename += "_android.rhn";      
-      contextPath = `${RNFS.DocumentDirectoryPath}/${contextFilename}`;      
-      await RNFS.copyFileRes(contextFilename, contextPath);
-    }
-    else if(Platform.OS == 'ios'){
-      contextFilename += "_ios.rhn";  
-      contextPath = `${RNFS.MainBundlePath}/${contextFilename}`;
-    }
+    let contextPath = `smart_lighting_${Platform.OS}.rhn`;
 
     // load context
     try{
-      this._rhinoManager = await RhinoManager.create(contextPath, (inference:object)=>{  
-        
-        this.setState({
-          rhinoText: JSON.stringify(inference, null, 4),
-          buttonText: 'Start',
-          buttonDisabled: false,
-          isListening: false,
-        });    
-      });
-    }
-    catch(e){
-      console.error(e);
+      this._rhinoManager = await RhinoManager.create(
+        this._accessKey, 
+        contextPath,
+        this.inferenceCallback.bind(this), 
+        null,
+        0.5,
+        true,
+        (error) => {
+          this.errorCallback(error.message);
+        });
+    } catch(err) {
+      let errorMessage = '';
+      if (err instanceof RhinoExceptions.RhinoInvalidArgumentException) {
+        errorMessage = `${err.message}\nPlease make sure your accessKey '${this._accessKey}'' is a valid access key.`;
+      } else if (err instanceof RhinoExceptions.RhinoActivationException) {
+        errorMessage = "AccessKey activation error";
+      } else if (err instanceof RhinoExceptions.RhinoActivationLimitException) {
+        errorMessage = "AccessKey reached its device limit";
+      } else if (err instanceof RhinoExceptions.RhinoActivationRefusedException) {
+        errorMessage = "AccessKey refused";
+      } else if (err instanceof RhinoExceptions.RhinoActivationThrottledException) {
+        errorMessage = "AccessKey has been throttled";
+      } else {
+        errorMessage = err.toString();
+      }
+      this.errorCallback(errorMessage);
     }
   }
 
-  componentWillUnmount() {
-    if (this.state.isListening) {
-      this._stopProcessing();
+  inferenceCallback(inference: RhinoInference) {
+    this.setState({
+      rhinoText: this.prettyPrint(inference),
+      buttonText: 'Start',
+      buttonDisabled: false,
+      isListening: false,
+    }); 
+  }
+
+  errorCallback(error: string) {
+    this.setState({
+      isError: true,
+      errorMessage: error
+    });
+  }
+
+  prettyPrint(inference: RhinoInference): string {
+    let printText =
+        `{\n    "isUnderstood" : "${inference.isUnderstood}",\n`;
+    if (inference.isUnderstood) {
+      printText += `    "intent" : "${inference.intent}",\n`;
+      if (Object.entries(inference.slots).length > 0) {
+        printText += '    "slots" : {\n';1
+        for (let [key, slot] of Object.entries(inference.slots)) {
+          printText += `        "${key}" : "${slot}",\n`;
+        }
+        printText += '    }\n';
+      }
     }
+    printText += '}';
+    return printText;
+  }
+
+  componentWillUnmount() {
     this._rhinoManager?.delete();
   }
 
@@ -116,7 +156,7 @@ export default class App extends Component<Props, State> {
       );
       return (granted === PermissionsAndroid.RESULTS.GRANTED)        
     } catch (err) {
-      console.error(err);
+      this.errorCallback(err.toString());
       return false;
     }
   }
@@ -127,7 +167,6 @@ export default class App extends Component<Props, State> {
       <View
         style={[
           styles.container,
-          { backgroundColor: this.state.backgroundColour },
         ]}
       >
         <View style={styles.statusBar}>
@@ -141,11 +180,11 @@ export default class App extends Component<Props, State> {
               height:'50%',
               alignSelf:'center',
               justifyContent:'center',
-              backgroundColor: '#377DFF',
+              backgroundColor: this.state.isError ? '#cccccc' : '#377DFF',
               borderRadius: 100,
               }}
             onPress={() => this._startProcessing()}
-            disabled={this.state.buttonDisabled}
+            disabled={this.state.buttonDisabled || this.state.isError}
           >
             <Text style={styles.buttonText}>{this.state.buttonText}</Text>
           </TouchableOpacity>
@@ -157,6 +196,16 @@ export default class App extends Component<Props, State> {
             </Text>
           </View>
         </View>
+        {this.state.isError &&
+          <View style={styles.errorBox}>
+            <Text style={{
+              color: 'white',
+              fontSize: 16
+            }}>
+              {this.state.errorMessage}
+            </Text>
+          </View>
+        }
         <View style={{ flex: 0.08, justifyContent: 'flex-end', paddingBottom:25}}>
           <Text style={styles.instructions}>
             Made in Vancouver, Canada by Picovoice
@@ -188,7 +237,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     marginLeft: 15,
-    marginBottom:15,
+    marginBottom: 10,
   },
   
   buttonStyle: {
@@ -215,5 +264,12 @@ const styles = StyleSheet.create({
   instructions: {
     textAlign: 'center',
     color: '#666666'
+  },
+  errorBox: {
+    backgroundColor: 'red',
+    borderRadius: 5,
+    margin: 20,
+    padding: 20,
+    textAlign: 'center'
   },
 });

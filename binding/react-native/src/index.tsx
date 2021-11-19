@@ -1,5 +1,5 @@
 //
-// Copyright 2020 Picovoice Inc.
+// Copyright 2020-2021 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -11,7 +11,8 @@
 
 'use strict';
 
-import Rhino from './rhino';
-import RhinoManager from './rhinomanager';
+import Rhino, { RhinoInference } from './rhino';
+import RhinoManager, { InferenceCallback, ProcessErrorCallback } from './rhino_manager';
+import * as RhinoExceptions from './rhino_exceptions';
 
-export { Rhino, RhinoManager };
+export { Rhino, RhinoInference, RhinoManager, InferenceCallback, ProcessErrorCallback, RhinoExceptions };

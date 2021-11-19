@@ -19,6 +19,7 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - ios-voice-processor (1.0.3)
   - RCTRequired (0.63.3)
   - RCTTypeSafety (0.63.3):
     - FBLazyVector (= 0.63.3)
@@ -247,8 +248,11 @@ PODS:
     - React-Core (= 0.63.3)
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
-  - rhino-react-native (1.6.9):
+  - Rhino-iOS (2.0.0):
+    - ios-voice-processor (~> 1.0.2)
+  - rhino-react-native (2.0.0):
     - React
+    - Rhino-iOS
   - RNFS (2.17.0):
     - React
   - Yoga (1.14.0)
@@ -282,6 +286,7 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - Rhino-iOS (from `https://raw.githubusercontent.com/Picovoice/rhino/v2.0/binding/ios/Rhino-iOS.podspec`)
   - "rhino-react-native (from `../node_modules/@picovoice/rhino-react-native`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -289,6 +294,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
+    - ios-voice-processor
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -343,12 +349,19 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  Rhino-iOS:
+    :podspec: https://raw.githubusercontent.com/Picovoice/rhino/v2.0/binding/ios/Rhino-iOS.podspec
   rhino-react-native:
     :path: "../node_modules/@picovoice/rhino-react-native"
   RNFS:
     :path: "../node_modules/react-native-fs"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
+
+CHECKOUT OPTIONS:
+  Rhino-iOS:
+    :commit: 79f39a1536a56c699e890159163ebe8e6ecdb85e
+    :git: https://github.com/Picovoice/rhino.git
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
@@ -357,6 +370,7 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 7da9338acfb98d4ef9e5536805a0704572d33c2f
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
+  ios-voice-processor: 65b25a8db69ea25ffba0eeef37bae71a982f34cc
   RCTRequired: 48884c74035a0b5b76dbb7a998bd93bcfc5f2047
   RCTTypeSafety: edf4b618033c2f1c5b7bc3d90d8e085ed95ba2ab
   React: f36e90f3ceb976546e97df3403e37d226f79d0e3
@@ -378,10 +392,11 @@ SPEC CHECKSUMS:
   React-RCTText: 65a6de06a7389098ce24340d1d3556015c38f746
   React-RCTVibration: 8e9fb25724a0805107fc1acc9075e26f814df454
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
-  rhino-react-native: 5535bb3ac0f8f7b5fbd279a85b7ead7d362e2bf4
+  Rhino-iOS: 36cec1f457365e4918c97d2b68d8a08cee6d8662
+  rhino-react-native: 08e9e6ec37c2ac0a0cdd158974d433c00dfd5f37
   RNFS: 93d5b5535eb39d98e6b19009faa8fe717f7ea45d
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
 
-PODFILE CHECKSUM: 78c436c7fa624e01b9c3a3425f02617ffb7f8f1d
+PODFILE CHECKSUM: 3fc4b0a40a32bac6fc3482befc0d1abd67e100b2
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2
