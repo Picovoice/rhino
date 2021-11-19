@@ -161,10 +161,10 @@ this._rhinoManager = await RhinoManager.create(
     accessKey,
     "/path/to/context/file.rhn",
     inferenceCallback,
+    processErrorCallback,
     'path/to/model/file.pv',
     0.25,
-    false,
-    processErrorCallback);
+    false);
 ```
 
 Once you have instantiated a RhinoManager, you can start audio capture and intent inference by calling:
