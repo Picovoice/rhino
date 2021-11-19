@@ -156,7 +156,8 @@ def main():
     parser.add_argument(
         '--require_endpoint',
         help="If set to `False`, Rhino does not require an endpoint (chunk of silence) before finishing inference.",
-        default='true')
+        default='True',
+        choices=['True', 'False'])
 
     parser.add_argument('--audio_device_index', help='Index of input audio device.', type=int, default=-1)
 
