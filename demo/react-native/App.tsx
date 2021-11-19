@@ -3,8 +3,6 @@ import { PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import { RhinoManager, RhinoInference, RhinoExceptions } from '@picovoice/rhino-react-native';
 
-const RNFS = require('react-native-fs')
-
 type Props = {};
 type State = {
   buttonText: string;
