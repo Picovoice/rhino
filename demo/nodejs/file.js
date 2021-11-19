@@ -45,7 +45,10 @@ program
     "sensitivity value between 0 and 1",
     parseFloat,
     0.5
-  ).option("-e, --requires_endpoint", "If set, Rhino requires an endpoint (chunk of silence) before finishing inference");
+  ).option(
+    "-e, --requires_endpoint <bool>",
+    "If set to `false`, Rhino does not require an endpoint (chunk of silence) before finishing inference."
+  );
 
 if (process.argv.length < 3) {
   program.help();
@@ -59,7 +62,7 @@ function fileDemo() {
   let libraryFilePath = program["library_file_path"];
   let modelFilePath = program["model_file_path"];
   let sensitivity = program["sensitivity"];
-  let requiresEndpoint = program["requires_endpoint"] !== undefined ? true : false ;
+  let requiresEndpoint = program["requires_endpoint"].toLowerCase() === 'false' ? false : true;
 
   if (isNaN(sensitivity) || sensitivity < 0 || sensitivity > 1) {
     console.error("--sensitivity must be a number in the range [0,1]");
