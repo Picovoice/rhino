@@ -38,10 +38,7 @@ export default class App extends Component<Props, State> {
       this._rhinoManager = await RhinoManager.create(
         this._accessKey, 
         contextPath,
-        this.inferenceCallback.bind(this), 
-        null,
-        0.5,
-        true,
+        this.inferenceCallback.bind(this),
         (error) => {
           this.errorCallback(error.message);
         });

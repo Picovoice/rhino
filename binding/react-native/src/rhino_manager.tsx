@@ -35,11 +35,11 @@ class RhinoManager {
    * @param accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/.
    * @param contextPath Absolute path to context file.
    * @param inferenceCallback A callback for when Rhino has made an intent inference
+   * @param processErrorCallback Reports errors that are encountered while the engine is processing audio.
    * @param modelPath Path to the file containing model parameters. If not set it will be set to the default location.
    * @param sensitivity Inference sensitivity. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
    * Sensitivity should be a floating-point number within [0, 1].
    * @param requireEndpoint If true, Rhino requires an endpoint (chunk of silence) before finishing inference.
-   * @param processErrorCallback Reports errors that are encountered while the engine is processing audio.
    * @returns An instance of the Rhino Manager
    */
 
@@ -47,10 +47,10 @@ class RhinoManager {
     accessKey: string,
     contextPath: string,
     inferenceCallback: InferenceCallback,
+    processErrorCallback?: ProcessErrorCallback,
     modelPath?: string,
     sensitivity: number = 0.5,
-    requireEndpoint: boolean = true,
-    processErrorCallback?: ProcessErrorCallback
+    requireEndpoint: boolean = true
   ) {
     let rhino = await Rhino.create(accessKey, contextPath, modelPath, sensitivity, requireEndpoint);
     return new RhinoManager(rhino, inferenceCallback, processErrorCallback);
