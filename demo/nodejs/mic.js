@@ -44,7 +44,10 @@ program
   ).option(
     "-d, --show_audio_devices",
     "show the list of available devices"
-  ).option("-e, --requires_endpoint", "If set, Rhino requires an endpoint (chunk of silence) before finishing inference");
+  ).option(
+    "-e, --requires_endpoint <bool>",
+    "If set to `false`, Rhino does not require an endpoint (chunk of silence) before finishing inference."
+  );
 
 if (process.argv.length < 3) {
   program.help();
@@ -61,7 +64,7 @@ async function micDemo() {
   let sensitivity = program["sensitivity"];
   let audioDeviceIndex = program["audio_device_index"];
   let showAudioDevices = program["show_audio_devices"];
-  let requiresEndpoint = program["requires_endpoint"] !== undefined ? true : false ;
+  let requiresEndpoint = program["requires_endpoint"].toLowerCase() === 'false' ? false : true;
 
   let showAudioDevicesDefined = showAudioDevices !== undefined;
 
