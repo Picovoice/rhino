@@ -31,8 +31,8 @@ func main() {
 		"The value should be a number within [0, 1]. A higher sensitivity value results in "+
 		"fewer misses at the cost of (potentially) increasing the erroneous inference rate. "+
 		"If not set, 0.5 will be used.")
-	requireEndpointArg := flag.Bool("require_endpoint", false,
-		"If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.")
+	requireEndpointArg := flag.String("require_endpoint", "true",
+		"If set to `false`, Rhino requires an endpoint (chunk of silence) before finishing inference.")
 	flag.Parse()
 
 	// validate input audio
@@ -52,7 +52,10 @@ func main() {
 	}
 
 	r := rhino.Rhino{
-		RequireEndpoint: *requireEndpointArg,
+		RequireEndpoint: true,
+	}
+	if *requireEndpointArg == "false" {
+		r.RequireEndpoint = false
 	}
 
 	if *accessKeyArg == "" {
