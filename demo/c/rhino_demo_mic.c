@@ -13,6 +13,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 
@@ -91,14 +92,14 @@ static struct option long_options[] = {
         {"model_path",         required_argument, NULL, 'm'},
         {"context_path",       required_argument, NULL, 'c'},
         {"sensitivity",        required_argument, NULL, 't'},
-        {"require_endpoint",   no_argument,       NULL, 'e'},
+        {"require_endpoint",   required_argument, NULL, 'e'},
         {"access_key",         required_argument, NULL, 'a'},
         {"audio_device_index", required_argument, NULL, 'd'}
 };
 
 static void print_usage(const char *program_name) {
     fprintf(stderr,
-            "Usage : %s -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -t SENSTIVITY -a ACCESS_KEY -d AUDIO_DEVICE_INDEX [--require_endpoint, -e]\n"
+            "Usage : %s -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -t SENSTIVITY -a ACCESS_KEY -d AUDIO_DEVICE_INDEX [-e, --require_endpoint (true,false)]\n"
             "        %s [-s, --show_audio_devices]\n", program_name, program_name);
 }
 
@@ -155,7 +156,7 @@ int main(int argc, char *argv[]) {
                 sensitivity = strtof(optarg, NULL);
                 break;
             case 'e':
-                require_endpoint = true;
+                require_endpoint = (strcmp(optarg, "false") != 0);
                 break;
             case 'a':
                 access_key = optarg;
