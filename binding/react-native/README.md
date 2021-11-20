@@ -239,13 +239,37 @@ this._rhino.delete();
 
 ## Custom Context Integration
 
-To add a custom context to your React Native application you'll need to add the rhn files to your platform projects. Android contexts must be added to `./android/app/src/main/assets/`, while iOS contexts can be added anywhere under `./ios`, but must be included as a bundled resource in your iOS project. Then in your app code, pass the resource path relative to the 
-directories mentioned previously:
+To add a custom context to your React Native application you'll need to add the rhn files to your platform projects.
+
+### Adding Android Models
+
+Android custom models and contexts must be added to [`./android/app/src/main/assets/`](android/app/src/main/assets/).
+
+### Adding iOS Models
+
+iOS contexts can be added anywhere under [`./ios`](ios), but it must be included as a bundled resource. 
+The easiest way to include a bundled resource in the iOS project is to:
+
+1. Open XCode.
+2. Either:
+  - Drag and Drop the model/keyword file to the navigation tab.
+  - Right click on the navigation tab, and click `Add Files To ...`.
+
+This will bundle your models together when the app is built.
+
+### Using Custom Context
 
 ```javascript
-let contextPath = `path_to_context_${Platform.OS}.rhn`; // usually in main assets/bundle directory
+const accessKey = "${ACCESS_KEY}"
 
-const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+let contextPath: '';
+if (Platform.OS === 'android') {
+    contextPath = 'context_android.rhn'
+} else if (Platform.OS === 'ios') {
+    contextPath = 'context_ios.rhn'
+} else {
+    // handle errors
+}
 
 try {
     let rhino = await Rhino.create(accessKey, contextPath);
