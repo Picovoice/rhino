@@ -78,8 +78,8 @@ namespace RhinoDemo
 
                 if (outputFileWriter != null)
                 {
-                        // write size to header and clean up
-                        WriteWavHeader(outputFileWriter, 1, 16, 16000, totalSamplesWritten);
+                    // write size to header and clean up
+                    WriteWavHeader(outputFileWriter, 1, 16, 16000, totalSamplesWritten);
                     outputFileWriter.Flush();
                     outputFileWriter.Dispose();
                 }
@@ -188,7 +188,7 @@ namespace RhinoDemo
             string modelPath = null;
             int audioDeviceIndex = -1;
             float sensitivity = 0.5f;
-            bool requireEndpoint = false;
+            bool requireEndpoint = true;
             string outputPath = null;
             bool showAudioDevices = false;
             bool showHelp = false;
@@ -228,8 +228,13 @@ namespace RhinoDemo
                 }
                 else if (args[argIndex] == "--require_endpoint")
                 {
-                    requireEndpoint = true;
-                    argIndex++;
+                    if (++argIndex < args.Length)
+                    {
+                        if (args[argIndex++].ToLower() == "false")
+                        {
+                            requireEndpoint = false;
+                        }
+                    }
                 }
                 else if (args[argIndex] == "--show_audio_devices")
                 {
@@ -302,7 +307,7 @@ namespace RhinoDemo
             "\t--model_path: Absolute path to the file containing model parameters.\n" +
             "\t--sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
             "fewer misses at the cost of (potentially) increasing the erroneous inference rate.\n" +
-            "\t--require_endpoint: If set, Rhino requires an endpoint (chunk of silence) before finishing inference.\n" +
+            "\t--require_endpoint: ['true'|'false'] If set to 'false', Rhino does not require an endpoint (chunk of silence) before finishing inference.\n" +
             "\t--audio_device_index: Index of input audio device.\n" +
             "\t--output_path: Absolute path to recorded audio for debugging.\n" +
             "\t--show_audio_devices: Print available recording devices.\n";
