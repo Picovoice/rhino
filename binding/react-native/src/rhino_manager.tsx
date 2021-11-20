@@ -16,10 +16,10 @@ import {
 import { EventSubscription, NativeEventEmitter } from 'react-native';
 
 import Rhino, { RhinoInference } from './rhino';
-import * as RhinoExceptions from './rhino_exceptions';
+import * as RhinoErrors from './rhino_errors';
 
 export type InferenceCallback = (inference: RhinoInference) => void;
-export type ProcessErrorCallback = (error: RhinoExceptions.RhinoException) => void;
+export type ProcessErrorCallback = (error: RhinoErrors.RhinoError) => void;
 
 class RhinoManager {
   private _voiceProcessor: VoiceProcessor;
@@ -68,7 +68,7 @@ class RhinoManager {
     this._needsReset = false;
 
     if (typeof inferenceCallback !== 'function') {
-      throw new RhinoExceptions.RhinoInvalidArgumentException("'inferenceCallback' must be a function type");
+      throw new RhinoErrors.RhinoInvalidArgumentError("'inferenceCallback' must be a function type");
     }
 
     // function that's executed every time an audio buffer is received
@@ -95,7 +95,7 @@ class RhinoManager {
         if (this._processErrorCallback !== undefined && 
             this._processErrorCallback !== null &&
             typeof this._processErrorCallback === 'function') {
-          this._processErrorCallback(e as RhinoExceptions.RhinoException);
+          this._processErrorCallback(e as RhinoErrors.RhinoError);
         } else {
           console.error(e);
         }

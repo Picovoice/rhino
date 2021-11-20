@@ -1024,7 +1024,7 @@
 
 "@picovoice/rhino-react-native@../../binding/react-native/pkg/picovoice-rhino-react-native-2.0.0.tgz":
   version "2.0.0"
-  resolved "../../binding/react-native/pkg/picovoice-rhino-react-native-2.0.0.tgz#59165df16fc3d0a1903a92022c2f1a00be8f8be2"
+  resolved "../../binding/react-native/pkg/picovoice-rhino-react-native-2.0.0.tgz#b31b592e3c751cfb7699826b93fc57e108dae2da"
 
 "@react-native-community/cli-debugger-ui@^4.13.1":
   version "4.13.1"

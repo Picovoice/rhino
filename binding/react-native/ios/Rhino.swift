@@ -92,13 +92,13 @@ class PvRhino: NSObject {
     
     private func getResourcePath(_ filePath: String) throws -> String {
         if (!FileManager.default.fileExists(atPath: filePath)) {
-            if let resourcePath = Bundle.main.resourceURL?.appendingPathComponent(filePath).path {
+            if let resourcePath = Bundle(for: type(of: self)).resourceURL?.appendingPathComponent(filePath).path {
                 if (FileManager.default.fileExists(atPath: resourcePath)) {
                     return resourcePath
                 }
             }
             
-            throw RhinoError.RhinoRuntimeError("Could not find file at path '\(filePath)'. If this is a packaged asset, ensure you have added it to your xcode project.")
+            throw RhinoError.RhinoIOError("Could not find file at path '\(filePath)'. If this is a packaged asset, ensure you have added it to your XCode project.")
         }
         
         return filePath

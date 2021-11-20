@@ -148,7 +148,7 @@ inferenceCallback(object){
 }
 ```
 
-You can override also the default Rhino model file and/or tge inference sensitivity.  You can set `requireEndpoint` parameter to 
+You can override also the default Rhino model file and/or the inference sensitivity.  You can set `requireEndpoint` parameter to 
 false if you do not wish to wait for silence before Rhino infers context. There is also an optional `processErrorCallback`
 that is called if there is a problem encountered while processing audio.
 
@@ -214,7 +214,7 @@ As you can see, in this case you don't pass in an inference callback as you will
 let buffer = getAudioFrame();
 
 try {
-    let ineference = await this._rhino.process(buffer);   
+    let inference = await this._rhino.process(buffer);   
     // inference result example:
     // if (inference.isFinalized) {
     //     if (inference.isUnderstood) {
@@ -239,22 +239,18 @@ this._rhino.delete();
 
 ## Custom Context Integration
 
-To add a custom context to your React Native application you'll need to add the rhn files to your platform projects. Android contexts must be added to `./android/app/src/main/res/raw/`, while iOS contexts can be added anywhere under `./ios`, but must be included as a bundled resource in your iOS project. Then in your app code, using the [react-native-fs](https://www.npmjs.com/package/react-native-fs) package, retrieve the files like so:
+To add a custom context to your React Native application you'll need to add the rhn files to your platform projects. Android contexts must be added to `./android/app/src/main/assets/`, while iOS contexts can be added anywhere under `./ios`, but must be included as a bundled resource in your iOS project. Then in your app code, pass the resource path relative to the 
+directories mentioned previously:
+
 ```javascript
-const RNFS = require('react-native-fs');
+let contextPath = `path_to_context_${Platform.OS}.rhn`; // usually in main assets/bundle directory
 
-let contextName = 'context';
-let contextFilename = contextName;
-let contextPath = '';
+const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
 
-if (Platform.OS == 'android') {
-    // for Android, extract resources from APK
-    contextFilename += '_android.rhn';
-    contextPath = `${RNFS.DocumentDirectoryPath}/${contextFilename}`;
-    await RNFS.copyFileRes(contextFilename, contextPath);
-} else if (Platform.OS == 'ios') {
-    contextFilename += '_ios.rhn';
-    contextPath = `${RNFS.MainBundlePath}/${contextFilename}`;
+try {
+    let rhino = await Rhino.create(accessKey, contextPath);
+} catch (e) {
+    // handle errors
 }
 ```
 

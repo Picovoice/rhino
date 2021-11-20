@@ -11,7 +11,7 @@
 
 import { NativeModules } from 'react-native';
 
-import * as RhinoExceptions from './rhino_exceptions';
+import * as RhinoErrors from './rhino_errors';
 
 export class RhinoInference {
   private _isFinalized: boolean;
@@ -96,11 +96,11 @@ class Rhino {
       } = await RCTRhino.create(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
       return new Rhino(handle, frameLength, sampleRate, version, contextInfo);
     } catch (err) {
-      if (err instanceof RhinoExceptions.RhinoException) {
+      if (err instanceof RhinoErrors.RhinoError) {
         throw err;
       } else {
         const nativeError = err as NativeError;
-        throw this.codeToException(nativeError.code, nativeError.message);
+        throw this.codeToError(nativeError.code, nativeError.message);
       }
     }
   }
@@ -131,18 +131,18 @@ class Rhino {
    */
   async process(frame: number[]): Promise<RhinoInference> {
     if (frame === undefined || frame === null) {
-      throw new RhinoExceptions.RhinoInvalidArgumentException(
+      throw new RhinoErrors.RhinoInvalidArgumentError(
         `Frame array provided to process() is undefined or null`
       );
     } else if (frame.length !== this._frameLength) {
-      throw new RhinoExceptions.RhinoInvalidArgumentException(
+      throw new RhinoErrors.RhinoInvalidArgumentError(
         `Size of frame array provided to 'process' (${frame.length}) does not match the engine 'frameLength' (${this._frameLength})`
       );
     }
 
     // sample the first frame to check for non-integer values
     if (!Number.isInteger(frame[0])) {
-      throw new RhinoExceptions.RhinoInvalidArgumentException(
+      throw new RhinoErrors.RhinoInvalidArgumentError(
         `Non-integer frame values provided to process(): ${frame[0]}. Rhino requires 16-bit integers`
       );
     }
@@ -157,7 +157,7 @@ class Rhino {
       return new RhinoInference(isFinalized, isUnderstood, intent, slots);
     } catch (err) {
       const nativeError = err as NativeError;
-      throw Rhino.codeToException(nativeError.code, nativeError.message);
+      throw Rhino.codeToError(nativeError.code, nativeError.message);
     }
   }
 
@@ -202,37 +202,38 @@ class Rhino {
   }
 
   /**
-   * Gets the exception type given a code.
-   * @param code Code name of nativee exception.
+   * Gets the Error type given a code.
+   * @param code Code name of native Error.
+   * @param message Detailed message of the error.
    */
-   private static codeToException(code: string, message: string){
+   private static codeToError(code: string, message: string){
     switch(code) {
-      case 'RhinoException':
-        return new RhinoExceptions.RhinoException(message);
-      case 'RhinoMemoryException':
-        return new RhinoExceptions.RhinoMemoryException(message);
-      case 'RhinoIOException':
-        return new RhinoExceptions.RhinoIOException(message);
-      case 'RhinoInvalidArgumentException':
-        return new RhinoExceptions.RhinoInvalidArgumentException(message);
-      case 'RhinoStopIterationException':
-        return new RhinoExceptions.RhinoStopIterationException(message);
-      case 'RhinoKeyException':
-        return new RhinoExceptions.RhinoKeyException(message);
-      case 'RhinoInvalidStateException':
-        return new RhinoExceptions.RhinoInvalidStateException(message);
-      case 'RhinoRuntimeException':
-        return new RhinoExceptions.RhinoRuntimeException(message);
-      case 'RhinoActivationException':
-        return new RhinoExceptions.RhinoActivationException(message);
-      case 'RhinoActivationLimitException':
-        return new RhinoExceptions.RhinoActivationLimitException(message);
-      case 'RhinoActivationThrottledException':
-        return new RhinoExceptions.RhinoActivationThrottledException(message);
-      case 'RhinoActivationRefusedException':
-        return new RhinoExceptions.RhinoActivationRefusedException(message);
+      case 'RhinoError':
+        return new RhinoErrors.RhinoError(message);
+      case 'RhinoMemoryError':
+        return new RhinoErrors.RhinoMemoryError(message);
+      case 'RhinoIOError':
+        return new RhinoErrors.RhinoIOError(message);
+      case 'RhinoInvalidArgumentError':
+        return new RhinoErrors.RhinoInvalidArgumentError(message);
+      case 'RhinoStopIterationError':
+        return new RhinoErrors.RhinoStopIterationError(message);
+      case 'RhinoKeyError':
+        return new RhinoErrors.RhinoKeyError(message);
+      case 'RhinoInvalidStateError':
+        return new RhinoErrors.RhinoInvalidStateError(message);
+      case 'RhinoRuntimeError':
+        return new RhinoErrors.RhinoRuntimeError(message);
+      case 'RhinoActivationError':
+        return new RhinoErrors.RhinoActivationError(message);
+      case 'RhinoActivationLimitError':
+        return new RhinoErrors.RhinoActivationLimitError(message);
+      case 'RhinoActivationThrottledError':
+        return new RhinoErrors.RhinoActivationThrottledError(message);
+      case 'RhinoActivationRefusedError':
+        return new RhinoErrors.RhinoActivationRefusedError(message);
       default:
-        throw new RhinoExceptions.RhinoException(`unexpected code: ${code}, message: ${message}`);
+        throw new RhinoErrors.RhinoError(`unexpected code: ${code}, message: ${message}`);
     }
   }
 }

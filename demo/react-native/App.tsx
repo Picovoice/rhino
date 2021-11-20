@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
-import { RhinoManager, RhinoInference, RhinoExceptions } from '@picovoice/rhino-react-native';
+import { RhinoManager, RhinoInference, RhinoErrors } from '@picovoice/rhino-react-native';
 
 type Props = {};
 type State = {
@@ -44,15 +44,15 @@ export default class App extends Component<Props, State> {
         });
     } catch(err) {
       let errorMessage = '';
-      if (err instanceof RhinoExceptions.RhinoInvalidArgumentException) {
+      if (err instanceof RhinoErrors.RhinoInvalidArgumentError) {
         errorMessage = `${err.message}\nPlease make sure your accessKey '${this._accessKey}'' is a valid access key.`;
-      } else if (err instanceof RhinoExceptions.RhinoActivationException) {
+      } else if (err instanceof RhinoErrors.RhinoActivationError) {
         errorMessage = "AccessKey activation error";
-      } else if (err instanceof RhinoExceptions.RhinoActivationLimitException) {
+      } else if (err instanceof RhinoErrors.RhinoActivationLimitError) {
         errorMessage = "AccessKey reached its device limit";
-      } else if (err instanceof RhinoExceptions.RhinoActivationRefusedException) {
+      } else if (err instanceof RhinoErrors.RhinoActivationRefusedError) {
         errorMessage = "AccessKey refused";
-      } else if (err instanceof RhinoExceptions.RhinoActivationThrottledException) {
+      } else if (err instanceof RhinoErrors.RhinoActivationThrottledError) {
         errorMessage = "AccessKey has been throttled";
       } else {
         errorMessage = err.toString();

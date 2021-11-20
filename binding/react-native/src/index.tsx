@@ -13,6 +13,6 @@
 
 import Rhino, { RhinoInference } from './rhino';
 import RhinoManager, { InferenceCallback, ProcessErrorCallback } from './rhino_manager';
-import * as RhinoExceptions from './rhino_exceptions';
+import * as RhinoErrors from './rhino_errors';
 
-export { Rhino, RhinoInference, RhinoManager, InferenceCallback, ProcessErrorCallback, RhinoExceptions };
+export { Rhino, RhinoInference, RhinoManager, InferenceCallback, ProcessErrorCallback, RhinoErrors };
