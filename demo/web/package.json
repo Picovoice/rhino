@@ -23,7 +23,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@picovoice/rhino-web-en-worker": "file:../../binding/web/rhino-web-en-worker",
-    "@picovoice/web-voice-processor": "^2.0.3"
+    "@picovoice/web-voice-processor": "^2.1.1"
   },
   "devDependencies": {
     "http-server": "^14.0.0"

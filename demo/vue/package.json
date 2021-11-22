@@ -15,7 +15,7 @@
   "dependencies": {
     "@picovoice/rhino-web-en-worker": "file:../../binding/web/rhino-web-en-worker",
     "@picovoice/rhino-web-vue": "file:../../binding/vue",
-    "@picovoice/web-voice-processor": "2.0.3",
+    "@picovoice/web-voice-processor": "2.1.1",
     "core-js": "^3.6.5",
     "vue": "^3.0.0"
   },
