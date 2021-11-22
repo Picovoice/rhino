@@ -208,29 +208,29 @@ class Rhino {
    */
    private static codeToError(code: string, message: string){
     switch(code) {
-      case 'RhinoError':
+      case 'RhinoException':
         return new RhinoErrors.RhinoError(message);
-      case 'RhinoMemoryError':
+      case 'RhinoMemoryException':
         return new RhinoErrors.RhinoMemoryError(message);
-      case 'RhinoIOError':
+      case 'RhinoIOException':
         return new RhinoErrors.RhinoIOError(message);
-      case 'RhinoInvalidArgumentError':
+      case 'RhinoInvalidArgumentException':
         return new RhinoErrors.RhinoInvalidArgumentError(message);
-      case 'RhinoStopIterationError':
+      case 'RhinoStopIterationException':
         return new RhinoErrors.RhinoStopIterationError(message);
-      case 'RhinoKeyError':
+      case 'RhinoKeyException':
         return new RhinoErrors.RhinoKeyError(message);
-      case 'RhinoInvalidStateError':
+      case 'RhinoInvalidStateException':
         return new RhinoErrors.RhinoInvalidStateError(message);
-      case 'RhinoRuntimeError':
+      case 'RhinoRuntimeException':
         return new RhinoErrors.RhinoRuntimeError(message);
-      case 'RhinoActivationError':
+      case 'RhinoActivationException':
         return new RhinoErrors.RhinoActivationError(message);
-      case 'RhinoActivationLimitError':
+      case 'RhinoActivationLimitException':
         return new RhinoErrors.RhinoActivationLimitError(message);
-      case 'RhinoActivationThrottledError':
+      case 'RhinoActivationThrottledException':
         return new RhinoErrors.RhinoActivationThrottledError(message);
-      case 'RhinoActivationRefusedError':
+      case 'RhinoActivationRefusedException':
         return new RhinoErrors.RhinoActivationRefusedError(message);
       default:
         throw new RhinoErrors.RhinoError(`unexpected code: ${code}, message: ${message}`);
