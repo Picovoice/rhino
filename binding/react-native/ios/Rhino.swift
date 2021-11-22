@@ -105,31 +105,6 @@ class PvRhino: NSObject {
     }
 
     private func errorToCodeAndMessage(_ error: RhinoError) -> (String, String) {
-        switch(error) {
-        case .RhinoMemoryError (let message):
-            return ("RhinoMemoryException", message)
-        case .RhinoIOError (let message):
-            return ("RhinoIOException", message)
-        case .RhinoInvalidArgumentError (let message):
-            return ("RhinoInvalidArgumentException", message)
-        case .RhinoStopIterationError (let message):
-            return ("RhinoStopIterationException", message)
-        case .RhinoKeyError (let message):
-            return ("RhinoKeyException", message)
-        case .RhinoInvalidStateError (let message):
-            return ("RhinoInvalidStateException", message)
-        case .RhinoRuntimeError (let message):
-            return ("RhinoRuntimeException", message)
-        case .RhinoActivationError (let message):
-            return ("RhinoActivationException", message)
-        case .RhinoActivationLimitError (let message):
-            return ("RhinoActivationLimitException", message)
-        case .RhinoActivationThrottledError (let message):
-            return ("RhinoActivationThrottledException", message)
-        case .RhinoActivationRefusedError (let message):
-            return ("RhinoActivationRefusedException", message)
-        case .RhinoError (let message):
-            return ("RhinoException", message)
-        }
+        return (error.code, error.message)
     }                
 }

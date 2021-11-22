@@ -117,31 +117,6 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
     }
     
     private func errorToFlutterError(_ error: RhinoError) -> FlutterError {
-        switch(error) {
-        case .RhinoMemoryError (let message):
-            return FlutterError(code: "RhinoMemoryException", message: message, details: nil)
-        case .RhinoIOError (let message):
-            return FlutterError(code: "RhinoIOException", message: message, details: nil)
-        case .RhinoInvalidArgumentError (let message):
-            return FlutterError(code: "RhinoInvalidArgumentException", message: message, details: nil)
-        case .RhinoStopIterationError (let message):
-            return FlutterError(code: "RhinoStopIterationException", message: message, details: nil)
-        case .RhinoKeyError (let message):
-            return FlutterError(code: "RhinoKeyException", message: message, details: nil)
-        case .RhinoInvalidStateError (let message):
-            return FlutterError(code: "RhinoInvalidStateException", message: message, details: nil)
-        case .RhinoRuntimeError (let message):
-            return FlutterError(code: "RhinoRuntimeException", message: message, details: nil)
-        case .RhinoActivationError (let message):
-            return FlutterError(code: "RhinoActivationException", message: message, details: nil)
-        case .RhinoActivationLimitError (let message):
-            return FlutterError(code: "RhinoActivationLimitException", message: message, details: nil)
-        case .RhinoActivationThrottledError (let message):
-            return FlutterError(code: "RhinoActivationThrottledException", message: message, details: nil)
-        case .RhinoActivationRefusedError (let message):
-            return FlutterError(code: "RhinoActivationRefusedException", message: message, details: nil)
-        case .RhinoError (let message):
-            return FlutterError(code: "RhinoException", message: message, details: nil)
-        }
+        return FlutterError(code: error.code, message: error.localizedDescription, details: nil)
     }
 }

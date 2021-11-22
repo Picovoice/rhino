@@ -32,7 +32,7 @@ target 'Runner' do
   use_modular_headers!
 
   # DELETE
-  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/v2.0-ios/binding/ios/Rhino-iOS.podspec'
+  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/v2.0/binding/ios/Rhino-iOS.podspec'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
