@@ -13,9 +13,11 @@
 
 @interface RCT_EXTERN_MODULE(PvRhino, NSObject)
 
-RCT_EXTERN_METHOD(create: (NSString *)modelPath
+RCT_EXTERN_METHOD(create: (NSString *)accessKey
+                  modelPath: (NSString *)modelPath
                   contextPath: (NSString *)contextPath
                   sensitivity: (float)sensitivity
+                  requireEndpoint: (BOOL)requireEndpoint
                   resolver: (RCTPromiseResolveBlock)resolve 
                   rejecter: (RCTPromiseRejectBlock)reject)
 

@@ -26,7 +26,7 @@ Rhino is:
 This binding is for running Rhino on **React Native 0.62.2+** on the following platforms:
 
 - Android 4.1+ (API 16+)
-- iOS 9.0+
+- iOS 10.0+
 
 ## Installation
 
@@ -48,7 +48,16 @@ Link the iOS package
 cd ios && pod install && cd ..
 ```
 
-**NOTE**: Due to a limitation in React Native CLI autolinking, these two native modules cannot be included as transitive depedencies. If you are creating a module that depends on rhino-react-native and/or react-native-voice-processor, you will have to list these as peer dependencies and require developers to install them alongside.
+**NOTE**: Due to a limitation in React Native CLI autolinking, these two native modules cannot be included as transitive dependencies. If you are creating a module that depends on rhino-react-native and/or react-native-voice-processor, you will have to list these as peer dependencies and require developers to install them alongside.
+
+## AccessKey
+
+All bindings require a valid Picovoice `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
 ## Permissions
 
@@ -63,6 +72,7 @@ On iOS, open your Info.plist and add the following line:
 On Android, open your AndroidManifest.xml and add the following line:
 ```xml
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.INTERNET" />
 ```
 
 Finally, in your app JS code, be sure to check for user permission consent before proceeding with audio capture:
@@ -110,9 +120,12 @@ audio recording. This class is the quickest way to get started.
 
 The constructor `RhinoManager.create` will create an instance of a RhinoManager using a context file that you pass to it.
 ```javascript
-async createRhinoManager(){
+const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
+async createRhinoManager() {
     try{
         this._rhinoManager = await RhinoManager.create(
+            accessKey,
             '/path/to/context/file.rhn',
             inferenceCallback);
     } catch (err) {
@@ -123,22 +136,35 @@ async createRhinoManager(){
 NOTE: the call is asynchronous and therefore should be called in an async block with a try/catch.
 
 The `inferenceCallback` parameter is a function that you want to execute when Rhino makes an inference.
-The function should accept an object, which will be a JSON representation of the inference.
+The function should accept a `RhinoInference` instance.
 
 ```javascript
 inferenceCallback(object){
-    console.log(JSON.stringify(inference));
+    if (inference.isUnderstood) {
+        // do something with:
+        // inference.intent - string representing intent
+        // inference.slots - Object<string, string> representing the slot values
+    }
 }
 ```
 
-You can override also the default Rhino model file and/or the inference sensitivity.
+You can override also the default Rhino model file and/or the inference sensitivity.  You can set `requireEndpoint` parameter to 
+false if you do not wish to wait for silence before Rhino infers context. There is also an optional `processErrorCallback`
+that is called if there is a problem encountered while processing audio.
+
 These optional parameters can be passed in like so:
+
 ```javascript
+const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 this._rhinoManager = await RhinoManager.create(
+    accessKey,
     "/path/to/context/file.rhn",
     inferenceCallback,
+    processErrorCallback,
     'path/to/model/file.pv',
-    0.25);
+    0.25,
+    false);
 ```
 
 Once you have instantiated a RhinoManager, you can start audio capture and intent inference by calling:
@@ -147,7 +173,7 @@ Once you have instantiated a RhinoManager, you can start audio capture and inten
 let didStart = await this._rhinoManager.process();
 ```
 
-When RhinoManager returns an inference result via the inferenceCallback, it will automatically stop audio capture for you. When you wish to result, call `.process()` again.
+When RhinoManager returns an inference result via the `inferenceCallback`, it will automatically stop audio capture for you. When you wish to result, call `.process()` again.
 
 Once your app is done with using RhinoManager, be sure you explicitly release the resources allocated for it:
 ```javascript
@@ -167,36 +193,35 @@ who want to incorporate speech-to-intent into a already existing audio processin
 `Rhino` is created by passing a context file to its static constructor `create`:
 
 ```javascript
+const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 async createRhino(){
     try{
-        this._rhino = await Rhino.create('/path/to/context/file.rhn');
+        this._rhino = await Rhino.create(accessKey, '/path/to/context/file.rhn');
     } catch (err) {
         // handle error
     }
 }
 ```
-As you can see, in this case you don't pass in an inference callback as you will be passing in audio frames directly using the `process` function. The JSON result that is returned from `process` will have up to four fields:
-- isFinalized - whether Rhino has made an inference
-- isUnderstood - if isFinalized, whether Rhino understood what it heard based on the context
-- intent - if isUnderstood, name of intent that were inferred
-- slots - if isUnderstood, dictionary of slot keys and values that were inferred
+As you can see, in this case you don't pass in an inference callback as you will be passing in audio frames directly using the `process` function. The `RhinoInference` result that is returned from `process` will have up to four fields:
+
+- isFinalized - true if Rhino has made an inference, false otherwise
+- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if Rhino did not understood context
+- intent - **null** if `isUnderstood` is not true, otherwise name of intent that were inferred
+- slots - **null** if `isUnderstood` is not true, otherwise the dictionary of slot keys and values that were inferred
 
 ```javascript
 let buffer = getAudioFrame();
 
 try {
-    let result = await this._rhino.process(buffer);   
+    let inference = await this._rhino.process(buffer);   
     // inference result example:
-    //   {
-    //     isFinalized: true,
-    //     isUnderstood: true,
-    //     intent: 'orderDrink',
-    //     slots: {
-    //       size: 'medium',
-    //       coffeeDrink: 'americano',
-    //       sugarAmount: 'some sugar'
-    //     }
-    //   }
+    // if (inference.isFinalized) {
+    //     if (inference.isUnderstood) {
+    //          console.log(inference.intent)
+    //          console.log(inference.slots)
+    //     }    
+    // }
     }
 } catch (e) {
     // handle error
@@ -214,22 +239,42 @@ this._rhino.delete();
 
 ## Custom Context Integration
 
-To add a custom context to your React Native application you'll need to add the rhn files to your platform projects. Android contexts must be added to `./android/app/src/main/res/raw/`, while iOS contexts can be added anywhere under `./ios`, but must be included as a bundled resource in your iOS project. Then in your app code, using the [react-native-fs](https://www.npmjs.com/package/react-native-fs) package, retrieve the files like so:
+To add a custom context to your React Native application you'll need to add the rhn files to your platform projects.
+
+### Adding Android Models
+
+Android custom models and contexts must be added to [`./android/app/src/main/assets/`](android/app/src/main/assets/).
+
+### Adding iOS Models
+
+iOS contexts can be added anywhere under [`./ios`](ios), but it must be included as a bundled resource. 
+The easiest way to include a bundled resource in the iOS project is to:
+
+1. Open XCode.
+2. Either:
+  - Drag and Drop the model/keyword file to the navigation tab.
+  - Right click on the navigation tab, and click `Add Files To ...`.
+
+This will bundle your models together when the app is built.
+
+### Using Custom Context
+
 ```javascript
-const RNFS = require('react-native-fs');
+const accessKey = "${ACCESS_KEY}"
 
-let contextName = 'context';
-let contextFilename = contextName;
-let contextPath = '';
+let contextPath: '';
+if (Platform.OS === 'android') {
+    contextPath = 'context_android.rhn'
+} else if (Platform.OS === 'ios') {
+    contextPath = 'context_ios.rhn'
+} else {
+    // handle errors
+}
 
-if (Platform.OS == 'android') {
-    // for Android, extract resources from APK
-    contextFilename += '_android.rhn';
-    contextPath = `${RNFS.DocumentDirectoryPath}/${contextFilename}`;
-    await RNFS.copyFileRes(contextFilename, contextPath);
-} else if (Platform.OS == 'ios') {
-    contextFilename += '_ios.rhn';
-    contextPath = `${RNFS.MainBundlePath}/${contextFilename}`;
+try {
+    let rhino = await Rhino.create(accessKey, contextPath);
+} catch (e) {
+    // handle errors
 }
 ```
 

@@ -14,8 +14,8 @@ const fs = require("fs")
 const mkdirp = require("mkdirp");
 
 // copy Android resources
-mkdirp.sync("./android/rhino-rn-demo-app/src/main/res/raw")
-fs.copyFileSync('../../resources/contexts/android/smart_lighting_android.rhn','./android/rhino-rn-demo-app/src/main/res/raw/smart_lighting_android.rhn')
+mkdirp.sync("./android/rhino-rn-demo-app/src/main/assets")
+fs.copyFileSync('../../resources/contexts/android/smart_lighting_android.rhn','./android/rhino-rn-demo-app/src/main/assets/smart_lighting_android.rhn')
 
 // copy iOS resources
 fs.copyFileSync('../../resources/contexts/ios/smart_lighting_ios.rhn','./ios/smart_lighting_ios.rhn')

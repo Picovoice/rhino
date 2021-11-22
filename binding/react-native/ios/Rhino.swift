@@ -1,5 +1,5 @@
 //
-// Copyright 2020 Picovoice Inc.
+// Copyright 2020-2021 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -9,116 +9,127 @@
 // specific language governing permissions and limitations under the License.
 //
 
-import PvRhino
+import Rhino
 
 @objc(PvRhino)
 class PvRhino: NSObject {
 
-    private var rhinoPool:Dictionary<String, OpaquePointer?> = [:]
+    private var rhinoPool:Dictionary<String, Rhino> = [:]
 
-    @objc func constantsToExport() -> Dictionary<String, Any> {
-        
-        let modelPath : String = Bundle.main.path(forResource: "rhino_params", ofType: "pv") ?? "unknown"
-        return [
-            "DEFAULT_MODEL_PATH": modelPath
-        ]
-    }
-
-    @objc(create:contextPath:sensitivity:resolver:rejecter:)
-    func create(modelPath: String, contextPath: String, sensitivity: Float32,
+    @objc(create:modelPath:contextPath:sensitivity:requireEndpoint:resolver:rejecter:)
+    func create(accessKey: String, modelPath: String, contextPath: String, sensitivity: Float32, requireEndpoint: Bool,
         resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) -> Void {
         
-        var rhino:OpaquePointer?
-        let status = pv_rhino_init(
-            modelPath,
-            contextPath,
-            sensitivity,
-            &rhino);
+        do {
+            let rhino = try Rhino(
+                accessKey: accessKey,
+                contextPath: try getResourcePath(contextPath),
+                modelPath: modelPath.isEmpty ? nil : try getResourcePath(modelPath),
+                sensitivity: sensitivity,
+                requireEndpoint: requireEndpoint
+            )
+            
+            let handle: String = String(describing: rhino)
+            rhinoPool[handle] = rhino
+            
+            var param: [String: Any] = [:]
+            param["handle"] = handle
+            param["contextInfo"] = rhino.contextInfo
+            param["frameLength"] = Rhino.frameLength
+            param["sampleRate"] = Rhino.sampleRate
+            param["version"] = Rhino.version
 
-        if status == PV_STATUS_SUCCESS {
-            let handle:String = String(describing:rhino)
-            rhinoPool[handle] = rhino;
-            
-            var cContextInfo: UnsafePointer<Int8>?
-            pv_rhino_context_info(rhino, &cContextInfo);
-            
-            let rhinoParameters:Dictionary<String, Any> = [
-                "handle": handle,
-                "frameLength": UInt32(pv_rhino_frame_length()),
-                "sampleRate": UInt32(pv_sample_rate()),
-                "version": String(cString: pv_rhino_version()),
-                "contextInfo": String(cString: cContextInfo!)
-            ]
-            resolve(rhinoParameters)
-        }
-        else {
-            let pvStatus = String(cString: pv_status_to_string(status))
-            reject("PvRhino:create", "Could not create a new instance of Rhino: \(pvStatus)", nil)
+            resolve(param)
+        } catch let error as RhinoError {
+            let (code, message) = errorToCodeAndMessage(error)
+            reject(code, message, nil)
+        } catch {
+            let (code, message) = errorToCodeAndMessage(RhinoError.RhinoError(error.localizedDescription))
+            reject(code, message, nil)
         }
     }
     
     @objc(delete:)
     func delete(handle:String) -> Void {
-        if var rhino = rhinoPool.removeValue(forKey: handle){
-            pv_rhino_delete(rhino)
-            rhino = nil
+        if let rhino = rhinoPool.removeValue(forKey: handle){
+            rhino.delete()
         }
     }
     
     @objc(process:pcm:resolver:rejecter:)
     func process(handle:String, pcm:[Int16],
         resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) -> Void {
+        do {
+            if let rhino = rhinoPool[handle] {
+                var param: [String: Any] = [:]
                 
-        if let rhino = rhinoPool[handle] {            
-
-            var isFinalized:Bool = false
-            pv_rhino_process(rhino, pcm, &isFinalized)            
+                let isFinalized = try rhino.process(pcm: pcm)
+                param["isFinalized"] = isFinalized
+                
+                if isFinalized {
+                    let inference = try rhino.getInference()
+                    param["isUnderstood"] = inference.isUnderstood
                     
-            if !isFinalized {
-                return resolve([
-                    "isFinalized": false
-                ])
-            }            
-                
-            var isUnderstood: Bool = false           
-            pv_rhino_is_understood(rhino, &isUnderstood)
-
-            var inference:Dictionary<String,Any?>            
-            if !isUnderstood {                
-                inference = [
-                    "isFinalized": true,
-                    "isUnderstood": false
-                ]
-            } else {
-
-                var cIntent: UnsafePointer<Int8>?
-                var numSlots: Int32 = 0
-                var cSlotKeys: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-                var cSlotValues: UnsafeMutablePointer<UnsafePointer<Int8>?>?
-                pv_rhino_get_intent(rhino, &cIntent, &numSlots, &cSlotKeys, &cSlotValues)
-                
-                let intent = String(cString: cIntent!)
-                var slots = [String: String]()
-                for i in 0..<numSlots {
-                    let slot = String(cString: cSlotKeys!.advanced(by: Int(i)).pointee!)
-                    let value = String(cString: cSlotValues!.advanced(by: Int(i)).pointee!)
-                    slots[slot] = value
+                    if inference.isUnderstood {
+                        param["intent"] = inference.intent
+                        param["slots"] = inference.slots
+                    }
                 }
                 
-                pv_rhino_free_slots_and_values(rhino, cSlotKeys, cSlotValues)
-                pv_rhino_reset(rhino)
-                inference = [
-                    "isFinalized": true,
-                    "isUnderstood": true,
-                    "intent": intent,
-                    "slots": slots
-                ]
+                resolve(param)
+            } else {
+                let (code, message) = errorToCodeAndMessage(RhinoError.RhinoInvalidStateError("Invalid handle provided to Rhino 'process'"))
+                reject(code, message, nil)
             }
-            pv_rhino_reset(rhino)
-            return resolve(inference)
+        } catch let error as RhinoError {
+            let (code, message) = errorToCodeAndMessage(error)
+            reject(code, message, nil)
+        } catch {
+            let (code, message) = errorToCodeAndMessage(RhinoError.RhinoError(error.localizedDescription))
+            reject(code, message, nil)
         }
-        else{
-            reject("PvRhino:process", "Invalid Rhino handle provided to native module.", nil)
+    }
+    
+    private func getResourcePath(_ filePath: String) throws -> String {
+        if (!FileManager.default.fileExists(atPath: filePath)) {
+            if let resourcePath = Bundle(for: type(of: self)).resourceURL?.appendingPathComponent(filePath).path {
+                if (FileManager.default.fileExists(atPath: resourcePath)) {
+                    return resourcePath
+                }
+            }
+            
+            throw RhinoError.RhinoIOError("Could not find file at path '\(filePath)'. If this is a packaged asset, ensure you have added it to your XCode project.")
         }
-    }                          
+        
+        return filePath
+    }
+
+    private func errorToCodeAndMessage(_ error: RhinoError) -> (String, String) {
+        switch(error) {
+        case .RhinoMemoryError (let message):
+            return ("RhinoMemoryException", message)
+        case .RhinoIOError (let message):
+            return ("RhinoIOException", message)
+        case .RhinoInvalidArgumentError (let message):
+            return ("RhinoInvalidArgumentException", message)
+        case .RhinoStopIterationError (let message):
+            return ("RhinoStopIterationException", message)
+        case .RhinoKeyError (let message):
+            return ("RhinoKeyException", message)
+        case .RhinoInvalidStateError (let message):
+            return ("RhinoInvalidStateException", message)
+        case .RhinoRuntimeError (let message):
+            return ("RhinoRuntimeException", message)
+        case .RhinoActivationError (let message):
+            return ("RhinoActivationException", message)
+        case .RhinoActivationLimitError (let message):
+            return ("RhinoActivationLimitException", message)
+        case .RhinoActivationThrottledError (let message):
+            return ("RhinoActivationThrottledException", message)
+        case .RhinoActivationRefusedError (let message):
+            return ("RhinoActivationRefusedException", message)
+        case .RhinoError (let message):
+            return ("RhinoException", message)
+        }
+    }                
 }

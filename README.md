@@ -998,9 +998,12 @@ audio recording. This class is the quickest way to get started.
 The constructor `RhinoManager.create` will create an instance of a RhinoManager using a context file that you pass to it.
 
 ```javascript
+const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 async createRhinoManager(){
     try{
         this._rhinoManager = await RhinoManager.create(
+            accessKey,
             '/path/to/context/file.rhn',
             inferenceCallback);
     } catch (err) {
@@ -1034,9 +1037,11 @@ who want to incorporate speech-to-intent into a already existing audio processin
 `Rhino` is created by passing a context file to its static constructor `create`:
 
 ```javascript
+const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 async createRhino(){
     try{
-        this._rhino = await Rhino.create('/path/to/context/file.rhn');
+        this._rhino = await Rhino.create(accessKey, '/path/to/context/file.rhn');
     } catch (err) {
         // handle error
     }
@@ -1044,17 +1049,17 @@ async createRhino(){
 ```
 
 To deliver audio to the enine, you must pass it audio frames
-using the `process` function. The JSON result that is returned from `process` will have up to four fields:
+using the `process` function. The `RhinoInference` result that is returned from `process` will have up to four fields:
 
-- isFinalized - whether Rhino has made an inference
-- isUnderstood - if isFinalized, whether Rhino understood what it heard based on the context
-- intent - if isUnderstood, name of intent that were inferred
-- slots - if isUnderstood, dictionary of slot keys and values that were inferred
+- isFinalized - true if Rhino has made an inference, false otherwise
+- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if Rhino did not understood context
+- intent - **null** if `isUnderstood` is not true, otherwise name of intent that were inferred
+- slots - **null** if `isUnderstood` is not true, otherwise the dictionary of slot keys and values that were inferred
 
 ```javascript
 let buffer = getAudioFrame();
 try {
-    let result = await this._rhino.process(buffer);
+    let inference = await this._rhino.process(buffer);
     // use result
     // ..
     }
