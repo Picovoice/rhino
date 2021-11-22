@@ -36,6 +36,33 @@ public enum RhinoError: Error {
     case RhinoActivationRefusedError(_ message:String)
 }
 
+extension RhinoError : LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .RhinoMemoryError(let message),
+                .RhinoIOError(let message),
+                .RhinoInvalidArgumentError(let message),
+                .RhinoStopIterationError(let message),
+                .RhinoKeyError(let message),
+                .RhinoInvalidStateError(let message),
+                .RhinoRuntimeError(let message),
+                .RhinoActivationError(let message),
+                .RhinoActivationLimitError(let message),
+                .RhinoActivationThrottledError(let message),
+                .RhinoActivationRefusedError(let message),
+                .RhinoError(let message):
+            return NSLocalizedString(message, comment: "")
+        }
+    }
+
+    public var code : String {
+        get {
+            let error = String(describing: self)
+            return error.replacingOccurrences(of: "Error", with: "Exception").components(separatedBy: "(\"")[0]
+        }
+    }
+}
+
 /// Low-level iOS binding for Rhino wake word engine. Provides a Swift interface to the Rhino library.
 public class Rhino {
     
