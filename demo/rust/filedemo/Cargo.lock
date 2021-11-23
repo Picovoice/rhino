@@ -151,6 +151,8 @@ dependencies = [
 [[package]]
 name = "pv_rhino"
 version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c9e4b56ea6b43f70ceb1183130d60b8edac61ecb73f8943bdeb8a50482195fe3"
 dependencies = [
  "lazy_static",
  "libc",
