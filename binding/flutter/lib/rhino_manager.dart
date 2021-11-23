@@ -33,7 +33,7 @@ class RhinoManager {
   bool _awaitingStop = false;
 
   /// Static creator for initializing Rhino
-  /// 
+  ///
   /// [accessKey] AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
   ///
   /// [contextPath] Absolute path to the Rhino context file (.rhn).
@@ -46,30 +46,32 @@ class RhinoManager {
   /// [sensitivity] (Optional) Inference sensitivity. A higher sensitivity value results in
   /// fewer misses at the cost of (potentially) increasing the erroneous inference rate.
   /// Sensitivity should be a floating-point number within 0 and 1.
-  /// 
-  /// [requireEndpoint] (Optional) Boolean variable to indicate if Rhino should wait 
+  ///
+  /// [requireEndpoint] (Optional) Boolean variable to indicate if Rhino should wait
   /// for a chunk of silence before finishing inference.
-  /// 
-  /// [processErrorCallback] (Optional) Reports errors that are encountered while 
+  ///
+  /// [processErrorCallback] (Optional) Reports errors that are encountered while
   /// the engine is processing audio.
   ///
   /// Thows a `RhinoException` if not initialized correctly
   ///
   /// returns an instance of the speech-to-intent engine
   static Future<RhinoManager> create(
-      String accessKey,
-      String contextPath, 
-      InferenceCallback inferenceCallback,
-      {String? modelPath, double sensitivity = 0.5,
-      bool requireEndpoint = true, ProcessErrorCallback? processErrorCallback}) async {
+      String accessKey, String contextPath, InferenceCallback inferenceCallback,
+      {String? modelPath,
+      double sensitivity = 0.5,
+      bool requireEndpoint = true,
+      ProcessErrorCallback? processErrorCallback}) async {
     Rhino rhino = await Rhino.create(accessKey, contextPath,
-        modelPath: modelPath, sensitivity: sensitivity, requireEndpoint: requireEndpoint);
+        modelPath: modelPath,
+        sensitivity: sensitivity,
+        requireEndpoint: requireEndpoint);
     return RhinoManager._(rhino, inferenceCallback, processErrorCallback);
   }
 
   // private constructor
-  RhinoManager._(
-      this._rhino, this._inferenceCallback, ProcessErrorCallback? processErrorCallback)
+  RhinoManager._(this._rhino, this._inferenceCallback,
+      ProcessErrorCallback? processErrorCallback)
       : _voiceProcessor = VoiceProcessor.getVoiceProcessor(
             _rhino!.frameLength, _rhino.sampleRate) {
     if (_voiceProcessor == null) {
@@ -105,7 +107,9 @@ class RhinoManager {
           await _voiceProcessor?.stop();
         }
       } on RhinoException catch (error) {
-        processErrorCallback == null ? print(error.message) : processErrorCallback(error);
+        processErrorCallback == null
+            ? print(error.message)
+            : processErrorCallback(error);
       } finally {
         _awaitingStop = false;
       }

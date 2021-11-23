@@ -61,30 +61,30 @@ class RhinoActivationRefusedException extends RhinoException {
 rhinoStatusToException(String code, String? message) {
   switch (code) {
     case 'RhinoException':
-        return RhinoException(message);
-      case 'RhinoMemoryException':
-        return RhinoMemoryException(message);
-      case 'RhinoIOException':
-        return RhinoIOException(message);
-      case 'RhinoInvalidArgumentException':
-        return RhinoInvalidArgumentException(message);
-      case 'RhinoStopIterationException':
-        return RhinoStopIterationException(message);
-      case 'RhinoKeyException':
-        return RhinoKeyException(message);
-      case 'RhinoInvalidStateException':
-        return RhinoInvalidStateException(message);
-      case 'RhinoRuntimeException':
-        return RhinoRuntimeException(message);
-      case 'RhinoActivationException':
-        return RhinoActivationException(message);
-      case 'RhinoActivationLimitException':
-        return RhinoActivationLimitException(message);
-      case 'RhinoActivationThrottledException':
-        return RhinoActivationThrottledException(message);
-      case 'RhinoActivationRefusedException':
-        return RhinoActivationRefusedException(message);
-      default:
-        return RhinoException("unexpected code: $code, message: $message");
+      return RhinoException(message);
+    case 'RhinoMemoryException':
+      return RhinoMemoryException(message);
+    case 'RhinoIOException':
+      return RhinoIOException(message);
+    case 'RhinoInvalidArgumentException':
+      return RhinoInvalidArgumentException(message);
+    case 'RhinoStopIterationException':
+      return RhinoStopIterationException(message);
+    case 'RhinoKeyException':
+      return RhinoKeyException(message);
+    case 'RhinoInvalidStateException':
+      return RhinoInvalidStateException(message);
+    case 'RhinoRuntimeException':
+      return RhinoRuntimeException(message);
+    case 'RhinoActivationException':
+      return RhinoActivationException(message);
+    case 'RhinoActivationLimitException':
+      return RhinoActivationLimitException(message);
+    case 'RhinoActivationThrottledException':
+      return RhinoActivationThrottledException(message);
+    case 'RhinoActivationRefusedException':
+      return RhinoActivationRefusedException(message);
+    default:
+      return RhinoException("unexpected code: $code, message: $message");
   }
 }
