@@ -66,15 +66,15 @@ struct ContentView: View {
                             })
                         try self.rhinoManager.process()
                         self.buttonLabel = "    ...    "
-                    } catch RhinoError.RhinoInvalidArgumentError (let message){
-                        errorMessage = "\(message)\nEnsure your AccessKey '\(ACCESS_KEY)' is valid"
-                    } catch RhinoError.RhinoActivationError {
+                    } catch let error as RhinoInvalidArgumentError{
+                        errorMessage = "\(error.localizedDescription)\nEnsure your AccessKey '\(ACCESS_KEY)' is valid"
+                    } catch is RhinoActivationError {
                         errorMessage = "ACCESS_KEY activation error"
-                    } catch RhinoError.RhinoActivationRefusedError {
+                    } catch is RhinoActivationRefusedError {
                         errorMessage = "ACCESS_KEY activation refused"
-                    } catch RhinoError.RhinoActivationLimitError {
+                    } catch is RhinoActivationLimitError {
                         errorMessage = "ACCESS_KEY reached its limit"
-                    } catch RhinoError.RhinoActivationThrottledError  {
+                    } catch is RhinoActivationThrottledError  {
                         errorMessage = "ACCESS_KEY is throttled"
                     } catch {
                         errorMessage = "\(error)"
