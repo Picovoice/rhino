@@ -40,7 +40,7 @@ public enum RhinoError: Error {
 public class Rhino {
     
     static let resourceBundle: Bundle = {
-       let myBundle = Bundle(for: Porcupine.self)
+       let myBundle = Bundle(for: Rhino.self)
 
         guard let resourceBundleURL = myBundle.url(
              forResource: "RhinoResources", withExtension: "bundle")
@@ -83,8 +83,7 @@ public class Rhino {
         
         var modelPathArg = modelPath
         if (modelPathArg == nil){
-            let bundle = Bundle(for: type(of: self))
-            modelPathArg  = bundle.path(forResource: "rhino_params", ofType: "pv")
+            modelPathArg  = Rhino.resourceBundle.path(forResource: "rhino_params", ofType: "pv")
             if modelPathArg == nil {
                 throw RhinoError.RhinoIOError("Could not find default model file in app bundle.")
             }
