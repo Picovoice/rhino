@@ -19,7 +19,7 @@ import (
 	"path/filepath"
 
 	pvrecorder "github.com/Picovoice/pvrecorder/sdk/go"
-	rhino "github.com/Picovoice/rhino/binding/go"
+	rhino "github.com/Picovoice/rhino/binding/go/v2"
 	"github.com/go-audio/wav"
 )
 
