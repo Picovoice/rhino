@@ -36,7 +36,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Rhino-iOS:
-    :commit: 6494234e0c4a75dbbf860579a5d4237413d59071
+    :commit: 7c7098d927a2f3d42efa2720cbee00873664f288
     :git: https://github.com/Picovoice/rhino.git
 
 SPEC CHECKSUMS:

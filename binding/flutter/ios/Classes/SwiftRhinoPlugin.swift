@@ -31,7 +31,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let method = Method(rawValue: call.method.uppercased()) else {
-            result(errorToFlutterError(RhinoError.RhinoRuntimeError("Rhino method '\(call.method)' is not a valid function")))
+            result(errorToFlutterError(RhinoRuntimeError("Rhino method '\(call.method)' is not a valid function")))
             return
         }
         let args = call.arguments as! [String: Any]
@@ -65,12 +65,12 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                     
                     result(param)
                 } else {
-                    result(errorToFlutterError(RhinoError.RhinoInvalidArgumentError("missing required arguments 'accessKey' and 'contextPath'")))
+                    result(errorToFlutterError(RhinoInvalidArgumentError("missing required arguments 'accessKey' and 'contextPath'")))
                 }
             } catch let error as RhinoError {
                 result(errorToFlutterError(error))
             } catch {
-                result(errorToFlutterError(RhinoError.RhinoError(error.localizedDescription)))
+                result(errorToFlutterError(RhinoError(error.localizedDescription)))
             }
             break
         case .PROCESS:
@@ -95,15 +95,15 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                         
                         result(param)
                     } else {
-                        result(errorToFlutterError(RhinoError.RhinoInvalidStateError("Invalid handle provided to Rhino 'process'")))
+                        result(errorToFlutterError(RhinoInvalidStateError("Invalid handle provided to Rhino 'process'")))
                     }
                 } else {
-                    result(errorToFlutterError(RhinoError.RhinoInvalidArgumentError("missing required arguments 'frame'")))
+                    result(errorToFlutterError(RhinoInvalidArgumentError("missing required arguments 'frame'")))
                 }
             } catch let error as RhinoError {
                 result(errorToFlutterError(error))
             } catch {
-                result(errorToFlutterError(RhinoError.RhinoError(error.localizedDescription)))
+                result(errorToFlutterError(RhinoError(error.localizedDescription)))
             }
             break
         case .DELETE:
@@ -117,6 +117,6 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
     }
     
     private func errorToFlutterError(_ error: RhinoError) -> FlutterError {
-        return FlutterError(code: error.code, message: error.localizedDescription, details: nil)
+        return FlutterError(code: error.name.replacingOccurrences(of: "Error", with: "Exception"), message: error.localizedDescription, details: nil)
     }
 }
