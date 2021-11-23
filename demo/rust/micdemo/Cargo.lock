@@ -178,9 +178,9 @@ dependencies = [
 
 [[package]]
 name = "pv_recorder"
-version = "1.0.0"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d57dc47df195b00d76d06b9086321e31cf7ca8e61fd05f36367ce8cd53ca1288"
+checksum = "43f749ad06d7aec0204ceb8bc107d9783285468d09378f3565acd703bd667daf"
 dependencies = [
  "lazy_static",
  "libc",
@@ -191,6 +191,8 @@ dependencies = [
 [[package]]
 name = "pv_rhino"
 version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c9e4b56ea6b43f70ceb1183130d60b8edac61ecb73f8943bdeb8a50482195fe3"
 dependencies = [
  "lazy_static",
  "libc",
