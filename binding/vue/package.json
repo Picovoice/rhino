@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-web-vue",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Vue component (renderless) for Rhino Web SDK",
   "entry": "src/index.js",
   "module": "dist/esm/index.js",
