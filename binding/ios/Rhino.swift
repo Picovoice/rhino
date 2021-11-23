@@ -21,48 +21,6 @@ public struct Inference {
     }
 }
 
-public enum RhinoError: Error {
-    case RhinoError(_ message:String)
-    case RhinoMemoryError(_ message:String)
-    case RhinoIOError(_ message:String)
-    case RhinoInvalidArgumentError(_ message:String)
-    case RhinoStopIterationError(_ message:String)
-    case RhinoKeyError(_ message:String)
-    case RhinoInvalidStateError(_ message:String)
-    case RhinoRuntimeError(_ message:String)
-    case RhinoActivationError(_ message:String)
-    case RhinoActivationLimitError(_ message:String)
-    case RhinoActivationThrottledError(_ message:String)
-    case RhinoActivationRefusedError(_ message:String)
-}
-
-extension RhinoError : LocalizedError {
-    public var errorDescription: String? {
-        switch self {
-        case .RhinoMemoryError(let message),
-                .RhinoIOError(let message),
-                .RhinoInvalidArgumentError(let message),
-                .RhinoStopIterationError(let message),
-                .RhinoKeyError(let message),
-                .RhinoInvalidStateError(let message),
-                .RhinoRuntimeError(let message),
-                .RhinoActivationError(let message),
-                .RhinoActivationLimitError(let message),
-                .RhinoActivationThrottledError(let message),
-                .RhinoActivationRefusedError(let message),
-                .RhinoError(let message):
-            return NSLocalizedString(message, comment: "")
-        }
-    }
-
-    public var code : String {
-        get {
-            let error = String(describing: self)
-            return error.replacingOccurrences(of: "Error", with: "Exception").components(separatedBy: "(\"")[0]
-        }
-    }
-}
-
 /// Low-level iOS binding for Rhino wake word engine. Provides a Swift interface to the Rhino library.
 public class Rhino {
     
@@ -88,11 +46,11 @@ public class Rhino {
     public init(accessKey: String, contextPath: String, modelPath:String? = nil, sensitivity:Float32 = 0.5, requireEndpoint: Bool = true) throws {
         
         if accessKey.isEmpty {
-            throw RhinoError.RhinoInvalidArgumentError("No AccessKey was provided to Rhino")
+            throw RhinoInvalidArgumentError("No AccessKey was provided to Rhino")
         }  
         
         if !FileManager().fileExists(atPath: contextPath) {
-            throw RhinoError.RhinoIOError("Context file at does not exist at '\(contextPath)'")
+            throw RhinoIOError("Context file at does not exist at '\(contextPath)'")
         }
         
         var modelPathArg = modelPath
@@ -100,16 +58,16 @@ public class Rhino {
             let bundle = Bundle(for: type(of: self))
             modelPathArg  = bundle.path(forResource: "rhino_params", ofType: "pv")
             if modelPathArg == nil {
-                throw RhinoError.RhinoIOError("Could not find default model file in app bundle.")
+                throw RhinoIOError("Could not find default model file in app bundle.")
             }
         }
         
         if !FileManager().fileExists(atPath: modelPathArg!) {
-            throw RhinoError.RhinoIOError("Model file at does not exist at '\(modelPathArg!)'")
+            throw RhinoIOError("Model file at does not exist at '\(modelPathArg!)'")
         }
         
         if sensitivity < 0 || sensitivity > 1 {
-            throw RhinoError.RhinoInvalidArgumentError("Sensitivity value '\(sensitivity)' is not a floating-point value between [0, 1]")
+            throw RhinoInvalidArgumentError("Sensitivity value '\(sensitivity)' is not a floating-point value between [0, 1]")
         }
         
         var status = pv_rhino_init(
@@ -153,11 +111,11 @@ public class Rhino {
     /// - Returns:A boolean indicating whether Rhino has a result ready or not
     public func process(pcm:[Int16]) throws -> Bool {
         if handle == nil {
-            throw RhinoError.RhinoInvalidStateError("Rhino must be initialized before process is called")
+            throw RhinoInvalidStateError("Rhino must be initialized before process is called")
         }
         
         if pcm.count != Rhino.frameLength {
-            throw RhinoError.RhinoInvalidArgumentError("Frame of audio data must contain \(Rhino.frameLength) samples - given frame contained \(pcm.count)")
+            throw RhinoInvalidArgumentError("Frame of audio data must contain \(Rhino.frameLength) samples - given frame contained \(pcm.count)")
         }
         
         let status = pv_rhino_process(self.handle, pcm, &self.isFinalized)
@@ -174,11 +132,11 @@ public class Rhino {
     public func getInference() throws -> Inference {
         
         if handle == nil {
-            throw RhinoError.RhinoInvalidStateError("Rhino must be initialized before process is called")
+            throw RhinoInvalidStateError("Rhino must be initialized before process is called")
         }
         
         if !self.isFinalized {
-            throw RhinoError.RhinoInvalidStateError("getInference can only be called after Rhino has finalized (i.e. process returns true)")
+            throw RhinoInvalidStateError("getInference can only be called after Rhino has finalized (i.e. process returns true)")
         }
         
         var isUnderstood: Bool = false
@@ -226,30 +184,30 @@ public class Rhino {
     private func pvStatusToRhinoError(_ status: pv_status_t, _ message: String) -> RhinoError {
         switch status {
         case PV_STATUS_OUT_OF_MEMORY:
-            return RhinoError.RhinoMemoryError(message)
+            return RhinoMemoryError(message)
         case PV_STATUS_IO_ERROR:
-            return RhinoError.RhinoIOError(message)
+            return RhinoIOError(message)
         case PV_STATUS_INVALID_ARGUMENT:
-            return RhinoError.RhinoInvalidArgumentError(message)
+            return RhinoInvalidArgumentError(message)
         case PV_STATUS_STOP_ITERATION:
-            return RhinoError.RhinoStopIterationError(message)
+            return RhinoStopIterationError(message)
         case PV_STATUS_KEY_ERROR:
-            return RhinoError.RhinoKeyError(message)
+            return RhinoKeyError(message)
         case PV_STATUS_INVALID_STATE:
-            return RhinoError.RhinoInvalidStateError(message)
+            return RhinoInvalidStateError(message)
         case PV_STATUS_RUNTIME_ERROR:
-            return RhinoError.RhinoRuntimeError(message)
+            return RhinoRuntimeError(message)
         case PV_STATUS_ACTIVATION_ERROR:
-            return RhinoError.RhinoActivationError(message)
+            return RhinoActivationError(message)
         case PV_STATUS_ACTIVATION_LIMIT_REACHED:
-            return RhinoError.RhinoActivationLimitError(message)
+            return RhinoActivationLimitError(message)
         case PV_STATUS_ACTIVATION_THROTTLED:
-            return RhinoError.RhinoActivationThrottledError(message)
+            return RhinoActivationThrottledError(message)
         case PV_STATUS_ACTIVATION_REFUSED:
-            return RhinoError.RhinoActivationRefusedError(message)
+            return RhinoActivationRefusedError(message)
         default:
             let pvStatusString = String(cString: pv_status_to_string(status))
-            return RhinoError.RhinoError("\(pvStatusString): \(message)")
+            return RhinoError("\(pvStatusString): \(message)")
         }
     }
 }
