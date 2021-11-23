@@ -10,7 +10,7 @@
     "@picovoice/rhino-web-es-worker": "^1.6.1",
     "@picovoice/rhino-web-fr-worker": "^1.6.1",
     "@picovoice/rhino-web-react": "file:../../binding/react",
-    "@picovoice/web-voice-processor": "^2.1.1",
+    "@picovoice/web-voice-processor": "^2.1.2",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^13.1.9",
