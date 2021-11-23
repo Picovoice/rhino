@@ -24,6 +24,19 @@ public struct Inference {
 /// Low-level iOS binding for Rhino wake word engine. Provides a Swift interface to the Rhino library.
 public class Rhino {
     
+    static let resourceBundle: Bundle = {
+       let myBundle = Bundle(for: Rhino.self)
+
+        guard let resourceBundleURL = myBundle.url(
+             forResource: "RhinoResources", withExtension: "bundle")
+        else { fatalError("RhinoResources.bundle not found") }
+
+        guard let resourceBundle = Bundle(url: resourceBundleURL)
+            else { fatalError("Could not open RhinoResources.bundle") }
+
+        return resourceBundle
+    }()
+
     private var handle: OpaquePointer?
     public static let frameLength = UInt32(pv_rhino_frame_length())
     public static let sampleRate = UInt32(pv_sample_rate())
@@ -55,8 +68,7 @@ public class Rhino {
         
         var modelPathArg = modelPath
         if (modelPathArg == nil){
-            let bundle = Bundle(for: type(of: self))
-            modelPathArg  = bundle.path(forResource: "rhino_params", ofType: "pv")
+            modelPathArg  = Rhino.resourceBundle.path(forResource: "rhino_params", ofType: "pv")
             if modelPathArg == nil {
                 throw RhinoIOError("Could not find default model file in app bundle.")
             }
