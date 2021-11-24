@@ -54,7 +54,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-!rhino.unitypackage
+!rhino-*.unitypackage
 
 # Crashlytics generated file
 crashlytics-build.properties
