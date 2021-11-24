@@ -47,7 +47,8 @@ program
     0.5
   ).option(
     "-e, --requires_endpoint <bool>",
-    "If set to `false`, Rhino does not require an endpoint (chunk of silence) before finishing inference."
+    "If set to `false`, Rhino does not require an endpoint (chunk of silence) before finishing inference.",
+    "true"
   );
 
 if (process.argv.length < 3) {
