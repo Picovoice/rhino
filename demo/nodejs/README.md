@@ -87,7 +87,7 @@ Specify the input audio device with `--audio_device_index` and the Speech-to-Int
 Here is an example using USB Audio Device and commands from the "Smart Lighting" demo from the [Rhino GitHub repostiory](https://github.com/Picovoice/rhino/blob/master/resources/contexts/) (note that context files are platform-dependent; choose the appropriate one for the platform you are using; this demo uses the "mac" version)
 
 ```console
-rhn-mic-demo --access_key ${ACCESS_KEY}--context ./smart_lighting_mac.rhn --audio_device_index 0
+rhn-mic-demo --access_key ${ACCESS_KEY} --context ./smart_lighting_mac.rhn --audio_device_index 0
 ```
 
 The context source in YAML format will be output to show you the grammar and options that the context supports. The demo will listen for a phrase that the contexts understands, and upon reaching a conclusion (or timeout), it will output the results.
