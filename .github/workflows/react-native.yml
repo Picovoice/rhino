@@ -5,15 +5,21 @@ on:
     paths:
       - 'binding/react-native/**'
       - '!binding/react-native/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/android/**'
+      - 'lib/common/**'
+      - 'lib/ios/**'
+      - 'resources/android/**'
+      - 'resources/ios/**'
   pull_request:
     branches: [ master ]
     paths:
       - 'binding/react-native/**'
       - '!binding/react-native/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/android/**'
+      - 'lib/common/**'
+      - 'lib/ios/**'
+      - 'resources/android/**'
+      - 'resources/ios/**'
 
 defaults:
   run:
