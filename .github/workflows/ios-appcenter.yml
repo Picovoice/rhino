@@ -3,11 +3,11 @@ name: iOS AppCenter Tests
 on:
   workflow_dispatch:
   push:
-    branches: [ master, v2.0 ]
+    branches: [ master ]
     paths: 
       - 'demo/ios/Podfile.lock'
   pull_request:
-    branches: [ master, v2.0 ]
+    branches: [ master ]
     paths: 
       - 'demo/ios/Podfile.lock'
 
@@ -51,6 +51,7 @@ jobs:
           -scheme RhinoDemo 
           -derivedDataPath ddp 
           CODE_SIGNING_ALLOWED=NO
+
       - name: Run Tests on AppCenter
         run: appcenter test run xcuitest 
           --token ${{secrets.APPCENTERAPITOKEN}}

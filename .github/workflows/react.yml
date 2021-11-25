@@ -40,13 +40,6 @@ jobs:
     - name: Pre-build dependencies
       run: npm install yarn
 
-    - name: Local package dependencies
-      run: |
-        yarn
-        yarn build
-        for i in rhino-web*; do cd $i; yarn && yarn build || exit 1; cd ..; done
-      working-directory: binding/web
-
     - name: Install dependencies
       run: yarn install
 
