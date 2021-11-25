@@ -28,7 +28,7 @@ interest, in real-time. For example, given a spoken command:
 
 > Can I have a small double-shot espresso?
 
-Rhino infers that the user and emits the following inference result:
+Rhino infers what the user wants and emits the following inference result:
 
 ```json
 {
