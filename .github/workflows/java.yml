@@ -3,7 +3,7 @@ name: Java
 on:
   workflow_dispatch:
   push:
-    branches: [ master, v2.0 ]
+    branches: [ master]
     paths:
       - 'binding/java/**'
       - '!binding/java/README.md'
@@ -16,7 +16,7 @@ on:
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
   pull_request:
-    branches: [ master, v2.0 ]
+    branches: [ master]
     paths:
       - 'binding/java/**'
       - '!binding/java/README.md'

@@ -2,14 +2,14 @@ name: Nodejs
 
 on:
   push:
-    branches: [ master, v2.0 ]
+    branches: [ master ]
     paths:
       - 'binding/nodejs/**'
       - '!binding/nodejs/README.md'
       - 'lib/node/**'
       - 'resources/**'
   pull_request:
-    branches: [ master, v2.0 ]
+    branches: [ master ]
     paths:
       - 'binding/nodejs/**'
       - '!binding/nodejs/README.md'
