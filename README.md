@@ -6,7 +6,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/pvrhino)](https://pypi.org/project/pvrhino/)
 [![Nuget](https://img.shields.io/nuget/v/rhino)](https://www.nuget.org/packages/Rhino/)
-[![Go Reference](https://pkg.go.dev/badge/github.com/Picovoice/rhino/binding/go.svg)](https://pkg.go.dev/github.com/Picovoice/rhino/binding/go)
+[![Go Reference](https://pkg.go.dev/badge/github.com/Picovoice/rhino/binding/go/v2.svg)](https://pkg.go.dev/github.com/Picovoice/rhino/binding/go/v2)
 [![Pub Version](https://img.shields.io/pub/v/rhino_flutter)](https://img.shields.io/pub/v/rhino_flutter)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-react-native?label=npm%20%5Breact-native%5D)](https://www.npmjs.com/package/@picovoice/rhino-react-native)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-android?label=maven%20central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-android/)
