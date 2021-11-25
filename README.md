@@ -58,7 +58,6 @@ Rhino is:
 
 - [Rhino](#rhino)
   - [Table of Contents](#table-of-contents)
-  - [License & Terms](#license--terms)
   - [Use Cases](#use-cases)
   - [Try It Out](#try-it-out)
   - [Language Support](#language-support)
@@ -103,15 +102,6 @@ Rhino is:
     - [C](#c)
   - [Releases](#releases)
   - [FAQ](#faq)
-
-## License & Terms
-
-The Rhino SDK is free and licensed under Apache 2.0, including the pre-trained [models](/resources/contexts) available within the
-repository. [Picovoice Console](https://picovoice.ai/console/) offers two types of subscriptions: Personal and Enterprise.
-Personal accounts can train custom wake word models, subject to limitations and strictly for non-commercial purposes.
-Personal accounts empower researchers, hobbyists, and tinkerers to experiment. Enterprise accounts can unlock all
-capabilities of Picovoice Console, are permitted for use in commercial settings, and have a path to graduate to
-commercial distribution[<sup>\*</sup>](https://picovoice.ai/pricing/).
 
 ## Use Cases
 
