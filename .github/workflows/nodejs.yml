@@ -7,14 +7,25 @@ on:
       - 'binding/nodejs/**'
       - '!binding/nodejs/README.md'
       - 'lib/node/**'
-      - 'resources/**'
+      - 'resources/contexts/beaglebone/**'      
+      - 'resources/contexts/jetson/**'
+      - 'resources/contexts/linux/**'
+      - 'resources/contexts/mac/**'
+      - 'resources/contexts/raspberry-pi/**'
+      - 'resources/contexts/windows/**'
+
   pull_request:
     branches: [ master ]
     paths:
       - 'binding/nodejs/**'
       - '!binding/nodejs/README.md'
       - 'lib/node/**'
-      - 'resources/**'
+      - 'resources/contexts/beaglebone/**'      
+      - 'resources/contexts/jetson/**'
+      - 'resources/contexts/linux/**'
+      - 'resources/contexts/mac/**'
+      - 'resources/contexts/raspberry-pi/**'
+      - 'resources/contexts/windows/**'
 
 defaults:
   run:

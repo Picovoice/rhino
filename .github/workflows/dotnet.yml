@@ -6,24 +6,41 @@ on:
     branches: [ master ]
     paths: 
       - 'binding/dotnet/**'
+      - '!binding/dotnet/README.md'
       - 'lib/beaglebone/**'
+      - 'lib/common/**'
       - 'lib/linux/**'
       - 'lib/jetson/**'
       - 'lib/mac/**'
       - 'lib/raspberry-pi/**'
       - 'lib/windows/**'
-      - '!binding/dotnet/README.md'
+      - 'resources/contexts/beaglebone/**'
+      - 'resources/contexts/common/**'
+      - 'resources/contexts/jetson/**'
+      - 'resources/contexts/linux/**'
+      - 'resources/contexts/mac/**'
+      - 'resources/contexts/raspberry-pi/**'
+      - 'resources/contexts/windows/**'
+      
   pull_request:
     branches: [ master ]
     paths: 
       - 'binding/dotnet/**'
+      - '!binding/dotnet/README.md'      
       - 'lib/beaglebone/**'
+      - 'lib/common/**'
       - 'lib/linux/**'
       - 'lib/jetson/**'
       - 'lib/mac/**'
       - 'lib/raspberry-pi/**'
       - 'lib/windows/**'
-      - '!binding/dotnet/README.md'
+      - 'resources/contexts/beaglebone/**'
+      - 'resources/contexts/common/**'
+      - 'resources/contexts/jetson/**'
+      - 'resources/contexts/linux/**'
+      - 'resources/contexts/mac/**'
+      - 'resources/contexts/raspberry-pi/**'
+      - 'resources/contexts/windows/**'
 
 defaults:
   run:
