@@ -2,7 +2,7 @@ name: Go
 
 on:
   push:
-    branches: [ master, v2.0 ]
+    branches: [ master ]
     paths:
       - 'binding/go/**'
       - '!binding/go/README.md'
@@ -21,7 +21,7 @@ on:
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
   pull_request:
-    branches: [ master, v2.0 ]
+    branches: [ master ]
     paths:
       - 'binding/go/**'
       - '!binding/go/README.md'
