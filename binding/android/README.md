@@ -98,7 +98,7 @@ The model file contains the parameters for the speech-to-intent engine. To chang
 
 There is also the option to pass an error callback, which will be invoked if an error is encountered while RhinoManager is processing audio.
 
-RequireEndpoint is the parameter which indicates if Rhino should wait for a silence before infering context. Default is set to true.
+RequireEndpoint is the parameter which indicates if Rhino should wait for a silence before inferring context. Default is set to true.
 
 These optional parameters can be set through the Builder functions `setModelPath`, `setSensitivity`, `setErrorCallback` and `setRequireEndpoint`:
 ```java
@@ -137,7 +137,7 @@ rhinoManager.delete();
 
 ### Low-Level API
 
-[Rhino](/binding/android/Rhino/rhino/src/main/java/ai/picovoice/rhino/Rhino.java) provides low-level access to the Speech-To-Intent engine for those who want to incorporate intent inference into a already existing audio processing pipeline.
+[Rhino](/binding/android/Rhino/rhino/src/main/java/ai/picovoice/rhino/Rhino.java) provides low-level access to the Speech-To-Intent engine for those who want to incorporate intent inference into an already existing audio processing pipeline.
 
 `Rhino` uses a Builder pattern to construct instances. You must pass a context file via the `setContextPath` function.
 

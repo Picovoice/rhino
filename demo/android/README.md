@@ -13,7 +13,7 @@ Copy your AccessKey into the `ACCESS_KEY` variable in `MainActivity.java` before
 
 ## Running the Demo
 
-The default context for this demo is `Smart Lighting`. Simply press start and the engine can recognize commands such as
+The default context for this demo is `Smart Lighting`. Simply press start, and the engine can recognize commands such as
 
 > Turn off the lights.
 

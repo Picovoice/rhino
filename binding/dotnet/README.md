@@ -5,8 +5,7 @@
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
-interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso with a lot of sugar
- and some milk"*, Rhino infers that the user would like to order a drink and emits the following inference result:
+interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso with a lot of sugar, and some milk"*, Rhino infers that the user would like to order a drink and emits the following inference result:
 
 ```json
 {
@@ -78,7 +77,7 @@ Rhino handle = Rhino.Create(accessKey, contextPath);
 
 Where `contextPath` is the absolute path to Speech-to-Intent context created either using [Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository.
 
-The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating point number within
+The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating-point number within
 [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous
 inference rate.
 

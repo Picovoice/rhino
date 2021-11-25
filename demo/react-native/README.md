@@ -1,6 +1,6 @@
 # Rhino Demo App
 
-To run the React Native Rhino demo app you'll first need to setup your React Native environment. For this, 
+To run the React Native Rhino demo app you'll first need to set up your React Native environment. For this, 
 please refer to [React Native's documentation](https://reactnative.dev/docs/environment-setup). Once your environment has been set up, 
 you can run the following commands from this repo location.
 
@@ -34,7 +34,7 @@ yarn ios-install        # sets up environment
 yarn ios-run            # builds and deploys to iOS
 ```
 
-The default context for this demo is `Smart Lighting`. Simply press start and the engine can recognize commands such as
+The default context for this demo is `Smart Lighting`. Simply press start, and the engine can recognize commands such as
 
 > Turn off the lights.
 

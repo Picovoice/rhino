@@ -65,7 +65,7 @@ if err != nil {
 The context file is a Speech-to-Intent context created either using
 [Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository.
 
-The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating point number within
+The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating-point number within
 [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous
 inference rate. You can also override the default Rhino model (.pv), which is required when using a non-English context. 
 
@@ -88,7 +88,7 @@ if err != nil {
 ```
 
 Once initialized, you can start passing in frames of audio for processing. The engine accepts 16-bit linearly-encoded PCM and operates on
-single-channel audio. The sample rate that is required by the engine is given by `SampleRate` and number of samples per frame is `FrameLength`.
+single-channel audio. The sample rate that is required by the engine is given by `SampleRate` and number of samples-per-frame is `FrameLength`.
 
 To feed audio into Rhino, use the `Process` function in your capture loop. You must have called `Init()` before calling `Process`.
 ```go
@@ -111,13 +111,13 @@ for {
 }
 ```
 
-When done resources have to be released explicitly.
+When done with the engine, resources have to be released explicitly.
 
 ```go
 rhino.Delete()
 ```
 
-Using a defer call to `Delete()` after `Init()` is also a good way to ensure cleanup.
+Using a `defer` call to `Delete()` after `Init()` is also a good way to ensure cleanup.
 
 ## Non-English Contexts
 

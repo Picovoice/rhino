@@ -2,18 +2,14 @@
 
 ## Rhino
 
-Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of interest, in real-time. For example, given a "Coffee Maker" context, and the utterance _"Can I have a small double-shot espresso with a lot of sugar and some milk?"_, Rhino infers that the user wants to order a drink with particular choices:
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
+interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso?"*, Rhino infers that the user wants to order a drink and emits the following inference result:
 
 ```json
 {
-  "intent": "orderDrink",
-  "slots": {
-    "type": "espresso",
-    "size": "small",
-    "numberOfShots": "2",
-    "sugar": "a lot",
-    "milk": "some"
-  }
+  "type": "espresso",
+  "size": "small",
+  "numberOfShots": "2"
 }
 ```
 

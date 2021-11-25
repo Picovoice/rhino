@@ -48,7 +48,7 @@ Link the iOS package
 cd ios && pod install && cd ..
 ```
 
-**NOTE**: Due to a limitation in React Native CLI autolinking, these two native modules cannot be included as transitive dependencies. If you are creating a module that depends on rhino-react-native and/or react-native-voice-processor, you will have to list these as peer dependencies and require developers to install them alongside.
+**NOTE**: Due to a limitation in React Native CLI auto-linking, these two native modules cannot be included as transitive dependencies. If you are creating a module that depends on rhino-react-native and/or react-native-voice-processor, you will have to list these as peer dependencies and require developers to install them alongside.
 
 ## AccessKey
 
@@ -115,7 +115,7 @@ The module provides you with two levels of API to choose from depending on your 
 
 #### High-Level API
 
-[RhinoManager](/binding/react-native/src/rhinomanager.tsx) provides a high-level API that takes care of
+[RhinoManager](/binding/react-native/src/rhino_manager.tsx) provides a high-level API that takes care of
 audio recording. This class is the quickest way to get started.
 
 The constructor `RhinoManager.create` will create an instance of a RhinoManager using a context file that you pass to it.
@@ -148,7 +148,7 @@ inferenceCallback(object){
 }
 ```
 
-You can override also the default Rhino model file and/or the inference sensitivity.  You can set `requireEndpoint` parameter to 
+You can override also the default Rhino model file and/or the inference sensitivity.  You can set `requireEndpoint` parameter to
 false if you do not wish to wait for silence before Rhino infers context. There is also an optional `processErrorCallback`
 that is called if there is a problem encountered while processing audio.
 
@@ -188,7 +188,7 @@ module to capture frames of audio and automatically pass it to the inference eng
 #### Low-Level API
 
 [Rhino](/binding/react-native/src/rhino.tsx) provides low-level access to the inference engine for those
-who want to incorporate speech-to-intent into a already existing audio processing pipeline.
+who want to incorporate speech-to-intent into an already existing audio processing pipeline.
 
 `Rhino` is created by passing a context file to its static constructor `create`:
 
@@ -206,7 +206,7 @@ async createRhino(){
 As you can see, in this case you don't pass in an inference callback as you will be passing in audio frames directly using the `process` function. The `RhinoInference` result that is returned from `process` will have up to four fields:
 
 - isFinalized - true if Rhino has made an inference, false otherwise
-- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if Rhino did not understood context
+- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if it did not
 - intent - **null** if `isUnderstood` is not true, otherwise name of intent that were inferred
 - slots - **null** if `isUnderstood` is not true, otherwise the dictionary of slot keys and values that were inferred
 
@@ -214,13 +214,13 @@ As you can see, in this case you don't pass in an inference callback as you will
 let buffer = getAudioFrame();
 
 try {
-    let inference = await this._rhino.process(buffer);   
+    let inference = await this._rhino.process(buffer);
     // inference result example:
     // if (inference.isFinalized) {
     //     if (inference.isUnderstood) {
     //          console.log(inference.intent)
     //          console.log(inference.slots)
-    //     }    
+    //     }
     // }
     }
 } catch (e) {
@@ -243,11 +243,11 @@ To add a custom context to your React Native application you'll need to add the 
 
 ### Adding Android Models
 
-Android custom models and contexts must be added to [`./android/app/src/main/assets/`](android/app/src/main/assets/).
+Android custom models and contexts must be added to `./android/app/src/main/assets/`.
 
 ### Adding iOS Models
 
-iOS contexts can be added anywhere under [`./ios`](ios), but it must be included as a bundled resource. 
+On iOS, contexts can be added anywhere under `./ios`, but they must be included as a bundled resource.
 The easiest way to include a bundled resource in the iOS project is to:
 
 1. Open XCode.

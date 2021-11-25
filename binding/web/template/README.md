@@ -20,7 +20,7 @@ If you are using this library with the [@picovoice/web-voice-processor](https://
 
 Rhino for Web is split into multiple packages due to each language including the entire Voice AI model which is of nontrivial size. There are separate worker and factory packages as well, due to the complexities with bundling an "all-in-one" web workers without bloating bundle sizes. Import each as required.
 
-Any Rhino context files (`.rhn` files) generated from [Picovoice Console](https://picovoice.ai/console/) must be trained for the WebAssembly (WASM) platform and match the language of the instance you create. The `.zip` file containes a `.rhn` file and a `_b64.txt` file which containes the binary model encoded with Base64. The base64 encoded model can then be passed into the Rhino `create` function as an argument.
+Any Rhino context files (`.rhn` files) generated from [Picovoice Console](https://picovoice.ai/console/) must be trained for the WebAssembly (WASM) platform and match the language of the instance you create. The `.zip` file contains a `.rhn` file and a `_b64.txt` file which contains the binary model encoded with Base64. The base64 encoded model can then be passed into the Rhino `create` function as an argument.
 
 ## AccessKey
 
@@ -52,7 +52,7 @@ For typical cases, use the worker packages. These are compatible with the framew
 To obtain a Rhino Worker, we can use the static `create` factory method from the RhinoWorkerFactory. Here is a complete example that:
 
 1. Obtains a Worker from the RhinoWorkerFactory (in this case, English) to listen for commands in the domain of the sample "Pico Clock"
-1. Responds to inferenence detection by setting the worker's `onmessage` event handler
+1. Responds to inference detection by setting the worker's `onmessage` event handler
 1. Starts up the WebVoiceProcessor to forward microphone audio to the Rhino Worker
 
 E.g.:
@@ -119,7 +119,7 @@ if (done) {
 
 ```
 
-**Important Note**: Because the workers are all-in-one packages that run an entire machine learning inference model in WebAssembly, they are approximately 3-4MB in size. While this is tiny for a speech recognition model, it's large for web delivery. Because of this, you likely will want to use dynamic `import()` instead of static `import {}` to reduce your app's starting bundle size. See e.g. https://webpack.js.org/guides/code-splitting/ for more information.
+**Important Note**: Because the workers are all-in-one packages that run an entire machine learning inference model in WebAssembly, they are approximately 3-4 MB in size. While this is tiny for a speech recognition model, it's large for web delivery. Because of this, you likely will want to use dynamic `import()` instead of static `import {}` to reduce your app's starting bundle size. See e.g. https://webpack.js.org/guides/code-splitting/ for more information.
 
 ### Factory
 
@@ -162,7 +162,7 @@ const PICO_CLOCK_64 = /* Base64 string of the pico_clock.rhn file for wasm platf
 startRhino();
 ```
 
-**Important Note**: Because the factories are all-in-one packages that run an entire machine learning inference model in WebAssembly, they are approximately 1-2MB in size. While this is tiny for a speech recognition, it's nontrivial for web delivery. Because of this, you likely will want to use dynamic `import()` instead of static `import {}` to reduce your app's starting bundle size. See e.g. https://webpack.js.org/guides/code-splitting/ for more information.
+**Important Note**: Because the factories are all-in-one packages that run an entire machine learning inference model in WebAssembly, they are approximately 1-2 MB in size. While this is tiny for a speech recognition, it's nontrivial for web delivery. Because of this, you likely will want to use dynamic `import()` instead of static `import {}` to reduce your app's starting bundle size. See e.g. https://webpack.js.org/guides/code-splitting/ for more information.
 
 ## Build from source (IIFE + ESM outputs)
 

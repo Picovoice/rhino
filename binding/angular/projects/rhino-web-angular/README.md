@@ -6,7 +6,7 @@ Angular service for Rhino for Web.
 
 This library processes naturally spoken commands in-browser, offline. All processing is done via WebAssembly and Workers in a separate thread. Speech results are converted into inference directly, without intermediate Speech-to-Text. Rhino can be used standalone (push-to-talk), or with the [Porcupine Wake Word engine](https://picovoice.ai/platform/porcupine/).
 
-Rhino operates on speech in a bespoke constext. E.g. using the [demo "Clock" Rhino context (English langauge)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn):
+Rhino operates on speech in a bespoke context. E.g. using the [demo "Clock" Rhino context (English language)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn):
 
 > "Set a timer for ten minutes"
 
@@ -42,7 +42,7 @@ The Picovoice SDKs for Web are powered by WebAssembly (WASM), the Web Audio API,
 
 All modern browsers (Chrome/Edge/Opera, Firefox, Safari) are supported, including on mobile. Internet Explorer is _not_ supported.
 
-Using the Web Audio API requires a secure context (HTTPS connection), with the exception of `localhost`, for local development.
+Using the Web Audio API requires a secure context (HTTPS connection) - except `localhost` - for local development.
 
 ## AccessKey
 
@@ -100,7 +100,7 @@ We need to initialize Rhino to tell it which context we want to listen to (and a
 
 ### Imports
 
-You can use Rhino by importing the worker package statically or dynamically. Static is more straightforward to implement, but will impact your initial bundle size with an additional ~4MB. Depending on your requirements, this may or may not be feasible. If you require a small bundle size, see dynamic importing below.
+You can use Rhino by importing the worker package statically or dynamically. Static is more straightforward to implement, but will impact your initial bundle size with an additional ~4 MB. Depending on your requirements, this may or may not be feasible. If you require a small bundle size, see dynamic importing below.
 
 #### Static Import
 

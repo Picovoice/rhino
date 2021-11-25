@@ -54,7 +54,7 @@ The module provides you with two levels of API to choose from depending on your 
 
 [RhinoManager](/binding/ios/RhinoManager.swift) provides a high-level API that takes care of audio recording and intent inference. This class is the quickest way to get started.
 
-To create an instance of RhinoManager, pass a Picovoice `AccessKey` and a Rhino context file to the constuctor:
+To create an instance of RhinoManager, pass a Picovoice `AccessKey` and a Rhino context file to the constructor:
 ```swift
 import Rhino
 
@@ -115,7 +115,7 @@ rhinoManager.delete()
 
 ### Low-Level API
 
-[Rhino](/binding/ios/Rhino.swift) provides low-level access to the Speech-to-Intent engine for those who want to incorporate intent inference into a already existing audio processing pipeline.
+[Rhino](/binding/ios/Rhino.swift) provides low-level access to the Speech-to-Intent engine for those who want to incorporate intent inference into an already existing audio processing pipeline.
 
 Create an instance of `Rhino` by passing it a Picovoice `AccessKey` and a Rhino context file (.rhn).
 

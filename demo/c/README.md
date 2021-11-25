@@ -162,7 +162,7 @@ usage : .\\demo\\c\\build\\rhino_demo_file.exe -l LIBRARY_PATH -m MODEL_PATH -c 
 **Note that the demo expects a single-channel WAV file with a sampling rate of 16kHz and 16-bit linear PCM encoding. If you
 provide a file with incorrect format the demo does not perform any format validation and simply outputs incorrect results.**
 
-The following processes a WAV file under the [audio_samples](/resources/audio_samples/) directory and infers the intent 
+The following processes a WAV file under the [audio_samples](/resources/audio_samples) directory and infers the intent 
 in the context of a coffee-maker system. Replace `${ACCESS_KEY}` with your Picovoice AccessKey.
 
 #### Linux

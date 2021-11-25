@@ -7,7 +7,7 @@
 [![PyPI](https://img.shields.io/pypi/v/pvrhino)](https://pypi.org/project/pvrhino/)
 [![Nuget](https://img.shields.io/nuget/v/rhino)](https://www.nuget.org/packages/Rhino/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/Picovoice/rhino/binding/go.svg)](https://pkg.go.dev/github.com/Picovoice/rhino/binding/go)
-[![Pub Version](https://img.shields.io/pub/v/rhino)](https://pub.dev/packages/rhino)
+[![Pub Version](https://img.shields.io/pub/v/rhino_flutter)](https://img.shields.io/pub/v/rhino_flutter)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-react-native?label=npm%20%5Breact-native%5D)](https://www.npmjs.com/package/@picovoice/rhino-react-native)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-android?label=maven%20central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-android/)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-java?label=maven%20central%20%5Bjava%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-java/)
@@ -46,9 +46,13 @@ Rhino is:
 
 - using deep neural networks trained in real-world environments.
 - compact and computationally-efficient. It is perfect for IoT.
-- cross-platform: Raspberry Pi, BeagleBone, Android, iOS, Linux (x86_64), Mac (x86_64), Windows (x86_64), and web
-  browsers are supported. Additionally, enterprise customers have access to the ARM Cortex-M SDK.
-- self-service. Developers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+- cross-platform:
+  - Arm Cortex-M, STM32, PSoC, Arduino, and i.MX RT 
+  - Raspberry Pi, NVIDIA Jetson Nano, and BeagleBone
+  - Android and iOS
+  - Chrome, Safari, Firefox, and Edge
+  - Linux (x86_64), macOS (x86_64, arm64), and Windows (x86_64)
+- self-service. Developers can train custom contexts using [Picovoice Console](https://picovoice.ai/console/).
 
 ## Table of Contents
 
@@ -168,7 +172,7 @@ turnLightOff:
   - Turn off the lights in the $location:lightLocation.
 ```
 
-`$location:lightLocation` means that we expect a variable of type `location` to occur and we want to capture its value
+`$location:lightLocation` means that we expect a variable of type `location` to occur, and we want to capture its value
 in a variable named `lightLocation`. We call such variable a `Slot`. Slots give us the ability to capture details of the
 spoken commands. Each slot type is be defined as a set of phrases. For example:
 
@@ -239,7 +243,7 @@ For more information about .NET demos, go to [demo/dotnet](/demo/dotnet).
 
 ### Java Demos
 
-The [Rhino Java demo](/demo/java) is a command-line application that lets you choose between running Rhino on a
+The [Rhino Java demo](/demo/java) is a command-line application that lets you choose between running Rhino on an
 audio file or on real-time microphone input.
 
 To try the real-time demo, make sure there is a working microphone connected to your device. Then invoke the following commands from the terminal:
@@ -270,7 +274,7 @@ For more information about Go demos go to [demo/go](/demo/go).
 
 ### Unity Demos
 
-To run the Rhino Unity demo, import the [Rhino Unity package](/binding/unity/rhino.unitypackage) into your project, open the RhinoDemo scene and hit play. To run on other platforms or in the player, go to _File > Build Settings_, choose your platform and hit the `Build and Run` button.
+To run the Rhino Unity demo, import the [Rhino Unity package](/binding/unity/rhino-2.0.0.unitypackage) into your project, open the RhinoDemo scene and hit play. To run on other platforms or in the player, go to _File > Build Settings_, choose your platform and hit the `Build and Run` button.
 
 To browse the demo source go to [demo/unity](/demo/unity).
 
@@ -280,7 +284,7 @@ To run the Rhino demo on Android or iOS with Flutter, you must have the [Flutter
 
 Before launching the app, use the [copy_assets.sh](/demo/flutter/copy_assets.sh) script to copy the rhino demo context file into the demo project. (**NOTE**: on Windows, Git Bash or another bash shell is required, or you will have to manually copy the context into the project.).
 
-Run the following command from [demo/flutter](/demo/flutter/) to build and deploy the demo to your device:
+Run the following command from [demo/flutter](/demo/flutter) to build and deploy the demo to your device:
 
 ```console
 flutter run
@@ -296,7 +300,7 @@ or
 
 ### React Native Demos
 
-To run the React Native Rhino demo app you will first need to setup your React Native environment. For this,
+To run the React Native Rhino demo app you will first need to set up your React Native environment. For this,
 please refer to [React Native's documentation](https://reactnative.dev/docs/environment-setup). Once your environment has
 been set up, navigate to [demo/react-native](/demo/react-native) to run the following commands:
 
@@ -351,7 +355,7 @@ or:
 
 > Set the lights in the living room to purple.
 
-For more information about Android demo and the complete list of available expressions go to [demo/ios](/demo/ios).
+For more information about Android demo, and the complete list of available expressions, go to [demo/ios](/demo/ios).
 
 ### Web Demos
 
@@ -727,7 +731,7 @@ if err != nil {
 ```
 
 Once initialized, you can start passing in frames of audio for processing. The engine accepts 16-bit linearly-encoded PCM and operates on
-single-channel audio. The sample rate that is required by the engine is given by `SampleRate` and number of samples per frame is `FrameLength`.
+single-channel audio. The sample rate that is required by the engine is given by `SampleRate` and number of samples-per-frame is given by `FrameLength`.
 
 To feed audio into Rhino, use the `Process` function in your capture loop. You must have called `Init()` before calling `Process`.
 ```go
@@ -750,7 +754,7 @@ for {
 }
 ```
 
-When done resources have to be released explicitly.
+When finished with the engine, resources have to be released explicitly.
 
 ```go
 rhino.Delete()
@@ -758,7 +762,7 @@ rhino.Delete()
 
 ### Unity
 
-Import the [Rhino Unity Package](/binding/unity/rhino.unitypackage) into your Unity project.
+Import the [Rhino Unity Package](/binding/unity/rhino-2.0.0.unitypackage) into your Unity project.
 
 The SDK provides two APIs:
 
@@ -794,7 +798,7 @@ _rhinoManager.Process();
 
 Audio capture stops and Rhino resets once an inference result is returned via the inference callback. When you wish to result, call `.Process()` again.
 
-Once the app is done with using an instance of RhinoManager, you can explicitly release the audio resources and the resources allocated to Rhino:
+Once the app is done with using an instance of RhinoManager, you can explicitly release the audio resources, and the resources allocated to Rhino:
 
 ```csharp
 _rhinoManager.Delete();
@@ -807,9 +811,9 @@ Unity package to capture frames of audio and automatically pass it to the infere
 
 #### Low-Level API
 
-[Rhino](/binding/unity/Assets/Rhino/Rhino.cs) provides low-level access to the inference engine for those who want to incorporate speech-to-intent into a already existing audio processing pipeline.
+[Rhino](/binding/unity/Assets/Rhino/Rhino.cs) provides low-level access to the inference engine for those who want to incorporate speech-to-intent into an already existing audio processing pipeline.
 
-To create an instance of `Rhino`, use the `.Create` static constructor and a context file.
+To create an instance of `Rhino`, use the `.Create` static constructor, and a context file.
 
 ```csharp
 using Pv.Unity;
@@ -861,7 +865,7 @@ catch (RhinoException ex)
 
 For process to work correctly, the audio data must be in the audio format required by Picovoice.
 
-Rhino implements the `IDisposable` interface, so you can use Rhino in a `using` block. If you don't use a `using` block, resources will be released by the garbage collector automatically or you can explicitly release the resources like so:
+Rhino implements the `IDisposable` interface, so you can use Rhino in a `using` block. If you don't use a `using` block, resources will be released by the garbage collector automatically, or you can explicitly release the resources like so:
 
 ```csharp
 _rhino.Dispose();
@@ -938,7 +942,7 @@ Our [flutter_voice_processor](https://github.com/Picovoice/flutter-voice-process
 #### Low-Level API
 
 [Rhino](/binding/flutter/lib/rhino.dart) provides low-level access to the inference engine for those who want to incorporate
-speech-to-intent into a already existing audio processing pipeline.
+speech-to-intent into an already existing audio processing pipeline.
 
 `Rhino` is created by passing a context file to its static constructor `create`:
 
@@ -961,7 +965,7 @@ To deliver audio to the engine, you must send audio frames to its `process` func
 Each call to `process` will return a `RhinoInference` instance with following variables:
 
 - isFinalized - true if Rhino has made an inference, false otherwise
-- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if Rhino did not understood context
+- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if it did not
 - intent - **null** if `isUnderstood` is not true, otherwise name of intent that were inferred
 - slots - **null** if `isUnderstood` is not true, otherwise the dictionary of slot keys and values that were inferred
 
@@ -992,7 +996,7 @@ Install [@picovoice/react-native-voice-processor](https://www.npmjs.com/package/
 
 #### High-Level API
 
-[RhinoManager](/binding/react-native/src/rhinomanager.tsx) provides a high-level API that takes care of
+[RhinoManager](/binding/react-native/src/rhino_manager.tsx) provides a high-level API that takes care of
 audio recording. This class is the quickest way to get started.
 
 The constructor `RhinoManager.create` will create an instance of a RhinoManager using a context file that you pass to it.
@@ -1020,7 +1024,7 @@ call `.process()` again.
 let didStart = await this._rhinoManager.process();
 ```
 
-When you are done using Rhino, release you must explicitly resources:
+When you are done using Rhino, you must explicitly release resources:
 
 ```javascript
 this._rhinoManager.delete();
@@ -1032,7 +1036,7 @@ audio capture and RhinoManager passes frames to the inference engine for you.
 #### Low-Level API
 
 [Rhino](/binding/react-native/src/rhino.tsx) provides low-level access to the inference engine for those
-who want to incorporate speech-to-intent into a already existing audio processing pipeline.
+who want to incorporate speech-to-intent into an already existing audio processing pipeline.
 
 `Rhino` is created by passing a context file to its static constructor `create`:
 
@@ -1048,11 +1052,11 @@ async createRhino(){
 }
 ```
 
-To deliver audio to the enine, you must pass it audio frames
+To deliver audio to the engine, you must pass it audio frames
 using the `process` function. The `RhinoInference` result that is returned from `process` will have up to four fields:
 
 - isFinalized - true if Rhino has made an inference, false otherwise
-- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if Rhino did not understood context
+- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if it did not
 - intent - **null** if `isUnderstood` is not true, otherwise name of intent that were inferred
 - slots - **null** if `isUnderstood` is not true, otherwise the dictionary of slot keys and values that were inferred
 
@@ -1115,7 +1119,7 @@ try {
 ```
 
 The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. 
-Sensitivity is the parameter that enables developers to trade miss rate for false alarm. It is a floating point number within
+Sensitivity is the parameter that enables developers to trade miss rate for false alarm. It is a floating-point number within
 [0, 1]. A higher sensitivity reduces miss rate at cost of increased false alarm rate.
 
 When initialized, input audio can be processed using `manager.process()`. When done, be sure to release the resources
@@ -1193,7 +1197,7 @@ do {
 } catch { }
 ```
 
-Sensitivity is the parameter that enables developers to trade miss rate for false alarm. It is a floating point number within
+Sensitivity is the parameter that enables developers to trade miss rate for false alarm. It is a floating-point number within
 [0, 1]. A higher sensitivity reduces miss rate at cost of increased false alarm rate.
 
 When initialized, input audio can be processed using `manager.process()`. When done, be sure to release the resources
@@ -1201,7 +1205,7 @@ using `manager.delete()`.
 
 #### Low-Level API
 
-[Rhino](/binding/ios/Rhino.swift) provides low-level access to the Speech-to-Intent engine for those who want to incorporate intent inference into a already existing audio processing pipeline.
+[Rhino](/binding/ios/Rhino.swift) provides low-level access to the Speech-to-Intent engine for those who want to incorporate intent inference into an already existing audio processing pipeline.
 
 ```swift
 import Rhino
@@ -1717,6 +1721,15 @@ pv_rhino_delete(rhino);
 ```
 
 ## Releases
+
+### v2.0.0 - Nov 25th, 2021
+
+- Improved accuracy.
+- Added Rust SDK.
+- macOS arm64 support.
+- Added NodeJS support for Windows, NVIDIA Jetson Nano, and BeagleBone.
+- Added .NET support for NVIDIA Jetson Nano and BeagleBone.
+- Runtime optimization.
 
 ### v1.6.0 December 2nd, 2020
 

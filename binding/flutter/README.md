@@ -158,7 +158,7 @@ This is because it uses our [flutter_voice_processor](https://github.com/Picovoi
 #### Low-Level API
 
 [Rhino](/binding/flutter/lib/rhino.dart) provides low-level access to the inference engine for those who want to incorporate 
-speech-to-intent into a already existing audio processing pipeline.
+speech-to-intent into an already existing audio processing pipeline.
 
 `Rhino` is created by passing a context file to its static constructor `create`:
 
@@ -181,7 +181,7 @@ To feed Rhino your audio, you must send it frames of audio to its `process` func
 Each call to `process` will return a `RhinoInference` instance that with following variables:
 
 - isFinalized - true if Rhino has made an inference, false otherwise
-- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if Rhino did not understood context
+- isUnderstood - **null** if `isFinalized` is false, otherwise true if Rhino understood what it heard based on the context or false if it did not
 - intent - **null** if `isUnderstood` is not true, otherwise name of intent that were inferred
 - slots - **null** if `isUnderstood` is not true, otherwise the dictionary of slot keys and values that were inferred
 
@@ -214,7 +214,7 @@ _rhino.delete();
 
 ## Custom Context Integration
 
-To add a custom context to your Flutter application, first add the rhn file to an `assets` folder in your project directory. Then add them to you your pubspec.yaml:
+To add a custom context to your Flutter application, first add the rhn file to an `assets` folder in your project directory. Then add them to you your `pubspec.yaml`:
 ```yaml
 flutter:
   assets:

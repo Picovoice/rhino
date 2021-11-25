@@ -62,7 +62,7 @@ handle = pvrhino.create(access_key=access_key, context_path='/absolute/path/to/c
 Where `context_path` is the absolute path to Speech-to-Intent context created either using
 [Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository.
 
-The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating point number within
+The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating-point number within
 [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous
 inference rate.
 

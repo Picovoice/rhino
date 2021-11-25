@@ -2,7 +2,7 @@
 
 This demo application includes a sample `VoiceWidget` Angular component which uses the `RhinoService` Angular service to allow naturally spoken commands to be converted to intents. Rhino inference is handled via the `inference$` event. Our VoiceWidget subscribes to this event and displays the results.
 
-The demo uses dynamic imports to split the RhinoService away from the main application bundle. This means that the initial download size of the Angular app will not be impacted by the ~3-4MB requirement of Rhino. While small for all-in-one offline Voice AI, the size is large for an intial web app load.
+The demo uses dynamic imports to split the RhinoService away from the main application bundle. This means that the initial download size of the Angular app will not be impacted by the ~3-4 MB requirement of Rhino. While small for all-in-one offline Voice AI, the size is large for an initial web app load.
 
 If you decline microphone permission in the browser, or another such issue prevents Rhino from starting, the error will be displayed.
 
@@ -60,7 +60,7 @@ Try a phrase that is out-of-context:
 }
 ```
 
-This command falls outside of the domain of "Alarm Clock" and is therefore not understood.
+This command falls outside the domain of "Alarm Clock" and is therefore not understood.
 
 The Alarm Clock was trained to understand a particular set of expressions. These are built using a simple grammar and grouped together into a YAML file. This file is trained by [Picovoice Console](https://picovoice.ai/console/) to create a `.rhn` file for the WebAssembly (WASM) platform.
 

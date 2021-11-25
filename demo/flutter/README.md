@@ -21,12 +21,12 @@ final String accessKey = "{YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Pi
 
 Before launching the app, use the copy_assets.sh script to copy the rhino demo context file into the demo project. (**NOTE**: on Windows, Git Bash or another bash shell is required, or you will have to manually copy the context into the project.).
 
-Run the following command from [demo/flutter](/demo/flutter/) to build and deploy the demo to your device:
+Run the following command from [demo/flutter](/demo/flutter) to build and deploy the demo to your device:
 ```console
 flutter run
 ```
 
-The default context for this demo is `Smart Lighting`. Simply press start and the engine can recognize commands such as
+The default context for this demo is `Smart Lighting`. Simply press start, and the engine can recognize commands such as
 
 > Turn off the lights.
 

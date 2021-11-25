@@ -61,7 +61,7 @@ go run filedemo/rhino_file_demo.go \
 -model_path "/path/to/model.pv"
 ```
 
-Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating point number within `[0, 1]`. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate.
+Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating-point number within `[0, 1]`. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate.
 
 ### Microphone Demo
 
@@ -106,4 +106,4 @@ go run micdemo/rhino_mic_demo.go \
 -output_path ./test.wav
 ```
 
-If after listening to stored file there is no apparent problem detected please open an issue.
+If after listening to stored file there is no apparent problem detected, please open an issue.

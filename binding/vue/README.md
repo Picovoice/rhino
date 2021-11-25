@@ -6,7 +6,7 @@ Renderless Vue component for Rhino for Web.
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of interest, in real-time.
 
-E.g. using the [demo "Clock" Rhino context (English langauge)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn), Rhino performs inference on a spoken phrase:
+E.g. using the [demo "Clock" Rhino context (English language)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn), Rhino performs inference on a spoken phrase:
 
 > "Set a timer for ten minutes"
 
@@ -40,7 +40,7 @@ The Picovoice SDKs for Web are powered by WebAssembly (WASM), the Web Audio API,
 
 All modern browsers (Chrome/Edge/Opera, Firefox, Safari) are supported, including on mobile. Internet Explorer is _not_ supported.
 
-Using the Web Audio API requires a secure context (HTTPS connection), with the exception of `localhost`, for local development.
+Using the Web Audio API requires a secure context (HTTPS connection) - except `localhost` - for local development.
 
 ## AccessKey
 

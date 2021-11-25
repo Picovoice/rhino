@@ -40,7 +40,7 @@ cargo run --release -- --access_key ${ACCESS_KEY} \
 ```
 
 Sensitivity is the parameter that enables trading miss rate for the false alarm rate.
-It is a floating point number within `[0, 1]`.
+It is a floating-point number within `[0, 1]`.
 A higher sensitivity reduces the miss rate at the cost of increased false alarm rate.
 
 ### Microphone Demo
@@ -79,4 +79,4 @@ This can be achieved with:
 cargo run --release -- --access_key ${ACCESS_KEY} --context_path "/path/to/context/one.rhn" --output_path ./test.wav
 ```
 
-If after listening to stored file there is no apparent problem detected please open an issue.
+If after listening to stored file there is no apparent problem detected, please open an issue.
