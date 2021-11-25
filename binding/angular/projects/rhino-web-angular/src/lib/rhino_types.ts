@@ -2,7 +2,9 @@
 // Rhino Types
 //
 export type RhinoFactoryArgs = {
+  accessKey: string;
   context: RhinoContext;
+  requireEndpoint?: boolean;
   start?: boolean;
 };
 
@@ -112,28 +114,54 @@ export type RhinoWorkerResponseInfo = {
   info: string;
 };
 
+export type RhinoWorkerRequestFileOperation = {
+  command:
+    | 'file-save-succeeded'
+    | 'file-save-failed'
+    | 'file-load-succeeded'
+    | 'file-load-failed'
+    | 'file-exists-succeeded'
+    | 'file-exists-failed'
+    | 'file-delete-succeeded'
+    | 'file-delete-failed';
+  message?: string;
+  content?: string;
+};
+
 export type RhinoWorkerRequest =
   | WorkerRequestVoid
   | WorkerRequestProcess
   | RhinoWorkerRequestInit
-  | RhinoWorkerRequestInfo;
+  | RhinoWorkerRequestInfo
+  | RhinoWorkerRequestFileOperation;
 
 export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: RhinoWorkerRequest): void;
 }
+
+export type RhinoWorkerResponseFileOperation = {
+  command: 'file-save' | 'file-load' | 'file-exists' | 'file-delete';
+  path: string;
+  content?: string;
+};
 
 export type RhinoWorkerResponse =
   | RhinoWorkerResponseReady
   | RhinoWorkerResponseInference
   | RhinoWorkerResponseError
   | RhinoWorkerResponseInitError
-  | RhinoWorkerResponseInfo;
+  | RhinoWorkerResponseInfo
+  | RhinoWorkerResponseFileOperation;
 
 // Angular
 
 export type RhinoServiceArgs = {
-  /** Immediately start the microphone upon initialization */
-  start?: boolean;
+  /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+  accessKey: string;
   /** The context to instantiate */
   context: RhinoContext;
+  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  requireEndpoint?: boolean;
+  /** Immediately start the microphone upon initialization */
+  start?: boolean;
 };

@@ -24,6 +24,10 @@ const {
 
 program
   .requiredOption(
+    "-a, --access_key <string>",
+    "AccessKey obtain from the Picovoice Console (https://console.picovoice.ai/)"
+  )
+  .requiredOption(
     "-i, --input_audio_file_path <string>",
     "input audio wave file in 16-bit 16KHz linear PCM format (mono)"
   )
@@ -41,6 +45,10 @@ program
     "sensitivity value between 0 and 1",
     parseFloat,
     0.5
+  ).option(
+    "-e, --requires_endpoint <bool>",
+    "If set to `false`, Rhino does not require an endpoint (chunk of silence) before finishing inference.",
+    "true"
   );
 
 if (process.argv.length < 3) {
@@ -50,10 +58,12 @@ program.parse(process.argv);
 
 function fileDemo() {
   let audioPath = program["input_audio_file_path"];
+  let access_key = program["access_key"]
   let contextPath = program["context_path"];
   let libraryFilePath = program["library_file_path"];
   let modelFilePath = program["model_file_path"];
   let sensitivity = program["sensitivity"];
+  let requiresEndpoint = program["requires_endpoint"].toLowerCase() === 'false' ? false : true;
 
   if (isNaN(sensitivity) || sensitivity < 0 || sensitivity > 1) {
     console.error("--sensitivity must be a number in the range [0,1]");
@@ -67,8 +77,10 @@ function fileDemo() {
   }
 
   let engineInstance = new Rhino(
+    access_key,
     contextPath,
     sensitivity,
+    requiresEndpoint,
     modelFilePath,
     libraryFilePath
   );

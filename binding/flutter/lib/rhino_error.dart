@@ -9,81 +9,82 @@
 // specific language governing permissions and limitations under the License.
 //
 
-class PvAudioException implements Exception {
+class RhinoException implements Exception {
   final String? message;
-  PvAudioException([this.message]);
+  RhinoException([this.message]);
 }
 
-class PvError extends Error {
-  final String? message;
-  PvError([this.message]);
+class RhinoMemoryException extends RhinoException {
+  RhinoMemoryException(String? message) : super(message);
 }
 
-class PvArgumentError extends PvError {
-  PvArgumentError(String message) : super(message);
+class RhinoIOException extends RhinoException {
+  RhinoIOException(String? message) : super(message);
 }
 
-class PvStateError extends PvError {
-  PvStateError(String message) : super(message);
+class RhinoInvalidArgumentException extends RhinoException {
+  RhinoInvalidArgumentException(String? message) : super(message);
 }
 
-/// PV_STATUS_OUT_OF_MEMORY
-class PvStatusOutOfMemoryError extends PvError {
-  PvStatusOutOfMemoryError(String message) : super(message);
+class RhinoStopIterationException extends RhinoException {
+  RhinoStopIterationException(String? message) : super(message);
 }
 
-/// PV_STATUS_IO_ERROR
-class PvStatusIoError extends PvError {
-  PvStatusIoError(String message) : super(message);
+class RhinoKeyException extends RhinoException {
+  RhinoKeyException(String? message) : super(message);
 }
 
-/// PV_STATUS_INVALID_ARGUMENT
-class PvStatusInvalidArgumentError extends PvError {
-  PvStatusInvalidArgumentError(String message) : super(message);
+class RhinoInvalidStateException extends RhinoException {
+  RhinoInvalidStateException(String? message) : super(message);
 }
 
-/// PV_STATUS_STOP_ITERATION
-class PvStatusStopIterationError extends PvError {
-  PvStatusStopIterationError(String message) : super(message);
+class RhinoRuntimeException extends RhinoException {
+  RhinoRuntimeException(String? message) : super(message);
 }
 
-/// PV_STATUS_KEY_ERROR
-class PvStatusKeyError extends PvError {
-  PvStatusKeyError(String message) : super(message);
+class RhinoActivationException extends RhinoException {
+  RhinoActivationException(String? message) : super(message);
 }
 
-/// PV_STATUS_INVALID_STATE
-class PvStatusInvalidStateError extends PvError {
-  PvStatusInvalidStateError(String message) : super(message);
+class RhinoActivationLimitException extends RhinoException {
+  RhinoActivationLimitException(String? message) : super(message);
 }
 
-enum PvStatus {
-  SUCCESS,
-  OUT_OF_MEMORY,
-  IO_ERROR,
-  INVALID_ARGUMENT,
-  STOP_ITERATION,
-  KEY_ERROR,
-  INVALID_STATE
+class RhinoActivationThrottledException extends RhinoException {
+  RhinoActivationThrottledException(String? message) : super(message);
 }
 
-/// convert [pvStatus] to PvError type
-pvStatusToException(PvStatus pvStatus, String errorMessage) {
-  switch (pvStatus) {
-    case PvStatus.OUT_OF_MEMORY:
-      throw new PvStatusOutOfMemoryError(errorMessage);
-    case PvStatus.IO_ERROR:
-      throw new PvStatusIoError(errorMessage);
-    case PvStatus.INVALID_ARGUMENT:
-      throw new PvStatusInvalidArgumentError(errorMessage);
-    case PvStatus.STOP_ITERATION:
-      throw new PvStatusStopIterationError(errorMessage);
-    case PvStatus.KEY_ERROR:
-      throw new PvStatusKeyError(errorMessage);
-    case PvStatus.INVALID_STATE:
-      throw new PvStatusInvalidStateError(errorMessage);
+class RhinoActivationRefusedException extends RhinoException {
+  RhinoActivationRefusedException(String? message) : super(message);
+}
+
+rhinoStatusToException(String code, String? message) {
+  switch (code) {
+    case 'RhinoException':
+      return RhinoException(message);
+    case 'RhinoMemoryException':
+      return RhinoMemoryException(message);
+    case 'RhinoIOException':
+      return RhinoIOException(message);
+    case 'RhinoInvalidArgumentException':
+      return RhinoInvalidArgumentException(message);
+    case 'RhinoStopIterationException':
+      return RhinoStopIterationException(message);
+    case 'RhinoKeyException':
+      return RhinoKeyException(message);
+    case 'RhinoInvalidStateException':
+      return RhinoInvalidStateException(message);
+    case 'RhinoRuntimeException':
+      return RhinoRuntimeException(message);
+    case 'RhinoActivationException':
+      return RhinoActivationException(message);
+    case 'RhinoActivationLimitException':
+      return RhinoActivationLimitException(message);
+    case 'RhinoActivationThrottledException':
+      return RhinoActivationThrottledException(message);
+    case 'RhinoActivationRefusedException':
+      return RhinoActivationRefusedException(message);
     default:
-      print("Unmapped error code: $pvStatus");
-      throw new PvError(errorMessage);
+      return RhinoException("unexpected code: $code, message: $message");
   }
 }

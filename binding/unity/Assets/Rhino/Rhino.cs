@@ -12,11 +12,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEngine;
+
+#if !UNITY_EDITOR && UNITY_ANDROID
+
 using UnityEngine.Networking;
+
+#endif
+
 
 namespace Pv.Unity
 {
@@ -31,7 +35,12 @@ namespace Pv.Unity
         INVALID_ARGUMENT = 3,
         STOP_ITERATION = 4,
         KEY_ERROR = 5,
-        INVALID_STATE = 6
+        INVALID_STATE = 6,
+        RUNTIME_ERROR = 7,
+        ACTIVATION_ERROR = 8,
+        ACTIVATION_LIMIT_REACHED = 9,
+        ACTIVATION_THROTTLED = 10,
+        ACTIVATION_REFUSED = 11
     }
 
     /// <summary>
@@ -64,7 +73,7 @@ namespace Pv.Unity
         private IntPtr _libraryPointer = IntPtr.Zero;
 
         [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern RhinoStatus pv_rhino_init(string modelPath, string contextPath, float sensitivity, out IntPtr handle);
+        private static extern RhinoStatus pv_rhino_init(string accessKey, string modelPath, string contextPath, float sensitivity, bool requireEndpoint, out IntPtr handle);
 
         [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int pv_sample_rate();
@@ -108,6 +117,7 @@ namespace Pv.Unity
         /// <summary>
         /// Factory method for Rhino Speech-to-Intent engine.
         /// </summary>
+        /// <param name="accessKey">AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).</param>
         /// <param name="contextPath">
         /// Absolute path to file containing context model (file with `.rhn` extension. A context represents the set of 
         /// expressions(spoken commands), intents, and intent arguments(slots) within a domain of interest.
@@ -120,42 +130,91 @@ namespace Pv.Unity
         /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses 
         /// at the cost of (potentially) increasing the erroneous inference rate.
         /// </param>
+        /// <param name="requireEndpoint">
+        /// Boolean variable to indicate if Rhino should wait for a chunk of silence before finishing inference.
+        /// </param>
         /// <returns>An instance of Rhino Speech-to-Intent engine.</returns>                             
-        public static Rhino Create(string contextPath, string modelPath = null, float sensitivity = 0.5f)
+        public static Rhino Create(
+            string accessKey,
+            string contextPath,
+            string modelPath = null,
+            float sensitivity = 0.5f,
+            bool requireEndpoint = true)
         {
-            return new Rhino(modelPath ?? DEFAULT_MODEL_PATH, contextPath, sensitivity);
+            return new Rhino(accessKey, modelPath ?? DEFAULT_MODEL_PATH, contextPath, sensitivity, requireEndpoint);
         }
 
         /// <summary>
         /// Creates an instance of the Rhino wake word engine.
         /// </summary>
+        /// <param name="accessKey">AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).</param>
         /// <param name="modelPath">Absolute path to file containing model parameters.
         /// <param name="contextPath">
         /// Absolute path to file containing context parameters. A context represents the set of
         /// expressions(spoken commands), intents, and intent arguments(slots) within a domain of interest.
         /// </param>
         /// <param name="sensitivity">
+        /// <param name="requireEndpoint">
+        /// Boolean variable to indicate if Rhino should wait for a chunk of silence before finishing inference.
+        /// </param>
         /// Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value
         /// results in fewer misses at the cost of(potentially) increasing the erroneous inference rate.
         /// </param>       
-        private Rhino(string modelPath, string contextPath, float sensitivity = 0.5f)
+        private Rhino(string accessKey, string modelPath, string contextPath, float sensitivity, bool requireEndpoint)
         {
+            CheckArchitecture();
+
+            if (string.IsNullOrEmpty(accessKey))
+            {
+                throw new RhinoInvalidArgumentException("No AccessKey provided to Rhino");
+            }
+
+            if (string.IsNullOrEmpty(contextPath))
+            {
+                throw new RhinoInvalidArgumentException("No contextPath provided to Rhino");
+            }
+
             if (!File.Exists(modelPath))
             {
-                throw new IOException("Couldn't find model file at " + modelPath);
+
+#if !UNITY_EDITOR && UNITY_ANDROID
+
+                try {
+                    modelPath = ExtractResource(modelPath);
+                } catch {
+                    throw new RhinoIOException($"Couldn't find model file at '{modelPath}'");
+                }
+
+#else
+
+                throw new RhinoIOException($"Couldn't find model file at '{modelPath}'");
+
+#endif
             }
 
             if (!File.Exists(contextPath))
             {
-                throw new IOException("Couldn't find context file at " + contextPath);
+
+#if !UNITY_EDITOR && UNITY_ANDROID
+                try {
+                    contextPath = ExtractResource(contextPath);
+                } catch (Exception e) {
+                    throw new RhinoIOException($"Couldn't find context file at '{contextPath}'");
+                }
+
+#else
+
+                throw new RhinoIOException($"Couldn't find context file at '{contextPath}'");
+
+#endif
             }
 
             if (sensitivity < 0 || sensitivity > 1)
             {
-                throw new ArgumentException("Sensitivity value should be within [0, 1].");
+                throw new RhinoInvalidArgumentException("Sensitivity value should be within [0, 1].");
             }
 
-            RhinoStatus status = pv_rhino_init(modelPath, contextPath, sensitivity, out _libraryPointer);
+            RhinoStatus status = pv_rhino_init(accessKey, modelPath, contextPath, sensitivity, requireEndpoint, out _libraryPointer);
             if (status != RhinoStatus.SUCCESS)
             {
                 throw RhinoStatusToException(status);
@@ -190,7 +249,7 @@ namespace Pv.Unity
         {
             if (pcm.Length != FrameLength)
             {
-                throw new ArgumentException(string.Format("Input audio frame size ({0}) was not the size specified by Rhino engine ({1}). ", pcm.Length, FrameLength) +
+                throw new RhinoInvalidArgumentException(string.Format("Input audio frame size ({0}) was not the size specified by Rhino engine ({1}). ", pcm.Length, FrameLength) +
                     "Use rhino.FrameLength to get the correct size.");
             }
 
@@ -302,20 +361,34 @@ namespace Pv.Unity
         /// </summary>
         /// <param name="status">Picovoice library status code.</param>
         /// <returns>.NET exception</returns>
-        private static Exception RhinoStatusToException(RhinoStatus status)
+        private static Exception RhinoStatusToException(RhinoStatus status, string message = "")
         {
             switch (status)
             {
                 case RhinoStatus.OUT_OF_MEMORY:
-                    return new OutOfMemoryException();
+                    return new RhinoMemoryException(message);
                 case RhinoStatus.IO_ERROR:
-                    return new IOException();
+                    return new RhinoIOException(message);
                 case RhinoStatus.INVALID_ARGUMENT:
-                    return new ArgumentException();
+                    return new RhinoInvalidArgumentException(message);
+                case RhinoStatus.STOP_ITERATION:
+                    return new RhinoStopIterationException(message);
+                case RhinoStatus.KEY_ERROR:
+                    return new RhinoKeyException(message);
                 case RhinoStatus.INVALID_STATE:
-                    return new Exception("Rhino reported an invalid state.");
+                    return new RhinoInvalidStateException(message);
+                case RhinoStatus.RUNTIME_ERROR:
+                    return new RhinoRuntimeException(message);
+                case RhinoStatus.ACTIVATION_ERROR:
+                    return new RhinoActivationException(message);
+                case RhinoStatus.ACTIVATION_LIMIT_REACHED:
+                    return new RhinoActivationLimitException(message);
+                case RhinoStatus.ACTIVATION_THROTTLED:
+                    return new RhinoActivationThrottledException(message);
+                case RhinoStatus.ACTIVATION_REFUSED:
+                    return new RhinoActivationRefusedException(message);
                 default:
-                    return new Exception("Unmapped error code returned from Rhino.");
+                    return new RhinoException("Unmapped error code returned from Rhino.");
             }
         }
 
@@ -339,10 +412,19 @@ namespace Pv.Unity
             Dispose();
         }
 
+        private static void CheckArchitecture()
+        {
+
+            if (SystemInfo.processorType.ToLower().Equals("apple m1"))
+            {
+                throw new RhinoRuntimeException("Apple M1 is not supported by Rhino Unity binding");
+            }
+        }
+
         private static string GetDefaultModelPath()
         {
 #if !UNITY_EDITOR && UNITY_ANDROID
-            return ExtractResource("rhino_params.pv");
+            return ExtractResource(Path.Combine(Application.streamingAssetsPath, "rhino_params.pv"));
 #else
             return Path.Combine(Application.streamingAssetsPath, "rhino_params.pv");
 #endif
@@ -351,10 +433,21 @@ namespace Pv.Unity
 #if !UNITY_EDITOR && UNITY_ANDROID
         public static string ExtractResource(string filePath)
         {
-            string srcPath = Path.Combine(Application.streamingAssetsPath, filePath);
-            string dstPath = Path.Combine(Application.persistentDataPath, filePath);
-            var loadingRequest = UnityWebRequest.Get(srcPath);
+            if (!filePath.StartsWith(Application.streamingAssetsPath))
+            {
+                throw new RhinoIOException($"File '{filePath}' not found in streaming assets path.");
+            }
+
+            string dstPath = filePath.Replace(Application.streamingAssetsPath, Application.persistentDataPath);
+            string dstDir = Path.GetDirectoryName(dstPath);
+            if (!Directory.Exists(dstDir))
+            {
+                Directory.CreateDirectory(dstDir);
+            }
+
+            var loadingRequest = UnityWebRequest.Get(filePath);
             loadingRequest.SendWebRequest();
+
             while (!loadingRequest.isDone)
             {
                 if (loadingRequest.isNetworkError || loadingRequest.isHttpError)

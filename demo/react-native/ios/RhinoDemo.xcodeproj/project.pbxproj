@@ -12,8 +12,8 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		545D08A9865AA1DC2FE16674 /* libPods-RhinoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 262FE5E535CF9CF9DD6AEBC8 /* libPods-RhinoDemo.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		BF45FE22882A6A483E6157C6 /* libPods-RhinoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 262FE5E535CF9CF9DD6AEBC8 /* libPods-RhinoDemo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,7 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				545D08A9865AA1DC2FE16674 /* libPods-RhinoDemo.a in Frameworks */,
+				BF45FE22882A6A483E6157C6 /* libPods-RhinoDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,7 +222,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/PvRhino/PvRhino.framework/PvRhino",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/Rhino-iOS/PvRhino.framework/PvRhino",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -241,12 +241,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
-				"${PODS_ROOT}/../../node_modules/@picovoice/rhino-react-native/ios/resources/rhino_params.pv",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Rhino-iOS/RhinoResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/rhino_params.pv",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RhinoResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

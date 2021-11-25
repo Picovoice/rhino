@@ -33,12 +33,21 @@ This binding is for running Rhino on **Unity 2017.4+** on the following platform
 
 ## Installation
 
-The easiest way to install the Rhino Unity SDK is to import [rhino.unitypackage](/binding/unity/rhino.unitypackage) into your Unity project by either dropping it into the Unity editor or going to _Assets>Import Package>Custom Package..._
+The easiest way to install the Rhino Unity SDK is to import the [Rhino Unity Package](/binding/unity/rhino-2.0.0.unitypackage) into your Unity project by either dropping it into the Unity editor or going to _Assets>Import Package>Custom Package..._
 
 **NOTE:** On macOS, the Rhino library may get flagged as having come from an unverified source if you've downloaded the  `.unitypackage` directly from github. This should only come up when running your project in the Editor. To disable this warning, go to Security & Preferences and choose to allow pv_rhino.dylib to run.
 
+## AccessKey
+
+All bindings require a valid Picovoice `AccessKey` at initialization. `AccessKey`s act as your credentials when using Porcupine SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
 ## Packaging
-To build the package from source, you have first have to clone the repo with submodules:
+To build the package from source, you first have to clone the repo with submodules:
 ```console
 git clone --recurse-submodules git@github.com:Picovoice/rhino.git
 # or 
@@ -61,13 +70,16 @@ Using the constructor `RhinoManager.Create` will create an instance of the Rhino
 ```csharp
 using Pv.Unity;
 
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try 
 {    
     RhinoManager _rhinoManager = RhinoManager.Create(
+                                    accessKey,
                                     "/path/to/context/file.rhn",
                                     OnInferenceResult);
 }
-catch (Exception ex)
+catch (RhinoException ex)
 {
     // handle rhino init error
 }
@@ -91,17 +103,22 @@ private void OnInferenceResult(Inference inference)
 }
 ```
 
-You can override the default Rhino model file and/or the inference sensitivity. There is also an optional errorCallback that is called if there is a problem encountered while processing audio. These optional parameters can be passed in like so:
+You can override the default Rhino model file and/or the inference sensitivity. You can set `requireEndpoint` parameter to false if you do not wish to wait for silence before Rhino infers context. There is also an optional `processErrorCallback` that is called if there is a problem encountered while processing audio. These optional parameters can be passed in like so:
 
 ```csharp
+
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 RhinoManager _rhinoManager = RhinoManager.Create(
+                                        accessKey,
                                         "/path/to/context/file.rhn",
                                         OnInferenceResult,
                                         modelPath: "/path/to/model/file.pv",
                                         sensitivity: 0.75f,
-                                        errorCallback: OnError);
+                                        requireEndpoint: false,
+                                        processErrorCallback: OnError);
 
-void OnError(Exception ex){
+void OnError(RhinoException ex){
     Debug.LogError(ex.ToString());
 }
 ```
@@ -114,7 +131,7 @@ _rhinoManager.Process();
 
 Audio capture stops and Rhino resets once an inference result is returned via the inference callback. When you wish to result, call `.Process()` again.
 
-Once the app is done with using an instance of RhinoManager, you can explicitly release the audio resources and the resources allocated to Rhino:
+Once the app is done with using an instance of RhinoManager, you can explicitly release the audio resources, and the resources allocated to Rhino:
 ```csharp
 _rhinoManager.Delete();
 ```
@@ -126,18 +143,20 @@ Unity package to capture frames of audio and automatically pass it to the infere
 
 #### Low-Level API
 
-[Rhino](/binding/unity/Assets/Rhino/Rhino.cs) provides low-level access to the inference engine for those who want to incorporate speech-to-intent into a already existing audio processing pipeline.
+[Rhino](/binding/unity/Assets/Rhino/Rhino.cs) provides low-level access to the inference engine for those who want to incorporate speech-to-intent into an already existing audio processing pipeline.
 
-To create an instance of `Rhino`, use the `.Create` static constructor and a context file.
+To create an instance of `Rhino`, use the `.Create` static constructor, and a context file.
 
 ```csharp
 using Pv.Unity;
 
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try
 {    
-    Rhino _rhino = Rhino.Create("path/to/context/file.rhn");
+    Rhino _rhino = Rhino.Create(accessKey, "path/to/context/file.rhn");
 } 
-catch (Exception ex) 
+catch (RhinoException ex) 
 {
     // handle rhino init error
 }
@@ -182,9 +201,9 @@ catch (Exception ex)
 ```
 
 For process to work correctly, the audio data must be in the audio format required by Picovoice.
-The required sample rate is specified by the `SampleRate` property and the required number of audio samples in each frame is specified by the `FrameLength` property. Audio must be single-channel and 16-bit linearly-encoded.
+The required sample rate is specified by the `SampleRate` property, and the required number of audio samples in each frame is specified by the `FrameLength` property. Audio must be single-channel and 16-bit linearly-encoded.
 
-Rhino implements the `IDisposable` interface, so you can use Rhino in a `using` block. If you don't use a `using` block, resources will be released by the garbage collector automatically or you can explicitly release the resources like so:
+Rhino implements the `IDisposable` interface, so you can use Rhino in a `using` block. If you don't use a `using` block, resources will be released by the garbage collector automatically, or you can explicitly release the resources like so:
 
 ```csharp
 _rhino.Dispose();

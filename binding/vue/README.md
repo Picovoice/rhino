@@ -6,7 +6,7 @@ Renderless Vue component for Rhino for Web.
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of interest, in real-time.
 
-E.g. using the [demo "Clock" Rhino context (English langauge)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn), Rhino performs inference on a spoken phrase:
+E.g. using the [demo "Clock" Rhino context (English language)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn), Rhino performs inference on a spoken phrase:
 
 > "Set a timer for ten minutes"
 
@@ -40,7 +40,16 @@ The Picovoice SDKs for Web are powered by WebAssembly (WASM), the Web Audio API,
 
 All modern browsers (Chrome/Edge/Opera, Firefox, Safari) are supported, including on mobile. Internet Explorer is _not_ supported.
 
-Using the Web Audio API requires a secure context (HTTPS connection), with the exception of `localhost`, for local development.
+Using the Web Audio API requires a secure context (HTTPS connection) - except `localhost` - for local development.
+
+## AccessKey
+
+The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
 ## Installation
 
@@ -74,6 +83,16 @@ export type RhinoContext = {
   /** Value in range [0,1] that trades off miss rate for false alarm */
   sensitivity?: number
 }
+
+export type RhinoFactoryArgs = {
+  /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+  accessKey: string;
+  /** The context to instantiate */
+  context: RhinoContext;
+  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  requireEndpoint?: boolean;
+};
+
 ```
 
 The `Rhino` component emits four [events](#events). The main event of interest is `rhn-inference`, emitted when Rhino concludes an inference (whether it was understood or not). The `rhn-inference` event provides a `RhinoInference` object:
@@ -97,6 +116,7 @@ Make sure you handle the possibility of errors with the `rhn-error` event. Users
   <Rhino
     ref="rhino"
     v-bind:rhinoFactoryArgs="{
+      accessKey: '${ACCESS_KEY}',  <!-- AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) -->
       context: {
         base64: RHINO_TRAINED_CONTEXT_BASE_64_STRING
       },
@@ -184,4 +204,4 @@ The Rhino component will emit the following events:
 
 Custom contexts are generated using [Picovoice Console](https://picovoice.ai/console/). They are trained from text using transfer learning into bespoke Rhino context files with a `.rhn` extension. The target platform is WebAssembly (WASM), as that is what backs the Vue library.
 
-The `.zip` file containes a `.rhn` file and a `_b64.txt` file which containes the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.
+The `.zip` file contains a `.rhn` file and a `_b64.txt` file which contains the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.

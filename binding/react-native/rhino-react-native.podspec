@@ -14,8 +14,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/Picovoice/rhino.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/*.{h,m,mm,swift}"
-  s.vendored_frameworks = "ios/PvRhino.xcframework"
-  s.resources = 'ios/resources/**/*.*'
 
   s.dependency "React"
+  s.dependency "Rhino-iOS"
 end

@@ -28,7 +28,12 @@ namespace Pv
         INVALID_ARGUMENT = 3,
         STOP_ITERATION = 4,
         KEY_ERROR = 5,
-        INVALID_STATE = 6
+        INVALID_STATE = 6,
+        RUNTIME_ERROR = 7,
+        ACTIVATION_ERROR = 8,
+        ACTIVATION_LIMIT_REACHED = 9,
+        ACTIVATION_THROTTLED = 10,
+        ACTIVATION_REFUSED = 11
     }
 
     /// <summary>
@@ -36,7 +41,7 @@ namespace Pv
     /// </summary>
     public class Inference
     {
-        public Inference(bool isUnderstood, string intent, Dictionary<string,string> slots)
+        public Inference(bool isUnderstood, string intent, Dictionary<string, string> slots)
         {
             IsUnderstood = isUnderstood;
             Intent = intent;
@@ -56,28 +61,34 @@ namespace Pv
     public class Rhino : IDisposable
     {
         private const string LIBRARY = "libpv_rhino";
-        private IntPtr _libraryPointer = IntPtr.Zero;        
+        private IntPtr _libraryPointer = IntPtr.Zero;
 
-        public static readonly string MODEL_PATH;
+        public static readonly string DEFAULT_MODEL_PATH;
 
-        static Rhino() 
+        static Rhino()
         {
 #if NETCOREAPP3_1
             NativeLibrary.SetDllImportResolver(typeof(Rhino).Assembly, ImportResolver);
 #endif
-            MODEL_PATH = Utils.PvModelPath();
+            DEFAULT_MODEL_PATH = Utils.PvModelPath();
         }
 
 #if NETCOREAPP3_1
-        private static IntPtr ImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath) 
+        private static IntPtr ImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
         {
-            IntPtr libHandle = IntPtr.Zero;                                   
+            IntPtr libHandle = IntPtr.Zero;
             NativeLibrary.TryLoad(Utils.PvLibraryPath(libraryName), out libHandle);
             return libHandle;
         }
 #endif
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern RhinoStatus pv_rhino_init(string modelPath, string contextPath, float sensitivity, out IntPtr handle);
+        private static extern RhinoStatus pv_rhino_init(
+            string accessKey,
+            string modelPath,
+            string contextPath,
+            float sensitivity,
+            bool requireEndpoint,
+            out IntPtr handle);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int pv_sample_rate();
@@ -86,22 +97,37 @@ namespace Pv
         private static extern void pv_rhino_delete(IntPtr handle);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern RhinoStatus pv_rhino_process(IntPtr handle, short[] pcm, out bool isFinalized);
+        private static extern RhinoStatus pv_rhino_process(
+            IntPtr handle,
+            short[] pcm,
+            out bool isFinalized);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern RhinoStatus pv_rhino_is_understood(IntPtr handle, out bool isUnderstood);
+        private static extern RhinoStatus pv_rhino_is_understood(
+            IntPtr handle,
+            out bool isUnderstood);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern RhinoStatus pv_rhino_get_intent(IntPtr handle, out IntPtr intent, out int numSlots, out IntPtr slots, out IntPtr values);
+        private static extern RhinoStatus pv_rhino_get_intent(
+            IntPtr handle,
+            out IntPtr intent,
+            out int numSlots,
+            out IntPtr slots,
+            out IntPtr values);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern RhinoStatus pv_rhino_free_slots_and_values(IntPtr handle, IntPtr slots, IntPtr values);
+        private static extern RhinoStatus pv_rhino_free_slots_and_values(
+            IntPtr handle,
+            IntPtr slots,
+            IntPtr values);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern RhinoStatus pv_rhino_reset(IntPtr handle);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern RhinoStatus pv_rhino_context_info(IntPtr handle, out IntPtr contextInfo);
+        private static extern RhinoStatus pv_rhino_context_info(
+            IntPtr handle,
+            out IntPtr contextInfo);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern IntPtr pv_rhino_version();
@@ -114,6 +140,7 @@ namespace Pv
         /// <summary>
         /// Factory method for Rhino Speech-to-Intent engine.
         /// </summary>
+        /// <param name="accessKey">AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).</param>
         /// <param name="contextPath">
         /// Absolute path to file containing context model (file with `.rhn` extension. A context represents the set of 
         /// expressions(spoken commands), intents, and intent arguments(slots) within a domain of interest.
@@ -126,42 +153,68 @@ namespace Pv
         /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses 
         /// at the cost of (potentially) increasing the erroneous inference rate.
         /// </param>
+        /// <param name="requireEndpoint">
+        /// If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+        /// </param>
         /// <returns>An instance of Rhino Speech-to-Intent engine.</returns>                             
-        public static Rhino Create(string contextPath, string modelPath = null, float sensitivity=0.5f)
+        public static Rhino Create(string accessKey, string contextPath, string modelPath = null, float sensitivity = 0.5f, bool requireEndpoint = true)
         {
-            return new Rhino(modelPath ?? MODEL_PATH, contextPath, sensitivity);
+            return new Rhino(accessKey, modelPath ?? DEFAULT_MODEL_PATH, contextPath, sensitivity, requireEndpoint);
         }
 
         /// <summary>
         /// Creates an instance of the Rhino wake word engine.
         /// </summary>
-        /// <param name="modelPath">Absolute path to file containing model parameters.
+        /// <param name="accessKey">AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).</param>
         /// <param name="contextPath">
-        /// Absolute path to file containing context parameters. A context represents the set of
+        /// Absolute path to file containing context model (file with `.rhn` extension. A context represents the set of 
         /// expressions(spoken commands), intents, and intent arguments(slots) within a domain of interest.
         /// </param>
+        /// <param name="modelPath">
+        /// Absolute path to the file containing model parameters. If not set it will be set to the 
+        /// default location.
+        /// </param>       
         /// <param name="sensitivity">
-        /// Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value
-        /// results in fewer misses at the cost of(potentially) increasing the erroneous inference rate.
-        /// </param>        
-        public Rhino(string modelPath, string contextPath, float sensitivity=0.5f)
-        {            
+        /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses 
+        /// at the cost of (potentially) increasing the erroneous inference rate.
+        /// </param>
+        /// <param name="requireEndpoint">
+        /// If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+        /// </param>
+        private Rhino(
+            string accessKey,
+            string modelPath,
+            string contextPath,
+            float sensitivity = 0.5f,
+            bool requireEndpoint = true)
+        {
+            if (string.IsNullOrEmpty(accessKey))
+            {
+                throw new RhinoInvalidArgumentException("No AccessKey provided to Rhino");
+            }
+
             if (!File.Exists(modelPath))
             {
-                throw new IOException($"Couldn't find model file at '{modelPath}'");
+                throw new RhinoIOException($"Couldn't find model file at '{modelPath}'");
             }
 
             if (!File.Exists(contextPath))
             {
-                throw new IOException($"Couldn't find context file at '{contextPath}'");
+                throw new RhinoIOException($"Couldn't find context file at '{contextPath}'");
             }
 
             if (sensitivity < 0 || sensitivity > 1)
             {
-                throw new ArgumentException("Sensitivity value should be within [0, 1].");
+                throw new RhinoInvalidArgumentException("Sensitivity value should be within [0, 1].");
             }
 
-            RhinoStatus status = pv_rhino_init(modelPath, contextPath, sensitivity, out _libraryPointer);
+            RhinoStatus status = pv_rhino_init(
+                accessKey,
+                modelPath,
+                contextPath,
+                sensitivity,
+                requireEndpoint,
+                out _libraryPointer);
             if (status != RhinoStatus.SUCCESS)
             {
                 throw RhinoStatusToException(status);
@@ -171,9 +224,9 @@ namespace Pv
             status = pv_rhino_context_info(_libraryPointer, out contextInfoPtr);
             if (status != RhinoStatus.SUCCESS)
             {
-                throw RhinoStatusToException(status);
+                throw RhinoStatusToException(status, "Rhino init failed.");
             }
-            
+
             ContextInfo = Marshal.PtrToStringAnsi(contextInfoPtr);
             Version = Marshal.PtrToStringAnsi(pv_rhino_version());
             SampleRate = pv_sample_rate();
@@ -196,14 +249,14 @@ namespace Pv
         {
             if (pcm.Length != FrameLength)
             {
-                throw new ArgumentException($"Input audio frame size ({pcm.Length}) was not the size specified by Rhino engine ({FrameLength}). " +
+                throw new RhinoInvalidArgumentException($"Input audio frame size ({pcm.Length}) was not the size specified by Rhino engine ({FrameLength}). " +
                     $"Use rhino.FrameLength to get the correct size.");
             }
-            
+
             RhinoStatus status = pv_rhino_process(_libraryPointer, pcm, out _isFinalized);
             if (status != RhinoStatus.SUCCESS)
             {
-                throw RhinoStatusToException(status);
+                throw RhinoStatusToException(status, "Rhino process failed.");
             }
 
             return _isFinalized;
@@ -219,9 +272,9 @@ namespace Pv
         /// </returns>
         public Inference GetInference()
         {
-            if (!_isFinalized) 
+            if (!_isFinalized)
             {
-                throw RhinoStatusToException(RhinoStatus.INVALID_STATE);
+                throw RhinoStatusToException(RhinoStatus.INVALID_STATE, "GetInference was called before Rhino had finalized");
             }
 
             bool isUnderstood;
@@ -231,38 +284,38 @@ namespace Pv
             RhinoStatus status = pv_rhino_is_understood(_libraryPointer, out isUnderstood);
             if (status != RhinoStatus.SUCCESS)
             {
-                throw RhinoStatusToException(status);
+                throw RhinoStatusToException(status, "GetInference failed at pv_rhino_is_understood");
             }
 
             if (isUnderstood)
-            {                
+            {
                 IntPtr intentPtr, slotKeysPtr, slotValuesPtr;
                 int numSlots;
 
                 status = pv_rhino_get_intent(_libraryPointer, out intentPtr, out numSlots, out slotKeysPtr, out slotValuesPtr);
                 if (status != RhinoStatus.SUCCESS)
                 {
-                    throw RhinoStatusToException(status);
+                    throw RhinoStatusToException(status, "GetInference failed at pv_rhino_get_intent");
                 }
 
                 intent = Marshal.PtrToStringAnsi(intentPtr);
 
                 int elementSize = Marshal.SizeOf(typeof(IntPtr));
                 slots = new Dictionary<string, string>();
-                for (int i = 0; i < numSlots; i++) 
+                for (int i = 0; i < numSlots; i++)
                 {
                     string slotKey = Marshal.PtrToStringAnsi(Marshal.ReadIntPtr(slotKeysPtr, i * elementSize));
-                    string slotValue = Marshal.PtrToStringAnsi(Marshal.ReadIntPtr(slotValuesPtr, i * elementSize));                    
+                    string slotValue = Marshal.PtrToStringAnsi(Marshal.ReadIntPtr(slotValuesPtr, i * elementSize));
                     slots[slotKey] = slotValue;
                 }
 
                 status = pv_rhino_free_slots_and_values(_libraryPointer, slotKeysPtr, slotValuesPtr);
                 if (status != RhinoStatus.SUCCESS)
                 {
-                    throw RhinoStatusToException(status);
+                    throw RhinoStatusToException(status, "GetInference failed at pv_rhino_free_slots_and_values");
                 }
             }
-            else 
+            else
             {
                 intent = null;
                 slots = new Dictionary<string, string>();
@@ -271,7 +324,7 @@ namespace Pv
             status = pv_rhino_reset(_libraryPointer);
             if (status != RhinoStatus.SUCCESS)
             {
-                throw RhinoStatusToException(status);
+                throw RhinoStatusToException(status, "GetInference failed at pv_rhino_reset");
             }
 
             return new Inference(isUnderstood, intent, slots);
@@ -288,7 +341,7 @@ namespace Pv
         /// Gets the version number of the Rhino library.
         /// </summary>
         /// <returns>Version of Rhino</returns>
-        public string Version { get; private set; }        
+        public string Version { get; private set; }
 
         /// <summary>
         /// Gets the required number of audio samples per frame.
@@ -307,22 +360,36 @@ namespace Pv
         /// </summary>
         /// <param name="status">Picovoice library status code.</param>
         /// <returns>.NET exception</returns>
-        private static Exception RhinoStatusToException(RhinoStatus status)
+        private static Exception RhinoStatusToException(RhinoStatus status, string message = "")
         {
             switch (status)
             {
                 case RhinoStatus.OUT_OF_MEMORY:
-                    return new OutOfMemoryException();
+                    return new RhinoMemoryException(message);
                 case RhinoStatus.IO_ERROR:
-                    return new IOException();
+                    return new RhinoIOException(message);
                 case RhinoStatus.INVALID_ARGUMENT:
-                    return new ArgumentException();
+                    return new RhinoInvalidArgumentException(message);
+                case RhinoStatus.STOP_ITERATION:
+                    return new RhinoStopIterationException(message);
+                case RhinoStatus.KEY_ERROR:
+                    return new RhinoKeyException(message);
                 case RhinoStatus.INVALID_STATE:
-                    return new Exception("Rhino reported an invalid state.");
+                    return new RhinoInvalidStateException(message);
+                case RhinoStatus.RUNTIME_ERROR:
+                    return new RhinoRuntimeException(message);
+                case RhinoStatus.ACTIVATION_ERROR:
+                    return new RhinoActivationException(message);
+                case RhinoStatus.ACTIVATION_LIMIT_REACHED:
+                    return new RhinoActivationLimitException(message);
+                case RhinoStatus.ACTIVATION_THROTTLED:
+                    return new RhinoActivationThrottledException(message);
+                case RhinoStatus.ACTIVATION_REFUSED:
+                    return new RhinoActivationRefusedException(message);
                 default:
-                    return new Exception("Unmapped error code returned from Rhino.");
+                    return new RhinoException("Unmapped error code returned from Rhino.");
             }
-        }        
+        }
 
         /// <summary>
         /// Frees memory that was allocated for Rhino

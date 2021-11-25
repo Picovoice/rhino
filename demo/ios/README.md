@@ -1,12 +1,25 @@
 # Rhino iOS Demo
 
+## AccessKey
+
+Rhino requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
+Copy your `AccessKey` into the `ACCESS_KEY` variable in `RhinoDemo/ContentView.swift` before building the demo.
+
+## Running the Demo
+
 Before building the demo app, run the following from this directory to install the Rhino Cocoapod:
 ```ruby
 pod install
 ```
 Open `RhinoDemo.xcworkspace` and run the demo.
 
-The default context for this demo is `Smart Lighting`. Simply press start and the engine can recognize commands such as
+The default context for this demo is `Smart Lighting`. Simply press start, and the engine can recognize commands such as
 
 > Turn off the lights.
 
@@ -68,4 +81,4 @@ context:
 
 ## Running the On-Device Unit Tests
 
-Open `RhinoDemo.xcworkspace` with XCode and run the tests with `Product > Test`.
+Copy your `AccessKey` into the `accessKey` variable in `RhinoDemoUITests/RhinoDemoUITests.swift`. Open `RhinoDemo.xcworkspace` with XCode and run the tests with `Product > Test`.

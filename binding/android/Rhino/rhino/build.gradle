@@ -3,16 +3,16 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 ext {
     PUBLISH_GROUP_ID = 'ai.picovoice'
-    PUBLISH_VERSION = '1.6.7'
+    PUBLISH_VERSION = '2.0.0'
     PUBLISH_ARTIFACT_ID = 'rhino-android'
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion defaultTargetSdkVersion
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 30
+        targetSdkVersion defaultTargetSdkVersion
         versionCode 1
         versionName "1.0"
 

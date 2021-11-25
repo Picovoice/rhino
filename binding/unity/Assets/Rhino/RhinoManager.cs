@@ -9,14 +9,9 @@
 // specific language governing permissions and limitations under the License.
 //
 
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
 using System;
-using System.Linq;
 
 using UnityEngine;
-using UnityEngine.UI;
 
 
 namespace Pv.Unity
@@ -27,11 +22,12 @@ namespace Pv.Unity
         private VoiceProcessor _voiceProcessor;
         private Rhino _rhino;
         private Action<Inference> _inferenceCallback;
-        private Action<Exception> _errorCallback;
+        private Action<RhinoException> _processErrorCallback;
 
         /// <summary>
         /// Creates an instance of Rhino inference engine with built-in audio processing
         /// </summary>        
+        /// <param name="accessKey">AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).</param>
         /// <param name="contextPath">Absolute path to the Rhino context file (.rhn).</param>
         /// <param name="inferenceCallback">A callback for when Rhino has made an intent inference.</param>
         /// <param name="modelPath">(Optional) Absolute path to the file containing model parameters. If not set it will be set to the default location.</param>        
@@ -40,22 +36,29 @@ namespace Pv.Unity
         /// fewer misses at the cost of (potentially) increasing the erroneous inference rate.
         /// Sensitivity should be a floating-point number within 0 and 1.
         /// </param>
-        /// <param name="errorCallback">(Optional) Callback that triggers is the engine experiences a problem while processing audio.</param>
-        /// <returns>An instance of RhinoManager.</returns>                             
-        public static RhinoManager Create(string contextPath, Action<Inference> inferenceCallback,
-                                          string modelPath = null, float sensitivity = 0.5f,
-                                          Action<Exception> errorCallback = null)
+        /// <param name="requireEndpoint">
+        /// (Optional) Boolean variable to indicate if Rhino should wait for a chunk of silence before finishing inference.
+        /// </param>
+        /// <param name="processErrorCallback">(Optional) Reports errors that are encountered while the engine is processing audio.</returns>                             
+        public static RhinoManager Create(
+            string accessKey,
+            string contextPath,
+            Action<Inference> inferenceCallback,
+            string modelPath = null,
+            float sensitivity = 0.5f,
+            bool requireEndpoint = true,
+            Action<RhinoException> processErrorCallback = null)
         {
-            Rhino rhino = Rhino.Create(contextPath, modelPath: modelPath, sensitivity: sensitivity);
-            return new RhinoManager(rhino, inferenceCallback, errorCallback);
+            Rhino rhino = Rhino.Create(accessKey, contextPath, modelPath: modelPath, sensitivity: sensitivity, requireEndpoint: requireEndpoint);
+            return new RhinoManager(rhino, inferenceCallback, processErrorCallback);
         }
 
         // private constructor
-        private RhinoManager(Rhino rhino, Action<Inference> inferenceCallback, Action<Exception> errorCallback = null)
+        private RhinoManager(Rhino rhino, Action<Inference> inferenceCallback, Action<RhinoException> processErrorCallback = null)
         {
             _rhino = rhino;
             _inferenceCallback = inferenceCallback;
-            _errorCallback = errorCallback;
+            _processErrorCallback = processErrorCallback;
 
             _voiceProcessor = VoiceProcessor.Instance;
             _voiceProcessor.OnFrameCaptured += OnFrameCaptured;
@@ -79,10 +82,10 @@ namespace Pv.Unity
                     _voiceProcessor.StopRecording();
                 }
             }
-            catch (Exception ex)
+            catch (RhinoException ex)
             {
-                if (_errorCallback != null)
-                    _errorCallback(ex);
+                if (_processErrorCallback != null)
+                    _processErrorCallback(ex);
                 else
                     Debug.LogError(ex.ToString());
             }
@@ -111,13 +114,13 @@ namespace Pv.Unity
         {
             if (_rhino == null || _voiceProcessor == null)
             {
-                throw new ObjectDisposedException("Rhino", "Cannot start RhinoManager - resources have already been released");
+                throw new RhinoInvalidStateException("Cannot start RhinoManager - resources have already been released");
             }
             _voiceProcessor.StartRecording(_rhino.SampleRate, _rhino.FrameLength);
-        }        
+        }
 
         /// <summary>
-        /// Free resources that were allocated to Porcupine and the voice processor
+        /// Free resources that were allocated to Rhino and the voice processor
         /// </summary>
         public void Delete()
         {

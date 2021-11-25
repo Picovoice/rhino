@@ -1,14 +1,13 @@
-# Rhino Speech-to-Intent Engine Demos
-
-Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
+# Rhino Demos for .NET
 
 This package contains .NET Core command line demos for processing real-time audio (i.e. microphone) and audio files
 using Rhino Speech-to-Intent engine.
 
 ## Rhino
 
-Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
-interest, in real-time. For example, given a spoken command
+Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
+
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of interest, in real-time. For example, given a spoken command
 
 >Can I have a small double-shot espresso?
 
@@ -59,6 +58,15 @@ dotnet build -c MicDemo.Release
 dotnet build -c FileDemo.Release
 ```
 
+## AccessKey
+
+Rhino requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
 ## Usage
 
 NOTE: File path arguments must be absolute paths. The working directory for the following dotnet commands is:
@@ -74,7 +82,10 @@ benchmarking against a corpus of audio data. Note that only the relevant spoken 
 and no other speech. There also needs to be at least one second of silence at the end of the file.
 
 ```console
-dotnet run -c FileDemo.Release -- --input_audio_path ${AUDIO_PATH} --context_path ${CONTEXT_PATH}
+dotnet run -c FileDemo.Release -- \ 
+--input_audio_path ${AUDIO_PATH} \
+--access_key ${ACCESS_KEY} \
+--context_path ${CONTEXT_PATH}
 ```
 
 ### Microphone Demo
@@ -82,7 +93,9 @@ dotnet run -c FileDemo.Release -- --input_audio_path ${AUDIO_PATH} --context_pat
 The microphone demo opens an audio stream from a microphone and performs inference on spoken commands:
 
 ```console
-dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_PATH}
+dotnet run -c MicDemo.Release -- \
+--access_key ${ACCESS_KEY} \
+--context_path ${CONTEXT_PATH}
 ```
 
 It is possible that the default audio input device is not the one you wish to use. There are a couple
@@ -103,13 +116,19 @@ You can use the device index to specify which microphone to use for the demo. Fo
 in the above example, you can invoke the demo application as below:
 
 ```console
-dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_PATH} --audio_device_index 0
+dotnet run -c MicDemo.Release -- \
+--access_key ${ACCESS_KEY} \
+--context_path ${CONTEXT_PATH} \
+--audio_device_index 0
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved with:
 
 ```console
-dotnet run -c MicDemo.Release -- --context_path ${CONTEXT_PATH} --audio_device_index 0 --output_path ./test.wav
+dotnet run -c MicDemo.Release -- \
+--access_key ${ACCESS_KEY} \
+--context_path ${CONTEXT_PATH} \ 
+--output_path ./test.wav
 ```
 
-If after listening to stored file there is no apparent problem detected please open an issue.
+If after listening to the stored file there is no apparent problem detected, please open an issue.

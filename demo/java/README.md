@@ -62,6 +62,15 @@ Navigate to the output directory to use the demos:
 cd rhino/demo/java/build/libs
 ```
 
+## AccessKey
+
+The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
 ### File Demo
 
 The file demo uses Rhino to get an inference result from an audio file. This demo is mainly useful for quantitative performance 
@@ -69,7 +78,7 @@ benchmarking against a corpus of audio data. Note that only the relevant spoken 
 and no other speech. There also needs to be at least one second of silence at the end of the file.
 
 ```console
-java -jar rhino-file-demo.jar -i ${AUDIO_PATH} -c ${CONTEXT_PATH}
+java -jar rhino-file-demo.jar -a ${ACCESS_KEY} -i ${AUDIO_PATH} -c ${CONTEXT_PATH}
 ```
 
 ### Microphone Demo
@@ -77,7 +86,7 @@ java -jar rhino-file-demo.jar -i ${AUDIO_PATH} -c ${CONTEXT_PATH}
 The microphone demo opens an audio stream from a microphone and performs inference on spoken commands:
 
 ```console
-java -jar rhino-mic-demo.jar -c ${CONTEXT_PATH}
+java -jar rhino-mic-demo.jar -a ${ACCESS_KEY} -c ${CONTEXT_PATH}
 ```
 
 It is possible that the default audio input device is not the one you wish to use. There are a couple
@@ -100,13 +109,13 @@ You can use the device index to specify which microphone to use for the demo. Fo
 microphone in the above example, you can invoke the demo application as below:
 
 ```console
-java -jar rhino-mic-demo.jar -c ${CONTEXT_PATH} -di 1
+java -jar rhino-mic-demo.jar -a ${ACCESS_KEY} -c ${CONTEXT_PATH} -di 1
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection. This can be achieved with:
 
 ```console
-java -jar rhino-mic-demo.jar -c ${CONTEXT_PATH} -di 1 -o ./test.wav
+java -jar rhino-mic-demo.jar -a ${ACCESS_KEY} -c ${CONTEXT_PATH} -di 1 -o ./test.wav
 ```
 
-If after listening to stored file there is no apparent problem detected please open an issue.
+If after listening to stored file there is no apparent problem detected, please open an issue.

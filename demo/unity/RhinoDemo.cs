@@ -1,20 +1,33 @@
-﻿using System;
-using System.Collections;
+﻿//
+// Copyright 2021 Picovoice Inc.
+//
+// You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+// file accompanying this source.
+//
+// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+// an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations under the License.
+//
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
 
 using Pv.Unity;
 
+
 public class RhinoDemo : MonoBehaviour
 {
+    private const string ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
     Button _startButton;
     Image[] _locationStates;
+    Text _errorMessage;
         
-    private bool _isProcessing;    
+    private bool _isProcessing;
 
     RhinoManager _rhinoManager;
 
@@ -44,14 +57,35 @@ public class RhinoDemo : MonoBehaviour
         _startButton = gameObject.GetComponentInChildren<Button>();
         _startButton.onClick.AddListener(ToggleProcessing);
         _locationStates = gameObject.GetComponentsInChildren<Image>().Where(i => i.name != "ToggleListeningButton").ToArray();
+        _errorMessage = gameObject.transform.Find("ErrorMessage").GetComponent<Text>();
         
         try
         {
-            _rhinoManager = RhinoManager.Create(_contextPath, OnInferenceResult);
+            _rhinoManager = RhinoManager.Create(ACCESS_KEY, _contextPath, OnInferenceResult, processErrorCallback: ErrorCallback);
         }
-        catch (Exception ex)
+        catch (RhinoInvalidArgumentException ex)
         {
-            Debug.LogError("RhinoManager was unable to initialize: " + ex.ToString());
+            SetError($"{ex.Message}\nMake sure your access key '{ACCESS_KEY}' is a valid access key.");
+        }
+        catch (RhinoActivationException)
+        {
+            SetError("AccessKey activation error");
+        }
+        catch (RhinoActivationLimitException)
+        {
+            SetError("AccessKey reached its device limit");
+        }
+        catch (RhinoActivationRefusedException)
+        {
+            SetError("AccessKey refused");
+        }
+        catch (RhinoActivationThrottledException)
+        {
+            SetError("AccessKey has been throttled");
+        }
+        catch (RhinoException ex)
+        {
+            SetError("RhinoManager was unable to initialize: " + ex.Message);
         }
     }
 
@@ -150,6 +184,17 @@ public class RhinoDemo : MonoBehaviour
         }
     }
 
+    private void ErrorCallback(RhinoException e)
+    {
+        SetError(e.Message);
+    }
+
+    private void SetError(string message)
+    {
+        _errorMessage.text = message;
+        _startButton.interactable = false;
+    }
+
     void Update()
     {
 
@@ -181,7 +226,7 @@ public class RhinoDemo : MonoBehaviour
             case RuntimePlatform.Android:
                 return "android";
             default:
-                throw new NotSupportedException(string.Format("Platform '{0}' not supported by Porcupine Unity binding", Application.platform));
+                throw new NotSupportedException(string.Format("Platform '{0}' not supported by Rhino Unity binding", Application.platform));
         }
     }
 
@@ -189,38 +234,6 @@ public class RhinoDemo : MonoBehaviour
     {
         string fileName = string.Format("smart_lighting_{0}.rhn", _platform);
         string srcPath = Path.Combine(Application.streamingAssetsPath, string.Format("contexts/{0}/{1}", _platform, fileName));
-#if !UNITY_EDITOR && UNITY_ANDROID
-        string dstPath = Path.Combine(Application.persistentDataPath, string.Format("contexts/{0}", _platform));
-        if (!Directory.Exists(dstPath))
-        {
-            Directory.CreateDirectory(dstPath);
-        }
-        dstPath = Path.Combine(dstPath, fileName);
-
-        return ExtractResource(srcPath, dstPath);
-#else
         return srcPath;
-#endif
     }
-
-#if !UNITY_EDITOR && UNITY_ANDROID
-    public static string ExtractResource(string srcPath, string dstPath)
-    {
-        var loadingRequest = UnityWebRequest.Get(srcPath);
-        loadingRequest.SendWebRequest();
-        while (!loadingRequest.isDone)
-        {
-            if (loadingRequest.isNetworkError || loadingRequest.isHttpError)
-            {
-                break;
-            }
-        }
-        if (!(loadingRequest.isNetworkError || loadingRequest.isHttpError))
-        {
-            File.WriteAllBytes(dstPath, loadingRequest.downloadHandler.data);
-        }
-
-        return dstPath;
-    }
-#endif
 }

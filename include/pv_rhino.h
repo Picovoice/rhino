@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
+    Copyright 2018-2021 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -19,8 +19,7 @@
 
 #ifdef __cplusplus
 
-extern "C"
-{
+extern "C" {
 
 #endif
 
@@ -37,19 +36,23 @@ typedef struct pv_rhino pv_rhino_t;
 /**
  * Constructor.
  *
+ * @param access_key AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
  * @param model_path Absolute path to file containing model parameters.
  * @param context_path Absolute path to file containing context parameters. A context represents the set of
  * expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
  * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in
  * fewer misses at the cost of (potentially) increasing the erroneous inference rate.
+ * @param require_endpoint If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
  * @param[out] object Constructed Speech-to-Intent object.
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT', 'PV_STATUS_IO_ERROR', or 'PV_STATUS_OUT_OF_MEMORY' on
  * failure.
  */
 PV_API pv_status_t pv_rhino_init(
+        const char *access_key,
         const char *model_path,
         const char *context_path,
         float sensitivity,
+        bool require_endpoint,
         pv_rhino_t **object);
 
 /**

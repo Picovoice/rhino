@@ -6,7 +6,7 @@ Angular service for Rhino for Web.
 
 This library processes naturally spoken commands in-browser, offline. All processing is done via WebAssembly and Workers in a separate thread. Speech results are converted into inference directly, without intermediate Speech-to-Text. Rhino can be used standalone (push-to-talk), or with the [Porcupine Wake Word engine](https://picovoice.ai/platform/porcupine/).
 
-Rhino operates on speech in a bespoke constext. E.g. using the [demo "Clock" Rhino context (English langauge)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn):
+Rhino operates on speech in a bespoke context. E.g. using the [demo "Clock" Rhino context (English language)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn):
 
 > "Set a timer for ten minutes"
 
@@ -42,7 +42,16 @@ The Picovoice SDKs for Web are powered by WebAssembly (WASM), the Web Audio API,
 
 All modern browsers (Chrome/Edge/Opera, Firefox, Safari) are supported, including on mobile. Internet Explorer is _not_ supported.
 
-Using the Web Audio API requires a secure context (HTTPS connection), with the exception of `localhost`, for local development.
+Using the Web Audio API requires a secure context (HTTPS connection) - except `localhost` - for local development.
+
+## AccessKey
+
+The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
 ## Installation
 
@@ -65,7 +74,7 @@ import { RhinoService } from "@picovoice/rhino-web-angular"
 ...
 
   constructor(private rhinoService: RhinoService) {
-    // Subscribe to Rhino Keyword detections
+    // Subscribe to Rhino inference detections
     // Store each detection so we can display it in an HTML list
     this.rhinoDetection = rhinoService.inference$.subscribe(
       inference => console.log(`Rhino Detected "${inference}"`))
@@ -91,7 +100,7 @@ We need to initialize Rhino to tell it which context we want to listen to (and a
 
 ### Imports
 
-You can use Rhino by importing the worker package statically or dynamically. Static is more straightforward to implement, but will impact your initial bundle size with an additional ~4MB. Depending on your requirements, this may or may not be feasible. If you require a small bundle size, see dynamic importing below.
+You can use Rhino by importing the worker package statically or dynamically. Static is more straightforward to implement, but will impact your initial bundle size with an additional ~4 MB. Depending on your requirements, this may or may not be feasible. If you require a small bundle size, see dynamic importing below.
 
 #### Static Import
 
@@ -101,7 +110,7 @@ import {RhinoWorkerFactory as RhinoWorkerFactoryEn} from'@picovoice/rhino-web-en
   async ngOnInit() {
     // Initialize Rhino Service
     try {
-      await this.rhinoService.init(RhinoWorkerFactoryEn, {context: { base64: RHINO_CLOCK_64 }})
+      await this.rhinoService.init(RhinoWorkerFactoryEn, {accessKey: accessKey, context: { base64: RHINO_CLOCK_64 }})
       console.log("Rhino is now loaded. Press the Push-to-Talk button to activate.")
     }
     catch (error) {
@@ -128,7 +137,7 @@ import {RhinoWorkerFactory as RhinoWorkerFactoryEn} from'@picovoice/rhino-web-en
     const rhinoFactoryEn = (await import('@picovoice/rhino-web-en-worker')).RhinoWorkerFactory
     // Initialize Rhino Service
     try {
-      await this.rhinoService.init(rhinoFactoryEn, {context: { base64: RHINO_CLOCK_64 }})
+      await this.rhinoService.init(rhinoFactoryEn, {accessKey: accessKey, context: { base64: RHINO_CLOCK_64 }})
       console.log("Rhino is now loaded. Press the Push-to-Talk button to activate.")
     }
     catch (error) {
@@ -157,4 +166,4 @@ Rhino requires a trigger to begin listening. To start listening for natural lang
 
 Custom contexts are generated using [Picovoice Console](https://picovoice.ai/console/). They are trained from text using transfer learning into bespoke Rhino context files with a `.rhn` extension. The target platform is WebAssembly (WASM), as that is what backs the Angular library.
 
-The `.zip` file containes a `.rhn` file and a `_b64.txt` file which containes the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.
+The `.zip` file contains a `.rhn` file and a `_b64.txt` file which contains the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.

@@ -38,14 +38,28 @@ type PvStatus int
 
 // Possible status return codes from the Rhino library
 const (
-	SUCCESS          PvStatus = 0
-	OUT_OF_MEMORY    PvStatus = 1
-	IO_ERROR         PvStatus = 2
-	INVALID_ARGUMENT PvStatus = 3
-	STOP_ITERATION   PvStatus = 4
-	KEY_ERROR        PvStatus = 5
-	INVALID_STATE    PvStatus = 6
+	SUCCESS                  PvStatus = 0
+	OUT_OF_MEMORY            PvStatus = 1
+	IO_ERROR                 PvStatus = 2
+	INVALID_ARGUMENT         PvStatus = 3
+	STOP_ITERATION           PvStatus = 4
+	KEY_ERROR                PvStatus = 5
+	INVALID_STATE            PvStatus = 6
+	RUNTIME_ERROR            PvStatus = 7
+	ACTIVATION_ERROR         PvStatus = 8
+	ACTIVATION_LIMIT_REACHED PvStatus = 9
+	ACTIVATION_THROTTLED     PvStatus = 10
+	ACTIVATION_REFUSED       PvStatus = 11
 )
+
+type RhinoError struct {
+	StatusCode PvStatus
+	Message    string
+}
+
+func (e *RhinoError) Error() string {
+	return fmt.Sprintf("%s: %s", pvStatusToString(e.StatusCode), e.Message)
+}
 
 func pvStatusToString(status PvStatus) string {
 	switch status {
@@ -63,6 +77,16 @@ func pvStatusToString(status PvStatus) string {
 		return "KEY_ERROR"
 	case INVALID_STATE:
 		return "INVALID_STATE"
+	case RUNTIME_ERROR:
+		return "RUNTIME_ERROR"
+	case ACTIVATION_ERROR:
+		return "ACTIVATION_ERROR"
+	case ACTIVATION_LIMIT_REACHED:
+		return "ACTIVATION_LIMIT_REACHED"
+	case ACTIVATION_THROTTLED:
+		return "ACTIVATION_THROTTLED"
+	case ACTIVATION_REFUSED:
+		return "ACTIVATION_REFUSED"
 	default:
 		return fmt.Sprintf("Unknown error code: %d", status)
 	}
@@ -87,6 +111,9 @@ type Rhino struct {
 	// whether Rhino has made an inference
 	isFinalized bool
 
+	// AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
+	AccessKey string
+
 	// Absolute path to the file containing model parameters.
 	ModelPath string
 
@@ -98,14 +125,23 @@ type Rhino struct {
 	// Absolute path to the Rhino context file (.rhn).
 	ContextPath string
 
+	// If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+	RequireEndpoint bool
+
 	// Once initialized, stores the source of the Rhino context in YAML format. Shows the list of intents,
 	// which expressions map to those intents, as well as slots and their possible values.
 	ContextInfo string
 }
 
 // Returns a Rhino struct with the given context file and default parameters
-func NewRhino(contextPath string) Rhino {
-	return Rhino{ContextPath: contextPath, Sensitivity: 0.5, ModelPath: defaultModelFile}
+func NewRhino(accessKey string, contextPath string) Rhino {
+	return Rhino{
+		AccessKey:       accessKey,
+		ContextPath:     contextPath,
+		Sensitivity:     0.5,
+		ModelPath:       defaultModelFile,
+		RequireEndpoint: true,
+	}
 }
 
 // native interface
@@ -131,6 +167,7 @@ type nativeRhinoType struct {
 
 // private vars
 var (
+	osName, cpu   = getOS()
 	extractionDir = filepath.Join(os.TempDir(), "rhino")
 
 	defaultModelFile = extractDefaultModel()
@@ -151,35 +188,52 @@ var (
 
 // Init function for Rhino. Must be called before attempting process
 func (rhino *Rhino) Init() error {
+	if rhino.AccessKey == "" {
+		return &RhinoError{
+			INVALID_ARGUMENT,
+			"No AccessKey provided to Rhino"}
+	}
+
 	if rhino.ModelPath == "" {
 		rhino.ModelPath = defaultModelFile
 	}
 
 	if _, err := os.Stat(rhino.ModelPath); os.IsNotExist(err) {
-		return fmt.Errorf("%s: Specified model file could not be found at %s", pvStatusToString(INVALID_ARGUMENT), rhino.ModelPath)
+		return &RhinoError{
+			INVALID_ARGUMENT,
+			fmt.Sprintf("Specified model file could not be found at %s", rhino.ModelPath)}
 	}
 
 	if rhino.ContextPath == "" {
-		return fmt.Errorf("%s: No valid context was provided", pvStatusToString(INVALID_ARGUMENT))
+		return &RhinoError{
+			INVALID_ARGUMENT,
+			"No valid context was provided"}
 	}
 
 	if _, err := os.Stat(rhino.ContextPath); os.IsNotExist(err) {
-		return fmt.Errorf("%s: Context file could not be found at %s", pvStatusToString(INVALID_ARGUMENT), rhino.ContextPath)
+		return &RhinoError{
+			INVALID_ARGUMENT,
+			fmt.Sprintf("Context file could not be found at %s", rhino.ContextPath)}
 	}
 
 	if rhino.Sensitivity < 0 || rhino.Sensitivity > 1 {
-		return fmt.Errorf("%s: Sensitivity value of %f is invalid. Must be between [0, 1]",
-			pvStatusToString(INVALID_ARGUMENT), rhino.Sensitivity)
+		return &RhinoError{
+			INVALID_ARGUMENT,
+			fmt.Sprintf("Sensitivity value of %f is invalid. Must be between [0, 1]", rhino.Sensitivity)}
 	}
 
 	status := nativeRhino.nativeInit(rhino)
 	if PvStatus(status) != SUCCESS {
-		return fmt.Errorf("Rhino returned error %s", pvStatusToString(INVALID_ARGUMENT))
+		return &RhinoError{
+			PvStatus(status),
+			"Rhino init failed"}
 	}
 
 	status, rhino.ContextInfo = nativeRhino.nativeContextInfo(rhino)
 	if PvStatus(status) != SUCCESS {
-		return fmt.Errorf("%s: Could not get context from rhino instance", pvStatusToString(INVALID_ARGUMENT))
+		return &RhinoError{
+			PvStatus(status),
+			"Could not get context from rhino instance"}
 	}
 
 	return nil
@@ -188,7 +242,9 @@ func (rhino *Rhino) Init() error {
 // Releases resources acquired by Rhino
 func (rhino *Rhino) Delete() error {
 	if rhino.handle == 0 {
-		return fmt.Errorf("Rhino has not been initialized or has already been deleted")
+		return &RhinoError{
+			INVALID_STATE,
+			"Rhino has not been initialized or has already been deleted"}
 	}
 
 	nativeRhino.nativeDelete(rhino)
@@ -200,17 +256,24 @@ func (rhino *Rhino) Delete() error {
 func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 
 	if rhino.handle == 0 {
-		return false, fmt.Errorf("Rhino has not been initialized or has been deleted")
+		return false, &RhinoError{
+			INVALID_STATE,
+			"Rhino has not been initialized or has been deleted"}
 	}
 
 	if len(pcm) != FrameLength {
-		return false, fmt.Errorf("input data frame size (%d) does not match required size of %d", len(pcm), FrameLength)
+		return false, &RhinoError{
+			INVALID_ARGUMENT,
+			fmt.Sprintf("Input data frame size (%d) does not match required size of %d", len(pcm), FrameLength)}
 	}
 
 	status, isFinalized := nativeRhino.nativeProcess(rhino, pcm)
 	if PvStatus(status) != SUCCESS {
-		return false, fmt.Errorf("process audio frame failed with PvStatus: %d", status)
+		return false, &RhinoError{
+			PvStatus(status),
+			"Rhino process failed"}
 	}
+
 	rhino.isFinalized = isFinalized
 	return isFinalized, nil
 }
@@ -221,12 +284,18 @@ func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 // Returns an inference struct with `.IsUnderstood`, '.Intent` , and `.Slots`.
 func (rhino *Rhino) GetInference() (inference RhinoInference, err error) {
 	if !rhino.isFinalized {
-		return RhinoInference{}, fmt.Errorf("GetInference called before rhino had finalized. Call GetInference only after Process has returned true")
+		return RhinoInference{},
+			&RhinoError{
+				INVALID_STATE,
+				"GetInference called before rhino had finalized. Call GetInference only after Process has returned true"}
 	}
 
 	status, isUnderstood := nativeRhino.nativeIsUnderstood(rhino)
 	if PvStatus(status) != SUCCESS {
-		return RhinoInference{}, fmt.Errorf("GetInference failed at IsUnderstood with PvStatus: %d", status)
+		return RhinoInference{},
+			&RhinoError{
+				PvStatus(status),
+				"Rhino GetInference failed at IsUnderstood"}
 	}
 
 	var intent string
@@ -234,21 +303,57 @@ func (rhino *Rhino) GetInference() (inference RhinoInference, err error) {
 	if isUnderstood {
 		status, intent, slots = nativeRhino.nativeGetIntent(rhino)
 		if PvStatus(status) != SUCCESS {
-			return RhinoInference{}, fmt.Errorf("GetInference failed at GetIntent with PvStatus: %d", status)
+			return RhinoInference{},
+				&RhinoError{
+					PvStatus(status),
+					"GetInference failed at GetIntent"}
 		}
 
 		status = nativeRhino.nativeFreeSlotsAndValues(rhino)
 		if PvStatus(status) != SUCCESS {
-			return RhinoInference{}, fmt.Errorf("GetInference failed at FreeSlotsAndValues with PvStatus: %d", status)
+			return RhinoInference{},
+				&RhinoError{
+					PvStatus(status),
+					"GetInference failed at FreeSlotsAndValues"}
+
 		}
 	}
 
 	status = nativeRhino.nativeReset(rhino)
 	if PvStatus(status) != SUCCESS {
-		return RhinoInference{}, fmt.Errorf("GetInference failed at Reset with PvStatus: %d", status)
+		return RhinoInference{},
+			&RhinoError{
+				PvStatus(status),
+				"GetInference failed at Reset"}
 	}
 
-	return RhinoInference{IsUnderstood: isUnderstood, Intent: intent, Slots: slots}, nil
+	return RhinoInference{
+		IsUnderstood: isUnderstood,
+		Intent:       intent,
+		Slots:        slots}, nil
+}
+
+func getOS() (string, string) {
+	switch os := runtime.GOOS; os {
+	case "darwin":
+		return "mac", getMacArch()
+	case "linux":
+		osName, cpu := getLinuxDetails()
+		return osName, cpu
+	case "windows":
+		return "windows", "amd64"
+	default:
+		log.Fatalf("%s is not a supported OS", os)
+		return "", ""
+	}
+}
+
+func getMacArch() string {
+	if runtime.GOARCH == "arm64" {
+		return "arm64"
+	} else {
+		return "x86_64"
+	}
 }
 
 func getLinuxDetails() (string, string) {
@@ -271,16 +376,16 @@ func getLinuxDetails() (string, string) {
 	for _, line := range strings.Split(string(cpuInfo), "\n") {
 		if strings.Contains(line, "CPU part") {
 			split := strings.Split(line, " ")
-			cpuPart = strings.ToLower(split[len(split) - 1])
+			cpuPart = strings.ToLower(split[len(split)-1])
 			break
 		}
 	}
 
 	switch cpuPart {
 	case "0xb76":
-		return "raspberry-pi", "arm11" + archInfo
+		return "raspberry-pi", "arm11"
 	case "0xc07":
-		return "raspberry-pi", "cortex-a7" + archInfo
+		return "raspberry-pi", "cortex-a7"
 	case "0xd03":
 		return "raspberry-pi", "cortex-a53" + archInfo
 	case "0xd07":
@@ -290,10 +395,8 @@ func getLinuxDetails() (string, string) {
 	case "0xc08":
 		return "beaglebone", ""
 	default:
-		log.Printf(
-			`WARNING: Please be advised that this device (CPU part = %s) is not officially supported by Picovoice.\n
-			Falling back to the armv6-based (Raspberry Pi Zero) library. This is not tested nor optimal.\n For the model, use Raspberry Pi\'s models`, cpuPart)
-		return "raspberry-pi", "arm11" + archInfo
+		log.Fatalf("Unsupported CPU:\n%s", cpuPart)
+		return "", ""
 	}
 }
 
@@ -306,16 +409,15 @@ func extractLib() string {
 	var libPath string
 	switch os := runtime.GOOS; os {
 	case "darwin":
-		libPath = "embedded/lib/mac/x86_64/libpv_rhino.dylib"
+		libPath = fmt.Sprintf("embedded/lib/%s/%s/libpv_rhino.dylib", osName, cpu)
 	case "linux":
-		osName, cpu := getLinuxDetails()
 		if cpu == "" {
 			libPath = fmt.Sprintf("embedded/lib/%s/libpv_rhino.so", osName)
 		} else {
 			libPath = fmt.Sprintf("embedded/lib/%s/%s/libpv_rhino.so", osName, cpu)
 		}
 	case "windows":
-		libPath = "embedded/lib/windows/amd64/libpv_rhino.dll"
+		libPath = fmt.Sprintf("embedded/lib/%s/amd64/libpv_rhino.dll", osName)
 	default:
 		log.Fatalf("%s is not a supported OS", os)
 	}

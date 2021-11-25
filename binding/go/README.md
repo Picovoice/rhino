@@ -30,7 +30,7 @@ Rhino is:
 ## Compatibility
 
 - Go 1.16+
-- Runs on Linux (x86_64), macOS (x86_64) and Windows (x86_64)
+- Runs on Linux (x86_64), macOS (x86_64, arm64), Windows (x86_64), Raspberry Pi, NVIDIA Jetson (Nano) and BeagleBone
 
 ## Installation
 
@@ -38,14 +38,25 @@ Rhino is:
 go get github.com/Picovoice/rhino/binding/go
 ```
 
+## AccessKey
+
+The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
 ## Usage
 
-To create an instance of the engine with default parameters, pass a path to a Rhino context file (.rhn) to the `NewRhino` function and then make a call to `.Init()`.
+To create an instance of the engine with default parameters, pass an `AccessKey` and a path to a Rhino context file (.rhn) to the `NewRhino` function and then make a call to `.Init()`.
 
 ```go
 import . "github.com/Picovoice/rhino/binding/go"
 
-rhino = NewRhino("/path/to/context/file.rhn")
+const accessKey = "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
+
+rhino = NewRhino(accessKey, "/path/to/context/file.rhn")
 err := rhino.Init()
 if err != nil {
     // handle error
@@ -54,16 +65,19 @@ if err != nil {
 The context file is a Speech-to-Intent context created either using
 [Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository.
 
-The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating point number within
+The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating-point number within
 [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous
-inference rate. You can also override the default Rhino model (.pv), which is needs to be done when using a non-English context. 
+inference rate. You can also override the default Rhino model (.pv), which is required when using a non-English context. 
 
 To override these parameters, you can create a Rhino struct directly and then call `Init()`:
 
 ```go
 import . "github.com/Picovoice/rhino/binding/go"
 
+const accessKey = "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
+
 rhino = Rhino{
+    AccessKey: accessKey,
     ContextPath: "/path/to/context/file.rhn",
     Sensitivity: 0.7,
     ModelPath: "/path/to/rhino/params.pv"}
@@ -74,7 +88,7 @@ if err != nil {
 ```
 
 Once initialized, you can start passing in frames of audio for processing. The engine accepts 16-bit linearly-encoded PCM and operates on
-single-channel audio. The sample rate that is required by the engine is given by `SampleRate` and number of samples per frame is `FrameLength`.
+single-channel audio. The sample rate that is required by the engine is given by `SampleRate` and number of samples-per-frame is `FrameLength`.
 
 To feed audio into Rhino, use the `Process` function in your capture loop. You must have called `Init()` before calling `Process`.
 ```go
@@ -97,13 +111,13 @@ for {
 }
 ```
 
-When done resources have to be released explicitly.
+When done with the engine, resources have to be released explicitly.
 
 ```go
 rhino.Delete()
 ```
 
-Using a defer call to `Delete()` after `Init()` is also a good way to ensure cleanup.
+Using a `defer` call to `Delete()` after `Init()` is also a good way to ensure cleanup.
 
 ## Non-English Contexts
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
 	  <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
-	  <Version>1.6.2</Version>
+	  <Version>2.0.1</Version>
 	  <Authors>Picovoice</Authors>
 	  <Company />
 	  <Product>Rhino Speech-to-Intent Engine</Product>
@@ -97,7 +97,7 @@ Rhino is:
 				build/netcoreapp3.1/lib/common/rhino_params.pv;
 			</PackagePath>
 			<Link>lib\common\rhino_params.pv</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>			
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 	<ItemGroup>

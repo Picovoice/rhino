@@ -1,6 +1,6 @@
 {
   "name": "rhino-web-angular-demo",
-  "version": "1.1.3",
+  "version": "2.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -22,9 +22,9 @@
     "@angular/platform-browser": "~12.0.0",
     "@angular/platform-browser-dynamic": "~12.0.0",
     "@angular/router": "~12.0.0",
-    "@picovoice/rhino-web-angular": "^1.1.3",
-    "@picovoice/rhino-web-en-worker": "1.6.1",
-    "@picovoice/web-voice-processor": "^2.0.4",
+    "@picovoice/rhino-web-angular": "^2.0.0",
+    "@picovoice/rhino-web-en-worker": "^2.0.0",
+    "@picovoice/web-voice-processor": "^2.1.2",
     "rxjs": "~6.5.3",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"

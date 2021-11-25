@@ -49,6 +49,7 @@ mod tests {
     use itertools::Itertools;
     use rodio::{source::Source, Decoder};
     use std::collections::HashMap;
+    use std::env;
     use std::fs::File;
     use std::io::BufReader;
 
@@ -57,12 +58,14 @@ mod tests {
 
     #[test]
     fn test_within_context() {
+        let access_key = env::var("PV_ACCESS_KEY")
+            .expect("Pass the AccessKey in using the PV_ACCESS_KEY env variable");
         let context_path = format!(
             "../../resources/contexts/{}/coffee_maker_{}.rhn",
             pv_platform(),
             pv_platform(),
         );
-        let rhino = RhinoBuilder::new(context_path)
+        let rhino = RhinoBuilder::new(access_key, context_path)
             .init()
             .expect("Unable to create Rhino");
 
@@ -105,12 +108,14 @@ mod tests {
 
     #[test]
     fn test_out_of_context() {
+        let access_key = env::var("PV_ACCESS_KEY")
+            .expect("Pass the AccessKey in using the PV_ACCESS_KEY env variable");
         let context_path = format!(
             "../../resources/contexts/{}/coffee_maker_{}.rhn",
             pv_platform(),
             pv_platform(),
         );
-        let rhino = RhinoBuilder::new(context_path)
+        let rhino = RhinoBuilder::new(access_key, context_path)
             .init()
             .expect("Unable to create Rhino");
 

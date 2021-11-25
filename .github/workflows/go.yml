@@ -2,19 +2,43 @@ name: Go
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'binding/go/**'
       - '!binding/go/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/beaglebone/**'
+      - 'lib/common/**'
+      - 'lib/jetson/**'
+      - 'lib/linux/**'
+      - 'lib/mac/**'
+      - 'lib/raspberry-pi/**'
+      - 'lib/windows/**'
+      - 'resources/contexts/beaglebone/**'
+      - 'resources/contexts/common/**'
+      - 'resources/contexts/jetson/**'
+      - 'resources/contexts/linux/**'
+      - 'resources/contexts/mac/**'
+      - 'resources/contexts/raspberry-pi/**'
+      - 'resources/contexts/windows/**'
   pull_request:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
     paths:
       - 'binding/go/**'
       - '!binding/go/README.md'
-      - 'lib/**'
-      - 'resources/**'
+      - 'lib/beaglebone/**'
+      - 'lib/common/**'
+      - 'lib/jetson/**'
+      - 'lib/linux/**'
+      - 'lib/mac/**'
+      - 'lib/raspberry-pi/**'
+      - 'lib/windows/**'
+      - 'resources/contexts/beaglebone/**'
+      - 'resources/contexts/common/**'
+      - 'resources/contexts/jetson/**'
+      - 'resources/contexts/linux/**'
+      - 'resources/contexts/mac/**'
+      - 'resources/contexts/raspberry-pi/**'
+      - 'resources/contexts/windows/**'
 
 defaults:
   run:
@@ -26,7 +50,7 @@ jobs:
 
     strategy:
       matrix:
-        go: [ '1.16' ]
+        go: [ '1.16', '1.17' ]
 
     steps:
     - uses: actions/checkout@v2
@@ -46,4 +70,4 @@ jobs:
       run: go build
 
     - name: Test
-      run: go test
+      run: go test -access_key ${{secrets.PV_VALID_ACCESS_KEY}}

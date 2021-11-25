@@ -2,7 +2,7 @@
 
 This demo application includes a sample `VoiceWidget` Vue component which uses the `Rhino` renderless Vue component service to allow processing naturally spoken phrases within a domain (context) of interest. Rhino inference events are handled via the `rhn-inference` event. Our VoiceWidget subscribes to this event and displays the results.
 
-The demo uses dynamic imports to split the VoiceWidget away from the main application bundle. This means that the initial download size of the Vue app will not be impacted by the ~3-4MB requirement of Rhino. While small for all-in-one offline Voice AI, the size is large for an intial web app load.
+The demo uses dynamic imports to split the VoiceWidget away from the main application bundle. This means that the initial download size of the Vue app will not be impacted by the ~3-4 MB requirement of Rhino. While small for all-in-one offline Voice AI, the size is large for an initial web app load.
 
 If you decline microphone permission in the browser, or another such issue prevents Rhino from starting, the error will be displayed.
 
@@ -43,7 +43,7 @@ Rhino's inference result will appear:
 }
 ```
 
-Use "Push to Talk" again, and this time try a phrase outside of the Rhino context:
+Use "Push to Talk" again, and this time try a phrase outside the Rhino context:
 
 > "Tell me a joke"
 

@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
+    Copyright 2018-2021 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -43,6 +43,7 @@ public class Rhino {
     /**
      * Constructor.
      *
+     * @param accessKey   AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
      * @param libraryPath Absolute path to the native Rhino library.
      * @param modelPath   Absolute path to the file containing model parameters.
      * @param contextPath Absolute path to file containing context parameters. A context represents
@@ -51,16 +52,17 @@ public class Rhino {
      * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher
      *                    sensitivity value results in fewer misses at the cost of (potentially)
      *                    increasing the erroneous inference rate.
-     * @throws RhinoException if there is an error while initializing Rhino.
+     * @param requireEndpoint If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+     * @throws RhinoException If there is an error while initializing Rhino.
      */
-    public Rhino(String libraryPath, String modelPath, String contextPath, float sensitivity) throws RhinoException {
+    public Rhino(String accessKey, String libraryPath, String modelPath, String contextPath, float sensitivity, boolean requireEndpoint) throws RhinoException {
 
         try {
             System.load(libraryPath);
-            libraryHandle = init(modelPath, contextPath, sensitivity);
-        } catch (Exception e) {
-            throw new RhinoException(e);
+        } catch (Exception exception) {
+            throw new RhinoException(exception);
         }
+        libraryHandle = init(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
     }
 
     /**
@@ -83,11 +85,7 @@ public class Rhino {
      * @throws RhinoException if there is an error while processing the audio frame.
      */
     public boolean process(short[] pcm) throws RhinoException {
-        try {
-            return process(libraryHandle, pcm);
-        } catch (Exception e) {
-            throw new RhinoException(e);
-        }
+        return process(libraryHandle, pcm);
     }
 
     /**
@@ -100,38 +98,34 @@ public class Rhino {
      * @throws RhinoException if inference retrieval fails.
      */
     public RhinoInference getInference() throws RhinoException {
-        try {
-            final boolean isUnderstood = isUnderstood(libraryHandle);
+        final boolean isUnderstood = isUnderstood(libraryHandle);
 
-            RhinoInference inference;
+        RhinoInference inference;
 
-            if (isUnderstood) {
-                final String intentPacked = getIntent(libraryHandle);
-                String[] parts = intentPacked.split(",");
-                if (parts.length == 0) {
-                    throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
-                }
-
-                Map<String, String> slots = new LinkedHashMap<>();
-                for (int i = 1; i < parts.length; i++) {
-                    String[] slotAndValue = parts[i].split(":");
-                    if (slotAndValue.length != 2) {
-                        throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
-                    }
-                    slots.put(slotAndValue[0], slotAndValue[1]);
-                }
-
-                inference = new RhinoInference(true, parts[0], slots);
-            } else {
-                inference = new RhinoInference(false, null, null);
+        if (isUnderstood) {
+            final String intentPacked = getIntent(libraryHandle);
+            String[] parts = intentPacked.split(",");
+            if (parts.length == 0) {
+                throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
             }
 
-            reset(libraryHandle);
+            Map<String, String> slots = new LinkedHashMap<>();
+            for (int i = 1; i < parts.length; i++) {
+                String[] slotAndValue = parts[i].split(":");
+                if (slotAndValue.length != 2) {
+                    throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
+                }
+                slots.put(slotAndValue[0], slotAndValue[1]);
+            }
 
-            return inference;
-        } catch (Exception e) {
-            throw new RhinoException(e);
+            inference = new RhinoInference(true, parts[0], slots);
+        } else {
+            inference = new RhinoInference(false, null, null);
         }
+
+        reset(libraryHandle);
+
+        return inference;
     }
 
     /**
@@ -164,7 +158,7 @@ public class Rhino {
      */
     public native String getVersion();
 
-    private native long init(String modelPath, String contextPath, float sensitivity);
+    private native long init(String accessKey, String modelPath, String contextPath, float sensitivity, boolean requireEndpoint);
 
     private native void delete(long object);
 
@@ -183,10 +177,17 @@ public class Rhino {
      */
     public static class Builder {
 
+        private String accessKey = null;
         private String libraryPath = null;
         private String modelPath = null;
         private String contextPath = null;
         private float sensitivity = 0.5f;
+        private boolean requireEndpoint = false;
+
+        public Builder setAccessKey(String accessKey) {
+            this.accessKey = accessKey;
+            return this;
+        }
 
         public Builder setLibraryPath(String libraryPath) {
             this.libraryPath = libraryPath;
@@ -208,6 +209,10 @@ public class Rhino {
             return this;
         }
 
+        public Builder setRequireEndpoint(boolean requireEndpoint) {
+            this.requireEndpoint = requireEndpoint;
+            return this;
+        }
         /**
          * Validates properties and creates an instance of the Rhino Speech-to-Intent engine.
          *
@@ -217,20 +222,24 @@ public class Rhino {
         public Rhino build() throws RhinoException {
 
             if (!Utils.isEnvironmentSupported()) {
-                throw new RhinoException(new RuntimeException("Could not initialize Rhino. " +
-                        "Execution environment not currently supported by Rhino Java."));
+                throw new RhinoRuntimeException("Could not initialize Rhino. " +
+                        "Execution environment not currently supported by Rhino Java.");
+            }
+
+            if (accessKey == null) {
+                throw new RhinoInvalidArgumentException("AccessKey is required for Rhino initialization.");
             }
 
             if (libraryPath == null) {
                 if (Utils.isResourcesAvailable()) {
                     libraryPath = LIBRARY_PATH;
                 } else {
-                    throw new RhinoException(new IllegalArgumentException("Default library unavailable. Please " +
-                            "provide a native Rhino library path (-l <library_path>)."));
+                    throw new RhinoInvalidArgumentException("Default library unavailable. Please " +
+                            "provide a native Rhino library path (-l <library_path>).");
                 }
                 if (!new File(libraryPath).exists()) {
-                    throw new RhinoException(new IOException(String.format("Couldn't find library file at " +
-                            "'%s'", libraryPath)));
+                    throw new RhinoIOException(String.format("Couldn't find library file at " +
+                            "'%s'", libraryPath));
                 }
             }
 
@@ -238,29 +247,29 @@ public class Rhino {
                 if (Utils.isResourcesAvailable()) {
                     modelPath = MODEL_PATH;
                 } else {
-                    throw new RhinoException(new IllegalArgumentException("Default model unavailable. Please provide a " +
-                            "valid Rhino model path (-m <model_path>)."));
+                    throw new RhinoInvalidArgumentException("Default model unavailable. Please provide a " +
+                            "valid Rhino model path (-m <model_path>).");
                 }
                 if (!new File(modelPath).exists()) {
-                    throw new RhinoException(new IOException(String.format("Couldn't find model file at " +
-                            "'%s'", modelPath)));
+                    throw new RhinoIOException(String.format("Couldn't find model file at " +
+                            "'%s'", modelPath));
                 }
             }
 
             if (contextPath == null) {
-                throw new RhinoException(new IllegalArgumentException("No context file provided."));
+                throw new RhinoInvalidArgumentException("No context file provided");
             }
 
             if (!new File(contextPath).exists()) {
-                throw new RhinoException(new IOException(String.format("Couldn't find context file at " +
-                        "'%s'", contextPath)));
+                throw new RhinoIOException(String.format("Couldn't find context file at " +
+                        "'%s'", contextPath));
             }
 
             if (sensitivity < 0 || sensitivity > 1) {
-                throw new RhinoException(new IllegalArgumentException("Sensitivity value should be within [0, 1]."));
+                throw new RhinoInvalidArgumentException("Sensitivity value should be within [0, 1].");
             }
 
-            return new Rhino(libraryPath, modelPath, contextPath, sensitivity);
+            return new Rhino(accessKey, libraryPath, modelPath, contextPath, sensitivity, requireEndpoint);
         }
     }
 }

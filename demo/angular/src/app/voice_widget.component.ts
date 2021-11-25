@@ -27,12 +27,6 @@ export class VoiceWidget {
   isTalking: boolean = false
   errorMessage: string
   inference: RhinoInferenceFinalized | null = null
-  rhinoServiceArgs: RhinoServiceArgs = {
-    context: {
-      base64:
-        CLOCK_EN_64
-    }
-  }
 
   constructor(private rhinoService: RhinoService) {
     // Subscribe to Rhino inference events
@@ -62,22 +56,6 @@ export class VoiceWidget {
   }
 
   async ngOnInit() {
-    // Load Rhino worker chunk with specific language model (large ~3-4MB chunk; needs to be dynamically imported)
-    const rhinoFactoryEn = (await import('@picovoice/rhino-web-en-worker')).RhinoWorkerFactory
-    this.isChunkLoaded = true
-    console.info("Rhino EN is loaded.")
-    // Initialize Rhino Service
-    try {
-      await this.rhinoService.init(rhinoFactoryEn, this.rhinoServiceArgs)
-      console.info("Rhino is ready!")
-      this.isLoaded = true;
-      this.contextInfo = this.rhinoService.contextInfo;
-    }
-    catch (error) {
-      console.error(error)
-      this.isError = true;
-      this.errorMessage = error.toString();
-    }
 
   }
 
@@ -94,10 +72,6 @@ export class VoiceWidget {
     this.rhinoService.pause();
   }
 
-  public resume() {
-    this.rhinoService.resume();
-  }
-
   public start() {
     this.rhinoService.start();
   }
@@ -105,5 +79,30 @@ export class VoiceWidget {
   public pushToTalk() {
     this.inference = null
     this.rhinoService.pushToTalk()
+  }
+
+  public async initEngine(accessKey: string) {
+    if (accessKey.length >= 0) {
+      this.rhinoService.release();
+      const rhinoServiceArgs: RhinoServiceArgs = {accessKey: accessKey, context: {base64: CLOCK_EN_64}};
+
+      // Load Rhino worker chunk with specific language model (large ~3-4MB chunk; needs to be dynamically imported)
+      const rhinoFactoryEn = (await import('@picovoice/rhino-web-en-worker')).RhinoWorkerFactory;
+      this.isChunkLoaded = true;
+      console.info("Rhino EN is loaded.");
+      // Initialize Rhino Service
+      try {
+        await this.rhinoService.init(rhinoFactoryEn, rhinoServiceArgs);
+        console.info("Rhino is ready!");
+        this.isError = false;
+        this.isLoaded = true;
+        this.contextInfo = this.rhinoService.contextInfo;
+      }
+      catch (error) {
+        console.error(error);
+        this.isError = true;
+        this.errorMessage = error.toString();
+      }
+    }
   }
 }

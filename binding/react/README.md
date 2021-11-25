@@ -8,7 +8,7 @@ Rhino is also available for React Native, as a separate package. See [@picovoice
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of interest, in real-time.
 
-E.g. using the [demo "Clock" Rhino context (English langauge)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn):
+E.g. using the [demo "Clock" Rhino context (English language)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn):
 
 > "Set a timer for ten minutes"
 
@@ -23,7 +23,7 @@ E.g. using the [demo "Clock" Rhino context (English langauge)](https://github.co
 }
 ```
 
-Something outside of the Clock context won't be understood:
+Something outside the Clock context won't be understood:
 
 > "Tell me a joke"
 
@@ -46,7 +46,16 @@ The Picovoice SDKs for Web are powered by WebAssembly (WASM), the Web Audio API,
 
 All modern browsers (Chrome/Edge/Opera, Firefox, Safari) are supported, including on mobile. Internet Explorer is _not_ supported.
 
-Using the Web Audio API requires a secure context (HTTPS connection), with the exception of `localhost`, for local development.
+Using the Web Audio API requires a secure context (HTTPS connection) - except `localhost` - for local development.
+
+## AccessKey
+
+The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
 ## Installation
 
@@ -79,6 +88,7 @@ import React, { useState } from 'react';
 import { RhinoWorkerFactory } from '@picovoice/rhino-web-en-worker';
 import { useRhino } from '@picovoice/rhino-web-react';
 
+const ACCESS_KEY = /* AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
 const RHN_CONTEXT_CLOCK_64 = /* Base64 representation of English language clock_wasm.rhn, omitted for brevity */
 
 function VoiceWidget(props) {
@@ -106,7 +116,7 @@ function VoiceWidget(props) {
       // Start Rhino with the clock contex
       //Immediately start processing audio,
       // although rhino will not activate until the button is pressed
-      { context: { base64: RHN_CONTEXT_CLOCK_64 }, start: true },
+      { accessKey: ACCESS_KEY, context: { base64: RHN_CONTEXT_CLOCK_64 }, start: true },
     inferenceEventHandler
   );
 
@@ -122,11 +132,11 @@ return (
 
 The `inferenceEventHandler` will log the inference to the browser's JavaScript console and display the most recent one. Use the push-to-talk button to activate Rhino.
 
-**Important Note**: Internally, `useRhino` performs work asynchronously to initialize, as well as asking for microphone permissions. Not until the asynchronous tasks are done and permission given will Rhino actually be running. Therefore, it makes sense to use the `isLoaded` state to update your UI to let users know your application is actually ready to process voice (and `isError` in case something went wrong). Otherwise, they may start speaking and their audio data will not be processed, leading to a poor/inconsistent experience.
+**Important Note**: Internally, `useRhino` performs work asynchronously to initialize, as well as asking for microphone permissions. Not until the asynchronous tasks are done and permission given will Rhino actually be running. Therefore, it makes sense to use the `isLoaded` state to update your UI to let users know your application is actually ready to process voice (and `isError` in case something went wrong). Otherwise, they may start speaking, and their audio data will not be processed, leading to a poor/inconsistent experience.
 
 ### Dynamic Import
 
-If you are shipping Rhino for the Web and wish to avoid adding its ~4MB to your application's initial bundle, you can use dynamic imports. These will split off the rhino-web-xx-worker packages into separate bundles and load them asynchronously. This means we need additional logic.
+If you are shipping Rhino for the Web and wish to avoid adding its ~4 MB to your application's initial bundle, you can use dynamic imports. These will split off the rhino-web-xx-worker packages into separate bundles and load them asynchronously. This means we need additional logic.
 
 We add a `useEffect` hook to kick off the dynamic import. We store the result of the dynamically loaded worker chunk into a `useState` hook. When `useRhino` receives a non-null/undefined value for the worker factory, it will automatically start up Rhino.
 
@@ -137,6 +147,7 @@ import React, { useState, useEffect } from 'react';
 import { RhinoWorkerFactory } from '@picovoice/rhino-web-en-worker';
 import { useRhino } from '@picovoice/rhino-web-react';
 
+const ACCESS_KEY = /* AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
 const RHN_CONTEXT_CLOCK_64 = /* Base64 representation of English language clock_wasm.rhn, omitted for brevity */
 
 function VoiceWidget(props) {
@@ -174,7 +185,7 @@ function VoiceWidget(props) {
     pushToTalk,
   } = useRhino(
     workerChunk.factory,
-    { context: { base64: RHN_EN_CLOCK_64 } },
+    { accessKey: ACCESS_KEY, context: { base64: RHN_EN_CLOCK_64 } },
     inferenceEventHandler
   );
 ```
@@ -183,4 +194,4 @@ function VoiceWidget(props) {
 
 Custom contexts are generated using [Picovoice Console](https://picovoice.ai/console/). They are trained from text using transfer learning into bespoke Rhino context files with a `.rhn` extension. The target platform is WebAssembly (WASM), as that is what backs the React library.
 
-The `.zip` file containes a `.rhn` file and a `_b64.txt` file which containes the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.
+The `.zip` file contains a `.rhn` file and a `_b64.txt` file which contains the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.

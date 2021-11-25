@@ -7,7 +7,7 @@ plugins {
 
 ext {
     PUBLISH_GROUP_ID = 'ai.picovoice'
-    PUBLISH_VERSION = '1.6.3'
+    PUBLISH_VERSION = '2.0.0'
     PUBLISH_ARTIFACT_ID = 'rhino-java'
 }
 
@@ -84,5 +84,6 @@ dependencies {
 }
 
 test {
+    systemProperty 'pvTestingAccessKey', System.getProperty('pvTestingAccessKey')
     useJUnitPlatform()
 }

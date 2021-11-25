@@ -2,18 +2,14 @@
 
 ## Rhino
 
-Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of interest, in real-time. For example, given a "Coffee Maker" context, and the utterance _"Can I have a small double-shot espresso with a lot of sugar and some milk?"_, Rhino infers that the user wants to order a drink with particular choices:
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
+interest, in real-time. For example, given a spoken command *"Can I have a small double-shot espresso?"*, Rhino infers that the user wants to order a drink and emits the following inference result:
 
 ```json
 {
-  "intent": "orderDrink",
-  "slots": {
-    "type": "espresso",
-    "size": "small",
-    "numberOfShots": "2",
-    "sugar": "a lot",
-    "milk": "some"
-  }
+  "type": "espresso",
+  "size": "small",
+  "numberOfShots": "2"
 }
 ```
 
@@ -33,15 +29,27 @@ Files generated with the Picovoice Console carry restrictions including (but not
 
 ## Compatibility
 
-This binding is for running Rhino on **NodeJS 10+** on the following platforms:
+This binding is for running Rhino on **NodeJS 12+** on the following platforms:
 
+- Windows (x86_64)
 - Linux (x86_64)
-- macOS (x86_64)
+- macOS (x86_64, arm64)
 - Raspberry Pi (2,3,4)
+- NVIDIA Jetson (Nano)
+- BeagleBone
 
 ### Web Browsers
 
 This binding is for NodeJS and **does not work in a browser**. Looking to run Rhino in-browser? There are npm packages available for [Web](https://www.npmjs.com/package/@picovoice/rhino-web-en-worker), and dedicated packages for [Angular](https://www.npmjs.com/package/@picovoice/rhino-web-angular), [React](https://www.npmjs.com/package/@picovoice/rhino-web-react), and [Vue](https://www.npmjs.com/package/@picovoice/rhino-web-vue).
+
+## AccessKey
+
+Rhino requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
 ## Usage
 
@@ -53,8 +61,8 @@ The binding provides the Rhino class. Create instances of the Rhino class to mak
 const Rhino = require("@picovoice/rhino-node");
 
 const coffeeMakerContextPath = "./coffee_maker.rhn";
-
-const handle = new Rhino(coffeeMakerContextPath);
+const accessKey = "${ACCESS_KEY}" // Obtained from the Picovoice Console (https://console.picovoice.ai/)
+const handle = new Rhino(accessKey, coffeeMakerContextPath);
 
 let isFinalized = false;
 // process each frame of audio until Rhino has concluded that it understood the phrase (or did not)
@@ -89,7 +97,9 @@ handle.release();
 The Rhino constructor accepts three optional positional parameters for the sensitivity and the absolute paths to the model and dynamic library, should you need to override them (typically, you will not).
 
 ```javascript
+const accessKey = "${ACCESS_KEY}" // Obtained from the Picovoice Console (https://console.picovoice.ai/)
 const handle = new Rhino(
+  accessKey,
   contextPath,
   sensitivity,
   modelFilePath,

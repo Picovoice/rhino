@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
+    Copyright 2018-2021 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -25,8 +25,8 @@ import java.util.Map;
 import javax.sound.sampled.*;
 
 public class MicDemo {
-    public static void runDemo(String contextPath, String libraryPath, String modelPath,
-                               float sensitivity, int audioDeviceIndex, String outputPath) {
+    public static void runDemo(String accessKey, String contextPath, String libraryPath, String modelPath,
+                               float sensitivity, int audioDeviceIndex, String outputPath, boolean requireEndpoint) {
 
         // for file output
         File outputFile = null;
@@ -51,10 +51,12 @@ public class MicDemo {
         try {
 
             rhino = new Rhino.Builder()
+                    .setAccessKey(accessKey)
                     .setContextPath(contextPath)
                     .setLibraryPath(libraryPath)
                     .setModelPath(modelPath)
                     .setSensitivity(sensitivity)
+                    .setRequireEndpoint(requireEndpoint)
                     .build();
 
             if (outputPath != null) {
@@ -212,12 +214,18 @@ public class MicDemo {
             return;
         }
 
+        String accessKey = cmd.getOptionValue("access_key");
         String libraryPath = cmd.getOptionValue("library_path");
         String modelPath = cmd.getOptionValue("model_path");
         String contextPath = cmd.getOptionValue("context_path");
         String sensitivityStr = cmd.getOptionValue("sensitivity");
         String audioDeviceIndexStr = cmd.getOptionValue("audio_device_index");
         String outputPath = cmd.getOptionValue("output_path");
+        String requireEndpointValue = cmd.getOptionValue("require_endpoint");
+
+        if (accessKey == null || accessKey.length() == 0) {
+            throw new IllegalArgumentException("AccessKey is required for Rhino.");
+        }
 
         // parse sensitivity
         float sensitivity = 0.5f;
@@ -265,11 +273,22 @@ public class MicDemo {
             }
         }
 
-        runDemo(contextPath, libraryPath, modelPath, sensitivity, audioDeviceIndex, outputPath);
+        boolean requireEndpoint = true;
+        if (requireEndpointValue != null && requireEndpointValue.toLowerCase().equals("false")) {
+            requireEndpoint = false;
+        }
+
+        runDemo(accessKey, contextPath, libraryPath, modelPath, sensitivity, audioDeviceIndex, outputPath, requireEndpoint);
     }
 
     private static Options BuildCommandLineOptions() {
         Options options = new Options();
+
+        options.addOption(Option.builder("a")
+                .longOpt("access_key")
+                .hasArg(true)
+                .desc("AccessKey obtained from Picovoice Console (https://picovoice.ai/console/).")
+                .build());
 
         options.addOption(Option.builder("c")
                 .longOpt("context_path")
@@ -295,6 +314,13 @@ public class MicDemo {
                 .desc("Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
                         "fewer misses at the cost of (potentially) increasing the erroneous inference rate. " +
                         "If not set 0.5 will be used.")
+                .build());
+
+        options.addOption(Option.builder("e")
+                .longOpt("require_endpoint")
+                .hasArg(true)
+                .desc("If set to `false`, Rhino does not require an endpoint (chunk of silence) before " +
+                        "finishing inference.")
                 .build());
 
         options.addOption(Option.builder("o")

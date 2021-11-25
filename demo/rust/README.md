@@ -11,6 +11,15 @@ rhino/demo/rust/filedemo  # File Demo
 rhino/demo/rust/micdemo  # Mic Demo
 ```
 
+## AccessKey
+
+The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
 ### File Demo
 
 The file demo uses Rhino to get an inference result from an audio file.
@@ -19,18 +28,19 @@ Note that only the relevant spoken command should be present in the file and no 
 There also needs to be at least one second of silence at the end of the file.
 
 ```console
-cargo run --release -- --input_audio_path "path/to/input.wav" --context_path "/path/to/context/file.rhn"
+cargo run --release -- --access_key ${ACCESS_KEY} --input_audio_path "path/to/input.wav" --context_path "/path/to/context/file.rhn"
 ```
 
 The sensitivity of the engine can be tuned using the `sensitivity` input argument:
 
 ```console
-cargo run --release -- --input_audio_path "path/to/input.wav" \
+cargo run --release -- --access_key ${ACCESS_KEY} \
+--input_audio_path "path/to/input.wav" \
 --context_path "/path/to/context/one.rhn" --sensitivity 0.4
 ```
 
 Sensitivity is the parameter that enables trading miss rate for the false alarm rate.
-It is a floating point number within `[0, 1]`.
+It is a floating-point number within `[0, 1]`.
 A higher sensitivity reduces the miss rate at the cost of increased false alarm rate.
 
 ### Microphone Demo
@@ -38,7 +48,7 @@ A higher sensitivity reduces the miss rate at the cost of increased false alarm 
 The microphone demo opens an audio stream from a microphone and performs inference on spoken commands:
 
 ```console
-cargo run --release -- --context_path "/path/to/context/file.rhn"
+cargo run --release -- --access_key ${ACCESS_KEY} --context_path "/path/to/context/file.rhn"
 ```
 
 It is possible that the default audio input device is not the one you wish to use. There are a couple
@@ -59,14 +69,14 @@ You can use the device index to specify which microphone to use for the demo. Fo
 in the above example, you can invoke the demo application as below:
 
 ```console
-cargo run --release -- --context_path "/path/to/context/one.rhn" --audio_device_index 0
+cargo run --release -- --access_key ${ACCESS_KEY} --context_path "/path/to/context/one.rhn" --audio_device_index 0
 ```
 
 If the problem persists we suggest storing the recorded audio into a file for inspection.
 This can be achieved with:
 
 ```console
-cargo run --release -- --context_path "/path/to/context/one.rhn" --output_path ./test.wav
+cargo run --release -- --access_key ${ACCESS_KEY} --context_path "/path/to/context/one.rhn" --output_path ./test.wav
 ```
 
-If after listening to stored file there is no apparent problem detected please open an issue.
+If after listening to stored file there is no apparent problem detected, please open an issue.

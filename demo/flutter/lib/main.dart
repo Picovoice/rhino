@@ -12,8 +12,9 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:rhino/rhino_manager.dart';
-import 'package:rhino/rhino_error.dart';
+import 'package:rhino_flutter/rhino.dart';
+import 'package:rhino_flutter/rhino_manager.dart';
+import 'package:rhino_flutter/rhino_error.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,7 +26,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final String accessKey =
+      '{YOUR_ACCESS_KEY_HERE}'; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool isError = false;
+  String errorMessage = "";
 
   bool isButtonDisabled = false;
   bool isProcessing = false;
@@ -35,7 +42,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    this.setState(() {
+    setState(() {
       isButtonDisabled = true;
       rhinoText = "";
     });
@@ -48,42 +55,60 @@ class _MyAppState extends State<MyApp> {
         ? "android"
         : Platform.isIOS
             ? "ios"
-            : throw new PvError("This demo supports iOS and Android only.");
+            : throw RhinoRuntimeException(
+                "This demo supports iOS and Android only.");
     String contextPath =
         "assets/contexts/$platform/smart_lighting_$platform.rhn";
 
     try {
-      _rhinoManager = await RhinoManager.create(contextPath, inferenceCallback,
-          errorCallback: errorCallback);
-    } on PvError catch (ex) {
-      print("Failed to initialize Rhino: ${ex.message}");
+      _rhinoManager = await RhinoManager.create(
+          accessKey, contextPath, inferenceCallback,
+          processErrorCallback: errorCallback);
+    } on RhinoInvalidArgumentException catch (ex) {
+      errorCallback(RhinoInvalidArgumentException(
+          "${ex.message}\nEnsure your accessKey '$accessKey' is a valid access key."));
+    } on RhinoActivationException {
+      errorCallback(RhinoActivationException("AccessKey activation error."));
+    } on RhinoActivationLimitException {
+      errorCallback(
+          RhinoActivationLimitException("AccessKey reached its device limit."));
+    } on RhinoActivationRefusedException {
+      errorCallback(RhinoActivationRefusedException("AccessKey refused."));
+    } on RhinoActivationThrottledException {
+      errorCallback(
+          RhinoActivationThrottledException("AccessKey has been throttled."));
+    } on RhinoException catch (ex) {
+      errorCallback(ex);
     } finally {
-      this.setState(() {
+      setState(() {
         isButtonDisabled = false;
       });
     }
   }
 
-  void inferenceCallback(Map<String, dynamic> inference) {
-    this.setState(() {
+  void inferenceCallback(RhinoInference inference) {
+    setState(() {
       rhinoText = prettyPrintInference(inference);
       isButtonDisabled = false;
       isProcessing = false;
     });
   }
 
-  void errorCallback(PvError error) {
-    print(error.message);
+  void errorCallback(RhinoException error) {
+    setState(() {
+      isError = true;
+      errorMessage = error.message!;
+    });
   }
 
-  String prettyPrintInference(Map<String, dynamic> inference) {
+  String prettyPrintInference(RhinoInference inference) {
     String printText =
-        "{\n    \"isUnderstood\" : \"${inference['isUnderstood']}\",\n";
-    if (inference['isUnderstood']) {
-      printText += "    \"intent\" : \"${inference['intent']}\",\n";
-      if (inference['slots'].length > 0) {
+        "{\n    \"isUnderstood\" : \"${inference.isUnderstood}\",\n";
+    if (inference.isUnderstood!) {
+      printText += "    \"intent\" : \"${inference.intent}\",\n";
+      if (inference.slots!.isNotEmpty) {
         printText += '    "slots" : {\n';
-        Map<String, String> slots = inference['slots'];
+        Map<String, String> slots = inference.slots!;
         for (String key in slots.keys) {
           printText += "        \"$key\" : \"${slots[key]}\",\n";
         }
@@ -99,19 +124,19 @@ class _MyAppState extends State<MyApp> {
       return;
     }
 
-    this.setState(() {
+    setState(() {
       isButtonDisabled = true;
     });
 
     try {
       await _rhinoManager!.process();
-      this.setState(() {
+      setState(() {
         isProcessing = true;
         rhinoText = "Listening...";
       });
-    } on PvAudioException catch (ex) {
+    } on RhinoException catch (ex) {
       print("Failed to start audio capture: ${ex.message}");
-      this.setState(() {
+      setState(() {
         isButtonDisabled = false;
       });
     }
@@ -131,6 +156,7 @@ class _MyAppState extends State<MyApp> {
           children: [
             buildStartButton(context),
             buildRhinoTextArea(context),
+            buildErrorMessage(context),
             footer
           ],
         ),
@@ -144,15 +170,16 @@ class _MyAppState extends State<MyApp> {
         shape: CircleBorder(),
         textStyle: TextStyle(color: Colors.white));
 
-    return new Expanded(
+    return Expanded(
       flex: 2,
       child: Container(
           child: SizedBox(
-              width: 150,
-              height: 150,
+              width: 130,
+              height: 130,
               child: ElevatedButton(
                 style: buttonStyle,
-                onPressed: isButtonDisabled ? null : _startProcessing,
+                onPressed:
+                    (isButtonDisabled || isError) ? null : _startProcessing,
                 child: Text(isProcessing ? "..." : "Start",
                     style: TextStyle(fontSize: 30)),
               ))),
@@ -160,7 +187,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   buildRhinoTextArea(BuildContext context) {
-    return new Expanded(
+    return Expanded(
         flex: 4,
         child: Container(
             alignment: Alignment.center,
@@ -170,6 +197,25 @@ class _MyAppState extends State<MyApp> {
               rhinoText,
               style: TextStyle(color: Colors.white, fontSize: 20),
             )));
+  }
+
+  buildErrorMessage(BuildContext context) {
+    return Expanded(
+        flex: isError ? 2 : 0,
+        child: Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(left: 20, right: 20),
+            padding: EdgeInsets.all(5),
+            decoration: !isError
+                ? null
+                : BoxDecoration(
+                    color: Colors.red, borderRadius: BorderRadius.circular(5)),
+            child: !isError
+                ? null
+                : Text(
+                    errorMessage,
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  )));
   }
 
   Widget footer = Expanded(

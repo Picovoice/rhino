@@ -17,17 +17,16 @@ export function useRhino(
   contextInfo: string | null;
   isLoaded: boolean;
   isListening: boolean;
-  isError: boolean;
+  isError: boolean | null;
   isTalking: boolean;
   errorMessage: string | null;
   webVoiceProcessor: WebVoiceProcessor | null;
   start: () => void;
   pause: () => void;
   pushToTalk: () => void;
-  resume: () => void;
 } {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isError, setIsError] = useState(false);
+  const [isError, setIsError] = useState<boolean | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isTalking, setIsTalking] = useState(false);
@@ -51,15 +50,6 @@ export function useRhino(
     if (webVoiceProcessor !== null) {
       webVoiceProcessor.pause();
       setIsListening(false);
-      return true;
-    }
-    return false;
-  };
-
-  const resume = (): boolean => {
-    if (webVoiceProcessor !== null) {
-      webVoiceProcessor.resume();
-      setIsListening(true);
       return true;
     }
     return false;
@@ -131,12 +121,19 @@ export function useRhino(
       webVp: WebVoiceProcessor;
       rhnWorker: RhinoWorker;
     }> {
-      const { context, start: startWebVp = true } = rhinoHookArgs!;
+      const {
+        accessKey,
+        context,
+        requireEndpoint,
+        start: startWebVp = true,
+      } = rhinoHookArgs!;
 
       const initIsTalking = rhinoHookArgs?.isTalking === true;
 
       const rhnWorker = await rhinoWorkerFactory!.create({
+        accessKey,
         context,
+        requireEndpoint,
         start: initIsTalking,
       });
 
@@ -214,6 +211,5 @@ export function useRhino(
     start,
     pause,
     pushToTalk,
-    resume,
   };
 }

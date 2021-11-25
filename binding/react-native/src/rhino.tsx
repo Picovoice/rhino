@@ -1,5 +1,5 @@
 //
-// Copyright 2020 Picovoice Inc.
+// Copyright 2020-2021 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -10,6 +10,56 @@
 //
 
 import { NativeModules } from 'react-native';
+
+import * as RhinoErrors from './rhino_errors';
+
+export class RhinoInference {
+  private _isFinalized: boolean;
+  private _isUnderstood?: boolean;
+  private _intent?: string;
+  private _slots?: {[key: string]: string};
+
+  public constructor(isFinalized: boolean, isUnderstood?: boolean, intent?: string, slots?: {[key: string]: string}) {
+    this._isFinalized = isFinalized;
+    this._isUnderstood = isUnderstood;
+    this._intent = intent;
+    this._slots = slots;
+  }
+
+  /**
+   * whether Rhino has made an inference
+   */
+  get isFinalized() {
+    return this._isFinalized;
+  }
+
+  /**
+   * if isFinalized, whether Rhino understood what it heard based on the context
+   */
+  get isUnderstood() {
+    return this._isUnderstood;
+  }
+
+  /**
+   * if isUnderstood, name of intent that was inferred
+   */
+  get intent() {
+    return this._intent;
+  }
+
+  /**
+   * if isUnderstood, dictionary of slot keys and values that were inferred
+   */
+  get slots() {
+    return this._slots;
+  }
+}
+
+type NativeError = {
+  code: string;
+  message: string;
+}
+
 const RCTRhino = NativeModules.PvRhino;
 
 class Rhino {
@@ -21,39 +71,38 @@ class Rhino {
 
   /**
    * Creates an instance of the Rhino Speech-to-Intent engine.
+   * @param accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/.
    * @param contextPath Absolute path to context file.
    * @param modelPath Path to the file containing model parameters. If not set it will be set to the default location.
    * @param sensitivity Inference sensitivity. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
    * Sensitivity should be a floating-point number within [0, 1].
+   * @param requireEndpoint If true, Rhino requires an endpoint (chunk of silence) before finishing inference.
    * @returns An instance of the engine.
    */
   public static async create(
+    accessKey: string,
     contextPath: string,
     modelPath?: string,
-    sensitivity?: number
-  ) {
-    if (modelPath === undefined) {
-      modelPath = RCTRhino.DEFAULT_MODEL_PATH;
+    sensitivity: number = 0.5,
+    requireEndpoint: boolean = true
+  ): Promise<Rhino> {
+    try {
+      let {
+        handle,
+        frameLength,
+        sampleRate,
+        version,
+        contextInfo,
+      } = await RCTRhino.create(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
+      return new Rhino(handle, frameLength, sampleRate, version, contextInfo);
+    } catch (err) {
+      if (err instanceof RhinoErrors.RhinoError) {
+        throw err;
+      } else {
+        const nativeError = err as NativeError;
+        throw this.codeToError(nativeError.code, nativeError.message);
+      }
     }
-
-    if (sensitivity === undefined) {
-      sensitivity = 0.5;
-    }
-
-    if (sensitivity < 0 || sensitivity > 1 || isNaN(sensitivity)) {
-      return Promise.reject(
-        `Sensitivity value in 'sensitivities' not in range [0,1]: ${sensitivity}`
-      );
-    }
-
-    let {
-      handle,
-      frameLength,
-      sampleRate,
-      version,
-      contextInfo,
-    } = await RCTRhino.create(modelPath, contextPath, sensitivity);
-    return new Rhino(handle, frameLength, sampleRate, version, contextInfo);
   }
 
   private constructor(
@@ -74,32 +123,42 @@ class Rhino {
    * Process a frame of pcm audio with the speech-to-intent engine.
    * @param frame frame 16-bit integers of 16kHz linear PCM mono audio.
    * The specific array length is obtained from Rhino via the frameLength field.
-   * @returns {object} inference result at time of frame being processed
-   * JSON object had fields:
+   * @returns {RhinoInference} inference result at time of frame being processed with fields:
    *  - isFinalized: whether Rhino has made an inference
    *  - isUnderstood: if isFinalized, whether Rhino understood what it heard based on the context
    *  - intent: if isUnderstood, name of intent that were inferred
    *  - slots: if isUnderstood, dictionary of slot keys and values that were inferred
    */
-  async process(frame: number[]) {
-    if (frame === undefined) {
-      return Promise.reject(
+  async process(frame: number[]): Promise<RhinoInference> {
+    if (frame === undefined || frame === null) {
+      throw new RhinoErrors.RhinoInvalidArgumentError(
         `Frame array provided to process() is undefined or null`
       );
     } else if (frame.length !== this._frameLength) {
-      return Promise.reject(
+      throw new RhinoErrors.RhinoInvalidArgumentError(
         `Size of frame array provided to 'process' (${frame.length}) does not match the engine 'frameLength' (${this._frameLength})`
       );
     }
 
     // sample the first frame to check for non-integer values
     if (!Number.isInteger(frame[0])) {
-      return Promise.reject(
+      throw new RhinoErrors.RhinoInvalidArgumentError(
         `Non-integer frame values provided to process(): ${frame[0]}. Rhino requires 16-bit integers`
       );
     }
 
-    return RCTRhino.process(this._handle, frame);
+    try {
+      const {
+        isFinalized,
+        isUnderstood,
+        intent,
+        slots
+      } = await RCTRhino.process(this._handle, frame);
+      return new RhinoInference(isFinalized, isUnderstood, intent, slots);
+    } catch (err) {
+      const nativeError = err as NativeError;
+      throw Rhino.codeToError(nativeError.code, nativeError.message);
+    }
   }
 
   /**
@@ -140,6 +199,42 @@ class Rhino {
    */
   get version() {
     return this._version;
+  }
+
+  /**
+   * Gets the Error type given a code.
+   * @param code Code name of native Error.
+   * @param message Detailed message of the error.
+   */
+   private static codeToError(code: string, message: string){
+    switch(code) {
+      case 'RhinoException':
+        return new RhinoErrors.RhinoError(message);
+      case 'RhinoMemoryException':
+        return new RhinoErrors.RhinoMemoryError(message);
+      case 'RhinoIOException':
+        return new RhinoErrors.RhinoIOError(message);
+      case 'RhinoInvalidArgumentException':
+        return new RhinoErrors.RhinoInvalidArgumentError(message);
+      case 'RhinoStopIterationException':
+        return new RhinoErrors.RhinoStopIterationError(message);
+      case 'RhinoKeyException':
+        return new RhinoErrors.RhinoKeyError(message);
+      case 'RhinoInvalidStateException':
+        return new RhinoErrors.RhinoInvalidStateError(message);
+      case 'RhinoRuntimeException':
+        return new RhinoErrors.RhinoRuntimeError(message);
+      case 'RhinoActivationException':
+        return new RhinoErrors.RhinoActivationError(message);
+      case 'RhinoActivationLimitException':
+        return new RhinoErrors.RhinoActivationLimitError(message);
+      case 'RhinoActivationThrottledException':
+        return new RhinoErrors.RhinoActivationThrottledError(message);
+      case 'RhinoActivationRefusedException':
+        return new RhinoErrors.RhinoActivationRefusedError(message);
+      default:
+        throw new RhinoErrors.RhinoError(`unexpected code: ${code}, message: ${message}`);
+    }
   }
 }
 

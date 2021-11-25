@@ -29,6 +29,15 @@ The Rhino iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Rh
 pod 'Rhino-iOS'
 ```
 
+## AccessKey
+
+Rhino requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
 ## Permissions
 
 To enable recording with your iOS device's microphone you must add the following to your app's `Info.plist` file:
@@ -45,12 +54,14 @@ The module provides you with two levels of API to choose from depending on your 
 
 [RhinoManager](/binding/ios/RhinoManager.swift) provides a high-level API that takes care of audio recording and intent inference. This class is the quickest way to get started.
 
-To create an instance of RhinoManager, pass a Rhino context file to the constuctor:
+To create an instance of RhinoManager, pass a Picovoice `AccessKey` and a Rhino context file to the constructor:
 ```swift
 import Rhino
 
+let accessKey = "${ACCESS_KEY}" // Obtained from Picovoice Console (https://console.picovoice.ai)
 do {
-    RhinoManager rhinoManager = try RhinoManager(
+    let rhinoManager = try RhinoManager(
+        accessKey: accessKey,
         contextPath: "/path/to/context/file.rhn", 
         onInferenceCallback: inferenceCallback)
 } catch { }
@@ -77,8 +88,10 @@ The model file contains the parameters for the speech-to-intent engine. To chang
 
 These optional parameters can be set like so:
 ```swift
+let accessKey = "${ACCESS_KEY}" // Obtained from Picovoice Console (https://console.picovoice.ai)
 do {
-    RhinoManager rhinoManager = try RhinoManager(
+    let rhinoManager = try RhinoManager(
+        accessKey: accessKey,
         contextPath: "/path/to/context/file.rhn", 
         modelPath: "/path/to/model/file.pv",
         sensitivity: 0.35,
@@ -102,15 +115,18 @@ rhinoManager.delete()
 
 ### Low-Level API
 
-[Rhino](/binding/ios/Rhino.swift) provides low-level access to the Speech-to-Intent engine for those who want to incorporate intent inference into a already existing audio processing pipeline.
+[Rhino](/binding/ios/Rhino.swift) provides low-level access to the Speech-to-Intent engine for those who want to incorporate intent inference into an already existing audio processing pipeline.
 
-Create an instance of `Rhino` by passing it a Rhino context file (.rhn).
+Create an instance of `Rhino` by passing it a Picovoice `AccessKey` and a Rhino context file (.rhn).
 
 ```swift
 import Rhino
 
+let accessKey = "${ACCESS_KEY}" // Obtained from Picovoice Console (https://console.picovoice.ai)
 do {
-    Rhino rhino = try Rhino(contextPath: "/path/to/context/file.rhn")
+    let rhino = try Rhino(
+        accessKey: accessKey,
+        contextPath: "/path/to/context/file.rhn")
 } catch { }
 ```
 

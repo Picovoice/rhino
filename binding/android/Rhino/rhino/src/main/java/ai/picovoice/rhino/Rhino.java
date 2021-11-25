@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -47,6 +46,7 @@ public class Rhino {
     /**
      * Constructor.
      *
+     * @param accessKey   AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
      * @param modelPath   Absolute path to the file containing model parameters.
      * @param contextPath Absolute path to file containing context parameters. A context represents
      *                    the set of expressions (spoken commands), intents, and intent arguments
@@ -54,14 +54,15 @@ public class Rhino {
      * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher
      *                    sensitivity value results in fewer misses at the cost of (potentially)
      *                    increasing the erroneous inference rate.
-     * @throws RhinoException if there is an error while initializing Rhino.
+     * @param requireEndpoint Boolean variable to indicate if Rhino should wait for a chunk of
+     *                        silence before finishing inference.
      */
-    private Rhino(String modelPath, String contextPath, float sensitivity) throws RhinoException {
-        try {
-            handle = init(modelPath, contextPath, sensitivity);
-        } catch (Exception e) {
-            throw new RhinoException(e);
-        }
+    private Rhino(String accessKey,
+                  String modelPath,
+                  String contextPath,
+                  float sensitivity,
+                  boolean requireEndpoint) {
+        handle = init(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
     }
 
     /**
@@ -88,19 +89,16 @@ public class Rhino {
      */
     public boolean process(short[] pcm) throws RhinoException {
         if (handle == 0) {
-            throw new RhinoException(
-                    new IllegalStateException("Attempted to call Rhino process after delete."));
+            new RhinoInvalidArgumentException("Attempted to call Rhino process after delete.");
         }
         if (pcm == null) {
-            throw new RhinoException(
-                    new IllegalArgumentException("Passed null frame to Rhino process."));
+            new RhinoInvalidArgumentException("Passed null frame to Rhino process.");
         }
 
         if (pcm.length != getFrameLength()) {
-            throw new RhinoException(
-                    new IllegalArgumentException(
-                            String.format("Rhino process requires frames of length %d. " +
-                                    "Received frame of size %d.", getFrameLength(), pcm.length)));
+            new RhinoInvalidArgumentException(
+                    String.format("Rhino process requires frames of length %d. " +
+                            "Received frame of size %d.", getFrameLength(), pcm.length));
         }
 
         try {
@@ -181,7 +179,7 @@ public class Rhino {
      */
     public native String getVersion();
 
-    private native long init(String modelPath, String contextPath, float sensitivity);
+    private native long init(String accessKey, String modelPath, String contextPath, float sensitivity, boolean requireEndpoint);
 
     private native void delete(long object);
 
@@ -199,10 +197,16 @@ public class Rhino {
      * Builder for creating an instance of Rhino with a mixture of default arguments
      */
     public static class Builder {
-
+        private String accessKey = null;
         private String modelPath = null;
         private String contextPath = null;
         private float sensitivity = 0.5f;
+        private boolean requireEndpoint = true;
+
+        public Builder setAccessKey(String accessKey) {
+            this.accessKey = accessKey;
+            return this;
+        }
 
         public Builder setModelPath(String modelPath) {
             this.modelPath = modelPath;
@@ -219,18 +223,22 @@ public class Rhino {
             return this;
         }
 
-        private void extractPackageResources(Context context) throws RhinoException {
+        public Builder setRequireEndpoint(boolean requireEndpoint) {
+            this.requireEndpoint = requireEndpoint;
+            return this;
+        }
+
+        private void extractPackageResources(Context context) throws RhinoIOException {
             final Resources resources = context.getResources();
 
             try {
-
                 DEFAULT_MODEL_PATH = extractResource(context,
                         resources.openRawResource(R.raw.rhino_params),
                         resources.getResourceEntryName(R.raw.rhino_params) + ".pv");
 
                 isExtracted = true;
             } catch (IOException ex) {
-                throw new RhinoException(ex);
+                throw new RhinoIOException(ex);
             }
         }
 
@@ -261,6 +269,10 @@ public class Rhino {
                 extractPackageResources(context);
             }
 
+            if (accessKey == null || accessKey.equals("")) {
+                throw new RhinoInvalidArgumentException("No AccessKey provided to Rhino.");
+            }
+
             if (modelPath == null) {
                 modelPath = DEFAULT_MODEL_PATH;
             } else {
@@ -272,13 +284,13 @@ public class Rhino {
                                 context.getAssets().open(modelPath),
                                 modelFilename);
                     } catch (IOException ex) {
-                        throw new RhinoException(ex);
+                        throw new RhinoIOException(ex);
                     }
                 }
             }
 
             if (this.contextPath == null) {
-                throw new RhinoException(new IllegalArgumentException("No context file (.rhn) was provided."));
+                throw new RhinoInvalidArgumentException("No context file (.rhn) was provided.");
             }
 
             File contextFile = new File(contextPath);
@@ -289,15 +301,15 @@ public class Rhino {
                             context.getAssets().open(contextPath),
                             contextFilename);
                 } catch (IOException ex) {
-                    throw new RhinoException(ex);
+                    throw new RhinoIOException(ex);
                 }
             }
 
             if (sensitivity < 0 || sensitivity > 1) {
-                throw new RhinoException(new IllegalArgumentException("Sensitivity value should be within [0, 1]."));
+                throw new RhinoInvalidArgumentException("Sensitivity value should be within [0, 1].");
             }
 
-            return new Rhino(modelPath, contextPath, sensitivity);
+            return new Rhino(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
         }
     }
 }

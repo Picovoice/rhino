@@ -1,10 +1,10 @@
 PODS:
-  - ios-voice-processor (1.0.2)
-  - Rhino-iOS (1.6.4):
+  - ios-voice-processor (1.0.3)
+  - Rhino-iOS (2.0.0):
     - ios-voice-processor (~> 1.0.2)
 
 DEPENDENCIES:
-  - Rhino-iOS
+  - Rhino-iOS (~> 2.0.0)
 
 SPEC REPOS:
   trunk:
@@ -12,9 +12,9 @@ SPEC REPOS:
     - Rhino-iOS
 
 SPEC CHECKSUMS:
-  ios-voice-processor: 59e7f750874f23961dcf57a83fef0d06248ab8aa
-  Rhino-iOS: d76e2e29c2d4a1e4a53584c6b049cdbbee9471f1
+  ios-voice-processor: 65b25a8db69ea25ffba0eeef37bae71a982f34cc
+  Rhino-iOS: 39be46edee2c3b1d21a796c40927a29fb2f91a65
 
-PODFILE CHECKSUM: 9982b20eec299139932575502eddeb54807357cd
+PODFILE CHECKSUM: b56dbcecc1c135473268cb22d50c5f3686785af0
 
-COCOAPODS: 1.10.2
+COCOAPODS: 1.11.2

@@ -1,5 +1,5 @@
 enum34
 numpy
-pvrhino==1.6.3
-pvrecorder==1.0.0
+pvrhino==2.0.0
+pvrecorder==1.0.2
 soundfile

@@ -49,6 +49,15 @@ Then you can reference the local binding location:
 pv_rhino = { path = "/path/to/rust/binding" }
 ```
 
+## AccessKey
+
+The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+
 ## Usage
 
 To create an instance of the engine you first create a `RhinoBuilder` instance with the configuration parameters for the speech to intent engine and then make a call to `.init()`:
@@ -56,18 +65,20 @@ To create an instance of the engine you first create a `RhinoBuilder` instance w
 ```rust
 use rhino::RhinoBuilder;
 
-let rhino: Rhino = RhinoBuilder::new("/path/to/context/file.rhn").init().expect("Unable to create Rhino");
+let access_key = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
+let rhino: Rhino = RhinoBuilder::new(access_key, "/path/to/context/file.rhn").init().expect("Unable to create Rhino");
 ```
 The context file is a Speech-to-Intent context created either using
 [Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on [Rhino's GitHub repository](/resources/contexts).
 
 The sensitivity of the engine can be tuned using the `sensitivity` parameter.
-It is a floating point number within [0, 1].
+It is a floating-point number within [0, 1].
 A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
 You can also override the default Rhino model (.pv), which is needs to be done when using a non-English context:
 
 ```rust
-let rhino: Rhino = RhinoBuilder::RhinoBuilder::new("/path/to/context/file.rhn")
+let rhino: Rhino = RhinoBuilder::RhinoBuilder::new(access_key, "/path/to/context/file.rhn")
     .sensitivity(0.42f32)
     .model_path("/path/to/rhino/params.pv")
     .init().expect("Unable to create Rhino");

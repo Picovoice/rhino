@@ -26,15 +26,19 @@ class RhinoDemo(Thread):
     debugging.
     """
 
-    def __init__(self, library_path, model_path, context_path, audio_device_index=None, output_path=None):
+    def __init__(self, access_key, library_path, model_path, context_path, require_endpoint, audio_device_index=None,
+                 output_path=None):
         """
         Constructor.
 
+        :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
         :param library_path: Absolute path to Rhino's dynamic library.
         :param model_path: Absolute path to file containing model parameters.
         :param context_path: Absolute path to file containing context model (file with `.rhn` extension). A context
         represents the set of expressions (spoken commands), intents, and intent arguments (slots) within a domain of
         interest.
+        :param require_endpoint If set to `False`, Rhino does not require an endpoint (chunk of silence) before
+        finishing inference.
         :param audio_device_index: Optional argument. If provided, audio is recorded from this input device. Otherwise,
         the default audio input device is used.
         :param output_path: If provided recorded audio will be stored in this location at the end of the run.
@@ -42,10 +46,11 @@ class RhinoDemo(Thread):
 
         super(RhinoDemo, self).__init__()
 
+        self._access_key = access_key
         self._library_path = library_path
         self._model_path = model_path
         self._context_path = context_path
-
+        self._require_endpoint = require_endpoint
         self._audio_device_index = audio_device_index
 
         self._output_path = output_path
@@ -63,16 +68,20 @@ class RhinoDemo(Thread):
 
         try:
             rhino = pvrhino.create(
+                access_key=self._access_key,
                 library_path=self._library_path,
                 model_path=self._model_path,
-                context_path=self._context_path)
+                context_path=self._context_path,
+                require_endpoint=self._require_endpoint)
 
             recorder = PvRecorder(device_index=self._audio_device_index, frame_length=rhino.frame_length)
             recorder.start()
 
-            print(f"Using device: {recorder.selected_device}")
-
             print(rhino.context_info)
+            print()
+
+            print(f"Using device: {recorder.selected_device}")
+            print("Listening...")
             print()
 
             while True:
@@ -124,7 +133,11 @@ class RhinoDemo(Thread):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--context_path', help="Absolute path to context file.")
+    parser.add_argument('--access_key',
+                        help='AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)',
+                        required=True)
+
+    parser.add_argument('--context_path', help="Absolute path to context file.", required=True)
 
     parser.add_argument('--library_path', help="Absolute path to dynamic library.", default=pvrhino.LIBRARY_PATH)
 
@@ -132,6 +145,19 @@ def main():
         '--model_path',
         help="Absolute path to the file containing model parameters.",
         default=pvrhino.MODEL_PATH)
+
+    parser.add_argument(
+        '--sensitivity',
+        help="Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
+             "fewer misses at the cost of (potentially) increasing the erroneous inference rate.",
+        type=float,
+        default=0.5)
+
+    parser.add_argument(
+        '--require_endpoint',
+        help="If set to `False`, Rhino does not require an endpoint (chunk of silence) before finishing inference.",
+        default='True',
+        choices=['True', 'False'])
 
     parser.add_argument('--audio_device_index', help='Index of input audio device.', type=int, default=-1)
 
@@ -141,6 +167,11 @@ def main():
 
     args = parser.parse_args()
 
+    if args.require_endpoint.lower() == 'false':
+        require_endpoint = False
+    else:
+        require_endpoint = True
+
     if args.show_audio_devices:
         RhinoDemo.show_audio_devices()
     else:
@@ -148,9 +179,11 @@ def main():
             raise ValueError('Missing path to context file')
 
         RhinoDemo(
+            access_key=args.access_key,
             library_path=args.library_path,
             model_path=args.model_path,
             context_path=args.context_path,
+            require_endpoint=require_endpoint,
             audio_device_index=args.audio_device_index,
             output_path=args.output_path).run()
 

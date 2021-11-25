@@ -54,7 +54,7 @@ Try a phrase that is out-of-context:
 }
 ````
 
-This command falls outside of the domain of "Alarm Clock" and is therefore not understood.
+This command falls outside the domain of "Alarm Clock" and is therefore not understood.
 
 #### Demo context source
 

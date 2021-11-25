@@ -6,6 +6,7 @@ cp ../../lib/linux/x86_64/libpv_rhino.so ./embedded/lib/linux/x86_64/libpv_rhino
 
 echo "Copying macOS lib..."
 cp ../../lib/mac/x86_64/libpv_rhino.dylib ./embedded/lib/mac/x86_64/libpv_rhino.dylib
+cp ../../lib/mac/arm64/libpv_rhino.dylib ./embedded/lib/mac/arm64/libpv_rhino.dylib
 
 echo "Copying Windows lib..."
 cp ../../lib/windows/amd64/libpv_rhino.dll ./embedded/lib/windows/amd64/libpv_rhino.dll

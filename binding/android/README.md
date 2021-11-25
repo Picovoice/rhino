@@ -28,15 +28,25 @@ Rhino can be found on Maven Central. To include the package in your Android proj
 ```groovy
 dependencies {
     // ...
-    implementation 'ai.picovoice:rhino-android:1.6.*'
+    implementation 'ai.picovoice:rhino-android:${LATEST_VERSION}'
 }
 ```
+
+## AccessKey
+
+All bindings require a valid Picovoice `AccessKey` at initialization. `AccessKey`s act as your credentials when using Porcupine SDKs.
+You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+
+To obtain your `AccessKey`:
+1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
+2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
 
 ## Permissions
 
 To enable recording with your Android device's microphone you must add the following line to your `AndroidManifest.xml` file:
 ```xml
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.INTERNET" />
 ```
 
 ## Usage
@@ -51,8 +61,11 @@ To create an instance of RhinoManager, use the RhinoManager Builder:
 ```java
 import ai.picovoice.rhino.*;
 
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
+                        .accessKey(accessKey)
                         .setContextPath("assets_sub_folder/context.rhn")
                         .build(appContext, inferenceCallback);
 } catch (RhinoException e) { }
@@ -85,21 +98,27 @@ The model file contains the parameters for the speech-to-intent engine. To chang
 
 There is also the option to pass an error callback, which will be invoked if an error is encountered while RhinoManager is processing audio.
 
-These optional parameters can be set through the Builder functions `setModelPath` and `setSensitivity`:
+RequireEndpoint is the parameter which indicates if Rhino should wait for a silence before inferring context. Default is set to true.
+
+These optional parameters can be set through the Builder functions `setModelPath`, `setSensitivity`, `setErrorCallback` and `setRequireEndpoint`:
 ```java
 import ai.picovoice.rhino.*;
 
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
+                        .setAccessKey(accessKey)
                         .setContextPath("assets_sub_folder/context.rhn")
-                        .setContextPath("assets_sub_folder/model.pv")
+                        .setModelPath("assets_sub_folder/model.pv")
                         .setSensitivity(0.35f)
                         .setErrorCallback(new RhinoManagerErrorCallback() {
                             @Override
                             public void invoke(RhinoExcpetion e) {
                                 // process error
                             }
-                        })                        
+                        })                
+                        .setRequireEndpoint(false)        
                         .build(context, inferenceCallback);
 } catch (RhinoException e) { }
 ```
@@ -118,15 +137,18 @@ rhinoManager.delete();
 
 ### Low-Level API
 
-[Rhino](/binding/android/Rhino/rhino/src/main/java/ai/picovoice/rhino/Rhino.java) provides low-level access to the Speech-To-Intent engine for those who want to incorporate intent inference into a already existing audio processing pipeline.
+[Rhino](/binding/android/Rhino/rhino/src/main/java/ai/picovoice/rhino/Rhino.java) provides low-level access to the Speech-To-Intent engine for those who want to incorporate intent inference into an already existing audio processing pipeline.
 
 `Rhino` uses a Builder pattern to construct instances. You must pass a context file via the `setContextPath` function.
 
 ```java
 import ai.picovoice.rhino.*;
 
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+
 try {    
     Rhino rhino = new Rhino.Builder()
+                        .setAccessKey(accessKey)
                         .setContextPath("assets_sub_folder/file.rhn")
                         .build(appContext);
 } catch (RhinoException e) { }

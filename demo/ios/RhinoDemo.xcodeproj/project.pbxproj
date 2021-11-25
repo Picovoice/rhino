@@ -18,6 +18,7 @@
 		0251C355269CF02000B77F69 /* test_fr_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C354269CF02000B77F69 /* test_fr_ios.rhn */; };
 		0251C357269CF02800B77F69 /* test_es_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C356269CF02800B77F69 /* test_es_ios.rhn */; };
 		0251C359269CF02F00B77F69 /* test_de_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C358269CF02F00B77F69 /* test_de_ios.rhn */; };
+		02FF56AC274D7168001EEB60 /* rhino_params.pv in Resources */ = {isa = PBXBuildFile; fileRef = 02FF56AB274D7168001EEB60 /* rhino_params.pv */; };
 		0663534B6ED4A931060FD3D9 /* libPods-RhinoDemoUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */; };
 		BB193E922370C4EC00556136 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E912370C4EC00556136 /* AppDelegate.swift */; };
 		BB193E942370C4EC00556136 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E932370C4EC00556136 /* SceneDelegate.swift */; };
@@ -66,6 +67,7 @@
 		0251C354269CF02000B77F69 /* test_fr_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_fr_ios.rhn; sourceTree = "<group>"; };
 		0251C356269CF02800B77F69 /* test_es_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_es_ios.rhn; sourceTree = "<group>"; };
 		0251C358269CF02F00B77F69 /* test_de_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_de_ios.rhn; sourceTree = "<group>"; };
+		02FF56AB274D7168001EEB60 /* rhino_params.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params.pv; path = ../../../lib/common/rhino_params.pv; sourceTree = "<group>"; };
 		2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemoUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.release.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 		0251C336269CC37900B77F69 /* model_files */ = {
 			isa = PBXGroup;
 			children = (
+				02FF56AB274D7168001EEB60 /* rhino_params.pv */,
 				0251C33A269CC3BB00B77F69 /* rhino_params_de.pv */,
 				0251C33B269CC3BB00B77F69 /* rhino_params_es.pv */,
 				0251C33C269CC3BB00B77F69 /* rhino_params_fr.pv */,
@@ -345,6 +348,7 @@
 				0251C343269CC42900B77F69 /* test_out_of_context.wav in Resources */,
 				0251C34B269CC6C000B77F69 /* coffee_maker_linux.rhn in Resources */,
 				0251C355269CF02000B77F69 /* test_fr_ios.rhn in Resources */,
+				02FF56AC274D7168001EEB60 /* rhino_params.pv in Resources */,
 				0251C33F269CC3BB00B77F69 /* rhino_params_fr.pv in Resources */,
 				0251C359269CF02F00B77F69 /* test_de_ios.rhn in Resources */,
 			);
