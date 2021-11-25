@@ -139,11 +139,13 @@ const ACCESS_KEY = /* AccessKey obtained from Picovoice Console (https://picovoi
 const PICO_CLOCK_64 = /* Base64 string of the pico_clock.rhn file for wasm platform */
 
   async function startRhino() {
-    const handle = await Rhino.create({
-      accessKey: ACCESS_KEY,
-      context: PICO_CLOCK_64,
-      sensitivity: 0.7,
-    });
+    const handle = await Rhino.create(
+      ACCESS_KEY,
+      {
+        context: PICO_CLOCK_64,
+        sensitivity: 0.7,
+      }
+    );
 
     // Send Rhino frames of audio (check handle.frameLength for size of array)
     const audioFrames = new Int16Array(/* Provide data with correct format and size */);

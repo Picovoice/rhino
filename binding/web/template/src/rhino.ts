@@ -380,6 +380,12 @@ export class Rhino implements RhinoEngine {
 
     const {base64, sensitivity} = contextInfo;
 
+    if (sensitivity && !(typeof sensitivity === 'number')) {
+      throw new Error('Rhino sensitivity is not a number (in the range [0,1])');
+    } else if (sensitivity && (sensitivity < 0 || sensitivity > 1)) {
+        throw new Error('Rhino sensitivity is outside of range [0,1]');
+    }
+
     const returnPromise = new Promise<Rhino>((resolve, reject) => {
       Rhino._rhinoMutex.runExclusive(async () => {
         const wasmOutput = await Rhino.initWasm(
