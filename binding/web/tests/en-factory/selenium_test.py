@@ -51,7 +51,7 @@ def run_unit_test_selenium(url, access_key, absolute_ic_audio_file, absolute_ooc
     driver.get(url)
     assert "unit test" in driver.title
 
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 3600)
 
     driver.find_element_by_id("inContextAudioFile").send_keys(absolute_ic_audio_file)
     wait.until(EC.visibility_of_element_located((By.ID, "inContextAudioLoaded")))
@@ -60,7 +60,7 @@ def run_unit_test_selenium(url, access_key, absolute_ic_audio_file, absolute_ooc
     wait.until(EC.visibility_of_element_located((By.ID, "oocAudioLoaded")))
 
     driver.find_element_by_id("accessKey").send_keys(access_key)
-    driver.find_element_by_id("sumbit").click()
+    driver.find_element_by_id("submit").click()
     wait.until(EC.visibility_of_element_located((By.ID, "testComplete")))
 
     test_result = 1
