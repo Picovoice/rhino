@@ -10,12 +10,11 @@
 #
 
 import argparse
-import os
+import struct
+import wave
 from threading import Thread
 
-import numpy as np
 import pvrhino
-import soundfile
 from pvrecorder import PvRecorder
 
 
@@ -65,6 +64,7 @@ class RhinoDemo(Thread):
 
         rhino = None
         recorder = None
+        wav_file = None
 
         try:
             rhino = pvrhino.create(
@@ -77,6 +77,10 @@ class RhinoDemo(Thread):
             recorder = PvRecorder(device_index=self._audio_device_index, frame_length=rhino.frame_length)
             recorder.start()
 
+            if self._output_path is not None:
+                wav_file = wave.open(self._output_path, "w")
+                wav_file.setparams((1, 2, 16000, 512, "NONE", "NONE"))
+
             print(rhino.context_info)
             print()
 
@@ -87,8 +91,8 @@ class RhinoDemo(Thread):
             while True:
                 pcm = recorder.read()
 
-                if self._output_path is not None:
-                    self._recorded_frames.append(pcm)
+                if wav_file is not None:
+                    wav_file.writeframes(struct.pack("h" * len(pcm), *pcm))
 
                 is_finalized = rhino.process(pcm)
                 if is_finalized:
@@ -114,13 +118,8 @@ class RhinoDemo(Thread):
             if rhino is not None:
                 rhino.delete()
 
-            if self._output_path is not None and len(self._recorded_frames) > 0:
-                recorded_audio = np.concatenate(self._recorded_frames, axis=0).astype(np.int16)
-                soundfile.write(
-                    os.path.expanduser(self._output_path),
-                    recorded_audio,
-                    samplerate=rhino.sample_rate,
-                    subtype='PCM_16')
+            if wav_file is not None:
+                wav_file.close()
 
     @classmethod
     def show_audio_devices(cls):
