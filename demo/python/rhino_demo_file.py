@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2020 Picovoice Inc.
+# Copyright 2018-2021 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -10,9 +10,29 @@
 #
 
 import argparse
+import struct
+import wave
 
 import pvrhino
-import soundfile
+
+
+def read_file(file_name, sample_rate):
+    wav_file = wave.open(file_name, mode="rb")
+    channels = wav_file.getnchannels()
+    num_frames = wav_file.getnframes()
+
+    if wav_file.getframerate() != sample_rate:
+        raise ValueError("Audio file should have a sample rate of %d. got %d" % (sample_rate, wav_file.getframerate()))
+
+    samples = wav_file.readframes(num_frames)
+    wav_file.close()
+
+    frames = struct.unpack('h' * num_frames * channels, samples)
+
+    if channels == 2:
+        print("Picovoice processes single-channel audio but stereo file is provided. Processing left channel only.")
+
+    return frames[::channels]
 
 
 def main():
@@ -62,12 +82,7 @@ def main():
         sensitivity=args.sensitivity,
         require_endpoint=require_endpoint)
 
-    audio, sample_rate = soundfile.read(args.input_audio_path, dtype='int16')
-    if audio.ndim == 2:
-        print("Picovoice processes single-channel audio but stereo file is provided. Processing left channel only.")
-        audio = audio[0, :]
-    if sample_rate != rhino.sample_rate:
-        raise ValueError("Audio file should have a sample rate of %d. got %d" % (rhino.sample_rate, sample_rate))
+    audio = read_file(args.input_audio_path, rhino.sample_rate)
 
     num_frames = len(audio) // rhino.frame_length
     for i in range(num_frames):
