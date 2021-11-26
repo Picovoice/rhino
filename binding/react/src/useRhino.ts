@@ -10,19 +10,34 @@ import {
 } from './rhino_types';
 
 export function useRhino(
+  /** The language-specific worker factory, imported as `{ RhinoWorkerFactory }` from
+  the `@picovoice/rhino-web-xx-worker` series of packages, where `xx` is the two-letter language code. */
   rhinoWorkerFactory: RhinoWorkerFactory | null,
+  /** useRhino Hook Parameters */
   rhinoHookArgs: RhinoHookArgs | null,
+  /** User-defined callback invoked upon completion of intent inference */
   inferenceCallback: (inference: RhinoInferenceFinalized) => void
 ): {
+  /** Context information */
   contextInfo: string | null;
+  /** A state indicating whether the engine is initialized successfully */
   isLoaded: boolean;
+  /** A state indicating whether the webVoiceProcessor is passing audio to the engine */
   isListening: boolean;
+  /** A state indicating whether the Hook returned an error */
   isError: boolean | null;
+  /** A state indicating whether the Rhino engine actively listening microphone audio until it
+  reaches a conclusion */
   isTalking: boolean;
+  /** A string expression of the error */
   errorMessage: string | null;
+  /** A pointer to the internal webVoiceProcessor object */
   webVoiceProcessor: WebVoiceProcessor | null;
+  /** A method to start processing audio */
   start: () => void;
+  /** A method to stop processing audio */
   pause: () => void;
+  /** A method to put Rhino in an active isTalking state */
   pushToTalk: () => void;
 } {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
