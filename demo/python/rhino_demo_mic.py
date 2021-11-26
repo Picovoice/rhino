@@ -53,8 +53,6 @@ class RhinoDemo(Thread):
         self._audio_device_index = audio_device_index
 
         self._output_path = output_path
-        if self._output_path is not None:
-            self._recorded_frames = list()
 
     def run(self):
         """
