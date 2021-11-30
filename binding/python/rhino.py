@@ -57,9 +57,9 @@ class Rhino(object):
     Inference.__doc__ = """"\
     Immutable object with `.is_understood`, `.intent` , and `.slots` getters.
     
-    :param is_understood: whether Rhino understood what it heard based on the context
-    :param intent: name of intent that was inferred
-    :param slots: dictionary of slot keys and values that were inferred
+    :param is_understood: Indicates whether the intent was understood by Rhino.
+    :param intent: Name of intent that was inferred
+    :param slots: Dictionary of the slot keys and values extracted from the utterance.
     """
 
     class CRhino(Structure):
