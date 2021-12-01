@@ -53,6 +53,15 @@ class Rhino(object):
         PicovoiceStatuses.ACTIVATION_REFUSED: PermissionError
     }
 
+    Inference = namedtuple('Inference', ['is_understood', 'intent', 'slots'])
+    Inference.__doc__ = """"\
+    Immutable object with `.is_understood`, `.intent` , and `.slots` getters.
+    
+    :param is_understood: Indicates whether the intent was understood by Rhino.
+    :param intent: Name of intent that was inferred
+    :param slots: Dictionary of the slot keys and values extracted from the utterance.
+    """
+
     class CRhino(Structure):
         pass
 
@@ -185,14 +194,12 @@ class Rhino(object):
 
         return is_finalized.value
 
-    Inference = namedtuple('Inference', ['is_understood', 'intent', 'slots'])
-
     def get_inference(self):
         """
          Gets inference results from Rhino. If the spoken command was understood, it includes the specific intent name
          that was inferred, and (if applicable) slot keys and specific slot values. Should only be called after the
          process function returns true, otherwise Rhino has not yet reached an inference conclusion.
-         :return An immutable object with `.is_understood`, '.intent` , and `.slots` getters.
+         :return Inference object with `.is_understood`, `.intent` , and `.slots` getters.
         """
 
         is_understood = c_bool()
