@@ -7,6 +7,20 @@
 <script>
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
 
+
+/**
+ * Rhino Vue Component
+ * 
+ * Props
+ * - rhinoFactoryArgs: Arguments for RhinoWorkerFactory.
+ * - rhinoFactory: The language-specific worker factory.
+ * 
+ * Events
+ * - rhn-ready: A method invoked after the component has initialized.
+ * - rhn-info: A method invoked after the component has initialized and has context information.
+ * - rhn-inference: A method invoked upon completion of intent inference.
+ * - rhn-error: A method invoked if an error occurs within initialization.
+ */
 export default {
   name: 'Rhino',
   props: {
@@ -17,6 +31,9 @@ export default {
     return { webVp: null, rhnWorker: null, contextInfo: null };
   },
   methods: {
+    /**
+     * Initializes RhinoWorkerFactory and Web Voice processor.
+     */
     initEngine: async function () {
       this.$emit('rhn-loading');
       try {
@@ -52,6 +69,9 @@ export default {
         this.$emit('rhn-error', error);
       }
     },
+    /**
+     * Method to start processing audio.
+     */
     start() {
       if (this.webVp !== null) {
         this.webVp.start();
@@ -59,6 +79,9 @@ export default {
       }
       return false;
     },
+    /**
+     * Method to stop processing audio.
+     */
     pause() {
       if (this.webVp !== null) {
         this.webVp.pause();
@@ -66,6 +89,9 @@ export default {
       }
       return false;
     },
+    /**
+     * Method to put Rhino in an active isTalking state.
+     */
     pushToTalk() {
       if (this.webVp !== null) {
         this.webVp.resume();
