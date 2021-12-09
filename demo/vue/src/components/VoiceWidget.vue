@@ -1,14 +1,5 @@
 <template>
   <div class="voice-widget">
-    <Rhino
-      ref="rhino"
-      v-bind:rhinoFactoryArgs="factoryArgs"
-      v-bind:rhinoFactory="factory"
-      v-on:rhn-ready="rhnReadyFn"
-      v-on:rhn-inference="rhnInferenceFn"
-      v-on:rhn-error="rhnErrorFn"
-      v-on:rhn-info="rhnInfoFn"
-    />
     <h2>VoiceWidget</h2>
     <h3>
       <label>
@@ -53,78 +44,82 @@
   </div>
 </template>
 
-<script>
-import Rhino from "@picovoice/rhino-web-vue";
+<script lang="ts">
+import Vue, { VueConstructor } from "vue";
+
+import rhinoMixin, { RhinoInferenceFinalized, RhinoVue } from "@picovoice/rhino-web-vue";
 import { RhinoWorkerFactory as RhinoWorkerFactoryEn } from "@picovoice/rhino-web-en-worker";
 import { CLOCK_EN_64 } from "../dist/rhn_contexts_base64";
 
-export default {
+export default (Vue as VueConstructor<Vue & {$rhino: RhinoVue}>).extend({
   name: "VoiceWidget",
-  components: {
-    Rhino,
-  },
+  mixins: [rhinoMixin],
   data: function () {
     return {
-      inference: null,
+      inference: null as RhinoInferenceFinalized | null,
       isError: false,
+      errorMessage: "",
       isLoaded: false,
       isListening: false,
       isTalking: false,
-      contextInfo: null,
+      contextInfo: null as string | null,
       factory: RhinoWorkerFactoryEn,
       factoryArgs: {
         accessKey: "",
         context: {
           base64: CLOCK_EN_64
-        }
+        },
+        start: false
       }
     };
   },
   methods: {
-    initEngine: function (event) {
+    initEngine: function (event: any) {
       this.factoryArgs.accessKey = event.target.value;
       this.isError = false;
       this.isLoaded = false;
       this.isListening = false;
-      this.$refs.rhino.initEngine();
+      this.$rhino.init(
+        this.factoryArgs,
+        this.factory,
+        this.rhnInferenceFn,
+        this.rhnInfoFn,
+        this.rhnReadyFn,
+        this.rhnErrorFn
+      )
     },
     start: function () {
-      if (this.$refs.rhino.start()) {
+      if (this.$rhino.start()) {
         this.isListening = !this.isListening;
       }
     },
     pause: function () {
-      if (this.$refs.rhino.pause()) {
-        this.isListening = !this.isListening;
-      }
-    },
-    resume: function () {
-      if (this.$refs.rhino.resume()) {
+      if (this.$rhino.pause()) {
         this.isListening = !this.isListening;
       }
     },
     pushToTalk: function () {
-      if (this.$refs.rhino.pushToTalk()) {
+      if (this.$rhino.pushToTalk()) {
         this.isTalking = true;
       }
     },
-    rhnInfoFn: function (info) {
+    rhnInfoFn: function (info: string) {
       this.contextInfo = info;
     },
     rhnReadyFn: function () {
       this.isLoaded = true;
       this.isListening = true;
     },
-    rhnInferenceFn: function (inference) {
+    rhnInferenceFn: function (inference: RhinoInferenceFinalized) {
       this.inference = inference;
       this.isTalking = false;
     },
-    rhnErrorFn: function (error) {
+    rhnErrorFn: function (error: Error) {
       this.isError = true;
       this.errorMessage = error.toString();
     },
   },
-};
+});
 </script>
 
 <style scoped>
