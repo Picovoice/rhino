@@ -123,11 +123,11 @@ if (done) {
 
 ### Factory
 
-If you wish to build your own worker, or perhaps not use workers at all, use the factory packages. This will let you instantiate Rhino engine instances directly.
+If you wish to not use workers at all, use the factory packages. This will let you instantiate Rhino engine instances directly.
 
 #### Usage
 
-The audio passed to the worker must be of the correct format. The WebVoiceProcessor handles downsampling in the examples above. If you are not using that, you must ensure you do it yourself.
+The audio passed to the engine must be of the correct format. The WebVoiceProcessor handles downsampling in the examples above. If you are not using that, you must ensure you do it yourself.
 
 E.g.:
 
