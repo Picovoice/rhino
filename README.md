@@ -1494,52 +1494,55 @@ npm install @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
 ```
 
 ```html
-<template>
-  <div class="voice-widget">
-    <Rhino
-      ref="rhino"
-      v-bind:rhinoFactoryArgs="{
-        accessKey: '${ACCESS_KEY}', <!-- AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) -->
-        context: {
-          base64: '...', <!-- Base64 representation of a trained Rhino context; i.e. a `.rhn` file, omitted for brevity -->
-        },
-      }"
-      v-bind:rhinoFactory="factory"
-      v-on:rhn-error="rhnErrorFn"
-      v-on:rhn-inference="rhnInferenceFn"
-      v-on:rhn-init="rhnInitFn"
-      v-on:rhn-ready="rhnReadyFn"
-    />
-  </div>
-</template>
- 
-<script>
-import Rhino from "@picovoice/rhino-web-vue";
+<script lang="ts">
+import rhinoMixin, { RhinoInferenceFinalized } from "@picovoice/rhino-web-vue";
 import { RhinoWorkerFactory as RhinoWorkerFactoryEn } from "@picovoice/rhino-web-en-worker";
- 
+
 export default {
   name: "VoiceWidget",
-  components: {
-    Rhino,
-  },
+  mixins: [rhinoMixin],
   data: function () {
     return {
-      inference: null,
+      inference: null as RhinoInferenceFinalized | null,
       isError: false,
       isLoaded: false,
       isListening: false,
       isTalking: false,
+      contextInfo: '',
       factory: RhinoWorkerFactoryEn,
+      factoryArgs: {
+        accessKey: '${ACCESS_KEY}',  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+        context: {
+          base64: `RHINO_TRAINED_CONTEXT_BASE_64_STRING`
+        },
+      }
     };
   },
+  async created() {
+    await this.$rhino.init(
+      factoryArgs,      // Rhino factory arguments
+      factory,          // Rhino Web Worker component
+      rhnInferenceFn,   // Rhino inference callback
+      rhnInfoFn,        // Rhino context information callback
+      rhnReadyFn,       // Rhino ready callback
+      rhnErrorFn        // Rhino error callback
+    );
+  },
   methods: {
-    pushToTalk: function () {
-      if (this.$refs.rhino.pushToTalk()) {
-        this.isTalking = true;
+    start: function () {
+      if (this.$rhino.start()) {
+        this.isListening = !this.isListening;
       }
     },
-    rhnInitFn: function () {
-      this.isError = false;
+    pause: function () {
+      if (this.$rhino.pause()) {
+        this.isListening = !this.isListening;
+      }
+    },
+    pushToTalk: function () {
+      if (this.$rhino.pushToTalk()) {
+        this.isTalking = true;
+      }
     },
     rhnReadyFn: function () {
       this.isLoaded = true;
@@ -1547,8 +1550,10 @@ export default {
     },
     rhnInferenceFn: function (inference) {
       this.inference = inference;
-      console.log("Rhino inference: " + inference)
       this.isTalking = false;
+    },
+    rhnInfoFn: function (info) {
+      this.contextInfo = info;
     },
     rhnErrorFn: function (error) {
       this.isError = true;
@@ -1556,6 +1561,7 @@ export default {
     },
   },
 };
+</script>
 ```
 
 ### NodeJS

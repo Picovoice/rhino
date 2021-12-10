@@ -1,6 +1,6 @@
 # rhino-web-vue
 
-Renderless Vue component for Rhino for Web.
+Vue mixin for Rhino Web.
 
 ## Rhino
 
