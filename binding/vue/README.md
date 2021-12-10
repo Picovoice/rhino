@@ -196,3 +196,13 @@ export default {
 Custom contexts are generated using [Picovoice Console](https://picovoice.ai/console/). They are trained from text using transfer learning into bespoke Rhino context files with a `.rhn` extension. The target platform is WebAssembly (WASM), as that is what backs the Vue library.
 
 The `.zip` file contains a `.rhn` file and a `_b64.txt` file which contains the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.
+
+```typescript
+factoryArgs: {
+  accessKey: "${ACCESS_KEY}", // AccessKey obtained from Picovoice Console(https://picovoice.ai/console/)",
+  context: {
+    base64: '${CONTEXT_FILE_64}'
+  },
+  start: false
+}
+```
