@@ -77,7 +77,7 @@ The Rhino library is by default a "push-to-talk" experience. You can use a butto
 
 ## Parameters
 
-The `` component has size parameters:
+The `Rhino` mixin has size parameters:
 
 1. The `rhinoFactoryArgs` (i.e. what specific context we want Rhino to understand).
 2. The `rhinoWorkerFactory` (language-specific, imported as `RhinoWorkerFactory` from the `@picovoice/rhino-web-xx-worker` series of packages, where `xx` is the two-letter language code).
