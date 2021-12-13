@@ -9,25 +9,25 @@
     specific language governing permissions and limitations under the License.
 */
 
-/**
+  /**
  * Convert a null terminated phrase stored inside an array buffer to a string
  *
  * @param arrayBuffer input array buffer
- * @param index the index at which the phrase is stored
+ * @param indexStart the index at which the phrase is stored
  * @return retrieved string
  */
 
- export function arrayBufferToStringAtIndex(
-  arrayBuffer: Uint8Array,
-  index: number,
-): string {
-  let stringBuffer = '';
-  let indexBuffer = index;
-  while (arrayBuffer[indexBuffer] !== 0) {
-    stringBuffer += String.fromCharCode(arrayBuffer[indexBuffer++]);
+   export function arrayBufferToStringAtIndex(
+    arrayBuffer: Uint8Array,
+    indexStart: number,
+  ): string {
+    let indexEnd = indexStart;
+    while (arrayBuffer[indexEnd] !== 0) {
+      indexEnd++;
+    }
+    let utf8decoder = new TextDecoder(); 
+    return utf8decoder.decode(arrayBuffer.subarray(indexStart, indexEnd));
   }
-  return stringBuffer;
-}
 
 /**
  * Decode a base64 string and stored it in a Uint8Array array
