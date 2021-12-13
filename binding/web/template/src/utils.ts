@@ -9,7 +9,7 @@
     specific language governing permissions and limitations under the License.
 */
 
-  /**
+/**
  * Convert a null terminated phrase stored inside an array buffer to a string
  *
  * @param arrayBuffer input array buffer
