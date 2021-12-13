@@ -25,7 +25,7 @@
     while (arrayBuffer[indexEnd] !== 0) {
       indexEnd++;
     }
-    let utf8decoder = new TextDecoder(); 
+    const utf8decoder = new TextDecoder('utf-8'); 
     return utf8decoder.decode(arrayBuffer.subarray(indexStart, indexEnd));
   }
 
