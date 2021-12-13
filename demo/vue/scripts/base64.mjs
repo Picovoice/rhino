@@ -28,7 +28,7 @@ const strBase64 = Buffer.from(rhnModel).toString("base64");
 const jsSourceFileOutput = `export const ${contextName.toUpperCase()}_EN_64 = "${strBase64}"\n`;
 
 writeFileSync(
-  join(outputDirectory, `rhn_contexts_base64.js`),
+  join(outputDirectory, `rhn_contexts_base64.ts`),
   jsSourceFileOutput
 );
 
