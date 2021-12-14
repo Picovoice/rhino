@@ -986,10 +986,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@picovoice/rhino-web-en-worker@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.0.1.tgz#0f30492cc580b3ea52c458ec178c5450719e51ae"
-  integrity sha512-dVEBOSn7tFLa+YOWUxdRDal6E95ff5K9/8slDGnIBQADbxJjlfq2wDUPefRTcIuns8PCGljmxzPi0k0lZNWvDw==
+"@picovoice/rhino-web-en-worker@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.0.2.tgz#21e4276284bbcbbe978dee229f00e9609a93f778"
+  integrity sha512-fCtGIcqX8o2Fd8DCYTdRjXZkJOKiRXNoOMS769dWUVTv+1yJPVdwnQ/f+ujuMSjIsrPfR6A7T44jvGWqJ+r7pw==
 
 "@picovoice/rhino-web-vue@^2.0.1":
   version "2.0.1"
