@@ -1,7 +1,7 @@
 {
   "name": "rhino-web-demo",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "A basic demo to show how to use Rhino for web browsers, using the IIFE version of the library",
   "main": "index.js",
   "scripts": {
