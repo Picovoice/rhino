@@ -1292,10 +1292,10 @@
   dependencies:
     tslib "^2.0.0"
 
-"@picovoice/rhino-web-en-worker@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.0.0.tgz#6392fc24477baf3480c72576425919677a357853"
-  integrity sha512-Q3iqECTvqQq40XPVbydL3OPGS1kAtsCc6kxSrtk2XR5EoBQwmxrafqE09HrlycrIi2PJ4ZxGP933pyq97UMgYQ==
+"@picovoice/rhino-web-en-worker@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.0.2.tgz#21e4276284bbcbbe978dee229f00e9609a93f778"
+  integrity sha512-fCtGIcqX8o2Fd8DCYTdRjXZkJOKiRXNoOMS769dWUVTv+1yJPVdwnQ/f+ujuMSjIsrPfR6A7T44jvGWqJ+r7pw==
 
 "@picovoice/web-voice-processor@^2.1.2":
   version "2.1.2"
