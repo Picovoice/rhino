@@ -67,16 +67,17 @@ class RhinoTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         _language_to_contexts = {
-            'en' : ['coffee_maker']
+            'en' : ['coffee_maker'],
             # 'es' : ['luz'],
             # 'fr' : ['éclairage_intelligent'],
-            # 'de' : ['beleuchtung']
+            'de' : ['beleuchtung']
         }
 
         cls.rhinos = {}
         for language in _language_to_contexts:
+            cls.rhinos[language] = {}
             for context in _language_to_contexts[language]:
-                cls.rhinos[language+context] = Rhino(
+                cls.rhinos[language][context] = Rhino(
                     access_key=sys.argv[1],
                     library_path=pv_library_path('../..'),
                     model_path=_pv_model_path_by_language('../..', language),
@@ -86,11 +87,12 @@ class RhinoTestCase(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.rhinos is not None:
-            for language_context in cls.rhinos:
-                cls.rhinos[language_context].delete()
+            for language in cls.rhinos:
+                for context in cls.rhinos[language]:
+                    cls.rhinos[language][context].delete()
 
     def run_rhino(self, language, context, audio_file_name, is_whithin_context, expected_intent = None, expected_slot_values = None):
-        rhino = self.rhinos[language+context]
+        rhino = self.rhinos[language][context]
 
         audio, sample_rate = \
             soundfile.read(
@@ -118,7 +120,7 @@ class RhinoTestCase(unittest.TestCase):
         else:
             self.assertFalse(inference.is_understood, "Shouldn't be able to understand.")
 
-    def test_en_within_context(self):
+    def test_within_context_en(self):
         self.run_rhino(language = 'en',
             context = 'coffee_maker',
             audio_file_name = 'test_within_context.wav',
@@ -126,11 +128,19 @@ class RhinoTestCase(unittest.TestCase):
             expected_intent = 'orderBeverage',
             expected_slot_values = dict(beverage='americano', numberOfShots='double shot', size='medium'))
 
-    def test_en_out_of_context(self):
+    def test_out_of_context_en(self):
         self.run_rhino(language = 'en',
             context = 'coffee_maker',
             audio_file_name = 'test_out_of_context.wav',
             is_whithin_context = False)
+
+    # def test_within_context_de(self):
+    #     self.run_rhino(language = 'de',
+    #         context = 'beleuchtung',
+    #         audio_file_name = 'test_within_context_de.wav',
+    #         is_whithin_context = True,
+    #         expected_intent = 'orderBeverage',
+    #         expected_slot_values = dict(beverage='americano', numberOfShots='double shot', size='medium'))
 
 
 if __name__ == '__main__':
