@@ -13,7 +13,6 @@ import sys
 import unittest
 
 import soundfile
-
 from rhino import Rhino
 from util import *
 
@@ -32,10 +31,10 @@ class RhinoTestCase(unittest.TestCase):
         contexts_root = cls.__append_language('../../resources/contexts', language)
 
         if system == 'Darwin':
-            return os.path.join(os.path.dirname(__file__), contexts_root, 'mac', context+'_mac.rhn')
+            return os.path.join(os.path.dirname(__file__), contexts_root, 'mac', context + '_mac.rhn')
         elif system == 'Linux':
             if platform.machine() == 'x86_64':
-                return os.path.join(os.path.dirname(__file__), contexts_root, 'linux', context+'_linux.rhn')
+                return os.path.join(os.path.dirname(__file__), contexts_root, 'linux', context + '_linux.rhn')
             else:
                 cpu_info = ''
                 try:
@@ -47,20 +46,19 @@ class RhinoTestCase(unittest.TestCase):
 
                 if '0xb76' == cpu_part or '0xc07' == cpu_part or '0xd03' == cpu_part or '0xd08' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        contexts_root, 'raspberry-pi', context+'_raspberry-pi.rhn')
+                                        contexts_root, 'raspberry-pi', context + '_raspberry-pi.rhn')
                 elif '0xd07' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        contexts_root, 'jetson', context+'_jetson.rhn')
+                                        contexts_root, 'jetson', context + '_jetson.rhn')
                 elif '0xc08' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        contexts_root, 'beaglebone', context+'_beaglebone.rhn')    
+                                        contexts_root, 'beaglebone', context + '_beaglebone.rhn')
                 else:
                     raise NotImplementedError("Unsupported CPU: '%s'." % cpu_part)
         elif system == 'Windows':
-            return os.path.join(os.path.dirname(__file__), contexts_root, 'windows', context+'_windows.rhn')
+            return os.path.join(os.path.dirname(__file__), contexts_root, 'windows', context + '_windows.rhn')
         else:
             raise ValueError("Unsupported system '%s'." % system)
-
 
     @classmethod
     def __pv_model_path_by_language(cls, relative, language):
@@ -72,10 +70,10 @@ class RhinoTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         _language_to_contexts = {
-            'en' : ['coffee_maker'],
-            'es' : ['luz'],
-            'fr' : ['éclairage_intelligent'],
-            'de' : ['beleuchtung']
+            'en': ['coffee_maker'],
+            'es': ['luz'],
+            'fr': ['éclairage_intelligent'],
+            'de': ['beleuchtung']
         }
 
         cls.rhinos = dict()
@@ -96,7 +94,8 @@ class RhinoTestCase(unittest.TestCase):
                 for context in cls.rhinos[language]:
                     cls.rhinos[language][context].delete()
 
-    def run_rhino(self, language, context, is_whithin_context, expected_intent = None, expected_slot_values = None, audio_file_name = None):
+    def run_rhino(self, language, context, is_whithin_context, expected_intent=None, expected_slot_values=None,
+                  audio_file_name=None):
         rhino = self.rhinos[language][context]
 
         if audio_file_name is None:
@@ -138,63 +137,54 @@ class RhinoTestCase(unittest.TestCase):
             context='coffee_maker',
             is_whithin_context=True,
             expected_intent='orderBeverage',
-            expected_slot_values=dict(beverage='americano', numberOfShots='double shot', size='medium')
-            )
+            expected_slot_values=dict(beverage='americano', numberOfShots='double shot', size='medium'))
 
     def test_out_of_context(self):
         self.run_rhino(
             language='en',
             context='coffee_maker',
-            is_whithin_context=False
-            )
+            is_whithin_context=False)
 
     def test_within_context_es(self):
         self.run_rhino(
             language='es',
             context='luz',
-            is_whithin_context = True,
+            is_whithin_context=True,
             expected_intent='changeColor',
-            expected_slot_values=dict(location='habitación', color='rosado')
-        )
+            expected_slot_values=dict(location='habitación', color='rosado'))
 
     def test_out_of_context_es(self):
         self.run_rhino(
             language='es',
             context='luz',
-            is_whithin_context=False
-            )            
+            is_whithin_context=False)
 
     def test_within_context_de(self):
-        self.run_rhino(language = 'de',
-            context = 'beleuchtung',
-            is_whithin_context = True,
-            expected_intent = 'changeState',
-            expected_slot_values = dict(state='aus')
-            )
+        self.run_rhino(language='de',
+                       context='beleuchtung',
+                       is_whithin_context=True,
+                       expected_intent='changeState',
+                       expected_slot_values=dict(state='aus'))
 
     def test_out_of_context_de(self):
         self.run_rhino(
             language='de',
             context='beleuchtung',
             is_whithin_context=False
-            )
+        )
 
     def test_within_context_fr(self):
-        self.run_rhino(language = 'fr',
-            context = 'éclairage_intelligent',
-            is_whithin_context = True,
-            expected_intent = 'changeColor',
-            expected_slot_values = dict(color='violet')
-            )
+        self.run_rhino(language='fr',
+                       context='éclairage_intelligent',
+                       is_whithin_context=True,
+                       expected_intent='changeColor',
+                       expected_slot_values=dict(color='violet'))
 
     def test_out_of_context_fr(self):
         self.run_rhino(
             language='fr',
             context='éclairage_intelligent',
-            is_whithin_context=False
-            )            
-
-    
+            is_whithin_context=False)
 
 
 if __name__ == '__main__':
