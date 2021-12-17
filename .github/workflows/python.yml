@@ -5,6 +5,7 @@ on:
   push:
     branches: [ master ]
     paths:
+      - '.github/workflows/python.yml'
       - 'binding/python/**'
       - '!binding/python/README.md'
       - 'lib/beaglebone/**'
