@@ -17,71 +17,76 @@ import soundfile
 from rhino import Rhino
 from util import *
 
-def _append_language(dir, language):
-    if language == 'en':
-        return dir
-    return dir + '_' + language
-
-def _context_path(language, context):
-    system = platform.system()
-
-    contexts_root = _append_language('../../resources/contexts', language)
-
-    if system == 'Darwin':
-        return os.path.join(os.path.dirname(__file__), contexts_root, 'mac', context+'_mac.rhn')
-    elif system == 'Linux':
-        if platform.machine() == 'x86_64':
-            return os.path.join(os.path.dirname(__file__), contexts_root, 'linux', context+'_linux.rhn')
-        else:
-            cpu_info = ''
-            try:
-                cpu_info = subprocess.check_output(['cat', '/proc/cpuinfo']).decode()
-                cpu_part_list = [x for x in cpu_info.split('\n') if 'CPU part' in x]
-                cpu_part = cpu_part_list[0].split(' ')[-1].lower()
-            except Exception as error:
-                raise RuntimeError("Failed to identify the CPU with '%s'\nCPU info: %s" % (error, cpu_info))
-
-            if '0xb76' == cpu_part or '0xc07' == cpu_part or '0xd03' == cpu_part or '0xd08' == cpu_part:
-                return os.path.join(os.path.dirname(__file__),
-                                    contexts_root, 'raspberry-pi', context+'_raspberry-pi.rhn')
-            elif '0xd07' == cpu_part:
-                return os.path.join(os.path.dirname(__file__),
-                                    contexts_root, 'jetson', context+'_jetson.rhn')
-            elif '0xc08' == cpu_part:
-                return os.path.join(os.path.dirname(__file__),
-                                    contexts_root, 'beaglebone', context+'_beaglebone.rhn')    
-            else:
-                raise NotImplementedError("Unsupported CPU: '%s'." % cpu_part)
-    elif system == 'Windows':
-        return os.path.join(os.path.dirname(__file__), contexts_root, 'windows', context+'_windows.rhn')
-    else:
-        raise ValueError("Unsupported system '%s'." % system)
-
-def _pv_model_path_by_language(relative, language):
-    model_path_subdir = _append_language('lib/common/rhino_params', language) + '.pv'
-    return os.path.join(os.path.dirname(__file__), relative, model_path_subdir)
 
 class RhinoTestCase(unittest.TestCase):
+    @staticmethod
+    def __append_language(s, language):
+        if language == 'en':
+            return s
+        return s + '_' + language
+
+    @classmethod
+    def __context_path(cls, context, language):
+        system = platform.system()
+
+        contexts_root = cls.__append_language('../../resources/contexts', language)
+
+        if system == 'Darwin':
+            return os.path.join(os.path.dirname(__file__), contexts_root, 'mac', context+'_mac.rhn')
+        elif system == 'Linux':
+            if platform.machine() == 'x86_64':
+                return os.path.join(os.path.dirname(__file__), contexts_root, 'linux', context+'_linux.rhn')
+            else:
+                cpu_info = ''
+                try:
+                    cpu_info = subprocess.check_output(['cat', '/proc/cpuinfo']).decode()
+                    cpu_part_list = [x for x in cpu_info.split('\n') if 'CPU part' in x]
+                    cpu_part = cpu_part_list[0].split(' ')[-1].lower()
+                except Exception as error:
+                    raise RuntimeError("Failed to identify the CPU with '%s'\nCPU info: %s" % (error, cpu_info))
+
+                if '0xb76' == cpu_part or '0xc07' == cpu_part or '0xd03' == cpu_part or '0xd08' == cpu_part:
+                    return os.path.join(os.path.dirname(__file__),
+                                        contexts_root, 'raspberry-pi', context+'_raspberry-pi.rhn')
+                elif '0xd07' == cpu_part:
+                    return os.path.join(os.path.dirname(__file__),
+                                        contexts_root, 'jetson', context+'_jetson.rhn')
+                elif '0xc08' == cpu_part:
+                    return os.path.join(os.path.dirname(__file__),
+                                        contexts_root, 'beaglebone', context+'_beaglebone.rhn')    
+                else:
+                    raise NotImplementedError("Unsupported CPU: '%s'." % cpu_part)
+        elif system == 'Windows':
+            return os.path.join(os.path.dirname(__file__), contexts_root, 'windows', context+'_windows.rhn')
+        else:
+            raise ValueError("Unsupported system '%s'." % system)
+
+
+    @classmethod
+    def __pv_model_path_by_language(cls, relative, language):
+        model_path_subdir = cls.__append_language('lib/common/rhino_params', language) + '.pv'
+        return os.path.join(os.path.dirname(__file__), relative, model_path_subdir)
+
     rhinos = None
 
     @classmethod
     def setUpClass(cls):
         _language_to_contexts = {
             'en' : ['coffee_maker'],
-            # 'es' : ['luz'],
-            # 'fr' : ['éclairage_intelligent'],
+            'es' : ['luz'],
+            'fr' : ['éclairage_intelligent'],
             'de' : ['beleuchtung']
         }
 
-        cls.rhinos = {}
+        cls.rhinos = dict()
         for language in _language_to_contexts:
-            cls.rhinos[language] = {}
+            cls.rhinos[language] = dict()
             for context in _language_to_contexts[language]:
                 cls.rhinos[language][context] = Rhino(
                     access_key=sys.argv[1],
                     library_path=pv_library_path('../..'),
-                    model_path=_pv_model_path_by_language('../..', language),
-                    context_path=_context_path(language, context)
+                    model_path=cls.__pv_model_path_by_language('../..', language),
+                    context_path=cls.__context_path(context, language)
                 )
 
     @classmethod
@@ -91,8 +96,15 @@ class RhinoTestCase(unittest.TestCase):
                 for context in cls.rhinos[language]:
                     cls.rhinos[language][context].delete()
 
-    def run_rhino(self, language, context, audio_file_name, is_whithin_context, expected_intent = None, expected_slot_values = None):
+    def run_rhino(self, language, context, is_whithin_context, expected_intent = None, expected_slot_values = None, audio_file_name = None):
         rhino = self.rhinos[language][context]
+
+        if audio_file_name is None:
+            if is_whithin_context:
+                prefix = 'test_within_context'
+            else:
+                prefix = 'test_out_of_context'
+            audio_file_name = f'{self.__append_language(prefix, language)}.wav'
 
         audio, sample_rate = \
             soundfile.read(
@@ -120,27 +132,69 @@ class RhinoTestCase(unittest.TestCase):
         else:
             self.assertFalse(inference.is_understood, "Shouldn't be able to understand.")
 
-    def test_within_context_en(self):
-        self.run_rhino(language = 'en',
-            context = 'coffee_maker',
-            audio_file_name = 'test_within_context.wav',
+    def test_within_context(self):
+        self.run_rhino(
+            language='en',
+            context='coffee_maker',
+            is_whithin_context=True,
+            expected_intent='orderBeverage',
+            expected_slot_values=dict(beverage='americano', numberOfShots='double shot', size='medium')
+            )
+
+    def test_out_of_context(self):
+        self.run_rhino(
+            language='en',
+            context='coffee_maker',
+            is_whithin_context=False
+            )
+
+    def test_within_context_es(self):
+        self.run_rhino(
+            language='es',
+            context='luz',
             is_whithin_context = True,
-            expected_intent = 'orderBeverage',
-            expected_slot_values = dict(beverage='americano', numberOfShots='double shot', size='medium'))
+            expected_intent='changeColor',
+            expected_slot_values=dict(location='habitación', color='rosado')
+        )
 
-    def test_out_of_context_en(self):
-        self.run_rhino(language = 'en',
-            context = 'coffee_maker',
-            audio_file_name = 'test_out_of_context.wav',
-            is_whithin_context = False)
+    def test_out_of_context_es(self):
+        self.run_rhino(
+            language='es',
+            context='luz',
+            is_whithin_context=False
+            )            
 
-    # def test_within_context_de(self):
-    #     self.run_rhino(language = 'de',
-    #         context = 'beleuchtung',
-    #         audio_file_name = 'test_within_context_de.wav',
-    #         is_whithin_context = True,
-    #         expected_intent = 'orderBeverage',
-    #         expected_slot_values = dict(beverage='americano', numberOfShots='double shot', size='medium'))
+    def test_within_context_de(self):
+        self.run_rhino(language = 'de',
+            context = 'beleuchtung',
+            is_whithin_context = True,
+            expected_intent = 'changeState',
+            expected_slot_values = dict(state='aus')
+            )
+
+    def test_out_of_context_de(self):
+        self.run_rhino(
+            language='de',
+            context='beleuchtung',
+            is_whithin_context=False
+            )
+
+    def test_within_context_fr(self):
+        self.run_rhino(language = 'fr',
+            context = 'éclairage_intelligent',
+            is_whithin_context = True,
+            expected_intent = 'changeColor',
+            expected_slot_values = dict(color='violet')
+            )
+
+    def test_out_of_context_fr(self):
+        self.run_rhino(
+            language='fr',
+            context='éclairage_intelligent',
+            is_whithin_context=False
+            )            
+
+    
 
 
 if __name__ == '__main__':
