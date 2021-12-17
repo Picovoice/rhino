@@ -45,26 +45,27 @@ defaults:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        os: [rpi4]
-        # python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2
 
-    # - name: Set up Python ${{ matrix.python-version }}
-    #   uses: actions/setup-python@v2
-    #   with:
-    #     python-version: ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
 
     - name: Pre-build dependencies
-      run: python3 -m pip install --upgrade pip
+      run: |
+        sudo apt install libsndfile1-dev
+        python -m pip install --upgrade pip
 
     - name: Install dependencies
-      run: pip3 install -r requirements.txt
+      run: pip install -r requirements.txt
 
     - name: Test
-      run: python3 test_rhino.py ${{secrets.PV_VALID_ACCESS_KEY}}
+      run: python test_rhino.py ${{secrets.PV_VALID_ACCESS_KEY}}
