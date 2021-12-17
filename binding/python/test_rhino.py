@@ -72,7 +72,6 @@ class RhinoTestCase(unittest.TestCase):
         _language_to_contexts = {
             'en': ['coffee_maker'],
             'es': ['luz'],
-            'fr': ['éclairage_intelligent'],
             'de': ['beleuchtung']
         }
 
@@ -172,19 +171,6 @@ class RhinoTestCase(unittest.TestCase):
             context='beleuchtung',
             is_whithin_context=False
         )
-
-    def test_within_context_fr(self):
-        self.run_rhino(language='fr',
-                       context='éclairage_intelligent',
-                       is_whithin_context=True,
-                       expected_intent='changeColor',
-                       expected_slot_values=dict(color='violet'))
-
-    def test_out_of_context_fr(self):
-        self.run_rhino(
-            language='fr',
-            context='éclairage_intelligent',
-            is_whithin_context=False)
 
 
 if __name__ == '__main__':
