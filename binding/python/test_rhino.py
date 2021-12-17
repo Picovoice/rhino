@@ -22,7 +22,7 @@ class RhinoTestCase(unittest.TestCase):
     def __append_language(s, language):
         if language == 'en':
             return s
-        return s + '_' + language
+        return f'{s}_{language}'
 
     @classmethod
     def __context_path(cls, context, language):
@@ -31,10 +31,10 @@ class RhinoTestCase(unittest.TestCase):
         contexts_root = cls.__append_language('../../resources/contexts', language)
 
         if system == 'Darwin':
-            return os.path.join(os.path.dirname(__file__), contexts_root, 'mac', context + '_mac.rhn')
+            return os.path.join(os.path.dirname(__file__), contexts_root, 'mac', f'{context}_mac.rhn')
         elif system == 'Linux':
             if platform.machine() == 'x86_64':
-                return os.path.join(os.path.dirname(__file__), contexts_root, 'linux', context + '_linux.rhn')
+                return os.path.join(os.path.dirname(__file__), contexts_root, 'linux', f'{context}_linux.rhn')
             else:
                 cpu_info = ''
                 try:
@@ -46,23 +46,24 @@ class RhinoTestCase(unittest.TestCase):
 
                 if '0xb76' == cpu_part or '0xc07' == cpu_part or '0xd03' == cpu_part or '0xd08' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        contexts_root, 'raspberry-pi', context + '_raspberry-pi.rhn')
+                                        contexts_root, 'raspberry-pi', f'{context}_raspberry-pi.rhn')
                 elif '0xd07' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        contexts_root, 'jetson', context + '_jetson.rhn')
+                                        contexts_root, 'jetson', f'{context}_jetson.rhn')
                 elif '0xc08' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        contexts_root, 'beaglebone', context + '_beaglebone.rhn')
+                                        contexts_root, 'beaglebone', f'{context}_beaglebone.rhn')
                 else:
                     raise NotImplementedError("Unsupported CPU: '%s'." % cpu_part)
         elif system == 'Windows':
-            return os.path.join(os.path.dirname(__file__), contexts_root, 'windows', context + '_windows.rhn')
+            return os.path.join(os.path.dirname(__file__), contexts_root, 'windows', f'{context}_windows.rhn')
         else:
             raise ValueError("Unsupported system '%s'." % system)
 
     @classmethod
     def __pv_model_path_by_language(cls, relative, language):
-        model_path_subdir = cls.__append_language('lib/common/rhino_params', language) + '.pv'
+        model_path_subdir = cls.__append_language('lib/common/rhino_params', language)
+        model_path_subdir = f'{model_path_subdir}.pv'
         return os.path.join(os.path.dirname(__file__), relative, model_path_subdir)
 
     rhinos = None
