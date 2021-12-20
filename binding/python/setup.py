@@ -26,6 +26,7 @@ MANIFEST_IN = """
 include pvrhino/LICENSE
 include pvrhino/__init__.py
 include pvrhino/rhino.py
+include pvrhino/rhino_error.py
 include pvrhino/util.py
 include pvrhino/lib/common/rhino_params.pv
 include pvrhino/lib/beaglebone/libpv_rhino.so
