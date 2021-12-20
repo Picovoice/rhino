@@ -10,6 +10,7 @@
 #
 
 from .rhino import Rhino
+from .rhino_error import *
 from .util import *
 
 LIBRARY_PATH = pv_library_path('')
