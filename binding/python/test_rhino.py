@@ -94,7 +94,7 @@ class RhinoTestCase(unittest.TestCase):
                 for context in cls.rhinos[language]:
                     cls.rhinos[language][context].delete()
 
-    def run_rhino(self, language, context, is_whithin_context, expected_intent=None, expected_slot_values=None,
+    def run_rhino(self, language, context, is_whithin_context, intent=None, slots=None,
                   audio_file_name=None):
         rhino = self.rhinos[language][context]
 
@@ -125,9 +125,9 @@ class RhinoTestCase(unittest.TestCase):
         if is_whithin_context:
             self.assertTrue(inference.is_understood, "Couldn't understand.")
 
-            self.assertEqual(expected_intent, inference.intent, "Incorrect intent.")
+            self.assertEqual(intent, inference.intent, "Incorrect intent.")
 
-            self.assertEqual(expected_slot_values, inference.slots, "Incorrect slots.")
+            self.assertEqual(slots, inference.slots, "Incorrect slots.")
         else:
             self.assertFalse(inference.is_understood, "Shouldn't be able to understand.")
 
@@ -136,8 +136,8 @@ class RhinoTestCase(unittest.TestCase):
             language='en',
             context='coffee_maker',
             is_whithin_context=True,
-            expected_intent='orderBeverage',
-            expected_slot_values=dict(beverage='americano', numberOfShots='double shot', size='medium'))
+            intent='orderBeverage',
+            slots=dict(beverage='americano', numberOfShots='double shot', size='medium'))
 
     def test_out_of_context(self):
         self.run_rhino(
@@ -150,8 +150,8 @@ class RhinoTestCase(unittest.TestCase):
             language='es',
             context='luz',
             is_whithin_context=True,
-            expected_intent='changeColor',
-            expected_slot_values=dict(location='habitación', color='rosado'))
+            intent='changeColor',
+            slots=dict(location='habitación', color='rosado'))
 
     def test_out_of_context_es(self):
         self.run_rhino(
@@ -160,11 +160,12 @@ class RhinoTestCase(unittest.TestCase):
             is_whithin_context=False)
 
     def test_within_context_de(self):
-        self.run_rhino(language='de',
-                       context='beleuchtung',
-                       is_whithin_context=True,
-                       expected_intent='changeState',
-                       expected_slot_values=dict(state='aus'))
+        self.run_rhino(
+            language='de',
+            context='beleuchtung',
+            is_whithin_context=True,
+            intent='changeState',
+            slots=dict(state='aus'))
 
     def test_out_of_context_de(self):
         self.run_rhino(
