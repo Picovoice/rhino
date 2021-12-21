@@ -215,8 +215,6 @@ describe("intent detection in DE", () => {
       WAV_PATH_IN_CONTEXT_DE
     );
 
-    // console.log(inference)
-
     expect(inference["isUnderstood"]).toBe(true);
     expect(inference["intent"]).toEqual("changeState");
     expect(inference["slots"]["state"]).toEqual("aus");
@@ -258,8 +256,6 @@ describe("intent detection in ES", () => {
       rhinoEngine,
       WAV_PATH_IN_CONTEXT_ES
     );
-
-    console.log(inference)
 
     expect(inference["isUnderstood"]).toBe(true);
     expect(inference["intent"]).toEqual("changeColor");
