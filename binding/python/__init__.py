@@ -10,7 +10,18 @@
 #
 
 from .rhino import Rhino
-from .rhino_error import *
+from .rhino import RhinoError
+from .rhino import RhinoMemoryError
+from .rhino import RhinoIOError
+from .rhino import RhinoInvalidArgumentError
+from .rhino import RhinoStopIterationError
+from .rhino import RhinoKeyError
+from .rhino import RhinoInvalidStateError
+from .rhino import RhinoRuntimeError
+from .rhino import RhinoActivationError
+from .rhino import RhinoActivationLimitError
+from .rhino import RhinoActivationThrottledError
+from .rhino import RhinoActivationRefusedError
 from .util import *
 
 LIBRARY_PATH = pv_library_path('')

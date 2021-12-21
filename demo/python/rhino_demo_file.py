@@ -74,13 +74,33 @@ def main():
     else:
         require_endpoint = True
 
-    rhino = pvrhino.create(
-        access_key=args.access_key,
-        library_path=args.library_path,
-        model_path=args.model_path,
-        context_path=args.context_path,
-        sensitivity=args.sensitivity,
-        require_endpoint=require_endpoint)
+    try:
+        rhino = pvrhino.create(
+            access_key=args.access_key,
+            library_path=args.library_path,
+            model_path=args.model_path,
+            context_path=args.context_path,
+            sensitivity=args.sensitivity,
+            require_endpoint=require_endpoint)
+    except pvrhino.RhinoInvalidArgumentError as e:
+        print(f"One or more arguments provided to Rhino is invalid: {args}")
+        print("If all other arguments seem valid, ensure that '{args.access_key}' is a valid AccessKey")
+        raise e
+    except pvrhino.RhinoActivationError as e:
+        print("AccessKey activation error")
+        raise e
+    except pvrhino.RhinoActivationLimitError as e:
+        print(f"AccessKey '{args.access_key}' has reached it's temporary device limit")
+        raise e
+    except pvrhino.RhinoActivationRefusedError as e:
+        print(f"AccessKey '{args.access_key}' refused")
+        raise e
+    except pvrhino.RhinoActivationThrottledError as e:
+        print(f"AccessKey '{args.access_key}' has been throttled")
+        raise e
+    except pvrhino.RhinoError as e:
+        print(f"Failed to initialize Rhino")
+        raise e
 
     audio = read_file(args.input_audio_path, rhino.sample_rate)
 

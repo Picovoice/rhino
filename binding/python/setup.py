@@ -26,7 +26,6 @@ MANIFEST_IN = """
 include pvrhino/LICENSE
 include pvrhino/__init__.py
 include pvrhino/rhino.py
-include pvrhino/rhino_error.py
 include pvrhino/util.py
 include pvrhino/lib/common/rhino_params.pv
 include pvrhino/lib/beaglebone/libpv_rhino.so
@@ -46,7 +45,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
 
 setuptools.setup(
     name="pvrhino",
-    version="2.0.1",
+    version="2.0.2",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Rhino Speech-to-Intent engine.",

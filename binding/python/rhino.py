@@ -14,7 +14,53 @@ from collections import namedtuple
 from ctypes import *
 from enum import Enum
 
-from rhino_error import *
+
+class RhinoError(Exception):
+    pass
+
+
+class RhinoMemoryError(RhinoError):
+    pass
+
+
+class RhinoIOError(RhinoError):
+    pass
+
+
+class RhinoInvalidArgumentError(RhinoError):
+    pass
+
+
+class RhinoStopIterationError(RhinoError):
+    pass
+
+
+class RhinoKeyError(RhinoError):
+    pass
+
+
+class RhinoInvalidStateError(RhinoError):
+    pass
+
+
+class RhinoRuntimeError(RhinoError):
+    pass
+
+
+class RhinoActivationError(RhinoError):
+    pass
+
+
+class RhinoActivationLimitError(RhinoError):
+    pass
+
+
+class RhinoActivationThrottledError(RhinoError):
+    pass
+
+
+class RhinoActivationRefusedError(RhinoError):
+    pass
 
 
 class Rhino(object):
