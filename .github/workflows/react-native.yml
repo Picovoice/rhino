@@ -1,5 +1,7 @@
 name: React Native
+
 on:
+  workflow_dispatch:
   push:
     branches: [ master ]
     paths:
