@@ -13,21 +13,28 @@ import sys
 import unittest
 
 import soundfile
-
 from rhino import Rhino
 from util import *
 
 
 class RhinoTestCase(unittest.TestCase):
     @staticmethod
-    def _context_path():
+    def __append_language(s, language):
+        if language == 'en':
+            return s
+        return f'{s}_{language}'
+
+    @classmethod
+    def __context_path(cls, context, language):
         system = platform.system()
 
+        contexts_root = cls.__append_language('../../resources/contexts', language)
+
         if system == 'Darwin':
-            return os.path.join(os.path.dirname(__file__), '../../resources/contexts/mac/coffee_maker_mac.rhn')
+            return os.path.join(os.path.dirname(__file__), contexts_root, 'mac', f'{context}_mac.rhn')
         elif system == 'Linux':
             if platform.machine() == 'x86_64':
-                return os.path.join(os.path.dirname(__file__), '../../resources/contexts/linux/coffee_maker_linux.rhn')
+                return os.path.join(os.path.dirname(__file__), contexts_root, 'linux', f'{context}_linux.rhn')
             else:
                 cpu_info = ''
                 try:
@@ -39,77 +46,131 @@ class RhinoTestCase(unittest.TestCase):
 
                 if '0xb76' == cpu_part or '0xc07' == cpu_part or '0xd03' == cpu_part or '0xd08' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        '../../resources/contexts/raspberry-pi/coffee_maker_raspberry-pi.rhn')
+                                        contexts_root, 'raspberry-pi', f'{context}_raspberry-pi.rhn')
                 elif '0xd07' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        '../../resources/contexts/jetson/coffee_maker_jetson.rhn')
+                                        contexts_root, 'jetson', f'{context}_jetson.rhn')
                 elif '0xc08' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        '../../resources/contexts/beaglebone/coffee_maker_beaglebone.rhn')
+                                        contexts_root, 'beaglebone', f'{context}_beaglebone.rhn')
                 else:
                     raise NotImplementedError("Unsupported CPU: '%s'." % cpu_part)
         elif system == 'Windows':
-            return os.path.join(os.path.dirname(__file__), '../../resources/contexts/windows/coffee_maker_windows.rhn')
+            return os.path.join(os.path.dirname(__file__), contexts_root, 'windows', f'{context}_windows.rhn')
         else:
             raise ValueError("Unsupported system '%s'." % system)
 
-    rhino = None
+    @classmethod
+    def __pv_model_path_by_language(cls, relative, language):
+        model_path_subdir = cls.__append_language('lib/common/rhino_params', language)
+        model_path_subdir = f'{model_path_subdir}.pv'
+        return os.path.join(os.path.dirname(__file__), relative, model_path_subdir)
+
+    rhinos = None
 
     @classmethod
     def setUpClass(cls):
-        cls.rhino = Rhino(
-            access_key=sys.argv[1],
-            library_path=pv_library_path('../..'),
-            model_path=pv_model_path('../..'),
-            context_path=cls._context_path())
+        _language_to_contexts = {
+            'en': ['coffee_maker'],
+            'es': ['luz'],
+            'de': ['beleuchtung']
+        }
+
+        cls.rhinos = dict()
+        for language in _language_to_contexts:
+            cls.rhinos[language] = dict()
+            for context in _language_to_contexts[language]:
+                cls.rhinos[language][context] = Rhino(
+                    access_key=sys.argv[1],
+                    library_path=pv_library_path('../..'),
+                    model_path=cls.__pv_model_path_by_language('../..', language),
+                    context_path=cls.__context_path(context, language)
+                )
 
     @classmethod
     def tearDownClass(cls):
-        if cls.rhino is not None:
-            cls.rhino.delete()
+        if cls.rhinos is not None:
+            for language in cls.rhinos:
+                for context in cls.rhinos[language]:
+                    cls.rhinos[language][context].delete()
+
+    def run_rhino(self, language, audio_file_name, context, is_whithin_context, intent=None, slots=None):
+        rhino = self.rhinos[language][context]
+
+        audio, sample_rate = \
+            soundfile.read(
+                os.path.join(os.path.dirname(__file__), '../../resources/audio_samples/', audio_file_name),
+                dtype='int16')
+        assert sample_rate == rhino.sample_rate
+
+        is_finalized = False
+        for i in range(len(audio) // rhino.frame_length):
+            frame = audio[i * rhino.frame_length:(i + 1) * rhino.frame_length]
+            is_finalized = rhino.process(frame)
+            if is_finalized:
+                break
+
+        self.assertTrue(is_finalized, "Failed to finalize.")
+
+        inference = rhino.get_inference()
+
+        if is_whithin_context:
+            self.assertTrue(inference.is_understood, "Couldn't understand.")
+
+            self.assertEqual(intent, inference.intent, "Incorrect intent.")
+
+            self.assertEqual(slots, inference.slots, "Incorrect slots.")
+        else:
+            self.assertFalse(inference.is_understood, "Shouldn't be able to understand.")
 
     def test_within_context(self):
-        audio, sample_rate = \
-            soundfile.read(
-                os.path.join(os.path.dirname(__file__), '../../resources/audio_samples/test_within_context.wav'),
-                dtype='int16')
-        assert sample_rate == self.rhino.sample_rate
-
-        is_finalized = False
-        for i in range(len(audio) // self.rhino.frame_length):
-            frame = audio[i * self.rhino.frame_length:(i + 1) * self.rhino.frame_length]
-            is_finalized = self.rhino.process(frame)
-            if is_finalized:
-                break
-
-        self.assertTrue(is_finalized, "Failed to finalize.")
-
-        inference = self.rhino.get_inference()
-
-        self.assertTrue(inference.is_understood, "Couldn't understand.")
-
-        self.assertEqual('orderBeverage', inference.intent, "Incorrect intent.")
-
-        expected_slot_values = dict(beverage='americano', numberOfShots='double shot', size='medium')
-        self.assertEqual(inference.slots, expected_slot_values, "Incorrect slots.")
+        self.run_rhino(
+            language='en',
+            audio_file_name='test_within_context.wav',
+            context='coffee_maker',
+            is_whithin_context=True,
+            intent='orderBeverage',
+            slots=dict(beverage='americano', numberOfShots='double shot', size='medium'))
 
     def test_out_of_context(self):
-        audio, sample_rate = \
-            soundfile.read(
-                os.path.join(os.path.dirname(__file__), '../../resources/audio_samples/test_out_of_context.wav'),
-                dtype='int16')
-        assert sample_rate == self.rhino.sample_rate
+        self.run_rhino(
+            language='en',
+            audio_file_name='test_out_of_context.wav',
+            context='coffee_maker',
+            is_whithin_context=False)
 
-        is_finalized = False
-        for i in range(len(audio) // self.rhino.frame_length):
-            frame = audio[i * self.rhino.frame_length:(i + 1) * self.rhino.frame_length]
-            is_finalized = self.rhino.process(frame)
-            if is_finalized:
-                break
+    def test_within_context_es(self):
+        self.run_rhino(
+            language='es',
+            audio_file_name='test_within_context_es.wav',
+            context='luz',
+            is_whithin_context=True,
+            intent='changeColor',
+            slots=dict(location='habitación', color='rosado'))
 
-        self.assertTrue(is_finalized, "Failed to finalize.")
+    def test_out_of_context_es(self):
+        self.run_rhino(
+            language='es',
+            audio_file_name='test_out_of_context_es.wav',
+            context='luz',
+            is_whithin_context=False)
 
-        self.assertFalse(self.rhino.get_inference().is_understood, "Shouldn't be able to understand.")
+    def test_within_context_de(self):
+        self.run_rhino(
+            language='de',
+            audio_file_name='test_within_context_de.wav',
+            context='beleuchtung',
+            is_whithin_context=True,
+            intent='changeState',
+            slots=dict(state='aus'))
+
+    def test_out_of_context_de(self):
+        self.run_rhino(
+            language='de',
+            audio_file_name='test_out_of_context_de.wav',
+            context='beleuchtung',
+            is_whithin_context=False
+        )
 
 
 if __name__ == '__main__':
