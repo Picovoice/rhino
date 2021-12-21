@@ -94,16 +94,8 @@ class RhinoTestCase(unittest.TestCase):
                 for context in cls.rhinos[language]:
                     cls.rhinos[language][context].delete()
 
-    def run_rhino(self, language, context, is_whithin_context, intent=None, slots=None,
-                  audio_file_name=None):
+    def run_rhino(self, language, audio_file_name, context, is_whithin_context, intent=None, slots=None):
         rhino = self.rhinos[language][context]
-
-        if audio_file_name is None:
-            if is_whithin_context:
-                prefix = 'test_within_context'
-            else:
-                prefix = 'test_out_of_context'
-            audio_file_name = f'{self.__append_language(prefix, language)}.wav'
 
         audio, sample_rate = \
             soundfile.read(
@@ -134,6 +126,7 @@ class RhinoTestCase(unittest.TestCase):
     def test_within_context(self):
         self.run_rhino(
             language='en',
+            audio_file_name='test_within_context.wav',
             context='coffee_maker',
             is_whithin_context=True,
             intent='orderBeverage',
@@ -142,12 +135,14 @@ class RhinoTestCase(unittest.TestCase):
     def test_out_of_context(self):
         self.run_rhino(
             language='en',
+            audio_file_name='test_out_of_context.wav',
             context='coffee_maker',
             is_whithin_context=False)
 
     def test_within_context_es(self):
         self.run_rhino(
             language='es',
+            audio_file_name='test_within_context_es.wav',
             context='luz',
             is_whithin_context=True,
             intent='changeColor',
@@ -156,12 +151,14 @@ class RhinoTestCase(unittest.TestCase):
     def test_out_of_context_es(self):
         self.run_rhino(
             language='es',
+            audio_file_name='test_out_of_context_es.wav',
             context='luz',
             is_whithin_context=False)
 
     def test_within_context_de(self):
         self.run_rhino(
             language='de',
+            audio_file_name='test_within_context_de.wav',
             context='beleuchtung',
             is_whithin_context=True,
             intent='changeState',
@@ -170,6 +167,7 @@ class RhinoTestCase(unittest.TestCase):
     def test_out_of_context_de(self):
         self.run_rhino(
             language='de',
+            audio_file_name='test_out_of_context_de.wav',
             context='beleuchtung',
             is_whithin_context=False
         )
