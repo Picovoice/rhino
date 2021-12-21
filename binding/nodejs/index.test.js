@@ -50,8 +50,6 @@ const contextPathBeleuchtungDe =
   `../../resources/contexts_de/${platform}/beleuchtung_${platform}.rhn`;
 const contextPathLuzEs =
   `../../resources/contexts_es/${platform}/luz_${platform}.rhn`;
-const contextPathEclairageIntelligentFr =
-  `../../resources/contexts_fr/${platform}/éclairage_intelligent_${platform}.rhn`;
 
 
 const ACCESS_KEY = process.argv
@@ -217,6 +215,8 @@ describe("intent detection in DE", () => {
       WAV_PATH_IN_CONTEXT_DE
     );
 
+    // console.log(inference)
+
     expect(inference["isUnderstood"]).toBe(true);
     expect(inference["intent"]).toEqual("changeState");
     expect(inference["slots"]["state"]).toEqual("aus");
@@ -237,7 +237,6 @@ describe("intent detection in DE", () => {
       rhinoEngine,
       WAV_PATH_OUT_OF_CONTEXT_DE
     );
-
     expect(inference["isUnderstood"]).toBe(false);
     expect(inference["intent"]).toBe(undefined);
 
@@ -260,6 +259,8 @@ describe("intent detection in ES", () => {
       WAV_PATH_IN_CONTEXT_ES
     );
 
+    console.log(inference)
+
     expect(inference["isUnderstood"]).toBe(true);
     expect(inference["intent"]).toEqual("changeColor");
     expect(inference["slots"]["location"]).toEqual("habitación");
@@ -281,50 +282,6 @@ describe("intent detection in ES", () => {
       rhinoEngine,
       WAV_PATH_OUT_OF_CONTEXT_ES
     );
-
-    expect(inference["isUnderstood"]).toBe(false);
-    expect(inference["intent"]).toBe(undefined);
-
-    rhinoEngine.release();
-  });
-});
-
-describe("intent detection in FR", () => {
-  test("successful inference éclairage", () => {
-    let rhinoEngine = new Rhino(
-      ACCESS_KEY,
-      contextPathEclairageIntelligentFr,
-      0.5,
-      true,
-      MODEL_PATH_FR
-    );
-
-    let inference = rhinoProcessWaveFile(
-      rhinoEngine,
-      WAV_PATH_IN_CONTEXT_FR
-    );
-
-    expect(inference["isUnderstood"]).toBe(true);
-    expect(inference["intent"]).toEqual("changeColor");
-    expect(inference["slots"]["color"]).toEqual("violet");
-
-    rhinoEngine.release();
-  });
-
-  test("out-of-context phrase is not understood", () => {
-    let rhinoEngine = new Rhino(
-      ACCESS_KEY,
-      contextPathEclairageIntelligentFr,
-      0.5,
-      true,
-      MODEL_PATH_FR
-    );
-
-    let inference = rhinoProcessWaveFile(
-      rhinoEngine,
-      WAV_PATH_OUT_OF_CONTEXT_FR
-    );
-    
     expect(inference["isUnderstood"]).toBe(false);
     expect(inference["intent"]).toBe(undefined);
 
