@@ -1,6 +1,7 @@
 name: Go Demos
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master ]
     paths:
