@@ -84,7 +84,7 @@ def main():
             require_endpoint=require_endpoint)
     except pvrhino.RhinoInvalidArgumentError as e:
         print(f"One or more arguments provided to Rhino is invalid: {args}")
-        print("If all other arguments seem valid, ensure that '{args.access_key}' is a valid AccessKey")
+        print(f"If all other arguments seem valid, ensure that '{args.access_key}' is a valid AccessKey")
         raise e
     except pvrhino.RhinoActivationError as e:
         print("AccessKey activation error")
