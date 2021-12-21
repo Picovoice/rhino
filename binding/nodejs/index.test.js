@@ -58,9 +58,11 @@ const ACCESS_KEY = process.argv
 
 function rhinoProcessWaveFile(
   engineInstance,
-  waveFilePath,
+  relativeWaveFilePath,
   ignoreIsFinalized = false
 ) {
+  const path = require("path");
+  const waveFilePath = path.join(__dirname, relativeWaveFilePath);
   const waveBuffer = fs.readFileSync(waveFilePath);
   const waveAudioFile = new WaveFile(waveBuffer);
 
