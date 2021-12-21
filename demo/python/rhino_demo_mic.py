@@ -105,7 +105,25 @@ class RhinoDemo(Thread):
                         print('}\n')
                     else:
                         print("Didn't understand the command.\n")
-
+        except pvrhino.RhinoInvalidArgumentError as e:
+            print("One or more arguments provided to Rhino is invalid")
+            print("If all other arguments seem valid, ensure that 'access_key' is a valid AccessKey")
+            raise e
+        except pvrhino.RhinoActivationError as e:
+            print("AccessKey activation error")
+            raise e
+        except pvrhino.RhinoActivationLimitError as e:
+            print(f"AccessKey '{args.access_key}' has reached it's temporary device limit")
+            raise e
+        except pvrhino.RhinoActivationRefusedError as e:
+            print(f"AccessKey '{args.access_key}' refused")
+            raise e
+        except pvrhino.RhinoActivationThrottledError as e:
+            print(f"AccessKey '{args.access_key}' has been throttled")
+            raise e
+        except pvrhino.RhinoError as e:
+            print(f"Failed to initialize Rhino")
+            raise e
         except KeyboardInterrupt:
             print('Stopping ...')
 
