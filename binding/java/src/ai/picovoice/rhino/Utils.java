@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 class Utils {
 
     private static final Path RESOURCE_DIRECTORY;
-    private static final String ENVIRONMENT_NAME;
+    public static final String ENVIRONMENT_NAME;
     private static final String ARCHITECTURE;
     private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
@@ -118,7 +118,7 @@ class Utils {
         return resourceDirectoryPath;
     }
 
-    static String getEnvironmentName() throws RuntimeException {
+    private static String getEnvironmentName() throws RuntimeException {
         String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
         if (os.contains("mac") || os.contains("darwin")) {
             return "mac";
