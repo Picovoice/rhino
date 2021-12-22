@@ -194,24 +194,7 @@ public class RhinoTest {
             null,
             null
         );
-    }
-
-    // @Test
-    // void testWithinContextEs() throws IOException, UnsupportedAudioFileException, RhinoException {
-    //     buildRhinoWrapper("es", "luz");
-
-    //     Map<String, String> expectedSlotValues  = new HashMap<String, String>() {{
-    //         put("location", "habitación");
-    //         put("color", "rosado");            
-    //     }};
-
-    //     runProcess(
-    //         "test_within_context_es.wav",
-    //         true,
-    //         "changeColor",
-    //         expectedSlotValues
-    //     );
-    // }    
+    }  
 
     @Test
     void testOutOfContextEs() throws IOException, UnsupportedAudioFileException, RhinoException {
