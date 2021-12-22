@@ -1,6 +1,6 @@
 {
   "name": "rhino-react-native-demo",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "android-run": "react-native run-android",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@picovoice/react-native-voice-processor": "^1.0.4",
-    "@picovoice/rhino-react-native": "^2.0.0",
+    "@picovoice/rhino-react-native": "^2.0.1",
     "react": "16.13.1",
     "react-native": "0.63.3"
   },
