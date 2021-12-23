@@ -1,0 +1,1 @@
+-keep class ai.picovoice.rhino.*Exception { <init>(...); }
