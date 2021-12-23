@@ -35,6 +35,74 @@ namespace RhinoTest
             }
         }
 
+        private static string appendLanguage(string s, string language)
+        {
+            if(language == "en")
+                return s;
+            return $"{s}_{language}";
+        }
+
+        private static string getContextPath(string language, string context)
+        {
+            return Path.Combine(
+                _relativeDir,
+                "../../../../../../resources",
+                appendLanguage("contexts", language),
+                $"{_env}/{context}_{_env}.rhn"
+            );
+        }
+
+        private static string getModelPath(string language)
+        {
+            string file_name = appendLanguage("rhino_params", language);
+            return Path.Combine(
+                _relativeDir,
+                "../../../../../../lib/common",
+                $"{file_name}.pv"
+            );
+        }
+
+        private Rhino createRhinoWrapper(string language, string context) => Rhino.Create(ACCESS_KEY, getContextPath(language, context), getModelPath(language));
+
+        private void runProcess(Rhino r, string audioFileName, bool isWithinContext, string expectedIntent = null, Dictionary<string, string> expectedSlots = null)
+        {
+            int frameLen = r.FrameLength;
+            string testAudioPath = Path.Combine(_relativeDir, "resources/audio_samples", audioFileName);
+            List<short> data = GetPcmFromFile(testAudioPath, r.SampleRate);
+
+            bool isFinalized = false;
+            int framecount = (int)Math.Floor((float)(data.Count / frameLen));
+            var results = new List<int>();
+            for (int i = 0; i < framecount; i++)
+            {
+                int start = i * r.FrameLength;
+                int count = r.FrameLength;
+                List<short> frame = data.GetRange(start, count);
+                isFinalized = r.Process(frame.ToArray());
+                if (isFinalized)
+                {
+                    break;
+                }
+            }
+            Assert.IsTrue(isFinalized, "Failed to finalize.");
+
+            Inference inference = r.GetInference();
+
+            if(isWithinContext)
+            {
+                Assert.IsTrue(inference.IsUnderstood, "Couldn't understand.");
+                Assert.AreEqual(expectedIntent, inference.Intent, "Incorrect intent.");
+                Assert.IsTrue(inference.Slots.All((keyValuePair) =>
+                                            expectedSlots.ContainsKey(keyValuePair.Key) &&
+                                            expectedSlots[keyValuePair.Key] == keyValuePair.Value));   
+            }
+            else
+            {
+                Assert.IsFalse(inference.IsUnderstood, "Shouldn't be able to understand.");
+            }
+         
+        }
+
         [TestMethod]
         public void TestFrameLength()
         {
@@ -60,70 +128,88 @@ namespace RhinoTest
         public void TestWithinContext()
         {
             using Rhino r = SetUpClass();
-            int frameLen = r.FrameLength;
-
-            string testAudioPath = Path.Combine(_relativeDir, "resources/audio_samples/test_within_context.wav");
-            List<short> data = GetPcmFromFile(testAudioPath, r.SampleRate);
-
-            bool isFinalized = false;
-            int framecount = (int)Math.Floor((float)(data.Count / frameLen));
-            var results = new List<int>();
-            for (int i = 0; i < framecount; i++)
-            {
-                int start = i * r.FrameLength;
-                int count = r.FrameLength;
-                List<short> frame = data.GetRange(start, count);
-                isFinalized = r.Process(frame.ToArray());
-                if (isFinalized)
-                {
-                    break;
-                }
-            }
-            Assert.IsTrue(isFinalized, "Failed to finalize.");
-
-            Inference inference = r.GetInference();
-            Assert.IsTrue(inference.IsUnderstood, "Couldn't understand.");
-            Assert.AreEqual("orderBeverage", inference.Intent, "Incorrect intent.");
-
-            Dictionary<string, string> expectedSlotValues = new Dictionary<string, string>()
+            Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
             {
                 {"size", "medium"},
                 {"numberOfShots", "double shot"},
                 {"beverage", "americano"},
             };
-            Assert.IsTrue(inference.Slots.All((keyValuePair) =>
-                                          expectedSlotValues.ContainsKey(keyValuePair.Key) &&
-                                          expectedSlotValues[keyValuePair.Key] == keyValuePair.Value));
+            runProcess(
+                r,
+                "test_within_context.wav",
+                true,
+                "orderBeverage",
+                expectedSlots
+            );
         }
 
         [TestMethod]
         public void TestOutOfContext()
         {
             using Rhino r = SetUpClass();
-            int frameLen = r.FrameLength;
-
-            string testAudioPath = Path.Combine(_relativeDir, "resources/audio_samples/test_out_of_context.wav");
-            List<short> data = GetPcmFromFile(testAudioPath, r.SampleRate);
-
-            bool isFinalized = false;
-            int framecount = (int)Math.Floor((float)(data.Count / frameLen));
-            var results = new List<int>();
-            for (int i = 0; i < framecount; i++)
-            {
-                int start = i * r.FrameLength;
-                int count = r.FrameLength;
-                List<short> frame = data.GetRange(start, count);
-                isFinalized = r.Process(frame.ToArray());
-                if (isFinalized)
-                {
-                    break;
-                }
-            }
-            Assert.IsTrue(isFinalized, "Failed to finalize.");
-
-            Inference inference = r.GetInference();
-            Assert.IsFalse(inference.IsUnderstood, "Shouldn't be able to understand.");
+            runProcess(
+                r,
+                "test_out_of_context.wav",
+                false
+            );
         }
+
+        [TestMethod]
+        public void TestWithinContextDe()
+        {
+            using Rhino r = createRhinoWrapper("de", "beleuchtung");
+            Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
+            {
+                {"state", "aus"}
+            };
+            runProcess(
+                r,
+                "test_within_context_de.wav",
+                true,
+                "changeState",
+                expectedSlots
+            );
+        }        
+
+        [TestMethod]
+        public void TestOutOfContextDe()
+        {
+            using Rhino r = createRhinoWrapper("de", "beleuchtung");
+            runProcess(
+                r,
+                "test_out_of_context_de.wav",
+                false
+            );
+        }
+
+        [TestMethod]
+        public void TestWithinContextEs()
+        {
+            using Rhino r = createRhinoWrapper("es", "luz");
+            Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
+            {
+                {"location", "habitación"},
+                {"color", "rosado"}
+            };
+            runProcess(
+                r,
+                "test_within_context_es.wav",
+                true,
+                "changeColor",
+                expectedSlots
+            );
+        }        
+
+        [TestMethod]
+        public void TestOutOfContextEs()
+        {
+            using Rhino r = createRhinoWrapper("es", "luz");
+            runProcess(
+                r,
+                "test_out_of_context_es.wav",
+                false
+            );
+        }        
 
         private List<short> GetPcmFromFile(string audioFilePath, int expectedSampleRate)
         {
