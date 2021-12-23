@@ -19,16 +19,38 @@ const { PvArgumentError, PvStateError } = require("./errors");
 const { getPlatform, getSystemLibraryPath } = require("./platforms");
 
 const MODEL_PATH = "./lib/common/rhino_params.pv";
+const MODEL_PATH_DE = "../../lib/common/rhino_params_de.pv";
+const MODEL_PATH_ES = "../../lib/common/rhino_params_es.pv";
+const MODEL_PATH_FR = "../../lib/common/rhino_params_fr.pv";
 
 const WAV_PATH_COFFEE_MAKER_IN_CONTEXT =
   "../../resources/audio_samples/test_within_context.wav";
 const WAV_PATH_COFFEE_MAKER_OUT_OF_CONTEXT =
   "../../resources/audio_samples/test_out_of_context.wav";
+const WAV_PATH_IN_CONTEXT_DE =
+  "../../resources/audio_samples/test_within_context_de.wav";
+const WAV_PATH_OUT_OF_CONTEXT_DE =
+  "../../resources/audio_samples/test_out_of_context_de.wav";
+const WAV_PATH_IN_CONTEXT_ES =
+  "../../resources/audio_samples/test_within_context_es.wav";
+const WAV_PATH_OUT_OF_CONTEXT_ES =
+  "../../resources/audio_samples/test_out_of_context_es.wav";
+const WAV_PATH_IN_CONTEXT_FR =
+  "../../resources/audio_samples/test_within_context_fr.wav";
+const WAV_PATH_OUT_OF_CONTEXT_FR =
+  "../../resources/audio_samples/test_out_of_context_fr.wav";  
+
 
 const platform = getPlatform();
 const libraryPath = getSystemLibraryPath();
 
-const contextPathCoffeeMaker = `../../resources/contexts/${platform}/coffee_maker_${platform}.rhn`;
+const contextPathCoffeeMaker =
+  `../../resources/contexts/${platform}/coffee_maker_${platform}.rhn`;
+const contextPathBeleuchtungDe =
+  `../../resources/contexts_de/${platform}/beleuchtung_${platform}.rhn`;
+const contextPathLuzEs =
+  `../../resources/contexts_es/${platform}/luz_${platform}.rhn`;
+
 
 const ACCESS_KEY = process.argv
   .filter((x) => x.startsWith("--access_key="))[0]
@@ -36,9 +58,11 @@ const ACCESS_KEY = process.argv
 
 function rhinoProcessWaveFile(
   engineInstance,
-  waveFilePath,
+  relativeWaveFilePath,
   ignoreIsFinalized = false
 ) {
+  const path = require("path");
+  const waveFilePath = path.join(__dirname, relativeWaveFilePath);
   const waveBuffer = fs.readFileSync(waveFilePath);
   const waveAudioFile = new WaveFile(waveBuffer);
 
@@ -173,6 +197,91 @@ describe("manual paths", () => {
     expect(inference["isUnderstood"]).toBe(true);
     expect(inference["intent"]).toEqual("orderBeverage");
     expect(inference["slots"]["beverage"]).toEqual("americano");
+
+    rhinoEngine.release();
+  });
+});
+
+describe("intent detection in DE", () => {
+  test("successful inference beleuchtung", () => {
+    let rhinoEngine = new Rhino(
+      ACCESS_KEY,
+      contextPathBeleuchtungDe,
+      0.5,
+      true,
+      MODEL_PATH_DE
+    );
+
+    let inference = rhinoProcessWaveFile(
+      rhinoEngine,
+      WAV_PATH_IN_CONTEXT_DE
+    );
+
+    expect(inference["isUnderstood"]).toBe(true);
+    expect(inference["intent"]).toEqual("changeState");
+    expect(inference["slots"]["state"]).toEqual("aus");
+
+    rhinoEngine.release();
+  });
+
+  test("out-of-context phrase is not understood", () => {
+    let rhinoEngine = new Rhino(
+      ACCESS_KEY,
+      contextPathBeleuchtungDe,
+      0.5,
+      true,
+      MODEL_PATH_DE
+    );
+
+    let inference = rhinoProcessWaveFile(
+      rhinoEngine,
+      WAV_PATH_OUT_OF_CONTEXT_DE
+    );
+    expect(inference["isUnderstood"]).toBe(false);
+    expect(inference["intent"]).toBe(undefined);
+
+    rhinoEngine.release();
+  });
+});
+
+describe("intent detection in ES", () => {
+  test("successful inference luz", () => {
+    let rhinoEngine = new Rhino(
+      ACCESS_KEY,
+      contextPathLuzEs,
+      0.5,
+      true,
+      MODEL_PATH_ES
+    );
+
+    let inference = rhinoProcessWaveFile(
+      rhinoEngine,
+      WAV_PATH_IN_CONTEXT_ES
+    );
+
+    expect(inference["isUnderstood"]).toBe(true);
+    expect(inference["intent"]).toEqual("changeColor");
+    expect(inference["slots"]["location"]).toEqual("habitación");
+    expect(inference["slots"]["color"]).toEqual("rosado");
+
+    rhinoEngine.release();
+  });
+
+  test("out-of-context phrase is not understood", () => {
+    let rhinoEngine = new Rhino(
+      ACCESS_KEY,
+      contextPathLuzEs,
+      0.5,
+      true,
+      MODEL_PATH_ES
+    );
+
+    let inference = rhinoProcessWaveFile(
+      rhinoEngine,
+      WAV_PATH_OUT_OF_CONTEXT_ES
+    );
+    expect(inference["isUnderstood"]).toBe(false);
+    expect(inference["intent"]).toBe(undefined);
 
     rhinoEngine.release();
   });
