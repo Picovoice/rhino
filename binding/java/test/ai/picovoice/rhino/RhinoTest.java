@@ -32,8 +32,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RhinoTest {
 
+    private static final String ENVIRONMENT_NAME;
     private Rhino rhino;
     private String accessKey = System.getProperty("pvTestingAccessKey");
+
+    static {
+        ENVIRONMENT_NAME = Utils.getEnvironmentName();
+    }
 
     private static String append_language(String s, String language) {
         if (language == "en")
@@ -45,8 +50,8 @@ public class RhinoTest {
         return Paths.get(System.getProperty("user.dir"))
             .resolve("../../resources")
             .resolve(append_language("contexts", language))
-            .resolve(Utils.ENVIRONMENT_NAME)
-            .resolve(context + "_" + Utils.ENVIRONMENT_NAME + ".rhn")
+            .resolve(ENVIRONMENT_NAME)
+            .resolve(context + "_" + ENVIRONMENT_NAME + ".rhn")
             .toString();
     }
 
