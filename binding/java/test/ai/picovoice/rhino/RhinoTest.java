@@ -62,10 +62,10 @@ public class RhinoTest {
             .toString();
     }    
 
-    private static String getAudioFilePath(String auadioFileName) {
+    private static String getAudioFilePath(String audioFileName) {
         return Paths.get(System.getProperty("user.dir"))
             .resolve("../../resources/audio_samples")
-            .resolve(auadioFileName)
+            .resolve(audioFileName)
             .toString();
     }
 
