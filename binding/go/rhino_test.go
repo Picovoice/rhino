@@ -218,3 +218,35 @@ func TestOutOfContextEs(t *testing.T) {
 		"",
 		map[string]string{})
 }
+
+func TestWithinContextFr(t *testing.T) {
+
+	language := "fr"
+	rhino = Rhino{
+		AccessKey: testAccessKey,
+		ContextPath: getTestContextPath(language, "éclairage_intelligent"),
+		Sensitivity: 0.5,
+		ModelPath: getTestModelPath(language)}
+	runTestCase(
+		t,
+		"test_within_context_fr.wav",
+		true,
+		"changeColor",
+		map[string]string{"color": "violet"})
+}
+
+func TestOutOfContextFr(t *testing.T) {
+
+	language := "fr"
+	rhino = Rhino{
+		AccessKey: testAccessKey,
+		ContextPath: getTestContextPath(language, "éclairage_intelligent"),
+		Sensitivity: 0.5,
+		ModelPath: getTestModelPath(language)}
+	runTestCase(
+		t,
+		"test_out_of_context_fr.wav",
+		false,
+		"",
+		map[string]string{})
+}
