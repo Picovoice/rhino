@@ -15,7 +15,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	// "log"
 	"math"
 	"os"
 	"path/filepath"
@@ -23,8 +22,11 @@ import (
 	"testing"
 )
 
-var r Rhino
-var pvTestAccessKey string
+var (
+	pvTestAccessKey string
+	r               Rhino
+)
+
 
 func TestMain(m *testing.M) {
 
@@ -58,19 +60,16 @@ func getTestContextPath(language string, context string) string {
 	return contextPath
 }
 
-func runTestCase(t *testing.T, r Rhino, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
-	audioFilePath := filepath.Join("../../resources/audio_samples", audioFileName)
-	testFile, _ := filepath.Abs(audioFilePath)
-
+func runTestCase(t *testing.T, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
 	err := r.Init()
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
-
-	t.Logf("Porcupine Version: %s", Version)
+	t.Logf("Rhino Version: %s", Version)
 	t.Logf("Frame Length: %d", FrameLength)
-	t.Logf("Samples Rate: %d", SampleRate)
+	t.Logf("Sample Rate: %d", SampleRate)
 
+	testFile, _ := filepath.Abs(filepath.Join("../../resources/audio_samples", audioFileName))
 	data, err := ioutil.ReadFile(testFile)
 	if err != nil {
 		t.Fatalf("Could not read test file: %v", err)
@@ -137,7 +136,6 @@ func TestWithinContext(t *testing.T) {
 	r = NewRhino(pvTestAccessKey, getTestContextPath("en", "coffee_maker"))
 	runTestCase(
 		t,
-		r,
 		"test_within_context.wav",
 		true,
 		"orderBeverage",
@@ -149,7 +147,6 @@ func TestOutOfContext(t *testing.T) {
 	r = NewRhino(pvTestAccessKey, getTestContextPath("en", "coffee_maker"))
 	runTestCase(
 		t,
-		r,
 		"test_out_of_context.wav",
 		false,
 		"",
@@ -166,7 +163,6 @@ func TestWithinContextDe(t *testing.T) {
 		ModelPath: getTestModelPath(language)}
 	runTestCase(
 		t,
-		r,
 		"test_within_context_de.wav",
 		true,
 		"changeState",
@@ -183,7 +179,6 @@ func TestOutOfContextDe(t *testing.T) {
 		ModelPath: getTestModelPath(language)}
 	runTestCase(
 		t,
-		r,
 		"test_out_of_context_de.wav",
 		false,
 		"",
@@ -200,7 +195,6 @@ func TestWithinContextEs(t *testing.T) {
 		ModelPath: getTestModelPath(language)}
 	runTestCase(
 		t,
-		r,
 		"test_within_context_es.wav",
 		true,
 		"changeColor",
@@ -217,7 +211,6 @@ func TestOutOfContextEs(t *testing.T) {
 		ModelPath: getTestModelPath(language)}
 	runTestCase(
 		t,
-		r,
 		"test_out_of_context_es.wav",
 		false,
 		"",
