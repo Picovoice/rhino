@@ -40,25 +40,25 @@ public class RhinoTest {
         ENVIRONMENT_NAME = Utils.getEnvironmentName();
     }
 
-    private static String append_language(String s, String language) {
+    private static String appendLanguage(String s, String language) {
         if (language == "en")
             return s;
         return s + "_" + language;
     }    
 
-    private static String getContextPath(String language, String context) {
+    private static String getTestContextPath(String language, String context) {
         return Paths.get(System.getProperty("user.dir"))
             .resolve("../../resources")
-            .resolve(append_language("contexts", language))
+            .resolve(appendLanguage("contexts", language))
             .resolve(ENVIRONMENT_NAME)
             .resolve(context + "_" + ENVIRONMENT_NAME + ".rhn")
             .toString();
     }
 
-    private static String getModelPath(String language) {
+    private static String getTestModelPath(String language) {
         return Paths.get(System.getProperty("user.dir"))
             .resolve("../../lib/common")
-            .resolve(append_language("rhino_params", language)+".pv")
+            .resolve(appendLanguage("rhino_params", language)+".pv")
             .toString();
     }    
 
@@ -69,46 +69,39 @@ public class RhinoTest {
             .toString();
     }
 
-    private void buildRhinoWrapper(String language, String context) throws RhinoException{
-        rhino = new Rhino(
-                accessKey,
-                Utils.getPackagedLibraryPath(),
-                getModelPath(language),
-                getContextPath(language, context),
-                0.5f,
-                false);
-    }    
-
-    private void buildDefaultTestRhino() throws RhinoException {
-        rhino = new Rhino.Builder()
-                .setAccessKey(accessKey)
-                .setContextPath(getContextPath("en", "coffee_maker"))
-                .build();
-    }
-
     @AfterEach
     void tearDown() {
         rhino.delete();
     }
 
     @Test
-    void getVersion() throws RhinoException{
-        buildDefaultTestRhino();
+    void getVersion() throws RhinoException {
+        rhino = new Rhino.Builder()
+        .setAccessKey(accessKey)
+        .setContextPath(getTestContextPath("en", "coffee_maker"))
+        .build();
         assertTrue(rhino.getVersion() != null && !rhino.getVersion().equals(""));
     }
 
     @Test
-    void getFrameLength() throws RhinoException{
-        buildDefaultTestRhino();
+    void getFrameLength() throws RhinoException {
+        rhino = new Rhino.Builder()
+        .setAccessKey(accessKey)
+        .setContextPath(getTestContextPath("en", "coffee_maker"))
+        .build();
         assertTrue(rhino.getFrameLength() > 0);
     }
 
     @org.junit.jupiter.api.Test
-    void getSampleRate() throws RhinoException{
-        buildDefaultTestRhino();
+    void getSampleRate() throws RhinoException {
+        rhino = new Rhino.Builder()
+        .setAccessKey(accessKey)
+        .setContextPath(getTestContextPath("en", "coffee_maker"))
+        .build();
         assertTrue(rhino.getSampleRate() > 0);
     }
-    void runProcess(String audioFileName, boolean isWithinContext, String expectedIntent, Map<String, String> expectedSlots) throws IOException, UnsupportedAudioFileException, RhinoException {
+
+    void runTestCase(String audioFileName, boolean isWithinContext, String expectedIntent, Map<String, String> expectedSlots) throws IOException, UnsupportedAudioFileException, RhinoException {
         int frameLen = rhino.getFrameLength();
         String audioFilePath = getAudioFilePath(audioFileName);
         File testAudioPath = new File(audioFilePath);
@@ -145,7 +138,10 @@ public class RhinoTest {
 
     @Test
     void testWithinContext() throws IOException, UnsupportedAudioFileException, RhinoException {
-        buildDefaultTestRhino();
+        rhino = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(getTestContextPath("en", "coffee_maker"))
+                .build();
 
         Map<String, String> expectedSlotValues  = new HashMap<String, String>() {{
             put("size", "medium");
@@ -153,7 +149,7 @@ public class RhinoTest {
             put("beverage", "americano");
         }};
 
-        runProcess(
+        runTestCase(
             "test_within_context.wav",
             true,
             "orderBeverage",
@@ -163,9 +159,12 @@ public class RhinoTest {
 
     @Test
     void testOutOfContext() throws IOException, UnsupportedAudioFileException, RhinoException {
-        buildDefaultTestRhino();
+        rhino = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(getTestContextPath("en", "coffee_maker"))
+                .build();
 
-        runProcess(
+        runTestCase(
             "test_out_of_context.wav",
             false,
             null,
@@ -175,13 +174,18 @@ public class RhinoTest {
 
     @Test
     void testWithinContextDe() throws IOException, UnsupportedAudioFileException, RhinoException {
-        buildRhinoWrapper("de", "beleuchtung");
+
+        final String language = "de";
+        rhino = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(getTestContextPath(language, "beleuchtung"))
+                .setModelPath(getTestModelPath(language))
+                .build();
 
         Map<String, String> expectedSlotValues  = new HashMap<String, String>() {{
             put("state", "aus");
         }};
-
-        runProcess(
+        runTestCase(
             "test_within_context_de.wav",
             true,
             "changeState",
@@ -191,9 +195,14 @@ public class RhinoTest {
 
     @Test
     void testOutOfContextDe() throws IOException, UnsupportedAudioFileException, RhinoException {
-        buildRhinoWrapper("de", "beleuchtung");
+        final String language = "de";
+        rhino = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(getTestContextPath(language, "beleuchtung"))
+                .setModelPath(getTestModelPath(language))
+                .build();
 
-        runProcess(
+        runTestCase(
             "test_out_of_context_de.wav",
             false,
             null,
@@ -203,13 +212,18 @@ public class RhinoTest {
 
     @Test
     void testOutOfContextEs() throws IOException, UnsupportedAudioFileException, RhinoException {
-        buildRhinoWrapper("es", "luz");
+        final String language = "es";
+        rhino = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(getTestContextPath(language, "luz"))
+                .setModelPath(getTestModelPath(language))
+                .build();
 
-        runProcess(
+        runTestCase(
             "test_out_of_context_es.wav",
             false,
             null,
             null
         );
-    }     
+    }
 }
