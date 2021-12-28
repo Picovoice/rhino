@@ -23,14 +23,14 @@ import (
 )
 
 var (
-	pvTestAccessKey string
-	r               Rhino
+	testAccessKey string
+	rhino         Rhino
 )
 
 
 func TestMain(m *testing.M) {
 
-	flag.StringVar(&pvTestAccessKey, "access_key", "", "AccessKey for testing")
+	flag.StringVar(&testAccessKey, "access_key", "", "AccessKey for testing")
 	flag.Parse()
 
 	os.Exit(m.Run())
@@ -44,24 +44,26 @@ func appendLanguage(s string, language string) string {
 }
 
 func getTestModelPath(language string) string {
-	modelPath, _ := filepath.Abs(fmt.Sprintf(
+	modelRelPath := fmt.Sprintf(
 		"../../lib/common/%s.pv",
-		appendLanguage("rhino_params", language)))
+		appendLanguage("rhino_params", language))
+	modelPath, _ := filepath.Abs(modelRelPath)
 	return modelPath
 }
 
 func getTestContextPath(language string, context string) string {
-	contextPath, _ :=  filepath.Abs(fmt.Sprintf(
+	contextRelPath := fmt.Sprintf(
 		"../../resources/%s/%s/%s_%s.rhn",
 		appendLanguage("contexts", language),
 		osName,
 		context,
-		osName))
+		osName)
+	contextPath, _ :=  filepath.Abs(contextRelPath)
 	return contextPath
 }
 
 func runTestCase(t *testing.T, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
-	err := r.Init()
+	err := rhino.Init()
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
@@ -69,8 +71,8 @@ func runTestCase(t *testing.T, audioFileName string, isWithinContext bool, expec
 	t.Logf("Frame Length: %d", FrameLength)
 	t.Logf("Sample Rate: %d", SampleRate)
 
-	testFile, _ := filepath.Abs(filepath.Join("../../resources/audio_samples", audioFileName))
-	data, err := ioutil.ReadFile(testFile)
+	testAudioPath, _ := filepath.Abs(filepath.Join("../../resources/audio_samples", audioFileName))
+	data, err := ioutil.ReadFile(testAudioPath)
 	if err != nil {
 		t.Fatalf("Could not read test file: %v", err)
 	}
@@ -88,7 +90,7 @@ func runTestCase(t *testing.T, audioFileName string, isWithinContext bool, expec
 			sampleBuffer[j] = int16(binary.LittleEndian.Uint16(data[dataOffset : dataOffset+2]))
 		}
 
-		isFinalized, err = r.Process(sampleBuffer)
+		isFinalized, err = rhino.Process(sampleBuffer)
 		if err != nil {
 			t.Fatalf("Could not read test file: %v", err)
 		}
@@ -102,7 +104,7 @@ func runTestCase(t *testing.T, audioFileName string, isWithinContext bool, expec
 		t.Fatalf("Rhino reached end of file without finalizing.")
 	}
 
-	inference, err := r.GetInference()
+	inference, err := rhino.GetInference()
 	if err != nil {
 		t.Fatalf("Rhino failed to get inference: \n%v", err)
 	}
@@ -125,7 +127,7 @@ func runTestCase(t *testing.T, audioFileName string, isWithinContext bool, expec
 		}
 	}
 
-	delErr := r.Delete()
+	delErr := rhino.Delete()
 	if delErr != nil {
 		t.Fatalf("%v", delErr)
 	}
@@ -133,7 +135,7 @@ func runTestCase(t *testing.T, audioFileName string, isWithinContext bool, expec
 
 func TestWithinContext(t *testing.T) {
 
-	r = NewRhino(pvTestAccessKey, getTestContextPath("en", "coffee_maker"))
+	rhino = NewRhino(testAccessKey, getTestContextPath("en", "coffee_maker"))
 	runTestCase(
 		t,
 		"test_within_context.wav",
@@ -144,7 +146,7 @@ func TestWithinContext(t *testing.T) {
 
 func TestOutOfContext(t *testing.T) {
 
-	r = NewRhino(pvTestAccessKey, getTestContextPath("en", "coffee_maker"))
+	rhino = NewRhino(testAccessKey, getTestContextPath("en", "coffee_maker"))
 	runTestCase(
 		t,
 		"test_out_of_context.wav",
@@ -156,8 +158,8 @@ func TestOutOfContext(t *testing.T) {
 func TestWithinContextDe(t *testing.T) {
 
 	language := "de"
-	r = Rhino{
-		AccessKey: pvTestAccessKey,
+	rhino = Rhino{
+		AccessKey: testAccessKey,
 		ContextPath: getTestContextPath(language, "beleuchtung"),
 		Sensitivity: 0.5,
 		ModelPath: getTestModelPath(language)}
@@ -172,8 +174,8 @@ func TestWithinContextDe(t *testing.T) {
 func TestOutOfContextDe(t *testing.T) {
 
 	language := "de"
-	r = Rhino{
-		AccessKey: pvTestAccessKey,
+	rhino = Rhino{
+		AccessKey: testAccessKey,
 		ContextPath: getTestContextPath(language, "beleuchtung"),
 		Sensitivity: 0.5,
 		ModelPath: getTestModelPath(language)}
@@ -188,8 +190,8 @@ func TestOutOfContextDe(t *testing.T) {
 func TestWithinContextEs(t *testing.T) {
 
 	language := "es"
-	r = Rhino{
-		AccessKey: pvTestAccessKey,
+	rhino = Rhino{
+		AccessKey: testAccessKey,
 		ContextPath: getTestContextPath(language, "luz"),
 		Sensitivity: 0.5,
 		ModelPath: getTestModelPath(language)}
@@ -204,8 +206,8 @@ func TestWithinContextEs(t *testing.T) {
 func TestOutOfContextEs(t *testing.T) {
 
 	language := "es"
-	r = Rhino{
-		AccessKey: pvTestAccessKey,
+	rhino = Rhino{
+		AccessKey: testAccessKey,
 		ContextPath: getTestContextPath(language, "luz"),
 		Sensitivity: 0.5,
 		ModelPath: getTestModelPath(language)}
