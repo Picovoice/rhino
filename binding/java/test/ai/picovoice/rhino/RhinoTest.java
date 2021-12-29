@@ -208,7 +208,29 @@ public class RhinoTest {
             null,
             null
         );
-    }  
+    }
+
+    @Test
+    void testWithinContextEs() throws IOException, UnsupportedAudioFileException, RhinoException {
+
+        final String language = "es";
+        rhino = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(getTestContextPath(language, "luz"))
+                .setModelPath(getTestModelPath(language))
+                .build();
+
+        Map<String, String> expectedSlotValues  = new HashMap<String, String>() {{
+            put("location", "habitación");
+            put("color", "rosado");
+        }};
+        runTestCase(
+            "test_within_context_es.wav",
+            true,
+            "changeColor",
+            expectedSlotValues
+        );
+    }    
 
     @Test
     void testOutOfContextEs() throws IOException, UnsupportedAudioFileException, RhinoException {
@@ -226,4 +248,42 @@ public class RhinoTest {
             null
         );
     }
+
+    @Test
+    void testWithinContextFr() throws IOException, UnsupportedAudioFileException, RhinoException {
+
+        final String language = "fr";
+        rhino = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(getTestContextPath(language, "éclairage_intelligent"))
+                .setModelPath(getTestModelPath(language))
+                .build();
+
+        Map<String, String> expectedSlotValues  = new HashMap<String, String>() {{
+            put("color", "violet");
+        }};
+        runTestCase(
+            "test_within_context_fr.wav",
+            true,
+            "changeColor",
+            expectedSlotValues
+        );
+    }    
+
+    @Test
+    void testOutOfContextFr() throws IOException, UnsupportedAudioFileException, RhinoException {
+        final String language = "fr";
+        rhino = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(getTestContextPath(language, "éclairage_intelligent"))
+                .setModelPath(getTestModelPath(language))
+                .build();
+
+        runTestCase(
+            "test_out_of_context_fr.wav",
+            false,
+            null,
+            null
+        );
+    }    
 }
