@@ -25,6 +25,7 @@ namespace RhinoTest
     public class MainTest
     {
         private static string ACCESS_KEY;
+        private Rhino rhino;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
@@ -64,21 +65,21 @@ namespace RhinoTest
 
         private Rhino createRhinoWrapper(string language, string context) => Rhino.Create(ACCESS_KEY, getContextPath(language, context), getModelPath(language));
 
-        private void runProcess(Rhino r, string audioFileName, bool isWithinContext, string expectedIntent = null, Dictionary<string, string> expectedSlots = null)
+        private void runProcess(string audioFileName, bool isWithinContext, string expectedIntent = null, Dictionary<string, string> expectedSlots = null)
         {
-            int frameLen = r.FrameLength;
+            int frameLen = rhino.FrameLength;
             string testAudioPath = Path.Combine(_relativeDir, "resources/audio_samples", audioFileName);
-            List<short> data = GetPcmFromFile(testAudioPath, r.SampleRate);
+            List<short> data = GetPcmFromFile(testAudioPath, rhino.SampleRate);
 
             bool isFinalized = false;
             int framecount = (int)Math.Floor((float)(data.Count / frameLen));
             var results = new List<int>();
             for (int i = 0; i < framecount; i++)
             {
-                int start = i * r.FrameLength;
-                int count = r.FrameLength;
+                int start = i * rhino.FrameLength;
+                int count = rhino.FrameLength;
                 List<short> frame = data.GetRange(start, count);
-                isFinalized = r.Process(frame.ToArray());
+                isFinalized = rhino.Process(frame.ToArray());
                 if (isFinalized)
                 {
                     break;
@@ -86,7 +87,7 @@ namespace RhinoTest
             }
             Assert.IsTrue(isFinalized, "Failed to finalize.");
 
-            Inference inference = r.GetInference();
+            Inference inference = rhino.GetInference();
 
             if(isWithinContext)
             {
@@ -100,34 +101,39 @@ namespace RhinoTest
             {
                 Assert.IsFalse(inference.IsUnderstood, "Shouldn't be able to understand.");
             }
-         
+
+            rhino.Dispose();
         }
 
         [TestMethod]
         public void TestFrameLength()
         {
-            using Rhino r = SetUpClass();
-            Assert.IsTrue(r?.FrameLength > 0, "Specified frame length was not a valid number.");
+            rhino = SetUpClass();
+            Assert.IsTrue(rhino?.FrameLength > 0, "Specified frame length was not a valid number.");
+            rhino.Dispose();
         }
 
         [TestMethod]
         public void TestVersion()
         {
-            using Rhino r = SetUpClass();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(r?.Version), "Rhino did not return a valid version number.");
+            rhino = SetUpClass();
+            Assert.IsFalse(string.IsNullOrWhiteSpace(rhino?.Version), "Rhino did not return a valid version number.");
+            rhino.Dispose();
         }
 
         [TestMethod]
         public void TestContextInfo()
         {
-            using Rhino r = SetUpClass();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(r?.ContextInfo), "Rhino did not return any context information.");
+            rhino = SetUpClass();
+            Assert.IsFalse(string.IsNullOrWhiteSpace(rhino?.ContextInfo), "Rhino did not return any context information.");
+            rhino.Dispose();
         }
 
         [TestMethod]
         public void TestWithinContext()
         {
-            using Rhino r = SetUpClass();
+            rhino = SetUpClass();
+            
             Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
             {
                 {"size", "medium"},
@@ -135,7 +141,6 @@ namespace RhinoTest
                 {"beverage", "americano"},
             };
             runProcess(
-                r,
                 "test_within_context.wav",
                 true,
                 "orderBeverage",
@@ -146,9 +151,9 @@ namespace RhinoTest
         [TestMethod]
         public void TestOutOfContext()
         {
-            using Rhino r = SetUpClass();
+            rhino = SetUpClass();
+
             runProcess(
-                r,
                 "test_out_of_context.wav",
                 false
             );
@@ -157,13 +162,17 @@ namespace RhinoTest
         [TestMethod]
         public void TestWithinContextDe()
         {
-            using Rhino r = createRhinoWrapper("de", "beleuchtung");
+            string language = "de";
+            rhino = Rhino.Create(
+                ACCESS_KEY,
+                getContextPath(language, "beleuchtung"),
+                getModelPath(language));
+
             Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
             {
                 {"state", "aus"}
             };
             runProcess(
-                r,
                 "test_within_context_de.wav",
                 true,
                 "changeState",
@@ -174,9 +183,13 @@ namespace RhinoTest
         [TestMethod]
         public void TestOutOfContextDe()
         {
-            using Rhino r = createRhinoWrapper("de", "beleuchtung");
+            string language = "de";
+            rhino = Rhino.Create(
+                ACCESS_KEY,
+                getContextPath(language, "beleuchtung"),
+                getModelPath(language));
+
             runProcess(
-                r,
                 "test_out_of_context_de.wav",
                 false
             );
@@ -185,14 +198,18 @@ namespace RhinoTest
         [TestMethod]
         public void TestWithinContextEs()
         {
-            using Rhino r = createRhinoWrapper("es", "luz");
+            string language = "es";
+            rhino = Rhino.Create(
+                ACCESS_KEY,
+                getContextPath(language, "luz"),
+                getModelPath(language));
+
             Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
             {
                 {"location", "habitación"},
                 {"color", "rosado"}
             };
             runProcess(
-                r,
                 "test_within_context_es.wav",
                 true,
                 "changeColor",
@@ -203,13 +220,53 @@ namespace RhinoTest
         [TestMethod]
         public void TestOutOfContextEs()
         {
-            using Rhino r = createRhinoWrapper("es", "luz");
+            string language = "es";
+            rhino = Rhino.Create(
+                ACCESS_KEY,
+                getContextPath(language, "luz"),
+                getModelPath(language));
+
             runProcess(
-                r,
                 "test_out_of_context_es.wav",
                 false
             );
-        }        
+        }
+
+        [TestMethod]
+        public void TestWithinContextFr()
+        {
+            string language = "fr";
+            rhino = Rhino.Create(
+                ACCESS_KEY,
+                getContextPath(language, "éclairage_intelligent"),
+                getModelPath(language));
+
+            Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
+            {
+                {"color", "violet"}
+            };
+            runProcess(
+                "test_within_context_fr.wav",
+                true,
+                "changeColor",
+                expectedSlots
+            );
+        }
+
+        [TestMethod]
+        public void TestOutOfContextFr()
+        {
+            string language = "fr";
+            rhino = Rhino.Create(
+                ACCESS_KEY,
+                getContextPath(language, "éclairage_intelligent"),
+                getModelPath(language));
+
+            runProcess(
+                "test_out_of_context_fr.wav",
+                false
+            );
+        }           
 
         private List<short> GetPcmFromFile(string audioFilePath, int expectedSampleRate)
         {
