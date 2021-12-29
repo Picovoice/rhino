@@ -63,8 +63,6 @@ namespace RhinoTest
             );
         }
 
-        private Rhino createRhinoWrapper(string language, string context) => Rhino.Create(ACCESS_KEY, getContextPath(language, context), getModelPath(language));
-
         private void runProcess(string audioFileName, bool isWithinContext, string expectedIntent = null, Dictionary<string, string> expectedSlots = null)
         {
             int frameLen = rhino.FrameLength;
@@ -133,7 +131,7 @@ namespace RhinoTest
         public void TestWithinContext()
         {
             rhino = SetUpClass();
-            
+
             Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
             {
                 {"size", "medium"},
