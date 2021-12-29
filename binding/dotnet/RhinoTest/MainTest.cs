@@ -36,26 +36,26 @@ namespace RhinoTest
             }
         }
 
-        private static string appendLanguage(string s, string language)
+        private static string AppendLanguage(string s, string language)
         {
             if(language == "en")
                 return s;
             return $"{s}_{language}";
         }
 
-        private static string getContextPath(string language, string context)
+        private static string GetContextPath(string language, string context)
         {
             return Path.Combine(
                 _relativeDir,
                 "../../../../../../resources",
-                appendLanguage("contexts", language),
+                AppendLanguage("contexts", language),
                 $"{_env}/{context}_{_env}.rhn"
             );
         }
 
-        private static string getModelPath(string language)
+        private static string GetModelPath(string language)
         {
-            string file_name = appendLanguage("rhino_params", language);
+            string file_name = AppendLanguage("rhino_params", language);
             return Path.Combine(
                 _relativeDir,
                 "../../../../../../lib/common",
@@ -63,7 +63,7 @@ namespace RhinoTest
             );
         }
 
-        private void runProcess(string audioFileName, bool isWithinContext, string expectedIntent = null, Dictionary<string, string> expectedSlots = null)
+        private void RunTestCase(string audioFileName, bool isWithinContext, string expectedIntent = null, Dictionary<string, string> expectedSlots = null)
         {
             int frameLen = rhino.FrameLength;
             string testAudioPath = Path.Combine(_relativeDir, "resources/audio_samples", audioFileName);
@@ -138,7 +138,7 @@ namespace RhinoTest
                 {"numberOfShots", "double shot"},
                 {"beverage", "americano"},
             };
-            runProcess(
+            RunTestCase(
                 "test_within_context.wav",
                 true,
                 "orderBeverage",
@@ -151,7 +151,7 @@ namespace RhinoTest
         {
             rhino = SetUpClass();
 
-            runProcess(
+            RunTestCase(
                 "test_out_of_context.wav",
                 false
             );
@@ -163,14 +163,14 @@ namespace RhinoTest
             string language = "de";
             rhino = Rhino.Create(
                 ACCESS_KEY,
-                getContextPath(language, "beleuchtung"),
-                getModelPath(language));
+                GetContextPath(language, "beleuchtung"),
+                GetModelPath(language));
 
             Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
             {
                 {"state", "aus"}
             };
-            runProcess(
+            RunTestCase(
                 "test_within_context_de.wav",
                 true,
                 "changeState",
@@ -184,10 +184,10 @@ namespace RhinoTest
             string language = "de";
             rhino = Rhino.Create(
                 ACCESS_KEY,
-                getContextPath(language, "beleuchtung"),
-                getModelPath(language));
+                GetContextPath(language, "beleuchtung"),
+                GetModelPath(language));
 
-            runProcess(
+            RunTestCase(
                 "test_out_of_context_de.wav",
                 false
             );
@@ -199,15 +199,15 @@ namespace RhinoTest
             string language = "es";
             rhino = Rhino.Create(
                 ACCESS_KEY,
-                getContextPath(language, "luz"),
-                getModelPath(language));
+                GetContextPath(language, "luz"),
+                GetModelPath(language));
 
             Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
             {
                 {"location", "habitación"},
                 {"color", "rosado"}
             };
-            runProcess(
+            RunTestCase(
                 "test_within_context_es.wav",
                 true,
                 "changeColor",
@@ -221,10 +221,10 @@ namespace RhinoTest
             string language = "es";
             rhino = Rhino.Create(
                 ACCESS_KEY,
-                getContextPath(language, "luz"),
-                getModelPath(language));
+                GetContextPath(language, "luz"),
+                GetModelPath(language));
 
-            runProcess(
+            RunTestCase(
                 "test_out_of_context_es.wav",
                 false
             );
@@ -236,14 +236,14 @@ namespace RhinoTest
             string language = "fr";
             rhino = Rhino.Create(
                 ACCESS_KEY,
-                getContextPath(language, "éclairage_intelligent"),
-                getModelPath(language));
+                GetContextPath(language, "éclairage_intelligent"),
+                GetModelPath(language));
 
             Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
             {
                 {"color", "violet"}
             };
-            runProcess(
+            RunTestCase(
                 "test_within_context_fr.wav",
                 true,
                 "changeColor",
@@ -257,10 +257,10 @@ namespace RhinoTest
             string language = "fr";
             rhino = Rhino.Create(
                 ACCESS_KEY,
-                getContextPath(language, "éclairage_intelligent"),
-                getModelPath(language));
+                GetContextPath(language, "éclairage_intelligent"),
+                GetModelPath(language));
 
-            runProcess(
+            RunTestCase(
                 "test_out_of_context_fr.wav",
                 false
             );
