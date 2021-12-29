@@ -118,7 +118,7 @@ class Utils {
         return resourceDirectoryPath;
     }
 
-    static String getEnvironmentName() throws RuntimeException {
+    public static String getEnvironmentName() throws RuntimeException {
         String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
         if (os.contains("mac") || os.contains("darwin")) {
             return "mac";
