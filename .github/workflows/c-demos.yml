@@ -1,0 +1,73 @@
+name: C Demos
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+    paths:
+      - 'demo/c/**'
+      - '!demo/c/README.md'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'demo/c/**'
+      - '!demo/c/README.md'
+
+
+defaults:
+  run:
+    working-directory: demo/c
+
+jobs:
+  build-github-hosted:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: [3.8]
+
+    steps:
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: actions-setup-cmake
+      uses: jwlawson/actions-setup-cmake@v1.11
+
+    - name: Install Dependencies
+      run: pip install pvrhino       
+
+    - name: Build File Demo
+      run: cmake -S . -B build && cmake --build build --target rhino_demo_file
+
+    - name: Test
+      run: python test_demo.py ${{secrets.PV_VALID_ACCESS_KEY}}
+
+  build-self-hosted:
+    runs-on: ${{ matrix.machine }}
+
+    strategy:
+      matrix:
+        machine: [rpi2, rpi3, rpi4, jetson, beaglebone]
+
+    steps:
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Install Dependencies
+      run: pip3 install pvrhino        
+
+    - name: Build File Demo
+      run: cmake -S . -B build && cmake --build build --target rhino_demo_file
+
+    - name: Test
+      run: python3 test_demo.py ${{secrets.PV_VALID_ACCESS_KEY}}
