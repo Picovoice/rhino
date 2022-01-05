@@ -1,12 +1,12 @@
 /*
-    Copyright 2018-2021 Picovoice Inc.
+  Copyright 2018-2021 Picovoice Inc.
 
-    You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
-    file accompanying this source.
+  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+  file accompanying this source.
 
-    Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
-    an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
-    specific language governing permissions and limitations under the License.
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations under the License.
 */
 
 import Rhino from './rhino';
@@ -77,38 +77,6 @@ onmessage = function (
   event: MessageEvent<RhinoWorkerRequest>
 ): void {
   switch (event.data.command) {
-    case 'file-save-succeeded':
-      Rhino.resolveFilePromise(event.data.message);
-      Rhino.clearFilePromises();
-      break;
-    case 'file-save-failed':
-      Rhino.rejectFilePromise(event.data.message);
-      Rhino.clearFilePromises();
-      break;
-    case 'file-load-succeeded':
-      Rhino.resolveFilePromise(event.data.content);
-      Rhino.clearFilePromises();
-      break;
-    case 'file-load-failed':
-      Rhino.rejectFilePromise(event.data.message);
-      Rhino.clearFilePromises();
-      break;
-    case 'file-exists-succeeded':
-      Rhino.resolveFilePromise(event.data.content);
-      Rhino.clearFilePromises();
-      break;
-    case 'file-exists-failed':
-      Rhino.rejectFilePromise(event.data.message);
-      Rhino.clearFilePromises();
-      break;
-    case 'file-delete-succeeded':
-      Rhino.resolveFilePromise(event.data.message);
-      Rhino.clearFilePromises();
-      break;
-    case 'file-delete-failed':
-      Rhino.rejectFilePromise(event.data.message);
-      Rhino.clearFilePromises();
-      break;
     case 'init':
       init(event.data.rhinoArgs);
       break;

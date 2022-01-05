@@ -68,7 +68,7 @@ export type RhinoWorkerResponseError = {
 export type RhinoWorkerResponseInitError = {
   command: 'rhn-error-init';
   error: Error | string
-}
+};
 
 export type RhinoWorkerResponseInference = {
   command: 'rhn-inference';
@@ -80,35 +80,14 @@ export type RhinoWorkerResponseInfo = {
   info: string
 };
 
-export type RhinoWorkerRequestFileOperation = {
-  command:
-    | 'file-save-succeeded'
-    | 'file-save-failed'
-    | 'file-load-succeeded'
-    | 'file-load-failed'
-    | 'file-exists-succeeded'
-    | 'file-exists-failed'
-    | 'file-delete-succeeded'
-    | 'file-delete-failed';
-  message?: string;
-  content?: string;
-};
-
 export type RhinoWorkerRequest =
   | WorkerRequestVoid
   | WorkerRequestProcess
   | RhinoWorkerRequestInit
-  | RhinoWorkerRequestInfo
-  | RhinoWorkerRequestFileOperation
+  | RhinoWorkerRequestInfo;
 
 export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
   postMessage(command: RhinoWorkerRequest): void
-}
-
-export type RhinoWorkerResponseFileOperation = {
-  command: 'file-save' | 'file-load' | 'file-exists' | 'file-delete';
-  path: string;
-  content?: string;
 };
 
 export type RhinoWorkerResponse =
@@ -116,5 +95,4 @@ export type RhinoWorkerResponse =
   | RhinoWorkerResponseInference
   | RhinoWorkerResponseError
   | RhinoWorkerResponseInitError
-  | RhinoWorkerResponseInfo
-  | RhinoWorkerResponseFileOperation
+  | RhinoWorkerResponseInfo;
