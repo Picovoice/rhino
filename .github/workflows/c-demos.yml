@@ -61,7 +61,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        lang: [en, de, es, fr]
         include:
         - os: ubuntu-latest
           platform: linux
@@ -75,18 +74,6 @@ jobs:
           platform: mac
           arch: x86_64
           ext: dylib
-        - lang: en
-          lang-ext: ''
-          context_file: coffee_maker
-        - lang: de
-          lang-ext: _de
-          context_file: beleuchtung
-        - lang: es
-          lang-ext: _es
-          context_file: luz
-        - lang: fr
-          lang-ext: _fr
-          context_file: éclairage_intelligent
 
     steps:
     - uses: actions/checkout@v2
@@ -99,25 +86,49 @@ jobs:
     - name: Build filedemo
       run: cmake --build ./build --target rhino_demo_file
 
-    - name: Run filedemo out of context
-      run: >
-        ./build/rhino_demo_file
-        -a ${{secrets.PV_VALID_ACCESS_KEY}}
-        -l ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.${{ matrix.ext }}
-        -m ../../lib/common/rhino_params${{ matrix.lang-ext }}.pv
-        -c ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.rhn
-        -t 0.5
-        -w ../../resources/audio_samples/test_out_of_context${{ matrix.lang-ext }}.wav
+    - uses: ./.github/actions/c-filedemo
+      name: Run filedemo (en)
+      with:
+        access-key: ${{ secrets.PV_VALID_ACCESS_KEY }}
+        platform: ${{ matrix.platform }}
+        arch: ${{ matrix.arch }}
+        ext: ${{ matrix.ext }}
+        lang: en
+        lang-ext: ''
+        context_file: coffee_maker
 
-    - name: Run filedemo within
-      run: >
-        ./build/rhino_demo_file
-        -a ${{secrets.PV_VALID_ACCESS_KEY}}
-        -l ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.${{ matrix.ext }}
-        -m ../../lib/common/rhino_params${{ matrix.lang-ext }}.pv
-        -c ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.rhn
-        -t 0.5
-        -w ../../resources/audio_samples/test_within_context${{ matrix.lang-ext }}.wav
+    - uses: ./.github/actions/c-filedemo
+      name: Run filedemo (de)
+      with:
+        access-key: ${{ secrets.PV_VALID_ACCESS_KEY }}
+        platform: ${{ matrix.platform }}
+        arch: ${{ matrix.arch }}
+        ext: ${{ matrix.ext }}
+        lang: de
+        lang-ext: '_de'
+        context_file: beleuchtung
+
+    - uses: ./.github/actions/c-filedemo
+      name: Run filedemo (es)
+      with:
+        access-key: ${{ secrets.PV_VALID_ACCESS_KEY }}
+        platform: ${{ matrix.platform }}
+        arch: ${{ matrix.arch }}
+        ext: ${{ matrix.ext }}
+        lang: es
+        lang-ext: '_es'
+        context_file: luz
+
+    - uses: ./.github/actions/c-filedemo
+      name: Run filedemo (fr)
+      with:
+        access-key: ${{ secrets.PV_VALID_ACCESS_KEY }}
+        platform: ${{ matrix.platform }}
+        arch: ${{ matrix.arch }}
+        ext: ${{ matrix.ext }}
+        lang: fr
+        lang-ext: '_fr'
+        context_file: éclairage_intelligent
   
   build-filedemo-self-hosted:
     runs-on: ${{ matrix.machine }}
@@ -125,7 +136,6 @@ jobs:
     strategy:
       matrix:
         machine: [rpi2, rpi3, rpi4, jetson, beaglebone]
-        lang: [en, de, es, fr]
         include:
         - machine: rpi2
           platform: raspberry-pi
@@ -142,18 +152,6 @@ jobs:
         - machine: beaglebone
           platform: beaglebone
           arch: ''
-        - lang: en
-          lang-ext: ''
-          context_file: coffee_maker
-        - lang: de
-          lang-ext: _de
-          context_file: beleuchtung
-        - lang: es
-          lang-ext: _es
-          context_file: luz
-        - lang: fr
-          lang-ext: _fr
-          context_file: éclairage_intelligent
 
     steps:
     - uses: actions/checkout@v2
@@ -166,22 +164,42 @@ jobs:
     - name: Build filedemo
       run: cmake --build ./build --target rhino_demo_file
 
-    - name: Run filedemo out of context
-      run: >
-        ./build/rhino_demo_file
-        -a ${{secrets.PV_VALID_ACCESS_KEY}}
-        -l ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.so
-        -m ../../lib/common/rhino_params${{ matrix.lang-ext }}.pv
-        -c ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.rhn
-        -t 0.5
-        -w ../../resources/audio_samples/test_out_of_context${{ matrix.lang-ext }}.wav
+    - uses: ./.github/actions/c-filedemo
+      name: Run filedemo (en)
+      with:
+        access-key: ${{ secrets.PV_VALID_ACCESS_KEY }}
+        platform: ${{ matrix.platform }}
+        arch: ${{ matrix.arch }}
+        lang: en
+        lang-ext: ''
+        context_file: coffee_maker
 
-    - name: Run filedemo within context
-      run: >
-        ./build/rhino_demo_file
-        -a ${{secrets.PV_VALID_ACCESS_KEY}}
-        -l ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.so
-        -m ../../lib/common/rhino_params${{ matrix.lang-ext }}.pv
-        -c ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.rhn
-        -t 0.5
-        -w ../../resources/audio_samples/test_within_context${{ matrix.lang-ext }}.wav
+    - uses: ./.github/actions/c-filedemo
+      name: Run filedemo (de)
+      with:
+        access-key: ${{ secrets.PV_VALID_ACCESS_KEY }}
+        platform: ${{ matrix.platform }}
+        arch: ${{ matrix.arch }}
+        lang: de
+        lang-ext: '_de'
+        context_file: beleuchtung
+
+    - uses: ./.github/actions/c-filedemo
+      name: Run filedemo (es)
+      with:
+        access-key: ${{ secrets.PV_VALID_ACCESS_KEY }}
+        platform: ${{ matrix.platform }}
+        arch: ${{ matrix.arch }}
+        lang: es
+        lang-ext: '_es'
+        context_file: luz
+
+    - uses: ./.github/actions/c-filedemo
+      name: Run filedemo (fr)
+      with:
+        access-key: ${{ secrets.PV_VALID_ACCESS_KEY }}
+        platform: ${{ matrix.platform }}
+        arch: ${{ matrix.arch }}
+        lang: fr
+        lang-ext: '_fr'
+        context_file: éclairage_intelligent

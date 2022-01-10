@@ -1,0 +1,43 @@
+name: Run filedemo
+
+inputs:
+  access-key:
+    required: true
+  platform:
+    required: true
+  arch:
+    required: true
+  ext:
+    default: so
+  lang:
+    required: true
+  lang-ext:
+    required: true
+  context_file:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - run: >
+      ./build/porcupine_demo_file
+      -a ${{ inputs.access-key }}
+      -l ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_porcupine.${{ inputs.ext }}
+      -m ../../lib/common/porcupine_params${{ inputs.lang-ext }}.pv
+      -c ../../resources/contexts${{ inputs.lang-ext }}/${{ inputs.platform }}/${{ inputs.context_file }}_${{ inputs.platform }}.ppn
+      -t 0.5
+      -w ../../resources/audio_samples/test_out_context${{ inputs.lang-ext }}.wav
+    working-directory: demo/c
+    shell: bash
+
+  - run: >
+      ./build/porcupine_demo_file
+      -a ${{ inputs.access-key }}
+      -l ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_porcupine.${{ inputs.ext }}
+      -m ../../lib/common/porcupine_params${{ inputs.lang-ext }}.pv
+      -k ../../resources/contexts${{ inputs.lang-ext }}/${{ inputs.platform }}/${{ inputs.context_file }}_${{ inputs.platform }}.ppn
+      -t 0.5
+      -w ../../resources/audio_samples/test_within_context${{ inputs.lang-ext }}.wav
+    working-directory: demo/c
+    shell: bash
+  
