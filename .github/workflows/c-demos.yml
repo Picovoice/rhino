@@ -105,7 +105,7 @@ jobs:
         -a ${{secrets.PV_VALID_ACCESS_KEY}}
         -l ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.${{ matrix.ext }}
         -m ../../lib/common/rhino_params${{ matrix.lang-ext }}.pv
-        -k ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.ppn
+        -c ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.ppn
         -t 0.5
         -w ../../resources/audio_samples/test_out_of_context${{ matrix.lang-ext }}.wav
 
@@ -115,7 +115,7 @@ jobs:
         -a ${{secrets.PV_VALID_ACCESS_KEY}}
         -l ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.${{ matrix.ext }}
         -m ../../lib/common/rhino_params${{ matrix.lang-ext }}.pv
-        -k ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.ppn
+        -c ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.ppn
         -t 0.5
         -w ../../resources/audio_samples/test_within_context${{ matrix.lang-ext }}.wav
   
@@ -172,7 +172,7 @@ jobs:
         -a ${{secrets.PV_VALID_ACCESS_KEY}}
         -l ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.so
         -m ../../lib/common/rhino_params${{ matrix.lang-ext }}.pv
-        -k ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.ppn
+        -c ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.ppn
         -t 0.5
         -w ../../resources/audio_samples/test_out_of_context${{ matrix.lang-ext }}.wav
 
@@ -182,6 +182,6 @@ jobs:
         -a ${{secrets.PV_VALID_ACCESS_KEY}}
         -l ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.so
         -m ../../lib/common/rhino_params${{ matrix.lang-ext }}.pv
-        -k ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.ppn
+        -c ../../resources/contexts${{ matrix.lang-ext }}/${{ matrix.platform }}/${{ matrix.keyword_file }}_${{ matrix.platform }}.ppn
         -t 0.5
         -w ../../resources/audio_samples/test_within_context${{ matrix.lang-ext }}.wav
