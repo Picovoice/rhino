@@ -20,10 +20,10 @@ runs:
   using: "composite"
   steps:
   - run: >
-      ./build/porcupine_demo_file
+      ./build/rhino_demo_file
       -a ${{ inputs.access-key }}
-      -l ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_porcupine.${{ inputs.ext }}
-      -m ../../lib/common/porcupine_params${{ inputs.lang-ext }}.pv
+      -l ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.${{ inputs.ext }}
+      -m ../../lib/common/rhino_params${{ inputs.lang-ext }}.pv
       -c ../../resources/contexts${{ inputs.lang-ext }}/${{ inputs.platform }}/${{ inputs.context_file }}_${{ inputs.platform }}.ppn
       -t 0.5
       -w ../../resources/audio_samples/test_out_context${{ inputs.lang-ext }}.wav
@@ -31,10 +31,10 @@ runs:
     shell: bash
 
   - run: >
-      ./build/porcupine_demo_file
+      ./build/rhino_demo_file
       -a ${{ inputs.access-key }}
-      -l ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_porcupine.${{ inputs.ext }}
-      -m ../../lib/common/porcupine_params${{ inputs.lang-ext }}.pv
+      -l ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.${{ inputs.ext }}
+      -m ../../lib/common/rhino_params${{ inputs.lang-ext }}.pv
       -k ../../resources/contexts${{ inputs.lang-ext }}/${{ inputs.platform }}/${{ inputs.context_file }}_${{ inputs.platform }}.ppn
       -t 0.5
       -w ../../resources/audio_samples/test_within_context${{ inputs.lang-ext }}.wav
