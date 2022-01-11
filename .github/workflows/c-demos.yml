@@ -90,36 +90,36 @@ jobs:
       name: Run filedemo (en)
       with:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
-        library_path: ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.${{ inputs.ext }}
+        library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.${{ matrix.ext }}
         model_path: ../../lib/common/rhino_params.pv
-        context_path: ../../resources/contexts/${{ inputs.platform }}/coffee_maker_${{ inputs.platform }}.rhn
+        context_path: ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context.wav
 
     - uses: ./.github/actions/c-filedemo
       name: Run filedemo (de)
       with:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
-        library_path: ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.${{ inputs.ext }}
+        library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.${{ matrix.ext }}
         model_path: ../../lib/common/rhino_params_de.pv
-        context_path: ../../resources/contexts_de/${{ inputs.platform }}/beleuchtung_${{ inputs.platform }}.rhn
+        context_path: ../../resources/contexts_de/${{ matrix.platform }}/beleuchtung_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context_de.wav
 
     - uses: ./.github/actions/c-filedemo
       name: Run filedemo (es)
       with:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
-        library_path: ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.${{ inputs.ext }}
+        library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.${{ matrix.ext }}
         model_path: ../../lib/common/rhino_params_es.pv
-        context_path: ../../resources/contexts_es/${{ inputs.platform }}/luz_${{ inputs.platform }}.rhn
+        context_path: ../../resources/contexts_es/${{ matrix.platform }}/luz_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context_es.wav
 
     - uses: ./.github/actions/c-filedemo
       name: Run filedemo (fr)
       with:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
-        library_path: ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.${{ inputs.ext }}
+        library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.${{ matrix.ext }}
         model_path: ../../lib/common/rhino_params_fr.pv
-        context_path: ../../resources/contexts_fr/${{ inputs.platform }}/éclairage_intelligent_${{ inputs.platform }}.rhn
+        context_path: ../../resources/contexts_fr/${{ matrix.platform }}/éclairage_intelligent_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context_fr.wav
   
   build-filedemo-self-hosted:
@@ -160,34 +160,34 @@ jobs:
       name: Run filedemo (en)
       with:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
-        library_path: ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.so
+        library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.so
         model_path: ../../lib/common/rhino_params.pv
-        context_path: ../../resources/contexts/${{ inputs.platform }}/coffee_maker_${{ inputs.platform }}.rhn
+        context_path: ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context.wav
 
     - uses: ./.github/actions/c-filedemo
       name: Run filedemo (de)
       with:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
-        library_path: ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.so
+        library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.so
         model_path: ../../lib/common/rhino_params_de.pv
-        context_path: ../../resources/contexts_de/${{ inputs.platform }}/beleuchtung_${{ inputs.platform }}.rhn
+        context_path: ../../resources/contexts_de/${{ matrix.platform }}/beleuchtung_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context_de.wav
 
     - uses: ./.github/actions/c-filedemo
       name: Run filedemo (es)
       with:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
-        library_path: ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.so
+        library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.so
         model_path: ../../lib/common/rhino_params_es.pv
-        context_path: ../../resources/contexts_es/${{ inputs.platform }}/luz_${{ inputs.platform }}.rhn
+        context_path: ../../resources/contexts_es/${{ matrix.platform }}/luz_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context_es.wav
 
     - uses: ./.github/actions/c-filedemo
       name: Run filedemo (fr)
       with:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
-        library_path: ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.so
+        library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.so
         model_path: ../../lib/common/rhino_params_fr.pv
-        context_path: ../../resources/contexts_fr/${{ inputs.platform }}/éclairage_intelligent_${{ inputs.platform }}.rhn
+        context_path: ../../resources/contexts_fr/${{ matrix.platform }}/éclairage_intelligent_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context_fr.wav
