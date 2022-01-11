@@ -1,19 +1,19 @@
 name: Run filedemo
 
 inputs:
-  access-key:
+  access_key:
     required: true
-  platform:
+  library_path:
     required: true
-  arch:
+  model_path:
     required: true
-  ext:
-    default: so
-  lang:
+  context_path:
     required: true
-  lang-ext:
-    required: true
-  context_file:
+  sensitivity:
+    default: 0.5
+  require_endpoint:
+    default: "true"
+  audio_path:
     required: true
 
 runs:
@@ -21,23 +21,13 @@ runs:
   steps:
   - run: >
       ./build/rhino_demo_file
-      -a ${{ inputs.access-key }}
-      -l ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.${{ inputs.ext }}
-      -m ../../lib/common/rhino_params${{ inputs.lang-ext }}.pv
-      -c ../../resources/contexts${{ inputs.lang-ext }}/${{ inputs.platform }}/${{ inputs.context_file }}_${{ inputs.platform }}.rhn
-      -t 0.5
-      -w ../../resources/audio_samples/test_out_of_context${{ inputs.lang-ext }}.wav
-    working-directory: demo/c
-    shell: bash
-
-  - run: >
-      ./build/rhino_demo_file
-      -a ${{ inputs.access-key }}
-      -l ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.${{ inputs.ext }}
-      -m ../../lib/common/rhino_params${{ inputs.lang-ext }}.pv
-      -c ../../resources/contexts${{ inputs.lang-ext }}/${{ inputs.platform }}/${{ inputs.context_file }}_${{ inputs.platform }}.rhn
-      -t 0.5
-      -w ../../resources/audio_samples/test_within_context${{ inputs.lang-ext }}.wav
+      -a ${{ inputs.access_key }}
+      -l ${{ inputs.library_path }}
+      -m ${{ inputs.model_path }}
+      -c ${{ inputs.context_path }}
+      -t ${{ inputs.sensitivity }}
+      -e ${{ inputs.require_endpoint }}
+      -w ${{ inputs.audio_path }}
     working-directory: demo/c
     shell: bash
   
