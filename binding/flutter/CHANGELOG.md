@@ -4,3 +4,9 @@
 
 ## [2.0.1] - 2021-12-22
 * Update Android native package
+
+## [2.0.2] - 2022-01-11
+* Patch for Android support
+
+## [2.0.3] - 2022-01-11
+* Android gradle fix
