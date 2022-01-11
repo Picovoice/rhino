@@ -24,7 +24,7 @@ runs:
       -a ${{ inputs.access-key }}
       -l ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.${{ inputs.ext }}
       -m ../../lib/common/rhino_params${{ inputs.lang-ext }}.pv
-      -c ../../resources/contexts${{ inputs.lang-ext }}/${{ inputs.platform }}/${{ inputs.context_file }}_${{ inputs.platform }}.ppn
+      -c ../../resources/contexts${{ inputs.lang-ext }}/${{ inputs.platform }}/${{ inputs.context_file }}_${{ inputs.platform }}.rhn
       -t 0.5
       -w ../../resources/audio_samples/test_out_of_context${{ inputs.lang-ext }}.wav
     working-directory: demo/c
@@ -35,7 +35,7 @@ runs:
       -a ${{ inputs.access-key }}
       -l ../../lib/${{ inputs.platform }}/${{ inputs.arch }}/libpv_rhino.${{ inputs.ext }}
       -m ../../lib/common/rhino_params${{ inputs.lang-ext }}.pv
-      -k ../../resources/contexts${{ inputs.lang-ext }}/${{ inputs.platform }}/${{ inputs.context_file }}_${{ inputs.platform }}.ppn
+      -k ../../resources/contexts${{ inputs.lang-ext }}/${{ inputs.platform }}/${{ inputs.context_file }}_${{ inputs.platform }}.rhn
       -t 0.5
       -w ../../resources/audio_samples/test_within_context${{ inputs.lang-ext }}.wav
     working-directory: demo/c
