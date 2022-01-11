@@ -25,7 +25,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 14
     }
     lintOptions {
         disable 'InvalidPackage'
@@ -33,5 +33,5 @@ android {
 }
 
 dependencies {
-    implementation 'ai.picovoice:rhino-android:2.0.1'
+    implementation 'ai.picovoice:rhino-android:2.0.2'
 }
