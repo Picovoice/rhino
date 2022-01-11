@@ -156,7 +156,7 @@ jobs:
     - name: Build filedemo
       run: cmake --build ./build --target rhino_demo_file
 
-     - uses: ./.github/actions/c-filedemo
+    - uses: ./.github/actions/c-filedemo
       name: Run filedemo (en)
       with:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
