@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
     int32_t device_index = -1;
 
     int c;
-    while ((c = getopt_long(argc, argv, "sel:m:c:t:a:d:", long_options, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "se:l:m:c:t:a:d:", long_options, NULL)) != -1) {
         switch (c) {
             case 's':
                 show_audio_devices();

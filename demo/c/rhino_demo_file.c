@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
     bool require_endpoint = false;
 
     int c;
-    while ((c = getopt_long(argc, argv, "el:m:c:t:a:w:", long_options, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "e:l:m:c:t:a:w:", long_options, NULL)) != -1) {
         switch (c) {
             case 'l':
                 library_path = optarg;
