@@ -26,7 +26,7 @@ runs:
       -m ../../lib/common/rhino_params${{ inputs.lang-ext }}.pv
       -c ../../resources/contexts${{ inputs.lang-ext }}/${{ inputs.platform }}/${{ inputs.context_file }}_${{ inputs.platform }}.ppn
       -t 0.5
-      -w ../../resources/audio_samples/test_out_context${{ inputs.lang-ext }}.wav
+      -w ../../resources/audio_samples/test_out_of_context${{ inputs.lang-ext }}.wav
     working-directory: demo/c
     shell: bash
 
