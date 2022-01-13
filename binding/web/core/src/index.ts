@@ -97,13 +97,18 @@ export type RhinoWorkerRequest =
   | RhinoWorkerRequestInit
   | RhinoWorkerRequestInfo;
 
-export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
-  postMessage(command: RhinoWorkerRequest): void
-};
-
 export type RhinoWorkerResponse =
   | RhinoWorkerResponseReady
   | RhinoWorkerResponseInference
   | RhinoWorkerResponseError
   | RhinoWorkerResponseInitError
   | RhinoWorkerResponseInfo;
+
+
+export interface RhinoWorker extends Omit<Worker, 'postMessage'> {
+  postMessage(command: RhinoWorkerRequest): void
+};
+
+export interface RhinoWorkerFactory {
+  create: (rhinoArgs: RhinoArgs) => Promise<RhinoWorker>;
+}
