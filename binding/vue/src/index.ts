@@ -1,12 +1,4 @@
-import rhinoMixin from './rhino';
-
-import { 
-  RhinoContext, 
-  RhinoInferenceFinalized, 
-  RhinoWorkerFactory, 
-  RhinoWorkerFactoryArgs,
-  RhinoVue
-} from './rhino_types';
+import rhinoMixin, { RhinoVue, RhinoWorkerFactoryArgs } from './rhino';
 
 // Create module definition for Vue.use()
 const plugin = {
@@ -33,9 +25,6 @@ export default rhinoMixin;
 
 // export types
 export { 
-  RhinoContext, 
-  RhinoInferenceFinalized, 
-  RhinoWorkerFactory, 
   RhinoWorkerFactoryArgs,
   RhinoVue
 };

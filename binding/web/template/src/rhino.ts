@@ -1,5 +1,5 @@
 /*
-  Copyright 2018-2021 Picovoice Inc.
+  Copyright 2018-2022 Picovoice Inc.
 
   You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
   file accompanying this source.
@@ -15,7 +15,7 @@
 import * as Asyncify from 'asyncify-wasm';
 import { Mutex } from 'async-mutex';
 
-import { RhinoInference, RhinoContext, RhinoEngine } from './rhino_types';
+import { RhinoInference, RhinoContext, RhinoEngine } from '@picovoice/rhino-web-core';
 
 // @ts-ignore
 import { RHINO_WASM_BASE64 } from './lang/rhino_b64';
@@ -33,6 +33,31 @@ import {
 
 const DEFAULT_SENSITIVITY = 0.5;
 const PV_STATUS_SUCCESS = 10000;
+
+/**
+ * WebAssembly function types
+ */
+
+type aligned_alloc_type = (alignment: number, size: number) => Promise<number>;
+type pv_rhino_context_info_type = (object: number, contextInfo: number) => Promise<number>;
+type pv_rhino_delete_type = (object: number) => Promise<void>;
+type pv_rhino_frame_length_type = () => Promise<number>;
+type pv_rhino_free_slots_and_values_type = (object: number, slots: number, values: number) => Promise<number>;
+type pv_rhino_get_intent_type = (object: number, intent: number, numSlots: number, slots: number, values: number) => Promise<number>;
+type pv_rhino_init_type = (
+  accessKey: number,
+  context: number,
+  contextSize: number,
+  sensitivity: number,
+  requireEndpoint: boolean,
+  object: number
+) => Promise<number>;
+type pv_rhino_is_understood_type = (object: number, isUnderstood: number) => Promise<number>;
+type pv_rhino_process_type = (object: number, pcm: number, isFinalized: number) => Promise<number>;
+type pv_rhino_reset_type = (object: number) => Promise<number>;
+type pv_rhino_version_type = () => Promise<number>;
+type pv_status_to_string_type = (status: number) => Promise<number>
+type pv_sample_rate_type = () => Promise<number>;
 
 /**
  * JavaScript/WebAssembly Binding for the Picovoice Rhino Speech-to-Intent engine.
@@ -60,23 +85,23 @@ type RhinoWasmOutput = {
   slotsAddressAddressAddress: number;
   valuesAddressAddressAddress: number;
 
-  pvRhinoDelete: CallableFunction;
-  pvRhinoFreeSlotsAndValues: CallableFunction;
-  pvRhinoGetIntent: CallableFunction;
-  pvRhinoIsUnderstood: CallableFunction;
-  pvRhinoProcess: CallableFunction;
-  pvRhinoReset: CallableFunction;
-  pvStatusToString: CallableFunction;
+  pvRhinoDelete: pv_rhino_delete_type;
+  pvRhinoFreeSlotsAndValues: pv_rhino_free_slots_and_values_type;
+  pvRhinoGetIntent: pv_rhino_get_intent_type;
+  pvRhinoIsUnderstood: pv_rhino_is_understood_type;
+  pvRhinoProcess: pv_rhino_process_type;
+  pvRhinoReset: pv_rhino_reset_type;
+  pvStatusToString: pv_status_to_string_type;
 };
 
 export class Rhino implements RhinoEngine {
-  private _pvRhinoDelete: CallableFunction;
-  private _pvRhinoFreeSlotsAndValues: CallableFunction;
-  private _pvRhinoGetIntent: CallableFunction;
-  private _pvRhinoIsUnderstood: CallableFunction;
-  private _pvRhinoProcess: CallableFunction;
-  private _pvRhinoReset: CallableFunction;
-  private _pvStatusToString: CallableFunction;
+  private _pvRhinoDelete: pv_rhino_delete_type;
+  private _pvRhinoFreeSlotsAndValues: pv_rhino_free_slots_and_values_type;
+  private _pvRhinoGetIntent: pv_rhino_get_intent_type;
+  private _pvRhinoIsUnderstood: pv_rhino_is_understood_type;
+  private _pvRhinoProcess: pv_rhino_process_type;
+  private _pvRhinoReset: pv_rhino_reset_type;
+  private _pvStatusToString: pv_status_to_string_type;
 
   private _wasmMemory: WebAssembly.Memory;
   private _memoryBuffer: Int16Array;
@@ -589,7 +614,7 @@ export class Rhino implements RhinoEngine {
       const path = arrayBufferToStringAtIndex(memoryBufferUint8, pathAddress);
 
       try {
-        const isExists = await  storage.getItem(path);
+        const isExists = await storage.getItem(path);
         memoryBufferUint8[isExistsAddress] = (isExists === undefined || isExists === null) ? 0 : 1;
         memoryBufferInt32[
           succeededAddress / Int32Array.BYTES_PER_ELEMENT
@@ -694,19 +719,19 @@ export class Rhino implements RhinoEngine {
       wasmCodeArray,
       importObject
     );
-    const aligned_alloc = instance.exports.aligned_alloc as CallableFunction;
-    const pv_rhino_context_info = instance.exports.pv_rhino_context_info as CallableFunction;
-    const pv_rhino_delete = instance.exports.pv_rhino_delete as CallableFunction;
-    const pv_rhino_frame_length = instance.exports.pv_rhino_frame_length as CallableFunction;
-    const pv_rhino_free_slots_and_values = instance.exports.pv_rhino_free_slots_and_values as CallableFunction;
-    const pv_rhino_get_intent = instance.exports.pv_rhino_get_intent as CallableFunction;
-    const pv_rhino_init = instance.exports.pv_rhino_init as CallableFunction;
-    const pv_rhino_is_understood = instance.exports.pv_rhino_is_understood as CallableFunction;
-    const pv_rhino_process = instance.exports.pv_rhino_process as CallableFunction;
-    const pv_rhino_reset = instance.exports.pv_rhino_reset as CallableFunction;
-    const pv_rhino_version = instance.exports.pv_rhino_version as CallableFunction;
-    const pv_sample_rate = instance.exports.pv_sample_rate as CallableFunction;
-    const pv_status_to_string = instance.exports.pv_status_to_string as CallableFunction;
+    const aligned_alloc = instance.exports.aligned_alloc as aligned_alloc_type;
+    const pv_rhino_context_info = instance.exports.pv_rhino_context_info as pv_rhino_context_info_type;
+    const pv_rhino_delete = instance.exports.pv_rhino_delete as pv_rhino_delete_type;
+    const pv_rhino_frame_length = instance.exports.pv_rhino_frame_length as pv_rhino_frame_length_type;
+    const pv_rhino_free_slots_and_values = instance.exports.pv_rhino_free_slots_and_values as pv_rhino_free_slots_and_values_type;
+    const pv_rhino_get_intent = instance.exports.pv_rhino_get_intent as pv_rhino_get_intent_type;
+    const pv_rhino_init = instance.exports.pv_rhino_init as pv_rhino_init_type;
+    const pv_rhino_is_understood = instance.exports.pv_rhino_is_understood as pv_rhino_is_understood_type;
+    const pv_rhino_process = instance.exports.pv_rhino_process as pv_rhino_process_type;
+    const pv_rhino_reset = instance.exports.pv_rhino_reset as pv_rhino_reset_type;
+    const pv_rhino_version = instance.exports.pv_rhino_version as pv_rhino_version_type;
+    const pv_sample_rate = instance.exports.pv_sample_rate as pv_sample_rate_type;
+    const pv_status_to_string = instance.exports.pv_status_to_string as pv_status_to_string_type;
 
     const objectAddressAddress = await aligned_alloc(
       Int32Array.BYTES_PER_ELEMENT,

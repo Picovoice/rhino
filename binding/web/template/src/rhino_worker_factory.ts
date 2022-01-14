@@ -15,7 +15,7 @@ import {
   RhinoWorker,
   RhinoWorkerRequestInit,
   RhinoWorkerResponse,
-} from './rhino_types';
+} from '@picovoice/rhino-web-core';
 
 export class RhinoWorkerFactory {
   private constructor() {}

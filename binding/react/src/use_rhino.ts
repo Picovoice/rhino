@@ -1,13 +1,37 @@
+/*
+  Copyright 2022 Picovoice Inc.
+
+  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+  file accompanying this source.
+
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations under the License.
+*/
+
 import { useState, useEffect } from 'react';
 
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
 import {
-  RhinoHookArgs,
-  RhinoInferenceFinalized,
+  RhinoContext,
+  RhinoInference,
   RhinoWorker,
   RhinoWorkerFactory,
   RhinoWorkerResponse,
-} from './rhino_types';
+} from '@picovoice/rhino-web-core';
+
+export type RhinoHookArgs = {
+  /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+  accessKey: string;
+  /** The context to instantiate */
+  context: RhinoContext;
+  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  requireEndpoint?: boolean;
+  /** Immediately start the microphone upon initialization */
+  start?: boolean;
+  /** Immediately put Rhino in an active isTalking state upon initialization (as if pushToTalk() was called) (default: false) */
+  isTalking?: boolean;
+};
 
 export function useRhino(
   /** The language-specific worker factory, imported as `{ RhinoWorkerFactory }` from
@@ -16,7 +40,7 @@ export function useRhino(
   /** useRhino Hook Parameters */
   rhinoHookArgs: RhinoHookArgs | null,
   /** User-defined callback invoked upon completion of intent inference */
-  inferenceCallback: (inference: RhinoInferenceFinalized) => void
+  inferenceCallback: (inference: RhinoInference) => void
 ): {
   /** Context information */
   contextInfo: string | null;
@@ -95,7 +119,7 @@ export function useRhino(
             setIsTalking(false);
             rhinoWorker.postMessage({ command: 'pause' });
             // We know this inference isFinalized, so assert to more specific type
-            inferenceCallback(msg.data.inference as RhinoInferenceFinalized);
+            inferenceCallback(msg.data.inference as RhinoInference);
             break;
           case 'rhn-error':
             setIsError(true);
@@ -158,7 +182,7 @@ export function useRhino(
             setIsTalking(false);
             rhnWorker.postMessage({ command: 'pause' });
             // We know this inference isFinalized, so assert to more specific type
-            inferenceCallback(msg.data.inference as RhinoInferenceFinalized);
+            inferenceCallback(msg.data.inference as RhinoInference);
             break;
           case 'rhn-error':
             setIsError(true);

@@ -1,6 +1,6 @@
 {
   "name": "$",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Rhino library for web browsers (via WebAssembly)",
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
@@ -18,6 +18,9 @@
     "watch": "rollup --config --watch",
     "format": "prettier --write \"**/*.{js,ts,json}\"",
     "test": "jest"
+  },
+  "dependencies": {
+    "@picovoice/rhino-web-core": "^2.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.13",

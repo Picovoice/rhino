@@ -1,14 +1,36 @@
+/*
+  Copyright 2022 Picovoice Inc.
+
+  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+  file accompanying this source.
+
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations under the License.
+*/
+
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
 import type {
-  RhinoInferenceFinalized,
-  RhinoServiceArgs,
+  RhinoContext,
+  RhinoInference,
   RhinoWorker,
   RhinoWorkerFactory,
   RhinoWorkerResponse,
-} from './rhino_types';
+} from '@picovoice/rhino-web-core';
+
+export type RhinoServiceArgs = {
+  /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+  accessKey: string;
+  /** The context to instantiate */
+  context: RhinoContext;
+  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  requireEndpoint?: boolean;
+  /** Immediately start the microphone upon initialization */
+  start?: boolean;
+};
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +39,8 @@ export class RhinoService implements OnDestroy {
   public webVoiceProcessor: WebVoiceProcessor | null = null;
   public isInit = false;
   public contextInfo: string | null = null;
-  public inference$: Subject<RhinoInferenceFinalized> =
-    new Subject<RhinoInferenceFinalized>();
+  public inference$: Subject<RhinoInference> =
+    new Subject<RhinoInference>();
   public listening$: Subject<boolean> = new Subject<boolean>();
   public isError$: Subject<boolean> = new Subject<boolean>();
   public isTalking$: Subject<boolean> = new Subject<boolean>();
@@ -94,7 +116,7 @@ export class RhinoService implements OnDestroy {
         switch (message.data.command) {
           case 'rhn-inference': {
             this.inference$.next(
-              message.data.inference as RhinoInferenceFinalized
+              message.data.inference as RhinoInference
             );
             this.isTalking = false;
             this.isTalking$.next(false);
@@ -110,7 +132,7 @@ export class RhinoService implements OnDestroy {
     } catch (error) {
       this.isInit = false;
       this.isError$.next(true);
-      this.error$.next(error);
+      this.error$.next(error as Error);
       throw error;
     }
 
@@ -125,7 +147,7 @@ export class RhinoService implements OnDestroy {
       this.rhinoWorker = null;
       this.isInit = false;
       this.isError$.next(true);
-      this.error$.next(error);
+      this.error$.next(error as Error);
       throw error;
     }
   }

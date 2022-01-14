@@ -3,5 +3,6 @@
   "dest": "../../dist/rhino-web-angular",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": ["@picovoice/rhino-web-core"]
 }

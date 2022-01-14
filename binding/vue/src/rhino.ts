@@ -1,5 +1,46 @@
+/*
+  Copyright 2022 Picovoice Inc.
+
+  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+  file accompanying this source.
+
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations under the License.
+*/
+
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
-import { RhinoVue, RhinoInferenceFinalized } from './rhino_types';
+import { RhinoContext, RhinoInference, RhinoWorkerFactory } from '@picovoice/rhino-web-core';
+
+/**
+ * Type alias for RhinoWorkerFactory arguments.
+ */
+ export type RhinoWorkerFactoryArgs = {
+  accessKey: string;
+  context: RhinoContext;
+  requireEndpoint?: boolean;
+  start: boolean;
+};
+
+/**
+ * Type alias for Rhino Vue Mixin.
+ * Use with `Vue as VueConstructor extends {$rhino: RhinoVue}` to get types in typescript.
+ */
+ export interface RhinoVue {
+  $_rhnWorker_: Worker | null;
+  $_webVp_: WebVoiceProcessor | null;
+  init: (
+    rhinoFactoryArgs: RhinoWorkerFactoryArgs,
+    rhinoFactory: RhinoWorkerFactory,
+    inferenceCallback: (inference: RhinoInference) => void,
+    contextCallback: (info: string) => void,
+    readyCallback: () => void,
+    errorCallback: (error: Error) => void) => void;
+  start: () => boolean;
+  pause: () => boolean;
+  pushToTalk: () => boolean;
+  delete: () => void;
+}
 
 export default {
   computed: {
@@ -23,7 +64,7 @@ export default {
         async init(
           rhinoFactoryArgs,
           rhinoFactory,
-          inferenceCallback = (_: RhinoInferenceFinalized) => {},
+          inferenceCallback = (_: RhinoInference) => {},
           contextCallback = (_: string) => {},
           readyCallback = () => {},
           errorCallback = (error: Error) => {console.error(error)}
