@@ -23,6 +23,7 @@
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
   "dependencies": {
+    "@picovoice/rhino-web-core": "^2.0.1",
     "tslib": "^2.0.0"
   }
 }
