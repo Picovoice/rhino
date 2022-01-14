@@ -18,7 +18,7 @@ import {
   RhinoWorkerRequest,
   RhinoWorkerResponseInitError,
   RhinoWorkerResponseInfo
-} from './rhino_types';
+} from '@picovoice/rhino-web-core';
 
 let paused = true;
 let rhinoEngine: RhinoEngine = null;

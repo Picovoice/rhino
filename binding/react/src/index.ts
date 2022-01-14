@@ -1,16 +1,6 @@
-import { useRhino } from './useRhino';
-
-import {
-  RhinoInference,
-  RhinoContext,
-  RhinoWorkerFactory,
-  RhinoHookArgs,
-} from './rhino_types';
+import { useRhino, RhinoHookArgs } from './use_rhino';
 
 export {
   useRhino,
-  RhinoInference,
-  RhinoContext,
-  RhinoWorkerFactory,
   RhinoHookArgs,
 };

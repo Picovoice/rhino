@@ -36,5 +36,8 @@
     "rollup-plugin-web-worker-loader": "^1.6.0",
     "typescript": "~4.1.5"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@picovoice/rhino-web-core": "^2.0.1"
+  }
 }

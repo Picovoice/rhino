@@ -2,12 +2,25 @@ import { useState, useEffect } from 'react';
 
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
 import {
-  RhinoHookArgs,
-  RhinoInferenceFinalized,
+  RhinoContext,
+  RhinoInference,
   RhinoWorker,
   RhinoWorkerFactory,
   RhinoWorkerResponse,
-} from './rhino_types';
+} from '@picovoice/rhino-web-core';
+
+export type RhinoHookArgs = {
+  /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+  accessKey: string;
+  /** The context to instantiate */
+  context: RhinoContext;
+  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  requireEndpoint?: boolean;
+  /** Immediately start the microphone upon initialization */
+  start?: boolean;
+  /** Immediately put Rhino in an active isTalking state upon initialization (as if pushToTalk() was called) (default: false) */
+  isTalking?: boolean;
+};
 
 export function useRhino(
   /** The language-specific worker factory, imported as `{ RhinoWorkerFactory }` from
@@ -16,7 +29,7 @@ export function useRhino(
   /** useRhino Hook Parameters */
   rhinoHookArgs: RhinoHookArgs | null,
   /** User-defined callback invoked upon completion of intent inference */
-  inferenceCallback: (inference: RhinoInferenceFinalized) => void
+  inferenceCallback: (inference: RhinoInference) => void
 ): {
   /** Context information */
   contextInfo: string | null;
@@ -95,7 +108,7 @@ export function useRhino(
             setIsTalking(false);
             rhinoWorker.postMessage({ command: 'pause' });
             // We know this inference isFinalized, so assert to more specific type
-            inferenceCallback(msg.data.inference as RhinoInferenceFinalized);
+            inferenceCallback(msg.data.inference as RhinoInference);
             break;
           case 'rhn-error':
             setIsError(true);
@@ -158,7 +171,7 @@ export function useRhino(
             setIsTalking(false);
             rhnWorker.postMessage({ command: 'pause' });
             // We know this inference isFinalized, so assert to more specific type
-            inferenceCallback(msg.data.inference as RhinoInferenceFinalized);
+            inferenceCallback(msg.data.inference as RhinoInference);
             break;
           case 'rhn-error':
             setIsError(true);
