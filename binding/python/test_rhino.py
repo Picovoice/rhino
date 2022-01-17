@@ -12,7 +12,6 @@
 import sys
 import unittest
 
-import soundfile
 from rhino import Rhino
 from util import *
 
@@ -97,11 +96,10 @@ class RhinoTestCase(unittest.TestCase):
     def run_rhino(self, language, audio_file_name, context, is_whithin_context, intent=None, slots=None):
         rhino = self.rhinos[language][context]
 
-        audio, sample_rate = \
-            soundfile.read(
+        audio = \
+            read_file(
                 os.path.join(os.path.dirname(__file__), '../../resources/audio_samples/', audio_file_name),
-                dtype='int16')
-        assert sample_rate == rhino.sample_rate
+                rhino.sample_rate)
 
         is_finalized = False
         for i in range(len(audio) // rhino.frame_length):
