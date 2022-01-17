@@ -9,8 +9,10 @@
 # specific language governing permissions and limitations under the License.
 #
 
+import struct
 import sys
 import unittest
+import wave
 
 from rhino import Rhino
 from util import *
@@ -22,6 +24,26 @@ class RhinoTestCase(unittest.TestCase):
         if language == 'en':
             return s
         return f'{s}_{language}'
+
+    @staticmethod
+    def __read_file(file_name, sample_rate):
+        wav_file = wave.open(file_name, mode="rb")
+        channels = wav_file.getnchannels()
+        num_frames = wav_file.getnframes()
+
+        if wav_file.getframerate() != sample_rate:
+            raise ValueError(
+                "Audio file should have a sample rate of %d. got %d" % (sample_rate, wav_file.getframerate()))
+
+        samples = wav_file.readframes(num_frames)
+        wav_file.close()
+
+        frames = struct.unpack('h' * num_frames * channels, samples)
+
+        if channels == 2:
+            print("Picovoice processes single-channel audio but stereo file is provided. Processing left channel only.")
+
+        return frames[::channels]
 
     @classmethod
     def __context_path(cls, context, language):
@@ -97,7 +119,7 @@ class RhinoTestCase(unittest.TestCase):
         rhino = self.rhinos[language][context]
 
         audio = \
-            read_file(
+            self.__read_file(
                 os.path.join(os.path.dirname(__file__), '../../resources/audio_samples/', audio_file_name),
                 rhino.sample_rate)
 
