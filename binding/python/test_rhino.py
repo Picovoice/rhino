@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2021 Picovoice Inc.
+# Copyright 2018-2022 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -9,10 +9,11 @@
 # specific language governing permissions and limitations under the License.
 #
 
+import struct
 import sys
 import unittest
+import wave
 
-import soundfile
 from rhino import Rhino
 from util import *
 
@@ -22,7 +23,27 @@ class RhinoTestCase(unittest.TestCase):
     def __append_language(s, language):
         if language == 'en':
             return s
-        return f'{s}_{language}'
+        return '%s_%s' % (s, language)
+
+    @staticmethod
+    def __read_file(file_name, sample_rate):
+        wav_file = wave.open(file_name, mode="rb")
+        channels = wav_file.getnchannels()
+        num_frames = wav_file.getnframes()
+
+        if wav_file.getframerate() != sample_rate:
+            raise ValueError(
+                "Audio file should have a sample rate of %d, got %d" % (sample_rate, wav_file.getframerate()))
+
+        samples = wav_file.readframes(num_frames)
+        wav_file.close()
+
+        frames = struct.unpack('h' * num_frames * channels, samples)
+
+        if channels == 2:
+            print("Picovoice processes single-channel audio but stereo file is provided. Processing left channel only.")
+
+        return frames[::channels]
 
     @classmethod
     def __context_path(cls, context, language):
@@ -31,10 +52,10 @@ class RhinoTestCase(unittest.TestCase):
         contexts_root = cls.__append_language('../../resources/contexts', language)
 
         if system == 'Darwin':
-            return os.path.join(os.path.dirname(__file__), contexts_root, 'mac', f'{context}_mac.rhn')
+            return os.path.join(os.path.dirname(__file__), contexts_root, 'mac', '%s_mac.rhn' % context)
         elif system == 'Linux':
             if platform.machine() == 'x86_64':
-                return os.path.join(os.path.dirname(__file__), contexts_root, 'linux', f'{context}_linux.rhn')
+                return os.path.join(os.path.dirname(__file__), contexts_root, 'linux', '%s_linux.rhn' % context)
             else:
                 cpu_info = ''
                 try:
@@ -46,24 +67,24 @@ class RhinoTestCase(unittest.TestCase):
 
                 if '0xb76' == cpu_part or '0xc07' == cpu_part or '0xd03' == cpu_part or '0xd08' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        contexts_root, 'raspberry-pi', f'{context}_raspberry-pi.rhn')
+                                        contexts_root, 'raspberry-pi', '%s_raspberry-pi.rhn' % context)
                 elif '0xd07' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        contexts_root, 'jetson', f'{context}_jetson.rhn')
+                                        contexts_root, 'jetson', '%s_jetson.rhn' % context)
                 elif '0xc08' == cpu_part:
                     return os.path.join(os.path.dirname(__file__),
-                                        contexts_root, 'beaglebone', f'{context}_beaglebone.rhn')
+                                        contexts_root, 'beaglebone', '%s_beaglebone.rhn' % context)
                 else:
                     raise NotImplementedError("Unsupported CPU: '%s'." % cpu_part)
         elif system == 'Windows':
-            return os.path.join(os.path.dirname(__file__), contexts_root, 'windows', f'{context}_windows.rhn')
+            return os.path.join(os.path.dirname(__file__), contexts_root, 'windows', '%s_windows.rhn' % context)
         else:
             raise ValueError("Unsupported system '%s'." % system)
 
     @classmethod
     def __pv_model_path_by_language(cls, relative, language):
         model_path_subdir = cls.__append_language('lib/common/rhino_params', language)
-        model_path_subdir = f'{model_path_subdir}.pv'
+        model_path_subdir = '%s.pv' % model_path_subdir
         return os.path.join(os.path.dirname(__file__), relative, model_path_subdir)
 
     rhinos = None
@@ -97,11 +118,10 @@ class RhinoTestCase(unittest.TestCase):
     def run_rhino(self, language, audio_file_name, context, is_whithin_context, intent=None, slots=None):
         rhino = self.rhinos[language][context]
 
-        audio, sample_rate = \
-            soundfile.read(
+        audio = \
+            self.__read_file(
                 os.path.join(os.path.dirname(__file__), '../../resources/audio_samples/', audio_file_name),
-                dtype='int16')
-        assert sample_rate == rhino.sample_rate
+                rhino.sample_rate)
 
         is_finalized = False
         for i in range(len(audio) // rhino.frame_length):
