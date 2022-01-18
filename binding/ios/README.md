@@ -15,7 +15,6 @@ interest, in real-time. For example, given a spoken command *"Can I have a small
 }
 ```
 
-
 Rhino is:
 
 * using deep neural networks trained in real-world environments.
