@@ -93,7 +93,7 @@ class RhinoTestCase(unittest.TestCase):
     def setUpClass(cls):
         _language_to_contexts = {
             'en': ['coffee_maker'],
-            'es': ['luz'],
+            'es': ['iluminación_inteligente'],
             'de': ['beleuchtung']
         }
 
@@ -163,7 +163,7 @@ class RhinoTestCase(unittest.TestCase):
         self.run_rhino(
             language='es',
             audio_file_name='test_within_context_es.wav',
-            context='luz',
+            context='iluminación_inteligente',
             is_whithin_context=True,
             intent='changeColor',
             slots=dict(location='habitación', color='rosado'))
@@ -172,7 +172,7 @@ class RhinoTestCase(unittest.TestCase):
         self.run_rhino(
             language='es',
             audio_file_name='test_out_of_context_es.wav',
-            context='luz',
+            context='iluminación_inteligente',
             is_whithin_context=False)
 
     def test_within_context_de(self):

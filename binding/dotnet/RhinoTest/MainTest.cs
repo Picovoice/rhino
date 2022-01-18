@@ -197,7 +197,7 @@ namespace RhinoTest
             string language = "es";
             using Rhino rhino = Rhino.Create(
                 ACCESS_KEY,
-                GetContextPath(language, "luz"),
+                GetContextPath(language, "iluminación_inteligente"),
                 GetModelPath(language));
 
             Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
@@ -220,7 +220,7 @@ namespace RhinoTest
             string language = "es";
             using Rhino rhino = Rhino.Create(
                 ACCESS_KEY,
-                GetContextPath(language, "luz"),
+                GetContextPath(language, "iluminación_inteligente"),
                 GetModelPath(language));
 
             RunTestCase(

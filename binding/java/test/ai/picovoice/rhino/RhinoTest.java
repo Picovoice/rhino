@@ -216,7 +216,7 @@ public class RhinoTest {
         final String language = "es";
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(getTestContextPath(language, "luz"))
+                .setContextPath(getTestContextPath(language, "iluminación_inteligente"))
                 .setModelPath(getTestModelPath(language))
                 .build();
 
@@ -237,7 +237,7 @@ public class RhinoTest {
         final String language = "es";
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(getTestContextPath(language, "luz"))
+                .setContextPath(getTestContextPath(language, "iluminación_inteligente"))
                 .setModelPath(getTestModelPath(language))
                 .build();
 
