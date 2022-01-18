@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2021 Picovoice Inc.
+    Copyright 2020-2022 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -25,7 +25,6 @@ namespace RhinoTest
     public class MainTest
     {
         private static string ACCESS_KEY;
-        private Rhino rhino;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
@@ -36,12 +35,7 @@ namespace RhinoTest
             }
         }
 
-        private static string AppendLanguage(string s, string language)
-        {
-            if(language == "en")
-                return s;
-            return $"{s}_{language}";
-        }
+        private static string AppendLanguage(string s, string language) => language == "en" ? s : $"{s}_{language}";
 
         private static string GetContextPath(string language, string context)
         {
@@ -63,7 +57,12 @@ namespace RhinoTest
             );
         }
 
-        private void RunTestCase(string audioFileName, bool isWithinContext, string expectedIntent = null, Dictionary<string, string> expectedSlots = null)
+        private void RunTestCase(
+            Rhino rhino,
+            string audioFileName,
+            bool isWithinContext,
+            string expectedIntent = null,
+            Dictionary<string, string> expectedSlots = null)
         {
             int frameLen = rhino.FrameLength;
             string testAudioPath = Path.Combine(_relativeDir, "resources/audio_samples", audioFileName);
@@ -87,50 +86,45 @@ namespace RhinoTest
 
             Inference inference = rhino.GetInference();
 
-            if(isWithinContext)
+            if (isWithinContext)
             {
                 Assert.IsTrue(inference.IsUnderstood, "Couldn't understand.");
                 Assert.AreEqual(expectedIntent, inference.Intent, "Incorrect intent.");
                 Assert.IsTrue(inference.Slots.All((keyValuePair) =>
                                             expectedSlots.ContainsKey(keyValuePair.Key) &&
-                                            expectedSlots[keyValuePair.Key] == keyValuePair.Value));   
+                                            expectedSlots[keyValuePair.Key] == keyValuePair.Value));
             }
             else
             {
                 Assert.IsFalse(inference.IsUnderstood, "Shouldn't be able to understand.");
             }
-
-            rhino.Dispose();
         }
 
         [TestMethod]
         public void TestFrameLength()
         {
-            rhino = SetUpClass();
+            using Rhino rhino = InitDefaultRhino();
             Assert.IsTrue(rhino?.FrameLength > 0, "Specified frame length was not a valid number.");
-            rhino.Dispose();
         }
 
         [TestMethod]
         public void TestVersion()
         {
-            rhino = SetUpClass();
+            using Rhino rhino = InitDefaultRhino();
             Assert.IsFalse(string.IsNullOrWhiteSpace(rhino?.Version), "Rhino did not return a valid version number.");
-            rhino.Dispose();
         }
 
         [TestMethod]
         public void TestContextInfo()
         {
-            rhino = SetUpClass();
+            using Rhino rhino = InitDefaultRhino();
             Assert.IsFalse(string.IsNullOrWhiteSpace(rhino?.ContextInfo), "Rhino did not return any context information.");
-            rhino.Dispose();
         }
 
         [TestMethod]
         public void TestWithinContext()
         {
-            rhino = SetUpClass();
+            using Rhino rhino = InitDefaultRhino();
 
             Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
             {
@@ -139,6 +133,7 @@ namespace RhinoTest
                 {"beverage", "americano"},
             };
             RunTestCase(
+                rhino,
                 "test_within_context.wav",
                 true,
                 "orderBeverage",
@@ -149,9 +144,10 @@ namespace RhinoTest
         [TestMethod]
         public void TestOutOfContext()
         {
-            rhino = SetUpClass();
+            using Rhino rhino = InitDefaultRhino();
 
             RunTestCase(
+                rhino,
                 "test_out_of_context.wav",
                 false
             );
@@ -161,7 +157,7 @@ namespace RhinoTest
         public void TestWithinContextDe()
         {
             string language = "de";
-            rhino = Rhino.Create(
+            using Rhino rhino = Rhino.Create(
                 ACCESS_KEY,
                 GetContextPath(language, "beleuchtung"),
                 GetModelPath(language));
@@ -171,23 +167,25 @@ namespace RhinoTest
                 {"state", "aus"}
             };
             RunTestCase(
+                rhino,
                 "test_within_context_de.wav",
                 true,
                 "changeState",
                 expectedSlots
             );
-        }        
+        }
 
         [TestMethod]
         public void TestOutOfContextDe()
         {
             string language = "de";
-            rhino = Rhino.Create(
+            using Rhino rhino = Rhino.Create(
                 ACCESS_KEY,
                 GetContextPath(language, "beleuchtung"),
                 GetModelPath(language));
 
             RunTestCase(
+                rhino,
                 "test_out_of_context_de.wav",
                 false
             );
@@ -197,7 +195,7 @@ namespace RhinoTest
         public void TestWithinContextEs()
         {
             string language = "es";
-            rhino = Rhino.Create(
+            using Rhino rhino = Rhino.Create(
                 ACCESS_KEY,
                 GetContextPath(language, "luz"),
                 GetModelPath(language));
@@ -208,23 +206,25 @@ namespace RhinoTest
                 {"color", "rosado"}
             };
             RunTestCase(
+                rhino,
                 "test_within_context_es.wav",
                 true,
                 "changeColor",
                 expectedSlots
             );
-        }        
+        }
 
         [TestMethod]
         public void TestOutOfContextEs()
         {
             string language = "es";
-            rhino = Rhino.Create(
+            using Rhino rhino = Rhino.Create(
                 ACCESS_KEY,
                 GetContextPath(language, "luz"),
                 GetModelPath(language));
 
             RunTestCase(
+                rhino,
                 "test_out_of_context_es.wav",
                 false
             );
@@ -234,7 +234,7 @@ namespace RhinoTest
         public void TestWithinContextFr()
         {
             string language = "fr";
-            rhino = Rhino.Create(
+            using Rhino rhino = Rhino.Create(
                 ACCESS_KEY,
                 GetContextPath(language, "éclairage_intelligent"),
                 GetModelPath(language));
@@ -244,6 +244,7 @@ namespace RhinoTest
                 {"color", "violet"}
             };
             RunTestCase(
+                rhino,
                 "test_within_context_fr.wav",
                 true,
                 "changeColor",
@@ -255,16 +256,17 @@ namespace RhinoTest
         public void TestOutOfContextFr()
         {
             string language = "fr";
-            rhino = Rhino.Create(
+            using Rhino rhino = Rhino.Create(
                 ACCESS_KEY,
                 GetContextPath(language, "éclairage_intelligent"),
                 GetModelPath(language));
 
             RunTestCase(
+                rhino,
                 "test_out_of_context_fr.wav",
                 false
             );
-        }           
+        }
 
         private List<short> GetPcmFromFile(string audioFilePath, int expectedSampleRate)
         {
@@ -293,7 +295,7 @@ namespace RhinoTest
                                                  RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
                                                     (_arch == Architecture.Arm || _arch == Architecture.Arm64) ? PvLinuxEnv() : "";
 
-        private Rhino SetUpClass() => Rhino.Create(ACCESS_KEY, Path.Combine(_relativeDir, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
+        private Rhino InitDefaultRhino() => Rhino.Create(ACCESS_KEY, Path.Combine(_relativeDir, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
 
         public static string PvLinuxEnv()
         {
