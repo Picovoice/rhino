@@ -125,11 +125,11 @@ async function micDemo() {
       console.log("Inference result:");
       console.log(JSON.stringify(inference, null, 4));
       console.log();
-      recording.stop();
     }
   }
 
   console.log("Stopping...");
+  recorder.stop();
   recorder.release();
 }
 
