@@ -32,6 +32,9 @@ target 'Runner' do
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # remove
+  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/v2.1/binding/ios/Rhino-iOS.podspec'
 end
 
 post_install do |installer|
