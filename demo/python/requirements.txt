@@ -1,2 +1,2 @@
-pvrhino==2.0.2
+pvrhino==2.1.0
 pvrecorder==1.0.2
