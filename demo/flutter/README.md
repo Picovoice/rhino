@@ -85,4 +85,3 @@ context:
       - "living room"
       - "pantry"
 ```
-
