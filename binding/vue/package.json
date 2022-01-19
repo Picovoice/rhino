@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-web-vue",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Vue component (renderless) for Rhino Web SDK",
   "author": "Picovoice Inc",
   "entry": "src/index.ts",
@@ -22,7 +22,7 @@
     "@babel/plugin-transform-runtime": "^7.12.15",
     "@babel/preset-env": "^7.12.13",
     "@babel/runtime": "^7.12.13",
-    "@picovoice/web-voice-processor": "^2.1.2",
+    "@picovoice/web-voice-processor": "^2.1.4",
     "@rollup/plugin-babel": "^5.2.3",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.1.1",
@@ -38,6 +38,6 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@picovoice/rhino-web-core": "^2.0.1"
+    "@picovoice/rhino-web-core": "^2.1.0"
   }
 }
