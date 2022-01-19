@@ -1,6 +1,6 @@
 {
   "name": "rhino-web-vue-demo",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
   "private": true,
@@ -13,9 +13,9 @@
     "postinstall": "node scripts/base64.mjs"
   },
   "dependencies": {
-    "@picovoice/rhino-web-en-worker": "^2.0.2",
-    "@picovoice/rhino-web-vue": "^2.0.1",
-    "@picovoice/web-voice-processor": "2.1.2",
+    "@picovoice/rhino-web-en-worker": "^2.1.0",
+    "@picovoice/rhino-web-vue": "^2.1.0",
+    "@picovoice/web-voice-processor": "2.1.4",
     "core-js": "^3.6.5",
     "vue": "^2.6.11"
   },

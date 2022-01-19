@@ -47,8 +47,9 @@
 <script lang="ts">
 import Vue, { VueConstructor } from "vue";
 
-import rhinoMixin, { RhinoInferenceFinalized, RhinoVue } from "@picovoice/rhino-web-vue";
+import rhinoMixin, { RhinoVue } from "@picovoice/rhino-web-vue";
 import { RhinoWorkerFactory as RhinoWorkerFactoryEn } from "@picovoice/rhino-web-en-worker";
+import { RhinoInference } from "@picovoice/rhino-web-core";
 import { CLOCK_EN_64 } from "../dist/rhn_contexts_base64";
 
 export default (Vue as VueConstructor<Vue & {$rhino: RhinoVue}>).extend({
@@ -56,7 +57,7 @@ export default (Vue as VueConstructor<Vue & {$rhino: RhinoVue}>).extend({
   mixins: [rhinoMixin],
   data: function () {
     return {
-      inference: null as RhinoInferenceFinalized | null,
+      inference: null as RhinoInference | null,
       isError: false,
       errorMessage: "",
       isLoaded: false,
@@ -110,7 +111,7 @@ export default (Vue as VueConstructor<Vue & {$rhino: RhinoVue}>).extend({
       this.isLoaded = true;
       this.isListening = true;
     },
-    rhnInferenceFn: function (inference: RhinoInferenceFinalized) {
+    rhnInferenceFn: function (inference: RhinoInference) {
       this.inference = inference;
       this.isTalking = false;
     },
