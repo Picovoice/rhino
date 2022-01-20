@@ -25,10 +25,10 @@ android {
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
   buildToolsVersion getExtOrDefault('buildToolsVersion')
   defaultConfig {
-    minSdkVersion 16
+    minSdkVersion 19
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
-    versionCode 1
-    versionName "1.0"
+    versionCode 2
+    versionName "2.0"
 
   }
 
@@ -120,5 +120,5 @@ repositories {
 dependencies {
   // noinspection GradleDynamicVersion
   api 'com.facebook.react:react-native:+'
-  implementation 'ai.picovoice:rhino-android:2.0.2'
+  implementation 'ai.picovoice:rhino-android:2.1.0'
 }

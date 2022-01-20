@@ -25,7 +25,7 @@ Rhino is:
 
 This binding is for running Rhino on **React Native 0.62.2+** on the following platforms:
 
-- Android 4.1+ (API 16+)
+- Android 4.4+ (API 19+)
 - iOS 10.0+
 
 ## Installation
