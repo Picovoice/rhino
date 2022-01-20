@@ -162,8 +162,6 @@ namespace Pv.Unity
         /// </param>       
         private Rhino(string accessKey, string modelPath, string contextPath, float sensitivity, bool requireEndpoint)
         {
-            CheckArchitecture();
-
             if (string.IsNullOrEmpty(accessKey))
             {
                 throw new RhinoInvalidArgumentException("No AccessKey provided to Rhino");
@@ -410,15 +408,6 @@ namespace Pv.Unity
         ~Rhino()
         {
             Dispose();
-        }
-
-        private static void CheckArchitecture()
-        {
-
-            if (SystemInfo.processorType.ToLower().Equals("apple m1"))
-            {
-                throw new RhinoRuntimeException("Apple M1 is not supported by Rhino Unity binding");
-            }
         }
 
         private static string GetDefaultModelPath()
