@@ -1,8 +1,8 @@
 import { Component } from "@angular/core"
 import { Subscription } from "rxjs"
 
-import { RhinoService } from "@picovoice/rhino-web-angular"
-import { RhinoInferenceFinalized, RhinoServiceArgs } from "@picovoice/rhino-web-angular/lib/rhino_types"
+import { RhinoService, RhinoServiceArgs } from "@picovoice/rhino-web-angular"
+import { RhinoInference } from "@picovoice/rhino-web-core"
 import { CLOCK_EN_64 } from "../dist/rhn_contexts_base64"
 
 @Component({
@@ -26,7 +26,7 @@ export class VoiceWidget {
   isListening: boolean | null = null
   isTalking: boolean = false
   errorMessage: string
-  inference: RhinoInferenceFinalized | null = null
+  inference: RhinoInference | null = null
 
   constructor(private rhinoService: RhinoService) {
     // Subscribe to Rhino inference events
