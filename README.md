@@ -1718,7 +1718,14 @@ pv_rhino_delete(rhino);
 
 ## Releases
 
-### v2.0.0 - Nov 25th, 2021
+### v2.1.0 - January 20th, 2022
+
+- Added macOS arm64 support for Java and Unity SDKs
+- Support added for non-English built-in slots
+- Support for Macros added
+- Various bug fixes and improvements
+
+### v2.0.0 - November 25th, 2021
 
 - Improved accuracy.
 - Added Rust SDK.
