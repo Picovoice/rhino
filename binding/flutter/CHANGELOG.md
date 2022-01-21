@@ -10,3 +10,6 @@
 
 ## [2.0.3] - 2022-01-11
 * Android gradle fix
+
+## [2.1.0] - 2022-01-19
+* Android/iOS development support patch

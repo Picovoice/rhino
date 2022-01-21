@@ -48,8 +48,8 @@ const contextPathCoffeeMaker =
   `../../resources/contexts/${platform}/coffee_maker_${platform}.rhn`;
 const contextPathBeleuchtungDe =
   `../../resources/contexts_de/${platform}/beleuchtung_${platform}.rhn`;
-const contextPathLuzEs =
-  `../../resources/contexts_es/${platform}/luz_${platform}.rhn`;
+const contextPathIluminacionInteligenteEs =
+  `../../resources/contexts_es/${platform}/iluminación_inteligente_${platform}.rhn`;
 
 
 const ACCESS_KEY = process.argv
@@ -245,10 +245,10 @@ describe("intent detection in DE", () => {
 });
 
 describe("intent detection in ES", () => {
-  test("successful inference luz", () => {
+  test("successful inference iluminación inteligente", () => {
     let rhinoEngine = new Rhino(
       ACCESS_KEY,
-      contextPathLuzEs,
+      contextPathIluminacionInteligenteEs,
       0.5,
       true,
       MODEL_PATH_ES
@@ -270,7 +270,7 @@ describe("intent detection in ES", () => {
   test("out-of-context phrase is not understood", () => {
     let rhinoEngine = new Rhino(
       ACCESS_KEY,
-      contextPathLuzEs,
+      contextPathIluminacionInteligenteEs,
       0.5,
       true,
       MODEL_PATH_ES

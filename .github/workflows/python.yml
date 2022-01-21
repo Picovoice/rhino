@@ -3,7 +3,7 @@ name: Python
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, v2.1 ]
     paths:
       - '.github/workflows/python.yml'
       - 'binding/python/**'
@@ -22,7 +22,7 @@ on:
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
   pull_request:
-    branches: [ master ]
+    branches: [ master, v2.1 ]
     paths:
       - 'binding/python/**'
       - '!binding/python/README.md'

@@ -110,7 +110,7 @@ jobs:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
         library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.${{ matrix.ext }}
         model_path: ../../lib/common/rhino_params_es.pv
-        context_path: ../../resources/contexts_es/${{ matrix.platform }}/luz_${{ matrix.platform }}.rhn
+        context_path: ../../resources/contexts_es/${{ matrix.platform }}/iluminación_inteligente_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context_es.wav
 
     - uses: ./.github/actions/c-filedemo
@@ -180,7 +180,7 @@ jobs:
         access_key: ${{ secrets.PV_VALID_ACCESS_KEY }}
         library_path: ../../lib/${{ matrix.platform }}/${{ matrix.arch }}/libpv_rhino.so
         model_path: ../../lib/common/rhino_params_es.pv
-        context_path: ../../resources/contexts_es/${{ matrix.platform }}/luz_${{ matrix.platform }}.rhn
+        context_path: ../../resources/contexts_es/${{ matrix.platform }}/iluminación_inteligente_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context_es.wav
 
     - uses: ./.github/actions/c-filedemo
