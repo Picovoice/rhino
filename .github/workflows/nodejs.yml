@@ -3,7 +3,7 @@ name: Nodejs
 on:
   workflow_dispatch:
   push:
-    branches: [ master, v2.1 ]
+    branches: [ master ]
     paths:
       - 'binding/nodejs/**'
       - '!binding/nodejs/README.md'
@@ -16,7 +16,7 @@ on:
       - 'resources/contexts/windows/**'
 
   pull_request:
-    branches: [ master, v2.1 ]
+    branches: [ master ]
     paths:
       - 'binding/nodejs/**'
       - '!binding/nodejs/README.md'
