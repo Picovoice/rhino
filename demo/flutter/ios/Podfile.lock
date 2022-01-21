@@ -15,12 +15,12 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_voice_processor (from `.symlinks/plugins/flutter_voice_processor/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
-  - Rhino-iOS (from `https://raw.githubusercontent.com/Picovoice/rhino/v2.1/binding/ios/Rhino-iOS.podspec`)
   - rhino_flutter (from `.symlinks/plugins/rhino_flutter/ios`)
 
 SPEC REPOS:
   trunk:
     - ios-voice-processor
+    - Rhino-iOS
 
 EXTERNAL SOURCES:
   Flutter:
@@ -29,24 +29,17 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_voice_processor/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
-  Rhino-iOS:
-    :podspec: https://raw.githubusercontent.com/Picovoice/rhino/v2.1/binding/ios/Rhino-iOS.podspec
   rhino_flutter:
     :path: ".symlinks/plugins/rhino_flutter/ios"
-
-CHECKOUT OPTIONS:
-  Rhino-iOS:
-    :commit: 647100a1daeeb24f0061004c306831020a23b974
-    :git: https://github.com/Picovoice/rhino.git
 
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_voice_processor: afb59b604d99397a1ccf15c935ac8f2c2327f09f
   ios-voice-processor: 65b25a8db69ea25ffba0eeef37bae71a982f34cc
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  Rhino-iOS: e3bac436f6452b021dae549f66a271ce5eb34106
+  Rhino-iOS: b30668ab5d4a2e18d61bd1bc10f0ae41e0e202c5
   rhino_flutter: 9a6eab42e344c9ab9f641c2433eb89a582f5b786
 
-PODFILE CHECKSUM: 58ede40b5ed3e3b44d76754d88550f93c7eebdc2
+PODFILE CHECKSUM: a75497545d4391e2d394c3668e20cfb1c2bbd4aa
 
 COCOAPODS: 1.11.2
