@@ -11,6 +11,9 @@ cp ../../lib/linux/x86_64/libpv_rhino.so ./Assets/Rhino/Plugins/linux/x86_64/lib
 echo "Copying macOS lib..."
 cp ../../lib/mac/x86_64/libpv_rhino.dylib ./Assets/Rhino/Plugins/mac/x86_64/libpv_rhino.dylib
 
+echo "Copying macOS (Apple silicon) lib..."
+cp ../../lib/mac/arm64/libpv_rhino.dylib ./Assets/Rhino/Plugins/mac/arm64/libpv_rhino.dylib
+
 echo "Copying Windows lib..."
 cp ../../lib/windows/amd64/libpv_rhino.dll ./Assets/Rhino/Plugins/windows/amd64/pv_rhino.dll
 
