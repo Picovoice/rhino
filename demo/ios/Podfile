@@ -2,9 +2,9 @@ source 'https://cdn.cocoapods.org/'
 platform :ios, '9.0'
 
 target 'RhinoDemo' do    
-    pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/master/binding/ios/Rhino-iOS.podspec'
+    pod 'Rhino-iOS', '~> 2.1.0'
 end
 
 target 'RhinoDemoUITests' do    
-    pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/master/binding/ios/Rhino-iOS.podspec'
+    pod 'Rhino-iOS', '~> 2.1.0'
 end

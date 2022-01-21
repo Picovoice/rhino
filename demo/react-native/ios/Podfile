@@ -6,7 +6,4 @@ platform :ios, '10.0'
 target 'RhinoDemo' do
   config = use_native_modules!
   use_react_native!(:path => config["reactNativePath"])
-
-  # remove
-  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/v2.1/binding/ios/Rhino-iOS.podspec'
 end
