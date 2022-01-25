@@ -21,6 +21,7 @@ on:
       - 'resources/contexts/mac/**'
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
+      - '.github/workflows/go.yml'
   pull_request:
     branches: [ master ]
     paths:
@@ -40,6 +41,7 @@ on:
       - 'resources/contexts/mac/**'
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
+      - '.github/workflows/go.yml'
 
 defaults:
   run:
@@ -79,7 +81,7 @@ jobs:
 
     strategy:
       matrix:
-        machine: [rpi2, rpi3, rpi4, jetson, beaglebone]
+        machine: [rpi2, rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson, beaglebone]
 
     steps:
     - uses: actions/checkout@v2
