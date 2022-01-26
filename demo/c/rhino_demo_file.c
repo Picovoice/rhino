@@ -349,7 +349,6 @@ int picovoice_main(int argc, char *argv[]) {
     return 0;
 }
 
-
 int main(int argc, char *argv[]) {
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -391,5 +390,4 @@ int main(int argc, char *argv[]) {
 #endif
 
     return result;
-
 }
