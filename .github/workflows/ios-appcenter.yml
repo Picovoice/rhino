@@ -58,7 +58,7 @@ jobs:
         run: appcenter test run xcuitest 
           --token ${{secrets.APPCENTERAPITOKEN}}
           --app "Picovoice/Rhino-iOS" 
-          --devices "Picovoice/ios-single" 
+          --devices "Picovoice/ios-min-max" 
           --test-series "rhino-ios" 
           --locale "en_US" 
           --build-dir ddp/Build/Products/Debug-iphoneos

@@ -56,7 +56,7 @@ jobs:
       run: appcenter test run espresso 
         --token ${{secrets.APPCENTERAPITOKEN}}
         --app "Picovoice/Rhino-Android-Activity" 
-        --devices "Picovoice/single-android" 
+        --devices "Picovoice/android-min-max" 
         --app-path rhino-activity-demo-app/build/outputs/apk/debug/rhino-activity-demo-app-debug.apk 
         --test-series "rhino-android" 
         --locale "en_US" 
