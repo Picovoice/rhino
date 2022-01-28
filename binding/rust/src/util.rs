@@ -9,23 +9,16 @@
     specific language governing permissions and limitations under the License.
 */
 
-#[allow(unused_imports)]
-use std::process::Command;
-
 use std::ffi::CString;
 use std::path::{Path, PathBuf};
 
 const DEFAULT_RELATIVE_LIBRARY_DIR: &str = "lib/";
 const DEFAULT_RELATIVE_MODEL_PATH: &str = "lib/common/rhino_params.pv";
 
-#[allow(dead_code)]
-const RPI_MACHINES: [&str; 4] = ["arm11", "cortex-a7", "cortex-a53", "cortex-a72"];
-#[allow(dead_code)]
-const JETSON_MACHINES: [&str; 1] = ["cortex-a57"];
-
-#[cfg(target_os = "linux")]
-#[allow(dead_code)]
+#[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))]
 fn find_machine_type() -> String {
+    use std::process::Command;
+
     let cpu_info = Command::new("cat")
         .arg("/proc/cpuinfo")
         .output()
@@ -82,6 +75,9 @@ fn base_library_path() -> PathBuf {
 
 #[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))]
 fn base_library_path() -> PathBuf {
+    const JETSON_MACHINES: &[&str] = &["cortex-a57"];
+    const RPI_MACHINES: &[&str] = &["arm11", "cortex-a7", "cortex-a53", "cortex-a72"];
+
     let machine = find_machine_type();
     match machine.as_str() {
         machine if RPI_MACHINES.contains(&machine) => {
