@@ -29,7 +29,7 @@ lazy_static! {
                 Ok(symbol) => Ok(symbol),
                 Err(err) => Err(RhinoError::new(
                     RhinoErrorStatus::LibraryLoadError,
-                    &format!("Failed to load rhino dynamic library: {}", err),
+                    format!("Failed to load rhino dynamic library: {}", err),
                 )),
             }
         }
@@ -107,10 +107,10 @@ pub struct RhinoError {
 }
 
 impl RhinoError {
-    pub fn new(status: RhinoErrorStatus, message: &str) -> Self {
+    pub fn new(status: RhinoErrorStatus, message: impl Into<String>) -> Self {
         Self {
             status,
-            message: Some(message.to_string()),
+            message: Some(message.into()),
         }
     }
 }
@@ -239,7 +239,7 @@ fn load_library_fn<T>(function_name: &[u8]) -> Result<Symbol<T>, RhinoError> {
             lib.get(function_name).map_err(|err| {
                 RhinoError::new(
                     RhinoErrorStatus::LibraryLoadError,
-                    &format!("Failed to load function symbol from rhino library: {}", err),
+                    format!("Failed to load function symbol from rhino library: {}", err),
                 )
             })
         },
@@ -252,7 +252,7 @@ fn check_fn_call_status(status: PvStatus, function_name: &str) -> Result<(), Rhi
         PvStatus::SUCCESS => Ok(()),
         _ => Err(RhinoError::new(
             RhinoErrorStatus::LibraryError(status),
-            &format!("Function '{}' in the rhino library failed", function_name),
+            format!("Function '{}' in the rhino library failed", function_name),
         )),
     }
 }
@@ -300,7 +300,7 @@ impl RhinoInner {
             if !library_path.exists() {
                 return Err(RhinoError::new(
                     RhinoErrorStatus::ArgumentError,
-                    &format!(
+                    format!(
                         "Couldn't find Rhino's dynamic library at {}",
                         library_path.display()
                     ),
@@ -310,21 +310,21 @@ impl RhinoInner {
             if !model_path.exists() {
                 return Err(RhinoError::new(
                     RhinoErrorStatus::ArgumentError,
-                    &format!("Couldn't find model file at {}", model_path.display()),
+                    format!("Couldn't find model file at {}", model_path.display()),
                 ));
             }
 
             if !context_path.exists() {
                 return Err(RhinoError::new(
                     RhinoErrorStatus::ArgumentError,
-                    &format!("Couldn't find context file at {}", context_path.display()),
+                    format!("Couldn't find context file at {}", context_path.display()),
                 ));
             }
 
             if !(0.0..=1.0).contains(&sensitivity) {
                 return Err(RhinoError::new(
                     RhinoErrorStatus::ArgumentError,
-                    &format!("Sensitivity value {} should be within [0, 1]", sensitivity),
+                    format!("Sensitivity value {} should be within [0, 1]", sensitivity),
                 ));
             }
 
@@ -333,7 +333,7 @@ impl RhinoInner {
                 Err(err) => {
                     return Err(RhinoError::new(
                         RhinoErrorStatus::LibraryLoadError,
-                        &format!("Failed to load rhino dynamic library: {}", err),
+                        format!("Failed to load rhino dynamic library: {}", err),
                     ))
                 }
             };
@@ -343,7 +343,7 @@ impl RhinoInner {
             let pv_access_key = CString::new(access_key).map_err(|err| {
                 RhinoError::new(
                     RhinoErrorStatus::ArgumentError,
-                    &format!("AccessKey is not a valid C string {}", err),
+                    format!("AccessKey is not a valid C string {}", err),
                 )
             })?;
             let pv_model_path = pathbuf_to_cstring(&model_path);
@@ -397,7 +397,7 @@ impl RhinoInner {
                 Err(err) => {
                     return Err(RhinoError::new(
                         RhinoErrorStatus::LibraryLoadError,
-                        &format!("Failed to get version info from Rhino Library: {}", err),
+                        format!("Failed to get version info from Rhino Library: {}", err),
                     ))
                 }
             };
@@ -431,7 +431,7 @@ impl RhinoInner {
         if pcm.len() as i32 != self.frame_length {
             return Err(RhinoError::new(
                 RhinoErrorStatus::FrameLengthError,
-                &format!(
+                format!(
                     "Found a frame length of {} Expected {}",
                     pcm.len(),
                     self.frame_length
