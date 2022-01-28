@@ -20,7 +20,7 @@ use std::path::PathBuf;
 use std::ptr::{addr_of, addr_of_mut};
 use std::sync::Arc;
 
-use crate::util::*;
+use crate::util::{pathbuf_to_cstring, pv_library_path, pv_model_path};
 
 lazy_static! {
     static ref PV_RHINO_LIB: Result<Library, RhinoError> = {
@@ -108,7 +108,7 @@ pub struct RhinoError {
 
 impl RhinoError {
     pub fn new(status: RhinoErrorStatus, message: &str) -> Self {
-        RhinoError {
+        Self {
             status,
             message: Some(message.to_string()),
         }
@@ -144,44 +144,44 @@ impl RhinoBuilder {
     const DEFAULT_REQUIRE_ENDPOINT: bool = true;
 
     pub fn new<S: Into<String>, P: Into<PathBuf>>(access_key: S, context_path: P) -> Self {
-        return Self {
+        Self {
             access_key: access_key.into(),
             library_path: pv_library_path(),
             model_path: pv_model_path(),
             context_path: context_path.into(),
-            sensitivity: RhinoBuilder::DEFAULT_SENSITIVITY,
-            require_endpoint: RhinoBuilder::DEFAULT_REQUIRE_ENDPOINT,
-        };
+            sensitivity: Self::DEFAULT_SENSITIVITY,
+            require_endpoint: Self::DEFAULT_REQUIRE_ENDPOINT,
+        }
     }
 
-    pub fn access_key<'a, S: Into<String>>(&'a mut self, access_key: S) -> &'a mut Self {
+    pub fn access_key<S: Into<String>>(&mut self, access_key: S) -> &mut Self {
         self.access_key = access_key.into();
-        return self;
+        self
     }
 
-    pub fn library_path<'a, P: Into<PathBuf>>(&'a mut self, library_path: P) -> &'a mut Self {
+    pub fn library_path<P: Into<PathBuf>>(&mut self, library_path: P) -> &mut Self {
         self.library_path = library_path.into();
-        return self;
+        self
     }
 
-    pub fn model_path<'a, P: Into<PathBuf>>(&'a mut self, model_path: P) -> &'a mut Self {
+    pub fn model_path<P: Into<PathBuf>>(&mut self, model_path: P) -> &mut Self {
         self.model_path = model_path.into();
-        return self;
+        self
     }
 
-    pub fn context_path<'a, P: Into<PathBuf>>(&'a mut self, context_path: P) -> &'a mut Self {
+    pub fn context_path<P: Into<PathBuf>>(&mut self, context_path: P) -> &mut Self {
         self.context_path = context_path.into();
-        return self;
+        self
     }
 
-    pub fn sensitivity<'a>(&'a mut self, sensitivity: f32) -> &'a mut Self {
+    pub fn sensitivity(&mut self, sensitivity: f32) -> &mut Self {
         self.sensitivity = sensitivity;
-        return self;
+        self
     }
 
-    pub fn require_endpoint<'a>(&'a mut self, require_endpoint: bool) -> &'a mut Self {
+    pub fn require_endpoint(&mut self, require_endpoint: bool) -> &mut Self {
         self.require_endpoint = require_endpoint;
-        return self;
+        self
     }
 
     pub fn init(&self) -> Result<Rhino, RhinoError> {
@@ -193,12 +193,12 @@ impl RhinoBuilder {
             self.sensitivity,
             self.require_endpoint,
         );
-        return match inner {
+        match inner {
             Ok(inner) => Ok(Rhino {
                 inner: Arc::new(inner),
             }),
             Err(err) => Err(err),
-        };
+        }
     }
 }
 
@@ -209,27 +209,27 @@ pub struct Rhino {
 
 impl Rhino {
     pub fn process(&self, pcm: &[i16]) -> Result<bool, RhinoError> {
-        return self.inner.process(pcm);
+        self.inner.process(pcm)
     }
 
     pub fn get_inference(&self) -> Result<RhinoInference, RhinoError> {
-        return self.inner.get_inference();
+        self.inner.get_inference()
     }
 
     pub fn context_info(&self) -> String {
-        return self.inner.context_info.clone();
+        self.inner.context_info.clone()
     }
 
     pub fn frame_length(&self) -> u32 {
-        return self.inner.frame_length as u32;
+        self.inner.frame_length as u32
     }
 
     pub fn sample_rate(&self) -> u32 {
-        return self.inner.sample_rate as u32;
+        self.inner.sample_rate as u32
     }
 
     pub fn version(&self) -> String {
-        return self.inner.version.clone();
+        self.inner.version.clone()
     }
 }
 
@@ -248,13 +248,13 @@ fn load_library_fn<T>(function_name: &[u8]) -> Result<Symbol<T>, RhinoError> {
 }
 
 fn check_fn_call_status(status: PvStatus, function_name: &str) -> Result<(), RhinoError> {
-    return match status {
+    match status {
         PvStatus::SUCCESS => Ok(()),
         _ => Err(RhinoError::new(
             RhinoErrorStatus::LibraryError(status),
             &format!("Function '{}' in the rhino library failed", function_name),
         )),
-    };
+    }
 }
 
 struct RhinoInnerVTable {
@@ -290,7 +290,7 @@ impl RhinoInner {
             let model_path: PathBuf = model_path.into();
             let context_path: PathBuf = context_path.into();
 
-            if access_key.len() == 0 {
+            if access_key.is_empty() {
                 return Err(RhinoError::new(
                     RhinoErrorStatus::ArgumentError,
                     "AccessKey is required for Rhino initialization",
@@ -321,7 +321,7 @@ impl RhinoInner {
                 ));
             }
 
-            if sensitivity < 0.0 || sensitivity > 1.0 {
+            if !(0.0..=1.0).contains(&sensitivity) {
                 return Err(RhinoError::new(
                     RhinoErrorStatus::ArgumentError,
                     &format!("Sensitivity value {} should be within [0, 1]", sensitivity),
@@ -416,14 +416,14 @@ impl RhinoInner {
                 pv_rhino_reset,
             };
 
-            return Ok(Self {
+            Ok(Self {
                 crhino,
                 sample_rate,
                 frame_length,
                 version,
                 context_info: context_info.to_string_lossy().to_string(),
                 vtable,
-            });
+            })
         }
     }
 
@@ -445,7 +445,7 @@ impl RhinoInner {
         };
         check_fn_call_status(status, "pv_rhino_process")?;
 
-        return Ok(is_finalized);
+        Ok(is_finalized)
     }
 
     fn is_understood(&self) -> Result<bool, RhinoError> {
@@ -455,14 +455,14 @@ impl RhinoInner {
         };
         check_fn_call_status(status, "pv_rhino_is_understood")?;
 
-        return Ok(is_understood);
+        Ok(is_understood)
     }
 
     fn reset(&self) -> Result<(), RhinoError> {
         let status = unsafe { (self.vtable.pv_rhino_reset)(self.crhino) };
         check_fn_call_status(status, "pv_rhino_reset")?;
 
-        return Ok(());
+        Ok(())
     }
 
     pub fn get_inference(&self) -> Result<RhinoInference, RhinoError> {
@@ -516,11 +516,11 @@ impl RhinoInner {
 
         self.reset()?;
 
-        return Ok(RhinoInference {
+        Ok(RhinoInference {
             is_understood,
             intent,
             slots,
-        });
+        })
     }
 }
 
