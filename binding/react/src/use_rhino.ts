@@ -227,10 +227,10 @@ export function useRhino(
 
     return (): void => {
       startRhinoPromise.then(({ webVp, rhnWorker }) => {
-        if (webVp !== undefined || webVp !== null) {
+        if (webVp !== undefined && webVp !== null) {
           webVp.release();
         }
-        if (rhnWorker !== undefined || rhnWorker !== null) {
+        if (rhnWorker !== undefined && rhnWorker !== null) {
           rhnWorker.postMessage({ command: 'release' });
         }
       }).catch(() => {
