@@ -12,7 +12,7 @@
 use std::cmp::PartialEq;
 use std::collections::HashMap;
 use std::ffi::{CStr, CString};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::ptr::{addr_of, addr_of_mut};
 use std::sync::Arc;
 
@@ -92,25 +92,22 @@ pub enum RhinoErrorStatus {
 
 #[derive(PartialEq, Clone, Debug)]
 pub struct RhinoError {
-    pub status: RhinoErrorStatus,
-    pub message: Option<String>,
+    status: RhinoErrorStatus,
+    message: String,
 }
 
 impl RhinoError {
     pub fn new(status: RhinoErrorStatus, message: impl Into<String>) -> Self {
         Self {
             status,
-            message: Some(message.into()),
+            message: message.into(),
         }
     }
 }
 
 impl std::fmt::Display for RhinoError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self.message {
-            Some(message) => write!(f, "{}: {:?}", message, self.status),
-            None => write!(f, "Rhino error: {:?}", self.status),
-        }
+        write!(f, "{}: {:?}", self.message, self.status)
     }
 }
 
@@ -175,20 +172,17 @@ impl RhinoBuilder {
     }
 
     pub fn init(&self) -> Result<Rhino, RhinoError> {
-        let inner = RhinoInner::init(
-            self.access_key.clone(),
+        RhinoInner::init(
+            &self.access_key,
             self.library_path.clone(),
             self.model_path.clone(),
             self.context_path.clone(),
             self.sensitivity,
             self.require_endpoint,
-        );
-        match inner {
-            Ok(inner) => Ok(Rhino {
-                inner: Arc::new(inner),
-            }),
-            Err(err) => Err(err),
-        }
+        )
+        .map(|inner| Rhino {
+            inner: Arc::new(inner),
+        })
     }
 }
 
@@ -299,19 +293,14 @@ struct RhinoInner {
 }
 
 impl RhinoInner {
-    pub fn init<S: Into<String>, P: Into<PathBuf>>(
-        access_key: S,
+    pub fn init<P: AsRef<Path>>(
+        access_key: &str,
         library_path: P,
         model_path: P,
         context_path: P,
         sensitivity: f32,
         require_endpoint: bool,
     ) -> Result<Self, RhinoError> {
-        let access_key: String = access_key.into();
-        let library_path: PathBuf = library_path.into();
-        let model_path: PathBuf = model_path.into();
-        let context_path: PathBuf = context_path.into();
-
         if access_key.is_empty() {
             return Err(RhinoError::new(
                 RhinoErrorStatus::ArgumentError,
@@ -319,27 +308,33 @@ impl RhinoInner {
             ));
         }
 
-        if !library_path.exists() {
+        if !library_path.as_ref().exists() {
             return Err(RhinoError::new(
                 RhinoErrorStatus::ArgumentError,
                 format!(
                     "Couldn't find Rhino's dynamic library at {}",
-                    library_path.display()
+                    library_path.as_ref().display()
                 ),
             ));
         }
 
-        if !model_path.exists() {
+        if !model_path.as_ref().exists() {
             return Err(RhinoError::new(
                 RhinoErrorStatus::ArgumentError,
-                format!("Couldn't find model file at {}", model_path.display()),
+                format!(
+                    "Couldn't find model file at {}",
+                    model_path.as_ref().display()
+                ),
             ));
         }
 
-        if !context_path.exists() {
+        if !context_path.as_ref().exists() {
             return Err(RhinoError::new(
                 RhinoErrorStatus::ArgumentError,
-                format!("Couldn't find context file at {}", context_path.display()),
+                format!(
+                    "Couldn't find context file at {}",
+                    context_path.as_ref().display()
+                ),
             ));
         }
 
@@ -350,7 +345,7 @@ impl RhinoInner {
             ));
         }
 
-        let lib = unsafe { Library::new(library_path) }.map_err(|err| {
+        let lib = unsafe { Library::new(library_path.as_ref()) }.map_err(|err| {
             RhinoError::new(
                 RhinoErrorStatus::LibraryLoadError,
                 format!("Failed to load rhino dynamic library: {}", err),
@@ -363,8 +358,8 @@ impl RhinoInner {
                 format!("AccessKey is not a valid C string {}", err),
             )
         })?;
-        let pv_model_path = pathbuf_to_cstring(&model_path);
-        let pv_context_path = pathbuf_to_cstring(&context_path);
+        let pv_model_path = pathbuf_to_cstring(model_path);
+        let pv_context_path = pathbuf_to_cstring(context_path);
 
         // SAFETY: most of the unsafe comes from the `load_library_fn` which is
         // safe, because we don't use the raw symbols after this function
@@ -438,7 +433,7 @@ impl RhinoInner {
             ));
         }
 
-        let mut is_finalized: bool = false;
+        let mut is_finalized = false;
         let status = unsafe {
             (self.vtable.pv_rhino_process)(self.crhino, pcm.as_ptr(), addr_of_mut!(is_finalized))
         };
@@ -448,7 +443,7 @@ impl RhinoInner {
     }
 
     fn is_understood(&self) -> Result<bool, RhinoError> {
-        let mut is_understood: bool = false;
+        let mut is_understood = false;
         let status = unsafe {
             (self.vtable.pv_rhino_is_understood)(self.crhino, addr_of_mut!(is_understood))
         };
@@ -474,7 +469,7 @@ impl RhinoInner {
                 let intent_c_buffer = Vec::new();
                 let intent_c_ptr = intent_c_buffer.as_ptr();
 
-                let mut num_slots: i32 = 0;
+                let mut num_slots = 0;
 
                 let slot_keys_ptr: *const c_char = std::ptr::null();
                 let slot_keys_ptr_ptr = addr_of!(slot_keys_ptr);
