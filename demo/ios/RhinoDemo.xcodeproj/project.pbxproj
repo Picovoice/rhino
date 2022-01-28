@@ -20,6 +20,7 @@
 		0251C359269CF02F00B77F69 /* test_de_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 0251C358269CF02F00B77F69 /* test_de_ios.rhn */; };
 		02FF56AC274D7168001EEB60 /* rhino_params.pv in Resources */ = {isa = PBXBuildFile; fileRef = 02FF56AB274D7168001EEB60 /* rhino_params.pv */; };
 		0663534B6ED4A931060FD3D9 /* libPods-RhinoDemoUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */; };
+		803756EB27A4B3AC0084F1D1 /* iluminación_inteligente_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 803756EA27A4B3AC0084F1D1 /* iluminación_inteligente_ios.rhn */; };
 		BB193E922370C4EC00556136 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E912370C4EC00556136 /* AppDelegate.swift */; };
 		BB193E942370C4EC00556136 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E932370C4EC00556136 /* SceneDelegate.swift */; };
 		BB193E962370C4EC00556136 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E952370C4EC00556136 /* ContentView.swift */; };
@@ -70,6 +71,7 @@
 		02FF56AB274D7168001EEB60 /* rhino_params.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params.pv; path = ../../../lib/common/rhino_params.pv; sourceTree = "<group>"; };
 		2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemoUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		803756EA27A4B3AC0084F1D1 /* iluminación_inteligente_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = "iluminación_inteligente_ios.rhn"; path = "../../resources/contexts_es/ios/iluminación_inteligente_ios.rhn"; sourceTree = "<group>"; };
 		81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.release.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.release.xcconfig"; sourceTree = "<group>"; };
 		8F4E55F466C02D38156A6586 /* Pods-RhinoDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		BB193E8E2370C4EC00556136 /* RhinoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -192,6 +194,7 @@
 		BB193E852370C4EC00556136 = {
 			isa = PBXGroup;
 			children = (
+				803756EA27A4B3AC0084F1D1 /* iluminación_inteligente_ios.rhn */,
 				BB193E902370C4EC00556136 /* RhinoDemo */,
 				0251C32A269CC25A00B77F69 /* RhinoDemoUITests */,
 				BB193E8F2370C4EC00556136 /* Products */,
@@ -340,6 +343,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				803756EB27A4B3AC0084F1D1 /* iluminación_inteligente_ios.rhn in Resources */,
 				0251C33E269CC3BB00B77F69 /* rhino_params_es.pv in Resources */,
 				0251C342269CC42900B77F69 /* test_within_context.wav in Resources */,
 				0251C357269CF02800B77F69 /* test_es_ios.rhn in Resources */,
