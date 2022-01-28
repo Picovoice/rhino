@@ -9,32 +9,22 @@
     specific language governing permissions and limitations under the License.
 */
 
-use lazy_static::lazy_static;
-use libc::{c_char, c_float};
-use libloading::{Library, Symbol};
 use std::cmp::PartialEq;
 use std::collections::HashMap;
-
 use std::ffi::{CStr, CString};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::ptr::{addr_of, addr_of_mut};
 use std::sync::Arc;
 
-use crate::util::*;
+use libc::{c_char, c_float};
+use libloading::{Library, Symbol};
 
-lazy_static! {
-    static ref PV_RHINO_LIB: Result<Library, RhinoError> = {
-        unsafe {
-            match Library::new(pv_library_path()) {
-                Ok(symbol) => Ok(symbol),
-                Err(err) => Err(RhinoError::new(
-                    RhinoErrorStatus::LibraryLoadError,
-                    &format!("Failed to load rhino dynamic library: {}", err),
-                )),
-            }
-        }
-    };
-}
+use crate::util::{pathbuf_to_cstring, pv_library_path, pv_model_path};
+
+#[cfg(unix)]
+use libloading::os::unix::Symbol as RawSymbol;
+#[cfg(windows)]
+use libloading::os::windows::Symbol as RawSymbol;
 
 #[repr(C)]
 struct CRhino {}
@@ -102,25 +92,22 @@ pub enum RhinoErrorStatus {
 
 #[derive(PartialEq, Clone, Debug)]
 pub struct RhinoError {
-    pub status: RhinoErrorStatus,
-    pub message: Option<String>,
+    status: RhinoErrorStatus,
+    message: String,
 }
 
 impl RhinoError {
-    pub fn new(status: RhinoErrorStatus, message: &str) -> Self {
-        RhinoError {
+    pub fn new(status: RhinoErrorStatus, message: impl Into<String>) -> Self {
+        Self {
             status,
-            message: Some(message.to_string()),
+            message: message.into(),
         }
     }
 }
 
 impl std::fmt::Display for RhinoError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self.message {
-            Some(message) => write!(f, "{}: {:?}", message, self.status),
-            None => write!(f, "Rhino error: {:?}", self.status),
-        }
+        write!(f, "{}: {:?}", self.message, self.status)
     }
 }
 
@@ -144,61 +131,58 @@ impl RhinoBuilder {
     const DEFAULT_REQUIRE_ENDPOINT: bool = true;
 
     pub fn new<S: Into<String>, P: Into<PathBuf>>(access_key: S, context_path: P) -> Self {
-        return Self {
+        Self {
             access_key: access_key.into(),
             library_path: pv_library_path(),
             model_path: pv_model_path(),
             context_path: context_path.into(),
-            sensitivity: RhinoBuilder::DEFAULT_SENSITIVITY,
-            require_endpoint: RhinoBuilder::DEFAULT_REQUIRE_ENDPOINT,
-        };
+            sensitivity: Self::DEFAULT_SENSITIVITY,
+            require_endpoint: Self::DEFAULT_REQUIRE_ENDPOINT,
+        }
     }
 
-    pub fn access_key<'a, S: Into<String>>(&'a mut self, access_key: S) -> &'a mut Self {
+    pub fn access_key<S: Into<String>>(&mut self, access_key: S) -> &mut Self {
         self.access_key = access_key.into();
-        return self;
+        self
     }
 
-    pub fn library_path<'a, P: Into<PathBuf>>(&'a mut self, library_path: P) -> &'a mut Self {
+    pub fn library_path<P: Into<PathBuf>>(&mut self, library_path: P) -> &mut Self {
         self.library_path = library_path.into();
-        return self;
+        self
     }
 
-    pub fn model_path<'a, P: Into<PathBuf>>(&'a mut self, model_path: P) -> &'a mut Self {
+    pub fn model_path<P: Into<PathBuf>>(&mut self, model_path: P) -> &mut Self {
         self.model_path = model_path.into();
-        return self;
+        self
     }
 
-    pub fn context_path<'a, P: Into<PathBuf>>(&'a mut self, context_path: P) -> &'a mut Self {
+    pub fn context_path<P: Into<PathBuf>>(&mut self, context_path: P) -> &mut Self {
         self.context_path = context_path.into();
-        return self;
+        self
     }
 
-    pub fn sensitivity<'a>(&'a mut self, sensitivity: f32) -> &'a mut Self {
+    pub fn sensitivity(&mut self, sensitivity: f32) -> &mut Self {
         self.sensitivity = sensitivity;
-        return self;
+        self
     }
 
-    pub fn require_endpoint<'a>(&'a mut self, require_endpoint: bool) -> &'a mut Self {
+    pub fn require_endpoint(&mut self, require_endpoint: bool) -> &mut Self {
         self.require_endpoint = require_endpoint;
-        return self;
+        self
     }
 
     pub fn init(&self) -> Result<Rhino, RhinoError> {
-        let inner = RhinoInner::init(
-            self.access_key.clone(),
+        RhinoInner::init(
+            &self.access_key,
             self.library_path.clone(),
             self.model_path.clone(),
             self.context_path.clone(),
             self.sensitivity,
             self.require_endpoint,
-        );
-        return match inner {
-            Ok(inner) => Ok(Rhino {
-                inner: Arc::new(inner),
-            }),
-            Err(err) => Err(err),
-        };
+        )
+        .map(|inner| Rhino {
+            inner: Arc::new(inner),
+        })
     }
 }
 
@@ -209,61 +193,94 @@ pub struct Rhino {
 
 impl Rhino {
     pub fn process(&self, pcm: &[i16]) -> Result<bool, RhinoError> {
-        return self.inner.process(pcm);
+        self.inner.process(pcm)
     }
 
     pub fn get_inference(&self) -> Result<RhinoInference, RhinoError> {
-        return self.inner.get_inference();
+        self.inner.get_inference()
     }
 
     pub fn context_info(&self) -> String {
-        return self.inner.context_info.clone();
+        self.inner.context_info.clone()
     }
 
     pub fn frame_length(&self) -> u32 {
-        return self.inner.frame_length as u32;
+        self.inner.frame_length as u32
     }
 
     pub fn sample_rate(&self) -> u32 {
-        return self.inner.sample_rate as u32;
+        self.inner.sample_rate as u32
     }
 
     pub fn version(&self) -> String {
-        return self.inner.version.clone();
+        self.inner.version.clone()
     }
 }
 
-fn load_library_fn<T>(function_name: &[u8]) -> Result<Symbol<T>, RhinoError> {
-    match &*PV_RHINO_LIB {
-        Ok(lib) => unsafe {
-            lib.get(function_name).map_err(|err| {
-                RhinoError::new(
-                    RhinoErrorStatus::LibraryLoadError,
-                    &format!("Failed to load function symbol from rhino library: {}", err),
-                )
-            })
-        },
-        Err(err) => Err((*err).clone()),
-    }
+/// Safety:
+/// The caller must uphold that the library is alive as long as the rawsymbol
+/// will be used. See the libloading documentation for details.
+unsafe fn load_library_fn<T>(
+    library: &Library,
+    function_name: &[u8],
+) -> Result<RawSymbol<T>, RhinoError> {
+    library
+        .get(function_name)
+        .map(|s: Symbol<T>| s.into_raw())
+        .map_err(|err| {
+            RhinoError::new(
+                RhinoErrorStatus::LibraryLoadError,
+                format!("Failed to load function symbol from rhino library: {}", err),
+            )
+        })
 }
 
 fn check_fn_call_status(status: PvStatus, function_name: &str) -> Result<(), RhinoError> {
-    return match status {
+    match status {
         PvStatus::SUCCESS => Ok(()),
         _ => Err(RhinoError::new(
             RhinoErrorStatus::LibraryError(status),
-            &format!("Function '{}' in the rhino library failed", function_name),
+            format!("Function '{}' in the rhino library failed", function_name),
         )),
-    };
+    }
 }
 
 struct RhinoInnerVTable {
-    pv_rhino_process: Symbol<'static, PvRhinoProcessFn>,
-    pv_rhino_delete: Symbol<'static, PvRhinoDeleteFn>,
-    pv_rhino_is_understood: Symbol<'static, PvRhinoIsUnderstoodFn>,
-    pv_rhino_get_intent: Symbol<'static, PvRhinoGetIntentFn>,
-    pv_rhino_free_slots_and_values: Symbol<'static, PvRhinoFreeSlotsAndValuesFn>,
-    pv_rhino_reset: Symbol<'static, PvRhinoResetFn>,
+    pv_rhino_process: RawSymbol<PvRhinoProcessFn>,
+    pv_rhino_delete: RawSymbol<PvRhinoDeleteFn>,
+    pv_rhino_is_understood: RawSymbol<PvRhinoIsUnderstoodFn>,
+    pv_rhino_get_intent: RawSymbol<PvRhinoGetIntentFn>,
+    pv_rhino_free_slots_and_values: RawSymbol<PvRhinoFreeSlotsAndValuesFn>,
+    pv_rhino_reset: RawSymbol<PvRhinoResetFn>,
+
+    _lib_guard: Library,
+}
+
+impl RhinoInnerVTable {
+    pub fn new(lib: Library) -> Result<Self, RhinoError> {
+        // SAFETY: the library will be hold by this struct and therefore the symbols can't outlive the library
+        unsafe {
+            Ok(Self {
+                pv_rhino_process: load_library_fn::<PvRhinoProcessFn>(&lib, b"pv_rhino_process")?,
+                pv_rhino_delete: load_library_fn::<PvRhinoDeleteFn>(&lib, b"pv_rhino_delete")?,
+                pv_rhino_is_understood: load_library_fn::<PvRhinoIsUnderstoodFn>(
+                    &lib,
+                    b"pv_rhino_is_understood",
+                )?,
+                pv_rhino_get_intent: load_library_fn::<PvRhinoGetIntentFn>(
+                    &lib,
+                    b"pv_rhino_get_intent",
+                )?,
+                pv_rhino_free_slots_and_values: load_library_fn::<PvRhinoFreeSlotsAndValuesFn>(
+                    &lib,
+                    b"pv_rhino_free_slots_and_values",
+                )?,
+                pv_rhino_reset: load_library_fn::<PvRhinoResetFn>(&lib, b"pv_rhino_reset")?,
+
+                _lib_guard: lib,
+            })
+        }
+    }
 }
 
 struct RhinoInner {
@@ -276,162 +293,139 @@ struct RhinoInner {
 }
 
 impl RhinoInner {
-    pub fn init<S: Into<String>, P: Into<PathBuf>>(
-        access_key: S,
+    pub fn init<P: AsRef<Path>>(
+        access_key: &str,
         library_path: P,
         model_path: P,
         context_path: P,
         sensitivity: f32,
         require_endpoint: bool,
     ) -> Result<Self, RhinoError> {
-        unsafe {
-            let access_key: String = access_key.into();
-            let library_path: PathBuf = library_path.into();
-            let model_path: PathBuf = model_path.into();
-            let context_path: PathBuf = context_path.into();
+        if access_key.is_empty() {
+            return Err(RhinoError::new(
+                RhinoErrorStatus::ArgumentError,
+                "AccessKey is required for Rhino initialization",
+            ));
+        }
 
-            if access_key.len() == 0 {
-                return Err(RhinoError::new(
-                    RhinoErrorStatus::ArgumentError,
-                    "AccessKey is required for Rhino initialization",
-                ));
-            }
+        if !library_path.as_ref().exists() {
+            return Err(RhinoError::new(
+                RhinoErrorStatus::ArgumentError,
+                format!(
+                    "Couldn't find Rhino's dynamic library at {}",
+                    library_path.as_ref().display()
+                ),
+            ));
+        }
 
-            if !library_path.exists() {
-                return Err(RhinoError::new(
-                    RhinoErrorStatus::ArgumentError,
-                    &format!(
-                        "Couldn't find Rhino's dynamic library at {}",
-                        library_path.display()
-                    ),
-                ));
-            }
+        if !model_path.as_ref().exists() {
+            return Err(RhinoError::new(
+                RhinoErrorStatus::ArgumentError,
+                format!(
+                    "Couldn't find model file at {}",
+                    model_path.as_ref().display()
+                ),
+            ));
+        }
 
-            if !model_path.exists() {
-                return Err(RhinoError::new(
-                    RhinoErrorStatus::ArgumentError,
-                    &format!("Couldn't find model file at {}", model_path.display()),
-                ));
-            }
+        if !context_path.as_ref().exists() {
+            return Err(RhinoError::new(
+                RhinoErrorStatus::ArgumentError,
+                format!(
+                    "Couldn't find context file at {}",
+                    context_path.as_ref().display()
+                ),
+            ));
+        }
 
-            if !context_path.exists() {
-                return Err(RhinoError::new(
-                    RhinoErrorStatus::ArgumentError,
-                    &format!("Couldn't find context file at {}", context_path.display()),
-                ));
-            }
+        if !(0.0..=1.0).contains(&sensitivity) {
+            return Err(RhinoError::new(
+                RhinoErrorStatus::ArgumentError,
+                format!("Sensitivity value {} should be within [0, 1]", sensitivity),
+            ));
+        }
 
-            if sensitivity < 0.0 || sensitivity > 1.0 {
-                return Err(RhinoError::new(
-                    RhinoErrorStatus::ArgumentError,
-                    &format!("Sensitivity value {} should be within [0, 1]", sensitivity),
-                ));
-            }
+        let lib = unsafe { Library::new(library_path.as_ref()) }.map_err(|err| {
+            RhinoError::new(
+                RhinoErrorStatus::LibraryLoadError,
+                format!("Failed to load rhino dynamic library: {}", err),
+            )
+        })?;
 
-            let _lib = match Library::new(library_path) {
-                Ok(symbol) => symbol,
-                Err(err) => {
-                    return Err(RhinoError::new(
-                        RhinoErrorStatus::LibraryLoadError,
-                        &format!("Failed to load rhino dynamic library: {}", err),
-                    ))
-                }
-            };
+        let pv_access_key = CString::new(access_key).map_err(|err| {
+            RhinoError::new(
+                RhinoErrorStatus::ArgumentError,
+                format!("AccessKey is not a valid C string {}", err),
+            )
+        })?;
+        let pv_model_path = pathbuf_to_cstring(model_path);
+        let pv_context_path = pathbuf_to_cstring(context_path);
 
-            let pv_rhino_init: Symbol<PvRhinoInitFn> = load_library_fn(b"pv_rhino_init")?;
+        // SAFETY: most of the unsafe comes from the `load_library_fn` which is
+        // safe, because we don't use the raw symbols after this function
+        // anymore, therefore they live as long as the library does
+        let (crhino, sample_rate, frame_length, version, context_info) = unsafe {
+            let pv_rhino_init = load_library_fn::<PvRhinoInitFn>(&lib, b"pv_rhino_init")?;
+            let pv_rhino_version = load_library_fn::<PvRhinoVersionFn>(&lib, b"pv_rhino_version")?;
+            let pv_rhino_context_info =
+                load_library_fn::<PvRhinoContextInfoFn>(&lib, b"pv_rhino_context_info")?;
+            let pv_sample_rate = load_library_fn::<PvSampleRateFn>(&lib, b"pv_sample_rate")?;
+            let pv_rhino_frame_length =
+                load_library_fn::<PvRhinoFrameLengthFn>(&lib, b"pv_rhino_frame_length")?;
 
-            let pv_access_key = CString::new(access_key).map_err(|err| {
-                RhinoError::new(
-                    RhinoErrorStatus::ArgumentError,
-                    &format!("AccessKey is not a valid C string {}", err),
-                )
-            })?;
-            let pv_model_path = pathbuf_to_cstring(&model_path);
-            let pv_context_path = pathbuf_to_cstring(&context_path);
             let mut crhino = std::ptr::null_mut();
+            check_fn_call_status(
+                pv_rhino_init(
+                    pv_access_key.as_ptr(),
+                    pv_model_path.as_ptr(),
+                    pv_context_path.as_ptr(),
+                    sensitivity,
+                    require_endpoint,
+                    addr_of_mut!(crhino),
+                ),
+                "pv_rhino_init",
+            )?;
 
-            let status = pv_rhino_init(
-                pv_access_key.as_ptr(),
-                pv_model_path.as_ptr(),
-                pv_context_path.as_ptr(),
-                sensitivity,
-                require_endpoint,
-                addr_of_mut!(crhino),
-            );
-            if status != PvStatus::SUCCESS {
-                return Err(RhinoError::new(
-                    RhinoErrorStatus::LibraryLoadError,
-                    "Failed to initialize the Rhino library",
-                ));
-            }
-
-            let pv_rhino_process: Symbol<PvRhinoProcessFn> = load_library_fn(b"pv_rhino_process")?;
-
-            let pv_rhino_delete: Symbol<PvRhinoDeleteFn> = load_library_fn(b"pv_rhino_delete")?;
-
-            let pv_rhino_is_understood: Symbol<PvRhinoIsUnderstoodFn> =
-                load_library_fn(b"pv_rhino_is_understood")?;
-
-            let pv_rhino_get_intent: Symbol<PvRhinoGetIntentFn> =
-                load_library_fn(b"pv_rhino_get_intent")?;
-
-            let pv_rhino_free_slots_and_values: Symbol<PvRhinoFreeSlotsAndValuesFn> =
-                load_library_fn(b"pv_rhino_free_slots_and_values")?;
-
-            let pv_rhino_reset: Symbol<PvRhinoResetFn> = load_library_fn(b"pv_rhino_reset")?;
-
-            let pv_rhino_context_info: Symbol<PvRhinoContextInfoFn> =
-                load_library_fn(b"pv_rhino_context_info")?;
-
-            let pv_sample_rate: Symbol<PvSampleRateFn> = load_library_fn(b"pv_sample_rate")?;
-
-            let pv_rhino_frame_length: Symbol<PvRhinoFrameLengthFn> =
-                load_library_fn(b"pv_rhino_frame_length")?;
-
-            let pv_rhino_version: Symbol<PvRhinoVersionFn> = load_library_fn(b"pv_rhino_version")?;
-
-            let sample_rate = pv_sample_rate();
-            let frame_length = pv_rhino_frame_length();
             let version = match CStr::from_ptr(pv_rhino_version()).to_str() {
                 Ok(string) => string.to_string(),
                 Err(err) => {
                     return Err(RhinoError::new(
                         RhinoErrorStatus::LibraryLoadError,
-                        &format!("Failed to get version info from Rhino Library: {}", err),
+                        format!("Failed to get version info from Rhino Library: {}", err),
                     ))
                 }
             };
 
             let context_info_ptr = std::ptr::null();
-            let status = pv_rhino_context_info(crhino, addr_of!(context_info_ptr));
-            check_fn_call_status(status, "pv_rhino_context_info")?;
-            let context_info = CStr::from_ptr(context_info_ptr);
+            check_fn_call_status(
+                pv_rhino_context_info(crhino, addr_of!(context_info_ptr)),
+                "pv_rhino_context_info",
+            )?;
 
-            let vtable = RhinoInnerVTable {
-                pv_rhino_process,
-                pv_rhino_delete,
-                pv_rhino_is_understood,
-                pv_rhino_get_intent,
-                pv_rhino_free_slots_and_values,
-                pv_rhino_reset,
-            };
-
-            return Ok(Self {
+            (
                 crhino,
-                sample_rate,
-                frame_length,
+                pv_sample_rate(),
+                pv_rhino_frame_length(),
                 version,
-                context_info: context_info.to_string_lossy().to_string(),
-                vtable,
-            });
-        }
+                CStr::from_ptr(context_info_ptr),
+            )
+        };
+
+        Ok(Self {
+            crhino,
+            sample_rate,
+            frame_length,
+            version,
+            context_info: context_info.to_string_lossy().to_string(),
+            vtable: RhinoInnerVTable::new(lib)?,
+        })
     }
 
     pub fn process(&self, pcm: &[i16]) -> Result<bool, RhinoError> {
         if pcm.len() as i32 != self.frame_length {
             return Err(RhinoError::new(
                 RhinoErrorStatus::FrameLengthError,
-                &format!(
+                format!(
                     "Found a frame length of {} Expected {}",
                     pcm.len(),
                     self.frame_length
@@ -439,30 +433,30 @@ impl RhinoInner {
             ));
         }
 
-        let mut is_finalized: bool = false;
+        let mut is_finalized = false;
         let status = unsafe {
             (self.vtable.pv_rhino_process)(self.crhino, pcm.as_ptr(), addr_of_mut!(is_finalized))
         };
         check_fn_call_status(status, "pv_rhino_process")?;
 
-        return Ok(is_finalized);
+        Ok(is_finalized)
     }
 
     fn is_understood(&self) -> Result<bool, RhinoError> {
-        let mut is_understood: bool = false;
+        let mut is_understood = false;
         let status = unsafe {
             (self.vtable.pv_rhino_is_understood)(self.crhino, addr_of_mut!(is_understood))
         };
         check_fn_call_status(status, "pv_rhino_is_understood")?;
 
-        return Ok(is_understood);
+        Ok(is_understood)
     }
 
     fn reset(&self) -> Result<(), RhinoError> {
         let status = unsafe { (self.vtable.pv_rhino_reset)(self.crhino) };
         check_fn_call_status(status, "pv_rhino_reset")?;
 
-        return Ok(());
+        Ok(())
     }
 
     pub fn get_inference(&self) -> Result<RhinoInference, RhinoError> {
@@ -475,7 +469,7 @@ impl RhinoInner {
                 let intent_c_buffer = Vec::new();
                 let intent_c_ptr = intent_c_buffer.as_ptr();
 
-                let mut num_slots: i32 = 0;
+                let mut num_slots = 0;
 
                 let slot_keys_ptr: *const c_char = std::ptr::null();
                 let slot_keys_ptr_ptr = addr_of!(slot_keys_ptr);
@@ -516,11 +510,11 @@ impl RhinoInner {
 
         self.reset()?;
 
-        return Ok(RhinoInference {
+        Ok(RhinoInference {
             is_understood,
             intent,
             slots,
-        });
+        })
     }
 }
 

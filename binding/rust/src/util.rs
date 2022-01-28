@@ -9,42 +9,32 @@
     specific language governing permissions and limitations under the License.
 */
 
-#[allow(unused_imports)]
-use log::*;
-
-#[allow(unused_imports)]
-use std::process::Command;
-
 use std::ffi::CString;
 use std::path::{Path, PathBuf};
 
 const DEFAULT_RELATIVE_LIBRARY_DIR: &str = "lib/";
 const DEFAULT_RELATIVE_MODEL_PATH: &str = "lib/common/rhino_params.pv";
 
-#[allow(dead_code)]
-const RPI_MACHINES: [&str; 4] = ["arm11", "cortex-a7", "cortex-a53", "cortex-a72"];
-#[allow(dead_code)]
-const JETSON_MACHINES: [&str; 1] = ["cortex-a57"];
-
-#[cfg(target_os = "linux")]
-#[allow(dead_code)]
+#[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))]
 fn find_machine_type() -> String {
+    use std::process::Command;
+
     let cpu_info = Command::new("cat")
         .arg("/proc/cpuinfo")
         .output()
         .expect("Failed to retrieve cpu info");
     let cpu_part_list = std::str::from_utf8(&cpu_info.stdout)
         .unwrap()
-        .split("\n")
+        .split('\n')
         .filter(|x| x.contains("CPU part"))
         .collect::<Vec<_>>();
 
-    if cpu_part_list.len() == 0 {
+    if cpu_part_list.is_empty() {
         panic!("Unsupported CPU");
     }
 
     let cpu_part = cpu_part_list[0]
-        .split(" ")
+        .split(' ')
         .collect::<Vec<_>>()
         .pop()
         .unwrap()
@@ -60,33 +50,36 @@ fn find_machine_type() -> String {
         _ => "unsupported",
     };
 
-    return String::from(machine);
+    String::from(machine)
 }
 
 #[cfg(all(target_os = "macos", target_arch = "x86_64"))]
 fn base_library_path() -> PathBuf {
-    return PathBuf::from("mac/x86_64/libpv_rhino.dylib");
+    PathBuf::from("mac/x86_64/libpv_rhino.dylib")
 }
 
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 fn base_library_path() -> PathBuf {
-    return PathBuf::from("mac/arm64/libpv_rhino.dylib");
+    PathBuf::from("mac/arm64/libpv_rhino.dylib")
 }
 
 #[cfg(target_os = "windows")]
 fn base_library_path() -> PathBuf {
-    return PathBuf::from("windows/amd64/libpv_rhino.dll");
+    PathBuf::from("windows/amd64/libpv_rhino.dll")
 }
 
 #[cfg(all(target_os = "linux", target_arch = "x86_64"))]
 fn base_library_path() -> PathBuf {
-    return PathBuf::from("linux/x86_64/libpv_rhino.so");
+    PathBuf::from("linux/x86_64/libpv_rhino.so")
 }
 
 #[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))]
 fn base_library_path() -> PathBuf {
+    const JETSON_MACHINES: &[&str] = &["cortex-a57"];
+    const RPI_MACHINES: &[&str] = &["arm11", "cortex-a7", "cortex-a53", "cortex-a72"];
+
     let machine = find_machine_type();
-    return match machine.as_str() {
+    match machine.as_str() {
         machine if RPI_MACHINES.contains(&machine) => {
             if cfg!(target_arch = "aarch64") {
                 PathBuf::from(format!("raspberry-pi/{}-aarch64/libpv_rhino.so", &machine))
@@ -99,23 +92,23 @@ fn base_library_path() -> PathBuf {
         }
         "beaglebone" => PathBuf::from("beaglebone/libpv_rhino.so"),
         _ => {
-            warn!("WARNING: Please be advised that this device is not officially supported by Picovoice.\nFalling back to the armv6-based (Raspberry Pi Zero) library. This is not tested nor optimal.\nFor the model, use Raspberry Pi's models");
+            eprintln!("WARNING: Please be advised that this device is not officially supported by Picovoice.\nFalling back to the armv6-based (Raspberry Pi Zero) library. This is not tested nor optimal.\nFor the model, use Raspberry Pi's models");
             PathBuf::from("raspberry-pi/arm11/libpv_rhino.so")
         }
-    };
+    }
 }
 
 pub fn pv_library_path() -> PathBuf {
-    return PathBuf::from(env!("OUT_DIR"))
+    PathBuf::from(env!("OUT_DIR"))
         .join(DEFAULT_RELATIVE_LIBRARY_DIR)
-        .join(base_library_path());
+        .join(base_library_path())
 }
 
 pub fn pv_model_path() -> PathBuf {
-    return PathBuf::from(env!("OUT_DIR")).join(DEFAULT_RELATIVE_MODEL_PATH);
+    PathBuf::from(env!("OUT_DIR")).join(DEFAULT_RELATIVE_MODEL_PATH)
 }
 
 pub fn pathbuf_to_cstring<P: AsRef<Path>>(pathbuf: P) -> CString {
     let pathstr = pathbuf.as_ref().to_str().unwrap();
-    return CString::new(pathstr).unwrap();
+    CString::new(pathstr).unwrap()
 }
