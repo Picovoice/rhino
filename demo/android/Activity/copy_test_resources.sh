@@ -23,3 +23,4 @@ cp ../../../lib/common/rhino_params_fr.pv ./rhino-activity-demo-app/src/androidT
 echo "Copying test context files..."
 cp ../../../resources/contexts/android/coffee_maker_android.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/coffee_maker_android.rhn
 cp ../../../resources/contexts/linux/coffee_maker_linux.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/coffee_maker_linux.rhn
+cp ../../../resources/contexts_es/android/iluminación_inteligente_android.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/iluminación_inteligente_android.rhn

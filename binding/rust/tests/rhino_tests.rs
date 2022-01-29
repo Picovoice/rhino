@@ -144,4 +144,45 @@ mod tests {
         assert!(is_finalized);
         assert!(!rhino.get_inference().unwrap().is_understood);
     }
+
+    #[test]
+    fn test_with_non_ascii_model_name() {
+        let access_key = env::var("PV_ACCESS_KEY")
+            .expect("Pass the AccessKey in using the PV_ACCESS_KEY env variable");
+        let context_path = format!(
+            "../../resources/contexts_es/{}/iluminación_inteligente_{}.rhn",
+            pv_platform(),
+            pv_platform(),
+        );
+        let rhino = RhinoBuilder::new(access_key, context_path)
+            .model_path("../../lib/common/rhino_params_es.pv")
+            .init()
+            .expect("Unable to create Rhino");
+
+
+        let soundfile = BufReader::new(
+            File::open(concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/../../resources/audio_samples/test_out_of_context.wav"
+            ))
+            .unwrap(),
+        );
+        let source = Decoder::new(soundfile).unwrap();
+
+        assert_eq!(rhino.sample_rate(), source.sample_rate());
+
+        let mut is_finalized = false;
+        for frame in &source.chunks(rhino.frame_length() as usize) {
+            let frame = frame.collect_vec();
+            if frame.len() == rhino.frame_length() as usize {
+                is_finalized = rhino.process(&frame).unwrap();
+                if is_finalized {
+                    break;
+                }
+            }
+        }
+
+        assert!(is_finalized);
+        assert!(!rhino.get_inference().unwrap().is_understood);
+    }
 }

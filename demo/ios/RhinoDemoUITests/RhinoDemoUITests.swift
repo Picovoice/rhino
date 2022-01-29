@@ -259,4 +259,17 @@ class RhinoDemoUITests: XCTestCase {
         
         r.delete()
     }
+
+    func testInitWithNonAsciiModelName() throws {
+        let bundle = Bundle(for: type(of: self))
+        let contextPath = bundle.path(forResource: "iluminación_inteligente_ios", ofType: "rhn")!
+        let modelPath = bundle.path(forResource: "rhino_params_es", ofType: "pv")!
+        
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath,
+            modelPath: modelPath)
+        XCTAssert(r.contextInfo != "")
+        r.delete()
+    }
 }

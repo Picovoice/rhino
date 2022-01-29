@@ -356,6 +356,20 @@ public class RhinoTest {
         r.delete();
     }
 
+    @Test
+    public void testInitWithNonAsciiModelName() throws RhinoException {
+        File contextPath = new File(testResourcesPath, "context_files/iluminación_inteligente_android.rhn");
+        File modelPath = new File(testResourcesPath, "model_files/rhino_params_es.pv");
+        Rhino r = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(contextPath.getAbsolutePath())
+                .setModelPath(modelPath.getAbsolutePath())
+                .build(appContext);
+
+        assertTrue(r.getContextInformation() != null && !r.getContextInformation().equals(""));
+        r.delete();
+    }
+
     private void extractAssetsRecursively(String path) throws IOException {
 
         String[] list = assetManager.list(path);
