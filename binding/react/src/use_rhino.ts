@@ -198,12 +198,17 @@ export function useRhino(
 
       rhnWorker.postMessage({ command: 'info' });
 
-      const webVp = await WebVoiceProcessor.init({
-        engines: [rhnWorker],
-        start: startWebVp,
-      });
+      try {
+        const webVp = await WebVoiceProcessor.init({
+          engines: [rhnWorker],
+          start: startWebVp,
+        });
 
-      return { webVp, rhnWorker };
+        return { webVp, rhnWorker };
+      } catch (error) {
+        rhnWorker.postMessage({ command: 'release' });
+        throw error;
+      }
     }
     const startRhinoPromise = startRhino();
 
@@ -222,13 +227,15 @@ export function useRhino(
 
     return (): void => {
       startRhinoPromise.then(({ webVp, rhnWorker }) => {
-        if (webVp !== null) {
+        if (webVp !== undefined && webVp !== null) {
           webVp.release();
         }
-        if (rhnWorker !== null) {
+        if (rhnWorker !== undefined && rhnWorker !== null) {
           rhnWorker.postMessage({ command: 'release' });
         }
-      });
+      }).catch(() => {
+        // do nothing
+      })
     };
   }, [
     rhinoWorkerFactory,
