@@ -111,6 +111,8 @@ impl std::fmt::Display for RhinoError {
     }
 }
 
+impl std::error::Error for RhinoError {}
+
 pub struct RhinoInference {
     pub is_understood: bool,
     pub intent: Option<String>,
