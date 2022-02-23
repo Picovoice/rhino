@@ -9,17 +9,53 @@
 // limitations under the License.
 //
 
-// +build darwin linux
-
 package rhino
 
 /*
-#cgo LDFLAGS: -ldl
+#cgo linux LDFLAGS: -ldl
+#cgo darwin LDFLAGS: -ldl
 #cgo CFLAGS: -std=c99
-#include <dlfcn.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+
+#if defined(_WIN32) || defined(_WIN64)
+
+	#include <windows.h>
+
+#else
+
+	#include <dlfcn.h>
+
+#endif
+
+static void *open_dl(const char *dl_path) {
+
+#if defined(_WIN32) || defined(_WIN64)
+
+    return LoadLibrary((LPCSTR) dl_path);
+
+#else
+
+    return dlopen(dl_path, RTLD_NOW);
+
+#endif
+
+}
+
+static void *load_symbol(void *handle, const char *symbol) {
+
+#if defined(_WIN32) || defined(_WIN64)
+
+    return GetProcAddress((HMODULE) handle, symbol);
+
+#else
+
+    return dlsym(handle, symbol);
+
+#endif
+
+}
 
 typedef int32_t (*pv_rhino_init_func)(
 	const char *access_key,
@@ -165,18 +201,18 @@ import (
 )
 
 var (
-	lib                                = C.dlopen(C.CString(libName), C.RTLD_NOW)
-	pv_rhino_init_ptr                  = C.dlsym(lib, C.CString("pv_rhino_init"))
-	pv_rhino_delete_ptr                = C.dlsym(lib, C.CString("pv_rhino_delete"))
-	pv_rhino_process_ptr               = C.dlsym(lib, C.CString("pv_rhino_process"))
-	pv_rhino_is_understood_ptr         = C.dlsym(lib, C.CString("pv_rhino_is_understood"))
-	pv_rhino_get_intent_ptr            = C.dlsym(lib, C.CString("pv_rhino_get_intent"))
-	pv_rhino_free_slots_and_values_ptr = C.dlsym(lib, C.CString("pv_rhino_free_slots_and_values"))
-	pv_rhino_reset_ptr                 = C.dlsym(lib, C.CString("pv_rhino_reset"))
-	pv_rhino_context_info_ptr          = C.dlsym(lib, C.CString("pv_rhino_context_info"))
-	pv_rhino_version_ptr               = C.dlsym(lib, C.CString("pv_rhino_version"))
-	pv_rhino_frame_length_ptr          = C.dlsym(lib, C.CString("pv_rhino_frame_length"))
-	pv_sample_rate_ptr                 = C.dlsym(lib, C.CString("pv_sample_rate"))
+	lib                                = C.open_dl(C.CString(libName))
+	pv_rhino_init_ptr                  = C.load_symbol(lib, C.CString("pv_rhino_init"))
+	pv_rhino_delete_ptr                = C.load_symbol(lib, C.CString("pv_rhino_delete"))
+	pv_rhino_process_ptr               = C.load_symbol(lib, C.CString("pv_rhino_process"))
+	pv_rhino_is_understood_ptr         = C.load_symbol(lib, C.CString("pv_rhino_is_understood"))
+	pv_rhino_get_intent_ptr            = C.load_symbol(lib, C.CString("pv_rhino_get_intent"))
+	pv_rhino_free_slots_and_values_ptr = C.load_symbol(lib, C.CString("pv_rhino_free_slots_and_values"))
+	pv_rhino_reset_ptr                 = C.load_symbol(lib, C.CString("pv_rhino_reset"))
+	pv_rhino_context_info_ptr          = C.load_symbol(lib, C.CString("pv_rhino_context_info"))
+	pv_rhino_version_ptr               = C.load_symbol(lib, C.CString("pv_rhino_version"))
+	pv_rhino_frame_length_ptr          = C.load_symbol(lib, C.CString("pv_rhino_frame_length"))
+	pv_sample_rate_ptr                 = C.load_symbol(lib, C.CString("pv_sample_rate"))
 )
 
 func (nr nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
