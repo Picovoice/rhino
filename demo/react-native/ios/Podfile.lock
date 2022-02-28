@@ -282,8 +282,6 @@ PODS:
   - rhino-react-native (2.1.0):
     - React
     - Rhino-iOS (~> 2.1.0)
-  - RNFS (2.19.0):
-    - React-Core
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -320,7 +318,6 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "rhino-react-native (from `../node_modules/@picovoice/rhino-react-native`)"
-  - RNFS (from `../node_modules/react-native-fs`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -392,8 +389,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   rhino-react-native:
     :path: "../node_modules/@picovoice/rhino-react-native"
-  RNFS:
-    :path: "../node_modules/react-native-fs"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -432,7 +427,6 @@ SPEC CHECKSUMS:
   ReactCommon: 650e33cde4fb7d36781cd3143f5276da0abb2f96
   Rhino-iOS: b30668ab5d4a2e18d61bd1bc10f0ae41e0e202c5
   rhino-react-native: 4e1b96f7b80197e99a05413bb7574b91970b7968
-  RNFS: fc610f78fdf8bfc89a9e5cc2f898519f4dba1002
   Yoga: 90dcd029e45d8a7c1ff059e8b3c6612ff409061a
 
 PODFILE CHECKSUM: 1bbfabf6f1c66bdf4ed7e43ff0bea37f3ae08498
