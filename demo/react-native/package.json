@@ -18,7 +18,7 @@
     "@picovoice/rhino-react-native": "^2.1.0",
     "react": "^17.0.2",
     "react-native": "^0.67.3",
-    "react-native-fs": "^2.18.0"
+    "react-native-fs": "^2.19.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
