@@ -4,7 +4,3 @@ platform :ios, '9.0'
 target 'RhinoDemo' do    
     pod 'Rhino-iOS', '~> 2.1.0'
 end
-
-target 'RhinoDemoUITests' do    
-    pod 'Rhino-iOS', '~> 2.1.0'
-end
