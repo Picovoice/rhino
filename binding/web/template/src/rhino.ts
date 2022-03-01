@@ -426,6 +426,7 @@ export class Rhino implements RhinoEngine {
     sensitivity: number,
     requireEndpoint: boolean): Promise<any> {
     // A WebAssembly page has a constant size of 64KiB. -> 10MiB ~= 160 pages
+    // minimum memory requirements for init: 34 pages
     const memory = new WebAssembly.Memory({ initial: 160, maximum: 500 });
 
     const memoryBufferUint8 = new Uint8Array(memory.buffer);
