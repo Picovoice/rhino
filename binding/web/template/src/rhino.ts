@@ -425,7 +425,7 @@ export class Rhino implements RhinoEngine {
     context: string,
     sensitivity: number,
     requireEndpoint: boolean): Promise<any> {
-    const memory = new WebAssembly.Memory({ initial: 1000, maximum: 2000 });
+    const memory = new WebAssembly.Memory({ initial: 10, maximum: 300 });
 
     const memoryBufferUint8 = new Uint8Array(memory.buffer);
 
