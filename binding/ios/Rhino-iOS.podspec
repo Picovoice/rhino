@@ -34,6 +34,7 @@ Pod::Spec.new do |s|
       ]
     }
     s.source_files = 'binding/ios/*.{swift}'
+    s.excluded_files = 'binding/ios/RhinoAppTest/**'
     
     s.dependency 'ios-voice-processor', '~> 1.0.2'
   end

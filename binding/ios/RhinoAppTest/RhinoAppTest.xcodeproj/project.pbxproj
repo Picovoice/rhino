@@ -1,0 +1,761 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		049E74D6C17F04FC6ADCEDC9 /* libPods-RhinoAppTestUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 59230357DF94896EBFBD8305 /* libPods-RhinoAppTestUITests.a */; };
+		1E1A57D227CEC84000A05F37 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57D127CEC84000A05F37 /* AppDelegate.swift */; };
+		1E1A57D627CEC84000A05F37 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57D527CEC84000A05F37 /* ViewController.swift */; };
+		1E1A57D927CEC84000A05F37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A57D727CEC84000A05F37 /* Main.storyboard */; };
+		1E1A57DB27CEC84000A05F37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A57DA27CEC84000A05F37 /* Assets.xcassets */; };
+		1E1A57DE27CEC84000A05F37 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A57DC27CEC84000A05F37 /* LaunchScreen.storyboard */; };
+		1E1A57F327CEC84000A05F37 /* RhinoAppTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57F227CEC84000A05F37 /* RhinoAppTestUITests.swift */; };
+		1E1A581E27CECE1B00A05F37 /* rhino_params_de.pv in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A581A27CECE1B00A05F37 /* rhino_params_de.pv */; };
+		1E1A581F27CECE1B00A05F37 /* rhino_params_es.pv in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A581B27CECE1B00A05F37 /* rhino_params_es.pv */; };
+		1E1A582027CECE1B00A05F37 /* rhino_params.pv in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A581C27CECE1B00A05F37 /* rhino_params.pv */; };
+		1E1A582127CECE1B00A05F37 /* rhino_params_fr.pv in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A581D27CECE1B00A05F37 /* rhino_params_fr.pv */; };
+		1E1A582727CECE4C00A05F37 /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582627CECE4C00A05F37 /* coffee_maker_ios.rhn */; };
+		1E1A582927CECE5D00A05F37 /* coffee_maker_linux.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582827CECE5D00A05F37 /* coffee_maker_linux.rhn */; };
+		1E1A582C27CECE6900A05F37 /* test_within_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582A27CECE6900A05F37 /* test_within_context.wav */; };
+		1E1A582D27CECE6900A05F37 /* test_out_of_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582B27CECE6900A05F37 /* test_out_of_context.wav */; };
+		1E1A582F27CECE7E00A05F37 /* test_de_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582E27CECE7E00A05F37 /* test_de_ios.rhn */; };
+		1E1A583127CECE8300A05F37 /* test_es_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A583027CECE8300A05F37 /* test_es_ios.rhn */; };
+		1E1A583327CECE8700A05F37 /* test_fr_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A583227CECE8700A05F37 /* test_fr_ios.rhn */; };
+		1E1A583527CED02400A05F37 /* iluminación_inteligente_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A583427CED02400A05F37 /* iluminación_inteligente_ios.rhn */; };
+		B6D75F72F9368E5A4D8A47F7 /* libPods-RhinoAppTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8B41DCF24254E027C2B30C /* libPods-RhinoAppTest.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1E1A57EF27CEC84000A05F37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E1A57C627CEC84000A05F37 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E1A57CD27CEC84000A05F37;
+			remoteInfo = RhinoAppTest;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		18FAB8FC8D086FF2500A0A6A /* Pods-RhinoAppTestUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTestUITests.debug.xcconfig"; path = "Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoAppTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E1A57D127CEC84000A05F37 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1E1A57D527CEC84000A05F37 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1E1A57D827CEC84000A05F37 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1E1A57DA27CEC84000A05F37 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1E1A57DD27CEC84000A05F37 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1E1A57DF27CEC84000A05F37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E1A57EE27CEC84000A05F37 /* RhinoAppTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RhinoAppTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E1A57F227CEC84000A05F37 /* RhinoAppTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RhinoAppTestUITests.swift; sourceTree = "<group>"; };
+		1E1A580127CEC99400A05F37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E1A581A27CECE1B00A05F37 /* rhino_params_de.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params_de.pv; path = ../../../../lib/common/rhino_params_de.pv; sourceTree = "<group>"; };
+		1E1A581B27CECE1B00A05F37 /* rhino_params_es.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params_es.pv; path = ../../../../lib/common/rhino_params_es.pv; sourceTree = "<group>"; };
+		1E1A581C27CECE1B00A05F37 /* rhino_params.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params.pv; path = ../../../../lib/common/rhino_params.pv; sourceTree = "<group>"; };
+		1E1A581D27CECE1B00A05F37 /* rhino_params_fr.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params_fr.pv; path = ../../../../lib/common/rhino_params_fr.pv; sourceTree = "<group>"; };
+		1E1A582627CECE4C00A05F37 /* coffee_maker_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_ios.rhn; path = ../../../../resources/contexts/ios/coffee_maker_ios.rhn; sourceTree = "<group>"; };
+		1E1A582827CECE5D00A05F37 /* coffee_maker_linux.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_linux.rhn; path = ../../../../resources/contexts/linux/coffee_maker_linux.rhn; sourceTree = "<group>"; };
+		1E1A582A27CECE6900A05F37 /* test_within_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context.wav; path = ../../../../resources/audio_samples/test_within_context.wav; sourceTree = "<group>"; };
+		1E1A582B27CECE6900A05F37 /* test_out_of_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context.wav; path = ../../../../resources/audio_samples/test_out_of_context.wav; sourceTree = "<group>"; };
+		1E1A582E27CECE7E00A05F37 /* test_de_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_de_ios.rhn; sourceTree = "<group>"; };
+		1E1A583027CECE8300A05F37 /* test_es_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_es_ios.rhn; sourceTree = "<group>"; };
+		1E1A583227CECE8700A05F37 /* test_fr_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_fr_ios.rhn; sourceTree = "<group>"; };
+		1E1A583427CED02400A05F37 /* iluminación_inteligente_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = "iluminación_inteligente_ios.rhn"; path = "../../../../resources/contexts_es/ios/iluminación_inteligente_ios.rhn"; sourceTree = "<group>"; };
+		2B1742C8ACAFE68554B2DFD4 /* Pods-RhinoAppTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTest.release.xcconfig"; path = "Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest.release.xcconfig"; sourceTree = "<group>"; };
+		59230357DF94896EBFBD8305 /* libPods-RhinoAppTestUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoAppTestUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C8B41DCF24254E027C2B30C /* libPods-RhinoAppTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoAppTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D3D0649948C17F6FF2875C0 /* Pods-RhinoAppTestUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTestUITests.release.xcconfig"; path = "Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests.release.xcconfig"; sourceTree = "<group>"; };
+		900FCBC5CECD2C71CA548677 /* Pods-RhinoAppTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTest.debug.xcconfig"; path = "Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1E1A57CB27CEC84000A05F37 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B6D75F72F9368E5A4D8A47F7 /* libPods-RhinoAppTest.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E1A57EB27CEC84000A05F37 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				049E74D6C17F04FC6ADCEDC9 /* libPods-RhinoAppTestUITests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1E1A57C527CEC84000A05F37 = {
+			isa = PBXGroup;
+			children = (
+				1E1A57D027CEC84000A05F37 /* RhinoAppTest */,
+				1E1A57F127CEC84000A05F37 /* RhinoAppTestUITests */,
+				1E1A57CF27CEC84000A05F37 /* Products */,
+				286CC2DF6F709F2C33610374 /* Pods */,
+				DAAB5662628E2FB49E4EDDC1 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		1E1A57CF27CEC84000A05F37 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */,
+				1E1A57EE27CEC84000A05F37 /* RhinoAppTestUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1E1A57D027CEC84000A05F37 /* RhinoAppTest */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A57D127CEC84000A05F37 /* AppDelegate.swift */,
+				1E1A57D527CEC84000A05F37 /* ViewController.swift */,
+				1E1A57D727CEC84000A05F37 /* Main.storyboard */,
+				1E1A57DA27CEC84000A05F37 /* Assets.xcassets */,
+				1E1A57DC27CEC84000A05F37 /* LaunchScreen.storyboard */,
+				1E1A57DF27CEC84000A05F37 /* Info.plist */,
+			);
+			path = RhinoAppTest;
+			sourceTree = "<group>";
+		};
+		1E1A57F127CEC84000A05F37 /* RhinoAppTestUITests */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A581627CECDE400A05F37 /* test_resources */,
+				1E1A580127CEC99400A05F37 /* Info.plist */,
+				1E1A57F227CEC84000A05F37 /* RhinoAppTestUITests.swift */,
+			);
+			path = RhinoAppTestUITests;
+			sourceTree = "<group>";
+		};
+		1E1A581627CECDE400A05F37 /* test_resources */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A581927CECE0300A05F37 /* audio_samples */,
+				1E1A581827CECDFC00A05F37 /* context_files */,
+				1E1A581727CECDF300A05F37 /* model_files */,
+			);
+			name = test_resources;
+			sourceTree = "<group>";
+		};
+		1E1A581727CECDF300A05F37 /* model_files */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A581A27CECE1B00A05F37 /* rhino_params_de.pv */,
+				1E1A581B27CECE1B00A05F37 /* rhino_params_es.pv */,
+				1E1A581D27CECE1B00A05F37 /* rhino_params_fr.pv */,
+				1E1A581C27CECE1B00A05F37 /* rhino_params.pv */,
+			);
+			name = model_files;
+			sourceTree = "<group>";
+		};
+		1E1A581827CECDFC00A05F37 /* context_files */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A582527CECE3A00A05F37 /* de */,
+				1E1A582327CECE3000A05F37 /* en */,
+				1E1A582427CECE3300A05F37 /* es */,
+				1E1A582227CECE2B00A05F37 /* fr */,
+			);
+			name = context_files;
+			sourceTree = "<group>";
+		};
+		1E1A581927CECE0300A05F37 /* audio_samples */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A582B27CECE6900A05F37 /* test_out_of_context.wav */,
+				1E1A582A27CECE6900A05F37 /* test_within_context.wav */,
+			);
+			name = audio_samples;
+			sourceTree = "<group>";
+		};
+		1E1A582227CECE2B00A05F37 /* fr */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A583227CECE8700A05F37 /* test_fr_ios.rhn */,
+			);
+			name = fr;
+			sourceTree = "<group>";
+		};
+		1E1A582327CECE3000A05F37 /* en */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A582827CECE5D00A05F37 /* coffee_maker_linux.rhn */,
+				1E1A582627CECE4C00A05F37 /* coffee_maker_ios.rhn */,
+			);
+			name = en;
+			sourceTree = "<group>";
+		};
+		1E1A582427CECE3300A05F37 /* es */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A583427CED02400A05F37 /* iluminación_inteligente_ios.rhn */,
+				1E1A583027CECE8300A05F37 /* test_es_ios.rhn */,
+			);
+			name = es;
+			sourceTree = "<group>";
+		};
+		1E1A582527CECE3A00A05F37 /* de */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A582E27CECE7E00A05F37 /* test_de_ios.rhn */,
+			);
+			name = de;
+			sourceTree = "<group>";
+		};
+		286CC2DF6F709F2C33610374 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				900FCBC5CECD2C71CA548677 /* Pods-RhinoAppTest.debug.xcconfig */,
+				2B1742C8ACAFE68554B2DFD4 /* Pods-RhinoAppTest.release.xcconfig */,
+				18FAB8FC8D086FF2500A0A6A /* Pods-RhinoAppTestUITests.debug.xcconfig */,
+				5D3D0649948C17F6FF2875C0 /* Pods-RhinoAppTestUITests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		DAAB5662628E2FB49E4EDDC1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5C8B41DCF24254E027C2B30C /* libPods-RhinoAppTest.a */,
+				59230357DF94896EBFBD8305 /* libPods-RhinoAppTestUITests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1E1A57CD27CEC84000A05F37 /* RhinoAppTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E1A57F827CEC84000A05F37 /* Build configuration list for PBXNativeTarget "RhinoAppTest" */;
+			buildPhases = (
+				0F5F05EF9B768DF99D50E11E /* [CP] Check Pods Manifest.lock */,
+				1E1A57CA27CEC84000A05F37 /* Sources */,
+				1E1A57CB27CEC84000A05F37 /* Frameworks */,
+				1E1A57CC27CEC84000A05F37 /* Resources */,
+				67A615C483290DE603AA3CCF /* [CP] Embed Pods Frameworks */,
+				EC659A1D531851ED5FBA02A3 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RhinoAppTest;
+			productName = RhinoAppTest;
+			productReference = 1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1E1A57ED27CEC84000A05F37 /* RhinoAppTestUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E1A57FE27CEC84000A05F37 /* Build configuration list for PBXNativeTarget "RhinoAppTestUITests" */;
+			buildPhases = (
+				CA6B1DE258959CB94690D59D /* [CP] Check Pods Manifest.lock */,
+				1E1A57EA27CEC84000A05F37 /* Sources */,
+				1E1A57EB27CEC84000A05F37 /* Frameworks */,
+				1E1A57EC27CEC84000A05F37 /* Resources */,
+				CEE3623C1AD3D9A2CC59F1BF /* [CP] Embed Pods Frameworks */,
+				2735EB327D16B1BB02AA2174 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1E1A57F027CEC84000A05F37 /* PBXTargetDependency */,
+			);
+			name = RhinoAppTestUITests;
+			productName = RhinoAppTestUITests;
+			productReference = 1E1A57EE27CEC84000A05F37 /* RhinoAppTestUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1E1A57C627CEC84000A05F37 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1320;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					1E1A57CD27CEC84000A05F37 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+					1E1A57ED27CEC84000A05F37 = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = 1E1A57CD27CEC84000A05F37;
+					};
+				};
+			};
+			buildConfigurationList = 1E1A57C927CEC84000A05F37 /* Build configuration list for PBXProject "RhinoAppTest" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1E1A57C527CEC84000A05F37;
+			productRefGroup = 1E1A57CF27CEC84000A05F37 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1E1A57CD27CEC84000A05F37 /* RhinoAppTest */,
+				1E1A57ED27CEC84000A05F37 /* RhinoAppTestUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1E1A57CC27CEC84000A05F37 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E1A57DE27CEC84000A05F37 /* LaunchScreen.storyboard in Resources */,
+				1E1A57DB27CEC84000A05F37 /* Assets.xcassets in Resources */,
+				1E1A57D927CEC84000A05F37 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E1A57EC27CEC84000A05F37 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E1A583527CED02400A05F37 /* iluminación_inteligente_ios.rhn in Resources */,
+				1E1A582127CECE1B00A05F37 /* rhino_params_fr.pv in Resources */,
+				1E1A582727CECE4C00A05F37 /* coffee_maker_ios.rhn in Resources */,
+				1E1A582D27CECE6900A05F37 /* test_out_of_context.wav in Resources */,
+				1E1A582C27CECE6900A05F37 /* test_within_context.wav in Resources */,
+				1E1A583127CECE8300A05F37 /* test_es_ios.rhn in Resources */,
+				1E1A581F27CECE1B00A05F37 /* rhino_params_es.pv in Resources */,
+				1E1A582027CECE1B00A05F37 /* rhino_params.pv in Resources */,
+				1E1A582927CECE5D00A05F37 /* coffee_maker_linux.rhn in Resources */,
+				1E1A581E27CECE1B00A05F37 /* rhino_params_de.pv in Resources */,
+				1E1A583327CECE8700A05F37 /* test_fr_ios.rhn in Resources */,
+				1E1A582F27CECE7E00A05F37 /* test_de_ios.rhn in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0F5F05EF9B768DF99D50E11E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RhinoAppTest-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2735EB327D16B1BB02AA2174 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		67A615C483290DE603AA3CCF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CA6B1DE258959CB94690D59D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RhinoAppTestUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CEE3623C1AD3D9A2CC59F1BF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EC659A1D531851ED5FBA02A3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1E1A57CA27CEC84000A05F37 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E1A57D627CEC84000A05F37 /* ViewController.swift in Sources */,
+				1E1A57D227CEC84000A05F37 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E1A57EA27CEC84000A05F37 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E1A57F327CEC84000A05F37 /* RhinoAppTestUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1E1A57F027CEC84000A05F37 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E1A57CD27CEC84000A05F37 /* RhinoAppTest */;
+			targetProxy = 1E1A57EF27CEC84000A05F37 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1E1A57D727CEC84000A05F37 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E1A57D827CEC84000A05F37 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1E1A57DC27CEC84000A05F37 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E1A57DD27CEC84000A05F37 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1E1A57F627CEC84000A05F37 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1E1A57F727CEC84000A05F37 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1E1A57F927CEC84000A05F37 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 900FCBC5CECD2C71CA548677 /* Pods-RhinoAppTest.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RhinoAppTest/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.RhinoAppTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		1E1A57FA27CEC84000A05F37 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2B1742C8ACAFE68554B2DFD4 /* Pods-RhinoAppTest.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RhinoAppTest/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.RhinoAppTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		1E1A57FF27CEC84000A05F37 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 18FAB8FC8D086FF2500A0A6A /* Pods-RhinoAppTestUITests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.RhinoAppTestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RhinoAppTest;
+			};
+			name = Debug;
+		};
+		1E1A580027CEC84000A05F37 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5D3D0649948C17F6FF2875C0 /* Pods-RhinoAppTestUITests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.RhinoAppTestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RhinoAppTest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1E1A57C927CEC84000A05F37 /* Build configuration list for PBXProject "RhinoAppTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E1A57F627CEC84000A05F37 /* Debug */,
+				1E1A57F727CEC84000A05F37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E1A57F827CEC84000A05F37 /* Build configuration list for PBXNativeTarget "RhinoAppTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E1A57F927CEC84000A05F37 /* Debug */,
+				1E1A57FA27CEC84000A05F37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E1A57FE27CEC84000A05F37 /* Build configuration list for PBXNativeTarget "RhinoAppTestUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E1A57FF27CEC84000A05F37 /* Debug */,
+				1E1A580027CEC84000A05F37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1E1A57C627CEC84000A05F37 /* Project object */;
+}
