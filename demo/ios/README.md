@@ -78,7 +78,3 @@ context:
       - "living room"
       - "pantry"
 ```
-
-## Running the On-Device Unit Tests
-
-Copy your `AccessKey` into the `accessKey` variable in `RhinoDemoUITests/RhinoDemoUITests.swift`. Open `RhinoDemo.xcworkspace` with XCode and run the tests with `Product > Test`.
