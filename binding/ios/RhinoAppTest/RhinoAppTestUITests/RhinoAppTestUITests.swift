@@ -12,7 +12,7 @@ import XCTest
 
 import Rhino
 
-class RhinoDemoUITests: XCTestCase {
+class RhinoAppTestUITests: XCTestCase {
     let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
     
     override func setUp() {
