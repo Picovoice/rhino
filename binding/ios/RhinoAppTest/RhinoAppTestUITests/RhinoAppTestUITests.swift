@@ -77,7 +77,7 @@ class RhinoAppTestUITests: XCTestCase {
     
     func testInitSuccessDE() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "test_de_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "beleuchtung_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params_de", ofType: "pv")!
         
         let r = try Rhino.init(
@@ -90,7 +90,7 @@ class RhinoAppTestUITests: XCTestCase {
     
     func testInitSuccessES() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "test_es_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "iluminación_inteligente_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params_es", ofType: "pv")!
         
         let r = try Rhino.init(
@@ -103,7 +103,7 @@ class RhinoAppTestUITests: XCTestCase {
     
     func testInitSuccessFR() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "test_fr_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "éclairage_intelligent_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params_fr", ofType: "pv")!
         
         let r = try Rhino.init(
@@ -116,7 +116,7 @@ class RhinoAppTestUITests: XCTestCase {
     
     func testInitFailWithMismatchedLanguage() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "test_de_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "beleuchtung_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params", ofType: "pv")!
         
         var didFail = false

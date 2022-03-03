@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		049E74D6C17F04FC6ADCEDC9 /* libPods-RhinoAppTestUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 59230357DF94896EBFBD8305 /* libPods-RhinoAppTestUITests.a */; };
+		1E00658E27D053CB006FF6E9 /* beleuchtung_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E00658D27D053CB006FF6E9 /* beleuchtung_ios.rhn */; };
+		1E00659027D053D9006FF6E9 /* éclairage_intelligent_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E00658F27D053D9006FF6E9 /* éclairage_intelligent_ios.rhn */; };
 		1E1A57D227CEC84000A05F37 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57D127CEC84000A05F37 /* AppDelegate.swift */; };
 		1E1A57D627CEC84000A05F37 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57D527CEC84000A05F37 /* ViewController.swift */; };
 		1E1A57D927CEC84000A05F37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A57D727CEC84000A05F37 /* Main.storyboard */; };
@@ -22,9 +24,6 @@
 		1E1A582927CECE5D00A05F37 /* coffee_maker_linux.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582827CECE5D00A05F37 /* coffee_maker_linux.rhn */; };
 		1E1A582C27CECE6900A05F37 /* test_within_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582A27CECE6900A05F37 /* test_within_context.wav */; };
 		1E1A582D27CECE6900A05F37 /* test_out_of_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582B27CECE6900A05F37 /* test_out_of_context.wav */; };
-		1E1A582F27CECE7E00A05F37 /* test_de_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582E27CECE7E00A05F37 /* test_de_ios.rhn */; };
-		1E1A583127CECE8300A05F37 /* test_es_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A583027CECE8300A05F37 /* test_es_ios.rhn */; };
-		1E1A583327CECE8700A05F37 /* test_fr_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A583227CECE8700A05F37 /* test_fr_ios.rhn */; };
 		1E1A583527CED02400A05F37 /* iluminación_inteligente_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A583427CED02400A05F37 /* iluminación_inteligente_ios.rhn */; };
 		B6D75F72F9368E5A4D8A47F7 /* libPods-RhinoAppTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8B41DCF24254E027C2B30C /* libPods-RhinoAppTest.a */; };
 /* End PBXBuildFile section */
@@ -41,6 +40,8 @@
 
 /* Begin PBXFileReference section */
 		18FAB8FC8D086FF2500A0A6A /* Pods-RhinoAppTestUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTestUITests.debug.xcconfig"; path = "Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		1E00658D27D053CB006FF6E9 /* beleuchtung_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = beleuchtung_ios.rhn; path = ../../../../resources/contexts_de/ios/beleuchtung_ios.rhn; sourceTree = "<group>"; };
+		1E00658F27D053D9006FF6E9 /* éclairage_intelligent_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = "éclairage_intelligent_ios.rhn"; path = "../../../../resources/contexts_fr/ios/éclairage_intelligent_ios.rhn"; sourceTree = "<group>"; };
 		1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoAppTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E1A57D127CEC84000A05F37 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E1A57D527CEC84000A05F37 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -59,9 +60,6 @@
 		1E1A582827CECE5D00A05F37 /* coffee_maker_linux.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_linux.rhn; path = ../../../../resources/contexts/linux/coffee_maker_linux.rhn; sourceTree = "<group>"; };
 		1E1A582A27CECE6900A05F37 /* test_within_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context.wav; path = ../../../../resources/audio_samples/test_within_context.wav; sourceTree = "<group>"; };
 		1E1A582B27CECE6900A05F37 /* test_out_of_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context.wav; path = ../../../../resources/audio_samples/test_out_of_context.wav; sourceTree = "<group>"; };
-		1E1A582E27CECE7E00A05F37 /* test_de_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_de_ios.rhn; sourceTree = "<group>"; };
-		1E1A583027CECE8300A05F37 /* test_es_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_es_ios.rhn; sourceTree = "<group>"; };
-		1E1A583227CECE8700A05F37 /* test_fr_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_fr_ios.rhn; sourceTree = "<group>"; };
 		1E1A583427CED02400A05F37 /* iluminación_inteligente_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = "iluminación_inteligente_ios.rhn"; path = "../../../../resources/contexts_es/ios/iluminación_inteligente_ios.rhn"; sourceTree = "<group>"; };
 		2B1742C8ACAFE68554B2DFD4 /* Pods-RhinoAppTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTest.release.xcconfig"; path = "Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest.release.xcconfig"; sourceTree = "<group>"; };
 		59230357DF94896EBFBD8305 /* libPods-RhinoAppTestUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoAppTestUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -177,7 +175,7 @@
 		1E1A582227CECE2B00A05F37 /* fr */ = {
 			isa = PBXGroup;
 			children = (
-				1E1A583227CECE8700A05F37 /* test_fr_ios.rhn */,
+				1E00658F27D053D9006FF6E9 /* éclairage_intelligent_ios.rhn */,
 			);
 			name = fr;
 			sourceTree = "<group>";
@@ -195,7 +193,6 @@
 			isa = PBXGroup;
 			children = (
 				1E1A583427CED02400A05F37 /* iluminación_inteligente_ios.rhn */,
-				1E1A583027CECE8300A05F37 /* test_es_ios.rhn */,
 			);
 			name = es;
 			sourceTree = "<group>";
@@ -203,7 +200,7 @@
 		1E1A582527CECE3A00A05F37 /* de */ = {
 			isa = PBXGroup;
 			children = (
-				1E1A582E27CECE7E00A05F37 /* test_de_ios.rhn */,
+				1E00658D27D053CB006FF6E9 /* beleuchtung_ios.rhn */,
 			);
 			name = de;
 			sourceTree = "<group>";
@@ -327,16 +324,15 @@
 			files = (
 				1E1A583527CED02400A05F37 /* iluminación_inteligente_ios.rhn in Resources */,
 				1E1A582127CECE1B00A05F37 /* rhino_params_fr.pv in Resources */,
+				1E00659027D053D9006FF6E9 /* éclairage_intelligent_ios.rhn in Resources */,
 				1E1A582727CECE4C00A05F37 /* coffee_maker_ios.rhn in Resources */,
 				1E1A582D27CECE6900A05F37 /* test_out_of_context.wav in Resources */,
 				1E1A582C27CECE6900A05F37 /* test_within_context.wav in Resources */,
-				1E1A583127CECE8300A05F37 /* test_es_ios.rhn in Resources */,
+				1E00658E27D053CB006FF6E9 /* beleuchtung_ios.rhn in Resources */,
 				1E1A581F27CECE1B00A05F37 /* rhino_params_es.pv in Resources */,
 				1E1A582027CECE1B00A05F37 /* rhino_params.pv in Resources */,
 				1E1A582927CECE5D00A05F37 /* coffee_maker_linux.rhn in Resources */,
 				1E1A581E27CECE1B00A05F37 /* rhino_params_de.pv in Resources */,
-				1E1A583327CECE8700A05F37 /* test_fr_ios.rhn in Resources */,
-				1E1A582F27CECE7E00A05F37 /* test_de_ios.rhn in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
