@@ -13,7 +13,7 @@ use chrono::prelude::*;
 use clap::{App, Arg, ArgGroup};
 use ctrlc;
 use hound;
-use pv_recorder::{Recorder, RecorderBuilder};
+use pv_recorder::RecorderBuilder;
 use rhino::RhinoBuilder;
 use std::sync::atomic::{AtomicBool, Ordering};
 
@@ -106,7 +106,10 @@ fn rhino_demo(
 }
 
 fn show_audio_devices() {
-    let audio_devices = Recorder::get_audio_devices();
+    let audio_devices = RecorderBuilder::new()
+        .init()
+        .expect("Failed to initialize pvrecorder")
+        .get_audio_devices();
     match audio_devices {
         Ok(audio_devices) => {
             for (idx, device) in audio_devices.iter().enumerate() {
