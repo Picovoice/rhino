@@ -179,6 +179,10 @@ let contextPath = Bundle.main.path(forResource: "context_ios", ofType: "rhn")
 
 In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
 
+## Running Unit Tests
+
+Copy your `AccessKey` into the `accessKey` variable in [`RhinoAppTestUITests.swift`](RhinoAppTest/RhinoAppTestUITests/RhinoAppTestUITests.swift). Open `RhinoAppTest.xcworkspace` with XCode and run the tests with `Product > Test`.
+
 ## Demo App
 
 For example usage refer to the [Rhino iOS demo app](/demo/ios).

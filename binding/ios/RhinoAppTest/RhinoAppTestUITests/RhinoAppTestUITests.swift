@@ -1,9 +1,18 @@
+//
+//  Copyright 2022 Picovoice Inc.
+//  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+//  file accompanying this source.
+//  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+//  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+//  specific language governing permissions and limitations under the License.
+//
+
 import AVFoundation
 import XCTest
 
 import Rhino
 
-class RhinoDemoUITests: XCTestCase {
+class RhinoAppTestUITests: XCTestCase {
     let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
     
     override func setUp() {
@@ -68,7 +77,7 @@ class RhinoDemoUITests: XCTestCase {
     
     func testInitSuccessDE() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "test_de_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "beleuchtung_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params_de", ofType: "pv")!
         
         let r = try Rhino.init(
@@ -81,7 +90,7 @@ class RhinoDemoUITests: XCTestCase {
     
     func testInitSuccessES() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "test_es_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "iluminación_inteligente_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params_es", ofType: "pv")!
         
         let r = try Rhino.init(
@@ -94,7 +103,7 @@ class RhinoDemoUITests: XCTestCase {
     
     func testInitSuccessFR() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "test_fr_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "éclairage_intelligent_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params_fr", ofType: "pv")!
         
         let r = try Rhino.init(
@@ -107,7 +116,7 @@ class RhinoDemoUITests: XCTestCase {
     
     func testInitFailWithMismatchedLanguage() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "test_de_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "beleuchtung_ios", ofType: "rhn")!
         let modelPath = bundle.path(forResource: "rhino_params", ofType: "pv")!
         
         var didFail = false
