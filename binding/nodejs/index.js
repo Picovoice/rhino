@@ -1,5 +1,5 @@
 //
-// Copyright 2020-2021 Picovoice Inc.
+// Copyright 2020-2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -20,8 +20,6 @@ const {
   pvStatusToException,
 } = require("./errors");
 const { getSystemLibraryPath } = require("./platforms");
-
-const pvRhino = require(getSystemLibraryPath());
 
 const MODEL_PATH_DEFAULT = "lib/common/rhino_params.pv";
 
@@ -89,13 +87,22 @@ class Rhino {
       );
     }
 
-    const packed = pvRhino.init(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
-    const status = Number(packed % 10n);
-    this.handle = status == PV_STATUS_T.SUCCESS ? packed / 10n : 0;
+    const pvRhino = require(libraryPath);
+
+    let rhinoHandleAndStatus = null;
+    try {
+      rhinoHandleAndStatus = pvRhino.init(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
+    } catch (err) {
+      pvStatusToException(PV_STATUS_T[err.code], err);
+    }
+
+    const status = rhinoHandleAndStatus.status;
     if (status !== PV_STATUS_T.SUCCESS) {
       pvStatusToException(status, "Rhino failed to initialize");
     }
 
+    this._handle = rhinoHandleAndStatus.handle;
+    this._pvRhino = pvRhino;
     this._frameLength = pvRhino.frame_length();
     this._sampleRate = pvRhino.sample_rate();
     this._version = pvRhino.version();
@@ -133,7 +140,11 @@ class Rhino {
    * @returns {boolean} true when Rhino has concluded processing audio and determined the intent (or that the intent was not understood), false otherwise.
    */
   process(frame) {
-    if (this.handle === 0) {
+    if (
+      this._handle === 0 ||
+      this._handle === null ||
+      this._handle === undefined
+    ) {
       throw new PvStateError("Rhino is not initialized");
     }
 
@@ -156,14 +167,19 @@ class Rhino {
 
     const frameBuffer = new Int16Array(frame);
 
-    const packed = pvRhino.process(this.handle, frameBuffer);
-    const status = packed % 10;
+    let finalizedAndStatus = null;
+    try {
+      finalizedAndStatus = this._pvRhino.process(this._handle, frameBuffer);
+    } catch (err) {
+      pvStatusToException(PV_STATUS_T[err.code], err);
+    }
 
+    const status = finalizedAndStatus.status;
     if (status !== PV_STATUS_T.SUCCESS) {
       pvStatusToException(status, "Rhino failed to process the frame");
     }
 
-    this.isFinalized = packed / 10 === 1;
+    this.isFinalized = finalizedAndStatus.is_finalized === 1;
     return this.isFinalized;
   }
 
@@ -199,23 +215,31 @@ class Rhino {
       );
     }
 
-    const packed = pvRhino.get_inference(this.handle);
+    if (
+      this._handle === 0 ||
+      this._handle === null ||
+      this._handle === undefined
+    ) {
+      throw new PvStateError("Rhino is not initialized");
+    }
 
-    const parts = packed.slice(0, -1).split(",");
-    const status = parseInt(parts[0]);
+    let inferenceAndStatus = null;
+    try {
+      inferenceAndStatus = this._pvRhino.get_inference(this._handle);
+    } catch (err) {
+      pvStatusToException(PV_STATUS_T[err.code], err);
+    }
+
+    const status = inferenceAndStatus.status;
     if (status !== PV_STATUS_T.SUCCESS) {
       pvStatusToException(status, `Rhino failed to get inference: ${status}`);
     }
 
-    let inference = { isUnderstood: parts[1] === "1" };
-    if (inference.isUnderstood) {
-      inference["intent"] = parts[2];
-      inference["slots"] = {};
-      for (let i = 3; i < parts.length; i++) {
-        const slotAndValue = parts[i].split(":");
-        inference["slots"][slotAndValue[0]] = slotAndValue[1];
-      }
-    }
+    let inference = {
+      isUnderstood: inferenceAndStatus.is_understood === 1,
+      intent: inferenceAndStatus.intent,
+      slots: inferenceAndStatus.slots,
+    };
 
     return inference;
   }
@@ -227,7 +251,27 @@ class Rhino {
    * @returns {string} the context YAML
    */
   getContextInfo() {
-    return pvRhino.context_info(this.handle);
+    if (
+      this._handle === 0 ||
+      this._handle === null ||
+      this._handle === undefined
+    ) {
+      throw new PvStateError("Rhino is not initialized");
+    }
+
+    let contextAndStatus = null;
+    try {
+      contextAndStatus = this._pvRhino.context_info(this._handle);
+    } catch (err) {
+      pvStatusToException(PV_STATUS_T[err.code], err);
+    }
+
+    const status = contextAndStatus.status;
+    if (status !== PV_STATUS_T.SUCCESS) {
+      pvStatusToException(status, `Rhino failed to get context info: ${status}`);
+    }
+
+    return contextAndStatus.context_info;
   }
 
   /**
@@ -237,9 +281,9 @@ class Rhino {
    * to reclaim the memory that was allocated by the C library.
    */
   release() {
-    if (this.handle !== 0) {
-      pvRhino.delete(this.handle);
-      this.handle = 0;
+    if (this._handle !== 0) {
+      this._pvRhino.delete(this._handle);
+      this._handle = 0;
     } else {
       console.warn("Rhino is not initialized; nothing to destroy");
     }
