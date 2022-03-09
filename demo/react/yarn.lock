@@ -1514,8 +1514,10 @@
   dependencies:
     "@picovoice/rhino-web-core" "^2.1.0"
 
-"@picovoice/rhino-web-react@file:../../binding/react":
-  version "2.1.1"
+"@picovoice/rhino-web-react@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-react/-/rhino-web-react-2.1.2.tgz#b4508d8971100294a1d2056cf3bd4ec482ab83ee"
+  integrity sha512-XINWYDe2VI6cX6possR83Xm4xk9FZO5uhSzVQpZ5w7cp/nzL3WxPJrrkCbBgi5MJ1ux2SuP/ROHxjyM9dxHYaw==
   dependencies:
     "@picovoice/rhino-web-core" "^2.1.0"
 
