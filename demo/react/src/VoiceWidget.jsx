@@ -46,7 +46,8 @@ export default function VoiceWidget() {
     errorMessage,
     pushToTalk,
     start,
-    pause
+    pause,
+    stop,
   } = useRhino(
     workerChunk.factory,
     {
@@ -93,6 +94,12 @@ export default function VoiceWidget() {
         disabled={isError || !isListening || !isLoaded}
       >
         Pause
+      </button>
+      <button
+        onClick={() => stop()}
+        disabled={isError || !isListening || !isLoaded}
+      >
+        Stop
       </button>
       <button
         onClick={() => pushToTalk()}
