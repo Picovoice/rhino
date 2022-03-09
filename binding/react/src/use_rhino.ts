@@ -57,8 +57,10 @@ export function useRhino(
   errorMessage: string | null;
   /** A pointer to the internal webVoiceProcessor object */
   webVoiceProcessor: WebVoiceProcessor | null;
-  /** A method to start processing audio */
+  /** A method to start listening to the mic and processing the audio. */
   start: () => void;
+  /** A method to stop listening to the mic. */
+  stop: () => void;
   /** A method to stop processing audio */
   pause: () => void;
   /** A method to put Rhino in an active isTalking state */
@@ -78,9 +80,10 @@ export function useRhino(
 
   const start = (): boolean => {
     if (webVoiceProcessor !== null) {
-      webVoiceProcessor.start();
-      setIsListening(true);
-      return true;
+      webVoiceProcessor.start().then(() => {
+        setIsListening(true);
+        return true;
+      });
     }
     return false;
   };
@@ -90,6 +93,16 @@ export function useRhino(
       webVoiceProcessor.pause();
       setIsListening(false);
       return true;
+    }
+    return false;
+  };
+
+  const stop = (): boolean => {
+    if (webVoiceProcessor !== null) {
+      webVoiceProcessor.stop().then(() => {
+        setIsListening(false);
+        return true;
+      });
     }
     return false;
   };
@@ -232,6 +245,7 @@ export function useRhino(
         }
         if (rhnWorker !== undefined && rhnWorker !== null) {
           rhnWorker.postMessage({ command: 'release' });
+          rhnWorker.terminate();
         }
       }).catch(() => {
         // do nothing
@@ -256,6 +270,7 @@ export function useRhino(
     webVoiceProcessor,
     start,
     pause,
+    stop,
     pushToTalk,
   };
 }
