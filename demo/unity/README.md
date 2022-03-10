@@ -10,18 +10,9 @@ Additionally, you will need a version of Unity that is 2017.4 or higher.
 
 ## AccessKey
 
-All demos require a valid Picovoice `AccessKey` at initialization. `AccessKey`s act as your credentials when using Porcupine SDKs.
-You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
-
-To obtain your `AccessKey`:
-1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
-2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
-
-Replace the `AccessKey` in [`RhinoDemo.cs`](RhinoDemo.cs) with the `AccessKey` obtained above:
-
-```csharp
-private const string ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
-```
+Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Usage
 
