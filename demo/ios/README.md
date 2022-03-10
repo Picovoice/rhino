@@ -14,6 +14,8 @@ pod install
 ```
 Open `RhinoDemo.xcworkspace` and run the demo.
 
+Copy your `AccessKey` into the `ACCESS_KEY` variable in `RhinoDemo/ContentView.swift` before building the demo.
+
 The default context for this demo is `Smart Lighting`. Simply press start, and the engine can recognize commands such as
 
 > Turn off the lights.

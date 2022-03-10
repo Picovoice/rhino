@@ -8,6 +8,8 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ## Running the Demo
 
+Copy your AccessKey into the `ACCESS_KEY` variable in `MainActivity.java` before building the demo.
+
 The default context for this demo is `Smart Lighting`. Simply press start, and the engine can recognize commands such as
 
 > Turn off the lights.
