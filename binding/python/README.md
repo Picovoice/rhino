@@ -25,7 +25,7 @@ Rhino is:
 
 * using deep neural networks trained in real-world environments.
 * compact and computationally-efficient, making it perfect for IoT.
-* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Compatibility
 
@@ -40,12 +40,9 @@ pip3 install pvrhino
 
 ## AccessKey
 
-Rhino requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
-You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
-
-To obtain your `AccessKey`:
-1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
-2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Usage
 
@@ -54,13 +51,13 @@ Create an instance of the engine:
 ```python
 import pvrhino
 
-access_key = "${ACCESS_KEY}" # AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+access_key = "${ACCESS_KEY}" # AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 handle = pvrhino.create(access_key=access_key, context_path='/absolute/path/to/context')
 ```
 
 Where `context_path` is the absolute path to Speech-to-Intent context created either using
-[Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository.
+[Picovoice Console](https://console.picovoice.ai/) or one of the default contexts available on Rhino's GitHub repository.
 
 The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating-point number within
 [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous
@@ -69,7 +66,7 @@ inference rate.
 ```python
 import pvrhino
 
-access_key = "${ACCESS_KEY}" # AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+access_key = "${ACCESS_KEY}" # AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 handle = pvrhino.create(access_key=access_key, context_path='/absolute/path/to/context', sensitivity=0.25)
 ```

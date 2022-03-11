@@ -155,7 +155,7 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--access_key',
-                        help='AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)',
+                        help='AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)',
                         required=True)
 
     parser.add_argument('--context_path', help="Absolute path to context file.", required=True)

@@ -17,7 +17,7 @@ Rhino is:
 
 * using deep neural networks trained in real-world environments.
 * compact and computationally-efficient, making it perfect for IoT.
-* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 
 ## Requirements
@@ -62,13 +62,9 @@ Once the task is complete, the output JAR can be found in `rhino/binding/java/bu
 
 ## AccessKey
 
-The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
-You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
-
-To obtain your `AccessKey`:
-1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
-2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
-
+Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Usage
 
@@ -76,7 +72,7 @@ The easiest way to create an instance of the engine is with the Rhino Builder:
 
 ```java
 import ai.picovoice.rhino.*;
-final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 try{
     Rhino handle = new Rhino.Builder()
                     .setAccessKey(accessKey)
@@ -87,7 +83,7 @@ try{
 
 
 Where the `setContextPath()` builder argument sets the absolute path to Speech-to-Intent context created either using
-[Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository.
+[Picovoice Console](https://console.picovoice.ai/) or one of the default contexts available on Rhino's GitHub repository.
 
 The sensitivity of the engine can be tuned using the `setSensitivity` builder argument. It is a floating-point number within
 [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous
@@ -95,7 +91,7 @@ inference rate.
 
 ```java
 import ai.picovoice.rhino.*;
-final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 try{
     Rhino handle = new Rhino.Builder()
                     .setAccessKey(accessKey)

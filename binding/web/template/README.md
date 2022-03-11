@@ -20,16 +20,13 @@ If you are using this library with the [@picovoice/web-voice-processor](https://
 
 Rhino for Web is split into multiple packages due to each language including the entire Voice AI model which is of nontrivial size. There are separate worker and factory packages as well, due to the complexities with bundling an "all-in-one" web workers without bloating bundle sizes. Import each as required.
 
-Any Rhino context files (`.rhn` files) generated from [Picovoice Console](https://picovoice.ai/console/) must be trained for the WebAssembly (WASM) platform and match the language of the instance you create. The `.zip` file contains a `.rhn` file and a `_b64.txt` file which contains the binary model encoded with Base64. The base64 encoded model can then be passed into the Rhino `create` function as an argument.
+Any Rhino context files (`.rhn` files) generated from [Picovoice Console](https://console.picovoice.ai/) must be trained for the WebAssembly (WASM) platform and match the language of the instance you create. The `.zip` file contains a `.rhn` file and a `_b64.txt` file which contains the binary model encoded with Base64. The base64 encoded model can then be passed into the Rhino `create` function as an argument.
 
 ## AccessKey
 
-The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
-You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
-
-To obtain your `AccessKey`:
-1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
-2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ### Workers
 
@@ -65,7 +62,7 @@ yarn add @picovoice/web-voice-processor @picovoice/rhino-web-en-worker
 import { WebVoiceProcessor } from "@picovoice/web-voice-processor"
 import { RhinoWorkerFactory } from "@picovoice/rhino-web-en-worker";
 
-const ACCESS_KEY = /* AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+const ACCESS_KEY = /* AccessKey obtained from Picovoice Console (https://console.picovoice.ai/) */
 const PICO_CLOCK_64 = /* Base64 string of the pico_clock.rhn file for wasm platform */
 
 async startRhino()
@@ -135,7 +132,7 @@ E.g.:
 import { Rhino } from '@picovoice/rhino-web-en-factory';
 
 
-const ACCESS_KEY = /* AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+const ACCESS_KEY = /* AccessKey obtained from Picovoice Console (https://console.picovoice.ai/) */
 const PICO_CLOCK_64 = /* Base64 string of the pico_clock.rhn file for wasm platform */
 
   async function startRhino() {

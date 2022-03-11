@@ -46,12 +46,9 @@ Using the Web Audio API requires a secure context (HTTPS connection) - except `l
 
 ## AccessKey
 
-The Rhino SDK requires a valid `AccessKey` at initialization. `AccessKey`s act as your credentials when using Rhino SDKs.
-You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
-
-To obtain your `AccessKey`:
-1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
-2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Installation
 
@@ -97,7 +94,7 @@ export type RhinoContext = {
 }
 
 export type RhinoFactoryArgs = {
-  /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+  /** AccessKey obtained from Picovoice Console (https://console.picovoice.ai/) */
   accessKey: string;
   /** The context to instantiate */
   context: RhinoContext;
@@ -139,7 +136,7 @@ export default {
       contextInfo: '',
       factory: RhinoWorkerFactoryEn,
       factoryArgs: {
-        accessKey: '${ACCESS_KEY}',  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+        accessKey: '${ACCESS_KEY}',  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
         context: {
           base64: `RHINO_TRAINED_CONTEXT_BASE_64_STRING`
         },
@@ -193,13 +190,13 @@ export default {
 
 ### Custom contexts
 
-Custom contexts are generated using [Picovoice Console](https://picovoice.ai/console/). They are trained from text using transfer learning into bespoke Rhino context files with a `.rhn` extension. The target platform is WebAssembly (WASM), as that is what backs the Vue library.
+Custom contexts are generated using [Picovoice Console](https://console.picovoice.ai/). They are trained from text using transfer learning into bespoke Rhino context files with a `.rhn` extension. The target platform is WebAssembly (WASM), as that is what backs the Vue library.
 
 The `.zip` file contains a `.rhn` file and a `_b64.txt` file which contains the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.
 
 ```typescript
 factoryArgs: {
-  accessKey: "${ACCESS_KEY}", // AccessKey obtained from Picovoice Console(https://picovoice.ai/console/)",
+  accessKey: "${ACCESS_KEY}", // AccessKey obtained from Picovoice Console(https://console.picovoice.ai/)",
   context: {
     base64: '${CONTEXT_FILE_64}'
   },

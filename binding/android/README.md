@@ -19,7 +19,7 @@ Rhino is:
 
 * using deep neural networks trained in real-world environments.
 * compact and computationally-efficient, making it perfect for IoT.
-* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Installation
 
@@ -34,12 +34,9 @@ dependencies {
 
 ## AccessKey
 
-All bindings require a valid Picovoice `AccessKey` at initialization. `AccessKey`s act as your credentials when using Porcupine SDKs.
-You can create your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
-
-To obtain your `AccessKey`:
-1. Login or Signup for a free account on the [Picovoice Console](https://picovoice.ai/console/).
-2. Once logged in, go to the [`AccessKey` tab](https://console.picovoice.ai/access_key) to create one or use an existing `AccessKey`.
+Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Permissions
 
@@ -61,7 +58,7 @@ To create an instance of RhinoManager, use the RhinoManager Builder:
 ```java
 import ai.picovoice.rhino.*;
 
-final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
@@ -71,7 +68,7 @@ try {
 } catch (RhinoException e) { }
 ```
 
-The context file is an .rhn file obtained from the [Picovoice Console](https://picovoice.ai/console/) that you can store in your Android assets folder (`src/main/assets`) and pass into the Rhino Builder. The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. The `inferenceCallback` parameter is a `RhinoManagerCallback` that will be invoked when Rhino has returned an inference result.
+The context file is an .rhn file obtained from the [Picovoice Console](https://console.picovoice.ai/) that you can store in your Android assets folder (`src/main/assets`) and pass into the Rhino Builder. The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. The `inferenceCallback` parameter is a `RhinoManagerCallback` that will be invoked when Rhino has returned an inference result.
 The callback should accept a `RhinoInference` object that will contain the inference results.
 
 ```java
@@ -104,7 +101,7 @@ These optional parameters can be set through the Builder functions `setModelPath
 ```java
 import ai.picovoice.rhino.*;
 
-final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
@@ -144,7 +141,7 @@ rhinoManager.delete();
 ```java
 import ai.picovoice.rhino.*;
 
-final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 try {    
     Rhino rhino = new Rhino.Builder()
