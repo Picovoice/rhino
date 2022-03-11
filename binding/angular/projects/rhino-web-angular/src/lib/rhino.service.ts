@@ -39,8 +39,7 @@ export class RhinoService implements OnDestroy {
   public webVoiceProcessor: WebVoiceProcessor | null = null;
   public isInit = false;
   public contextInfo: string | null = null;
-  public inference$: Subject<RhinoInference> =
-    new Subject<RhinoInference>();
+  public inference$: Subject<RhinoInference> = new Subject<RhinoInference>();
   public listening$: Subject<boolean> = new Subject<boolean>();
   public isError$: Subject<boolean> = new Subject<boolean>();
   public isTalking$: Subject<boolean> = new Subject<boolean>();
@@ -115,9 +114,7 @@ export class RhinoService implements OnDestroy {
       ) => {
         switch (message.data.command) {
           case 'rhn-inference': {
-            this.inference$.next(
-              message.data.inference as RhinoInference
-            );
+            this.inference$.next(message.data.inference as RhinoInference);
             this.isTalking = false;
             this.isTalking$.next(false);
             break;
