@@ -15,6 +15,11 @@ use std::path::{Path, PathBuf};
 const DEFAULT_RELATIVE_LIBRARY_DIR: &str = "lib/";
 const DEFAULT_RELATIVE_MODEL_PATH: &str = "lib/common/rhino_params.pv";
 
+#[allow(dead_code)]
+const JETSON_MACHINES: &[&str] = &["cortex-a57"];
+#[allow(dead_code)]
+const RPI_MACHINES: &[&str] = &["arm11", "cortex-a7", "cortex-a53", "cortex-a72"];
+
 #[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))]
 fn find_machine_type() -> String {
     use std::process::Command;
@@ -75,8 +80,6 @@ fn base_library_path() -> PathBuf {
 
 #[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))]
 fn base_library_path() -> PathBuf {
-    const JETSON_MACHINES: &[&str] = &["cortex-a57"];
-    const RPI_MACHINES: &[&str] = &["arm11", "cortex-a7", "cortex-a53", "cortex-a72"];
 
     let machine = find_machine_type();
     match machine.as_str() {
@@ -111,4 +114,32 @@ pub fn pv_model_path() -> PathBuf {
 pub fn pathbuf_to_cstring<P: AsRef<Path>>(pathbuf: P) -> CString {
     let pathstr = pathbuf.as_ref().to_str().unwrap();
     CString::new(pathstr).unwrap()
+}
+
+#[cfg(target_os = "macos")]
+pub fn pv_platform() -> String {
+    String::from("mac")
+}
+
+#[cfg(target_os = "windows")]
+pub fn pv_platform() -> String {
+    String::from("windows")
+}
+
+#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
+pub fn pv_platform() -> String {
+    String::from("linux")
+}
+
+#[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))]
+pub fn pv_platform() -> String {
+    let machine = find_machine_type();
+    match machine.as_str() {
+        machine if RPI_MACHINES.contains(&machine) => String::from("raspberry-pi"),
+        machine if JETSON_MACHINES.contains(&machine) => String::from("jetson"),
+        "beaglebone" => String::from("beaglebone"),
+        _ => {
+            panic!("ERROR: Please be advised that this device is not officially supported by Picovoice");
+        }
+    }
 }

@@ -10,6 +10,6 @@
 */
 
 mod rhino;
-mod util;
+pub mod util;
 
 pub use crate::rhino::*;
