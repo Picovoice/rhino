@@ -43,7 +43,7 @@ public class Rhino {
     /**
      * Constructor.
      *
-     * @param accessKey   AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+     * @param accessKey   AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
      * @param libraryPath Absolute path to the native Rhino library.
      * @param modelPath   Absolute path to the file containing model parameters.
      * @param contextPath Absolute path to file containing context parameters. A context represents

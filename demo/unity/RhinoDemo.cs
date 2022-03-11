@@ -21,7 +21,7 @@ using Pv.Unity;
 
 public class RhinoDemo : MonoBehaviour
 {
-    private const string ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+    private const string ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
     Button _startButton;
     Image[] _locationStates;

@@ -52,7 +52,7 @@ Rhino is:
   - Android and iOS
   - Chrome, Safari, Firefox, and Edge
   - Linux (x86_64), macOS (x86_64, arm64), and Windows (x86_64)
-- self-service. Developers can train custom contexts using [Picovoice Console](https://picovoice.ai/console/).
+- self-service. Developers can train custom contexts using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Table of Contents
 
@@ -179,7 +179,7 @@ lightLocation:
   - ...
 ```
 
-You can create custom contexts using the [Picovoice Console](https://picovoice.ai/console/).
+You can create custom contexts using the [Picovoice Console](https://console.picovoice.ai/).
 
 To learn the complete expression syntax of Rhino, see the [Speech-to-Intent Syntax Cheat Sheet](https://picovoice.ai/docs/tips/syntax-cheat-sheet/).
 
@@ -558,7 +558,7 @@ The SDK exposes a factory method to create instances of the engine:
 ```python
 import pvrhino
 
-access_key = "${ACCESS_KEY}" # AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+access_key = "${ACCESS_KEY}" # AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 handle = pvrhino.create(access_key=access_key, context_path='/absolute/path/to/context')
 ```
@@ -658,7 +658,7 @@ The SDK exposes a Builder that allows you to create an instance of the engine:
 ```java
 import ai.picovoice.rhino.*;
 
-final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 try{
     Rhino handle = new Rhino.Builder()
@@ -765,7 +765,7 @@ Using the constructor `RhinoManager.Create` will create an instance of the Rhino
 ```csharp
 using Pv.Unity;
 
-string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 try
 {
@@ -808,7 +808,7 @@ To create an instance of `Rhino`, use the `.Create` static constructor, and a co
 ```csharp
 using Pv.Unity;
 
-string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 try
 {
@@ -882,7 +882,7 @@ The constructor `RhinoManager.create` will create an instance of the RhinoManage
 import 'package:rhino_flutter/rhino_manager.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 
-const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 void createRhinoManager() async {
     try{
@@ -940,7 +940,7 @@ speech-to-intent into an already existing audio processing pipeline.
 import 'package:rhino_flutter/rhino_manager.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 
-const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 void createRhino() async {
     try{
@@ -992,7 +992,7 @@ audio recording. This class is the quickest way to get started.
 The constructor `RhinoManager.create` will create an instance of a RhinoManager using a context file that you pass to it.
 
 ```javascript
-const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 async createRhinoManager(){
     try{
@@ -1031,7 +1031,7 @@ who want to incorporate speech-to-intent into an already existing audio processi
 `Rhino` is created by passing a context file to its static constructor `create`:
 
 ```javascript
-const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 async createRhino(){
     try{
@@ -1084,7 +1084,7 @@ for integrating Rhino into Android applications. It manages all activities relat
 feeding it into Rhino, and invoking a user-provided inference callback.
 
 ```java
-final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
@@ -1122,7 +1122,7 @@ Rhino provides a binding for Android using JNI. It can be initialized using:
 ```java
 import ai.picovoice.rhino.*;
 
-final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 try {    
     Rhino rhino = new Rhino.Builder()
@@ -1258,7 +1258,7 @@ Each spoken language is available as a dedicated npm package (e.g. @picovoice/rh
         console.log("Rhino is loading. Please wait...");
         window.rhinoWorker = await RhinoWebEnWorker.RhinoWorkerFactory.create(
           {
-            accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+            accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
             context: {
               base64: RHINO_CONTEXT_BASE64,
               sensitivity: 0.5,
@@ -1334,7 +1334,7 @@ async startRhino()
   // commands in the specified context
   const rhinoWorker = await RhinoWorkerFactory.create(
     {
-      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
       context: RHN_CONTEXT_BASE64
     }
   );
@@ -1400,7 +1400,7 @@ async ngOnInit() {
   // Initialize Rhino Service
   try {
     await this.rhinoService.init(rhinoFactoryEn, {
-      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
       context: { base64: RHN_CONTEXT_BASE64 }
     })
     console.log("Rhino is now loaded. Press the Push-to-Talk button to activate.")
@@ -1464,7 +1464,7 @@ function VoiceWidget(props) {
     // Immediately start processing microphone audio,
     // Although Rhino itself will not start listening until the Push to Talk button is pressed.
     {
-      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
       context: { base64: RHINO_CONTEXT_BASE64 },
       start: true,
     }
@@ -1511,7 +1511,7 @@ export default {
       contextInfo: '',
       factory: RhinoWorkerFactoryEn,
       factoryArgs: {
-        accessKey: '${ACCESS_KEY}',  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+        accessKey: '${ACCESS_KEY}',  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
         context: {
           base64: `RHINO_TRAINED_CONTEXT_BASE_64_STRING`
         },
@@ -1618,7 +1618,7 @@ To create an instance of the engine you first create a `RhinoBuilder` instance w
 ```rust
 use rhino::RhinoBuilder;
 
-let access_key = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+let access_key = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 let rhino: Rhino = RhinoBuilder::new(access_key, "/path/to/context/file.rhn").init().expect("Unable to create Rhino");
 ```
@@ -1652,7 +1652,7 @@ Rhino is implemented in ANSI C and therefore can be directly linked to C applica
 header file contains relevant information. An instance of the Rhino object can be constructed as follows:
 
 ```c
-const char *access_key = "${ACCESS_KEY}" // obtained from the Picovoice Console (https://picovoice.ai/console/)
+const char *access_key = "${ACCESS_KEY}" // obtained from the Picovoice Console (https://console.picovoice.ai/)
 const char *model_path = ... // Available at lib/common/rhino_params.pv
 const char *context_path = ... // absolute path to context file for the domain of interest
 const float sensitivity = 0.5f;

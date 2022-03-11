@@ -49,7 +49,7 @@ These demos and the bindings upon which they are built are for NodeJS and **do n
 ## AccessKey
 
 Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
-You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Install NPM package
@@ -225,7 +225,7 @@ rhn-mic-demo --context_path ../../resources/contexts/mac/coffee_maker_mac.rhn --
 
 ### Creating a custom Speech-to-Intent context
 
-To design Speech-to-Intent contexts and train them into RHN files, see the [Picovoice Console](https://picovoice.ai/console/).
+To design Speech-to-Intent contexts and train them into RHN files, see the [Picovoice Console](https://console.picovoice.ai/).
 
 Files generated with the Picovoice Console carry restrictions including (but not limited to): training allowance, time limits, available platforms, and commercial usage.
 

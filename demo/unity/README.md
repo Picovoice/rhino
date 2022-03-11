@@ -11,7 +11,7 @@ Additionally, you will need a version of Unity that is 2017.4 or higher.
 ## AccessKey
 
 Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
-You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Usage
@@ -19,7 +19,7 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 Replace the `AccessKey` in [`RhinoDemo.cs`](RhinoDemo.cs) with the `AccessKey` obtained above:
 
 ```csharp
-private const string ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+private const string ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 ```
 
 The easiest way to run the demo is to simply import the [Rhino Unity package](/binding/unity/rhino-2.1.1.unitypackage) into your project, open the RhinoDemo scene and hit play. To run on other platforms or in the player, go to _File > Build Settings_, choose your platform and hit the `Build and Run` button.

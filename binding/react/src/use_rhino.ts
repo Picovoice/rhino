@@ -21,7 +21,7 @@ import {
 } from '@picovoice/rhino-web-core';
 
 export type RhinoHookArgs = {
-  /** AccessKey obtained from Picovoice Console (https://picovoice.ai/console/) */
+  /** AccessKey obtained from Picovoice Console (https://console.picovoice.ai/) */
   accessKey: string;
   /** The context to instantiate */
   context: RhinoContext;

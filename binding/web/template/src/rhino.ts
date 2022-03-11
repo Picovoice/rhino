@@ -379,7 +379,7 @@ export class Rhino implements RhinoEngine {
    * Behind the scenes, it requires the WebAssembly code to load and initialize before
    * it can create an instance.
    *
-   * @param accessKey - AccessKey obtained from Picovoice Console (https://picovoice.ai/console/).
+   * @param accessKey - AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
    * @param contextInfo - Base64 representation of the context and it's sensitivity.
    * @param requireEndpoint - Boolean. If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
    *

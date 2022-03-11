@@ -19,7 +19,7 @@ Rhino is:
 
 * using deep neural networks trained in real-world environments.
 * compact and computationally-efficient, making it perfect for IoT.
-* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Requirements
 
@@ -57,7 +57,7 @@ dotnet add package Rhino
 ## AccessKey
 
 Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
-You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Usage
@@ -72,7 +72,7 @@ string contextPath = "/absolute/path/to/context.rhn";
 Rhino handle = Rhino.Create(accessKey, contextPath);
 ```
 
-Where `contextPath` is the absolute path to Speech-to-Intent context created either using [Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on Rhino's GitHub repository.
+Where `contextPath` is the absolute path to Speech-to-Intent context created either using [Picovoice Console](https://console.picovoice.ai/) or one of the default contexts available on Rhino's GitHub repository.
 
 The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating-point number within
 [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous

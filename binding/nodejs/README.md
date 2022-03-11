@@ -23,7 +23,7 @@ To learn more about Rhino, see the [platform](https://picovoice.ai/platform/rhin
 
 ### Creating a context
 
-To design contexts and train into `.rhn` files, see the [Picovoice Console](https://picovoice.ai/console/).
+To design contexts and train into `.rhn` files, see the [Picovoice Console](https://console.picovoice.ai/).
 
 Files generated with the Picovoice Console carry restrictions including (but not limited to): training allowance, time limits, available platforms, and commercial usage.
 
@@ -45,7 +45,7 @@ This binding is for NodeJS and **does not work in a browser**. Looking to run Rh
 ## AccessKey
 
 Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
-You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Usage

@@ -19,7 +19,7 @@ Rhino is:
 
 * using deep neural networks trained in real-world environments.
 * compact and computationally-efficient, making it perfect for IoT.
-* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Compatibility
 
@@ -48,7 +48,7 @@ dependencies:
 ## AccessKey
 
 Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
-You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Permissions
@@ -82,7 +82,7 @@ The constructor `RhinoManager.create` will create an instance of the RhinoManage
 import 'package:rhino/rhino_manager.dart';
 import 'package:rhino/rhino_error.dart';
 
-const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 void createRhinoManager() async {
     try{
@@ -117,7 +117,7 @@ false if you do not wish to wait for silence before Rhino infers context. There 
 that is called if there is a problem encountered while processing audio. These optional parameters can be passed in like so:
 
 ```dart
-const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 _rhinoManager = await RhinoManager.create(
     accessCallback
@@ -163,7 +163,7 @@ speech-to-intent into an already existing audio processing pipeline.
 import 'package:rhino/rhino_manager.dart';
 import 'package:rhino/rhino_error.dart';
 
-const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 void createRhino() async {
     try{
@@ -220,7 +220,7 @@ flutter:
 
 You can then pass it directly to Rhino's `create` constructor:
 ```dart
-const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 String contextAsset = "assets/context.rhn"
 try{

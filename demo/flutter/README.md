@@ -5,7 +5,7 @@ To run the Rhino demo on Android or iOS with Flutter, you must have the [Flutter
 ## AccessKey
 
 Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
-You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Usage
@@ -13,7 +13,7 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 Replace your `AccessKey` in [lib/main.dart](lib/main.dart) file:
 
 ```dart
-final String accessKey = "{YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+final String accessKey = "{YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 ```
 
 Before launching the app, use the copy_assets.sh script to copy the rhino demo context file into the demo project. (**NOTE**: on Windows, Git Bash or another bash shell is required, or you will have to manually copy the context into the project.).

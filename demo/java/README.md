@@ -30,7 +30,7 @@ Rhino is:
 
 - using deep neural networks trained in real-world environments.
 - compact and computationally-efficient. It is perfect for IoT.
-- self-service. Developers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+- self-service. Developers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 
 ## Requirements
@@ -65,7 +65,7 @@ cd rhino/demo/java/build/libs
 ## AccessKey
 
 Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
-You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ### File Demo

@@ -19,7 +19,7 @@ Rhino is:
 
 * using deep neural networks trained in real-world environments.
 * compact and computationally-efficient, making it perfect for IoT.
-* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Compatibility
 
@@ -42,7 +42,7 @@ The easiest way to install the Rhino Unity SDK is to import the [Rhino Unity Pac
 ## AccessKey
 
 Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
-You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Packaging
@@ -69,7 +69,7 @@ Using the constructor `RhinoManager.Create` will create an instance of the Rhino
 ```csharp
 using Pv.Unity;
 
-string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 try 
 {    
@@ -106,7 +106,7 @@ You can override the default Rhino model file and/or the inference sensitivity. 
 
 ```csharp
 
-string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 RhinoManager _rhinoManager = RhinoManager.Create(
                                         accessKey,
@@ -149,7 +149,7 @@ To create an instance of `Rhino`, use the `.Create` static constructor, and a co
 ```csharp
 using Pv.Unity;
 
-string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 try
 {    

@@ -25,7 +25,7 @@ Rhino is:
 
 * using deep neural networks trained in real-world environments.
 * compact and computationally-efficient, making it perfect for IoT.
-* self-service. Developers and designers can train custom models using [Picovoice Console](https://picovoice.ai/console/).
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Compatibility
 
@@ -52,7 +52,7 @@ pv_rhino = { path = "/path/to/rust/binding" }
 ## AccessKey
 
 Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
-You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret. 
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Usage
@@ -62,12 +62,12 @@ To create an instance of the engine you first create a `RhinoBuilder` instance w
 ```rust
 use rhino::RhinoBuilder;
 
-let access_key = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://picovoice.ai/console/)
+let access_key = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 let rhino: Rhino = RhinoBuilder::new(access_key, "/path/to/context/file.rhn").init().expect("Unable to create Rhino");
 ```
 The context file is a Speech-to-Intent context created either using
-[Picovoice Console](https://picovoice.ai/console/) or one of the default contexts available on [Rhino's GitHub repository](/resources/contexts).
+[Picovoice Console](https://console.picovoice.ai/) or one of the default contexts available on [Rhino's GitHub repository](/resources/contexts).
 
 The sensitivity of the engine can be tuned using the `sensitivity` parameter.
 It is a floating-point number within [0, 1].
