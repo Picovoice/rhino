@@ -405,9 +405,7 @@ func getLinuxDetails() (string, string) {
 
 func extractDefaultModel() string {
 	modelPath := "embedded/lib/common/rhino_params.pv"
-    srcHash := sha256sum(modelPath)
-    hashedExtractionDir := filepath.Join(extractionDir, srcHash)
-	return extractFile(modelPath, hashedExtractionDir)
+	return extractFile(modelPath, extractionDir)
 }
 
 func extractLib() string {
@@ -427,14 +425,7 @@ func extractLib() string {
 		log.Fatalf("%s is not a supported OS", os)
 	}
 
-    srcHash := sha256sum(libPath)
-    hashedExtractionDir := filepath.Join(extractionDir, srcHash)
-    destPath := filepath.Join(hashedExtractionDir, libPath)
-    if _, err := os.Stat(destPath); errors.Is(err, os.ErrNotExist) {
-        return extractFile(libPath, hashedExtractionDir)
-    } else {
-        return destPath
-    }
+	return extractFile(libPath, extractionDir)
 }
 
 func extractFile(srcFile string, dstDir string) string {
@@ -443,25 +434,26 @@ func extractFile(srcFile string, dstDir string) string {
 		log.Fatalf("%v", readErr)
 	}
 
-	extractedFilepath := filepath.Join(dstDir, srcFile)
-	err := os.MkdirAll(filepath.Dir(extractedFilepath), 0777)
-	if err != nil {
-		log.Fatalf("Could not create rhino directory: %v", err)
-	}
+    srcHash := sha256sumBytes(bytes)
+    hashedDstDir := filepath.Join(dstDir, srcHash)
+	extractedFilepath := filepath.Join(hashedDstDir, srcFile)
 
-	writeErr := ioutil.WriteFile(extractedFilepath, bytes, 0777)
-	if writeErr != nil {
-		log.Fatalf("%v", writeErr)
-	}
-	return extractedFilepath
-}
+    if _, err := os.Stat(extractedFilepath); errors.Is(err, os.ErrNotExist) {
+		err = os.MkdirAll(filepath.Dir(extractedFilepath), 0777)
+		if err != nil {
+			log.Fatalf("Could not create rhino directory: %v", err)
+		}
 
-func sha256sum(filePath string) string {
-    bytes, readErr := embeddedFS.ReadFile(filePath)
-    if readErr != nil {
-        log.Fatalf("%v", readErr)
+		writeErr := ioutil.WriteFile(extractedFilepath, bytes, 0777)
+		if writeErr != nil {
+			log.Fatalf("%v", writeErr)
+		}
     }
 
+    return extractedFilepath
+}
+
+func sha256sumBytes(bytes []byte) string {
     sum := sha256.Sum256(bytes)
     return hex.EncodeToString(sum[:])
 }
