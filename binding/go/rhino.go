@@ -1,4 +1,4 @@
-// Copyright 2021 Picovoice Inc.
+// Copyright 2021-2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is
 // located in the "LICENSE" file accompanying this source.
@@ -19,7 +19,10 @@ package rhino
 
 import (
 	"C"
+	"crypto/sha256"
 	"embed"
+	"encoding/hex"
+    "errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -402,7 +405,9 @@ func getLinuxDetails() (string, string) {
 
 func extractDefaultModel() string {
 	modelPath := "embedded/lib/common/rhino_params.pv"
-	return extractFile(modelPath, extractionDir)
+    srcHash := sha256sum(modelPath)
+    hashedExtractionDir := filepath.Join(extractionDir, srcHash)
+	return extractFile(modelPath, hashedExtractionDir)
 }
 
 func extractLib() string {
@@ -422,7 +427,14 @@ func extractLib() string {
 		log.Fatalf("%s is not a supported OS", os)
 	}
 
-	return extractFile(libPath, extractionDir)
+    srcHash := sha256sum(libPath)
+    hashedExtractionDir := filepath.Join(extractionDir, srcHash)
+    destPath := filepath.Join(hashedExtractionDir, libPath)
+    if _, err := os.Stat(destPath); errors.Is(err, os.ErrNotExist) {
+        return extractFile(libPath, hashedExtractionDir)
+    } else {
+        return destPath
+    }
 }
 
 func extractFile(srcFile string, dstDir string) string {
@@ -442,4 +454,14 @@ func extractFile(srcFile string, dstDir string) string {
 		log.Fatalf("%v", writeErr)
 	}
 	return extractedFilepath
+}
+
+func sha256sum(filePath string) string {
+    bytes, readErr := embeddedFS.ReadFile(filePath)
+    if readErr != nil {
+        log.Fatalf("%v", readErr)
+    }
+
+    sum := sha256.Sum256(bytes)
+    return hex.EncodeToString(sum[:])
 }
