@@ -9,41 +9,6 @@
     specific language governing permissions and limitations under the License.
 */
 
-mod platform {
-    #[allow(dead_code)]
-    const RPI_MACHINES: [&str; 4] = ["arm11", "cortex-a7", "cortex-a53", "cortex-a72"];
-    #[allow(dead_code)]
-    const JETSON_MACHINES: [&str; 1] = ["cortex-a57"];
-
-    #[cfg(target_os = "macos")]
-    pub fn pv_platform() -> String {
-        return String::from("mac");
-    }
-
-    #[cfg(target_os = "windows")]
-    pub fn pv_platform() -> String {
-        return String::from("windows");
-    }
-
-    #[cfg(all(target_os = "linux", target_arch = "x86_64"))]
-    pub fn pv_platform() -> String {
-        return String::from("linux");
-    }
-
-    #[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))]
-    pub fn pv_platform() -> String {
-        let machine = find_machine_type();
-        return match machine.as_str() {
-            machine if RPI_MACHINES.contains(&machine) => String::from("raspberry-pi"),
-            machine if JETSON_MACHINES.contains(&machine) => String::from("jetson"),
-            "beaglebone" => String::from("beaglebone"),
-            _ => {
-                panic!("ERROR: Please be advised that this device is not officially supported by Picovoice");
-            }
-        };
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use itertools::Itertools;
@@ -53,8 +18,87 @@ mod tests {
     use std::fs::File;
     use std::io::BufReader;
 
-    use super::platform::pv_platform;
+    use rhino::util::pv_platform;
     use rhino::RhinoBuilder;
+
+    fn append_lang(path: &str, language: &str) -> String {
+        if language == "en" {
+            String::from(path)
+        } else {
+            format!("{}_{}", path, language)
+        }
+    }
+
+    fn model_path_by_language(language: &str) -> String {
+        format!(
+            "{}{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            append_lang("/../../lib/common/rhino_params", language),
+            ".pv"
+        )
+    }
+
+    fn context_path_by_language(context: &str, language: &str) -> String {
+        format!(
+            "{}{}/{}/{}_{}.rhn",
+            env!("CARGO_MANIFEST_DIR"),
+            append_lang("/../../resources/contexts", language),
+            pv_platform(),
+            context,
+            pv_platform()
+        )
+    }
+
+    fn run_rhino_test(
+        language: &str,
+        context: &str,
+        is_whithin_context: bool,
+        intent: &str,
+        slot: HashMap<String, String>,
+        audio_file_name: &str,
+    ) {
+        let access_key = env::var("PV_ACCESS_KEY")
+            .expect("Pass the AccessKey in using the PV_ACCESS_KEY env variable");
+
+        let rhino = RhinoBuilder::new(access_key, context_path_by_language(context, language))
+            .model_path(model_path_by_language(language))
+            .init()
+            .expect("Unable to create Rhino");
+
+        let soundfile_path = format!(
+            "{}{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../resources/audio_samples/",
+            audio_file_name
+        );
+
+        let soundfile = BufReader::new(File::open(&soundfile_path).expect(&soundfile_path));
+        let source = Decoder::new(soundfile).unwrap();
+
+        assert_eq!(rhino.sample_rate(), source.sample_rate());
+
+        let mut is_finalized = false;
+        for frame in &source.chunks(rhino.frame_length() as usize) {
+            let frame = frame.collect_vec();
+            if frame.len() == rhino.frame_length() as usize {
+                is_finalized = rhino.process(&frame).unwrap();
+                if is_finalized {
+                    break;
+                }
+            }
+        }
+
+        assert!(is_finalized);
+        let inference = rhino.get_inference().unwrap();
+
+        assert!(inference.is_understood == is_whithin_context);
+
+        if is_whithin_context {
+            assert_eq!(inference.intent.unwrap(), intent);
+
+            assert_eq!(inference.slots, slot);
+        }
+    }
 
     #[test]
     fn test_within_context() {
@@ -159,7 +203,6 @@ mod tests {
             .init()
             .expect("Unable to create Rhino");
 
-
         let soundfile = BufReader::new(
             File::open(concat!(
                 env!("CARGO_MANIFEST_DIR"),
@@ -184,5 +227,60 @@ mod tests {
 
         assert!(is_finalized);
         assert!(!rhino.get_inference().unwrap().is_understood);
+    }
+
+    #[test]
+    fn test_within_context_es() {
+        let mut expected_slot_values = HashMap::new();
+        expected_slot_values.insert(String::from("location"), String::from("habitación"));
+        expected_slot_values.insert(String::from("color"), String::from("rosado"));
+
+        run_rhino_test(
+            "es",
+            &"iluminación_inteligente",
+            true,
+            "changeColor",
+            expected_slot_values,
+            "test_within_context_es.wav",
+        );
+    }
+
+    #[test]
+    fn test_out_of_context_es() {
+        run_rhino_test(
+            "es",
+            &"iluminación_inteligente",
+            false,
+            "changeColor",
+            HashMap::new(),
+            "test_out_of_context_es.wav",
+        );
+    }
+
+    #[test]
+    fn test_within_context_de() {
+        let mut expected_slot_values = HashMap::new();
+        expected_slot_values.insert(String::from("state"), String::from("aus"));
+
+        run_rhino_test(
+            "de",
+            &"beleuchtung",
+            true,
+            "changeState",
+            expected_slot_values,
+            "test_within_context_de.wav",
+        );
+    }
+
+    #[test]
+    fn test_out_of_context_de() {
+        run_rhino_test(
+            "de",
+            &"beleuchtung",
+            false,
+            "changeState",
+            HashMap::new(),
+            "test_out_of_context_de.wav",
+        );
     }
 }
