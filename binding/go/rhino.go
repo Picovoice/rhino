@@ -1,4 +1,4 @@
-// Copyright 2021 Picovoice Inc.
+// Copyright 2021-2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is
 // located in the "LICENSE" file accompanying this source.
@@ -19,7 +19,10 @@ package rhino
 
 import (
 	"C"
+	"crypto/sha256"
 	"embed"
+	"encoding/hex"
+    "errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -431,15 +434,26 @@ func extractFile(srcFile string, dstDir string) string {
 		log.Fatalf("%v", readErr)
 	}
 
-	extractedFilepath := filepath.Join(dstDir, srcFile)
-	err := os.MkdirAll(filepath.Dir(extractedFilepath), 0777)
-	if err != nil {
-		log.Fatalf("Could not create rhino directory: %v", err)
-	}
+    srcHash := sha256sumBytes(bytes)
+    hashedDstDir := filepath.Join(dstDir, srcHash)
+	extractedFilepath := filepath.Join(hashedDstDir, srcFile)
 
-	writeErr := ioutil.WriteFile(extractedFilepath, bytes, 0777)
-	if writeErr != nil {
-		log.Fatalf("%v", writeErr)
-	}
-	return extractedFilepath
+    if _, err := os.Stat(extractedFilepath); errors.Is(err, os.ErrNotExist) {
+		err = os.MkdirAll(filepath.Dir(extractedFilepath), 0777)
+		if err != nil {
+			log.Fatalf("Could not create rhino directory: %v", err)
+		}
+
+		writeErr := ioutil.WriteFile(extractedFilepath, bytes, 0777)
+		if writeErr != nil {
+			log.Fatalf("%v", writeErr)
+		}
+    }
+
+    return extractedFilepath
+}
+
+func sha256sumBytes(bytes []byte) string {
+    sum := sha256.Sum256(bytes)
+    return hex.EncodeToString(sum[:])
 }
