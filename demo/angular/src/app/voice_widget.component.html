@@ -23,6 +23,7 @@
   <br />
   <button (click)="start()" [disabled]="isError || isListening || !isLoaded">Start</button>
   <button (click)="pause()" [disabled]="isError || !isListening || !isLoaded">Pause</button>
+  <button (click)="stop()" [disabled]="isError || !isListening || !isLoaded">Stop</button>
   <button
     (click)="pushToTalk()"
     [disabled]="isError || !isListening || isTalking || !isLoaded"

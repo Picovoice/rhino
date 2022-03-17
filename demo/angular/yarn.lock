@@ -1285,10 +1285,10 @@
     node-gyp "^7.1.0"
     read-package-json-fast "^2.0.1"
 
-"@picovoice/rhino-web-angular@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-angular/-/rhino-web-angular-2.1.0.tgz#d9da58fba81cebf5f733b02130f247757cf28167"
-  integrity sha512-1R3+GJHE1ig6rG7VF7sEy1m3kcdnLNnsZ11seDEJ1rhL8bwvcK3G9P0IdbmA/YY3276LruncL3df+lHDlb3n3w==
+"@picovoice/rhino-web-angular@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-angular/-/rhino-web-angular-2.1.2.tgz#9f6f3726713fed2c62c484d7a6fc646c10cec8c8"
+  integrity sha512-5NVPdHuDahl4qqLLisGt6xRlFVTdD4awrTktKF/yE9lXlsCFK7ACTk1yQPiq4BtjYzcX7BFBDfn8r2YvEdHOYw==
   dependencies:
     "@picovoice/rhino-web-core" "^2.1.0"
     tslib "^2.0.0"
@@ -1305,10 +1305,10 @@
   dependencies:
     "@picovoice/rhino-web-core" "^2.1.0"
 
-"@picovoice/web-voice-processor@^2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-2.1.4.tgz#3d7ebabbaa58ec2e4195a5c9e9d7fcd8de88f8a2"
-  integrity sha512-dFdhHnHjZkooSvzhSAdnhB2YrsFxQPjqQTpcpIYnfX3U0TU/KpdBprWaXpL7ShZ3Vbgpkogh/qmpEAzXoNuNBA==
+"@picovoice/web-voice-processor@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-2.2.2.tgz#dcaa18349e2539bb33555532ea0d172b2bf6ba7a"
+  integrity sha512-66DuOQiaZX2OYgBq0+8qJ3r964ai5ebhJkv07SdJudmrSGu/1cCocjt0plMlOkLTWO8SL2J41JZraRf2lSdnDw==
   dependencies:
     "@babel/runtime" "^7.12.18"
 

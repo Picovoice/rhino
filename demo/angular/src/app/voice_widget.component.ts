@@ -76,6 +76,10 @@ export class VoiceWidget {
     this.rhinoService.start();
   }
 
+  public stop() {
+    this.rhinoService.stop();
+  }
+
   public pushToTalk() {
     this.inference = null
     this.rhinoService.pushToTalk()
