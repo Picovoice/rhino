@@ -58,13 +58,24 @@ export class RhinoService implements OnDestroy {
     return false;
   }
 
-  public start(): boolean {
+  public async start(): Promise<boolean> {
     if (this.webVoiceProcessor !== null) {
-      this.webVoiceProcessor.start();
+      await this.webVoiceProcessor.start();
       this.listening$.next(true);
       return true;
+    } else {
+      return false;
     }
-    return false;
+  }
+
+  public async stop(): Promise<boolean> {
+    if (this.webVoiceProcessor !== null) {
+      await this.webVoiceProcessor.stop();
+      this.listening$.next(false);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public async release(): Promise<void> {
@@ -141,6 +152,7 @@ export class RhinoService implements OnDestroy {
       this.listening$.next(start);
     } catch (error) {
       this.rhinoWorker.postMessage({ command: 'release' });
+      this.rhinoWorker.terminate();
       this.rhinoWorker = null;
       this.isInit = false;
       this.isError$.next(true);

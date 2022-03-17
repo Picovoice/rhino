@@ -26,6 +26,9 @@
     <button v-on:click="pause" :disabled="!isLoaded || isError || !isListening">
       Pause
     </button>
+    <button v-on:click="stop" :disabled="!isLoaded || isError || !isListening">
+      Stop
+    </button>
     <button
       v-on:click="pushToTalk"
       :disabled="!isLoaded || isError || !isListening || isTalking"
@@ -91,6 +94,11 @@ export default (Vue as VueConstructor<Vue & {$rhino: RhinoVue}>).extend({
     },
     start: function () {
       if (this.$rhino.start()) {
+        this.isListening = !this.isListening;
+      }
+    },
+    stop: function () {
+      if (this.$rhino.stop()) {
         this.isListening = !this.isListening;
       }
     },
