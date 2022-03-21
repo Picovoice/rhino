@@ -10,18 +10,34 @@
 //
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+import * as fs from "fs";
+import * as path from "path";
 
-const PV_STATUS_T = require("./pv_status_t");
-const {
+import PvStatus from "./pv_status_t";
+import {
   PvArgumentError,
   PvStateError,
   pvStatusToException,
-} = require("./errors");
-const { getSystemLibraryPath } = require("./platforms");
+} from "./errors";
+import { getSystemLibraryPath } from "./platforms";
 
 const MODEL_PATH_DEFAULT = "lib/common/rhino_params.pv";
+
+export type RhinoInference = {
+  isUnderstood: boolean
+  intent?: string
+  slots?: Record<string, string>
+}
+
+type RhinoHandleAndStatus = { handle: any, status: PvStatus };
+type FinalizedAndStatus = { is_finalized: number, status: PvStatus }
+type InferenceAndStatus = {
+  is_understood: number
+  intent?: string
+  slots?: Record<string, string>
+  status: PvStatus
+}
+type ContextAndStatus = { context_info: string, status: PvStatus }
 
 /**
  * Wraps the Rhino engine and context.
@@ -29,7 +45,16 @@ const MODEL_PATH_DEFAULT = "lib/common/rhino_params.pv";
  * Performs the calls to the Rhino node library. Does some basic parameter validation to prevent
  * errors occurring in the library layer. Provides clearer error messages in native JavaScript.
  */
-class Rhino {
+export default class Rhino {
+  private _pvRhino: any;
+
+  private _handle: any;
+
+  private _version: string;
+  private _sampleRate: number;
+  private _frameLength: number;
+  private isFinalized: boolean;
+
   /**
    * Creates an instance of Rhino with a specific context.
    * @param {string} accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
@@ -40,12 +65,12 @@ class Rhino {
    * @param {string} manualLibraryPath the path to the Rhino dynamic library (platform-dependent extension)
    */
   constructor(
-    accessKey,
-    contextPath,
-    sensitivity = 0.5,
-    requireEndpoint = true,
-    manualModelPath,
-    manualLibraryPath
+    accessKey: string,
+    contextPath: string,
+    sensitivity: number = 0.5,
+    requireEndpoint: boolean = true,
+    manualModelPath?: string,
+    manualLibraryPath?: string
   ) {
     if (
       accessKey === null ||
@@ -89,19 +114,19 @@ class Rhino {
 
     const pvRhino = require(libraryPath);
 
-    let rhinoHandleAndStatus = null;
+    let rhinoHandleAndStatus: RhinoHandleAndStatus | null = null;
     try {
       rhinoHandleAndStatus = pvRhino.init(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
-    } catch (err) {
-      pvStatusToException(PV_STATUS_T[err.code], err);
+    } catch (err: any) {
+      pvStatusToException(<PvStatus>err.code, err);
     }
 
-    const status = rhinoHandleAndStatus.status;
-    if (status !== PV_STATUS_T.SUCCESS) {
+    const status = rhinoHandleAndStatus!.status;
+    if (status !== PvStatus.SUCCESS) {
       pvStatusToException(status, "Rhino failed to initialize");
     }
 
-    this._handle = rhinoHandleAndStatus.handle;
+    this._handle = rhinoHandleAndStatus!.handle;
     this._pvRhino = pvRhino;
     this._frameLength = pvRhino.frame_length();
     this._sampleRate = pvRhino.sample_rate();
@@ -114,21 +139,21 @@ class Rhino {
    * @returns number of audio samples per frame (i.e. the length of the array provided to the process function)
    * @see {@link process}
    */
-  get frameLength() {
+  get frameLength(): number {
     return this._frameLength;
   }
 
   /**
    * @returns the audio sampling rate accepted by Rhino
    */
-  get sampleRate() {
+  get sampleRate(): number {
     return this._sampleRate;
   }
 
   /**
    * @returns the version of the Rhino engine
    */
-  get version() {
+  get version(): string {
     return this._version;
   }
 
@@ -139,7 +164,7 @@ class Rhino {
    * The specific array length is obtained from Rhino via the frameLength field.
    * @returns {boolean} true when Rhino has concluded processing audio and determined the intent (or that the intent was not understood), false otherwise.
    */
-  process(frame) {
+  process(frame: Int16Array): boolean {
     if (
       this._handle === 0 ||
       this._handle === null ||
@@ -167,19 +192,19 @@ class Rhino {
 
     const frameBuffer = new Int16Array(frame);
 
-    let finalizedAndStatus = null;
+    let finalizedAndStatus: FinalizedAndStatus | null = null;
     try {
       finalizedAndStatus = this._pvRhino.process(this._handle, frameBuffer);
-    } catch (err) {
-      pvStatusToException(PV_STATUS_T[err.code], err);
+    } catch (err: any) {
+      pvStatusToException(<PvStatus>err.code, err);
     }
 
-    const status = finalizedAndStatus.status;
-    if (status !== PV_STATUS_T.SUCCESS) {
+    const status = finalizedAndStatus!.status;
+    if (status !== PvStatus.SUCCESS) {
       pvStatusToException(status, "Rhino failed to process the frame");
     }
 
-    this.isFinalized = finalizedAndStatus.is_finalized === 1;
+    this.isFinalized = finalizedAndStatus!.is_finalized === 1;
     return this.isFinalized;
   }
 
@@ -208,7 +233,7 @@ class Rhino {
    *   }
    * }
    */
-  getInference() {
+  getInference(): RhinoInference {
     if (!this.isFinalized) {
       throw new PvStateError(
         "'getInference' was called but Rhino has not yet reached a conclusion. Use the results of calling process to determine if Rhino has concluded"
@@ -223,22 +248,22 @@ class Rhino {
       throw new PvStateError("Rhino is not initialized");
     }
 
-    let inferenceAndStatus = null;
+    let inferenceAndStatus: InferenceAndStatus | null = null;
     try {
       inferenceAndStatus = this._pvRhino.get_inference(this._handle);
-    } catch (err) {
-      pvStatusToException(PV_STATUS_T[err.code], err);
+    } catch (err: any) {
+      pvStatusToException(<PvStatus>err.code, err);
     }
 
-    const status = inferenceAndStatus.status;
-    if (status !== PV_STATUS_T.SUCCESS) {
+    const status = inferenceAndStatus!.status;
+    if (status !== PvStatus.SUCCESS) {
       pvStatusToException(status, `Rhino failed to get inference: ${status}`);
     }
 
-    let inference = {
-      isUnderstood: inferenceAndStatus.is_understood === 1,
-      intent: inferenceAndStatus.intent,
-      slots: inferenceAndStatus.slots,
+    let inference: RhinoInference = {
+      isUnderstood: inferenceAndStatus!.is_understood === 1,
+      intent: inferenceAndStatus!.intent,
+      slots: inferenceAndStatus!.slots,
     };
 
     return inference;
@@ -250,7 +275,7 @@ class Rhino {
    *
    * @returns {string} the context YAML
    */
-  getContextInfo() {
+  getContextInfo(): string {
     if (
       this._handle === 0 ||
       this._handle === null ||
@@ -259,19 +284,19 @@ class Rhino {
       throw new PvStateError("Rhino is not initialized");
     }
 
-    let contextAndStatus = null;
+    let contextAndStatus: ContextAndStatus | null = null;
     try {
       contextAndStatus = this._pvRhino.context_info(this._handle);
-    } catch (err) {
-      pvStatusToException(PV_STATUS_T[err.code], err);
+    } catch (err: any) {
+      pvStatusToException(<PvStatus>err.code, err);
     }
 
-    const status = contextAndStatus.status;
-    if (status !== PV_STATUS_T.SUCCESS) {
+    const status = contextAndStatus!.status;
+    if (status !== PvStatus.SUCCESS) {
       pvStatusToException(status, `Rhino failed to get context info: ${status}`);
     }
 
-    return contextAndStatus.context_info;
+    return contextAndStatus!.context_info;
   }
 
   /**
