@@ -14,7 +14,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
-import { PvUnsupportedPlatformError } from "./errors";
+import { RhinoRuntimeError } from "./errors";
 
 const SYSTEM_LINUX = "linux";
 const SYSTEM_MAC = "darwin";
@@ -47,47 +47,47 @@ const LIBRARY_PATH_PREFIX = "../lib/";
 const SYSTEM_TO_LIBRARY_PATH = new Map();
 SYSTEM_TO_LIBRARY_PATH.set(
   `${SYSTEM_MAC}/${X86_64}`,
-  `${PLATFORM_MAC}/x86_64/pv_porcupine.node`
+  `${PLATFORM_MAC}/x86_64/pv_rhino.node`
 );
 SYSTEM_TO_LIBRARY_PATH.set(
     `${SYSTEM_MAC}/${ARM_64}`,
-    `${PLATFORM_MAC}/arm64/pv_porcupine.node`
+    `${PLATFORM_MAC}/arm64/pv_rhino.node`
   );
 SYSTEM_TO_LIBRARY_PATH.set(
   `${SYSTEM_LINUX}/${X86_64}`,
-  `${PLATFORM_LINUX}/x86_64/pv_porcupine.node`
+  `${PLATFORM_LINUX}/x86_64/pv_rhino.node`
 );
 SYSTEM_TO_LIBRARY_PATH.set(
   `${SYSTEM_LINUX}/${ARM_CPU_CORTEX_A7}`,
-  `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A7}/pv_porcupine.node`
+  `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A7}/pv_rhino.node`
 );
 SYSTEM_TO_LIBRARY_PATH.set(
   `${SYSTEM_LINUX}/${ARM_CPU_CORTEX_A53}`,
-  `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A53}/pv_porcupine.node`
+  `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A53}/pv_rhino.node`
 );
 SYSTEM_TO_LIBRARY_PATH.set(
     `${SYSTEM_LINUX}/${ARM_CPU_CORTEX_A53}${ARM_CPU_64}`,
-    `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A53}${ARM_CPU_64}/pv_porcupine.node`
+    `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A53}${ARM_CPU_64}/pv_rhino.node`
 );
 SYSTEM_TO_LIBRARY_PATH.set(
   `${SYSTEM_LINUX}/${ARM_CPU_CORTEX_A72}`,
-  `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A72}/pv_porcupine.node`
+  `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A72}/pv_rhino.node`
 );
 SYSTEM_TO_LIBRARY_PATH.set(
     `${SYSTEM_LINUX}/${ARM_CPU_CORTEX_A72}${ARM_CPU_64}`,
-    `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A72}${ARM_CPU_64}/pv_porcupine.node`
+    `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A72}${ARM_CPU_64}/pv_rhino.node`
 );
 SYSTEM_TO_LIBRARY_PATH.set(
     `${SYSTEM_LINUX}/${ARM_CPU_CORTEX_A57}${ARM_CPU_64}`,
-    `${PLATFORM_JETSON}/${ARM_CPU_CORTEX_A57}${ARM_CPU_64}/pv_porcupine.node`
+    `${PLATFORM_JETSON}/${ARM_CPU_CORTEX_A57}${ARM_CPU_64}/pv_rhino.node`
 );
 SYSTEM_TO_LIBRARY_PATH.set(
     `${SYSTEM_LINUX}/${PLATFORM_BEAGLEBONE}`,
-    `${PLATFORM_BEAGLEBONE}/pv_porcupine.node`
+    `${PLATFORM_BEAGLEBONE}/pv_rhino.node`
 );
 SYSTEM_TO_LIBRARY_PATH.set(
     `${SYSTEM_WINDOWS}/${X86_64}`,
-    `${PLATFORM_WINDOWS}/amd64/pv_porcupine.node`
+    `${PLATFORM_WINDOWS}/amd64/pv_rhino.node`
 );
 
 function absoluteLibraryPath(libraryPath: string) {
@@ -98,15 +98,15 @@ function getCpuPart() {
     const cpuInfo = fs.readFileSync("/proc/cpuinfo", "ascii");
     for (let infoLine of cpuInfo.split("\n")) {
       if (infoLine.includes("CPU part")) {
-        let infoLineSplit = infoLine.split(' ')
+        const infoLineSplit = infoLine.split(' ')
         return infoLineSplit[infoLineSplit.length - 1].toLowerCase();
       }
     }
-    throw new PvUnsupportedPlatformError(`Unsupported CPU.`);
+    throw new RhinoRuntimeError(`Unsupported CPU.`);
 }
 
 function getLinuxPlatform() {
-    var cpuPart = getCpuPart(); 
+    const cpuPart = getCpuPart();
     switch(cpuPart) {
         case "0xc07": 
         case "0xd03": 
@@ -114,7 +114,7 @@ function getLinuxPlatform() {
         case "0xd07": return PLATFORM_JETSON;
         case "0xc08": return PLATFORM_BEAGLEBONE;
         default: 
-            throw new PvUnsupportedPlatformError(`Unsupported CPU: '${cpuPart}'`);
+            throw new RhinoRuntimeError(`Unsupported CPU: '${cpuPart}'`);
     }
 }
 
@@ -124,7 +124,7 @@ function getLinuxMachine(arch: string) {
       archInfo = ARM_CPU_64;
     } 
 
-    var cpuPart = getCpuPart(); 
+    const cpuPart = getCpuPart();
     switch(cpuPart) {
         case "0xc07": return ARM_CPU_CORTEX_A7 + archInfo;
         case "0xd03": return ARM_CPU_CORTEX_A53 + archInfo;
@@ -132,7 +132,7 @@ function getLinuxMachine(arch: string) {
         case "0xd08": return ARM_CPU_CORTEX_A72 + archInfo;
         case "0xc08": return PLATFORM_BEAGLEBONE;
         default: 
-            throw new PvUnsupportedPlatformError(`Unsupported CPU: '${cpuPart}'`);
+            throw new RhinoRuntimeError(`Unsupported CPU: '${cpuPart}'`);
     }
 }
 
@@ -189,7 +189,7 @@ export function getSystemLibraryPath() {
               SYSTEM_TO_LIBRARY_PATH.get(`${SYSTEM_LINUX}/${linuxMachine}`)
             );
           } else {
-            throw new PvUnsupportedPlatformError(
+            throw new RhinoRuntimeError(
               `System ${system}/${arch} is not supported by this library for this CPU.`
             );
           }
@@ -205,7 +205,7 @@ export function getSystemLibraryPath() {
     }
   }
 
-  throw new PvUnsupportedPlatformError(
+  throw new RhinoRuntimeError(
     `System ${system}/${arch} is not supported by this library.`
   );
 }

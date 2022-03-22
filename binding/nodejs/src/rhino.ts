@@ -15,13 +15,13 @@ import * as path from "path";
 
 import PvStatus from "./pv_status_t";
 import {
-  PvArgumentError,
-  PvStateError,
+  RhinoInvalidArgumentError,
+  RhinoInvalidStateError,
   pvStatusToException,
 } from "./errors";
 import { getSystemLibraryPath } from "./platforms";
 
-const MODEL_PATH_DEFAULT = "lib/common/rhino_params.pv";
+const MODEL_PATH_DEFAULT = "../lib/common/rhino_params.pv";
 
 export type RhinoInference = {
   isUnderstood: boolean
@@ -50,9 +50,9 @@ export default class Rhino {
 
   private _handle: any;
 
-  private _version: string;
-  private _sampleRate: number;
-  private _frameLength: number;
+  private readonly _version: string;
+  private readonly _sampleRate: number;
+  private readonly _frameLength: number;
   private isFinalized: boolean;
 
   /**
@@ -77,7 +77,7 @@ export default class Rhino {
       accessKey === undefined ||
       accessKey.length === 0
     ) {
-      throw new PvArgumentError(`No AccessKey provided to Rhino`);
+      throw new RhinoInvalidArgumentError(`No AccessKey provided to Rhino`);
     }
 
     let modelPath = manualModelPath;
@@ -91,17 +91,17 @@ export default class Rhino {
     }
 
     if (!fs.existsSync(libraryPath)) {
-      throw new PvArgumentError(
+      throw new RhinoInvalidArgumentError(
         `File not found at 'libraryPath': ${libraryPath}`
       );
     }
 
     if (!fs.existsSync(modelPath)) {
-      throw new PvArgumentError(`File not found at 'modelPath': ${modelPath}`);
+      throw new RhinoInvalidArgumentError(`File not found at 'modelPath': ${modelPath}`);
     }
 
     if (!fs.existsSync(contextPath)) {
-      throw new PvArgumentError(
+      throw new RhinoInvalidArgumentError(
         `File not found at 'contextPath': ${contextPath}`
       );
     }
@@ -170,22 +170,22 @@ export default class Rhino {
       this._handle === null ||
       this._handle === undefined
     ) {
-      throw new PvStateError("Rhino is not initialized");
+      throw new RhinoInvalidStateError("Rhino is not initialized");
     }
 
     if (frame === undefined || frame === null) {
-      throw new PvArgumentError(
+      throw new RhinoInvalidArgumentError(
         `Frame array provided to process() is undefined or null`
       );
     } else if (frame.length !== this.frameLength) {
-      throw new PvArgumentError(
+      throw new RhinoInvalidArgumentError(
         `Size of frame array provided to 'process' (${frame.length}) does not match the engine 'frameLength' (${this.frameLength})`
       );
     }
 
     // sample the first frame to check for non-integer values
     if (!Number.isInteger(frame[0])) {
-      throw new PvArgumentError(
+      throw new RhinoInvalidArgumentError(
         `Non-integer frame values provided to process(): ${frame[0]}. Rhino requires 16-bit integers`
       );
     }
@@ -235,7 +235,7 @@ export default class Rhino {
    */
   getInference(): RhinoInference {
     if (!this.isFinalized) {
-      throw new PvStateError(
+      throw new RhinoInvalidStateError(
         "'getInference' was called but Rhino has not yet reached a conclusion. Use the results of calling process to determine if Rhino has concluded"
       );
     }
@@ -245,7 +245,7 @@ export default class Rhino {
       this._handle === null ||
       this._handle === undefined
     ) {
-      throw new PvStateError("Rhino is not initialized");
+      throw new RhinoInvalidStateError("Rhino is not initialized");
     }
 
     let inferenceAndStatus: InferenceAndStatus | null = null;
@@ -281,7 +281,7 @@ export default class Rhino {
       this._handle === null ||
       this._handle === undefined
     ) {
-      throw new PvStateError("Rhino is not initialized");
+      throw new RhinoInvalidStateError("Rhino is not initialized");
     }
 
     let contextAndStatus: ContextAndStatus | null = null;
@@ -314,5 +314,3 @@ export default class Rhino {
     }
   }
 }
-
-module.exports = Rhino;
