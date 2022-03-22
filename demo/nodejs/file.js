@@ -15,12 +15,12 @@ const { program } = require("commander");
 const fs = require("fs");
 
 const WaveFile = require("wavefile").WaveFile;
-const Rhino = require("@picovoice/rhino-node");
-const { PvArgumentError } = require("@picovoice/rhino-node/errors");
 const {
+  Rhino,
   getInt16Frames,
-  checkWaveFile,
-} = require("@picovoice/rhino-node/wave_util");
+  checkWaveFile
+} = require("@picovoice/rhino-node");
+const { RhinoInvalidArgumentError } = require("@picovoice/rhino-node/dist/errors");
 
 program
   .requiredOption(
@@ -71,7 +71,7 @@ function fileDemo() {
   }
 
   if (!fs.existsSync(contextPath)) {
-    throw new PvArgumentError(
+    throw new RhinoInvalidArgumentError(
       `File not found at 'contextPath': ${contextPath}`
     );
   }
