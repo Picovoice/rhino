@@ -95,45 +95,45 @@ function absoluteLibraryPath(libraryPath: string) {
 }
 
 function getCpuPart() {
-    const cpuInfo = fs.readFileSync("/proc/cpuinfo", "ascii");
-    for (let infoLine of cpuInfo.split("\n")) {
-      if (infoLine.includes("CPU part")) {
-        const infoLineSplit = infoLine.split(' ')
-        return infoLineSplit[infoLineSplit.length - 1].toLowerCase();
-      }
+  const cpuInfo = fs.readFileSync("/proc/cpuinfo", "ascii");
+  for (let infoLine of cpuInfo.split("\n")) {
+    if (infoLine.includes("CPU part")) {
+      const infoLineSplit = infoLine.split(' ')
+      return infoLineSplit[infoLineSplit.length - 1].toLowerCase();
     }
-    throw new RhinoRuntimeError(`Unsupported CPU.`);
+  }
+  throw new RhinoRuntimeError(`Unsupported CPU.`);
 }
 
 function getLinuxPlatform() {
-    const cpuPart = getCpuPart();
-    switch(cpuPart) {
-        case "0xc07": 
-        case "0xd03": 
-        case "0xd08": return PLATFORM_RASPBERRY_PI;
-        case "0xd07": return PLATFORM_JETSON;
-        case "0xc08": return PLATFORM_BEAGLEBONE;
-        default: 
-            throw new RhinoRuntimeError(`Unsupported CPU: '${cpuPart}'`);
-    }
+  const cpuPart = getCpuPart();
+  switch(cpuPart) {
+    case "0xc07":
+    case "0xd03":
+    case "0xd08": return PLATFORM_RASPBERRY_PI;
+    case "0xd07": return PLATFORM_JETSON;
+    case "0xc08": return PLATFORM_BEAGLEBONE;
+    default:
+      throw new RhinoRuntimeError(`Unsupported CPU: '${cpuPart}'`);
+  }
 }
 
 function getLinuxMachine(arch: string) {
-    let archInfo = ""
-    if(arch == ARM_64) {
-      archInfo = ARM_CPU_64;
-    } 
+  let archInfo = ""
+  if(arch == ARM_64) {
+    archInfo = ARM_CPU_64;
+  }
 
-    const cpuPart = getCpuPart();
-    switch(cpuPart) {
-        case "0xc07": return ARM_CPU_CORTEX_A7 + archInfo;
-        case "0xd03": return ARM_CPU_CORTEX_A53 + archInfo;
-        case "0xd07": return ARM_CPU_CORTEX_A57 + archInfo;
-        case "0xd08": return ARM_CPU_CORTEX_A72 + archInfo;
-        case "0xc08": return PLATFORM_BEAGLEBONE;
-        default: 
-            throw new RhinoRuntimeError(`Unsupported CPU: '${cpuPart}'`);
-    }
+  const cpuPart = getCpuPart();
+  switch(cpuPart) {
+    case "0xc07": return ARM_CPU_CORTEX_A7 + archInfo;
+    case "0xd03": return ARM_CPU_CORTEX_A53 + archInfo;
+    case "0xd07": return ARM_CPU_CORTEX_A57 + archInfo;
+    case "0xd08": return ARM_CPU_CORTEX_A72 + archInfo;
+    case "0xc08": return PLATFORM_BEAGLEBONE;
+    default:
+      throw new RhinoRuntimeError(`Unsupported CPU: '${cpuPart}'`);
+  }
 }
 
 export function getPlatform() {
@@ -172,9 +172,9 @@ export function getSystemLibraryPath() {
           );
         }
         else if (arch === ARM_64) {
-            return absoluteLibraryPath(
-                SYSTEM_TO_LIBRARY_PATH.get(`${SYSTEM_MAC}/${ARM_64}`)
-            )
+          return absoluteLibraryPath(
+            SYSTEM_TO_LIBRARY_PATH.get(`${SYSTEM_MAC}/${ARM_64}`)
+          )
         }
       }
       case SYSTEM_LINUX: {
@@ -196,11 +196,11 @@ export function getSystemLibraryPath() {
         }
       }
       case SYSTEM_WINDOWS: {
-          if (arch === X86_64) {
-            return absoluteLibraryPath(
-                SYSTEM_TO_LIBRARY_PATH.get(`${SYSTEM_WINDOWS}/${X86_64}`)
-              );
-          }
+        if (arch === X86_64) {
+          return absoluteLibraryPath(
+            SYSTEM_TO_LIBRARY_PATH.get(`${SYSTEM_WINDOWS}/${X86_64}`)
+          );
+        }
       }
     }
   }
