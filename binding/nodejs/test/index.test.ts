@@ -1,5 +1,5 @@
 //
-// Copyright 2020-2021 Picovoice Inc.
+// Copyright 2020-2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -10,13 +10,15 @@
 //
 "use strict";
 
-const Rhino = require("./index.js");
-const fs = require("fs");
-const { getInt16Frames, checkWaveFile } = require("./wave_util");
-const WaveFile = require("wavefile").WaveFile;
+import Rhino, { RhinoInference } from "../src/rhino";
 
-const { PvArgumentError, PvStateError } = require("./errors");
-const { getPlatform, getSystemLibraryPath } = require("./platforms");
+import * as fs from "fs";
+import * as path from "path";
+import { getInt16Frames, checkWaveFile } from "../src/wave_util";
+import { WaveFile } from "wavefile";
+
+import { RhinoInvalidArgumentError, RhinoInvalidStateError } from "../src/errors";
+import { getPlatform, getSystemLibraryPath } from "../src/platforms";
 
 const MODEL_PATH = "./lib/common/rhino_params.pv";
 const MODEL_PATH_DE = "../../lib/common/rhino_params_de.pv";
@@ -24,21 +26,21 @@ const MODEL_PATH_ES = "../../lib/common/rhino_params_es.pv";
 const MODEL_PATH_FR = "../../lib/common/rhino_params_fr.pv";
 
 const WAV_PATH_COFFEE_MAKER_IN_CONTEXT =
-  "../../resources/audio_samples/test_within_context.wav";
+  "../../../resources/audio_samples/test_within_context.wav";
 const WAV_PATH_COFFEE_MAKER_OUT_OF_CONTEXT =
-  "../../resources/audio_samples/test_out_of_context.wav";
+  "../../../resources/audio_samples/test_out_of_context.wav";
 const WAV_PATH_IN_CONTEXT_DE =
-  "../../resources/audio_samples/test_within_context_de.wav";
+  "../../../resources/audio_samples/test_within_context_de.wav";
 const WAV_PATH_OUT_OF_CONTEXT_DE =
-  "../../resources/audio_samples/test_out_of_context_de.wav";
+  "../../../resources/audio_samples/test_out_of_context_de.wav";
 const WAV_PATH_IN_CONTEXT_ES =
-  "../../resources/audio_samples/test_within_context_es.wav";
+  "../../../resources/audio_samples/test_within_context_es.wav";
 const WAV_PATH_OUT_OF_CONTEXT_ES =
-  "../../resources/audio_samples/test_out_of_context_es.wav";
+  "../../../resources/audio_samples/test_out_of_context_es.wav";
 const WAV_PATH_IN_CONTEXT_FR =
-  "../../resources/audio_samples/test_within_context_fr.wav";
+  "../../../resources/audio_samples/test_within_context_fr.wav";
 const WAV_PATH_OUT_OF_CONTEXT_FR =
-  "../../resources/audio_samples/test_out_of_context_fr.wav";  
+  "../../../resources/audio_samples/test_out_of_context_fr.wav";
 
 
 const platform = getPlatform();
@@ -52,25 +54,21 @@ const contextPathIluminacionInteligenteEs =
   `../../resources/contexts_es/${platform}/iluminación_inteligente_${platform}.rhn`;
 
 
-const ACCESS_KEY = process.argv
-  .filter((x) => x.startsWith("--access_key="))[0]
-  .split("--access_key=")[1];
+const ACCESS_KEY = process.argv.filter((x) => x.startsWith("--access_key="))[0].split("--access_key=")[1];
 
 function rhinoProcessWaveFile(
-  engineInstance,
-  relativeWaveFilePath,
-  ignoreIsFinalized = false
-) {
-  const path = require("path");
+  engineInstance: Rhino,
+  relativeWaveFilePath: string,
+  ignoreIsFinalized: boolean = false
+): RhinoInference {
   const waveFilePath = path.join(__dirname, relativeWaveFilePath);
   const waveBuffer = fs.readFileSync(waveFilePath);
   const waveAudioFile = new WaveFile(waveBuffer);
 
   if (!checkWaveFile(waveAudioFile, engineInstance.sampleRate)) {
-    console.error(
+    fail(
       "Audio file did not meet requirements. Wave file must be 16KHz, 16-bit, linear PCM (mono)."
     );
-    return null;
   }
 
   const frames = getInt16Frames(waveAudioFile, engineInstance.frameLength);
@@ -84,28 +82,30 @@ function rhinoProcessWaveFile(
       return engineInstance.getInference();
     }
   }
+
+  fail("hehehehe");
 }
 
 describe("intent detection (coffee maker)", () => {
   test("successful inference", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
 
-    let inference = rhinoProcessWaveFile(
+    const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_COFFEE_MAKER_IN_CONTEXT
     );
 
     expect(inference["isUnderstood"]).toBe(true);
     expect(inference["intent"]).toEqual("orderBeverage");
-    expect(inference["slots"]["beverage"]).toEqual("americano");
+    expect(inference.slots?.beverage).toEqual("americano");
 
     rhinoEngine.release();
   });
 
   test("out-of-context phrase is not understood", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
 
-    let inference = rhinoProcessWaveFile(
+    const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_COFFEE_MAKER_OUT_OF_CONTEXT
     );
@@ -116,23 +116,23 @@ describe("intent detection (coffee maker)", () => {
     rhinoEngine.release();
   });
 
-  test("getInference throws PvStateError if called before isFinalized is true", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+  test("getInference throws RhinoInvalidStateError if called before isFinalized is true", () => {
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
 
     expect(() => {
-      let inference = rhinoProcessWaveFile(
+      const inference = rhinoProcessWaveFile(
         rhinoEngine,
         WAV_PATH_COFFEE_MAKER_IN_CONTEXT,
         true
       );
-    }).toThrow(PvStateError);
+    }).toThrow(RhinoInvalidStateError);
 
     rhinoEngine.release();
   });
 
   test("process method returns boolean", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
-    let isFinalized = rhinoEngine.process(
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+    const isFinalized = rhinoEngine.process(
       new Int16Array(rhinoEngine.frameLength)
     );
     expect(isFinalized).toEqual(false);
@@ -140,14 +140,14 @@ describe("intent detection (coffee maker)", () => {
   });
 
   test("successful inference object does not contain extraneous junk", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
-    let inference = rhinoProcessWaveFile(
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+    const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_COFFEE_MAKER_IN_CONTEXT
     );
     expect(inference.isUnderstood).toEqual(true);
 
-    for (const [key, value] of Object.entries(inference.slots)) {
+    for (const [key, value] of Object.entries({...inference.slots})) {
       expect(key).not.toEqual("orderBeverage");
       expect(key).not.toEqual("");
       expect(value).not.toEqual(undefined);
@@ -159,7 +159,7 @@ describe("intent detection (coffee maker)", () => {
 
 describe("manual paths", () => {
   test("manual model path", () => {
-    let rhinoEngine = new Rhino(
+    const rhinoEngine = new Rhino(
       ACCESS_KEY,
       contextPathCoffeeMaker,
       0.5,
@@ -167,20 +167,20 @@ describe("manual paths", () => {
       MODEL_PATH
     );
 
-    let inference = rhinoProcessWaveFile(
+    const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_COFFEE_MAKER_IN_CONTEXT
     );
 
     expect(inference["isUnderstood"]).toBe(true);
     expect(inference["intent"]).toEqual("orderBeverage");
-    expect(inference["slots"]["beverage"]).toEqual("americano");
+    expect(inference.slots?.beverage).toEqual("americano");
 
     rhinoEngine.release();
   });
 
   test("manual model and library path", () => {
-    let rhinoEngine = new Rhino(
+    const rhinoEngine = new Rhino(
       ACCESS_KEY,
       contextPathCoffeeMaker,
       0.5,
@@ -189,14 +189,14 @@ describe("manual paths", () => {
       libraryPath
     );
 
-    let inference = rhinoProcessWaveFile(
+    const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_COFFEE_MAKER_IN_CONTEXT
     );
 
     expect(inference["isUnderstood"]).toBe(true);
     expect(inference["intent"]).toEqual("orderBeverage");
-    expect(inference["slots"]["beverage"]).toEqual("americano");
+    expect(inference.slots?.beverage).toEqual("americano");
 
     rhinoEngine.release();
   });
@@ -204,7 +204,7 @@ describe("manual paths", () => {
 
 describe("intent detection in DE", () => {
   test("successful inference beleuchtung", () => {
-    let rhinoEngine = new Rhino(
+    const rhinoEngine = new Rhino(
       ACCESS_KEY,
       contextPathBeleuchtungDe,
       0.5,
@@ -212,20 +212,20 @@ describe("intent detection in DE", () => {
       MODEL_PATH_DE
     );
 
-    let inference = rhinoProcessWaveFile(
+    const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_IN_CONTEXT_DE
     );
 
     expect(inference["isUnderstood"]).toBe(true);
     expect(inference["intent"]).toEqual("changeState");
-    expect(inference["slots"]["state"]).toEqual("aus");
+    expect(inference.slots?.state).toEqual("aus");
 
     rhinoEngine.release();
   });
 
   test("out-of-context phrase is not understood", () => {
-    let rhinoEngine = new Rhino(
+    const rhinoEngine = new Rhino(
       ACCESS_KEY,
       contextPathBeleuchtungDe,
       0.5,
@@ -233,7 +233,7 @@ describe("intent detection in DE", () => {
       MODEL_PATH_DE
     );
 
-    let inference = rhinoProcessWaveFile(
+    const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_OUT_OF_CONTEXT_DE
     );
@@ -246,7 +246,7 @@ describe("intent detection in DE", () => {
 
 describe("intent detection in ES", () => {
   test("successful inference iluminación inteligente", () => {
-    let rhinoEngine = new Rhino(
+    const rhinoEngine = new Rhino(
       ACCESS_KEY,
       contextPathIluminacionInteligenteEs,
       0.5,
@@ -254,21 +254,21 @@ describe("intent detection in ES", () => {
       MODEL_PATH_ES
     );
 
-    let inference = rhinoProcessWaveFile(
+    const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_IN_CONTEXT_ES
     );
 
     expect(inference["isUnderstood"]).toBe(true);
     expect(inference["intent"]).toEqual("changeColor");
-    expect(inference["slots"]["location"]).toEqual("habitación");
-    expect(inference["slots"]["color"]).toEqual("rosado");
+    expect(inference.slots?.location).toEqual("habitación");
+    expect(inference.slots?.color).toEqual("rosado");
 
     rhinoEngine.release();
   });
 
   test("out-of-context phrase is not understood", () => {
-    let rhinoEngine = new Rhino(
+    const rhinoEngine = new Rhino(
       ACCESS_KEY,
       contextPathIluminacionInteligenteEs,
       0.5,
@@ -276,7 +276,7 @@ describe("intent detection in ES", () => {
       MODEL_PATH_ES
     );
 
-    let inference = rhinoProcessWaveFile(
+    const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_OUT_OF_CONTEXT_ES
     );
@@ -289,9 +289,9 @@ describe("intent detection in ES", () => {
 
 describe("basic parameter validation", () => {
   test("custom sensitivity", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker, 0.65);
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker, 0.65);
 
-    let inference = rhinoProcessWaveFile(
+    const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_COFFEE_MAKER_IN_CONTEXT
     );
@@ -303,15 +303,16 @@ describe("basic parameter validation", () => {
 
   test("invalid sensitivity range", () => {
     expect(() => {
-      let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker, 2.99);
+      const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker, 2.99);
     }).toThrow(RangeError);
   });
 
   test("invalid sensitivity type", () => {
     expect(() => {
-      let rhinoEngine = new Rhino(
+      const rhinoEngine = new Rhino(
         ACCESS_KEY,
         contextPathCoffeeMaker,
+        // @ts-expect-error
         "they told me I was daft to build a castle on a swamp"
       );
     }).toThrow(RangeError);
@@ -319,42 +320,54 @@ describe("basic parameter validation", () => {
 });
 
 describe("frame validation", () => {
+  test("accepts non Int16Array if array is valid", () => {
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+    const emptyArray = Array.apply(null, Array(rhinoEngine.frameLength)).map((x, i) => i)
+    // @ts-expect-error
+    rhinoEngine.process(emptyArray);
+    rhinoEngine.release();
+  });
+
   test("mismatched frameLength throws error", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
     expect(() => {
+      // @ts-expect-error
       rhinoEngine.process([1, 2, 3]);
-    }).toThrow(PvArgumentError);
+    }).toThrow(RhinoInvalidArgumentError);
     rhinoEngine.release();
   });
 
   test("null/undefined frames throws error", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
     expect(() => {
+      // @ts-expect-error
       rhinoEngine.process(null);
-    }).toThrow(PvArgumentError);
+    }).toThrow(RhinoInvalidArgumentError);
     expect(() => {
+      // @ts-expect-error
       rhinoEngine.process(undefined);
-    }).toThrow(PvArgumentError);
+    }).toThrow(RhinoInvalidArgumentError);
     rhinoEngine.release();
   });
 
-  test("passing floating point frame values throws PvArgumentError", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
-    let floatFrames = Array.from({ length: rhinoEngine.frameLength }).map(
+  test("passing floating point frame values throws RhinoInvalidArgumentError", () => {
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+    const floatFrames = Array.from({ length: rhinoEngine.frameLength }).map(
       (x) => 3.1415
     );
     expect(() => {
+      // @ts-expect-error
       rhinoEngine.process(floatFrames);
-    }).toThrow(PvArgumentError);
+    }).toThrow(RhinoInvalidArgumentError);
     rhinoEngine.release();
   });
 });
 
 describe("getContextInfo", () => {
   test("coffee maker expressions and slots are returned", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
 
-    let contextInfo = rhinoEngine.getContextInfo();
+    const contextInfo = rhinoEngine.getContextInfo();
 
     expect(contextInfo).toMatch(
       /(\[brew, can I get, can I have, I want, get me, give me, I'd like, make me, may I have)/i
@@ -369,25 +382,25 @@ describe("getContextInfo", () => {
 });
 
 describe("invalid state", () => {
-  test("attempt to process after release throws PvStateError", () => {
-    let rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+  test("attempt to process after release throws RhinoInvalidStateError", () => {
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
 
-    let inference = rhinoProcessWaveFile(
+    const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_COFFEE_MAKER_IN_CONTEXT
     );
 
     expect(inference["isUnderstood"]).toBe(true);
     expect(inference["intent"]).toEqual("orderBeverage");
-    expect(inference["slots"]["beverage"]).toEqual("americano");
+    expect(inference.slots?.beverage).toEqual("americano");
 
     rhinoEngine.release();
 
     expect(() => {
-      count = rhinoProcessWaveFile(
+      const inference = rhinoProcessWaveFile(
         rhinoEngine,
         WAV_PATH_COFFEE_MAKER_IN_CONTEXT
       );
-    }).toThrow(PvStateError);
+    }).toThrow(RhinoInvalidStateError);
   });
 });

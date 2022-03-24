@@ -13,8 +13,8 @@
 
 const fs = require("fs");
 const { program } = require("commander");
-const Rhino = require("@picovoice/rhino-node");
-const { PvArgumentError } = require("@picovoice/rhino-node/errors");
+const { Rhino } = require("@picovoice/rhino-node");
+const { RhinoInvalidArgumentError } = require("@picovoice/rhino-node/dist/errors");
 const PvRecorder = require("@picovoice/pvrecorder-node");
 
 program
@@ -83,7 +83,7 @@ async function micDemo() {
   }
 
   if (!fs.existsSync(contextPath)) {
-    throw new PvArgumentError(
+    throw new RhinoInvalidArgumentError(
       `File not found at 'contextPath': ${contextPath}`
     );
   }
