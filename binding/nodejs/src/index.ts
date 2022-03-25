@@ -10,7 +10,7 @@
 //
 "use strict";
 
-import Rhino from "./rhino";
+import Rhino, { RhinoInference } from "./rhino";
 import { getInt16Frames, checkWaveFile } from "./wave_util"
 
-export { Rhino, getInt16Frames, checkWaveFile };
+export { Rhino, RhinoInference, getInt16Frames, checkWaveFile };
