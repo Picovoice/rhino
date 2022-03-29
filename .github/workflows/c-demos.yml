@@ -137,7 +137,7 @@ jobs:
         - machine: rpi2
           platform: raspberry-pi
           arch: cortex-a7
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 1.75
         - machine: rpi3-32
           platform: raspberry-pi
           arch: cortex-a53

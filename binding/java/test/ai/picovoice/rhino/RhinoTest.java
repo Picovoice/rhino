@@ -306,7 +306,7 @@ public class RhinoTest {
                 .build();
 
         int frameLen = rhino.getFrameLength();
-        String audioFilePath = getAudioFilePath(audioFileName);
+        String audioFilePath = getAudioFilePath("test_within_context.wav");
         File testAudioPath = new File(audioFilePath);
 
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(testAudioPath);
