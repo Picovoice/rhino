@@ -8,7 +8,7 @@ on:
       - 'binding/nodejs/**'
       - '!binding/nodejs/README.md'
       - 'lib/node/**'
-      - 'resources/contexts/beaglebone/**'      
+      - 'resources/contexts/beaglebone/**'
       - 'resources/contexts/jetson/**'
       - 'resources/contexts/linux/**'
       - 'resources/contexts/mac/**'
@@ -21,7 +21,7 @@ on:
       - 'binding/nodejs/**'
       - '!binding/nodejs/README.md'
       - 'lib/node/**'
-      - 'resources/contexts/beaglebone/**'      
+      - 'resources/contexts/beaglebone/**'
       - 'resources/contexts/jetson/**'
       - 'resources/contexts/linux/**'
       - 'resources/contexts/mac/**'
@@ -74,11 +74,11 @@ jobs:
         machine: [rpi2, rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson, beaglebone]
         include:
         - machine: rpi2
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 1.75
         - machine: rpi3-32
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 0.75
         - machine: rpi3-64
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 0.75
         - machine: rpi4-32
           performance_threshold_sec: 0.5
         - machine: rpi4-64
@@ -86,7 +86,7 @@ jobs:
         - machine: jetson
           performance_threshold_sec: 0.5
         - machine: beaglebone
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 1.75
 
     steps:
     - uses: actions/checkout@v2
