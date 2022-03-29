@@ -86,7 +86,7 @@ jobs:
         - machine: jetson
           performance_threshold_sec: 0.5
         - machine: beaglebone
-          performance_threshold_sec: 2.0
+          performance_threshold_sec: 2.5
 
     steps:
     - uses: actions/checkout@v2
