@@ -32,4 +32,5 @@ ncp("../../lib/node", "./lib", function (err) {
   if (err) {
     return console.error(err);
   }
+  console.log("../../lib/node copied.");
 });

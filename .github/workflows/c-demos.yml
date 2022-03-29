@@ -67,14 +67,17 @@ jobs:
           platform: linux
           arch: x86_64
           ext: so
+          performance_threshold_sec: 0.5
         - os: windows-latest
           platform: windows
           arch: amd64
           ext: dll
+          performance_threshold_sec: 0.5
         - os: macos-latest
           platform: mac
           arch: x86_64
           ext: dylib
+          performance_threshold_sec: 0.5
 
     steps:
     - uses: actions/checkout@v2
@@ -95,6 +98,7 @@ jobs:
         model_path: ../../lib/common/rhino_params.pv
         context_path: ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context.wav
+        performance_threshold_sec: ${{ matrix.performance_threshold_sec }}
 
     - uses: ./.github/actions/c-filedemo
       name: Run filedemo (de)
@@ -133,24 +137,31 @@ jobs:
         - machine: rpi2
           platform: raspberry-pi
           arch: cortex-a7
+          performance_threshold_sec: 0.5
         - machine: rpi3-32
           platform: raspberry-pi
           arch: cortex-a53
+          performance_threshold_sec: 0.5
         - machine: rpi3-64
           platform: raspberry-pi
           arch: cortex-a53-aarch64
+          performance_threshold_sec: 0.5
         - machine: rpi4-32
           platform: raspberry-pi
           arch: cortex-a72
+          performance_threshold_sec: 0.5
         - machine: rpi4-64
           platform: raspberry-pi
           arch: cortex-a72-aarch64
+          performance_threshold_sec: 0.5
         - machine: jetson
           platform: jetson
           arch: cortex-a57-aarch64
+          performance_threshold_sec: 0.5
         - machine: beaglebone
           platform: beaglebone
           arch: ''
+          performance_threshold_sec: 0.5
 
     steps:
     - uses: actions/checkout@v2
@@ -171,6 +182,7 @@ jobs:
         model_path: ../../lib/common/rhino_params.pv
         context_path: ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context.wav
+        performance_threshold_sec: ${{ matrix.performance_threshold_sec }}
 
     - uses: ./.github/actions/c-filedemo
       name: Run filedemo (de)
