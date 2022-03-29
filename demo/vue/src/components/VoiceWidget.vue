@@ -8,10 +8,13 @@
         <input
           type="text"
           name="accessKey"
-          v-on:change="initEngine"
+          v-on:change="updateInputValue"
           :disabled="isLoaded"
         />
       </label>
+      <button class="start-button" v-on:click="initEngine" :disabled="isLoaded">
+          Start Rhino
+      </button>
     </h3>
     <h3>Rhino Loaded: {{ isLoaded }}</h3>
     <h3>Listening: {{ isListening }}</h3>
@@ -60,6 +63,7 @@ export default (Vue as VueConstructor<Vue & {$rhino: RhinoVue}>).extend({
   mixins: [rhinoMixin],
   data: function () {
     return {
+      inputValue: "",
       inference: null as RhinoInference | null,
       isError: false,
       errorMessage: "",
@@ -79,7 +83,7 @@ export default (Vue as VueConstructor<Vue & {$rhino: RhinoVue}>).extend({
   },
   methods: {
     initEngine: function (event: any) {
-      this.factoryArgs.accessKey = event.target.value;
+      this.factoryArgs.accessKey = this.inputValue;
       this.isError = false;
       this.isLoaded = false;
       this.isListening = false;
@@ -91,6 +95,9 @@ export default (Vue as VueConstructor<Vue & {$rhino: RhinoVue}>).extend({
         this.rhnReadyFn,
         this.rhnErrorFn
       )
+    },
+    updateInputValue: function (event: any) {
+      this.inputValue = event.target.value;
     },
     start: function () {
       if (this.$rhino.start()) {
@@ -136,6 +143,12 @@ button {
   padding: 1rem;
   font-size: 1.5rem;
   margin-right: 1rem;
+}
+
+.start-button {
+  padding: 0.1rem;
+  font-size: 1rem;
+  margin-left: 0.5rem;
 }
 
 .voice-widget {
