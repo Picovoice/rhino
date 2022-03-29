@@ -37,7 +37,7 @@ jobs:
 
     - name: Build micdemo
       run: cmake --build ./build --target rhino_demo_mic
-  
+
   build-micdemo-self-hosted:
     runs-on: ${{ matrix.machine }}
 
@@ -126,7 +126,7 @@ jobs:
         model_path: ../../lib/common/rhino_params_fr.pv
         context_path: ../../resources/contexts_fr/${{ matrix.platform }}/éclairage_intelligent_${{ matrix.platform }}.rhn
         audio_path: ../../resources/audio_samples/test_within_context_fr.wav
-  
+
   build-filedemo-self-hosted:
     runs-on: ${{ matrix.machine }}
 
@@ -161,7 +161,7 @@ jobs:
         - machine: beaglebone
           platform: beaglebone
           arch: ''
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 1.75
 
     steps:
     - uses: actions/checkout@v2

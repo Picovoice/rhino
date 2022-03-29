@@ -414,7 +414,7 @@ describe_if(PERFORMANCE_THRESHOLD_SEC > 0)("performance", () => {
     const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
 
     const path = require("path");
-    const waveFilePath = path.join(__dirname, WAV_PATH_MULTIPLE_KEYWORDS);
+    const waveFilePath = path.join(__dirname, WAV_PATH_COFFEE_MAKER_IN_CONTEXT);
     const waveBuffer = fs.readFileSync(waveFilePath);
     const waveAudioFile = new WaveFile(waveBuffer);
 

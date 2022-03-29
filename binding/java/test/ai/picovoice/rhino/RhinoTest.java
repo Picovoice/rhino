@@ -324,7 +324,7 @@ public class RhinoTest {
             if (numBytesRead / byteDepth == frameLen) {
                 ByteBuffer.wrap(pcm).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(rhinoFrame);
                 long before = System.nanoTime();
-                porcupine.process(rhinoFrame);
+                rhino.process(rhinoFrame);
                 long after = System.nanoTime();
                 totalNSec += (after - before);
             }
