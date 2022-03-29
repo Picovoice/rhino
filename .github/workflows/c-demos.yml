@@ -161,7 +161,7 @@ jobs:
         - machine: beaglebone
           platform: beaglebone
           arch: ''
-          performance_threshold_sec: 2.0
+          performance_threshold_sec: 2.5
 
     steps:
     - uses: actions/checkout@v2
