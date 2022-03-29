@@ -405,7 +405,7 @@ public class RhinoTest {
                 totalNSec += (after - before);
             }
         }
-        p.delete();
+        r.delete();
 
         double totalSec = Math.round(((double) totalNSec) * 1e-6) / 1000.0;
         assertTrue(
