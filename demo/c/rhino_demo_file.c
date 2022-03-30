@@ -346,6 +346,11 @@ int picovoice_main(int argc, char *argv[]) {
     const double real_time_factor = total_cpu_time_usec / total_processed_time_usec;
     fprintf(stdout, "real time factor : %.3f\n", real_time_factor);
 
+    free(pcm);
+    drwav_uninit(&f);
+    pv_rhino_delete_func(rhino);
+    close_dl(rhino_library);
+
     if (performance_threshold_sec > 0) {
         const double total_cpu_time_sec = total_cpu_time_usec * 1e-6;
         if (total_cpu_time_sec > performance_threshold_sec) {
@@ -353,11 +358,6 @@ int picovoice_main(int argc, char *argv[]) {
             exit(1);
         }
     }
-
-    free(pcm);
-    drwav_uninit(&f);
-    pv_rhino_delete_func(rhino);
-    close_dl(rhino_library);
 
     return 0;
 }
