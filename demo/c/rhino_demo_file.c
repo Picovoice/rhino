@@ -88,13 +88,14 @@ static void print_dl_error(const char *message) {
 }
 
 static struct option long_options[] = {
-        {"library_path",     required_argument, NULL, 'l'},
-        {"model_path",       required_argument, NULL, 'm'},
-        {"context_path",     required_argument, NULL, 'c'},
-        {"sensitivity",      required_argument, NULL, 't'},
-        {"require_endpoint", required_argument, NULL, 'e'},
-        {"access_key",       required_argument, NULL, 'a'},
-        {"wav_path",         required_argument, NULL, 'w'}
+        {"library_path",                required_argument, NULL, 'l'},
+        {"model_path",                  required_argument, NULL, 'm'},
+        {"context_path",                required_argument, NULL, 'c'},
+        {"sensitivity",                 required_argument, NULL, 't'},
+        {"require_endpoint",            required_argument, NULL, 'e'},
+        {"access_key",                  required_argument, NULL, 'a'},
+        {"wav_path",                    required_argument, NULL, 'w'},
+        {"performance_threshold_sec",   optional_argument, NULL, 'p'}
 };
 
 void print_usage(const char *program_name) {
@@ -111,9 +112,10 @@ int picovoice_main(int argc, char *argv[]) {
     const char *wav_path = NULL;
     float sensitivity = 0.5f;
     bool require_endpoint = false;
+    double performance_threshold_sec = 0;
 
     int c;
-    while ((c = getopt_long(argc, argv, "e:l:m:c:t:a:w:", long_options, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "e:l:m:c:t:a:w:p:", long_options, NULL)) != -1) {
         switch (c) {
             case 'l':
                 library_path = optarg;
@@ -135,6 +137,9 @@ int picovoice_main(int argc, char *argv[]) {
                 break;
             case 'w':
                 wav_path = optarg;
+                break;
+            case 'p':
+                performance_threshold_sec = strtod(optarg, NULL);
                 break;
             default:
                 exit(1);
@@ -346,6 +351,14 @@ int picovoice_main(int argc, char *argv[]) {
     pv_rhino_delete_func(rhino);
     close_dl(rhino_library);
 
+    if (performance_threshold_sec > 0) {
+        const double total_cpu_time_sec = total_cpu_time_usec * 1e-6;
+        if (total_cpu_time_sec > performance_threshold_sec) {
+            fprintf(stderr, "Expected threshold (%.3fs), process took (%.3fs)\n", performance_threshold_sec, total_cpu_time_sec);
+            exit(1);
+        }
+    }
+
     return 0;
 }
 
@@ -361,7 +374,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "CommandLineToArgvW failed\n");
         exit(1);
     }
-    
+
     char *utf8_argv[argc];
 
     for (int i = 0; i < argc; ++i) {

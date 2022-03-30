@@ -15,6 +15,9 @@ inputs:
     default: "true"
   audio_path:
     required: true
+  performance_threshold_sec:
+    required: false
+    type: number
 
 runs:
   using: "composite"
@@ -28,6 +31,20 @@ runs:
       -t ${{ inputs.sensitivity }}
       -e ${{ inputs.require_endpoint }}
       -w ${{ inputs.audio_path }}
+    if: "${{ inputs.performance_threshold_sec == '' }}"
     working-directory: demo/c
     shell: bash
-  
+
+  - run: >
+      ./build/rhino_demo_file
+      -a ${{ inputs.access_key }}
+      -l ${{ inputs.library_path }}
+      -m ${{ inputs.model_path }}
+      -c ${{ inputs.context_path }}
+      -t ${{ inputs.sensitivity }}
+      -e ${{ inputs.require_endpoint }}
+      -w ${{ inputs.audio_path }}
+      -p ${{ inputs.performance_threshold_sec }}
+    if: "${{ inputs.performance_threshold_sec != '' }}"
+    working-directory: demo/c
+    shell: bash

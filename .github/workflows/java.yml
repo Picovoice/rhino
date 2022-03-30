@@ -8,7 +8,7 @@ on:
       - 'binding/java/**'
       - '!binding/java/README.md'
       - 'lib/java/**'
-      - 'resources/contexts/beaglebone/**'      
+      - 'resources/contexts/beaglebone/**'
       - 'resources/contexts/jetson/**'
       - 'resources/contexts/linux/**'
       - 'resources/contexts/mac/**'
@@ -21,7 +21,7 @@ on:
       - 'binding/java/**'
       - '!binding/java/README.md'
       - 'lib/java/**'
-      - 'resources/contexts/beaglebone/**'      
+      - 'resources/contexts/beaglebone/**'
       - 'resources/contexts/jetson/**'
       - 'resources/contexts/linux/**'
       - 'resources/contexts/mac/**'
@@ -40,6 +40,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+        - os: ubuntu-latest
+          performance_threshold_sec: 0.5
+        - os: windows-latest
+          performance_threshold_sec: 0.5
+        - os: macos-latest
+          performance_threshold_sec: 0.5
 
     steps:
     - uses: actions/checkout@v2
@@ -57,7 +64,7 @@ jobs:
       run: ./gradlew assemble
 
     - name: Test
-      run: ./gradlew test -DpvTestingAccessKey="${{secrets.PV_VALID_ACCESS_KEY}}"
+      run: ./gradlew test -DpvTestingAccessKey="${{secrets.PV_VALID_ACCESS_KEY}}" -DperformanceThresholdSec="${{matrix.performance_threshold_sec}}"
 
   build-self-hosted:
     runs-on: ${{ matrix.machine }}
@@ -65,6 +72,21 @@ jobs:
     strategy:
       matrix:
         machine: [rpi2, rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson, beaglebone]
+        include:
+        - machine: rpi2
+          performance_threshold_sec: 2.0
+        - machine: rpi3-32
+          performance_threshold_sec: 0.7
+        - machine: rpi3-64
+          performance_threshold_sec: 0.7
+        - machine: rpi4-32
+          performance_threshold_sec: 0.5
+        - machine: rpi4-64
+          performance_threshold_sec: 0.5
+        - machine: jetson
+          performance_threshold_sec: 0.5
+        - machine: beaglebone
+          performance_threshold_sec: 2.5
 
     steps:
     - uses: actions/checkout@v2
@@ -76,4 +98,4 @@ jobs:
       run: ./gradlew assemble
 
     - name: Test
-      run: ./gradlew test -DpvTestingAccessKey="${{secrets.PV_VALID_ACCESS_KEY}}"
+      run: ./gradlew test -DpvTestingAccessKey="${{secrets.PV_VALID_ACCESS_KEY}}" -DperformanceThresholdSec="${{matrix.performance_threshold_sec}}"

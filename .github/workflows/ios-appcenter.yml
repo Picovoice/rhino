@@ -4,19 +4,19 @@ on:
   workflow_dispatch:
   push:
     branches: [ master ]
-    paths: 
+    paths:
       - 'binding/ios/RhinoAppTest/Podfile.lock'
       - '.github/workflows/ios-appcenter.yml'
   pull_request:
     branches: [ master ]
-    paths: 
+    paths:
       - 'binding/ios/RhinoAppTest/Podfile.lock'
       - '.github/workflows/ios-appcenter.yml'
 
 defaults:
   run:
     working-directory: binding/ios/RhinoAppTest
-    
+
 jobs:
   build:
     name: Run iOS Tests on AppCenter
@@ -40,25 +40,29 @@ jobs:
 
       - name: Run Cocoapods
         run: pod install
-      
+
       - name: Inject AppID
         run: sed -i '.bak' 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
           RhinoAppTestUITests/RhinoAppTestUITests.swift
-  
+
+      - name: Inject Performance Threshold
+        run: sed -i '.bak' 's:{PERFORMANCE_THRESHOLD_SEC}:1.25:'
+          RhinoAppTestUITests/RhinoAppTestUITests.swift
+
       - name: XCode Build
-        run: xcrun xcodebuild build-for-testing 
-          -configuration Debug 
-          -workspace RhinoAppTest.xcworkspace 
-          -sdk iphoneos 
-          -scheme RhinoAppTest 
-          -derivedDataPath ddp 
+        run: xcrun xcodebuild build-for-testing
+          -configuration Debug
+          -workspace RhinoAppTest.xcworkspace
+          -sdk iphoneos
+          -scheme RhinoAppTest
+          -derivedDataPath ddp
           CODE_SIGNING_ALLOWED=NO
 
       - name: Run Tests on AppCenter
-        run: appcenter test run xcuitest 
+        run: appcenter test run xcuitest
           --token ${{secrets.APPCENTERAPITOKEN}}
-          --app "Picovoice/Rhino-iOS" 
-          --devices "Picovoice/ios-min-max" 
-          --test-series "rhino-ios" 
-          --locale "en_US" 
+          --app "Picovoice/Rhino-iOS"
+          --devices "Picovoice/ios-min-max"
+          --test-series "rhino-ios"
+          --locale "en_US"
           --build-dir ddp/Build/Products/Debug-iphoneos

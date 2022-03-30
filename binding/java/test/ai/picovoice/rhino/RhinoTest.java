@@ -15,6 +15,7 @@ package ai.picovoice.rhino;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -34,17 +35,26 @@ public class RhinoTest {
 
     private static final String ENVIRONMENT_NAME;
     private Rhino rhino;
-    private String accessKey = System.getProperty("pvTestingAccessKey");
+    private final String accessKey = System.getProperty("pvTestingAccessKey");
+    private double performanceThresholdSec;
 
     static {
         ENVIRONMENT_NAME = Utils.getEnvironmentName();
     }
 
+    RhinoTest() {
+        try {
+            performanceThresholdSec = Double.parseDouble(System.getProperty("performanceThresholdSec"));
+        } catch (Exception e) {
+            performanceThresholdSec = 0f;
+        }
+    }
+
     private static String appendLanguage(String s, String language) {
-        if (language == "en")
+        if (language.equals("en"))
             return s;
         return s + "_" + language;
-    }    
+    }
 
     private static String getTestContextPath(String language, String context) {
         return Paths.get(System.getProperty("user.dir"))
@@ -60,7 +70,7 @@ public class RhinoTest {
             .resolve("../../lib/common")
             .resolve(appendLanguage("rhino_params", language)+".pv")
             .toString();
-    }    
+    }
 
     private static String getAudioFilePath(String audioFileName) {
         return Paths.get(System.getProperty("user.dir"))
@@ -191,7 +201,7 @@ public class RhinoTest {
             "changeState",
             expectedSlotValues
         );
-    }    
+    }
 
     @Test
     void testOutOfContextDe() throws IOException, UnsupportedAudioFileException, RhinoException {
@@ -230,7 +240,7 @@ public class RhinoTest {
             "changeColor",
             expectedSlotValues
         );
-    }    
+    }
 
     @Test
     void testOutOfContextEs() throws IOException, UnsupportedAudioFileException, RhinoException {
@@ -268,7 +278,7 @@ public class RhinoTest {
             "changeColor",
             expectedSlotValues
         );
-    }    
+    }
 
     @Test
     void testOutOfContextFr() throws IOException, UnsupportedAudioFileException, RhinoException {
@@ -285,5 +295,45 @@ public class RhinoTest {
             null,
             null
         );
-    }    
+    }
+
+    @Test
+    @DisabledIf("systemProperty.get('performanceThresholdSec') == null || systemProperty.get('performanceThresholdSec') == ''")
+    void testPerformance() throws Exception {
+        rhino = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(getTestContextPath("en", "coffee_maker"))
+                .build();
+
+        int frameLen = rhino.getFrameLength();
+        String audioFilePath = getAudioFilePath("test_within_context.wav");
+        File testAudioPath = new File(audioFilePath);
+
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(testAudioPath);
+        assertEquals(audioInputStream.getFormat().getFrameRate(), 16000);
+
+        int byteDepth = audioInputStream.getFormat().getFrameSize();
+        int bufferSize = frameLen * byteDepth;
+
+        byte[] pcm = new byte[bufferSize];
+        short[] rhinoFrame = new short[frameLen];
+        int numBytesRead;
+
+        long totalNSec = 0;
+        while ((numBytesRead = audioInputStream.read(pcm)) != -1) {
+            if (numBytesRead / byteDepth == frameLen) {
+                ByteBuffer.wrap(pcm).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(rhinoFrame);
+                long before = System.nanoTime();
+                rhino.process(rhinoFrame);
+                long after = System.nanoTime();
+                totalNSec += (after - before);
+            }
+        }
+
+        double totalSec = Math.round(((double) totalNSec) * 1e-6) / 1000.0;
+        assertTrue(
+                totalSec <= this.performanceThresholdSec,
+                String.format("Expected threshold (%.3fs), process took (%.3fs)", this.performanceThresholdSec, totalSec)
+        );
+    }
 }

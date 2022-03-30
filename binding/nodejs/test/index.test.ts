@@ -14,6 +14,7 @@ import Rhino, { RhinoInference } from "../src/rhino";
 
 import * as fs from "fs";
 import * as path from "path";
+import { performance } from "perf_hooks";
 import { getInt16Frames, checkWaveFile } from "../src/wave_util";
 import { WaveFile } from "wavefile";
 
@@ -54,7 +55,9 @@ const contextPathIluminacionInteligenteEs =
   `../../resources/contexts_es/${platform}/iluminación_inteligente_${platform}.rhn`;
 
 
-const ACCESS_KEY = process.argv.filter((x) => x.startsWith("--access_key="))[0].split("--access_key=")[1];
+const ACCESS_KEY = process.argv.filter((x) => x.startsWith('--access_key='))[0]?.split('--access_key=')[1] ?? "";
+const PERFORMANCE_THRESHOLD_SEC = Number(process.argv.filter((x) => x.startsWith('--performance_threshold_sec='))[0]?.split('--performance_threshold_sec=')[1] ?? 0);
+const describe_if = (condition: boolean) => condition ? describe : describe.skip;
 
 function rhinoProcessWaveFile(
   engineInstance: Rhino,
@@ -402,5 +405,32 @@ describe("invalid state", () => {
         WAV_PATH_COFFEE_MAKER_IN_CONTEXT
       );
     }).toThrow(RhinoInvalidStateError);
+  });
+});
+
+
+describe_if(PERFORMANCE_THRESHOLD_SEC > 0)("performance", () => {
+  test("process", () => {
+    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+
+    const path = require("path");
+    const waveFilePath = path.join(__dirname, WAV_PATH_COFFEE_MAKER_IN_CONTEXT);
+    const waveBuffer = fs.readFileSync(waveFilePath);
+    const waveAudioFile = new WaveFile(waveBuffer);
+
+    const frames = getInt16Frames(waveAudioFile, rhinoEngine.frameLength);
+    let total = 0;
+    for (let i = 0; i < frames.length; i++) {
+      const frame = frames[0];
+      const before = performance.now();
+      rhinoEngine.process(frame);
+      const after = performance.now();
+      total += (after - before);
+    }
+
+    rhinoEngine.release();
+
+    total = Number((total / 1000).toFixed(3));
+    expect(total).toBeLessThanOrEqual(PERFORMANCE_THRESHOLD_SEC);
   });
 });
