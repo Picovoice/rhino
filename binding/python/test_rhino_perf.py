@@ -53,9 +53,6 @@ class RhinoPerformanceTestCase(unittest.TestCase):
             if i > 0:
                 perf_results.append(proc_time)
 
-            self.assertTrue(is_finalized, "Failed to finalize.")
-            rhino.get_inference()
-
         rhino.delete()
 
         avg_perf = sum(perf_results) / self.NUM_TEST_ITERATIONS
