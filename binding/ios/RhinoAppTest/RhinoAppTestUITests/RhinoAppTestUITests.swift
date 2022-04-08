@@ -14,7 +14,6 @@ import Rhino
 
 class RhinoAppTestUITests: XCTestCase {
     let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
-    let thresholdString: String = "{PERFORMANCE_THRESHOLD_SEC}"
     
     override func setUp() {
         super.setUp()
@@ -281,37 +280,5 @@ class RhinoAppTestUITests: XCTestCase {
             modelPath: modelPath)
         XCTAssert(r.contextInfo != "")
         r.delete()
-    }
-
-    func testPerformance() throws {
-        try XCTSkipIf(thresholdString == "{PERFORMANCE_THRESHOLD_SEC}")
-
-        let performanceThresholdSec = Double(thresholdString)
-        try XCTSkipIf(performanceThresholdSec == nil)
-
-        let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
-        let r = try Rhino.init(accessKey: accessKey, contextPath: contextPath)
-
-        let fileURL:URL = bundle.url(forResource: "test_within_context", withExtension: "wav")!
-
-        let data = try Data(contentsOf: fileURL)
-        let frameLengthBytes = Int(Rhino.frameLength) * 2
-        var pcmBuffer = Array<Int16>(repeating: 0, count: Int(Rhino.frameLength))
-
-        var totalNSec = 0.0
-        var index = 44
-        while(index + frameLengthBytes < data.count) {
-            _ = pcmBuffer.withUnsafeMutableBytes { data.copyBytes(to: $0, from: index..<(index + frameLengthBytes)) }
-            let before = CFAbsoluteTimeGetCurrent()
-            try r.process(pcm:pcmBuffer)
-            let after = CFAbsoluteTimeGetCurrent()
-            totalNSec += (after - before)
-            index += frameLengthBytes
-        }
-        r.delete()
-
-        let totalSec = Double(round(totalNSec * 1000) / 1000)
-        XCTAssertLessThanOrEqual(totalSec, performanceThresholdSec!)
     }
 }

@@ -8,3 +8,7 @@ end
 target 'RhinoAppTestUITests' do
     pod 'Rhino-iOS', '~> 2.1.0'
 end
+
+target 'PerformanceTest' do
+    pod 'Rhino-iOS', '~> 2.1.0'
+end
