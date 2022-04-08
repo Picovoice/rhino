@@ -14,8 +14,7 @@ import Rhino, { RhinoInference } from "../src/rhino";
 
 import * as fs from "fs";
 import * as path from "path";
-import { performance } from "perf_hooks";
-import { getInt16Frames, checkWaveFile } from "../src/wave_util";
+import { getInt16Frames, checkWaveFile } from "../src";
 import { WaveFile } from "wavefile";
 
 import { RhinoInvalidArgumentError, RhinoInvalidStateError } from "../src/errors";
@@ -405,32 +404,5 @@ describe("invalid state", () => {
         WAV_PATH_COFFEE_MAKER_IN_CONTEXT
       );
     }).toThrow(RhinoInvalidStateError);
-  });
-});
-
-
-describe_if(PERFORMANCE_THRESHOLD_SEC > 0)("performance", () => {
-  test("process", () => {
-    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
-
-    const path = require("path");
-    const waveFilePath = path.join(__dirname, WAV_PATH_COFFEE_MAKER_IN_CONTEXT);
-    const waveBuffer = fs.readFileSync(waveFilePath);
-    const waveAudioFile = new WaveFile(waveBuffer);
-
-    const frames = getInt16Frames(waveAudioFile, rhinoEngine.frameLength);
-    let total = 0;
-    for (let i = 0; i < frames.length; i++) {
-      const frame = frames[0];
-      const before = performance.now();
-      rhinoEngine.process(frame);
-      const after = performance.now();
-      total += (after - before);
-    }
-
-    rhinoEngine.release();
-
-    total = Number((total / 1000).toFixed(3));
-    expect(total).toBeLessThanOrEqual(PERFORMANCE_THRESHOLD_SEC);
   });
 });

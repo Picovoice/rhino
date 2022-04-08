@@ -44,14 +44,11 @@ class RhinoPerformanceTestCase(unittest.TestCase):
         perf_results = []
         for i in range(self.NUM_TEST_ITERATIONS):
             proc_time = 0
-            is_finalized = False
             for j in range(len(audio) // rhino.frame_length):
                 frame = audio[j * rhino.frame_length:(j + 1) * rhino.frame_length]
                 start = time.time()
-                is_finalized = rhino.process(frame)
+                rhino.process(frame)
                 proc_time += time.time() - start
-                if is_finalized:
-                    break
 
             if i > 0:
                 perf_results.append(proc_time)
