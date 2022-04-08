@@ -55,7 +55,7 @@ jobs:
         - os: windows-latest
           performance_threshold_sec: 0.2
         - os: macos-latest
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 0.2
 
     steps:
     - uses: actions/checkout@v2
@@ -96,7 +96,7 @@ jobs:
           num_test_iterations: 50
           performance_threshold_sec: 0.52
         - machine: beaglebone
-          num_test_iterations: 10
+          num_test_iterations: 20
           performance_threshold_sec: 2.7
 
     steps:
