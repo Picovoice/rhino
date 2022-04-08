@@ -5,7 +5,6 @@ on:
   push:
     branches: [ master ]
     paths:
-      - '.github/workflows/python.yml'
       - 'binding/python/**'
       - '!binding/python/README.md'
       - 'lib/beaglebone/**'
@@ -15,7 +14,7 @@ on:
       - 'lib/mac/**'
       - 'lib/raspberry-pi/**'
       - 'lib/windows/**'
-      - 'resources/contexts/beaglebone/**'      
+      - 'resources/contexts/beaglebone/**'
       - 'resources/contexts/jetson/**'
       - 'resources/contexts/linux/**'
       - 'resources/contexts/mac/**'
@@ -34,7 +33,7 @@ on:
       - 'lib/mac/**'
       - 'lib/raspberry-pi/**'
       - 'lib/windows/**'
-      - 'resources/contexts/beaglebone/**'      
+      - 'resources/contexts/beaglebone/**'
       - 'resources/contexts/jetson/**'
       - 'resources/contexts/linux/**'
       - 'resources/contexts/mac/**'
