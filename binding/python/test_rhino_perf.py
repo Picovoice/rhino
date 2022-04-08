@@ -42,18 +42,20 @@ class RhinoPerformanceTestCase(unittest.TestCase):
             rhino.sample_rate)
 
         perf_results = []
-        for _ in range(self.NUM_TEST_ITERATIONS):
+        for i in range(self.NUM_TEST_ITERATIONS):
             proc_time = 0
             is_finalized = False
-            for i in range(len(audio) // rhino.frame_length):
-                frame = audio[i * rhino.frame_length:(i + 1) * rhino.frame_length]
+            for j in range(len(audio) // rhino.frame_length):
+                frame = audio[j * rhino.frame_length:(j + 1) * rhino.frame_length]
                 start = time.time()
                 is_finalized = rhino.process(frame)
                 proc_time += time.time() - start
                 if is_finalized:
                     break
-                    
-            perf_results.append(proc_time)
+
+            if i > 0:
+                perf_results.append(proc_time)
+
             self.assertTrue(is_finalized, "Failed to finalize.")
             rhino.get_inference()
 
@@ -66,7 +68,7 @@ class RhinoPerformanceTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
     if len(sys.argv) != 4:
-        print("usage: test_porcupine_perf.py ${ACCESS_KEY} ${NUM_TEST_INTERVALS} ${PERFORMANCE_THRESHOLD_SEC}")
+        print("usage: test_rhino_perf.py ${ACCESS_KEY} ${NUM_TEST_INTERVALS} ${PERFORMANCE_THRESHOLD_SEC}")
         exit(1)
 
     unittest.main(argv=sys.argv[:1])
