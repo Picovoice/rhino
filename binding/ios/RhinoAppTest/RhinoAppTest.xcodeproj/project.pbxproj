@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		049E74D6C17F04FC6ADCEDC9 /* libPods-RhinoAppTestUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 59230357DF94896EBFBD8305 /* libPods-RhinoAppTestUITests.a */; };
+		049E74D6C17F04FC6ADCEDC9 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		1E00658E27D053CB006FF6E9 /* beleuchtung_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E00658D27D053CB006FF6E9 /* beleuchtung_ios.rhn */; };
 		1E00659027D053D9006FF6E9 /* éclairage_intelligent_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E00658F27D053D9006FF6E9 /* éclairage_intelligent_ios.rhn */; };
 		1E1A57D227CEC84000A05F37 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57D127CEC84000A05F37 /* AppDelegate.swift */; };
@@ -25,11 +25,23 @@
 		1E1A582C27CECE6900A05F37 /* test_within_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582A27CECE6900A05F37 /* test_within_context.wav */; };
 		1E1A582D27CECE6900A05F37 /* test_out_of_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582B27CECE6900A05F37 /* test_out_of_context.wav */; };
 		1E1A583527CED02400A05F37 /* iluminación_inteligente_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A583427CED02400A05F37 /* iluminación_inteligente_ios.rhn */; };
+		1E5B7AD72800AC2700F8BDDB /* PerformanceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B7AD62800AC2700F8BDDB /* PerformanceTest.swift */; };
+		1E5B7ADA2800ADCD00F8BDDB /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E5B7AD92800ADCD00F8BDDB /* coffee_maker_ios.rhn */; };
+		1E5B7ADC2800ADD800F8BDDB /* test_within_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E5B7ADB2800ADD800F8BDDB /* test_within_context.wav */; };
+		3C77A1FF7E9EE1E6942527E8 /* libPods-RhinoAppTestUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AA66651E907F4A1B2E5D84A /* libPods-RhinoAppTestUITests.a */; };
+		3D73D7DE0BB4828FC4E1B3C2 /* libPods-PerformanceTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F2642FE16C549581638C57 /* libPods-PerformanceTest.a */; };
 		B6D75F72F9368E5A4D8A47F7 /* libPods-RhinoAppTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8B41DCF24254E027C2B30C /* libPods-RhinoAppTest.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		1E1A57EF27CEC84000A05F37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E1A57C627CEC84000A05F37 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E1A57CD27CEC84000A05F37;
+			remoteInfo = RhinoAppTest;
+		};
+		1E5B7ABE2800ABDE00F8BDDB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1E1A57C627CEC84000A05F37 /* Project object */;
 			proxyType = 1;
@@ -61,11 +73,19 @@
 		1E1A582A27CECE6900A05F37 /* test_within_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context.wav; path = ../../../../resources/audio_samples/test_within_context.wav; sourceTree = "<group>"; };
 		1E1A582B27CECE6900A05F37 /* test_out_of_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context.wav; path = ../../../../resources/audio_samples/test_out_of_context.wav; sourceTree = "<group>"; };
 		1E1A583427CED02400A05F37 /* iluminación_inteligente_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = "iluminación_inteligente_ios.rhn"; path = "../../../../resources/contexts_es/ios/iluminación_inteligente_ios.rhn"; sourceTree = "<group>"; };
+		1E5B7AD52800ABDE00F8BDDB /* PerformanceTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PerformanceTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E5B7AD62800AC2700F8BDDB /* PerformanceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTest.swift; sourceTree = "<group>"; };
+		1E5B7AD82800AC8F00F8BDDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E5B7AD92800ADCD00F8BDDB /* coffee_maker_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_ios.rhn; path = ../../../../resources/contexts/ios/coffee_maker_ios.rhn; sourceTree = "<group>"; };
+		1E5B7ADB2800ADD800F8BDDB /* test_within_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context.wav; path = ../../../../resources/audio_samples/test_within_context.wav; sourceTree = "<group>"; };
 		2B1742C8ACAFE68554B2DFD4 /* Pods-RhinoAppTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTest.release.xcconfig"; path = "Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest.release.xcconfig"; sourceTree = "<group>"; };
-		59230357DF94896EBFBD8305 /* libPods-RhinoAppTestUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoAppTestUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AA66651E907F4A1B2E5D84A /* libPods-RhinoAppTestUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoAppTestUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C8B41DCF24254E027C2B30C /* libPods-RhinoAppTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoAppTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D3D0649948C17F6FF2875C0 /* Pods-RhinoAppTestUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTestUITests.release.xcconfig"; path = "Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests.release.xcconfig"; sourceTree = "<group>"; };
 		900FCBC5CECD2C71CA548677 /* Pods-RhinoAppTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTest.debug.xcconfig"; path = "Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest.debug.xcconfig"; sourceTree = "<group>"; };
+		F10FFBFDE9AD2034FA8C0429 /* Pods-PerformanceTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.debug.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.debug.xcconfig"; sourceTree = "<group>"; };
+		F679D59C9F02B60A47B90200 /* Pods-PerformanceTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.release.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.release.xcconfig"; sourceTree = "<group>"; };
+		F7F2642FE16C549581638C57 /* libPods-PerformanceTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PerformanceTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,7 +101,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				049E74D6C17F04FC6ADCEDC9 /* libPods-RhinoAppTestUITests.a in Frameworks */,
+				049E74D6C17F04FC6ADCEDC9 /* (null) in Frameworks */,
+				3C77A1FF7E9EE1E6942527E8 /* libPods-RhinoAppTestUITests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E5B7AC22800ABDE00F8BDDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D73D7DE0BB4828FC4E1B3C2 /* libPods-PerformanceTest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +120,7 @@
 		1E1A57C527CEC84000A05F37 = {
 			isa = PBXGroup;
 			children = (
+				1E5B7ABB2800ABC600F8BDDB /* PerformanceTest */,
 				1E1A57D027CEC84000A05F37 /* RhinoAppTest */,
 				1E1A57F127CEC84000A05F37 /* RhinoAppTestUITests */,
 				1E1A57CF27CEC84000A05F37 /* Products */,
@@ -104,6 +134,7 @@
 			children = (
 				1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */,
 				1E1A57EE27CEC84000A05F37 /* RhinoAppTestUITests.xctest */,
+				1E5B7AD52800ABDE00F8BDDB /* PerformanceTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -205,6 +236,17 @@
 			name = de;
 			sourceTree = "<group>";
 		};
+		1E5B7ABB2800ABC600F8BDDB /* PerformanceTest */ = {
+			isa = PBXGroup;
+			children = (
+				1E5B7AD62800AC2700F8BDDB /* PerformanceTest.swift */,
+				1E5B7AD82800AC8F00F8BDDB /* Info.plist */,
+				1E5B7AD92800ADCD00F8BDDB /* coffee_maker_ios.rhn */,
+				1E5B7ADB2800ADD800F8BDDB /* test_within_context.wav */,
+			);
+			path = PerformanceTest;
+			sourceTree = "<group>";
+		};
 		286CC2DF6F709F2C33610374 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,6 +254,8 @@
 				2B1742C8ACAFE68554B2DFD4 /* Pods-RhinoAppTest.release.xcconfig */,
 				18FAB8FC8D086FF2500A0A6A /* Pods-RhinoAppTestUITests.debug.xcconfig */,
 				5D3D0649948C17F6FF2875C0 /* Pods-RhinoAppTestUITests.release.xcconfig */,
+				F10FFBFDE9AD2034FA8C0429 /* Pods-PerformanceTest.debug.xcconfig */,
+				F679D59C9F02B60A47B90200 /* Pods-PerformanceTest.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -220,7 +264,8 @@
 			isa = PBXGroup;
 			children = (
 				5C8B41DCF24254E027C2B30C /* libPods-RhinoAppTest.a */,
-				59230357DF94896EBFBD8305 /* libPods-RhinoAppTestUITests.a */,
+				F7F2642FE16C549581638C57 /* libPods-PerformanceTest.a */,
+				5AA66651E907F4A1B2E5D84A /* libPods-RhinoAppTestUITests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -269,6 +314,27 @@
 			productReference = 1E1A57EE27CEC84000A05F37 /* RhinoAppTestUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		1E5B7ABC2800ABDE00F8BDDB /* PerformanceTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E5B7AD22800ABDE00F8BDDB /* Build configuration list for PBXNativeTarget "PerformanceTest" */;
+			buildPhases = (
+				1E5B7ABF2800ABDE00F8BDDB /* [CP] Check Pods Manifest.lock */,
+				1E5B7AC02800ABDE00F8BDDB /* Sources */,
+				1E5B7AC22800ABDE00F8BDDB /* Frameworks */,
+				1E5B7AC42800ABDE00F8BDDB /* Resources */,
+				1E5B7AD02800ABDE00F8BDDB /* [CP] Embed Pods Frameworks */,
+				1E5B7AD12800ABDE00F8BDDB /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1E5B7ABD2800ABDE00F8BDDB /* PBXTargetDependency */,
+			);
+			name = PerformanceTest;
+			productName = RhinoAppTestUITests;
+			productReference = 1E5B7AD52800ABDE00F8BDDB /* PerformanceTest.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -284,6 +350,9 @@
 					};
 					1E1A57ED27CEC84000A05F37 = {
 						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = 1E1A57CD27CEC84000A05F37;
+					};
+					1E5B7ABC2800ABDE00F8BDDB = {
 						TestTargetID = 1E1A57CD27CEC84000A05F37;
 					};
 				};
@@ -303,6 +372,7 @@
 			targets = (
 				1E1A57CD27CEC84000A05F37 /* RhinoAppTest */,
 				1E1A57ED27CEC84000A05F37 /* RhinoAppTestUITests */,
+				1E5B7ABC2800ABDE00F8BDDB /* PerformanceTest */,
 			);
 		};
 /* End PBXProject section */
@@ -336,6 +406,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1E5B7AC42800ABDE00F8BDDB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E5B7ADA2800ADCD00F8BDDB /* coffee_maker_ios.rhn in Resources */,
+				1E5B7ADC2800ADD800F8BDDB /* test_within_context.wav in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -359,6 +438,62 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1E5B7ABF2800ABDE00F8BDDB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PerformanceTest-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1E5B7AD02800ABDE00F8BDDB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1E5B7AD12800ABDE00F8BDDB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		2735EB327D16B1BB02AA2174 /* [CP] Copy Pods Resources */ = {
@@ -471,6 +606,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1E5B7AC02800ABDE00F8BDDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E5B7AD72800AC2700F8BDDB /* PerformanceTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -478,6 +621,11 @@
 			isa = PBXTargetDependency;
 			target = 1E1A57CD27CEC84000A05F37 /* RhinoAppTest */;
 			targetProxy = 1E1A57EF27CEC84000A05F37 /* PBXContainerItemProxy */;
+		};
+		1E5B7ABD2800ABDE00F8BDDB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E1A57CD27CEC84000A05F37 /* RhinoAppTest */;
+			targetProxy = 1E5B7ABE2800ABDE00F8BDDB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -721,6 +869,52 @@
 			};
 			name = Release;
 		};
+		1E5B7AD32800ABDE00F8BDDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F10FFBFDE9AD2034FA8C0429 /* Pods-PerformanceTest.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.RhinoAppTestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RhinoAppTest;
+			};
+			name = Debug;
+		};
+		1E5B7AD42800ABDE00F8BDDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F679D59C9F02B60A47B90200 /* Pods-PerformanceTest.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.RhinoAppTestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RhinoAppTest;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -747,6 +941,15 @@
 			buildConfigurations = (
 				1E1A57FF27CEC84000A05F37 /* Debug */,
 				1E1A580027CEC84000A05F37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E5B7AD22800ABDE00F8BDDB /* Build configuration list for PBXNativeTarget "PerformanceTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E5B7AD32800ABDE00F8BDDB /* Debug */,
+				1E5B7AD42800ABDE00F8BDDB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
