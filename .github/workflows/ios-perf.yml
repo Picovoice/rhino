@@ -7,19 +7,19 @@ on:
     paths: 
       - 'lib/ios/**'
       - 'lib/common/**'
-      - 'resources/keyword_files/ios/**'
+      - 'resources/contexts/ios/**'
       - '.github/workflows/ios-perf.yml'
   pull_request:
     branches: [ master ]
     paths: 
       - 'lib/ios/**'
       - 'lib/common/**'
-      - 'resources/keyword_files/ios/**'
+      - 'resources/contexts/ios/**'
       - '.github/workflows/ios-perf.yml'
       
 defaults:
   run:
-    working-directory: binding/ios/PorcupineAppTest
+    working-directory: binding/ios/RhinoAppTest
     
 jobs:
   build:
