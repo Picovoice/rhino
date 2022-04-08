@@ -13,9 +13,7 @@
 package ai.picovoice.rhino;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -24,60 +22,16 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RhinoTest {
 
-    private static final String ENVIRONMENT_NAME;
-    private Rhino rhino;
     private final String accessKey = System.getProperty("pvTestingAccessKey");
-    private double performanceThresholdSec;
-
-    static {
-        ENVIRONMENT_NAME = Utils.getEnvironmentName();
-    }
-
-    RhinoTest() {
-        try {
-            performanceThresholdSec = Double.parseDouble(System.getProperty("performanceThresholdSec"));
-        } catch (Exception e) {
-            performanceThresholdSec = 0f;
-        }
-    }
-
-    private static String appendLanguage(String s, String language) {
-        if (language.equals("en"))
-            return s;
-        return s + "_" + language;
-    }
-
-    private static String getTestContextPath(String language, String context) {
-        return Paths.get(System.getProperty("user.dir"))
-            .resolve("../../resources")
-            .resolve(appendLanguage("contexts", language))
-            .resolve(ENVIRONMENT_NAME)
-            .resolve(context + "_" + ENVIRONMENT_NAME + ".rhn")
-            .toString();
-    }
-
-    private static String getTestModelPath(String language) {
-        return Paths.get(System.getProperty("user.dir"))
-            .resolve("../../lib/common")
-            .resolve(appendLanguage("rhino_params", language)+".pv")
-            .toString();
-    }
-
-    private static String getAudioFilePath(String audioFileName) {
-        return Paths.get(System.getProperty("user.dir"))
-            .resolve("../../resources/audio_samples")
-            .resolve(audioFileName)
-            .toString();
-    }
+    private Rhino rhino;
 
     @AfterEach
     void tearDown() {
@@ -87,33 +41,33 @@ public class RhinoTest {
     @Test
     void getVersion() throws RhinoException {
         rhino = new Rhino.Builder()
-        .setAccessKey(accessKey)
-        .setContextPath(getTestContextPath("en", "coffee_maker"))
-        .build();
+                .setAccessKey(accessKey)
+                .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
+                .build();
         assertTrue(rhino.getVersion() != null && !rhino.getVersion().equals(""));
     }
 
     @Test
     void getFrameLength() throws RhinoException {
         rhino = new Rhino.Builder()
-        .setAccessKey(accessKey)
-        .setContextPath(getTestContextPath("en", "coffee_maker"))
-        .build();
+                .setAccessKey(accessKey)
+                .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
+                .build();
         assertTrue(rhino.getFrameLength() > 0);
     }
 
     @org.junit.jupiter.api.Test
     void getSampleRate() throws RhinoException {
         rhino = new Rhino.Builder()
-        .setAccessKey(accessKey)
-        .setContextPath(getTestContextPath("en", "coffee_maker"))
-        .build();
+                .setAccessKey(accessKey)
+                .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
+                .build();
         assertTrue(rhino.getSampleRate() > 0);
     }
 
     void runTestCase(String audioFileName, boolean isWithinContext, String expectedIntent, Map<String, String> expectedSlots) throws IOException, UnsupportedAudioFileException, RhinoException {
         int frameLen = rhino.getFrameLength();
-        String audioFilePath = getAudioFilePath(audioFileName);
+        String audioFilePath = RhinoTestUtils.getAudioFilePath(audioFileName);
         File testAudioPath = new File(audioFilePath);
 
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(testAudioPath);
@@ -140,7 +94,7 @@ public class RhinoTest {
         RhinoInference inference = rhino.getInference();
         assertEquals(inference.getIsUnderstood(), isWithinContext);
 
-        if(isWithinContext) {
+        if (isWithinContext) {
             assertEquals(inference.getIntent(), expectedIntent);
             assertEquals(inference.getSlots(), expectedSlots);
         }
@@ -150,20 +104,20 @@ public class RhinoTest {
     void testWithinContext() throws IOException, UnsupportedAudioFileException, RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(getTestContextPath("en", "coffee_maker"))
+                .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                 .build();
 
-        Map<String, String> expectedSlotValues  = new HashMap<String, String>() {{
+        Map<String, String> expectedSlotValues = new HashMap<String, String>() {{
             put("size", "medium");
             put("numberOfShots", "double shot");
             put("beverage", "americano");
         }};
 
         runTestCase(
-            "test_within_context.wav",
-            true,
-            "orderBeverage",
-            expectedSlotValues
+                "test_within_context.wav",
+                true,
+                "orderBeverage",
+                expectedSlotValues
         );
     }
 
@@ -171,14 +125,14 @@ public class RhinoTest {
     void testOutOfContext() throws IOException, UnsupportedAudioFileException, RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(getTestContextPath("en", "coffee_maker"))
+                .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                 .build();
 
         runTestCase(
-            "test_out_of_context.wav",
-            false,
-            null,
-            null
+                "test_out_of_context.wav",
+                false,
+                null,
+                null
         );
     }
 
@@ -188,18 +142,18 @@ public class RhinoTest {
         final String language = "de";
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(getTestContextPath(language, "beleuchtung"))
-                .setModelPath(getTestModelPath(language))
+                .setContextPath(RhinoTestUtils.getTestContextPath(language, "beleuchtung"))
+                .setModelPath(RhinoTestUtils.getTestModelPath(language))
                 .build();
 
-        Map<String, String> expectedSlotValues  = new HashMap<String, String>() {{
+        Map<String, String> expectedSlotValues = new HashMap<String, String>() {{
             put("state", "aus");
         }};
         runTestCase(
-            "test_within_context_de.wav",
-            true,
-            "changeState",
-            expectedSlotValues
+                "test_within_context_de.wav",
+                true,
+                "changeState",
+                expectedSlotValues
         );
     }
 
@@ -208,15 +162,15 @@ public class RhinoTest {
         final String language = "de";
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(getTestContextPath(language, "beleuchtung"))
-                .setModelPath(getTestModelPath(language))
+                .setContextPath(RhinoTestUtils.getTestContextPath(language, "beleuchtung"))
+                .setModelPath(RhinoTestUtils.getTestModelPath(language))
                 .build();
 
         runTestCase(
-            "test_out_of_context_de.wav",
-            false,
-            null,
-            null
+                "test_out_of_context_de.wav",
+                false,
+                null,
+                null
         );
     }
 
@@ -226,19 +180,19 @@ public class RhinoTest {
         final String language = "es";
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(getTestContextPath(language, "iluminación_inteligente"))
-                .setModelPath(getTestModelPath(language))
+                .setContextPath(RhinoTestUtils.getTestContextPath(language, "iluminación_inteligente"))
+                .setModelPath(RhinoTestUtils.getTestModelPath(language))
                 .build();
 
-        Map<String, String> expectedSlotValues  = new HashMap<String, String>() {{
+        Map<String, String> expectedSlotValues = new HashMap<String, String>() {{
             put("location", "habitación");
             put("color", "rosado");
         }};
         runTestCase(
-            "test_within_context_es.wav",
-            true,
-            "changeColor",
-            expectedSlotValues
+                "test_within_context_es.wav",
+                true,
+                "changeColor",
+                expectedSlotValues
         );
     }
 
@@ -247,15 +201,15 @@ public class RhinoTest {
         final String language = "es";
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(getTestContextPath(language, "iluminación_inteligente"))
-                .setModelPath(getTestModelPath(language))
+                .setContextPath(RhinoTestUtils.getTestContextPath(language, "iluminación_inteligente"))
+                .setModelPath(RhinoTestUtils.getTestModelPath(language))
                 .build();
 
         runTestCase(
-            "test_out_of_context_es.wav",
-            false,
-            null,
-            null
+                "test_out_of_context_es.wav",
+                false,
+                null,
+                null
         );
     }
 
@@ -265,18 +219,18 @@ public class RhinoTest {
         final String language = "fr";
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(getTestContextPath(language, "éclairage_intelligent"))
-                .setModelPath(getTestModelPath(language))
+                .setContextPath(RhinoTestUtils.getTestContextPath(language, "éclairage_intelligent"))
+                .setModelPath(RhinoTestUtils.getTestModelPath(language))
                 .build();
 
-        Map<String, String> expectedSlotValues  = new HashMap<String, String>() {{
+        Map<String, String> expectedSlotValues = new HashMap<String, String>() {{
             put("color", "violet");
         }};
         runTestCase(
-            "test_within_context_fr.wav",
-            true,
-            "changeColor",
-            expectedSlotValues
+                "test_within_context_fr.wav",
+                true,
+                "changeColor",
+                expectedSlotValues
         );
     }
 
@@ -285,55 +239,15 @@ public class RhinoTest {
         final String language = "fr";
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(getTestContextPath(language, "éclairage_intelligent"))
-                .setModelPath(getTestModelPath(language))
+                .setContextPath(RhinoTestUtils.getTestContextPath(language, "éclairage_intelligent"))
+                .setModelPath(RhinoTestUtils.getTestModelPath(language))
                 .build();
 
         runTestCase(
-            "test_out_of_context_fr.wav",
-            false,
-            null,
-            null
-        );
-    }
-
-    @Test
-    @DisabledIf("systemProperty.get('performanceThresholdSec') == null || systemProperty.get('performanceThresholdSec') == ''")
-    void testPerformance() throws Exception {
-        rhino = new Rhino.Builder()
-                .setAccessKey(accessKey)
-                .setContextPath(getTestContextPath("en", "coffee_maker"))
-                .build();
-
-        int frameLen = rhino.getFrameLength();
-        String audioFilePath = getAudioFilePath("test_within_context.wav");
-        File testAudioPath = new File(audioFilePath);
-
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(testAudioPath);
-        assertEquals(audioInputStream.getFormat().getFrameRate(), 16000);
-
-        int byteDepth = audioInputStream.getFormat().getFrameSize();
-        int bufferSize = frameLen * byteDepth;
-
-        byte[] pcm = new byte[bufferSize];
-        short[] rhinoFrame = new short[frameLen];
-        int numBytesRead;
-
-        long totalNSec = 0;
-        while ((numBytesRead = audioInputStream.read(pcm)) != -1) {
-            if (numBytesRead / byteDepth == frameLen) {
-                ByteBuffer.wrap(pcm).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(rhinoFrame);
-                long before = System.nanoTime();
-                rhino.process(rhinoFrame);
-                long after = System.nanoTime();
-                totalNSec += (after - before);
-            }
-        }
-
-        double totalSec = Math.round(((double) totalNSec) * 1e-6) / 1000.0;
-        assertTrue(
-                totalSec <= this.performanceThresholdSec,
-                String.format("Expected threshold (%.3fs), process took (%.3fs)", this.performanceThresholdSec, totalSec)
+                "test_out_of_context_fr.wav",
+                false,
+                null,
+                null
         );
     }
 }
