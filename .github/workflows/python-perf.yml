@@ -55,7 +55,7 @@ jobs:
         - os: windows-latest
           performance_threshold_sec: 0.2
         - os: macos-latest
-          performance_threshold_sec: 0.2
+          performance_threshold_sec: 0.25
 
     steps:
     - uses: actions/checkout@v2
@@ -78,25 +78,25 @@ jobs:
         include:
         - machine: rpi2
           num_test_iterations: 20
-          performance_threshold_sec: 2.1
+          performance_threshold_sec: 2.6
         - machine: rpi3-32
           num_test_iterations: 50
-          performance_threshold_sec: 0.6
+          performance_threshold_sec: 0.72
         - machine: rpi3-64
           num_test_iterations: 50
-          performance_threshold_sec: 0.71
+          performance_threshold_sec: 0.82
         - machine: rpi4-32
           num_test_iterations: 50
-          performance_threshold_sec: 0.35
+          performance_threshold_sec: 0.4
         - machine: rpi4-64
           num_test_iterations: 50
-          performance_threshold_sec: 0.35
+          performance_threshold_sec: 0.4
         - machine: jetson
           num_test_iterations: 50
-          performance_threshold_sec: 0.52
+          performance_threshold_sec: 0.6
         - machine: beaglebone
           num_test_iterations: 20
-          performance_threshold_sec: 2.7
+          performance_threshold_sec: 3.0
 
     steps:
     - uses: actions/checkout@v2
