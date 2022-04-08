@@ -70,38 +70,39 @@ def _pv_platform():
     return pv_system, pv_machine
 
 
-_PV_SYSTEM, _PV_MACHINE = _pv_platform()
+PV_SYSTEM, PV_MACHINE = _pv_platform()
 
-_RASPBERRY_PI_MACHINES = {'arm11', 'cortex-a7', 'cortex-a53', 'cortex-a72', 'cortex-a53-aarch64', 'cortex-a72-aarch64'}
-_JETSON_MACHINES = {'cortex-a57-aarch64'}
+RASPBERRY_PI_MACHINES = {'arm11', 'cortex-a7', 'cortex-a53', 'cortex-a72', 'cortex-a53-aarch64', 'cortex-a72-aarch64'}
+JETSON_MACHINES = {'cortex-a57-aarch64'}
 
 
 def pv_library_path(relative_path):
-    if _PV_SYSTEM == 'Darwin':
-        if _PV_MACHINE == 'x86_64':
+    if PV_SYSTEM == 'Darwin':
+        if PV_MACHINE == 'x86_64':
             return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/x86_64/libpv_rhino.dylib')
-        elif _PV_MACHINE == 'arm64':
+        elif PV_MACHINE == 'arm64':
             return os.path.join(os.path.dirname(__file__), relative_path, 'lib/mac/arm64/libpv_rhino.dylib')
-    elif _PV_SYSTEM == 'Linux':
-        if _PV_MACHINE == 'x86_64':
+    elif PV_SYSTEM == 'Linux':
+        if PV_MACHINE == 'x86_64':
             return os.path.join(os.path.dirname(__file__), relative_path, 'lib/linux/x86_64/libpv_rhino.so')
-        elif _PV_MACHINE in _JETSON_MACHINES:
+        elif PV_MACHINE in JETSON_MACHINES:
             return os.path.join(
                 os.path.dirname(__file__),
                 relative_path,
-                'lib/jetson/%s/libpv_rhino.so' % _PV_MACHINE)
-        elif _PV_MACHINE in _RASPBERRY_PI_MACHINES:
+                'lib/jetson/%s/libpv_rhino.so' % PV_MACHINE)
+        elif PV_MACHINE in RASPBERRY_PI_MACHINES:
             return os.path.join(
                 os.path.dirname(__file__),
                 relative_path,
-                'lib/raspberry-pi/%s/libpv_rhino.so' % _PV_MACHINE)
-        elif _PV_MACHINE == 'beaglebone':
+                'lib/raspberry-pi/%s/libpv_rhino.so' % PV_MACHINE)
+        elif PV_MACHINE == 'beaglebone':
             return os.path.join(os.path.dirname(__file__), relative_path, 'lib/beaglebone/libpv_rhino.so')
-    elif _PV_SYSTEM == 'Windows':
+    elif PV_SYSTEM == 'Windows':
         return os.path.join(os.path.dirname(__file__), relative_path, 'lib/windows/amd64/libpv_rhino.dll')
 
-    raise NotImplementedError("Unsupported platform ('%s', '%s').", _PV_SYSTEM, _PV_MACHINE)
+    raise NotImplementedError("Unsupported platform ('%s', '%s').", PV_SYSTEM, PV_MACHINE)
 
 
 def pv_model_path(relative_path):
     return os.path.join(os.path.dirname(__file__), relative_path, 'lib/common/rhino_params.pv')
+

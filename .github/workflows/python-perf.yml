@@ -1,12 +1,10 @@
-name: Python
+name: Python Performance
 
 on:
   workflow_dispatch:
   push:
     branches: [ master ]
     paths:
-      - 'binding/python/**'
-      - '!binding/python/README.md'
       - 'lib/beaglebone/**'
       - 'lib/common/**'
       - 'lib/jetson/**'
@@ -20,12 +18,10 @@ on:
       - 'resources/contexts/mac/**'
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
-      - '.github/workflows/python.yml'
+      - '.github/workflows/python-perf.yml'
   pull_request:
     branches: [ master ]
     paths:
-      - 'binding/python/**'
-      - '!binding/python/README.md'
       - 'lib/beaglebone/**'
       - 'lib/common/**'
       - 'lib/jetson/**'
@@ -39,7 +35,7 @@ on:
       - 'resources/contexts/mac/**'
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
-      - '.github/workflows/python.yml'
+      - '.github/workflows/python-perf.yml'
 
 defaults:
   run:
@@ -52,18 +48,24 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10']
+        include:
+        - os: ubuntu-latest
+          performance_threshold_sec: 0.5
+        - os: windows-latest
+          performance_threshold_sec: 0.5
+        - os: macos-latest
+          performance_threshold_sec: 0.5
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python '3.10'
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '3.10'
 
     - name: Test
-      run: python test_rhino.py ${{secrets.PV_VALID_ACCESS_KEY}}
+      run: python test_rhino_perf.py ${{secrets.PV_VALID_ACCESS_KEY}} --num_test_iterations=100 --performance_threshold_sec=${{matrix.performance_threshold_sec}}
 
 
   build-self-hosted:
@@ -72,9 +74,31 @@ jobs:
     strategy:
       matrix:
         machine: [rpi2, rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson, beaglebone]
+        include:
+        - machine: rpi2
+          num_test_iterations: 20
+          performance_threshold_sec: 2.0
+        - machine: rpi3-32
+          num_test_iterations: 50
+          performance_threshold_sec: 0.7
+        - machine: rpi3-64
+          num_test_iterations: 50
+          performance_threshold_sec: 0.7
+        - machine: rpi4-32
+          num_test_iterations: 50
+          performance_threshold_sec: 0.5
+        - machine: rpi4-64
+          num_test_iterations: 50
+          performance_threshold_sec: 0.5
+        - machine: jetson
+          num_test_iterations: 50
+          performance_threshold_sec: 0.5
+        - machine: beaglebone
+          num_test_iterations: 10
+          performance_threshold_sec: 2.5
 
     steps:
     - uses: actions/checkout@v2
 
     - name: Test
-      run: python3 test_rhino.py ${{secrets.PV_VALID_ACCESS_KEY}}
+      run: python3 test_rhino_perf.py ${{secrets.PV_VALID_ACCESS_KEY}} --num_test_iterations=${{matrix.num_test_iterations}} --performance_threshold_sec=${{matrix.performance_threshold_sec}}
