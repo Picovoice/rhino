@@ -68,7 +68,6 @@ jobs:
     - name: Test
       run: python test_rhino_perf.py ${{secrets.PV_VALID_ACCESS_KEY}} 100 ${{matrix.performance_threshold_sec}}
 
-
   perf-self-hosted:
     runs-on: ${{ matrix.machine }}
 
