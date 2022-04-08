@@ -42,7 +42,7 @@ defaults:
     working-directory: binding/python
 
 jobs:
-  build-github-hosted:
+  perf-github-hosted:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -51,9 +51,9 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
         - os: ubuntu-latest
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 0.2
         - os: windows-latest
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 0.2
         - os: macos-latest
           performance_threshold_sec: 0.5
 
@@ -69,7 +69,7 @@ jobs:
       run: python test_rhino_perf.py ${{secrets.PV_VALID_ACCESS_KEY}} 100 ${{matrix.performance_threshold_sec}}
 
 
-  build-self-hosted:
+  perf-self-hosted:
     runs-on: ${{ matrix.machine }}
 
     strategy:
@@ -79,25 +79,25 @@ jobs:
         include:
         - machine: rpi2
           num_test_iterations: 20
-          performance_threshold_sec: 2.0
+          performance_threshold_sec: 2.1
         - machine: rpi3-32
           num_test_iterations: 50
-          performance_threshold_sec: 0.7
+          performance_threshold_sec: 0.6
         - machine: rpi3-64
           num_test_iterations: 50
-          performance_threshold_sec: 0.7
+          performance_threshold_sec: 0.71
         - machine: rpi4-32
           num_test_iterations: 50
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 0.35
         - machine: rpi4-64
           num_test_iterations: 50
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 0.35
         - machine: jetson
           num_test_iterations: 50
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 0.52
         - machine: beaglebone
           num_test_iterations: 10
-          performance_threshold_sec: 2.5
+          performance_threshold_sec: 2.7
 
     steps:
     - uses: actions/checkout@v2
