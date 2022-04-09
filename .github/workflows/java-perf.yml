@@ -5,6 +5,7 @@ on:
   push:
     branches: [ master ]
     paths:
+      - 'binding/java/**/RhinoPerformanceTest.java'
       - 'lib/common/**'
       - 'lib/java/**'
       - 'resources/contexts/beaglebone/**'
@@ -17,6 +18,7 @@ on:
   pull_request:
     branches: [ master ]
     paths:
+      - 'binding/java/**/RhinoPerformanceTest.java'
       - 'lib/common/**'
       - 'lib/java/**'
       - 'resources/contexts/beaglebone/**'
