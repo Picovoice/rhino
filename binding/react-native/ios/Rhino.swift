@@ -23,8 +23,8 @@ class PvRhino: NSObject {
         do {
             let rhino = try Rhino(
                 accessKey: accessKey,
-                contextPath: try getResourcePath(contextPath),
-                modelPath: modelPath.isEmpty ? nil : try getResourcePath(modelPath),
+                contextPath: contextPath.isEmpty ? nil : contextPath,
+                modelPath: modelPath.isEmpty ? nil : modelPath,
                 sensitivity: sensitivity,
                 requireEndpoint: requireEndpoint
             )
@@ -88,20 +88,6 @@ class PvRhino: NSObject {
             let (code, message) = errorToCodeAndMessage(RhinoError(error.localizedDescription))
             reject(code, message, nil)
         }
-    }
-    
-    private func getResourcePath(_ filePath: String) throws -> String {
-        if (!FileManager.default.fileExists(atPath: filePath)) {
-            if let resourcePath = Bundle(for: type(of: self)).resourceURL?.appendingPathComponent(filePath).path {
-                if (FileManager.default.fileExists(atPath: resourcePath)) {
-                    return resourcePath
-                }
-            }
-            
-            throw RhinoIOError("Could not find file at path '\(filePath)'. If this is a packaged asset, ensure you have added it to your XCode project.")
-        }
-        
-        return filePath
     }
 
     private func errorToCodeAndMessage(_ error: RhinoError) -> (String, String) {

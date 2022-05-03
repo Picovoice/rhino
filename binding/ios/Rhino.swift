@@ -61,21 +61,22 @@ public class Rhino {
         if accessKey.isEmpty {
             throw RhinoInvalidArgumentError("No AccessKey was provided to Rhino")
         }  
-        
-        if !FileManager().fileExists(atPath: contextPath) {
-            throw RhinoIOError("Context file at does not exist at '\(contextPath)'")
+
+        var contextPathArg = contextPath
+        if !FileManager().fileExists(atPath: contextPathArg) {
+            contextPathArg = try getResourcePath(contextPathArg)
         }
         
         var modelPathArg = modelPath
         if (modelPathArg == nil){
-            modelPathArg  = Rhino.resourceBundle.path(forResource: "rhino_params", ofType: "pv")
+            modelPathArg = Rhino.resourceBundle.path(forResource: "rhino_params", ofType: "pv")
             if modelPathArg == nil {
                 throw RhinoIOError("Could not find default model file in app bundle.")
             }
         }
         
         if !FileManager().fileExists(atPath: modelPathArg!) {
-            throw RhinoIOError("Model file at does not exist at '\(modelPathArg!)'")
+            modelPathArg = try getResourcePath(modelPathArg!)
         }
         
         if sensitivity < 0 || sensitivity > 1 {
@@ -85,7 +86,7 @@ public class Rhino {
         var status = pv_rhino_init(
             accessKey,
             modelPathArg,
-            contextPath,
+            contextPathArg,
             sensitivity,
             requireEndpoint,
             &self.handle)
@@ -191,6 +192,22 @@ public class Rhino {
         }
         
         return Inference(isUnderstood: isUnderstood, intent: intent, slots: slots)
+    }
+
+    /// Given a path, return the full path to the resource.
+    ///
+    /// - Parameters:
+    ///   - filePath: relative path of a file in the bundle.
+    /// - Throws: RhinoIOError
+    /// - Returns: The full path of the resource.
+    private func getResourcePath(_ filePath: String) throws -> String {
+        if let resourcePath = Bundle(for: type(of: self)).resourceURL?.appendingPathComponent(filePath).path {
+            if (FileManager.default.fileExists(atPath: resourcePath)) {
+                return resourcePath
+            }
+        }
+
+        throw RhinoIOError("Could not find file at path '\(filePath)'. If this is a packaged asset, ensure you have added it to your xcode project.")
     }
     
     private func pvStatusToRhinoError(_ status: pv_status_t, _ message: String) -> RhinoError {
