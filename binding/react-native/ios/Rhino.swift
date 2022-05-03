@@ -23,7 +23,7 @@ class PvRhino: NSObject {
         do {
             let rhino = try Rhino(
                 accessKey: accessKey,
-                contextPath: contextPath.isEmpty ? nil : constextPath,
+                contextPath: contextPath.isEmpty ? nil : contextPath,
                 modelPath: modelPath.isEmpty ? nil : modelPath,
                 sensitivity: sensitivity,
                 requireEndpoint: requireEndpoint
