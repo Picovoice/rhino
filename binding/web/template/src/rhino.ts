@@ -16,8 +16,9 @@ import { Mutex } from 'async-mutex';
 
 import { RhinoInference, RhinoContext, RhinoEngine } from '@picovoice/rhino-web-core';
 
-import { 
-  aligned_alloc_type, 
+import {
+  aligned_alloc_type,
+  pv_free_type,
   buildWasm,
   arrayBufferToStringAtIndex,
   base64ToUint8Array,
@@ -66,6 +67,7 @@ type pv_sample_rate_type = () => Promise<number>;
 
 type RhinoWasmOutput = {
   memory: WebAssembly.Memory;
+  pvFree: pv_free_type;
   frameLength: number;
   sampleRate: number;
   version: string;
@@ -99,6 +101,7 @@ export class Rhino implements RhinoEngine {
   private _pvStatusToString: pv_status_to_string_type;
 
   private _wasmMemory: WebAssembly.Memory;
+  private _pvFree: pv_free_type
   private _memoryBuffer: Int16Array;
   private _memoryBufferUint8: Uint8Array;
   private _memoryBufferView: DataView;
@@ -135,6 +138,7 @@ export class Rhino implements RhinoEngine {
     this._pvStatusToString = handleWasm.pvStatusToString;
 
     this._wasmMemory = handleWasm.memory;
+    this._pvFree = handleWasm.pvFree;
     this._memoryBuffer = new Int16Array(handleWasm.memory.buffer);
     this._memoryBufferUint8 = new Uint8Array(handleWasm.memory.buffer);
     this._memoryBufferView = new DataView(handleWasm.memory.buffer);
@@ -156,6 +160,13 @@ export class Rhino implements RhinoEngine {
    */
   public async release(): Promise<void> {
     await this._pvRhinoDelete(this._objectAddress);
+    await this._pvFree(this._inputBufferAddress)
+    await this._pvFree(this._isFinalizedAddress)
+    await this._pvFree(this._isUnderstoodAddress)
+    await this._pvFree(this._intentAddressAddress)
+    await this._pvFree(this._numSlotsAddress)
+    await this._pvFree(this._slotsAddressAddressAddress)
+    await this._pvFree(this._valuesAddressAddressAddress)
   }
 
   /**
@@ -434,6 +445,7 @@ export class Rhino implements RhinoEngine {
     const exports = await buildWasm(memory, RHINO_WASM_BASE64);
 
     const aligned_alloc = exports.aligned_alloc as aligned_alloc_type;
+    const pv_free = exports.pv_free as pv_free_type;
     const pv_rhino_context_info = exports.pv_rhino_context_info as pv_rhino_context_info_type;
     const pv_rhino_delete = exports.pv_rhino_delete as pv_rhino_delete_type;
     const pv_rhino_frame_length = exports.pv_rhino_frame_length as pv_rhino_frame_length_type;
@@ -486,6 +498,8 @@ export class Rhino implements RhinoEngine {
       sensitivity,
       requireEndpoint,
       objectAddressAddress);
+    await pv_free(accessKeyAddress);
+    await pv_free(contextAddress);
     if (status !== PV_STATUS_SUCCESS) {
       throw new Error(
         `'pv_rhino_init' failed with status ${arrayBufferToStringAtIndex(
@@ -499,6 +513,7 @@ export class Rhino implements RhinoEngine {
       objectAddressAddress,
       true
     );
+    await pv_free(objectAddressAddress);
 
     const sampleRate = await pv_sample_rate();
     const frameLength = await pv_rhino_frame_length();
@@ -531,6 +546,7 @@ export class Rhino implements RhinoEngine {
       contextInfoAddressAddress,
       true
     );
+    await pv_free(contextInfoAddressAddress);
     const contextInfo = arrayBufferToStringAtIndex(
       memoryBufferUint8,
       contextInfoAddress
@@ -594,6 +610,7 @@ export class Rhino implements RhinoEngine {
 
     return {
       memory: memory,
+      pvFree: pv_free,
       frameLength: frameLength,
       sampleRate: sampleRate,
       version: version,
