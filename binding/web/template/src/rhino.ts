@@ -74,6 +74,7 @@ type RhinoWasmOutput = {
   contextInfo: string;
 
   objectAddress: number;
+  contextAddress: number;
   inputBufferAddress: number;
   isFinalizedAddress: number;
   isUnderstoodAddress: number;
@@ -108,6 +109,7 @@ export class Rhino implements RhinoEngine {
   private _processMutex: Mutex;
 
   private _objectAddress: number;
+  private _contextAddress: number;
   private _inputBufferAddress: number;
   private _isFinalizedAddress: number;
   private _isUnderstoodAddress: number;
@@ -144,6 +146,7 @@ export class Rhino implements RhinoEngine {
     this._memoryBufferView = new DataView(handleWasm.memory.buffer);
 
     this._objectAddress = handleWasm.objectAddress;
+    this._contextAddress = handleWasm.contextAddress;
     this._inputBufferAddress = handleWasm.inputBufferAddress;
     this._isFinalizedAddress = handleWasm.isFinalizedAddress;
     this._isUnderstoodAddress = handleWasm.isUnderstoodAddress;
@@ -160,6 +163,7 @@ export class Rhino implements RhinoEngine {
    */
   public async release(): Promise<void> {
     await this._pvRhinoDelete(this._objectAddress);
+    await this._pvFree(this._contextAddress);
     await this._pvFree(this._inputBufferAddress)
     await this._pvFree(this._isFinalizedAddress)
     await this._pvFree(this._isUnderstoodAddress)
@@ -499,7 +503,6 @@ export class Rhino implements RhinoEngine {
       requireEndpoint,
       objectAddressAddress);
     await pv_free(accessKeyAddress);
-    await pv_free(contextAddress);
     if (status !== PV_STATUS_SUCCESS) {
       throw new Error(
         `'pv_rhino_init' failed with status ${arrayBufferToStringAtIndex(
@@ -527,7 +530,7 @@ export class Rhino implements RhinoEngine {
       Uint8Array.BYTES_PER_ELEMENT,
       Uint8Array.BYTES_PER_ELEMENT
     )
-    if (contextAddress === 0) {
+    if (contextInfoAddressAddress === 0) {
       throw new Error('malloc failed: Cannot allocate memory');
     }
     status = await pv_rhino_context_info(
@@ -617,6 +620,7 @@ export class Rhino implements RhinoEngine {
       contextInfo: contextInfo,
 
       objectAddress: objectAddress,
+      contextAddress: contextAddress,
       inputBufferAddress: inputBufferAddress,
       isFinalizedAddress: isFinalizedAddress,
       isUnderstoodAddress: isUnderstoodAddress,
