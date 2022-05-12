@@ -1486,31 +1486,31 @@
   resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-core/-/rhino-web-core-2.1.0.tgz#53a8d50c5fd9588fc5115f0dfa2bc8a563b4a862"
   integrity sha512-AJEEEIXODRxleTtQoCZIVxwdgfMm23ivLzdXJDhYR/nk/07L5CVcmvihfWlcyCd7Utqkm5Z8UrlJylVnTMVd5g==
 
-"@picovoice/rhino-web-de-worker@^2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-de-worker/-/rhino-web-de-worker-2.1.3.tgz#b8c5e9c9f448583a8ba96a619569c79f36d2ef4a"
-  integrity sha512-3CpOpfpfhSNdfuN933xCKHjjaGnuVQAZmZ8D4xwqLtz38sB4+/SBfSRYxW5OmW6ywVM62YAho5odKcz4qG91RA==
+"@picovoice/rhino-web-de-worker@^2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-de-worker/-/rhino-web-de-worker-2.1.4.tgz#c2398320d84fba075ac2c536d498f3c618bd3310"
+  integrity sha512-vmBvJN+CH3SsYyQHg8SYcty3I2h9i6RDOIeZd23sD7Ucwmq1ZOS7pFg/2ndek3LEuNlgHMRkJsTYH3oIHf4v4g==
   dependencies:
     "@picovoice/rhino-web-core" "^2.1.0"
 
-"@picovoice/rhino-web-en-worker@^2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.1.3.tgz#1c2418777f417cd5b5165e14118a82fc92d62cad"
-  integrity sha512-lRBiW5U+L0hYQOekGMahX3JdZRRK3TpPCU25o5aSLozD4SzDEIAKZX6JkQhwR5Ad4GjiNI9/I5+6bd/Cukmdmg==
+"@picovoice/rhino-web-en-worker@^2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.1.4.tgz#eb8a7ca36742d8382b3ecbcf1d547da093150a93"
+  integrity sha512-UfvzpEnRUHIcWE1dqg7F7BVZOBO0nE9o6FY5gaWpVN0MQFfc0TG1phdmCUDOIqG2MAeCY8f/P+EpmreE+FURBA==
   dependencies:
     "@picovoice/rhino-web-core" "^2.1.0"
 
-"@picovoice/rhino-web-es-worker@^2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-es-worker/-/rhino-web-es-worker-2.1.3.tgz#0d227d267ce096e0ccfbc86f16b73c4d628954d7"
-  integrity sha512-obdqxp7qTLjxDWb/ntIh7mnuZDwYJV/ilCY3lYZ6vAU7EFvRfk2Ken+Wo5Uu4PR9I88Qfs6OEEPG4XT8MIEdCQ==
+"@picovoice/rhino-web-es-worker@^2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-es-worker/-/rhino-web-es-worker-2.1.4.tgz#909ac09bff0313d2d880ce225de4de4fffde6395"
+  integrity sha512-rFsA0AGlcfPju2d+Y906hvenprYnBcKUnAQsJIFK+m1vH0eqLeEKCDDtD7tdwke5/9QJNTHtPJhc92xkpdti7w==
   dependencies:
     "@picovoice/rhino-web-core" "^2.1.0"
 
-"@picovoice/rhino-web-fr-worker@^2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-fr-worker/-/rhino-web-fr-worker-2.1.3.tgz#5d9c6c6f3b6ec3d27cd533901c107723f0b896f0"
-  integrity sha512-B3LRJxQDvV+V4OOOsUbCQbwyYYQQ5SNLfAEvPn0yyUCcut4R+/dRor7B+7d3m7XgMVmEkKTSn6ZRLSxebayMDg==
+"@picovoice/rhino-web-fr-worker@^2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-fr-worker/-/rhino-web-fr-worker-2.1.4.tgz#3a4368b4066037203705e2fe080148d704be47dc"
+  integrity sha512-1tm5hZEwLrU7VITGa6EIf7kRO0StdklmoqsWXUP5+vSNosvTMuvg4uevdBl/dyGr5U1wKLg0HQfChzJvA8hy0w==
   dependencies:
     "@picovoice/rhino-web-core" "^2.1.0"
 
