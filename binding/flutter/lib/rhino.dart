@@ -1,5 +1,5 @@
 //
-// Copyright 2021 Picovoice Inc.
+// Copyright 2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -11,10 +11,8 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 
