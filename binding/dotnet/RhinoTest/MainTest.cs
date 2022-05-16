@@ -27,12 +27,9 @@ namespace RhinoTest
         private static string ACCESS_KEY;
 
         [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
+        public static void ClassInitialize(TestContext _)
         {
-            if (testContext.Properties.Contains("pvTestAccessKey"))
-            {
-                ACCESS_KEY = testContext.Properties["pvTestAccessKey"].ToString();
-            }
+            ACCESS_KEY = Environment.GetEnvironmentVariable("ACCESS_KEY");
         }
 
         private static string AppendLanguage(string s, string language) => language == "en" ? s : $"{s}_{language}";
