@@ -50,7 +50,7 @@ defaults:
 jobs:
   build-github-hosted:
     runs-on: ${{ matrix.os }}
-    variables: 
+    env: 
       ACCESS_KEY: ${{secrets.PV_VALID_ACCESS_KEY}}
 
     strategy:
@@ -76,7 +76,7 @@ jobs:
 
   build-self-hosted:
     runs-on: ${{ matrix.machine }}
-    variables: 
+    env:
       ACCESS_KEY: ${{secrets.PV_VALID_ACCESS_KEY}}
 
     strategy:
