@@ -81,7 +81,7 @@ namespace Pv
             return libHandle;
         }
 #endif
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_init(
             IntPtr accessKey,
             IntPtr modelPath,
@@ -90,24 +90,24 @@ namespace Pv
             bool requireEndpoint,
             out IntPtr handle);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern int pv_sample_rate();
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern void pv_rhino_delete(IntPtr handle);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_process(
             IntPtr handle,
             short[] pcm,
             out bool isFinalized);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_is_understood(
             IntPtr handle,
             out bool isUnderstood);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_get_intent(
             IntPtr handle,
             out IntPtr intent,
@@ -115,28 +115,25 @@ namespace Pv
             out IntPtr slots,
             out IntPtr values);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_free_slots_and_values(
             IntPtr handle,
             IntPtr slots,
             IntPtr values);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_reset(IntPtr handle);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_context_info(
             IntPtr handle,
             out IntPtr contextInfo);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr pv_rhino_version();
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern int pv_rhino_frame_length();
-
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern void pv_free(IntPtr memoryPtr);
 
         private bool _isFinalized;
 
