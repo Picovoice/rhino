@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2020-2021 Picovoice Inc.
+    Copyright 2020-2022 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -81,33 +81,33 @@ namespace Pv
             return libHandle;
         }
 #endif
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_init(
-            string accessKey,
-            string modelPath,
-            string contextPath,
+            IntPtr accessKey,
+            IntPtr modelPath,
+            IntPtr contextPath,
             float sensitivity,
             bool requireEndpoint,
             out IntPtr handle);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern int pv_sample_rate();
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern void pv_rhino_delete(IntPtr handle);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_process(
             IntPtr handle,
             short[] pcm,
             out bool isFinalized);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_is_understood(
             IntPtr handle,
             out bool isUnderstood);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_get_intent(
             IntPtr handle,
             out IntPtr intent,
@@ -115,24 +115,24 @@ namespace Pv
             out IntPtr slots,
             out IntPtr values);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_free_slots_and_values(
             IntPtr handle,
             IntPtr slots,
             IntPtr values);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_reset(IntPtr handle);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_context_info(
             IntPtr handle,
             out IntPtr contextInfo);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr pv_rhino_version();
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern int pv_rhino_frame_length();
 
         private bool _isFinalized;
@@ -208,13 +208,22 @@ namespace Pv
                 throw new RhinoInvalidArgumentException("Sensitivity value should be within [0, 1].");
             }
 
+            IntPtr accessKeyPtr = Utils.GetPtrFromUtf8String(accessKey);
+            IntPtr modelPathPtr = Utils.GetPtrFromUtf8String(modelPath);
+            IntPtr contextPathPtr = Utils.GetPtrFromUtf8String(contextPath);
+
             RhinoStatus status = pv_rhino_init(
-                accessKey,
-                modelPath,
-                contextPath,
+                accessKeyPtr,
+                modelPathPtr,
+                contextPathPtr,
                 sensitivity,
                 requireEndpoint,
                 out _libraryPointer);
+
+            Marshal.FreeHGlobal(accessKeyPtr);
+            Marshal.FreeHGlobal(modelPathPtr);
+            Marshal.FreeHGlobal(contextPathPtr);
+
             if (status != RhinoStatus.SUCCESS)
             {
                 throw RhinoStatusToException(status);
@@ -227,8 +236,8 @@ namespace Pv
                 throw RhinoStatusToException(status, "Rhino init failed.");
             }
 
-            ContextInfo = Marshal.PtrToStringAnsi(contextInfoPtr);
-            Version = Marshal.PtrToStringAnsi(pv_rhino_version());
+            ContextInfo = Utils.GetUtf8StringFromPtr(contextInfoPtr);
+            Version = Utils.GetUtf8StringFromPtr(pv_rhino_version());
             SampleRate = pv_sample_rate();
             FrameLength = pv_rhino_frame_length();
         }
@@ -298,14 +307,15 @@ namespace Pv
                     throw RhinoStatusToException(status, "GetInference failed at pv_rhino_get_intent");
                 }
 
-                intent = Marshal.PtrToStringAnsi(intentPtr);
+                intent = Utils.GetUtf8StringFromPtr(intentPtr);
 
                 int elementSize = Marshal.SizeOf(typeof(IntPtr));
                 slots = new Dictionary<string, string>();
                 for (int i = 0; i < numSlots; i++)
                 {
-                    string slotKey = Marshal.PtrToStringAnsi(Marshal.ReadIntPtr(slotKeysPtr, i * elementSize));
-                    string slotValue = Marshal.PtrToStringAnsi(Marshal.ReadIntPtr(slotValuesPtr, i * elementSize));
+
+                    string slotKey = Utils.GetUtf8StringFromPtr(Marshal.ReadIntPtr(slotKeysPtr, i * elementSize));
+                    string slotValue = Utils.GetUtf8StringFromPtr(Marshal.ReadIntPtr(slotValuesPtr, i * elementSize));
                     slots[slotKey] = slotValue;
                 }
 
