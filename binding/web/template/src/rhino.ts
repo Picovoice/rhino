@@ -527,8 +527,8 @@ export class Rhino implements RhinoEngine {
     );
 
     const contextInfoAddressAddress = await aligned_alloc(
-      Uint8Array.BYTES_PER_ELEMENT,
-      Uint8Array.BYTES_PER_ELEMENT
+      Int32Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT
     )
     if (contextInfoAddressAddress === 0) {
       throw new Error('malloc failed: Cannot allocate memory');
@@ -580,32 +580,32 @@ export class Rhino implements RhinoEngine {
     }
 
     const intentAddressAddress = await aligned_alloc(
-      Uint8Array.BYTES_PER_ELEMENT,
-      Uint8Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT,
     )
     if (intentAddressAddress === 0) {
       throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const numSlotsAddress = await aligned_alloc(
-      Uint8Array.BYTES_PER_ELEMENT,
-      Uint8Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT,
     )
     if (numSlotsAddress === 0) {
       throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const slotsAddressAddressAddress = await aligned_alloc(
-      Uint8Array.BYTES_PER_ELEMENT,
-      Uint8Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT,
     )
     if (slotsAddressAddressAddress === 0) {
       throw new Error('malloc failed: Cannot allocate memory');
     }
 
     const valuesAddressAddressAddress = await aligned_alloc(
-      Uint8Array.BYTES_PER_ELEMENT,
-      Uint8Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT,
     )
     if (valuesAddressAddressAddress === 0) {
       throw new Error('malloc failed: Cannot allocate memory');
