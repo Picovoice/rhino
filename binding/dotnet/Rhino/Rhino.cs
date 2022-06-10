@@ -67,13 +67,13 @@ namespace Pv
 
         static Rhino()
         {
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
             NativeLibrary.SetDllImportResolver(typeof(Rhino).Assembly, ImportResolver);
 #endif
             DEFAULT_MODEL_PATH = Utils.PvModelPath();
         }
 
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
         private static IntPtr ImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
         {
             IntPtr libHandle = IntPtr.Zero;
@@ -142,21 +142,21 @@ namespace Pv
         /// </summary>
         /// <param name="accessKey">AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).</param>
         /// <param name="contextPath">
-        /// Absolute path to file containing context model (file with `.rhn` extension. A context represents the set of 
+        /// Absolute path to file containing context model (file with `.rhn` extension. A context represents the set of
         /// expressions(spoken commands), intents, and intent arguments(slots) within a domain of interest.
         /// </param>
         /// <param name="modelPath">
-        /// Absolute path to the file containing model parameters. If not set it will be set to the 
+        /// Absolute path to the file containing model parameters. If not set it will be set to the
         /// default location.
-        /// </param>       
+        /// </param>
         /// <param name="sensitivity">
-        /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses 
+        /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses
         /// at the cost of (potentially) increasing the erroneous inference rate.
         /// </param>
         /// <param name="requireEndpoint">
         /// If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
         /// </param>
-        /// <returns>An instance of Rhino Speech-to-Intent engine.</returns>                             
+        /// <returns>An instance of Rhino Speech-to-Intent engine.</returns>
         public static Rhino Create(string accessKey, string contextPath, string modelPath = null, float sensitivity = 0.5f, bool requireEndpoint = true)
         {
             return new Rhino(accessKey, modelPath ?? DEFAULT_MODEL_PATH, contextPath, sensitivity, requireEndpoint);
@@ -167,15 +167,15 @@ namespace Pv
         /// </summary>
         /// <param name="accessKey">AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).</param>
         /// <param name="contextPath">
-        /// Absolute path to file containing context model (file with `.rhn` extension. A context represents the set of 
+        /// Absolute path to file containing context model (file with `.rhn` extension. A context represents the set of
         /// expressions(spoken commands), intents, and intent arguments(slots) within a domain of interest.
         /// </param>
         /// <param name="modelPath">
-        /// Absolute path to the file containing model parameters. If not set it will be set to the 
+        /// Absolute path to the file containing model parameters. If not set it will be set to the
         /// default location.
-        /// </param>       
+        /// </param>
         /// <param name="sensitivity">
-        /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses 
+        /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses
         /// at the cost of (potentially) increasing the erroneous inference rate.
         /// </param>
         /// <param name="requireEndpoint">
@@ -243,12 +243,12 @@ namespace Pv
         }
 
         /// <summary>
-        /// Processes a frame of audio and emits a flag indicating if the inference is finalized. When finalized, 
+        /// Processes a frame of audio and emits a flag indicating if the inference is finalized. When finalized,
         /// `pv_rhino_is_understood()` should be called to check if the spoken command is considered valid.
         /// </summary>
         /// <param name="pcm">
-        /// A frame of audio samples. The number of samples per frame can be found by calling `.FrameLength`. 
-        /// The incoming audio needs to have a sample rate equal to `.SampleRate` and be 16-bit linearly-encoded. 
+        /// A frame of audio samples. The number of samples per frame can be found by calling `.FrameLength`.
+        /// The incoming audio needs to have a sample rate equal to `.SampleRate` and be 16-bit linearly-encoded.
         /// Rhino operates on single-channel audio.
         /// </param>
         /// <returns>
@@ -275,7 +275,7 @@ namespace Pv
         /// Gets inference results from Rhino. If the spoken command was understood, it includes the specific intent name
         /// that was inferred, and (if applicable) slot keys and specific slot values. Should only be called after the
         /// process function returns true, otherwise Rhino has not yet reached an inference conclusion.
-        /// </summary>        
+        /// </summary>
         /// <returns>
         /// An immutable Inference object with `.IsUnderstood`, '.Intent` , and `.Slots` getters.
         /// </returns>
