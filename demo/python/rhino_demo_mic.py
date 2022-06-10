@@ -25,8 +25,16 @@ class RhinoDemo(Thread):
     debugging.
     """
 
-    def __init__(self, access_key, library_path, model_path, context_path, require_endpoint, audio_device_index=None,
-                 output_path=None):
+    def __init__(
+            self,
+            access_key,
+            library_path,
+            model_path,
+            context_path,
+            endpoint_duration_sec,
+            require_endpoint,
+            audio_device_index=None,
+            output_path=None):
         """
         Constructor.
 
@@ -36,8 +44,14 @@ class RhinoDemo(Thread):
         :param context_path: Absolute path to file containing context model (file with `.rhn` extension). A context
         represents the set of expressions (spoken commands), intents, and intent arguments (slots) within a domain of
         interest.
-        :param require_endpoint If set to `False`, Rhino does not require an endpoint (chunk of silence) before
-        finishing inference.
+        :param endpoint_duration_sec: Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+        utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+        duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return
+        inference pre-emptively in case the user pauses before finishing the request.
+        require_endpoint: If set to `True`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+        If set to `False`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless.
+        Set to `False` only if operating in an environment with overlapping speech (e.g. people talking in the
+        background).
         :param audio_device_index: Optional argument. If provided, audio is recorded from this input device. Otherwise,
         the default audio input device is used.
         :param output_path: If provided recorded audio will be stored in this location at the end of the run.
@@ -49,6 +63,7 @@ class RhinoDemo(Thread):
         self._library_path = library_path
         self._model_path = model_path
         self._context_path = context_path
+        self._endpoint_duration_sec = endpoint_duration_sec
         self._require_endpoint = require_endpoint
         self._audio_device_index = audio_device_index
 
@@ -70,6 +85,7 @@ class RhinoDemo(Thread):
                 library_path=self._library_path,
                 model_path=self._model_path,
                 context_path=self._context_path,
+                endpoint_duration_sec=self._endpoint_duration_sec,
                 require_endpoint=self._require_endpoint)
 
             recorder = PvRecorder(device_index=self._audio_device_index, frame_length=rhino.frame_length)
@@ -175,8 +191,20 @@ def main():
         default=0.5)
 
     parser.add_argument(
+        '--endpoint_duration_sec',
+        help="Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an utterance that marks "
+             "the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint duration "
+             "reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return "
+             "inference pre-emptively in case the user pauses before finishing the request.",
+        type=float,
+        default=1.)
+
+    parser.add_argument(
         '--require_endpoint',
-        help="If set to `False`, Rhino does not require an endpoint (chunk of silence) before finishing inference.",
+        help="If set to `True`, Rhino requires an endpoint (a chunk of silence) after the spoken command. If set to "
+             "`False`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. "
+             "Set to `False` only if operating in an environment with overlapping speech (e.g. people talking in the "
+             "background).",
         default='True',
         choices=['True', 'False'])
 
@@ -204,6 +232,7 @@ def main():
             library_path=args.library_path,
             model_path=args.model_path,
             context_path=args.context_path,
+            endpoint_duration_sec=args.endpoint_duration_sec,
             require_endpoint=require_endpoint,
             audio_device_index=args.audio_device_index,
             output_path=args.output_path).run()
