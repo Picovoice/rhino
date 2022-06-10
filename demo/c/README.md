@@ -30,7 +30,7 @@ Running the executable without any commandline arguments prints the usage info t
 
 ```console
 ./demo/c/build/rhino_demo_mic
-Usage : ./demo/c/build/rhino_demo_mic -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -t SENSTIVITY -a ACCESS_KEY -d AUDIO_DEVICE_INDEX [-e, --require_endpoint (true,false)]
+Usage : ./demo/c/build/rhino_demo_mic -a ACCESS_KEY -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH [-d AUDIO_DEVICE_INDEX] [-t SENSITIVITY]  [-u, --endpoint_duration_sec] [-e, --require_endpoint (true,false)]
         ./demo/c/build/rhino_demo_mic [-s, --show_audio_devices]
 ```
 
@@ -38,7 +38,7 @@ Usage : ./demo/c/build/rhino_demo_mic -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_P
 
 ```console
 .\\demo\\c\\build\\rhino_demo_mic.exe
-usage : .\\demo\\c\\build\\rhino_demo_mic.exe -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -t SENSTIVITY -a ACCESS_KEY -d AUDIO_DEVICE_INDEX [-e, --require_endpoint (true,false)]
+Usage : .\\demo\\c\\build\\rhino_demo_mic.exe -a ACCESS_KEY -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH [-d AUDIO_DEVICE_INDEX] [-t SENSITIVITY]  [-u, --endpoint_duration_sec] [-e, --require_endpoint (true,false)]
         .\\demo\\c\\build\\rhino_demo_mic.exe [-s, --show_audio_devices]
 ```
 
@@ -141,14 +141,14 @@ Running the executable without any commandline arguments prints the usage info t
 
 ```console
 ./demo/c/build/rhino_demo_file 
-usage : ./demo/c/build/rhino_demo_file -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -t SENSTIVITY -a ACCESS_KEY -w WAV_PATH [-e, --require_endpoint (true,false)]
+Usage : ./demo/c/build/rhino_demo_file -a ACCESS_KEY -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -w WAV_PATH [-t SENSITIVITY] [-u, --endpoint_duration_sec] [-e, --require_endpoint (true,false)]
 ```
 
 #### Windows
 
 ```console
 .\\demo\\c\\build\\rhino_demo_file.exe
-usage : .\\demo\\c\\build\\rhino_demo_file.exe -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -t SENSTIVITY -a ACCESS_KEY -w WAV_PATH [-e, --require_endpoint (true,false)]
+usage : .\\demo\\c\\build\\rhino_demo_file.exe -a ACCESS_KEY -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -w WAV_PATH [-t SENSITIVITY] [-u, --endpoint_duration_sec] [-e, --require_endpoint (true,false)]
 ```
 
 ### Follow-on Commands
