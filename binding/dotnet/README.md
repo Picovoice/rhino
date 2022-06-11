@@ -23,13 +23,9 @@ Rhino is:
 
 ## Requirements
 
-- .NET Core 3.1
+- .NET 6.0
 
 ## Compatibility
-
-Platform compatible with .NET 6.0+:
-
-- macOS (arm64)
 
 Platform compatible with .NET Framework 4.6.1+:
 
@@ -49,6 +45,10 @@ Platforms compatible with .NET Core 3.1+:
   - 4 (32 and 64 bit)
 - NVIDIA Jetson Nano
 - BeagleBone
+
+Platform compatible with .NET 6.0+:
+
+- macOS (arm64)
 
 ## Installation
 
