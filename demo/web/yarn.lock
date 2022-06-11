@@ -9,17 +9,17 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@picovoice/rhino-web-core@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-core/-/rhino-web-core-2.1.0.tgz#53a8d50c5fd9588fc5115f0dfa2bc8a563b4a862"
-  integrity sha512-AJEEEIXODRxleTtQoCZIVxwdgfMm23ivLzdXJDhYR/nk/07L5CVcmvihfWlcyCd7Utqkm5Z8UrlJylVnTMVd5g==
+"@picovoice/rhino-web-core@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-core/-/rhino-web-core-2.1.1.tgz#f94a7e2cd3e12576240c66f9e0476fce6409a853"
+  integrity sha512-q7+0zDy14+83yhJC9LwToSn73EUL6oFZN1AdYPuwml0FeNDGkOHEQSQdXp3zfIXhJ4k0vRjaxN2z6xwIKO+ytg==
 
-"@picovoice/rhino-web-en-worker@^2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.1.4.tgz#eb8a7ca36742d8382b3ecbcf1d547da093150a93"
-  integrity sha512-UfvzpEnRUHIcWE1dqg7F7BVZOBO0nE9o6FY5gaWpVN0MQFfc0TG1phdmCUDOIqG2MAeCY8f/P+EpmreE+FURBA==
+"@picovoice/rhino-web-en-worker@^2.1.6":
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.1.6.tgz#00cffeb8c0d16c04a06cce518ba6eb51e484fb7e"
+  integrity sha512-anvKVPoyI/RMz3fFtTbalifEkba0D3YkodvDliI+s36zyMl3sF4KoshYF9sahxjsA4LQB9oE9h0KGpoYcmKpRg==
   dependencies:
-    "@picovoice/rhino-web-core" "^2.1.0"
+    "@picovoice/rhino-web-core" "^2.1.1"
 
 "@picovoice/web-voice-processor@^2.2.2":
   version "2.2.2"
