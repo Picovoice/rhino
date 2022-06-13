@@ -60,11 +60,11 @@ export default class Rhino {
    * @param {string} accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
    * @param {string} contextPath the path to the Rhino context file (.rhn extension)
    * @param {number} sensitivity [0.5] the sensitivity in the range [0,1]
-   * @param endpointDurationSec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+   * @param {number} endpointDurationSec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
    * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
    * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
    * pre-emptively in case the user pauses before finishing the request.
-   * @param requireEndpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+   * @param {boolean} requireEndpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
    * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
    * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
    * @param {string} manualModelPath the path to the Rhino model (.pv extension)
