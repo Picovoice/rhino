@@ -28,7 +28,7 @@ async function init(rhinoArgs: RhinoArgs): Promise<void> {
     rhinoEngine = await Rhino.create(
       rhinoArgs.accessKey,
       rhinoArgs.context,
-      rhinoArgs.endpoint_duration_sec,
+      rhinoArgs.endpointDurationSec,
       rhinoArgs.requireEndpoint
     );
   } catch (error) {

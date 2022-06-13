@@ -54,7 +54,7 @@ export type WorkerRequestVoid = {
 export type RhinoArgs = {
   accessKey: string;
   context: RhinoContext;
-  endpoint_duration_sec?: number;
+  endpointDurationSec?: number;
   requireEndpoint?: boolean;
   start: boolean;
 }
