@@ -18,6 +18,7 @@ import { RhinoContext, RhinoInference, RhinoWorkerFactory } from '@picovoice/rhi
  export type RhinoWorkerFactoryArgs = {
   accessKey: string;
   context: RhinoContext;
+  endpointDurationSec?: number;
   requireEndpoint?: boolean;
   start: boolean;
 };
@@ -71,10 +72,11 @@ export default {
           errorCallback = (error: Error) => {console.error(error)}
         ) {
           try {
-            const { accessKey, context, requireEndpoint, start } = rhinoFactoryArgs;
+            const { accessKey, context, endpointDurationSec, requireEndpoint, start } = rhinoFactoryArgs;
             this.$_rhnWorker_ = await rhinoFactory.create({
               accessKey,
               context: JSON.parse(JSON.stringify(context)),
+              endpointDurationSec,
               requireEndpoint,
               start
             });
