@@ -20,7 +20,7 @@ using Pv;
 namespace RhinoDemo
 {
     /// <summary>
-    /// Microphone Demo for Rhino Speech-to-Intent engine. It creates an input audio stream from a microphone, monitors it, 
+    /// Microphone Demo for Rhino Speech-to-Intent engine. It creates an input audio stream from a microphone, monitors it,
     /// and extracts the intent from the speech command.It optionally saves the recorded audio into a file for further debugging.
     /// </summary>
     public class MicDemo
@@ -31,24 +31,36 @@ namespace RhinoDemo
         /// </summary>
         /// <param name="accessKey">AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).</param>
         /// <param name="contextPath">
-        /// Absolute path to file containing context model (file with `.rhn` extension). A context represents the set of 
+        /// Absolute path to file containing context model (file with `.rhn` extension. A context represents the set of
         /// expressions(spoken commands), intents, and intent arguments(slots) within a domain of interest.
-        /// </param>    
-        /// <param name="modelPath">Absolute path to the file containing model parameters. If not set it will be set to the default location.</param>           
+        /// </param>
+        /// <param name="modelPath">
+        /// Absolute path to the file containing model parameters. If not set it will be set to the
+        /// default location.
+        /// </param>
         /// <param name="sensitivity">
-        /// Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in 
-        /// fewer misses at the cost of (potentially) increasing the erroneous inference rate. If not set, the default value of 0.5 will be used.
+        /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses
+        /// at the cost of (potentially) increasing the erroneous inference rate.
+        /// </param>
+        /// <param name="endpointDurationSec">
+        /// Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+        /// utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+        /// duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+        /// pre-emptively in case the user pauses before finishing the request.
         /// </param>
         /// <param name="requireEndpoint">
-        /// If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+        /// If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+        /// If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+        /// to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
         /// </param>
-        /// <param name="audioDeviceIndex">Optional argument. If provided, audio is recorded from this input device. Otherwise, the default audio input device is used.</param>        
-        /// <param name="outputPath">Optional argument. If provided, recorded audio will be stored in this location at the end of the run.</param>                
+        /// <param name="audioDeviceIndex">Optional argument. If provided, audio is recorded from this input device. Otherwise, the default audio input device is used.</param>
+        /// <param name="outputPath">Optional argument. If provided, recorded audio will be stored in this location at the end of the run.</param>
         public static void RunDemo(
             string accessKey,
             string contextPath,
             string modelPath,
             float sensitivity,
+            float endpointDurationSec,
             bool requireEndpoint,
             int audioDeviceIndex,
             string outputPath = null)
@@ -63,6 +75,7 @@ namespace RhinoDemo
                 contextPath,
                 modelPath,
                 sensitivity,
+                endpointDurationSec,
                 requireEndpoint);
 
             // open stream to output file
@@ -136,8 +149,8 @@ namespace RhinoDemo
         /// Writes the RIFF header for a file in WAV format
         /// </summary>
         /// <param name="writer">Output stream to WAV file</param>
-        /// <param name="channelCount">Number of channels</param>     
-        /// <param name="bitDepth">Number of bits per sample</param>     
+        /// <param name="channelCount">Number of channels</param>
+        /// <param name="bitDepth">Number of bits per sample</param>
         /// <param name="sampleRate">Sampling rate in Hz</param>
         /// <param name="totalSampleCount">Total number of samples written to the file</param>
         private static void WriteWavHeader(BinaryWriter writer, ushort channelCount, ushort bitDepth, int sampleRate, int totalSampleCount)
@@ -188,6 +201,7 @@ namespace RhinoDemo
             string modelPath = null;
             int audioDeviceIndex = -1;
             float sensitivity = 0.5f;
+            float endpointDurationSec = 1.0f;
             bool requireEndpoint = true;
             string outputPath = null;
             bool showAudioDevices = false;
@@ -222,6 +236,14 @@ namespace RhinoDemo
                 {
                     argIndex++;
                     if (argIndex < args.Length && float.TryParse(args[argIndex], out sensitivity))
+                    {
+                        argIndex++;
+                    }
+                }
+                else if (args[argIndex] == "--endpoint_duration")
+                {
+                    argIndex++;
+                    if (argIndex < args.Length && float.TryParse(args[argIndex], out endpointDurationSec))
                     {
                         argIndex++;
                     }
@@ -289,6 +311,7 @@ namespace RhinoDemo
                 contextPath,
                 modelPath,
                 sensitivity,
+                endpointDurationSec,
                 requireEndpoint,
                 audioDeviceIndex,
                 outputPath);
@@ -307,6 +330,7 @@ namespace RhinoDemo
             "\t--model_path: Absolute path to the file containing model parameters.\n" +
             "\t--sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
             "fewer misses at the cost of (potentially) increasing the erroneous inference rate.\n" +
+            "\t--endpoint_duration: Endpoint duration in seconds. It should be a positive number within [0.5, 5].\n" +
             "\t--require_endpoint: ['true'|'false'] If set to 'false', Rhino does not require an endpoint (chunk of silence) before finishing inference.\n" +
             "\t--audio_device_index: Index of input audio device.\n" +
             "\t--output_path: Absolute path to recorded audio for debugging.\n" +

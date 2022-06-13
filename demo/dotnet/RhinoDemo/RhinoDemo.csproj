@@ -11,7 +11,7 @@
 		<TargetName>RhinoFileDemo</TargetName>
 		<AssemblyName>RhinoFileDemo</AssemblyName>
 	</PropertyGroup>
-	
+
 	<PropertyGroup Condition="'$(Configuration)' == 'MicDemo.Debug' Or '$(Configuration)' == 'MicDemo.Release'">
 		<StartupObject>RhinoDemo.MicDemo</StartupObject>
 		<TargetName>RhinoMicDemo</TargetName>
@@ -19,7 +19,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="pvrecorder" Version="1.1.0" />
-		<PackageReference Include="Rhino" Version="2.1.3" />
+		<PackageReference Include="pvrecorder" Version="1.1.1" />
+		<PackageReference Include="Rhino" Version="2.1.5" />
 	</ItemGroup>
 </Project>
