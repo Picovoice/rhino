@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-web-react",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "React component for Rhino Web SDK",
   "entry": "src/index.ts",
   "module": "dist/esm/index.js",
@@ -61,6 +61,6 @@
     "react-dom": "^17.0.1"
   },
   "dependencies": {
-    "@picovoice/rhino-web-core": "^2.1.0"
+    "@picovoice/rhino-web-core": "^2.1.2"
   }
 }

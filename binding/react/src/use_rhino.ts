@@ -25,7 +25,14 @@ export type RhinoHookArgs = {
   accessKey: string;
   /** The context to instantiate */
   context: RhinoContext;
-  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
+  /** Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an utterance that marks the end
+   * of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint duration reduces delay and
+   * improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference pre-emptively in case
+   * the user pauses before finishing the request. */
+  endpointDurationSec?: number;
+  /** If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command. If set to `false`,
+   * Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set to `false` only
+   * if operating in an environment with overlapping speech (e.g. people talking in the background) **/
   requireEndpoint?: boolean;
   /** Immediately start the microphone upon initialization */
   start?: boolean;
@@ -176,6 +183,7 @@ export function useRhino(
       const {
         accessKey,
         context,
+        endpointDurationSec,
         requireEndpoint,
         start: startWebVp = true,
       } = rhinoHookArgs!;
@@ -185,6 +193,7 @@ export function useRhino(
       const rhnWorker = await rhinoWorkerFactory!.create({
         accessKey,
         context,
+        endpointDurationSec,
         requireEndpoint,
         start: initIsTalking,
       });
