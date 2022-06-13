@@ -165,6 +165,7 @@ describe("manual paths", () => {
       ACCESS_KEY,
       contextPathCoffeeMaker,
       0.5,
+      1.0,
       true,
       MODEL_PATH
     );
@@ -186,6 +187,7 @@ describe("manual paths", () => {
       ACCESS_KEY,
       contextPathCoffeeMaker,
       0.5,
+      1.0,
       true,
       MODEL_PATH,
       libraryPath
@@ -210,6 +212,7 @@ describe("intent detection in DE", () => {
       ACCESS_KEY,
       contextPathBeleuchtungDe,
       0.5,
+      1.0,
       true,
       MODEL_PATH_DE
     );
@@ -231,6 +234,7 @@ describe("intent detection in DE", () => {
       ACCESS_KEY,
       contextPathBeleuchtungDe,
       0.5,
+      1.0,
       true,
       MODEL_PATH_DE
     );
@@ -252,6 +256,7 @@ describe("intent detection in ES", () => {
       ACCESS_KEY,
       contextPathIluminacionInteligenteEs,
       0.5,
+      1.0,
       true,
       MODEL_PATH_ES
     );
@@ -274,6 +279,7 @@ describe("intent detection in ES", () => {
       ACCESS_KEY,
       contextPathIluminacionInteligenteEs,
       0.5,
+      1.0,
       true,
       MODEL_PATH_ES
     );
