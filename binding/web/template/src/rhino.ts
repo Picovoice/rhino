@@ -410,7 +410,7 @@ export class Rhino implements RhinoEngine {
   public static async create(
     accessKey: string,
     contextInfo: RhinoContext,
-    endpointDurationSec: number,
+    endpointDurationSec?: number,
     requireEndpoint?: boolean,
   ): Promise<Rhino> {
     if (!isAccessKeyValid(accessKey)) {
