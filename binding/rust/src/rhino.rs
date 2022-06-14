@@ -52,6 +52,7 @@ type PvRhinoInitFn = unsafe extern "C" fn(
     model_path: *const c_char,
     context_path: *const c_char,
     sensitivity: c_float,
+    endpoint_duration_sec: c_float,
     require_endpoint: bool,
     object: *mut *mut CRhino,
 ) -> PvStatus;
@@ -125,11 +126,13 @@ pub struct RhinoBuilder {
     model_path: PathBuf,
     context_path: PathBuf,
     sensitivity: f32,
+    endpoint_duration_sec: f32,
     require_endpoint: bool,
 }
 
 impl RhinoBuilder {
     const DEFAULT_SENSITIVITY: f32 = 0.5;
+    const DEFAULT_ENDPOINT_DURATION_SEC: f32 = 1.0;
     const DEFAULT_REQUIRE_ENDPOINT: bool = true;
 
     pub fn new<S: Into<String>, P: Into<PathBuf>>(access_key: S, context_path: P) -> Self {
@@ -139,6 +142,7 @@ impl RhinoBuilder {
             model_path: pv_model_path(),
             context_path: context_path.into(),
             sensitivity: Self::DEFAULT_SENSITIVITY,
+            endpoint_duration_sec: Self::DEFAULT_ENDPOINT_DURATION_SEC,
             require_endpoint: Self::DEFAULT_REQUIRE_ENDPOINT,
         }
     }
@@ -168,6 +172,11 @@ impl RhinoBuilder {
         self
     }
 
+    pub fn endpoint_duration_sec(&mut self, endpoint_duration_sec: f32) -> &mut Self {
+        self.endpoint_duration_sec = endpoint_duration_sec;
+        self
+    }
+
     pub fn require_endpoint(&mut self, require_endpoint: bool) -> &mut Self {
         self.require_endpoint = require_endpoint;
         self
@@ -180,6 +189,7 @@ impl RhinoBuilder {
             self.model_path.clone(),
             self.context_path.clone(),
             self.sensitivity,
+            self.endpoint_duration_sec,
             self.require_endpoint,
         )
         .map(|inner| Rhino {
@@ -301,6 +311,7 @@ impl RhinoInner {
         model_path: P,
         context_path: P,
         sensitivity: f32,
+        endpoint_duration_sec: f32,
         require_endpoint: bool,
     ) -> Result<Self, RhinoError> {
         if access_key.is_empty() {
@@ -347,6 +358,16 @@ impl RhinoInner {
             ));
         }
 
+        if !(0.5..=5.0).contains(&endpoint_duration_sec) {
+            return Err(RhinoError::new(
+                RhinoErrorStatus::ArgumentError,
+                format!(
+                    "Endpoint duration value {} should be within [0.5, 5.0]",
+                    endpoint_duration_sec
+                ),
+            ));
+        }
+
         let lib = unsafe { Library::new(library_path.as_ref()) }.map_err(|err| {
             RhinoError::new(
                 RhinoErrorStatus::LibraryLoadError,
@@ -382,6 +403,7 @@ impl RhinoInner {
                     pv_model_path.as_ptr(),
                     pv_context_path.as_ptr(),
                     sensitivity,
+                    endpoint_duration_sec,
                     require_endpoint,
                     addr_of_mut!(crhino),
                 ),
