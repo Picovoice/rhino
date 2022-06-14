@@ -23,7 +23,7 @@ Rhino is:
 
 ## Requirements
 
-- .NET Core 3.1
+- .NET 6.0
 
 ## Compatibility
 
@@ -45,6 +45,10 @@ Platforms compatible with .NET Core 3.1+:
   - 4 (32 and 64 bit)
 - NVIDIA Jetson Nano
 - BeagleBone
+
+Platform compatible with .NET 6.0+:
+
+- macOS (arm64)
 
 ## Installation
 
@@ -86,7 +90,7 @@ string contextPath = "/absolute/path/to/context.rhn";
 
 Rhino handle = Rhino.Create(
     accessKey
-    contextPath, 
+    contextPath,
     sensitivity: 0.25f);
 ```
 
@@ -101,7 +105,7 @@ short[] GetNextAudioFrame()
 
 while(true)
 {
-    bool isFinalized = handle.Process(GetNextAudioFrame());   
+    bool isFinalized = handle.Process(GetNextAudioFrame());
     if(isFinalized)
     {
         Inference inference = handle.GetInference();
@@ -113,13 +117,13 @@ while(true)
         }
         else
         {
-            // .. code to handle unsupported commands              
-        }        
+            // .. code to handle unsupported commands
+        }
     }
 }
 ```
 
-Rhino will have its resources freed by the garbage collector, but to have resources freed immediately after use, wrap it in a using statement: 
+Rhino will have its resources freed by the garbage collector, but to have resources freed immediately after use, wrap it in a using statement:
 
 ```csharp
 using(Rhino handle = Rhino.Create(accessKey, contextPath))

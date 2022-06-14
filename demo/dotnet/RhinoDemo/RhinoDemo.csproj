@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<Configurations>FileDemo.Debug;FileDemo.Release;MicDemo.Debug;MicDemo.Release</Configurations>
 	</PropertyGroup>
 
@@ -11,7 +11,7 @@
 		<TargetName>RhinoFileDemo</TargetName>
 		<AssemblyName>RhinoFileDemo</AssemblyName>
 	</PropertyGroup>
-	
+
 	<PropertyGroup Condition="'$(Configuration)' == 'MicDemo.Debug' Or '$(Configuration)' == 'MicDemo.Release'">
 		<StartupObject>RhinoDemo.MicDemo</StartupObject>
 		<TargetName>RhinoMicDemo</TargetName>
@@ -19,7 +19,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="pvrecorder" Version="1.1.0" />
-		<PackageReference Include="Rhino" Version="2.1.3" />
+		<PackageReference Include="pvrecorder" Version="1.1.1" />
+		<PackageReference Include="Rhino" Version="2.1.6" />
 	</ItemGroup>
 </Project>

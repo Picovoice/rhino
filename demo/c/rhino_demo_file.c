@@ -88,35 +88,41 @@ static void print_dl_error(const char *message) {
 }
 
 static struct option long_options[] = {
-        {"library_path",                required_argument, NULL, 'l'},
-        {"model_path",                  required_argument, NULL, 'm'},
-        {"context_path",                required_argument, NULL, 'c'},
-        {"sensitivity",                 required_argument, NULL, 't'},
-        {"require_endpoint",            required_argument, NULL, 'e'},
-        {"access_key",                  required_argument, NULL, 'a'},
-        {"wav_path",                    required_argument, NULL, 'w'},
-        {"performance_threshold_sec",   optional_argument, NULL, 'p'}
+        {"access_key",                required_argument, NULL, 'a'},
+        {"library_path",              required_argument, NULL, 'l'},
+        {"model_path",                required_argument, NULL, 'm'},
+        {"context_path",              required_argument, NULL, 'c'},
+        {"wav_path",                  required_argument, NULL, 'w'},
+        {"sensitivity",               required_argument, NULL, 't'},
+        {"endpoint_duration_sec",     required_argument, NULL, 'u'},
+        {"require_endpoint",          required_argument, NULL, 'e'},
+        {"performance_threshold_sec", optional_argument, NULL, 'p'}
 };
 
 void print_usage(const char *program_name) {
     fprintf(stderr,
-            "Usage : %s -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -t SENSTIVITY -a ACCESS_KEY -w WAV_PATH [-e, --require_endpoint (true,false)]\n",
+            "Usage : %s -a ACCESS_KEY -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -w WAV_PATH [-t SENSITIVITY] "
+            "[-u, --endpoint_duration_sec] [-e, --require_endpoint (true,false)]\n",
             program_name);
 }
 
 int picovoice_main(int argc, char *argv[]) {
+    const char *access_key = NULL;
     const char *library_path = NULL;
     const char *model_path = NULL;
     const char *context_path = NULL;
-    const char *access_key = NULL;
     const char *wav_path = NULL;
     float sensitivity = 0.5f;
+    float endpoint_duration_sec = 1.f;
     bool require_endpoint = false;
     double performance_threshold_sec = 0;
 
     int c;
-    while ((c = getopt_long(argc, argv, "e:l:m:c:t:a:w:p:", long_options, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "a:l:m:c:w:t:u:e:p:", long_options, NULL)) != -1) {
         switch (c) {
+            case 'a':
+                access_key = optarg;
+                break;
             case 'l':
                 library_path = optarg;
                 break;
@@ -126,17 +132,17 @@ int picovoice_main(int argc, char *argv[]) {
             case 'c':
                 context_path = optarg;
                 break;
+            case 'w':
+                wav_path = optarg;
+                break;
             case 't':
                 sensitivity = strtof(optarg, NULL);
                 break;
+            case 'u':
+                endpoint_duration_sec = strtof(optarg, NULL);
+                break;
             case 'e':
                 require_endpoint = (strcmp(optarg, "false") != 0);
-                break;
-            case 'a':
-                access_key = optarg;
-                break;
-            case 'w':
-                wav_path = optarg;
                 break;
             case 'p':
                 performance_threshold_sec = strtod(optarg, NULL);
@@ -146,7 +152,7 @@ int picovoice_main(int argc, char *argv[]) {
         }
     }
 
-    if (!library_path || !model_path || !context_path || !access_key) {
+    if (!access_key || !library_path || !model_path || !context_path || !wav_path) {
         print_usage(argv[0]);
         exit(1);
     }
@@ -173,6 +179,7 @@ int picovoice_main(int argc, char *argv[]) {
             const char *,
             const char *,
             const char *,
+            float,
             float,
             bool,
             pv_rhino_t **) =
@@ -263,6 +270,7 @@ int picovoice_main(int argc, char *argv[]) {
             model_path,
             context_path,
             sensitivity,
+            endpoint_duration_sec,
             require_endpoint,
             &rhino);
     if (status != PV_STATUS_SUCCESS) {
@@ -354,7 +362,11 @@ int picovoice_main(int argc, char *argv[]) {
     if (performance_threshold_sec > 0) {
         const double total_cpu_time_sec = total_cpu_time_usec * 1e-6;
         if (total_cpu_time_sec > performance_threshold_sec) {
-            fprintf(stderr, "Expected threshold (%.3fs), process took (%.3fs)\n", performance_threshold_sec, total_cpu_time_sec);
+            fprintf(
+                    stderr,
+                    "Expected threshold (%.3fs), process took (%.3fs)\n",
+                    performance_threshold_sec,
+                    total_cpu_time_sec);
             exit(1);
         }
     }
