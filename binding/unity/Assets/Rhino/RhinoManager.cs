@@ -26,30 +26,39 @@ namespace Pv.Unity
 
         /// <summary>
         /// Creates an instance of Rhino inference engine with built-in audio processing
-        /// </summary>        
+        /// </summary>
         /// <param name="accessKey">AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).</param>
         /// <param name="contextPath">Absolute path to the Rhino context file (.rhn).</param>
         /// <param name="inferenceCallback">A callback for when Rhino has made an intent inference.</param>
-        /// <param name="modelPath">(Optional) Absolute path to the file containing model parameters. If not set it will be set to the default location.</param>        
+        /// <param name="modelPath">(Optional) Absolute path to the file containing model parameters. If not set it will be set to the default location.</param>
         /// <param name="sensitivity">
         /// (Optional) Inference sensitivity. A higher sensitivity value results in
         /// fewer misses at the cost of (potentially) increasing the erroneous inference rate.
         /// Sensitivity should be a floating-point number within 0 and 1.
         /// </param>
-        /// <param name="requireEndpoint">
-        /// (Optional) Boolean variable to indicate if Rhino should wait for a chunk of silence before finishing inference.
+        /// <param name="endpointDurationSec">
+        /// (Optional) Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+        /// utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+        /// duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+        /// pre-emptively in case the user pauses before finishing the request.
         /// </param>
-        /// <param name="processErrorCallback">(Optional) Reports errors that are encountered while the engine is processing audio.</returns>                             
+        /// <param name="requireEndpoint">
+        /// (Optional) If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+        /// If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+        /// to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
+        /// </param>
+        /// <param name="processErrorCallback">(Optional) Reports errors that are encountered while the engine is processing audio.</returns>
         public static RhinoManager Create(
             string accessKey,
             string contextPath,
             Action<Inference> inferenceCallback,
             string modelPath = null,
             float sensitivity = 0.5f,
+            float endpointDurationSec = 1.0f,
             bool requireEndpoint = true,
             Action<RhinoException> processErrorCallback = null)
         {
-            Rhino rhino = Rhino.Create(accessKey, contextPath, modelPath: modelPath, sensitivity: sensitivity, requireEndpoint: requireEndpoint);
+            Rhino rhino = Rhino.Create(accessKey, contextPath, modelPath: modelPath, sensitivity: sensitivity, endpointDurationSec: endpointDurationSec, requireEndpoint: requireEndpoint);
             return new RhinoManager(rhino, inferenceCallback, processErrorCallback);
         }
 
@@ -66,7 +75,7 @@ namespace Pv.Unity
 
         /// <summary>
         /// Action to catch audio frames as voice processor produces them
-        /// </summary>        
+        /// </summary>
         /// <param name="pcm">Frame of pcm audio</param>
         private void OnFrameCaptured(short[] pcm)
         {
