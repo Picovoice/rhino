@@ -3,13 +3,13 @@ name: Go Demos
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths:
       - 'demo/go/**'
       - '!demo/go/README.md'
       - '.github/workflows/go-demos.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths:
       - 'demo/go/**'
       - '!demo/go/README.md'

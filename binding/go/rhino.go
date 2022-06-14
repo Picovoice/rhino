@@ -22,7 +22,7 @@ import (
 	"crypto/sha256"
 	"embed"
 	"encoding/hex"
-    "errors"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -125,10 +125,18 @@ type Rhino struct {
 	// Sensitivity should be a floating-point number within 0 and 1.
 	Sensitivity float32
 
+	/// Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+	/// utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+	/// duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+	/// pre-emptively in case the user pauses before finishing the request.
+	EndpointDurationSec float32
+
 	// Absolute path to the Rhino context file (.rhn).
 	ContextPath string
 
-	// If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+	/// If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+	/// If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+	/// to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
 	RequireEndpoint bool
 
 	// Once initialized, stores the source of the Rhino context in YAML format. Shows the list of intents,
@@ -139,11 +147,12 @@ type Rhino struct {
 // Returns a Rhino struct with the given context file and default parameters
 func NewRhino(accessKey string, contextPath string) Rhino {
 	return Rhino{
-		AccessKey:       accessKey,
-		ContextPath:     contextPath,
-		Sensitivity:     0.5,
-		ModelPath:       defaultModelFile,
-		RequireEndpoint: true,
+		AccessKey:       		accessKey,
+		ContextPath:     		contextPath,
+		Sensitivity:     		0.5,
+		EndpointDurationSec:	1.0,
+		ModelPath:       		defaultModelFile,
+		RequireEndpoint: 		true,
 	}
 }
 
@@ -223,6 +232,12 @@ func (rhino *Rhino) Init() error {
 		return &RhinoError{
 			INVALID_ARGUMENT,
 			fmt.Sprintf("Sensitivity value of %f is invalid. Must be between [0, 1]", rhino.Sensitivity)}
+	}
+
+	if rhino.EndpointDurationSec < 0.5 || rhino.EndpointDurationSec > 5.0 {
+		return &RhinoError{
+			INVALID_ARGUMENT,
+			fmt.Sprintf("EndpointDurationSec value of %f is invalid. Must be between [0.5, 5.0]", rhino.EndpointDurationSec)}
 	}
 
 	status := nativeRhino.nativeInit(rhino)
@@ -434,11 +449,11 @@ func extractFile(srcFile string, dstDir string) string {
 		log.Fatalf("%v", readErr)
 	}
 
-    srcHash := sha256sumBytes(bytes)
-    hashedDstDir := filepath.Join(dstDir, srcHash)
+	srcHash := sha256sumBytes(bytes)
+	hashedDstDir := filepath.Join(dstDir, srcHash)
 	extractedFilepath := filepath.Join(hashedDstDir, srcFile)
 
-    if _, err := os.Stat(extractedFilepath); errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Stat(extractedFilepath); errors.Is(err, os.ErrNotExist) {
 		err = os.MkdirAll(filepath.Dir(extractedFilepath), 0777)
 		if err != nil {
 			log.Fatalf("Could not create rhino directory: %v", err)
@@ -448,12 +463,12 @@ func extractFile(srcFile string, dstDir string) string {
 		if writeErr != nil {
 			log.Fatalf("%v", writeErr)
 		}
-    }
+	}
 
-    return extractedFilepath
+	return extractedFilepath
 }
 
 func sha256sumBytes(bytes []byte) string {
-    sum := sha256.Sum256(bytes)
-    return hex.EncodeToString(sum[:])
+	sum := sha256.Sum256(bytes)
+	return hex.EncodeToString(sum[:])
 }

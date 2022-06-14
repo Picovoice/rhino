@@ -62,6 +62,7 @@ typedef int32_t (*pv_rhino_init_func)(
 	const char *model_path,
 	const char *context_path,
 	float sensitivity,
+	float endpoint_duration_sec,
 	bool endpoint_required,
 	void **object);
 
@@ -71,6 +72,7 @@ int32_t pv_rhino_init_wrapper(
 	const char *model_path,
 	const char *context_path,
 	float sensitivity,
+	float endpoint_duration_sec,
 	bool endpoint_required,
 	void **object) {
 	return ((pv_rhino_init_func) f)(
@@ -78,6 +80,7 @@ int32_t pv_rhino_init_wrapper(
 		model_path,
 		context_path,
 		sensitivity,
+		endpoint_duration_sec,
 		endpoint_required,
 		object);
 }
@@ -232,6 +235,7 @@ func (nr nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
 		modelPathC,
 		contextPathC,
 		(C.float)(rhino.Sensitivity),
+		(C.float)(rhino.EndpointDurationSec),
 		(C.bool)(rhino.RequireEndpoint),
 		&ptrC[0])
 
