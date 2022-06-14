@@ -113,7 +113,15 @@ class Rhino(object):
     class CRhino(Structure):
         pass
 
-    def __init__(self, access_key, library_path, model_path, context_path, sensitivity=0.5, require_endpoint=True):
+    def __init__(
+            self,
+            access_key,
+            library_path,
+            model_path,
+            context_path,
+            sensitivity=0.5,
+            endpoint_duration_sec=1.,
+            require_endpoint=True):
         """
         Constructor.
 
@@ -124,8 +132,14 @@ class Rhino(object):
         expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
         :param sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value
         results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
-        :param require_endpoint If set to `False`, Rhino does not require an endpoint (chunk of silence) before
-        finishing inference.
+        :param endpoint_duration_sec: Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+        utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+        duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return
+        inference pre-emptively in case the user pauses before finishing the request.
+        require_endpoint: If set to `True`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+        If set to `False`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless.
+        Set to `False` only if operating in an environment with overlapping speech (e.g. people talking in the
+        background).
         """
 
         if not access_key:
@@ -145,11 +159,15 @@ class Rhino(object):
         if not 0 <= sensitivity <= 1:
             raise ValueError("Sensitivity should be within [0, 1].")
 
+        if not 0.5 <= endpoint_duration_sec <= 5.:
+            raise ValueError("Endpoint duration should be within [0.5, 5]")
+
         init_func = library.pv_rhino_init
         init_func.argtypes = [
             c_char_p,
             c_char_p,
             c_char_p,
+            c_float,
             c_float,
             c_bool,
             POINTER(POINTER(self.CRhino))]
@@ -162,6 +180,7 @@ class Rhino(object):
             model_path.encode('utf-8'),
             context_path.encode('utf-8'),
             sensitivity,
+            endpoint_duration_sec,
             require_endpoint,
             byref(self._handle))
         if status is not self.PicovoiceStatuses.SUCCESS:
