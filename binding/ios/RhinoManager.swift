@@ -1,5 +1,5 @@
 //
-//  Copyright 2018-2021 Picovoice Inc.
+//  Copyright 2018-2022 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -33,7 +33,13 @@ public class RhinoManager {
     ///   intent arguments (slots) within a domain of interest.
     ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially)
     ///   increasing the erroneous inference rate.
-    ///   - requireEndpoint: If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+    ///   - endpointDurationSec: Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+    ///   utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+    ///   duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+    ///   pre-emptively in case the user pauses before finishing the request.
+    ///   - requireEndpoint: If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+    ///   If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+    ///   to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
     ///   - onInferenceCallback: It is invoked upon completion of intent inference.
     ///   - processErrorCallback: Invoked if an error occurs while processing frames. If missing, error will be printed to console.
     /// - Throws: RhinoManagerError
@@ -42,6 +48,7 @@ public class RhinoManager {
         contextPath: String,
         modelPath: String? = nil,
         sensitivity: Float32 = 0.5,
+        endpointDurationSec: Float32 = 1.0,
         requireEndpoint: Bool = true,
         onInferenceCallback: ((Inference) -> Void)?,
         processErrorCallback: ((Error) -> Void)? = nil) throws {

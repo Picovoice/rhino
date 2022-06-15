@@ -1,5 +1,5 @@
 //
-//  Copyright 2021 Picovoice Inc.
+//  Copyright 2021-2022 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -54,9 +54,21 @@ public class Rhino {
     ///   - modelPath: Absolute path to file containing model parameters.
     ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially)
     ///   increasing the erroneous inference rate.
-    ///   - requireEndpoint: If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+    ///   - endpointDurationSec: Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+    ///   utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+    ///   duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+    ///   pre-emptively in case the user pauses before finishing the request.
+    ///   - requireEndpoint: If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+    ///   If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+    ///   to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
     /// - Throws: RhinoError
-    public init(accessKey: String, contextPath: String, modelPath:String? = nil, sensitivity:Float32 = 0.5, requireEndpoint: Bool = true) throws {
+    public init(
+            accessKey: String,
+            contextPath: String,
+            modelPath:String? = nil,
+            sensitivity:Float32 = 0.5,
+            endpointDurationSec:Float32 = 1.0,
+            requireEndpoint: Bool = true) throws {
         
         if accessKey.isEmpty {
             throw RhinoInvalidArgumentError("No AccessKey was provided to Rhino")
@@ -82,14 +94,19 @@ public class Rhino {
         if sensitivity < 0 || sensitivity > 1 {
             throw RhinoInvalidArgumentError("Sensitivity value '\(sensitivity)' is not a floating-point value between [0, 1]")
         }
+
+        if endpointDurationSec < 0.5 || endpointDurationSec > 5.0 {
+            throw RhinoInvalidArgumentError("Endpoint duration value '\(endpointDurationSec)' is not a floating-point value between [0.5, 5.0]")
+        }
         
         var status = pv_rhino_init(
-            accessKey,
-            modelPathArg,
-            contextPathArg,
-            sensitivity,
-            requireEndpoint,
-            &self.handle)
+                accessKey,
+                modelPathArg,
+                contextPathArg,
+                sensitivity,
+                endpointDurationSec,
+                requireEndpoint,
+                &self.handle)
         if status != PV_STATUS_SUCCESS {
             throw pvStatusToRhinoError(status, "Rhino init failed")
         }
