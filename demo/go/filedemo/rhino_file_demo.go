@@ -95,7 +95,7 @@ func main() {
 
 	// validate endpoint duration
 	endpointDurationFloat := float32(*endpointDurationArg)
-	if endpointDurationFloat < 0 || endpointDurationFloat > 1 {
+	if endpointDurationFloat < 0.5 || endpointDurationFloat > 5.0 {
 		log.Fatalf("Endpoint duration value of '%f' is invalid. Must be between [0.5, 5.0].", endpointDurationFloat)
 	}
 	r.EndpointDurationSec = endpointDurationFloat
