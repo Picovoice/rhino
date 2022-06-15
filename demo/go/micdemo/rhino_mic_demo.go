@@ -31,6 +31,9 @@ func main() {
 		"The value should be a number within [0, 1]. A higher sensitivity value results in "+
 		"fewer misses at the cost of (potentially) increasing the erroneous inference rate. "+
 		"If not set, 0.5 will be used.")
+	endpointDurationArg := flag.Float64("endpoint_duration", 1.0, "Endpoint duration in seconds. " +
+		"An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command. " +
+		"It should be a positive number within [0.5, 5]. If not set, 1.0 will be used.")
 	requireEndpointArg := flag.String("require_endpoint", "true",
 		"If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.")
 	audioDeviceIndex := flag.Int("audio_device_index", -1, "Index of capture device to use.")
@@ -93,6 +96,13 @@ func main() {
 		log.Fatalf("Senstivity value of '%f' is invalid. Must be between [0, 1].", sensitivityFloat)
 	}
 	r.Sensitivity = sensitivityFloat
+
+	// validate endpoint duration
+	endpointDurationFloat := float32(*endpointDurationArg)
+	if endpointDurationFloat < 0 || endpointDurationFloat > 1 {
+		log.Fatalf("Endpoint duration value of '%f' is invalid. Must be between [0.5, 5.0].", endpointDurationFloat)
+	}
+	r.EndpointDurationSec = endpointDurationFloat
 
 	err := r.Init()
 	if err != nil {

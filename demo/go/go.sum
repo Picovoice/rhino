@@ -6,6 +6,8 @@ github.com/Picovoice/rhino/binding/go/v2 v2.1.1 h1:7r1OVNWJWcSDKf0bFZOk6yk5GMx3j
 github.com/Picovoice/rhino/binding/go/v2 v2.1.1/go.mod h1:8f1JuYLexgD44ISYSLhEIGfns6Z+4vQhpLitwNgpM2I=
 github.com/Picovoice/rhino/binding/go/v2 v2.1.3 h1:F7wvDKUjQzVEOk5wjvgfFOAJcUsjp6HvXKCzBREB78M=
 github.com/Picovoice/rhino/binding/go/v2 v2.1.3/go.mod h1:/DNCpNLIENfz9A85bHUUDTW8YSHFcmPDDDA/XZPQgbI=
+github.com/Picovoice/rhino/binding/go/v2 v2.1.4-0.20220615000518-ba50c8789b2a h1:fuXQjpWSkOAiHijFVq7BTYeB2DZXTonJxGVbxDkAXAc=
+github.com/Picovoice/rhino/binding/go/v2 v2.1.4-0.20220615000518-ba50c8789b2a/go.mod h1:/DNCpNLIENfz9A85bHUUDTW8YSHFcmPDDDA/XZPQgbI=
 github.com/go-audio/audio v1.0.0 h1:zS9vebldgbQqktK4H0lUqWrG8P0NxCJVqcj7ZpNnwd4=
 github.com/go-audio/audio v1.0.0/go.mod h1:6uAu0+H2lHkwdGsAY+j2wHPNPpPoeg5AaEFh9FlA+Zs=
 github.com/go-audio/riff v1.0.0 h1:d8iCGbDvox9BfLagY94fBynxSPHO80LmZCaOsmKxokA=
