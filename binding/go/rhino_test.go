@@ -161,6 +161,7 @@ func TestWithinContextDe(t *testing.T) {
 		AccessKey:   testAccessKey,
 		ContextPath: getTestContextPath(language, "beleuchtung"),
 		Sensitivity: 0.5,
+		EndpointDurationSec: 1.0,
 		ModelPath:   getTestModelPath(language)}
 	runTestCase(
 		t,
@@ -177,6 +178,7 @@ func TestOutOfContextDe(t *testing.T) {
 		AccessKey:   testAccessKey,
 		ContextPath: getTestContextPath(language, "beleuchtung"),
 		Sensitivity: 0.5,
+		EndpointDurationSec: 1.0,
 		ModelPath:   getTestModelPath(language)}
 	runTestCase(
 		t,
@@ -193,6 +195,7 @@ func TestWithinContextEs(t *testing.T) {
 		AccessKey:   testAccessKey,
 		ContextPath: getTestContextPath(language, "iluminación_inteligente"),
 		Sensitivity: 0.5,
+		EndpointDurationSec: 1.0,
 		ModelPath:   getTestModelPath(language)}
 	runTestCase(
 		t,
@@ -209,6 +212,7 @@ func TestOutOfContextEs(t *testing.T) {
 		AccessKey:   testAccessKey,
 		ContextPath: getTestContextPath(language, "iluminación_inteligente"),
 		Sensitivity: 0.5,
+		EndpointDurationSec: 1.0,
 		ModelPath:   getTestModelPath(language)}
 	runTestCase(
 		t,
@@ -225,6 +229,7 @@ func TestWithinContextFr(t *testing.T) {
 		AccessKey:   testAccessKey,
 		ContextPath: getTestContextPath(language, "éclairage_intelligent"),
 		Sensitivity: 0.5,
+		EndpointDurationSec: 1.0,
 		ModelPath:   getTestModelPath(language)}
 	runTestCase(
 		t,
@@ -241,6 +246,7 @@ func TestOutOfContextFr(t *testing.T) {
 		AccessKey:   testAccessKey,
 		ContextPath: getTestContextPath(language, "éclairage_intelligent"),
 		Sensitivity: 0.5,
+		EndpointDurationSec: 1.0,
 		ModelPath:   getTestModelPath(language)}
 	runTestCase(
 		t,
