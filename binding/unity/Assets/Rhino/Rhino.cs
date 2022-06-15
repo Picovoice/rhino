@@ -73,7 +73,7 @@ namespace Pv.Unity
         private IntPtr _libraryPointer = IntPtr.Zero;
 
         [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern RhinoStatus pv_rhino_init(string accessKey, string modelPath, string contextPath, float sensitivity, bool requireEndpoint, out IntPtr handle);
+        private static extern RhinoStatus pv_rhino_init(string accessKey, string modelPath, string contextPath, float sensitivity, float endpointDurationSec, bool requireEndpoint, out IntPtr handle);
 
         [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int pv_sample_rate();
@@ -119,29 +119,38 @@ namespace Pv.Unity
         /// </summary>
         /// <param name="accessKey">AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).</param>
         /// <param name="contextPath">
-        /// Absolute path to file containing context model (file with `.rhn` extension. A context represents the set of 
+        /// Absolute path to file containing context model (file with `.rhn` extension. A context represents the set of
         /// expressions(spoken commands), intents, and intent arguments(slots) within a domain of interest.
         /// </param>
         /// <param name="modelPath">
-        /// Absolute path to the file containing model parameters. If not set it will be set to the 
+        /// Absolute path to the file containing model parameters. If not set it will be set to the
         /// default location.
-        /// </param>       
+        /// </param>
         /// <param name="sensitivity">
-        /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses 
+        /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses
         /// at the cost of (potentially) increasing the erroneous inference rate.
         /// </param>
-        /// <param name="requireEndpoint">
-        /// Boolean variable to indicate if Rhino should wait for a chunk of silence before finishing inference.
+        /// <param name="endpointDurationSec">
+        /// Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+        /// utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+        /// duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+        /// pre-emptively in case the user pauses before finishing the request.
         /// </param>
-        /// <returns>An instance of Rhino Speech-to-Intent engine.</returns>                             
+        /// <param name="requireEndpoint">
+        /// If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+        /// If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+        /// to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
+        /// </param>
+        /// <returns>An instance of Rhino Speech-to-Intent engine.</returns>
         public static Rhino Create(
             string accessKey,
             string contextPath,
             string modelPath = null,
             float sensitivity = 0.5f,
+            float endpointDurationSec = 1.0f,
             bool requireEndpoint = true)
         {
-            return new Rhino(accessKey, modelPath ?? DEFAULT_MODEL_PATH, contextPath, sensitivity, requireEndpoint);
+            return new Rhino(accessKey, modelPath ?? DEFAULT_MODEL_PATH, contextPath, sensitivity, endpointDurationSec, requireEndpoint);
         }
 
         /// <summary>
@@ -154,13 +163,21 @@ namespace Pv.Unity
         /// expressions(spoken commands), intents, and intent arguments(slots) within a domain of interest.
         /// </param>
         /// <param name="sensitivity">
-        /// <param name="requireEndpoint">
-        /// Boolean variable to indicate if Rhino should wait for a chunk of silence before finishing inference.
-        /// </param>
         /// Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value
         /// results in fewer misses at the cost of(potentially) increasing the erroneous inference rate.
-        /// </param>       
-        private Rhino(string accessKey, string modelPath, string contextPath, float sensitivity, bool requireEndpoint)
+        /// </param>
+        /// <param name="endpointDurationSec">
+        /// Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+        /// utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+        /// duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+        /// pre-emptively in case the user pauses before finishing the request.
+        /// </param>
+        /// <param name="requireEndpoint">
+        /// If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+        /// If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+        /// to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
+        /// </param>
+        private Rhino(string accessKey, string modelPath, string contextPath, float sensitivity, float endpointDurationSec, bool requireEndpoint)
         {
             if (string.IsNullOrEmpty(accessKey))
             {
@@ -212,7 +229,19 @@ namespace Pv.Unity
                 throw new RhinoInvalidArgumentException("Sensitivity value should be within [0, 1].");
             }
 
-            RhinoStatus status = pv_rhino_init(accessKey, modelPath, contextPath, sensitivity, requireEndpoint, out _libraryPointer);
+            if (endpointDurationSec < 0.5 || endpointDurationSec > 5.0)
+            {
+                throw new RhinoInvalidArgumentException("Endpoint duration value should be within [0.5, 5.0].");
+            }
+
+            RhinoStatus status = pv_rhino_init(
+                accessKey,
+                modelPath,
+                contextPath,
+                sensitivity,
+                endpointDurationSec,
+                requireEndpoint,
+                out _libraryPointer);
             if (status != RhinoStatus.SUCCESS)
             {
                 throw RhinoStatusToException(status);
@@ -232,12 +261,12 @@ namespace Pv.Unity
         }
 
         /// <summary>
-        /// Processes a frame of audio and emits a flag indicating if the inference is finalized. When finalized, 
+        /// Processes a frame of audio and emits a flag indicating if the inference is finalized. When finalized,
         /// `pv_rhino_is_understood()` should be called to check if the spoken command is considered valid.
         /// </summary>
         /// <param name="pcm">
-        /// A frame of audio samples. The number of samples per frame can be found by calling `.FrameLength`. 
-        /// The incoming audio needs to have a sample rate equal to `.SampleRate` and be 16-bit linearly-encoded. 
+        /// A frame of audio samples. The number of samples per frame can be found by calling `.FrameLength`.
+        /// The incoming audio needs to have a sample rate equal to `.SampleRate` and be 16-bit linearly-encoded.
         /// Rhino operates on single-channel audio.
         /// </param>
         /// <returns>
@@ -264,7 +293,7 @@ namespace Pv.Unity
         /// Gets inference results from Rhino. If the spoken command was understood, it includes the specific intent name
         /// that was inferred, and (if applicable) slot keys and specific slot values. Should only be called after the
         /// process function returns true, otherwise Rhino has not yet reached an inference conclusion.
-        /// </summary>        
+        /// </summary>
         /// <returns>
         /// An immutable Inference object with `.IsUnderstood`, '.Intent` , and `.Slots` getters.
         /// </returns>
