@@ -80,7 +80,6 @@ fn base_library_path() -> PathBuf {
 
 #[cfg(all(target_os = "linux", any(target_arch = "arm", target_arch = "aarch64")))]
 fn base_library_path() -> PathBuf {
-
     let machine = find_machine_type();
     match machine.as_str() {
         machine if RPI_MACHINES.contains(&machine) => {
