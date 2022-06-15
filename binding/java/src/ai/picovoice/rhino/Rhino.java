@@ -52,17 +52,23 @@ public class Rhino {
      * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher
      *                    sensitivity value results in fewer misses at the cost of (potentially)
      *                    increasing the erroneous inference rate.
-     * @param requireEndpoint If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+     * @param endpointDurationSec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+     *                            utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+     *                            duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+     *                            pre-emptively in case the user pauses before finishing the request.
+     * @param requireEndpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+     *                        If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+     *                        to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
      * @throws RhinoException If there is an error while initializing Rhino.
      */
-    public Rhino(String accessKey, String libraryPath, String modelPath, String contextPath, float sensitivity, boolean requireEndpoint) throws RhinoException {
+    public Rhino(String accessKey, String libraryPath, String modelPath, String contextPath, float sensitivity, float endpointDurationSec, boolean requireEndpoint) throws RhinoException {
 
         try {
             System.load(libraryPath);
         } catch (Exception exception) {
             throw new RhinoException(exception);
         }
-        libraryHandle = init(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
+        libraryHandle = init(accessKey, modelPath, contextPath, sensitivity, endpointDurationSec, requireEndpoint);
     }
 
     /**
@@ -158,7 +164,7 @@ public class Rhino {
      */
     public native String getVersion();
 
-    private native long init(String accessKey, String modelPath, String contextPath, float sensitivity, boolean requireEndpoint);
+    private native long init(String accessKey, String modelPath, String contextPath, float sensitivity, float endpointDurationSec, boolean requireEndpoint);
 
     private native void delete(long object);
 
@@ -182,6 +188,7 @@ public class Rhino {
         private String modelPath = null;
         private String contextPath = null;
         private float sensitivity = 0.5f;
+        private float endpointDuration = 1.0f;
         private boolean requireEndpoint = false;
 
         public Builder setAccessKey(String accessKey) {
@@ -206,6 +213,11 @@ public class Rhino {
 
         public Builder setSensitivity(float sensitivity) {
             this.sensitivity = sensitivity;
+            return this;
+        }
+
+        public Builder setEndpointDuration(float endpointDuration) {
+            this.endpointDuration = endpointDuration;
             return this;
         }
 
@@ -269,7 +281,11 @@ public class Rhino {
                 throw new RhinoInvalidArgumentException("Sensitivity value should be within [0, 1].");
             }
 
-            return new Rhino(accessKey, libraryPath, modelPath, contextPath, sensitivity, requireEndpoint);
+            if (endpointDuration < 0.5 || endpointDuration > 5.0) {
+                throw new RhinoInvalidArgumentException("Endpoint duration value should be within [0.5, 5.0].");
+            }
+
+            return new Rhino(accessKey, libraryPath, modelPath, contextPath, sensitivity, endpointDuration, requireEndpoint);
         }
     }
 }

@@ -26,7 +26,7 @@ import javax.sound.sampled.*;
 
 public class MicDemo {
     public static void runDemo(String accessKey, String contextPath, String libraryPath, String modelPath,
-                               float sensitivity, int audioDeviceIndex, String outputPath, boolean requireEndpoint) {
+                               float sensitivity, float endpointDuration, int audioDeviceIndex, String outputPath, boolean requireEndpoint) {
 
         // for file output
         File outputFile = null;
@@ -56,6 +56,7 @@ public class MicDemo {
                     .setLibraryPath(libraryPath)
                     .setModelPath(modelPath)
                     .setSensitivity(sensitivity)
+                    .setEndpointDuration(endpointDuration)
                     .setRequireEndpoint(requireEndpoint)
                     .build();
 
@@ -219,6 +220,7 @@ public class MicDemo {
         String modelPath = cmd.getOptionValue("model_path");
         String contextPath = cmd.getOptionValue("context_path");
         String sensitivityStr = cmd.getOptionValue("sensitivity");
+        String endpointDurationStr = cmd.getOptionValue("endpoint_duration");
         String audioDeviceIndexStr = cmd.getOptionValue("audio_device_index");
         String outputPath = cmd.getOptionValue("output_path");
         String requireEndpointValue = cmd.getOptionValue("require_endpoint");
@@ -227,7 +229,7 @@ public class MicDemo {
             throw new IllegalArgumentException("AccessKey is required for Rhino.");
         }
 
-        // parse sensitivity
+        // Parse sensitivity
         float sensitivity = 0.5f;
         if (sensitivityStr != null) {
             try {
@@ -240,6 +242,22 @@ public class MicDemo {
             if (sensitivity < 0 || sensitivity > 1) {
                 throw new IllegalArgumentException(String.format("Failed to parse sensitivity value (%s). " +
                         "Must be a floating-point number between [0,1].", sensitivity));
+            }
+        }
+
+        // Parse endpoint duration
+        float endpointDuration = 1.0f;
+        if (endpointDurationStr != null) {
+            try {
+                endpointDuration = Float.parseFloat(endpointDurationStr);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Failed to parse endpointDuration value. " +
+                        "Must be a floating-point number between [0.5, 5.0].");
+            }
+
+            if (endpointDuration < 0.5 || endpointDuration > 5.0) {
+                throw new IllegalArgumentException(String.format("Failed to parse endpointDuration value (%s). " +
+                        "Must be a floating-point number between [0.5, 5.0].", endpointDuration));
             }
         }
 
@@ -278,7 +296,7 @@ public class MicDemo {
             requireEndpoint = false;
         }
 
-        runDemo(accessKey, contextPath, libraryPath, modelPath, sensitivity, audioDeviceIndex, outputPath, requireEndpoint);
+        runDemo(accessKey, contextPath, libraryPath, modelPath, sensitivity, endpointDuration, audioDeviceIndex, outputPath, requireEndpoint);
     }
 
     private static Options BuildCommandLineOptions() {
@@ -316,11 +334,21 @@ public class MicDemo {
                         "If not set 0.5 will be used.")
                 .build());
 
+        options.addOption(Option.builder("u")
+                .longOpt("endpoint_duration")
+                .hasArgs()
+                .desc("Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an " +
+                        "utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint " +
+                        "duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference " +
+                        "pre-emptively in case the user pauses before finishing the request.")
+                .build());
+
         options.addOption(Option.builder("e")
                 .longOpt("require_endpoint")
                 .hasArg(true)
-                .desc("If set to `false`, Rhino does not require an endpoint (chunk of silence) before " +
-                        "finishing inference.")
+                .desc("If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command. " +
+                        "If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set " +
+                        "to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).")
                 .build());
 
         options.addOption(Option.builder("o")
