@@ -3,12 +3,12 @@ name: iOS AppCenter Tests
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths:
       - 'binding/ios/RhinoAppTest/Podfile.lock'
       - '.github/workflows/ios-appcenter.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths:
       - 'binding/ios/RhinoAppTest/Podfile.lock'
       - '.github/workflows/ios-appcenter.yml'
