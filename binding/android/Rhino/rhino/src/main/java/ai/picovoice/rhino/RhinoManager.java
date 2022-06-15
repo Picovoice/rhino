@@ -164,6 +164,7 @@ public class RhinoManager {
         private String modelPath = null;
         private String contextPath = null;
         private float sensitivity = 0.5f;
+        private float endpointDurationSec = 1.0f;
         private boolean requireEndpoint = true;
         private RhinoManagerErrorCallback errorCallback = null;
 
@@ -184,6 +185,11 @@ public class RhinoManager {
 
         public RhinoManager.Builder setSensitivity(float sensitivity) {
             this.sensitivity = sensitivity;
+            return this;
+        }
+
+        public RhinoManager.Builder setEndpointDurationSec(float endpointDurationSec) {
+            this.endpointDurationSec = endpointDurationSec;
             return this;
         }
 
@@ -211,6 +217,7 @@ public class RhinoManager {
                     .setModelPath(modelPath)
                     .setContextPath(contextPath)
                     .setSensitivity(sensitivity)
+                    .setEndpointDurationSec(endpointDurationSec)
                     .setRequireEndpoint(requireEndpoint)
                     .build(context);
             return new RhinoManager(rhino, callback, errorCallback);

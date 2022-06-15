@@ -46,23 +46,34 @@ public class Rhino {
     /**
      * Constructor.
      *
-     * @param accessKey   AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
-     * @param modelPath   Absolute path to the file containing model parameters.
-     * @param contextPath Absolute path to file containing context parameters. A context represents
-     *                    the set of expressions (spoken commands), intents, and intent arguments
-     *                    (slots) within a domain of interest.
-     * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher
-     *                    sensitivity value results in fewer misses at the cost of (potentially)
-     *                    increasing the erroneous inference rate.
-     * @param requireEndpoint Boolean variable to indicate if Rhino should wait for a chunk of
-     *                        silence before finishing inference.
+     * @param accessKey           AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
+     * @param modelPath           Absolute path to the file containing model parameters.
+     * @param contextPath         Absolute path to file containing context parameters. A context represents
+     *                            the set of expressions (spoken commands), intents, and intent arguments
+     *                            (slots) within a domain of interest.
+     * @param sensitivity         Inference sensitivity. It should be a number within [0, 1]. A higher
+     *                            sensitivity value results in fewer misses at the cost of (potentially)
+     *                            increasing the erroneous inference rate.
+     * @param endpointDurationSec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+     *                            utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+     *                            duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+     *                            pre-emptively in case the user pauses before finishing the request.
+     * @param requireEndpoint     Boolean variable to indicate if Rhino should wait for a chunk of
+     *                            silence before finishing inference.
      */
     private Rhino(String accessKey,
                   String modelPath,
                   String contextPath,
                   float sensitivity,
+                  float endpointDurationSec,
                   boolean requireEndpoint) {
-        handle = init(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
+        handle = init(
+                accessKey,
+                modelPath,
+                contextPath,
+                sensitivity,
+                endpointDurationSec,
+                requireEndpoint);
     }
 
     /**
@@ -179,7 +190,13 @@ public class Rhino {
      */
     public native String getVersion();
 
-    private native long init(String accessKey, String modelPath, String contextPath, float sensitivity, boolean requireEndpoint);
+    private native long init(
+            String accessKey,
+            String modelPath,
+            String contextPath,
+            float sensitivity,
+            float endpointDurationSec,
+            boolean requireEndpoint);
 
     private native void delete(long object);
 
@@ -201,6 +218,7 @@ public class Rhino {
         private String modelPath = null;
         private String contextPath = null;
         private float sensitivity = 0.5f;
+        private float endpointDurationSec = 1.0f;
         private boolean requireEndpoint = true;
 
         public Builder setAccessKey(String accessKey) {
@@ -220,6 +238,11 @@ public class Rhino {
 
         public Builder setSensitivity(float sensitivity) {
             this.sensitivity = sensitivity;
+            return this;
+        }
+
+        public Builder setEndpointDurationSec(float endpointDurationSec) {
+            this.endpointDurationSec = endpointDurationSec;
             return this;
         }
 
@@ -309,7 +332,17 @@ public class Rhino {
                 throw new RhinoInvalidArgumentException("Sensitivity value should be within [0, 1].");
             }
 
-            return new Rhino(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
+            if (endpointDurationSec < 0.5 || endpointDurationSec > 5.0) {
+                throw new RhinoInvalidArgumentException("Endpoint duration should be within [0.5, 5.0].");
+            }
+
+            return new Rhino(
+                    accessKey,
+                    modelPath,
+                    contextPath,
+                    sensitivity,
+                    endpointDurationSec,
+                    requireEndpoint);
         }
     }
 }

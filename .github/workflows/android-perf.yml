@@ -3,14 +3,14 @@ name: Android Performance
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths: 
       - 'lib/android/**'
       - 'lib/common/**'
       - 'resources/contexts/android/**'
       - '.github/workflows/android-perf.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths: 
       - 'lib/android/**'
       - 'lib/common/**'
