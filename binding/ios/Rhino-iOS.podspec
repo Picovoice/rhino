@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
     DESC
     s.homepage = 'https://github.com/Picovoice/rhino/tree/master/binding/ios'
     s.author = { 'Picovoice' => 'hello@picovoice.ai' }
-    s.source = { :git => "https://github.com/Picovoice/rhino.git", :tag => "Rhino-iOS-v2.1.2"}
+    s.source = { :git => "https://github.com/Picovoice/rhino.git", :branch => "ios-update" }
     s.ios.deployment_target = '9.0'
     s.swift_version = '5.0'
     s.vendored_frameworks = 'lib/ios/PvRhino.xcframework'
