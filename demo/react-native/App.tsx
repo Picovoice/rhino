@@ -18,7 +18,7 @@ type State = {
 };
 
 export default class App extends Component<Props, State> {
-  readonly _accessKey: string = "${YOUR_ACCESS_KEY_HERE}" // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+  readonly _accessKey: string = '${YOUR_ACCESS_KEY_HERE}'; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
   _rhinoManager: RhinoManager | undefined;
 
