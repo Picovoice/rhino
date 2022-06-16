@@ -51,7 +51,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                         contextPath: contextPath,
                         modelPath: modelPath,
                         sensitivity: sensitivity ?? 0.5,
-                        endpointDurationSec: endpointDurationSec ?? 1.0
+                        endpointDurationSec: endpointDurationSec ?? 1.0,
                         requireEndpoint: requireEndpoint ?? true
                     )
                     
