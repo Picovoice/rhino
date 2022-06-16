@@ -45,6 +45,16 @@ program
     "-d, --show_audio_devices",
     "show the list of available devices"
   ).option(
+    "-d, --endpoint_duration_sec <bool>",
+    "Endpoint duration in seconds. " +
+    "An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command. " +
+    "It should be a positive number within [0.5, 5]. " +
+    "A lower endpoint duration reduces delay and improves responsiveness. " +
+    "A higher endpoint duration assures Rhino doesn't return inference pre-emptively " +
+    "in case the user pauses before finishing the request." ,
+    parseFloat,
+    1.0
+  ).option(
     "-e, --requires_endpoint <bool>",
     "If set to `false`, Rhino does not require an endpoint (chunk of silence) before finishing inference.",
     "true"
@@ -65,7 +75,8 @@ async function micDemo() {
   let sensitivity = program["sensitivity"];
   let audioDeviceIndex = program["audio_device_index"];
   let showAudioDevices = program["show_audio_devices"];
-  let requiresEndpoint = program["requires_endpoint"].toLowerCase() === 'false' ? false : true;
+  let endpointDurationSec = program["endpoint_duration_sec"];
+  let requiresEndpoint = program["requires_endpoint"].toLowerCase() !== 'false';
 
   let showAudioDevicesDefined = showAudioDevices !== undefined;
 
@@ -79,6 +90,12 @@ async function micDemo() {
 
   if (isNaN(sensitivity) || sensitivity < 0 || sensitivity > 1) {
     console.error("--sensitivity must be a number in the range [0,1]");
+    return;
+  }
+
+
+  if (isNaN(endpointDurationSec) || endpointDurationSec < 0.5 || endpointDurationSec > 5.0) {
+    console.error("--endpointDurationSec must be a number in the range [0.5, 5.0]");
     return;
   }
 
@@ -97,6 +114,7 @@ async function micDemo() {
     accessKey,
     contextPath,
     sensitivity,
+    endpointDurationSec,
     requiresEndpoint,
     modelFilePath,
     libraryFilePath
