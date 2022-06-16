@@ -277,9 +277,9 @@ PODS:
     - React-jsi (= 0.67.3)
     - React-logger (= 0.67.3)
     - React-perflogger (= 0.67.3)
-  - Rhino-iOS (2.1.1):
+  - Rhino-iOS (2.1.2):
     - ios-voice-processor (~> 1.0.2)
-  - rhino-react-native (2.1.3):
+  - rhino-react-native (2.1.4):
     - React
     - Rhino-iOS (~> 2.1.1)
   - Yoga (1.14.0)
@@ -317,6 +317,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - Rhino-iOS (from `https://raw.githubusercontent.com/Picovoice/rhino/lib-update/binding/ios/Rhino-iOS.podspec`)
   - "rhino-react-native (from `../node_modules/@picovoice/rhino-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -324,7 +325,6 @@ SPEC REPOS:
   trunk:
     - fmt
     - ios-voice-processor
-    - Rhino-iOS
 
 EXTERNAL SOURCES:
   boost:
@@ -387,10 +387,17 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  Rhino-iOS:
+    :podspec: https://raw.githubusercontent.com/Picovoice/rhino/lib-update/binding/ios/Rhino-iOS.podspec
   rhino-react-native:
     :path: "../node_modules/@picovoice/rhino-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
+
+CHECKOUT OPTIONS:
+  Rhino-iOS:
+    :commit: 3deba528e17e604cbbee3640ad1b1a038cda9b14
+    :git: https://github.com/Picovoice/rhino.git
 
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
@@ -425,10 +432,10 @@ SPEC CHECKSUMS:
   React-RCTVibration: d0361f15ea978958fab7ffb6960f475b5063d83f
   React-runtimeexecutor: af1946623656f9c5fd64ca6f36f3863516193446
   ReactCommon: 650e33cde4fb7d36781cd3143f5276da0abb2f96
-  Rhino-iOS: 2cd7dcfe4b2e56e60a56cbc29143949a9cbccb03
-  rhino-react-native: 802237d91a9b148a4d7209738f9e438da246723a
+  Rhino-iOS: 075a258d07fc55c316a86a5ec84667e015a2ddaf
+  rhino-react-native: ffc71037b7a6c40b52b1b933bd76a106b12d3ddd
   Yoga: 90dcd029e45d8a7c1ff059e8b3c6612ff409061a
 
-PODFILE CHECKSUM: 1bbfabf6f1c66bdf4ed7e43ff0bea37f3ae08498
+PODFILE CHECKSUM: dbe64321fc0475d40f8726b06494bff5521c9014
 
 COCOAPODS: 1.11.2
