@@ -95,7 +95,10 @@ The model file contains the parameters for the speech-to-intent engine. To chang
 
 There is also the option to pass an error callback, which will be invoked if an error is encountered while RhinoManager is processing audio.
 
-RequireEndpoint is the parameter which indicates if Rhino should wait for a silence before inferring context. Default is set to true.
+RequireEndpoint is the parameter which indicates if Rhino should wait for a silence before inferring context. 
+If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command. If set to `false`, 
+Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
 
 These optional parameters can be set through the Builder functions `setModelPath`, `setSensitivity`, `setErrorCallback` and `setRequireEndpoint`:
 ```java
