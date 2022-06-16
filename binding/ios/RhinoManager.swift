@@ -20,10 +20,10 @@ public class RhinoManager {
     private var onInferenceCallback: ((Inference) -> Void)?
     private var processErrorCallback: ((Error) -> Void)?
     private var rhino: Rhino?
-    
-    private var started = false    
+
+    private var started = false
     private var stop = false
-    
+
     /// Constructor.
     ///
     /// - Parameters:
@@ -44,40 +44,40 @@ public class RhinoManager {
     ///   - processErrorCallback: Invoked if an error occurs while processing frames. If missing, error will be printed to console.
     /// - Throws: RhinoManagerError
     public init(
-        accessKey: String,
-        contextPath: String,
-        modelPath: String? = nil,
-        sensitivity: Float32 = 0.5,
-        endpointDurationSec: Float32 = 1.0,
-        requireEndpoint: Bool = true,
-        onInferenceCallback: ((Inference) -> Void)?,
-        processErrorCallback: ((Error) -> Void)? = nil) throws {
+            accessKey: String,
+            contextPath: String,
+            modelPath: String? = nil,
+            sensitivity: Float32 = 0.5,
+            endpointDurationSec: Float32 = 1.0,
+            requireEndpoint: Bool = true,
+            onInferenceCallback: ((Inference) -> Void)?,
+            processErrorCallback: ((Error) -> Void)? = nil) throws {
         self.onInferenceCallback = onInferenceCallback
         self.processErrorCallback = processErrorCallback
         self.rhino = try Rhino(
-            accessKey: accessKey,
-            contextPath: contextPath,
-            modelPath: modelPath,
-            sensitivity: sensitivity,
-            requireEndpoint: requireEndpoint)
+                accessKey: accessKey,
+                contextPath: contextPath,
+                modelPath: modelPath,
+                sensitivity: sensitivity,
+                requireEndpoint: requireEndpoint)
     }
-    
+
     deinit {
         self.delete()
     }
-    
+
     /// Stops recording and releases Rhino resources
     public func delete() {
         if self.started {
             self.stop = true
         }
-        
+
         if self.rhino != nil {
             self.rhino!.delete()
             self.rhino = nil
         }
     }
-    
+
     /// Start recording audio from the microphone and infers the user's intent from the spoken command. Once the inference is finalized it will invoke the user
     /// provided callback and terminates recording audio.
     ///
@@ -87,7 +87,7 @@ public class RhinoManager {
         if self.started {
             return
         }
-        
+
         if rhino == nil {
             throw RhinoManagerError.objectDisposed
         }
@@ -96,27 +96,27 @@ public class RhinoManager {
         guard try VoiceProcessor.shared.hasPermissions() else {
             throw RhinoManagerError.recordingDenied
         }
-                
+
         let dispatchQueue = DispatchQueue(label: "RhinoManagerWatcher", qos: .background)
         dispatchQueue.async {
             while !self.stop {
                 usleep(10000)
             }
             VoiceProcessor.shared.stop()
-            
+
             self.started = false
             self.stop = false
         }
-        
+
         try VoiceProcessor.shared.start(
-            frameLength: Rhino.frameLength,
-            sampleRate: Rhino.sampleRate,
-            audioCallback: self.audioCallback
+                frameLength: Rhino.frameLength,
+                sampleRate: Rhino.sampleRate,
+                audioCallback: self.audioCallback
         )
-     
-        self.started = true        
+
+        self.started = true
     }
-    
+
     /// Callback to run after after voice processor processes frames.
     private func audioCallback(pcm: [Int16]) {
         guard self.rhino != nil else {
@@ -124,9 +124,9 @@ public class RhinoManager {
         }
 
         do {
-            let isFinalized:Bool = try self.rhino!.process(pcm: pcm)
+            let isFinalized: Bool = try self.rhino!.process(pcm: pcm)
             if isFinalized {
-                let inference:Inference = try self.rhino!.getInference()
+                let inference: Inference = try self.rhino!.getInference()
                 self.onInferenceCallback?(inference)
                 self.stop = true
             }
