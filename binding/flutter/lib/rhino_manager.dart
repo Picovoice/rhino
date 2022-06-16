@@ -1,5 +1,5 @@
 //
-// Copyright 2021 Picovoice Inc.
+// Copyright 2021-2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -47,8 +47,14 @@ class RhinoManager {
   /// fewer misses at the cost of (potentially) increasing the erroneous inference rate.
   /// Sensitivity should be a floating-point number within 0 and 1.
   ///
-  /// [requireEndpoint] (Optional) Boolean variable to indicate if Rhino should wait
-  /// for a chunk of silence before finishing inference.
+  /// [endpointDurationSec] (Optional) Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+  /// utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+  /// duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+  /// pre-emptively in case the user pauses before finishing the request.
+  ///
+  /// [requireEndpoint] (Optional) If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+  /// If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+  /// to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
   ///
   /// [processErrorCallback] (Optional) Reports errors that are encountered while
   /// the engine is processing audio.
@@ -60,11 +66,13 @@ class RhinoManager {
       String accessKey, String contextPath, InferenceCallback inferenceCallback,
       {String? modelPath,
       double sensitivity = 0.5,
+      double endpointDurationSec = 1.0,
       bool requireEndpoint = true,
       ProcessErrorCallback? processErrorCallback}) async {
     Rhino rhino = await Rhino.create(accessKey, contextPath,
         modelPath: modelPath,
         sensitivity: sensitivity,
+        endpointDurationSec: endpointDurationSec,
         requireEndpoint: requireEndpoint);
     return RhinoManager._(rhino, inferenceCallback, processErrorCallback);
   }

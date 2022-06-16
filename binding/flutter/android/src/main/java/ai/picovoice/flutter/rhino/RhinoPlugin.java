@@ -1,5 +1,5 @@
 //
-// Copyright 2021 Picovoice Inc.
+// Copyright 2021-2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -65,6 +65,7 @@ public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
           String modelPath = call.argument("modelPath");
           String contextPath = call.argument("contextPath");
           Double sensitivity = call.argument("sensitivity");
+          Double endpointDurationSec = call.argument("endpointDurationSec");
           Boolean requireEndpoint = call.argument("requireEndpoint");
 
           Rhino.Builder rhinoBuilder = new Rhino.Builder()
@@ -74,6 +75,10 @@ public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
 
           if (sensitivity != null) {
             rhinoBuilder.setSensitivity(sensitivity.floatValue());
+          }
+
+          if (endpointDurationSec != null) {
+            rhinoBuilder.setEndpointDurationSec(endpointDurationSec.floatValue());
           }
 
           if (requireEndpoint != null) {

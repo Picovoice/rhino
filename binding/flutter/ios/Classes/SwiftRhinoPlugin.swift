@@ -43,6 +43,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                    let contextPath = args["contextPath"] as? String {
                     let modelPath = args["modelPath"] as? String
                     let sensitivity = args["sensitivity"] as? Float
+                    let endpointDurationSec = args["endpointDurationSec"] as? Float
                     let requireEndpoint = args["requireEndpoint"] as? Bool
                     
                     let rhino = try Rhino(
@@ -50,6 +51,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                         contextPath: contextPath,
                         modelPath: modelPath,
                         sensitivity: sensitivity ?? 0.5,
+                        endpointDurationSec: endpointDurationSec ?? 1.0
                         requireEndpoint: requireEndpoint ?? true
                     )
                     
