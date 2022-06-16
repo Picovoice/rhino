@@ -1,5 +1,5 @@
 /*
-  Copyright 2018-2021 Picovoice Inc.
+  Copyright 2018-2022 Picovoice Inc.
 
   You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
   file accompanying this source.
@@ -28,6 +28,7 @@ async function init(rhinoArgs: RhinoArgs): Promise<void> {
     rhinoEngine = await Rhino.create(
       rhinoArgs.accessKey,
       rhinoArgs.context,
+      rhinoArgs.endpointDurationSec,
       rhinoArgs.requireEndpoint
     );
   } catch (error) {

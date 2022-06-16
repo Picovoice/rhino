@@ -45,6 +45,7 @@ type pv_rhino_init_type = (
   context: number,
   contextSize: number,
   sensitivity: number,
+  endpointDurationSec: number,
   requireEndpoint: boolean,
   object: number
 ) => Promise<number>;
@@ -396,13 +397,20 @@ export class Rhino implements RhinoEngine {
    *
    * @param accessKey - AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
    * @param contextInfo - Base64 representation of the context and it's sensitivity.
-   * @param requireEndpoint - Boolean. If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+   * @param endpointDurationSec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+   * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+   * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+   * pre-emptively in case the user pauses before finishing the request.
+   * @param requireEndpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+   * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+   * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background)
    *
    * @returns An instance of the Rhino engine.
    */
   public static async create(
     accessKey: string,
     contextInfo: RhinoContext,
+    endpointDurationSec?: number,
     requireEndpoint?: boolean,
   ): Promise<Rhino> {
     if (!isAccessKeyValid(accessKey)) {
@@ -417,12 +425,19 @@ export class Rhino implements RhinoEngine {
         throw new Error('Rhino sensitivity is outside of range [0,1]');
     }
 
+    if (endpointDurationSec && !(typeof endpointDurationSec === 'number')) {
+      throw new Error('Rhino endpointDurationSec is not a number (in the range [0.5,5.0])');
+    } else if (endpointDurationSec && (endpointDurationSec < 0.5 || endpointDurationSec > 5.0)) {
+      throw new Error('Rhino endpointDurationSec is outside of range [0.5,5.0]');
+    }
+
     const returnPromise = new Promise<Rhino>((resolve, reject) => {
       Rhino._rhinoMutex.runExclusive(async () => {
         const wasmOutput = await Rhino.initWasm(
           accessKey,
           base64,
           sensitivity ?? 0.5,
+          endpointDurationSec ?? 1.0,
           requireEndpoint ?? true
         );
         return new Rhino(wasmOutput);
@@ -439,6 +454,7 @@ export class Rhino implements RhinoEngine {
     accessKey: string,
     context: string,
     sensitivity: number,
+    endpointDurationSec: number,
     requireEndpoint: boolean): Promise<any> {
     // A WebAssembly page has a constant size of 64KiB. -> 16MiB ~= 256 pages
     // minimum memory requirements for init: 34 pages
@@ -500,6 +516,7 @@ export class Rhino implements RhinoEngine {
       contextAddress,
       context.length,
       sensitivity,
+      endpointDurationSec,
       requireEndpoint,
       objectAddressAddress);
     await pv_free(accessKeyAddress);
