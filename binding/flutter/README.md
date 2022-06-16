@@ -112,17 +112,11 @@ void _infererenceCallback(RhinoInference inference) {
 }
 ```
 
-You can override the default Rhino model file and/or the inference sensitivity. There is also an optional `processErrorCallback`
-that is called if there is a problem encountered while processing audio. These optional parameters can be passed in like so:
-
-`endpointDurationSec` indicates how much silence (in seconds) Rhino will wait for before marking the end of a spoken command. A lower endpoint
-duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
-pre-emptively in case the user pauses before finishing the request.
-
-`requireEndpoint` is the parameter which indicates if Rhino should wait for a silence before inferring context.
-If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command. If set to `false`,
-Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
-to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
+Rhino accepts the following optional parameters:
+ - `sensitivity`: overrides the default inference sensitivity.
+ - `processErrorCallback`: called if there is a problem encountered while processing audio.
+ - `endpointDurationSec`: sets how much silence is required after a spoken command.
+ - `requireEndpoint`: indicates whether Rhino should wait for silence before returning an inference.
 
 ```dart
 const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
@@ -133,7 +127,7 @@ _rhinoManager = await RhinoManager.create(
     _inferenceCallback,
     modelPath: 'path/to/model/file.pv',
     sensitivity: 0.75,
-    endpointDurationSec: 1.0,
+    endpointDurationSec: 1.5,
     requireEndpoint: false,
     processErrorCallback: _errorCallback);
 
