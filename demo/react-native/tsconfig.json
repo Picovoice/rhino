@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": false,
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+  },
+  "exclude": ["node_modules"]
+}

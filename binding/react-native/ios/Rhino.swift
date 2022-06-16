@@ -16,10 +16,17 @@ class PvRhino: NSObject {
 
     private var rhinoPool:Dictionary<String, Rhino> = [:]
 
-    @objc(create:modelPath:contextPath:sensitivity:requireEndpoint:resolver:rejecter:)
-    func create(accessKey: String, modelPath: String, contextPath: String, sensitivity: Float32, requireEndpoint: Bool,
-        resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) -> Void {
-        
+    @objc(create:modelPath:contextPath:sensitivity:endpointDurationSec:requireEndpoint:resolver:rejecter:)
+    func create(
+        accessKey: String,
+        modelPath: String,
+        contextPath: String,
+        sensitivity: Float32,
+        endpointDurationSec: Float32,
+        requireEndpoint: Bool,
+        resolver resolve:RCTPromiseResolveBlock,
+        rejecter reject:RCTPromiseRejectBlock
+    ) -> Void {
         do {
             let rhino = try Rhino(
                 accessKey: accessKey,
@@ -28,10 +35,10 @@ class PvRhino: NSObject {
                 sensitivity: sensitivity,
                 requireEndpoint: requireEndpoint
             )
-            
+
             let handle: String = String(describing: rhino)
             rhinoPool[handle] = rhino
-            
+
             var param: [String: Any] = [:]
             param["handle"] = handle
             param["contextInfo"] = rhino.contextInfo
@@ -48,34 +55,34 @@ class PvRhino: NSObject {
             reject(code, message, nil)
         }
     }
-    
+
     @objc(delete:)
     func delete(handle:String) -> Void {
         if let rhino = rhinoPool.removeValue(forKey: handle){
             rhino.delete()
         }
     }
-    
+
     @objc(process:pcm:resolver:rejecter:)
     func process(handle:String, pcm:[Int16],
         resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) -> Void {
         do {
             if let rhino = rhinoPool[handle] {
                 var param: [String: Any] = [:]
-                
+
                 let isFinalized = try rhino.process(pcm: pcm)
                 param["isFinalized"] = isFinalized
-                
+
                 if isFinalized {
                     let inference = try rhino.getInference()
                     param["isUnderstood"] = inference.isUnderstood
-                    
+
                     if inference.isUnderstood {
                         param["intent"] = inference.intent
                         param["slots"] = inference.slots
                     }
                 }
-                
+
                 resolve(param)
             } else {
                 let (code, message) = errorToCodeAndMessage(RhinoInvalidStateError("Invalid handle provided to Rhino 'process'"))
@@ -92,5 +99,5 @@ class PvRhino: NSObject {
 
     private func errorToCodeAndMessage(_ error: RhinoError) -> (String, String) {
         return (error.name.replacingOccurrences(of: "Error", with: "Exception"), error.localizedDescription)
-    }                
+    }
 }
