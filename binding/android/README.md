@@ -100,7 +100,11 @@ If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spok
 Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
 to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
 
-These optional parameters can be set through the Builder functions `setModelPath`, `setSensitivity`, `setErrorCallback` and `setRequireEndpoint`:
+Endpoint duration indicates how much silence (in seconds) Rhino will wait for before marking the end of a spoken command. A lower endpoint
+duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+pre-emptively in case the user pauses before finishing the request. 
+
+These optional parameters can be set through the Builder functions `setModelPath`, `setSensitivity`, `setErrorCallback`, `setRequireEndpoint` and `endpointDurationSec`:
 ```java
 import ai.picovoice.rhino.*;
 
@@ -118,7 +122,8 @@ try {
                                 // process error
                             }
                         })                
-                        .setRequireEndpoint(false)        
+                        .setRequireEndpoint(false)      
+                        .setEndpointDurationSec(1.5f)
                         .build(context, inferenceCallback);
 } catch (RhinoException e) { }
 ```
