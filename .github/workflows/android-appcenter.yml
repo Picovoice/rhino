@@ -3,12 +3,12 @@ name: Android AppCenter Tests
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths: 
       - 'demo/android/Activity/rhino-activity-demo-app/build.gradle'
       - '.github/workflows/android-appcenter.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths: 
       - 'demo/android/Activity/rhino-activity-demo-app/build.gradle'
       - '.github/workflows/android-appcenter.yml'

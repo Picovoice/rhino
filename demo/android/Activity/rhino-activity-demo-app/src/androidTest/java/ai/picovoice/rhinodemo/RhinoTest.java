@@ -107,6 +107,19 @@ public class RhinoTest {
     }
 
     @Test
+    public void testInitSuccessWithCustomEndpointDurationSec() throws RhinoException {
+        File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+        Rhino r = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(contextPath.getAbsolutePath())
+                .setEndpointDurationSec(3.0f)
+                .build(appContext);
+
+        assertTrue(r.getContextInformation() != null && !r.getContextInformation().equals(""));
+        r.delete();
+    }
+
+    @Test
     public void testInitSuccessWithRequireEndpointFalse() throws RhinoException {
         File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
         Rhino r = new Rhino.Builder()
@@ -251,6 +264,23 @@ public class RhinoTest {
                     .setAccessKey(accessKey)
                     .setContextPath(contextPath.getAbsolutePath())
                     .setSensitivity(10)
+                    .build(appContext);
+        } catch (RhinoException e) {
+            didFail = true;
+        }
+
+        assertTrue(didFail);
+    }
+
+    @Test
+    public void testInitFailWithInvalidEndpointDurationSec() {
+        boolean didFail = false;
+        File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+        try {
+            new Rhino.Builder()
+                    .setAccessKey(accessKey)
+                    .setContextPath(contextPath.getAbsolutePath())
+                    .setEndpointDurationSec(10.0f)
                     .build(appContext);
         } catch (RhinoException e) {
             didFail = true;
