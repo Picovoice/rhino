@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/Picovoice/pvrecorder/sdk/go v1.1.0
-	github.com/Picovoice/rhino/binding/go/v2 v2.1.4-0.20220615000518-ba50c8789b2a
+	github.com/Picovoice/rhino/binding/go/v2 v2.1.4
 	github.com/go-audio/audio v1.0.0
 	github.com/go-audio/wav v1.0.0
 )
