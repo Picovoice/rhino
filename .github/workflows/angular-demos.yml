@@ -3,13 +3,13 @@ name: Angular Demos
 on:
   workflow_dispatch:
   push:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'demo/angular/**'
       - '!demo/angular/README.md'
       - '.github/workflows/angular-demos.yml'
   pull_request:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'demo/angular/**'
       - '!demo/angular/README.md'

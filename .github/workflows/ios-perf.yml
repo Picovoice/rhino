@@ -3,24 +3,24 @@ name: iOS Performance
 on:
   workflow_dispatch:
   push:
-    branches: [ master, lib-update ]
-    paths: 
+    branches: [ master ]
+    paths:
       - 'lib/ios/**'
       - 'lib/common/**'
       - 'resources/contexts/ios/**'
       - '.github/workflows/ios-perf.yml'
   pull_request:
-    branches: [ master, lib-update ]
-    paths: 
+    branches: [ master ]
+    paths:
       - 'lib/ios/**'
       - 'lib/common/**'
       - 'resources/contexts/ios/**'
       - '.github/workflows/ios-perf.yml'
-      
+
 defaults:
   run:
     working-directory: binding/ios/RhinoAppTest
-    
+
 jobs:
   build:
     name: Run iOS Tests on AppCenter

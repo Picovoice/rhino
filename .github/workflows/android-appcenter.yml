@@ -3,20 +3,20 @@ name: Android AppCenter Tests
 on:
   workflow_dispatch:
   push:
-    branches: [ master, lib-update ]
-    paths: 
+    branches: [ master ]
+    paths:
       - 'demo/android/Activity/rhino-activity-demo-app/build.gradle'
       - '.github/workflows/android-appcenter.yml'
   pull_request:
-    branches: [ master, lib-update ]
-    paths: 
+    branches: [ master ]
+    paths:
       - 'demo/android/Activity/rhino-activity-demo-app/build.gradle'
       - '.github/workflows/android-appcenter.yml'
 
 defaults:
   run:
     working-directory: demo/android/Activity
-    
+
 jobs:
   build:
     name: Run Android Tests on AppCenter
@@ -53,11 +53,11 @@ jobs:
       run: ./gradlew assembleAndroidTest
 
     - name: Run tests on AppCenter
-      run: appcenter test run espresso 
+      run: appcenter test run espresso
         --token ${{secrets.APPCENTERAPITOKEN}}
-        --app "Picovoice/Rhino-Android-Activity" 
-        --devices "Picovoice/android-min-max" 
-        --app-path rhino-activity-demo-app/build/outputs/apk/debug/rhino-activity-demo-app-debug.apk 
-        --test-series "rhino-android" 
-        --locale "en_US" 
+        --app "Picovoice/Rhino-Android-Activity"
+        --devices "Picovoice/android-min-max"
+        --app-path rhino-activity-demo-app/build/outputs/apk/debug/rhino-activity-demo-app-debug.apk
+        --test-series "rhino-android"
+        --locale "en_US"
         --build-dir rhino-activity-demo-app/build/outputs/apk/androidTest/debug

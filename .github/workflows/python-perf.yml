@@ -3,7 +3,7 @@ name: Python Performance
 on:
   workflow_dispatch:
   push:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'lib/beaglebone/**'
       - 'lib/common/**'
@@ -20,7 +20,7 @@ on:
       - 'resources/contexts/windows/**'
       - '.github/workflows/python-perf.yml'
   pull_request:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'lib/beaglebone/**'
       - 'lib/common/**'

@@ -3,13 +3,13 @@ name: Rust Demos
 on:
   workflow_dispatch:
   push:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'demo/rust/**'
       - '!demo/rust/README.md'
       - '.github/workflows/rust-demos.yml'
   pull_request:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'demo/rust/**'
       - '!demo/rust/README.md'
