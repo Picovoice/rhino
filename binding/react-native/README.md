@@ -25,7 +25,7 @@ Rhino is:
 
 This binding is for running Rhino on **React Native 0.62.2+** on the following platforms:
 
-- Android 4.4+ (API 19+)
+- Android 5.0+ (API 21+)
 - iOS 10.0+
 
 ## Installation
@@ -136,7 +136,7 @@ The `inferenceCallback` parameter is a function that you want to execute when Rh
 The function should accept a `RhinoInference` instance.
 
 ```javascript
-inferenceCallback(object){
+inferenceCallback(object) {
     if (inference.isUnderstood) {
         // do something with:
         // inference.intent - string representing intent
@@ -145,9 +145,11 @@ inferenceCallback(object){
 }
 ```
 
-You can override also the default Rhino model file and/or the inference sensitivity.  You can set `requireEndpoint` parameter to
-false if you do not wish to wait for silence before Rhino infers context. There is also an optional `processErrorCallback`
-that is called if there is a problem encountered while processing audio.
+Rhino accepts the following optional parameters:
+ - `sensitivity`: overrides the default inference sensitivity.
+ - `processErrorCallback`: called if there is a problem encountered while processing audio.
+ - `endpointDurationSec`: sets how much silence is required after a spoken command.
+ - `requireEndpoint`: indicates whether Rhino should wait for silence before returning an inference.
 
 These optional parameters can be passed in like so:
 
@@ -160,8 +162,9 @@ this._rhinoManager = await RhinoManager.create(
     inferenceCallback,
     processErrorCallback,
     'path/to/model/file.pv',
-    0.25,
-    false);
+    sensitivity,
+    endpointDurationSec,
+    requireEndpoint);
 ```
 
 Once you have instantiated a RhinoManager, you can start audio capture and intent inference by calling:

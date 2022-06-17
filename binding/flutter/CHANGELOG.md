@@ -19,3 +19,6 @@
 
 ## [2.1.2] - 2022-05-13
 * Android/iOS lib patch
+
+## [2.1.3] - 2022-06-16
+* Updated method for endpoint handling while inferring context.

@@ -62,7 +62,19 @@ class RhinoAppTestUITests: XCTestCase {
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
-    
+
+    func testInitSuccessWithCustomEndpointDuration() throws {
+        let bundle = Bundle(for: type(of: self))
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+
+        let r = try Rhino.init(
+                accessKey: accessKey,
+                contextPath: contextPath,
+                endpointDurationSec: 3.0)
+        XCTAssert(r.contextInfo != "")
+        r.delete()
+    }
+
     func testInitSuccessWithRequireEndpointOff() throws {
         let bundle = Bundle(for: type(of: self))
         let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
@@ -179,6 +191,23 @@ class RhinoAppTestUITests: XCTestCase {
             didFail = true
         }
         
+        XCTAssert(didFail)
+    }
+
+    func testInitFailWithInvalidEndpointDuration() throws {
+        let bundle = Bundle(for: type(of: self))
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+
+        var didFail = false
+        do {
+            _ = try Rhino.init(
+                    accessKey: accessKey,
+                    contextPath: contextPath,
+                    endpointDurationSec: 10.0)
+        } catch {
+            didFail = true
+        }
+
         XCTAssert(didFail)
     }
     

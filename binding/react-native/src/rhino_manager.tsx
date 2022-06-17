@@ -1,5 +1,5 @@
 //
-// Copyright 2020 Picovoice Inc.
+// Copyright 2020-2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -24,8 +24,8 @@ export type ProcessErrorCallback = (error: RhinoErrors.RhinoError) => void;
 class RhinoManager {
   private _voiceProcessor: VoiceProcessor;
   private _rhino: Rhino | null;
-  private _inferenceCallback: InferenceCallback;
-  private _processErrorCallback?: ProcessErrorCallback;
+  private readonly _inferenceCallback: InferenceCallback;
+  private readonly _processErrorCallback?: ProcessErrorCallback;
   private _bufferListener?: EventSubscription;
   private _bufferEmitter: NativeEventEmitter;
   private _needsReset: boolean;
@@ -39,7 +39,13 @@ class RhinoManager {
    * @param modelPath Path to the file containing model parameters. If not set it will be set to the default location.
    * @param sensitivity Inference sensitivity. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
    * Sensitivity should be a floating-point number within [0, 1].
-   * @param requireEndpoint If true, Rhino requires an endpoint (chunk of silence) before finishing inference.
+   * @param endpointDurationSec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+   * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+   * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+   * pre-emptively in case the user pauses before finishing the request.
+   * @param requireEndpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+   * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+   * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
    * @returns An instance of the Rhino Manager
    */
 
@@ -50,13 +56,25 @@ class RhinoManager {
     processErrorCallback?: ProcessErrorCallback,
     modelPath?: string,
     sensitivity: number = 0.5,
+    endpointDurationSec: number = 1.0,
     requireEndpoint: boolean = true
   ) {
-    let rhino = await Rhino.create(accessKey, contextPath, modelPath, sensitivity, requireEndpoint);
+    let rhino = await Rhino.create(
+      accessKey,
+      contextPath,
+      modelPath,
+      sensitivity,
+      endpointDurationSec,
+      requireEndpoint
+    );
     return new RhinoManager(rhino, inferenceCallback, processErrorCallback);
   }
 
-  private constructor(rhino: Rhino, inferenceCallback: InferenceCallback, processErrorCallback?: ProcessErrorCallback) {
+  private constructor(
+    rhino: Rhino,
+    inferenceCallback: InferenceCallback,
+    processErrorCallback?: ProcessErrorCallback
+  ) {
     this._inferenceCallback = inferenceCallback;
     this._processErrorCallback = processErrorCallback;
     this._rhino = rhino;
@@ -68,7 +86,9 @@ class RhinoManager {
     this._needsReset = false;
 
     if (typeof inferenceCallback !== 'function') {
-      throw new RhinoErrors.RhinoInvalidArgumentError("'inferenceCallback' must be a function type");
+      throw new RhinoErrors.RhinoInvalidArgumentError(
+        "'inferenceCallback' must be a function type"
+      );
     }
 
     // function that's executed every time an audio buffer is received
@@ -76,7 +96,7 @@ class RhinoManager {
       try {
         if (this._rhino === null) return;
 
-        // don't process if we've already already received a result
+        // don't process if we've already received a result
         if (this._needsReset) return;
 
         let inference = await this._rhino.process(buffer);
@@ -85,16 +105,17 @@ class RhinoManager {
         if (this._needsReset) return;
 
         if (inference.isFinalized) {
-
           // send out result and stop audio
           this._inferenceCallback(inference);
           await this._voiceProcessor.stop();
           this._needsReset = false;
         }
       } catch (e) {
-        if (this._processErrorCallback !== undefined && 
-            this._processErrorCallback !== null &&
-            typeof this._processErrorCallback === 'function') {
+        if (
+          this._processErrorCallback !== undefined &&
+          this._processErrorCallback !== null &&
+          typeof this._processErrorCallback === 'function'
+        ) {
           this._processErrorCallback(e as RhinoErrors.RhinoError);
         } else {
           console.error(e);

@@ -3,13 +3,13 @@ name: Vue Demos
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths:
       - 'demo/vue/**'
       - '!demo/vue/README.md'
       - '.github/workflows/vue-demos.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths:
       - 'demo/vue/**'
       - '!demo/vue/README.md'

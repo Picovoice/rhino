@@ -46,10 +46,20 @@ program
     parseFloat,
     0.5
   ).option(
+    "-d, --endpoint_duration_sec <bool>",
+    "Endpoint duration in seconds. " +
+    "An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command. " +
+    "It should be a positive number within [0.5, 5]. " +
+    "A lower endpoint duration reduces delay and improves responsiveness. " +
+    "A higher endpoint duration assures Rhino doesn't return inference pre-emptively " +
+    "in case the user pauses before finishing the request." ,
+    parseFloat,
+    1.0
+  ).option(
     "-e, --requires_endpoint <bool>",
     "If set to `false`, Rhino does not require an endpoint (chunk of silence) before finishing inference.",
     "true"
-  );
+);
 
 if (process.argv.length < 3) {
   program.help();
@@ -63,10 +73,16 @@ function fileDemo() {
   let libraryFilePath = program["library_file_path"];
   let modelFilePath = program["model_file_path"];
   let sensitivity = program["sensitivity"];
-  let requiresEndpoint = program["requires_endpoint"].toLowerCase() === 'false' ? false : true;
+  let endpointDurationSec = program["endpoint_duration_sec"];
+  let requiresEndpoint = program["requires_endpoint"].toLowerCase() !== 'false';
 
   if (isNaN(sensitivity) || sensitivity < 0 || sensitivity > 1) {
     console.error("--sensitivity must be a number in the range [0,1]");
+    return;
+  }
+
+  if (isNaN(endpointDurationSec) || endpointDurationSec < 0.5 || endpointDurationSec > 5.0) {
+    console.error("--endpointDurationSec must be a number in the range [0.5, 5.0]");
     return;
   }
 
@@ -80,6 +96,7 @@ function fileDemo() {
     access_key,
     contextPath,
     sensitivity,
+    endpointDurationSec,
     requiresEndpoint,
     modelFilePath,
     libraryFilePath

@@ -5,9 +5,9 @@ edition = "2018"
 
 [dependencies]
 chrono = "0.4.19"
-clap = "2.33.3"
-ctrlc = "3.1.9"
+clap = "3.2.3"
+ctrlc = "3.2.2"
 hound = "3.4.0"
-itertools = "0.10.1"
+itertools = "0.10.3"
 pv_recorder = "=1.1.0"
-pv_rhino = "=2.1.6"
+pv_rhino = "=2.1.7"

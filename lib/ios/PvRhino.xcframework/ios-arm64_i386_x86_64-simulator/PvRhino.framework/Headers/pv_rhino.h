@@ -46,7 +46,13 @@ typedef struct pv_rhino pv_rhino_t;
  * @param context_size Size of the context in bytes.
  * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in
  * fewer misses at the cost of (potentially) increasing the erroneous inference rate.
- * @param require_endpoint If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
+ * @param endpoint_duration_sec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+ * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+ * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+ * pre-emptively in case the user pauses before finishing the request.
+ * @param require_endpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+ * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+ * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
  * @param[out] object Constructed Speech-to-Intent object.
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY' on failure.
  */
@@ -57,6 +63,7 @@ PV_API pv_status_t pv_rhino_init(
         const void *context,
         int32_t context_size,
         float sensitivity,
+        float endpoint_duration_sec,
         bool require_endpoint,
         pv_rhino_t **object);
 
@@ -71,6 +78,13 @@ PV_API pv_status_t pv_rhino_init(
  * @param context_size Size of context in bytes.
  * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in
  * fewer misses at the cost of (potentially) increasing the erroneous inference rate.
+ * @param endpoint_duration_sec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+ * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+ * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+ * pre-emptively in case the user pauses before finishing the request.
+ * @param require_endpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+ * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+ * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
  * @param[out] object Constructed Speech-to-Intent object.
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY' on failure.
  */
@@ -79,6 +93,7 @@ PV_API pv_status_t pv_rhino_init(
         const void *context,
         int32_t context_size,
         float sensitivity,
+        float endpoint_duration_sec,
         bool require_endpoint,
         pv_rhino_t **object);
 
@@ -93,8 +108,13 @@ PV_API pv_status_t pv_rhino_init(
  * expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
  * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in
  * fewer misses at the cost of (potentially) increasing the erroneous inference rate.
- * @param require_endpoint If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.
- * @param[out] object Constructed Speech-to-Intent object.
+ * @param endpoint_duration_sec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+ * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+ * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+ * pre-emptively in case the user pauses before finishing the request.
+ * @param require_endpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+ * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+ * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
  * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT', 'PV_STATUS_IO_ERROR', or 'PV_STATUS_OUT_OF_MEMORY' on
  * failure.
  */
@@ -103,6 +123,7 @@ PV_API pv_status_t pv_rhino_init(
         const char *model_path,
         const char *context_path,
         float sensitivity,
+        float endpoint_duration_sec,
         bool require_endpoint,
         pv_rhino_t **object);
 

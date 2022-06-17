@@ -3,7 +3,7 @@ name: Web
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths:
       - 'binding/web/**'
       - '!binding/web/README.md'
@@ -11,7 +11,7 @@ on:
       - 'resources/contexts/wasm/**'
       - '.github/workflows/web.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths:
       - 'binding/web/**'
       - '!binding/web/README.md'

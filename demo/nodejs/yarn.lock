@@ -9,10 +9,10 @@
   dependencies:
     ncp "^2.0.0"
 
-"@picovoice/rhino-node@2.1.7":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-node/-/rhino-node-2.1.7.tgz#76dfebda0b1c69ca813b3a0ed7bce96c8979a534"
-  integrity sha512-8QtiCE/ANWW4pdD1FZpTs6hUNOFs+00i6VnegqP7LaKN3kZ5UzFlVDCO/ZX4ZDm8sNBZwt80jRXwO79q9r10jw==
+"@picovoice/rhino-node@2.1.9":
+  version "2.1.9"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-node/-/rhino-node-2.1.9.tgz#03d32246b0b465d6dccd1c4e10a903fc33db52d1"
+  integrity sha512-sAsOTdCHdJG2LcnpispfKEW5tOY0zNpG3TiMRRnj/NZ5PBH7vcIPhiMgSPHyyQrANvV5HQFk03iLtMFjeG6cwQ==
 
 commander@^6.1.0:
   version "6.2.1"

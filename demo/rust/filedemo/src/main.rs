@@ -21,8 +21,9 @@ fn rhino_demo(
     access_key: &str,
     context_path: &str,
     sensitivity: Option<f32>,
-    model_path: Option<&str>,
+    endpoint_duration_sec: Option<f32>,
     require_endpoint: Option<bool>,
+    model_path: Option<&str>,
 ) {
     let mut rhino_builder = RhinoBuilder::new(access_key, context_path);
 
@@ -30,12 +31,16 @@ fn rhino_demo(
         rhino_builder.sensitivity(sensitivity);
     }
 
-    if let Some(model_path) = model_path {
-        rhino_builder.model_path(model_path);
+    if let Some(endpoint_duration_sec) = endpoint_duration_sec {
+        rhino_builder.endpoint_duration_sec(endpoint_duration_sec);
     }
 
     if let Some(require_endpoint) = require_endpoint {
         rhino_builder.require_endpoint(require_endpoint);
+    }
+
+    if let Some(model_path) = model_path {
+        rhino_builder.model_path(model_path);
     }
 
     let rhino = rhino_builder.init().expect("Failed to create Rhino");
@@ -145,6 +150,13 @@ fn main() {
             .takes_value(true)
         )
         .arg(
+            Arg::with_name("endpoint_duration")
+            .long("endpoint_duration")
+            .value_name("DURATION")
+            .help("Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. If not set 1.0 will be used.")
+            .takes_value(true)
+        )
+        .arg(
             Arg::with_name("require_endpoint")
             .long("require_endpoint")
             .value_name("BOOL")
@@ -156,17 +168,21 @@ fn main() {
 
     let input_audio_path = PathBuf::from(matches.value_of("input_audio_path").unwrap());
 
+    let access_key = matches
+        .value_of("access_key")
+        .expect("AccessKey is REQUIRED for Rhino operation");
+
     let context_path = matches.value_of("context_path").unwrap();
+
+    let model_path = matches.value_of("model_path");
 
     let sensitivity = matches
         .value_of("sensitivity")
         .map(|sensitivity| sensitivity.parse().unwrap());
 
-    let model_path = matches.value_of("model_path");
-
-    let access_key = matches
-        .value_of("access_key")
-        .expect("AccessKey is REQUIRED for Rhino operation");
+    let endpoint_duration_sec = matches
+        .value_of("endpoint_duration")
+        .map(|endpoint_duration| endpoint_duration.parse().unwrap());
 
     let require_endpoint = matches.value_of("require_endpoint").map(|req| match req {
         "TRUE" | "true" => true,
@@ -179,7 +195,8 @@ fn main() {
         access_key,
         context_path,
         sensitivity,
-        model_path,
+        endpoint_duration_sec,
         require_endpoint,
+        model_path,
     );
 }

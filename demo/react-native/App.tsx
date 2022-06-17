@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
-import { RhinoManager, RhinoInference, RhinoErrors } from '@picovoice/rhino-react-native';
+import {
+  RhinoManager,
+  RhinoInference,
+  RhinoErrors,
+} from '@picovoice/rhino-react-native';
 
 type Props = {};
 type State = {
@@ -14,7 +18,7 @@ type State = {
 };
 
 export default class App extends Component<Props, State> {
-  readonly _accessKey: string = "${YOUR_ACCESS_KEY_HERE}" // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+  readonly _accessKey: string = '${YOUR_ACCESS_KEY_HERE}'; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
   _rhinoManager: RhinoManager | undefined;
 
@@ -26,7 +30,7 @@ export default class App extends Component<Props, State> {
       rhinoText: '',
       isListening: false,
       isError: false,
-      errorMessage: ''
+      errorMessage: '',
     };
   }
 
@@ -34,26 +38,27 @@ export default class App extends Component<Props, State> {
     let contextPath = `smart_lighting_${Platform.OS}.rhn`;
 
     // load context
-    try{
+    try {
       this._rhinoManager = await RhinoManager.create(
-        this._accessKey, 
+        this._accessKey,
         contextPath,
         this.inferenceCallback.bind(this),
         (error) => {
           this.errorCallback(error.message);
-        });
-    } catch(err) {
-      let errorMessage = '';
+        },
+      );
+    } catch (err) {
+      let errorMessage;
       if (err instanceof RhinoErrors.RhinoInvalidArgumentError) {
         errorMessage = `${err.message}\nPlease make sure your accessKey '${this._accessKey}'' is a valid access key.`;
       } else if (err instanceof RhinoErrors.RhinoActivationError) {
-        errorMessage = "AccessKey activation error";
+        errorMessage = 'AccessKey activation error';
       } else if (err instanceof RhinoErrors.RhinoActivationLimitError) {
-        errorMessage = "AccessKey reached its device limit";
+        errorMessage = 'AccessKey reached its device limit';
       } else if (err instanceof RhinoErrors.RhinoActivationRefusedError) {
-        errorMessage = "AccessKey refused";
+        errorMessage = 'AccessKey refused';
       } else if (err instanceof RhinoErrors.RhinoActivationThrottledError) {
-        errorMessage = "AccessKey has been throttled";
+        errorMessage = 'AccessKey has been throttled';
       } else {
         errorMessage = err.toString();
       }
@@ -67,23 +72,22 @@ export default class App extends Component<Props, State> {
       buttonText: 'Start',
       buttonDisabled: false,
       isListening: false,
-    }); 
+    });
   }
 
   errorCallback(error: string) {
     this.setState({
       isError: true,
-      errorMessage: error
+      errorMessage: error,
     });
   }
 
   prettyPrint(inference: RhinoInference): string {
-    let printText =
-        `{\n    "isUnderstood" : "${inference.isUnderstood}",\n`;
+    let printText = `{\n    "isUnderstood" : "${inference.isUnderstood}",\n`;
     if (inference.isUnderstood) {
       printText += `    "intent" : "${inference.intent}",\n`;
       if (Object.entries(inference.slots).length > 0) {
-        printText += '    "slots" : {\n';1
+        printText += '    "slots" : {\n';
         for (let [key, slot] of Object.entries(inference.slots)) {
           printText += `        "${key}" : "${slot}",\n`;
         }
@@ -99,17 +103,16 @@ export default class App extends Component<Props, State> {
   }
 
   async _startProcessing() {
-
-    if(this.state.isListening){
+    if (this.state.isListening) {
       return;
     }
 
     this.setState({
-        buttonDisabled: true
+      buttonDisabled: true,
     });
 
     let recordAudioRequest;
-    if (Platform.OS == 'android') {
+    if (Platform.OS === 'android') {
       recordAudioRequest = this._requestRecordAudioPermission();
     } else {
       recordAudioRequest = new Promise(function (resolve, _) {
@@ -119,12 +122,12 @@ export default class App extends Component<Props, State> {
 
     recordAudioRequest.then((hasPermission) => {
       if (!hasPermission) {
-        console.error("Required microphone permission was not granted.")
+        console.error('Required microphone permission was not granted.');
         return;
       }
 
-      this._rhinoManager.process().then((didStart)=>{
-        if(didStart){          
+      this._rhinoManager.process().then((didStart) => {
+        if (didStart) {
           this.setState({
             buttonText: '...',
             rhinoText: '',
@@ -132,7 +135,7 @@ export default class App extends Component<Props, State> {
             isListening: true,
           });
         }
-      });      
+      });
     });
   }
 
@@ -147,61 +150,67 @@ export default class App extends Component<Props, State> {
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
-        }
+        },
       );
-      return (granted === PermissionsAndroid.RESULTS.GRANTED)        
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
     } catch (err) {
       this.errorCallback(err.toString());
       return false;
     }
   }
 
-  render() {    
-
+  render() {
     return (
-      <View
-        style={[
-          styles.container,
-        ]}
-      >
+      <View style={[styles.container]}>
         <View style={styles.statusBar}>
           <Text style={styles.statusBarText}>Rhino</Text>
         </View>
 
-        <View style={{flex:0.35, justifyContent:'center', alignContent:'center'}}>
+        <View
+          style={{
+            flex: 0.35,
+            justifyContent: 'center',
+            alignContent: 'center',
+          }}>
           <TouchableOpacity
             style={{
-              width:'50%',
-              height:'50%',
-              alignSelf:'center',
-              justifyContent:'center',
+              width: '50%',
+              height: '50%',
+              alignSelf: 'center',
+              justifyContent: 'center',
               backgroundColor: this.state.isError ? '#cccccc' : '#377DFF',
               borderRadius: 100,
-              }}
+            }}
             onPress={() => this._startProcessing()}
-            disabled={this.state.buttonDisabled || this.state.isError}
-          >
+            disabled={this.state.buttonDisabled || this.state.isError}>
             <Text style={styles.buttonText}>{this.state.buttonText}</Text>
           </TouchableOpacity>
         </View>
-        <View style={{flex:1, padding:20, }}>
-          <View style={{flex:1, flexDirection:'row', justifyContent:'center', padding:30, backgroundColor:'#25187E'}}>
-            <Text style={styles.rhinoText}>
-                  {this.state.rhinoText}
-            </Text>
+        <View style={{ flex: 1, padding: 20 }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              padding: 30,
+              backgroundColor: '#25187E',
+            }}>
+            <Text style={styles.rhinoText}>{this.state.rhinoText}</Text>
           </View>
         </View>
-        {this.state.isError &&
+        {this.state.isError && (
           <View style={styles.errorBox}>
-            <Text style={{
-              color: 'white',
-              fontSize: 16
-            }}>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 16,
+              }}>
               {this.state.errorMessage}
             </Text>
           </View>
-        }
-        <View style={{ flex: 0.08, justifyContent: 'flex-end', paddingBottom:25}}>
+        )}
+        <View
+          style={{ flex: 0.08, justifyContent: 'flex-end', paddingBottom: 25 }}>
           <Text style={styles.instructions}>
             Made in Vancouver, Canada by Picovoice
           </Text>
@@ -223,9 +232,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   statusBar: {
-    flex: 0.20,
+    flex: 0.2,
     backgroundColor: '#377DFF',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   statusBarText: {
     fontSize: 18,
@@ -234,7 +243,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginBottom: 10,
   },
-  
+
   buttonStyle: {
     backgroundColor: '#377DFF',
     borderRadius: 100,
@@ -246,9 +255,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   rhinoText: {
-    flex:1, 
-    flexWrap:'wrap',
-    color: 'white',    
+    flex: 1,
+    flexWrap: 'wrap',
+    color: 'white',
     fontSize: 20,
   },
   itemStyle: {
@@ -258,13 +267,13 @@ const styles = StyleSheet.create({
   },
   instructions: {
     textAlign: 'center',
-    color: '#666666'
+    color: '#666666',
   },
   errorBox: {
     backgroundColor: 'red',
     borderRadius: 5,
     margin: 20,
     padding: 20,
-    textAlign: 'center'
+    textAlign: 'center',
   },
 });

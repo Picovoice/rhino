@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2021 Picovoice Inc.
+    Copyright 2020-2022 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -46,7 +46,15 @@ public class RhinoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void create(String accessKey, String modelPath, String contextPath, Float sensitivity, Boolean requireEndpoint, Promise promise) {
+  public void create(
+    String accessKey,
+    String modelPath,
+    String contextPath,
+    Float sensitivity,
+    Float endpointDurationSec,
+    Boolean requireEndpoint,
+    Promise promise
+  ) {
     try {
       Rhino rhino = new Rhino.Builder()
                       .setAccessKey(accessKey)
@@ -54,6 +62,7 @@ public class RhinoModule extends ReactContextBaseJavaModule {
                       .setContextPath(contextPath)
                       .setSensitivity(sensitivity)
                       .setRequireEndpoint(requireEndpoint)
+                      .setEndpointDurationSec(endpointDurationSec)
                       .build(reactContext);
       String handle = String.valueOf(System.identityHashCode(rhino));
       rhinoPool.put(handle, rhino);

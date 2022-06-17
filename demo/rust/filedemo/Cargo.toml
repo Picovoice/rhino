@@ -5,7 +5,7 @@ edition = "2018"
 
 [dependencies]
 chrono = "0.4.19"
-clap = "2.33.3"
+clap = "3.2.3"
 hound = "3.4.0"
-itertools = "0.10.1"
-pv_rhino = "=2.1.6"
+itertools = "0.10.3"
+pv_rhino = "=2.1.7"

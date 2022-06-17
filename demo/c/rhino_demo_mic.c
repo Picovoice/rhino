@@ -87,20 +87,24 @@ static void print_dl_error(const char *message) {
 }
 
 static struct option long_options[] = {
-        {"show_audio_devices", no_argument,       NULL, 's'},
-        {"library_path",       required_argument, NULL, 'l'},
-        {"model_path",         required_argument, NULL, 'm'},
-        {"context_path",       required_argument, NULL, 'c'},
-        {"sensitivity",        required_argument, NULL, 't'},
-        {"require_endpoint",   required_argument, NULL, 'e'},
-        {"access_key",         required_argument, NULL, 'a'},
-        {"audio_device_index", required_argument, NULL, 'd'}
+        {"access_key",            required_argument, NULL, 'a'},
+        {"library_path",          required_argument, NULL, 'l'},
+        {"model_path",            required_argument, NULL, 'm'},
+        {"context_path",          required_argument, NULL, 'c'},
+        {"audio_device_index",    required_argument, NULL, 'd'},
+        {"sensitivity",           required_argument, NULL, 't'},
+        {"endpoint_duration_sec", required_argument, NULL, 'u'},
+        {"require_endpoint",      required_argument, NULL, 'e'},
+        {"show_audio_devices",    no_argument,       NULL, 's'},
 };
 
 static void print_usage(const char *program_name) {
     fprintf(stderr,
-            "Usage : %s -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -t SENSTIVITY -a ACCESS_KEY -d AUDIO_DEVICE_INDEX [-e, --require_endpoint (true,false)]\n"
-            "        %s [-s, --show_audio_devices]\n", program_name, program_name);
+            "Usage : %s -a ACCESS_KEY -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH [-d AUDIO_DEVICE_INDEX] "
+            "[-t SENSITIVITY]  [-u, --endpoint_duration_sec] [-e, --require_endpoint (true,false)]\n"
+            "        %s [-s, --show_audio_devices]\n",
+            program_name,
+            program_name);
 }
 
 void interrupt_handler(int _) {
@@ -129,20 +133,21 @@ void show_audio_devices(void) {
 int picovoice_main(int argc, char *argv[]) {
     signal(SIGINT, interrupt_handler);
 
+    const char *access_key = NULL;
     const char *library_path = NULL;
     const char *model_path = NULL;
     const char *context_path = NULL;
-    float sensitivity = 0.5f;
-    bool require_endpoint = false;
-    const char *access_key = NULL;
     int32_t device_index = -1;
+    float sensitivity = 0.5f;
+    float endpoint_duration_sec = 1.f;
+    bool require_endpoint = false;
 
     int c;
-    while ((c = getopt_long(argc, argv, "se:l:m:c:t:a:d:", long_options, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "a:l:m:c:d:t:u:e:s", long_options, NULL)) != -1) {
         switch (c) {
-            case 's':
-                show_audio_devices();
-                return 0;
+            case 'a':
+                access_key = optarg;
+                break;
             case 'l':
                 library_path = optarg;
                 break;
@@ -152,24 +157,27 @@ int picovoice_main(int argc, char *argv[]) {
             case 'c':
                 context_path = optarg;
                 break;
+            case 'd':
+                device_index = (int32_t) strtol(optarg, NULL, 10);
+                break;
             case 't':
                 sensitivity = strtof(optarg, NULL);
+                break;
+            case 'u':
+                endpoint_duration_sec = strtof(optarg, NULL);
                 break;
             case 'e':
                 require_endpoint = (strcmp(optarg, "false") != 0);
                 break;
-            case 'a':
-                access_key = optarg;
-                break;
-            case 'd':
-                device_index = (int32_t) strtol(optarg, NULL, 10);
-                break;
+            case 's':
+                show_audio_devices();
+                return 0;
             default:
                 exit(1);
         }
     }
 
-    if (!library_path || !model_path || !context_path || !access_key) {
+    if (!access_key || !library_path || !model_path || !context_path) {
         print_usage(argv[0]);
         exit(1);
     }
@@ -196,6 +204,7 @@ int picovoice_main(int argc, char *argv[]) {
             const char *,
             const char *,
             const char *,
+            float,
             float,
             bool,
             pv_rhino_t **) =
@@ -272,6 +281,7 @@ int picovoice_main(int argc, char *argv[]) {
             model_path,
             context_path,
             sensitivity,
+            endpoint_duration_sec,
             require_endpoint,
             &rhino);
     if (status != PV_STATUS_SUCCESS) {

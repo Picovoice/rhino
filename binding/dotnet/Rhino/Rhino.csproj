@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;netcoreapp3.1;netstandard2.0</TargetFrameworks>
-		<Version>2.1.3</Version>
+		<Version>2.1.6</Version>
 		<Authors>Picovoice</Authors>
 		<Company />
 		<Product>Rhino Speech-to-Intent Engine</Product>
@@ -52,7 +52,7 @@ Rhino is:
 			<PackagePath>
 				build/netstandard2.0/lib/linux/x86_64/libpv_rhino.so;
 				build/netcoreapp3.1/lib/linux/x86_64/libpv_rhino.so;
-				build/not6.0/lib/linux/x86_64/libpv_rhino.so;
+				build/net6.0/lib/linux/x86_64/libpv_rhino.so;
 			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>lib\linux\x86_64\libpv_rhino.so</Link>
@@ -62,7 +62,7 @@ Rhino is:
 			<PackagePath>
 				build/netstandard2.0/lib/raspberry-pi;
 				build/netcoreapp3.1/lib/raspberry-pi;
-				build/not6.0/lib/raspberry-pi;
+				build/net6.0/lib/raspberry-pi;
 			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>lib\raspberry-pi\%(RecursiveDir)%(Filename)%(Extension)</Link>
@@ -72,7 +72,7 @@ Rhino is:
 			<PackagePath>
 				build/netstandard2.0/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
 				build/netcoreapp3.1/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
-				build/not6.0/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
+				build/net6.0/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
 			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>lib\jetson\cortex-a57-aarch64\libpv_rhino.so</Link>
@@ -82,7 +82,7 @@ Rhino is:
 			<PackagePath>
 				build/netstandard2.0/lib/beaglebone/libpv_rhino.so;
 				build/netcoreapp3.1/lib/beaglebone/libpv_rhino.so;
-				build/not6.0/lib/beaglebone/libpv_rhino.so;
+				build/net6.0/lib/beaglebone/libpv_rhino.so;
 			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>lib\beaglebone\libpv_rhino.so</Link>

@@ -3,7 +3,7 @@ name: Rust
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths:
       - 'binding/rust/**'
       - '!binding/rust/README.md'
@@ -14,7 +14,7 @@ on:
       - 'lib/mac/**'
       - 'lib/raspberry-pi/**'
       - 'lib/windows/**'
-      - 'resources/contexts/beaglebone/**'      
+      - 'resources/contexts/beaglebone/**'
       - 'resources/contexts/jetson/**'
       - 'resources/contexts/linux/**'
       - 'resources/contexts/mac/**'
@@ -22,7 +22,7 @@ on:
       - 'resources/contexts/windows/**'
       - '.github/workflows/rust.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, lib-update ]
     paths:
       - 'binding/rust/**'
       - '!binding/rust/README.md'
@@ -33,7 +33,7 @@ on:
       - 'lib/mac/**'
       - 'lib/raspberry-pi/**'
       - 'lib/windows/**'
-      - 'resources/contexts/beaglebone/**'      
+      - 'resources/contexts/beaglebone/**'
       - 'resources/contexts/jetson/**'
       - 'resources/contexts/linux/**'
       - 'resources/contexts/mac/**'
