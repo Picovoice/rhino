@@ -3,7 +3,7 @@ name: Rust
 on:
   workflow_dispatch:
   push:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'binding/rust/**'
       - '!binding/rust/README.md'
@@ -22,7 +22,7 @@ on:
       - 'resources/contexts/windows/**'
       - '.github/workflows/rust.yml'
   pull_request:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'binding/rust/**'
       - '!binding/rust/README.md'

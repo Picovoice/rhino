@@ -3,7 +3,7 @@ name: Vue
 on:
   workflow_dispatch:
   push:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'binding/vue/**'
       - '!binding/vue/README.md'
@@ -11,7 +11,7 @@ on:
       - 'resources/contexts/wasm/**'
       - '.github/workflows/vue.yml'
   pull_request:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'binding/vue/**'
       - '!binding/vue/README.md'

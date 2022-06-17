@@ -3,7 +3,7 @@ name: Java Performance
 on:
   workflow_dispatch:
   push:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'binding/java/**/RhinoPerformanceTest.java'
       - 'lib/common/**'
@@ -16,7 +16,7 @@ on:
       - 'resources/contexts/windows/**'
       - '.github/workflows/java-perf.yml'
   pull_request:
-    branches: [ master, lib-update ]
+    branches: [ master ]
     paths:
       - 'binding/java/**/RhinoPerformanceTest.java'
       - 'lib/common/**'
