@@ -1,5 +1,5 @@
 //
-// Copyright 2020-2021 Picovoice Inc.
+// Copyright 2020-2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -14,12 +14,17 @@ import { NativeModules } from 'react-native';
 import * as RhinoErrors from './rhino_errors';
 
 export class RhinoInference {
-  private _isFinalized: boolean;
-  private _isUnderstood?: boolean;
-  private _intent?: string;
-  private _slots?: {[key: string]: string};
+  private readonly _isFinalized: boolean;
+  private readonly _isUnderstood?: boolean;
+  private readonly _intent?: string;
+  private readonly _slots?: { [key: string]: string };
 
-  public constructor(isFinalized: boolean, isUnderstood?: boolean, intent?: string, slots?: {[key: string]: string}) {
+  public constructor(
+    isFinalized: boolean,
+    isUnderstood?: boolean,
+    intent?: string,
+    slots?: { [key: string]: string }
+  ) {
     this._isFinalized = isFinalized;
     this._isUnderstood = isUnderstood;
     this._intent = intent;
@@ -58,16 +63,16 @@ export class RhinoInference {
 type NativeError = {
   code: string;
   message: string;
-}
+};
 
 const RCTRhino = NativeModules.PvRhino;
 
 class Rhino {
-  private _handle: string;
-  private _frameLength: number;
-  private _sampleRate: number;
-  private _version: string;
-  private _contextInfo: string;
+  private readonly _handle: string;
+  private readonly _frameLength: number;
+  private readonly _sampleRate: number;
+  private readonly _version: string;
+  private readonly _contextInfo: string;
 
   /**
    * Creates an instance of the Rhino Speech-to-Intent engine.
@@ -76,7 +81,13 @@ class Rhino {
    * @param modelPath Path to the file containing model parameters. If not set it will be set to the default location.
    * @param sensitivity Inference sensitivity. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
    * Sensitivity should be a floating-point number within [0, 1].
-   * @param requireEndpoint If true, Rhino requires an endpoint (chunk of silence) before finishing inference.
+   * @param endpointDurationSec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+   * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
+   * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+   * pre-emptively in case the user pauses before finishing the request.
+   * @param requireEndpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+   * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
+   * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
    * @returns An instance of the engine.
    */
   public static async create(
@@ -84,16 +95,19 @@ class Rhino {
     contextPath: string,
     modelPath?: string,
     sensitivity: number = 0.5,
+    endpointDurationSec: number = 1.0,
     requireEndpoint: boolean = true
   ): Promise<Rhino> {
     try {
-      let {
-        handle,
-        frameLength,
-        sampleRate,
-        version,
-        contextInfo,
-      } = await RCTRhino.create(accessKey, modelPath, contextPath, sensitivity, requireEndpoint);
+      let { handle, frameLength, sampleRate, version, contextInfo } =
+        await RCTRhino.create(
+          accessKey,
+          modelPath,
+          contextPath,
+          sensitivity,
+          endpointDurationSec,
+          requireEndpoint
+        );
       return new Rhino(handle, frameLength, sampleRate, version, contextInfo);
     } catch (err) {
       if (err instanceof RhinoErrors.RhinoError) {
@@ -148,12 +162,8 @@ class Rhino {
     }
 
     try {
-      const {
-        isFinalized,
-        isUnderstood,
-        intent,
-        slots
-      } = await RCTRhino.process(this._handle, frame);
+      const { isFinalized, isUnderstood, intent, slots } =
+        await RCTRhino.process(this._handle, frame);
       return new RhinoInference(isFinalized, isUnderstood, intent, slots);
     } catch (err) {
       const nativeError = err as NativeError;
@@ -206,8 +216,8 @@ class Rhino {
    * @param code Code name of native Error.
    * @param message Detailed message of the error.
    */
-   private static codeToError(code: string, message: string){
-    switch(code) {
+  private static codeToError(code: string, message: string) {
+    switch (code) {
       case 'RhinoException':
         return new RhinoErrors.RhinoError(message);
       case 'RhinoMemoryException':
@@ -233,7 +243,9 @@ class Rhino {
       case 'RhinoActivationRefusedException':
         return new RhinoErrors.RhinoActivationRefusedError(message);
       default:
-        throw new RhinoErrors.RhinoError(`unexpected code: ${code}, message: ${message}`);
+        throw new RhinoErrors.RhinoError(
+          `unexpected code: ${code}, message: ${message}`
+        );
     }
   }
 }
