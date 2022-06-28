@@ -98,6 +98,80 @@ class RhinoTestCase(unittest.TestCase):
             is_within_context=False
         )
 
+    def test_within_context_fr(self):
+        self.run_rhino(
+            language='fr',
+            context_name='éclairage_intelligent',
+            is_within_context=True,
+            intent='changeColor',
+            slots=dict(color='violet'))
+
+    def test_out_of_context_fr(self):
+        self.run_rhino(
+            language='fr',
+            context_name='éclairage_intelligent',
+            is_within_context=False
+        )
+
+    def test_within_context_it(self):
+        self.run_rhino(
+            language='it',
+            context_name='illuminazione',
+            is_within_context=True,
+            intent='spegnereLuce',
+            slots=dict(luogo='bagno'))
+
+    def test_out_of_context_it(self):
+        self.run_rhino(
+            language='it',
+            context_name='illuminazione',
+            is_within_context=False
+        )
+
+    def test_within_context_ja(self):
+        self.run_rhino(
+            language='ja',
+            context_name='sumāto_shōmei',
+            is_within_context=True,
+            intent='色変更',
+            slots=dict(色='青'))
+
+    def test_out_of_context_ja(self):
+        self.run_rhino(
+            language='ja',
+            context_name='sumāto_shōmei',
+            is_within_context=False
+        )
+
+    def test_within_context_ko(self):
+        self.run_rhino(
+            language='ko',
+            context_name='seumateu_jomyeong',
+            is_within_context=True,
+            intent='changeColor',
+            slots=dict(color='파란색'))
+
+    def test_out_of_context_ko(self):
+        self.run_rhino(
+            language='ko',
+            context_name='seumateu_jomyeong',
+            is_within_context=False
+        )
+
+    def test_within_context_pt(self):
+        self.run_rhino(
+            language='pt',
+            context_name='luz_inteligente',
+            is_within_context=True,
+            intent='ligueLuz',
+            slots=dict(lugar='cozinha'))
+
+    def test_out_of_context_pt(self):
+        self.run_rhino(
+            language='pt',
+            context_name='luz_inteligente',
+            is_within_context=False
+        )
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
