@@ -68,14 +68,22 @@ task copyBeagleboneLib(type: Copy) {
     from('../../lib/java/beaglebone/libpv_rhino_jni.so') into "${outputDir}/rhino/lib/java/beaglebone/"
 }
 
+task copyTasks(type: GradleBuild) {
+    tasks = ['copyDefaultModel',
+             'copyLinuxLib',
+             'copyMacLib',
+             'copyWindowsLib',
+             'copyRPiLib',
+             'copyJetsonLib',
+             'copyBeagleboneLib']
+}
+
 jar {
-    dependsOn 'copyDefaultModel'
-    dependsOn 'copyLinuxLib'
-    dependsOn 'copyMacLib'
-    dependsOn 'copyWindowsLib'
-    dependsOn 'copyRPiLib'
-    dependsOn 'copyJetsonLib'
-    dependsOn 'copyBeagleboneLib'
+    dependsOn 'copyTasks'
+}
+
+javadoc {
+    dependsOn 'copyTasks'
 }
 
 if (file("${rootDir}/publish-mavencentral.gradle").exists()) {
