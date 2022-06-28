@@ -21,9 +21,14 @@ import { RhinoInvalidArgumentError, RhinoInvalidStateError } from "../src/errors
 import { getPlatform, getSystemLibraryPath } from "../src/platforms";
 
 const MODEL_PATH = "./lib/common/rhino_params.pv";
+
 const MODEL_PATH_DE = "../../lib/common/rhino_params_de.pv";
 const MODEL_PATH_ES = "../../lib/common/rhino_params_es.pv";
 const MODEL_PATH_FR = "../../lib/common/rhino_params_fr.pv";
+const MODEL_PATH_IT = "../../lib/common/rhino_params_it.pv";
+const MODEL_PATH_JA = "../../lib/common/rhino_params_ja.pv";
+const MODEL_PATH_KO = "../../lib/common/rhino_params_ko.pv";
+const MODEL_PATH_PT = "../../lib/common/rhino_params_pt.pv";
 
 const WAV_PATH_COFFEE_MAKER_IN_CONTEXT =
   "../../../resources/audio_samples/test_within_context.wav";
@@ -41,7 +46,22 @@ const WAV_PATH_IN_CONTEXT_FR =
   "../../../resources/audio_samples/test_within_context_fr.wav";
 const WAV_PATH_OUT_OF_CONTEXT_FR =
   "../../../resources/audio_samples/test_out_of_context_fr.wav";
-
+const WAV_PATH_IN_CONTEXT_IT =
+    "../../../resources/audio_samples/test_within_context_it.wav";
+const WAV_PATH_OUT_OF_CONTEXT_IT =
+    "../../../resources/audio_samples/test_out_of_context_it.wav";
+const WAV_PATH_IN_CONTEXT_JA =
+    "../../../resources/audio_samples/test_within_context_ja.wav";
+const WAV_PATH_OUT_OF_CONTEXT_JA =
+    "../../../resources/audio_samples/test_out_of_context_ja.wav";
+const WAV_PATH_OUT_OF_CONTEXT_KO =
+    "../../../resources/audio_samples/test_out_of_context_ko.wav";
+const WAV_PATH_IN_CONTEXT_KO =
+    "../../../resources/audio_samples/test_within_context_ko.wav";
+const WAV_PATH_IN_CONTEXT_PT =
+    "../../../resources/audio_samples/test_within_context_pt.wav";
+const WAV_PATH_OUT_OF_CONTEXT_PT =
+    "../../../resources/audio_samples/test_out_of_context_pt.wav";
 
 const platform = getPlatform();
 const libraryPath = getSystemLibraryPath();
@@ -52,7 +72,16 @@ const contextPathBeleuchtungDe =
   `../../resources/contexts_de/${platform}/beleuchtung_${platform}.rhn`;
 const contextPathIluminacionInteligenteEs =
   `../../resources/contexts_es/${platform}/iluminación_inteligente_${platform}.rhn`;
-
+const contextPathFr =
+    `../../resources/contexts_fr/${platform}/éclairage_intelligent_${platform}.rhn`;
+const contextPathIt =
+    `../../resources/contexts_it/${platform}/illuminazione_${platform}.rhn`;
+const contextPathJa =
+    `../../resources/contexts_ja/${platform}/sumāto_shōmei_${platform}.rhn`;
+const contextPathKo =
+    `../../resources/contexts_ko/${platform}/seumateu_jomyeong_${platform}.rhn`;
+const contextPathPt =
+    `../../resources/contexts_pt/${platform}/luz_inteligente_${platform}.rhn`;
 
 const ACCESS_KEY = process.argv.filter((x) => x.startsWith('--access_key='))[0]?.split('--access_key=')[1] ?? "";
 const PERFORMANCE_THRESHOLD_SEC = Number(process.argv.filter((x) => x.startsWith('--performance_threshold_sec='))[0]?.split('--performance_threshold_sec=')[1] ?? 0);
@@ -287,6 +316,225 @@ describe("intent detection in ES", () => {
     const inference = rhinoProcessWaveFile(
       rhinoEngine,
       WAV_PATH_OUT_OF_CONTEXT_ES
+    );
+    expect(inference["isUnderstood"]).toBe(false);
+    expect(inference["intent"]).toBe(undefined);
+
+    rhinoEngine.release();
+  });
+});
+
+describe("intent detection in FR", () => {
+  test("successful inference éclairage intelligent", () => {
+    const rhinoEngine = new Rhino(
+        ACCESS_KEY,
+        contextPathFr,
+        0.5,
+        1.0,
+        true,
+        MODEL_PATH_FR
+    );
+
+    const inference = rhinoProcessWaveFile(
+        rhinoEngine,
+        WAV_PATH_IN_CONTEXT_FR
+    );
+    expect(inference["isUnderstood"]).toBe(true);
+    expect(inference["intent"]).toEqual("changeColor");
+    expect(inference.slots?.color).toEqual("violet");
+
+    rhinoEngine.release();
+  });
+
+  test("out-of-context phrase is not understood", () => {
+    const rhinoEngine = new Rhino(
+        ACCESS_KEY,
+        contextPathFr,
+        0.5,
+        1.0,
+        true,
+        MODEL_PATH_FR
+    );
+
+    const inference = rhinoProcessWaveFile(
+        rhinoEngine,
+        WAV_PATH_OUT_OF_CONTEXT_FR
+    );
+    expect(inference["isUnderstood"]).toBe(false);
+    expect(inference["intent"]).toBe(undefined);
+
+    rhinoEngine.release();
+  });
+});
+
+describe("intent detection in IT", () => {
+  test("successful inference éclairage intelligent", () => {
+    const rhinoEngine = new Rhino(
+        ACCESS_KEY,
+        contextPathIt,
+        0.5,
+        1.0,
+        true,
+        MODEL_PATH_IT
+    );
+
+    const inference = rhinoProcessWaveFile(
+        rhinoEngine,
+        WAV_PATH_IN_CONTEXT_IT
+    );
+    console.log(inference);
+    expect(inference["isUnderstood"]).toBe(true);
+    expect(inference["intent"]).toEqual("spegnereLuce");
+    expect(inference.slots?.luogo).toEqual("bagno");
+
+    rhinoEngine.release();
+  });
+
+  test("out-of-context phrase is not understood", () => {
+    const rhinoEngine = new Rhino(
+        ACCESS_KEY,
+        contextPathIt,
+        0.5,
+        1.0,
+        true,
+        MODEL_PATH_IT
+    );
+
+    const inference = rhinoProcessWaveFile(
+        rhinoEngine,
+        WAV_PATH_OUT_OF_CONTEXT_IT
+    );
+    expect(inference["isUnderstood"]).toBe(false);
+    expect(inference["intent"]).toBe(undefined);
+
+    rhinoEngine.release();
+  });
+});
+
+describe("intent detection in JA", () => {
+  test("successful inference éclairage intelligent", () => {
+    const rhinoEngine = new Rhino(
+        ACCESS_KEY,
+        contextPathJa,
+        0.5,
+        1.0,
+        true,
+        MODEL_PATH_JA
+    );
+
+    const inference = rhinoProcessWaveFile(
+        rhinoEngine,
+        WAV_PATH_IN_CONTEXT_JA
+    );
+    console.log(inference);
+    expect(inference["isUnderstood"]).toBe(true);
+    expect(inference["intent"]).toEqual("色変更");
+    expect(inference.slots?.色).toEqual("青");
+
+    rhinoEngine.release();
+  });
+
+  test("out-of-context phrase is not understood", () => {
+    const rhinoEngine = new Rhino(
+        ACCESS_KEY,
+        contextPathJa,
+        0.5,
+        1.0,
+        true,
+        MODEL_PATH_JA
+    );
+
+    const inference = rhinoProcessWaveFile(
+        rhinoEngine,
+        WAV_PATH_OUT_OF_CONTEXT_JA
+    );
+    expect(inference["isUnderstood"]).toBe(false);
+    expect(inference["intent"]).toBe(undefined);
+
+    rhinoEngine.release();
+  });
+});
+
+describe("intent detection in KO", () => {
+  test("successful inference éclairage intelligent", () => {
+    const rhinoEngine = new Rhino(
+        ACCESS_KEY,
+        contextPathKo,
+        0.5,
+        1.0,
+        true,
+        MODEL_PATH_KO
+    );
+
+    const inference = rhinoProcessWaveFile(
+        rhinoEngine,
+        WAV_PATH_IN_CONTEXT_KO
+    );
+    console.log(inference);
+    expect(inference["isUnderstood"]).toBe(true);
+    expect(inference["intent"]).toEqual("changeColor");
+    expect(inference.slots?.color).toEqual("파란색");
+
+    rhinoEngine.release();
+  });
+
+  test("out-of-context phrase is not understood", () => {
+    const rhinoEngine = new Rhino(
+        ACCESS_KEY,
+        contextPathKo,
+        0.5,
+        1.0,
+        true,
+        MODEL_PATH_KO
+    );
+
+    const inference = rhinoProcessWaveFile(
+        rhinoEngine,
+        WAV_PATH_OUT_OF_CONTEXT_KO
+    );
+    expect(inference["isUnderstood"]).toBe(false);
+    expect(inference["intent"]).toBe(undefined);
+
+    rhinoEngine.release();
+  });
+});
+
+describe("intent detection in PT", () => {
+  test("successful inference éclairage intelligent", () => {
+    const rhinoEngine = new Rhino(
+        ACCESS_KEY,
+        contextPathPt,
+        0.5,
+        1.0,
+        true,
+        MODEL_PATH_PT
+    );
+
+    const inference = rhinoProcessWaveFile(
+        rhinoEngine,
+        WAV_PATH_IN_CONTEXT_PT
+    );
+    console.log(inference);
+    expect(inference["isUnderstood"]).toBe(true);
+    expect(inference["intent"]).toEqual("ligueLuz");
+    expect(inference.slots?.lugar).toEqual("cozinha");
+
+    rhinoEngine.release();
+  });
+
+  test("out-of-context phrase is not understood", () => {
+    const rhinoEngine = new Rhino(
+        ACCESS_KEY,
+        contextPathPt,
+        0.5,
+        1.0,
+        true,
+        MODEL_PATH_PT
+    );
+
+    const inference = rhinoProcessWaveFile(
+        rhinoEngine,
+        WAV_PATH_OUT_OF_CONTEXT_PT
     );
     expect(inference["isUnderstood"]).toBe(false);
     expect(inference["intent"]).toBe(undefined);
