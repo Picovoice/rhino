@@ -34,6 +34,10 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 - @picovoice/rhino-web-en-worker
 - @picovoice/rhino-web-es-worker
 - @picovoice/rhino-web-fr-worker
+- @picovoice/rhino-web-it-worker
+- @picovoice/rhino-web-ja-worker
+- @picovoice/rhino-web-kr-worker
+- @picovoice/rhino-web-pt-worker
 
 ### Factories
 
@@ -41,6 +45,10 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 - @picovoice/rhino-web-en-factory
 - @picovoice/rhino-web-es-factory
 - @picovoice/rhino-web-fr-factory
+- @picovoice/rhino-web-it-factory
+- @picovoice/rhino-web-ja-factory
+- @picovoice/rhino-web-kr-factory
+- @picovoice/rhino-web-pt-factory
 
 ### Worker
 
