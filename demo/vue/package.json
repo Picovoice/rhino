@@ -13,7 +13,7 @@
     "postinstall": "node scripts/base64.mjs"
   },
   "dependencies": {
-    "@picovoice/rhino-web-en-worker": "^2.1.0",
+    "@picovoice/rhino-web-en-worker": "^2.1.8",
     "@picovoice/rhino-web-vue": "^2.1.2",
     "@picovoice/web-voice-processor": "2.2.2",
     "core-js": "^3.6.5",
