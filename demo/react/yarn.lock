@@ -1486,31 +1486,10 @@
   resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-core/-/rhino-web-core-2.1.2.tgz#ef5e21f47e9973bbb11e6e4b21ff75fb44bf0e5a"
   integrity sha512-svWBeS5vmUQIEq4zV08bjhL82mTtV3+ia8IJaZ3uAK3PAHtYI0vZrP2DY7ErG+aTWEAZkIrkoqdoz2+qXJ35mg==
 
-"@picovoice/rhino-web-de-worker@^2.1.4":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-de-worker/-/rhino-web-de-worker-2.1.7.tgz#895b588df8c3ffd82911ca93c19a94015b38cf80"
-  integrity sha512-8xQlrAVDDvPyCyNfx+QUO8Skpbq7V7pirndQ2cA+J/JofkLy5e1IsUSRAbw9EJWYwJkL/cwFv6NOeujq2ZrdsQ==
-  dependencies:
-    "@picovoice/rhino-web-core" "^2.1.2"
-
-"@picovoice/rhino-web-en-worker@^2.1.4":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.1.7.tgz#77dde4903411bb6b824e3294221164d6fa657a61"
-  integrity sha512-zKOadqCch9viquc+iqJg5bbzE6455cmDXJ2YB6ak0lHrQRc3jFLLNJBHx1zPDTE+0qzmuX/peOuxM+Roxq0XTg==
-  dependencies:
-    "@picovoice/rhino-web-core" "^2.1.2"
-
-"@picovoice/rhino-web-es-worker@^2.1.4":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-es-worker/-/rhino-web-es-worker-2.1.7.tgz#914bc0dceb89bf8f587f31ef8a2a2efa3c5df66d"
-  integrity sha512-FcGJAeJwXCGpI6R2kMs7KKaEMgRE2gZkdBpTR7+T39f6mYygL0YeW4F1QrN8jXQjLxRAZDx5br2estm/efViOw==
-  dependencies:
-    "@picovoice/rhino-web-core" "^2.1.2"
-
-"@picovoice/rhino-web-fr-worker@^2.1.4":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-fr-worker/-/rhino-web-fr-worker-2.1.7.tgz#5abe0f2645c4142a00f4016547305cbc426b01f3"
-  integrity sha512-jgxnEijtEDymBcxQdJrttiE+mVdlIyax0bILzimKWCx18HRF5pbPNM6uNQjpOjxYZPIQL+vmssV9LQWHqzamxg==
+"@picovoice/rhino-web-en-worker@^2.1.8":
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.1.8.tgz#660c0ab359c28456edc5c101ae96e2e2a992b4ba"
+  integrity sha512-OEyYhBxNqZ51IDC32ZsruPc3kSxPsJEYSMDWjoWNd9CUhpwnjgcUHVvCyAf5Qk290EqO5mZaBSJcAWQEdo6Rrg==
   dependencies:
     "@picovoice/rhino-web-core" "^2.1.2"
 

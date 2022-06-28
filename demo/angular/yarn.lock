@@ -1298,10 +1298,10 @@
   resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-core/-/rhino-web-core-2.1.2.tgz#ef5e21f47e9973bbb11e6e4b21ff75fb44bf0e5a"
   integrity sha512-svWBeS5vmUQIEq4zV08bjhL82mTtV3+ia8IJaZ3uAK3PAHtYI0vZrP2DY7ErG+aTWEAZkIrkoqdoz2+qXJ35mg==
 
-"@picovoice/rhino-web-en-worker@^2.1.7":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.1.7.tgz#77dde4903411bb6b824e3294221164d6fa657a61"
-  integrity sha512-zKOadqCch9viquc+iqJg5bbzE6455cmDXJ2YB6ak0lHrQRc3jFLLNJBHx1zPDTE+0qzmuX/peOuxM+Roxq0XTg==
+"@picovoice/rhino-web-en-worker@^2.1.8":
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.1.8.tgz#660c0ab359c28456edc5c101ae96e2e2a992b4ba"
+  integrity sha512-OEyYhBxNqZ51IDC32ZsruPc3kSxPsJEYSMDWjoWNd9CUhpwnjgcUHVvCyAf5Qk290EqO5mZaBSJcAWQEdo6Rrg==
   dependencies:
     "@picovoice/rhino-web-core" "^2.1.2"
 
