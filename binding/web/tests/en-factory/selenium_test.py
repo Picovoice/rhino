@@ -53,14 +53,14 @@ def run_unit_test_selenium(url, access_key, absolute_ic_audio_file, absolute_ooc
 
     wait = WebDriverWait(driver, 3600)
 
-    driver.find_element_by_id("inContextAudioFile").send_keys(absolute_ic_audio_file)
+    driver.find_element(By.ID, "inContextAudioFile").send_keys(absolute_ic_audio_file)
     wait.until(EC.visibility_of_element_located((By.ID, "inContextAudioLoaded")))
 
-    driver.find_element_by_id("oocAudioFile").send_keys(absolute_ooc_audio_file)
+    driver.find_element(By.ID, "oocAudioFile").send_keys(absolute_ooc_audio_file)
     wait.until(EC.visibility_of_element_located((By.ID, "oocAudioLoaded")))
 
-    driver.find_element_by_id("accessKey").send_keys(access_key)
-    driver.find_element_by_id("submit").click()
+    driver.find_element(By.ID, "accessKey").send_keys(access_key)
+    driver.find_element(By.ID, "submit").click()
     wait.until(EC.visibility_of_element_located((By.ID, "testComplete")))
 
     test_result = 1
