@@ -12,6 +12,8 @@
 import sys
 import unittest
 
+from parameterized import parameterized
+
 from rhino import Rhino
 from test_util import *
 from util import *
@@ -55,123 +57,41 @@ class RhinoTestCase(unittest.TestCase):
         else:
             self.assertFalse(inference.is_understood, "Shouldn't be able to understand.")
 
-    def test_within_context(self):
+    @parameterized.expand([
+        ['en', 'coffee_maker', True, 'orderBeverage',
+         dict(beverage='americano', numberOfShots='double shot', size='medium')],
+        ['es', 'iluminación_inteligente', True, 'changeColor', dict(location='habitación', color='rosado')],
+        ['de', 'beleuchtung', True, 'changeState', dict(state='aus')],
+        ['fr', 'éclairage_intelligent', True, 'changeColor', dict(color='violet')],
+        ['it', 'illuminazione', True, 'spegnereLuce', dict(luogo='bagno')],
+        ['ja', 'sumāto_shōmei', True, '色変更', dict(色='青')],
+        ['ko', 'seumateu_jomyeong', True, 'changeColor', dict(color='파란색')],
+        ['pt', 'luz_inteligente', True, 'ligueLuz', dict(lugar='cozinha')],
+    ])
+    def test_within_context(self, language, context_name, is_within_context, intent, slots):
         self.run_rhino(
-            language='en',
-            context_name='coffee_maker',
-            is_within_context=True,
-            intent='orderBeverage',
-            slots=dict(beverage='americano', numberOfShots='double shot', size='medium'))
+            language=language,
+            context_name=context_name,
+            is_within_context=is_within_context,
+            intent=intent,
+            slots=slots)
 
-    def test_out_of_context(self):
+    @parameterized.expand([
+        ['en', 'coffee_maker'],
+        ['es', 'iluminación_inteligente'],
+        ['de', 'beleuchtung'],
+        ['fr', 'éclairage_intelligent'],
+        ['it', 'illuminazione'],
+        ['ja', 'sumāto_shōmei'],
+        ['ko', 'seumateu_jomyeong'],
+        ['pt', 'luz_inteligente'],
+    ])
+    def test_out_of_context(self, language, context_name):
         self.run_rhino(
-            language='en',
-            context_name='coffee_maker',
+            language=language,
+            context_name=context_name,
             is_within_context=False)
 
-    def test_within_context_es(self):
-        self.run_rhino(
-            language='es',
-            context_name='iluminación_inteligente',
-            is_within_context=True,
-            intent='changeColor',
-            slots=dict(location='habitación', color='rosado'))
-
-    def test_out_of_context_es(self):
-        self.run_rhino(
-            language='es',
-            context_name='iluminación_inteligente',
-            is_within_context=False)
-
-    def test_within_context_de(self):
-        self.run_rhino(
-            language='de',
-            context_name='beleuchtung',
-            is_within_context=True,
-            intent='changeState',
-            slots=dict(state='aus'))
-
-    def test_out_of_context_de(self):
-        self.run_rhino(
-            language='de',
-            context_name='beleuchtung',
-            is_within_context=False
-        )
-
-    def test_within_context_fr(self):
-        self.run_rhino(
-            language='fr',
-            context_name='éclairage_intelligent',
-            is_within_context=True,
-            intent='changeColor',
-            slots=dict(color='violet'))
-
-    def test_out_of_context_fr(self):
-        self.run_rhino(
-            language='fr',
-            context_name='éclairage_intelligent',
-            is_within_context=False
-        )
-
-    def test_within_context_it(self):
-        self.run_rhino(
-            language='it',
-            context_name='illuminazione',
-            is_within_context=True,
-            intent='spegnereLuce',
-            slots=dict(luogo='bagno'))
-
-    def test_out_of_context_it(self):
-        self.run_rhino(
-            language='it',
-            context_name='illuminazione',
-            is_within_context=False
-        )
-
-    def test_within_context_ja(self):
-        self.run_rhino(
-            language='ja',
-            context_name='sumāto_shōmei',
-            is_within_context=True,
-            intent='色変更',
-            slots=dict(色='青'))
-
-    def test_out_of_context_ja(self):
-        self.run_rhino(
-            language='ja',
-            context_name='sumāto_shōmei',
-            is_within_context=False
-        )
-
-    def test_within_context_ko(self):
-        self.run_rhino(
-            language='ko',
-            context_name='seumateu_jomyeong',
-            is_within_context=True,
-            intent='changeColor',
-            slots=dict(color='파란색'))
-
-    def test_out_of_context_ko(self):
-        self.run_rhino(
-            language='ko',
-            context_name='seumateu_jomyeong',
-            is_within_context=False
-        )
-
-    def test_within_context_pt(self):
-        self.run_rhino(
-            language='pt',
-            context_name='luz_inteligente',
-            is_within_context=True,
-            intent='ligueLuz',
-            slots=dict(lugar='cozinha'))
-
-    def test_out_of_context_pt(self):
-        self.run_rhino(
-            language='pt',
-            context_name='luz_inteligente',
-            is_within_context=False
-        )
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
