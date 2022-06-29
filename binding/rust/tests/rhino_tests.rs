@@ -54,7 +54,7 @@ mod tests {
         context: &str,
         is_whithin_context: bool,
         intent: &str,
-        slot: HashMap<String, String>,
+        slots: HashMap<String, String>,
         audio_file_name: &str,
     ) {
         let access_key = env::var("PV_ACCESS_KEY")
@@ -96,8 +96,127 @@ mod tests {
         if is_whithin_context {
             assert_eq!(inference.intent.unwrap(), intent);
 
-            assert_eq!(inference.slots, slot);
+            assert_eq!(inference.slots, slots);
         }
+    }
+
+    macro_rules! rhino_tests {
+        ($($test_name:ident: $values:expr,)*) => {
+        $(
+            #[test]
+            fn $test_name() {
+                let (language, context, is_whithin_context, intent, slots):
+                    (&str, &str, bool, &str, HashMap<&str, &str>) = $values;
+                let mut string_slots = HashMap::new();
+                for (key, value) in slots {
+                    string_slots.insert(String::from(key), String::from(value));
+                }
+                let audio_file_name = format!("{}.wav", stringify!($test_name));
+                run_rhino_test(language, context, is_whithin_context, intent, string_slots, &audio_file_name);
+            }
+        )*
+        }
+    }
+
+    rhino_tests! {
+        test_within_context_es: (
+            "es",
+            &"iluminación_inteligente",
+            true,
+            "changeColor",
+            HashMap::from([("location", "habitación"), ("color", "rosado")]),
+        ),
+        test_out_of_context_es: (
+            "es",
+            &"iluminación_inteligente",
+            false,
+            "changeColor",
+            HashMap::new(),
+        ),
+        test_within_context_de: (
+            "de",
+            &"beleuchtung",
+            true,
+            "changeState",
+            HashMap::from([("state", "aus")]),
+        ),
+        test_out_of_context_de: (
+            "de",
+            &"beleuchtung",
+            false,
+            "changeState",
+            HashMap::new(),
+        ),
+        test_within_context_fr: (
+            "fr",
+            &"éclairage_intelligent",
+            true,
+            "changeColor",
+            HashMap::from([("color", "violet")]),
+        ),
+        test_out_of_context_fr: (
+            "fr",
+            &"éclairage_intelligent",
+            false,
+            "changeColor",
+            HashMap::new(),
+        ),
+        test_within_context_it: (
+            "it",
+            &"illuminazione",
+            true,
+            "spegnereLuce",
+            HashMap::from([("luogo", "bagno")]),
+        ),
+        test_out_of_context_it: (
+            "it",
+            &"illuminazione",
+            false,
+            "spegnereLuce",
+            HashMap::new(),
+        ),
+        test_within_context_ja: (
+            "ja",
+            &"sumāto_shōmei",
+            true,
+            "色変更",
+            HashMap::from([("色", "青")]),
+        ),
+        test_out_of_context_ja: (
+            "ja",
+            &"sumāto_shōmei",
+            false,
+            "色変更",
+            HashMap::new(),
+        ),
+        test_within_context_ko: (
+            "ko",
+            &"seumateu_jomyeong",
+            true,
+            "changeColor",
+            HashMap::from([("color", "파란색")]),
+        ),
+        test_out_of_context_ko: (
+            "ko",
+            &"seumateu_jomyeong",
+            false,
+            "changeColor",
+            HashMap::new(),
+        ),
+        test_within_context_pt: (
+            "pt",
+            &"luz_inteligente",
+            true,
+            "ligueLuz",
+            HashMap::from([("lugar", "cozinha")]),
+        ),
+        test_out_of_context_pt: (
+            "pt",
+            &"luz_inteligente",
+            false,
+            "ligueLuz",
+            HashMap::new(),
+        ),
     }
 
     #[test]
@@ -187,100 +306,5 @@ mod tests {
 
         assert!(is_finalized);
         assert!(!rhino.get_inference().unwrap().is_understood);
-    }
-
-    #[test]
-    fn test_with_non_ascii_model_name() {
-        let access_key = env::var("PV_ACCESS_KEY")
-            .expect("Pass the AccessKey in using the PV_ACCESS_KEY env variable");
-        let context_path = format!(
-            "../../resources/contexts_es/{}/iluminación_inteligente_{}.rhn",
-            pv_platform(),
-            pv_platform(),
-        );
-        let rhino = RhinoBuilder::new(access_key, context_path)
-            .model_path("../../lib/common/rhino_params_es.pv")
-            .init()
-            .expect("Unable to create Rhino");
-
-        let soundfile = BufReader::new(
-            File::open(concat!(
-                env!("CARGO_MANIFEST_DIR"),
-                "/../../resources/audio_samples/test_out_of_context.wav"
-            ))
-            .unwrap(),
-        );
-        let source = Decoder::new(soundfile).unwrap();
-
-        assert_eq!(rhino.sample_rate(), source.sample_rate());
-
-        let mut is_finalized = false;
-        for frame in &source.chunks(rhino.frame_length() as usize) {
-            let frame = frame.collect_vec();
-            if frame.len() == rhino.frame_length() as usize {
-                is_finalized = rhino.process(&frame).unwrap();
-                if is_finalized {
-                    break;
-                }
-            }
-        }
-
-        assert!(is_finalized);
-        assert!(!rhino.get_inference().unwrap().is_understood);
-    }
-
-    #[test]
-    fn test_within_context_es() {
-        let mut expected_slot_values = HashMap::new();
-        expected_slot_values.insert(String::from("location"), String::from("habitación"));
-        expected_slot_values.insert(String::from("color"), String::from("rosado"));
-
-        run_rhino_test(
-            "es",
-            &"iluminación_inteligente",
-            true,
-            "changeColor",
-            expected_slot_values,
-            "test_within_context_es.wav",
-        );
-    }
-
-    #[test]
-    fn test_out_of_context_es() {
-        run_rhino_test(
-            "es",
-            &"iluminación_inteligente",
-            false,
-            "changeColor",
-            HashMap::new(),
-            "test_out_of_context_es.wav",
-        );
-    }
-
-    #[test]
-    fn test_within_context_de() {
-        let mut expected_slot_values = HashMap::new();
-        expected_slot_values.insert(String::from("state"), String::from("aus"));
-
-        run_rhino_test(
-            "de",
-            &"beleuchtung",
-            true,
-            "changeState",
-            expected_slot_values,
-            "test_within_context_de.wav",
-        );
-    }
-
-    #[test]
-    fn test_out_of_context_de() {
-        run_rhino_test(
-            "de",
-            &"beleuchtung",
-            false,
-            "changeState",
-            HashMap::new(),
-            "test_out_of_context_de.wav",
-        );
     }
 }
