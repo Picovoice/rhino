@@ -18,6 +18,29 @@ from rhino import Rhino
 from test_util import *
 from util import *
 
+WITHIN_CONTEXT_PARAMETERS = [
+    ['en', 'coffee_maker', True, 'orderBeverage',
+     dict(beverage='americano', numberOfShots='double shot', size='medium')],
+    ['es', 'iluminación_inteligente', True, 'changeColor', dict(location='habitación', color='rosado')],
+    ['de', 'beleuchtung', True, 'changeState', dict(state='aus')],
+    ['fr', 'éclairage_intelligent', True, 'changeColor', dict(color='violet')],
+    ['it', 'illuminazione', True, 'spegnereLuce', dict(luogo='bagno')],
+    ['ja', 'sumāto_shōmei', True, '色変更', dict(色='青')],
+    ['ko', 'seumateu_jomyeong', True, 'changeColor', dict(color='파란색')],
+    ['pt', 'luz_inteligente', True, 'ligueLuz', dict(lugar='cozinha')],
+]
+
+OUT_OF_CONTEXT_PARAMETERS = [
+    ['en', 'coffee_maker'],
+    ['es', 'iluminación_inteligente'],
+    ['de', 'beleuchtung'],
+    ['fr', 'éclairage_intelligent'],
+    ['it', 'illuminazione'],
+    ['ja', 'sumāto_shōmei'],
+    ['ko', 'seumateu_jomyeong'],
+    ['pt', 'luz_inteligente'],
+]
+
 
 class RhinoTestCase(unittest.TestCase):
 
@@ -57,17 +80,7 @@ class RhinoTestCase(unittest.TestCase):
         else:
             self.assertFalse(inference.is_understood, "Shouldn't be able to understand.")
 
-    @parameterized.expand([
-        ['en', 'coffee_maker', True, 'orderBeverage',
-         dict(beverage='americano', numberOfShots='double shot', size='medium')],
-        ['es', 'iluminación_inteligente', True, 'changeColor', dict(location='habitación', color='rosado')],
-        ['de', 'beleuchtung', True, 'changeState', dict(state='aus')],
-        ['fr', 'éclairage_intelligent', True, 'changeColor', dict(color='violet')],
-        ['it', 'illuminazione', True, 'spegnereLuce', dict(luogo='bagno')],
-        ['ja', 'sumāto_shōmei', True, '色変更', dict(色='青')],
-        ['ko', 'seumateu_jomyeong', True, 'changeColor', dict(color='파란색')],
-        ['pt', 'luz_inteligente', True, 'ligueLuz', dict(lugar='cozinha')],
-    ])
+    @parameterized.expand(WITHIN_CONTEXT_PARAMETERS)
     def test_within_context(self, language, context_name, is_within_context, intent, slots):
         self.run_rhino(
             language=language,
@@ -76,16 +89,7 @@ class RhinoTestCase(unittest.TestCase):
             intent=intent,
             slots=slots)
 
-    @parameterized.expand([
-        ['en', 'coffee_maker'],
-        ['es', 'iluminación_inteligente'],
-        ['de', 'beleuchtung'],
-        ['fr', 'éclairage_intelligent'],
-        ['it', 'illuminazione'],
-        ['ja', 'sumāto_shōmei'],
-        ['ko', 'seumateu_jomyeong'],
-        ['pt', 'luz_inteligente'],
-    ])
+    @parameterized.expand(OUT_OF_CONTEXT_PARAMETERS)
     def test_out_of_context(self, language, context_name):
         self.run_rhino(
             language=language,
