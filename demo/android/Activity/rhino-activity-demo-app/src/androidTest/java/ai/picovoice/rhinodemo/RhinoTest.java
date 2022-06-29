@@ -13,6 +13,7 @@
 package ai.picovoice.rhinodemo;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -35,6 +36,7 @@ import ai.picovoice.rhino.RhinoInference;
 public class RhinoTest {
 
     public static class StandardTests extends BaseTest {
+
         @Test
         public void testInitSuccessSimple() throws RhinoException {
             File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
@@ -252,7 +254,7 @@ public class RhinoTest {
     }
 
     @RunWith(Parameterized.class)
-    public static class LanguageTests extends BaseTest {
+    public static class LanguageWithinContextTests extends BaseTest {
 
         @Parameterized.Parameter(value = 0)
         public String modelFile;
@@ -272,15 +274,9 @@ public class RhinoTest {
         @Parameterized.Parameter(value = 5)
         public Map<String, String> expectedSlots;
 
-        @Parameterized.Parameters(name = "{0}")
+        @Parameterized.Parameters(name = "{2}")
         public static Collection<Object[]> initParameters() {
             return Arrays.asList(new Object[][]{
-                    {
-                            "model_files/rhino_params.pv",
-                            "context_files/coffee_maker_android.rhn",
-                            "audio_samples/test_out_of_context.wav",
-                            false, null, null
-                    },
                     {
                             "model_files/rhino_params.pv",
                             "context_files/coffee_maker_android.rhn",
@@ -296,12 +292,6 @@ public class RhinoTest {
                     {
                             "model_files/rhino_params_es.pv",
                             "context_files/iluminación_inteligente_android.rhn",
-                            "audio_samples/test_out_of_context_es.wav",
-                            false, null, null
-                    },
-                    {
-                            "model_files/rhino_params_es.pv",
-                            "context_files/iluminación_inteligente_android.rhn",
                             "audio_samples/test_within_context_es.wav",
                             true,
                             "changeColor",
@@ -309,12 +299,6 @@ public class RhinoTest {
                                 put("location", "habitación");
                                 put("color", "rosado");
                             }}
-                    },
-                    {
-                            "model_files/rhino_params_de.pv",
-                            "context_files/beleuchtung_android.rhn",
-                            "audio_samples/test_out_of_context_de.wav",
-                            false, null, null
                     },
                     {
                             "model_files/rhino_params_de.pv",
@@ -329,24 +313,12 @@ public class RhinoTest {
                     {
                             "model_files/rhino_params_fr.pv",
                             "context_files/éclairage_intelligent_android.rhn",
-                            "audio_samples/test_out_of_context_fr.wav",
-                            false, null, null
-                    },
-                    {
-                            "model_files/rhino_params_fr.pv",
-                            "context_files/éclairage_intelligent_android.rhn",
                             "audio_samples/test_within_context_fr.wav",
                             true,
                             "changeColor",
                             new HashMap<String, String>() {{
                                 put("color", "violet");
                             }}
-                    },
-                    {
-                            "model_files/rhino_params_it.pv",
-                            "context_files/illuminazione_android.rhn",
-                            "audio_samples/test_out_of_context_it.wav",
-                            false, null, null
                     },
                     {
                             "model_files/rhino_params_it.pv",
@@ -361,12 +333,6 @@ public class RhinoTest {
                     {
                             "model_files/rhino_params_ja.pv",
                             "context_files/sumāto_shōmei_android.rhn",
-                            "audio_samples/test_out_of_context_ja.wav",
-                            false, null, null
-                    },
-                    {
-                            "model_files/rhino_params_ja.pv",
-                            "context_files/sumāto_shōmei_android.rhn",
                             "audio_samples/test_within_context_ja.wav",
                             true,
                             "色変更",
@@ -377,24 +343,12 @@ public class RhinoTest {
                     {
                             "model_files/rhino_params_ko.pv",
                             "context_files/seumateu_jomyeong_android.rhn",
-                            "audio_samples/test_out_of_context_ko.wav",
-                            false, null, null
-                    },
-                    {
-                            "model_files/rhino_params_ko.pv",
-                            "context_files/seumateu_jomyeong_android.rhn",
                             "audio_samples/test_within_context_ko.wav",
                             true,
                             "changeColor",
                             new HashMap<String, String>() {{
                                 put("color", "파란색");
                             }}
-                    },
-                    {
-                            "model_files/rhino_params_pt.pv",
-                            "context_files/luz_inteligente_android.rhn",
-                            "audio_samples/test_out_of_context_pt.wav",
-                            false, null, null
                     },
                     {
                             "model_files/rhino_params_pt.pv",
@@ -410,7 +364,7 @@ public class RhinoTest {
         }
 
         @Test
-        public void testProcess() throws Exception {
+        public void testWithinContext() throws Exception {
 
             String modelPath = new File(testResourcesPath, modelFile).getAbsolutePath();
             String contextPath = new File(testResourcesPath, contextFile).getAbsolutePath();
@@ -429,6 +383,84 @@ public class RhinoTest {
 
             Map<String, String> slots = inference.getSlots();
             assertEquals(expectedSlots, slots);
+            r.delete();
+        }
+    }
+
+    @RunWith(Parameterized.class)
+    public static class LanguageOutOfContextTests extends BaseTest {
+
+        @Parameterized.Parameter(value = 0)
+        public String modelFile;
+
+        @Parameterized.Parameter(value = 1)
+        public String contextFile;
+
+        @Parameterized.Parameter(value = 2)
+        public String testAudioFile;
+
+        @Parameterized.Parameters(name = "{2}")
+        public static Collection<Object[]> initParameters() {
+            return Arrays.asList(new Object[][]{
+                    {
+                            "model_files/rhino_params.pv",
+                            "context_files/coffee_maker_android.rhn",
+                            "audio_samples/test_out_of_context.wav",
+                    },
+                    {
+                            "model_files/rhino_params_es.pv",
+                            "context_files/iluminación_inteligente_android.rhn",
+                            "audio_samples/test_out_of_context_es.wav",
+                    },
+                    {
+                            "model_files/rhino_params_de.pv",
+                            "context_files/beleuchtung_android.rhn",
+                            "audio_samples/test_out_of_context_de.wav",
+                    },
+                    {
+                            "model_files/rhino_params_fr.pv",
+                            "context_files/éclairage_intelligent_android.rhn",
+                            "audio_samples/test_out_of_context_fr.wav",
+                    },
+                    {
+                            "model_files/rhino_params_it.pv",
+                            "context_files/illuminazione_android.rhn",
+                            "audio_samples/test_out_of_context_it.wav",
+                    },
+                    {
+                            "model_files/rhino_params_ja.pv",
+                            "context_files/sumāto_shōmei_android.rhn",
+                            "audio_samples/test_out_of_context_ja.wav",
+                    },
+                    {
+                            "model_files/rhino_params_ko.pv",
+                            "context_files/seumateu_jomyeong_android.rhn",
+                            "audio_samples/test_out_of_context_ko.wav",
+                    },
+                    {
+                            "model_files/rhino_params_pt.pv",
+                            "context_files/luz_inteligente_android.rhn",
+                            "audio_samples/test_out_of_context_pt.wav",
+                    },
+            });
+        }
+
+        @Test
+        public void testOutOfContext() throws Exception {
+
+            String modelPath = new File(testResourcesPath, modelFile).getAbsolutePath();
+            String contextPath = new File(testResourcesPath, contextFile).getAbsolutePath();
+
+            Rhino r = new Rhino.Builder()
+                    .setAccessKey(accessKey)
+                    .setModelPath(modelPath)
+                    .setContextPath(contextPath)
+                    .build(appContext);
+
+            File testAudio = new File(testResourcesPath, testAudioFile);
+
+            RhinoInference inference = processTestAudio(r, testAudio);
+            assertFalse(inference.getIsUnderstood());
             r.delete();
         }
     }
