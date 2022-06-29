@@ -134,7 +134,7 @@ public class RhinoTest {
 
     @Test
     public void testInitSuccessDE() throws RhinoException {
-        File contextPath = new File(testResourcesPath, "context_files/test_de_android.rhn");
+        File contextPath = new File(testResourcesPath, "context_files/beleuchtung_android.rhn");
         File modelPath = new File(testResourcesPath, "model_files/rhino_params_de.pv");
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
@@ -148,7 +148,7 @@ public class RhinoTest {
 
     @Test
     public void testInitSuccessES() throws RhinoException {
-        File contextPath = new File(testResourcesPath, "context_files/test_es_android.rhn");
+        File contextPath = new File(testResourcesPath, "context_files/iluminación_inteligente_android.rhn");
         File modelPath = new File(testResourcesPath, "model_files/rhino_params_es.pv");
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
@@ -162,7 +162,7 @@ public class RhinoTest {
 
     @Test
     public void testInitSuccessFR() throws RhinoException {
-        File contextPath = new File(testResourcesPath, "context_files/test_fr_android.rhn");
+        File contextPath = new File(testResourcesPath, "context_files/éclairage_intelligent_android.rhn");
         File modelPath = new File(testResourcesPath, "model_files/rhino_params_fr.pv");
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
@@ -177,7 +177,7 @@ public class RhinoTest {
     @Test
     public void testInitFailWithMismatchedLanguage() {
         boolean didFail = false;
-        File contextPath = new File(testResourcesPath, "context_files/test_de_android.rhn");
+        File contextPath = new File(testResourcesPath, "context_files/beleuchtung_android.rhn");
         File modelPath = new File(testResourcesPath, "model_files/rhino_params.pv");
         try {
             new Rhino.Builder()
@@ -195,7 +195,7 @@ public class RhinoTest {
     @Test
     public void testInitFailWithNoAccessKey() {
         boolean didFail = false;
-        File contextPath = new File(testResourcesPath, "context_files/test_fr_android.rhn");
+        File contextPath = new File(testResourcesPath, "context_files/éclairage_intelligent_android.rhn");
         try {
             new Rhino.Builder()
                     .setContextPath(contextPath.getAbsolutePath())

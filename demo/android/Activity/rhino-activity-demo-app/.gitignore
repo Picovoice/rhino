@@ -1,6 +1,4 @@
 /build
 audio_samples
 model_files
-coffee_maker_android.rhn
-coffee_maker_linux.rhn
-iluminación_inteligente_android.rhn
+context_files
