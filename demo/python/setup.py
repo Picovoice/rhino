@@ -28,7 +28,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
 
 setuptools.setup(
     name="pvrhinodemo",
-    version="2.1.7",
+    version="2.1.8",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Rhino Speech-to-Intent engine demos.",
@@ -36,7 +36,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Picovoice/rhino",
     packages=["pvrhinodemo"],
-    install_requires=["pvrhino==2.1.6", "pvrecorder==1.1.0"],
+    install_requires=["pvrhino==2.1.7", "pvrecorder==1.1.0"],
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
