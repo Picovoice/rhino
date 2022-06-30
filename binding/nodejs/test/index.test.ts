@@ -13,11 +13,10 @@
 import Rhino, {RhinoInference} from "../src/rhino";
 
 import * as fs from "fs";
-import {getInt16Frames, checkWaveFile} from "../src";
+import {checkWaveFile, getInt16Frames} from "../src";
 import {WaveFile} from "wavefile";
 
-import {RhinoInvalidArgumentError, RhinoInvalidStateError} from "../src/errors";
-import {getPlatform, getSystemLibraryPath} from "../src/platforms";
+import {RhinoInvalidArgumentError} from "../src/errors";
 import {getAudioFileByLanguage, getContextPathsByLanguage, getModelPathByLanguage} from "./test_utils"
 
 const WITHIN_CONTEXT_PARAMETERS: [string, string, string, Record<string, string>][] = [
