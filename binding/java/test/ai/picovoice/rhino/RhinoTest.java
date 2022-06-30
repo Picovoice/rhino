@@ -14,16 +14,20 @@ package ai.picovoice.rhino;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -100,154 +104,82 @@ public class RhinoTest {
         }
     }
 
-    @Test
-    void testWithinContext() throws IOException, UnsupportedAudioFileException, RhinoException {
+    @ParameterizedTest(name = "testWithinContext for ''{0}''")
+    @MethodSource("withinContextProvider")
+    void testWithinContext(String language, String context, String audioFileName, String intent, Map<String, String> expectedSlotValues) throws IOException, UnsupportedAudioFileException, RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
+                .setContextPath(RhinoTestUtils.getTestContextPath(language, context))
+                .setModelPath(RhinoTestUtils.getTestModelPath(language))
                 .build();
 
-        Map<String, String> expectedSlotValues = new HashMap<String, String>() {{
-            put("size", "medium");
-            put("numberOfShots", "double shot");
-            put("beverage", "americano");
-        }};
-
         runTestCase(
-                "test_within_context.wav",
+                audioFileName,
                 true,
-                "orderBeverage",
+                intent,
                 expectedSlotValues
         );
     }
 
-    @Test
-    void testOutOfContext() throws IOException, UnsupportedAudioFileException, RhinoException {
+    private static Stream<Arguments> withinContextProvider() {
+        return Stream.of(
+                Arguments.of("en", "coffee_maker", "test_within_context.wav", "orderBeverage", new HashMap<String, String>() {{
+                    put("size", "medium");
+                    put("numberOfShots", "double shot");
+                    put("beverage", "americano");
+                }}),
+                Arguments.of("de", "beleuchtung", "test_within_context_de.wav", "changeState", new HashMap<String, String>() {{
+                    put("state", "aus");
+                }}),
+                Arguments.of("es", "iluminación_inteligente", "test_within_context_es.wav", "changeColor", new HashMap<String, String>() {{
+                    put("location", "habitación");
+                    put("color", "rosado");
+                }}),
+                Arguments.of("fr", "éclairage_intelligent", "test_within_context_fr.wav", "changeColor", new HashMap<String, String>() {{
+                    put("color", "violet");
+                }}),
+                Arguments.of("it", "illuminazione", "test_within_context_it.wav", "spegnereLuce", new HashMap<String, String>() {{
+                    put("luogo", "bagno");
+                }}),
+                Arguments.of("ja", "sumāto_shōmei", "test_within_context_ja.wav", "色変更", new HashMap<String, String>() {{
+                    put("色", "青");
+                }}),
+                Arguments.of("ko", "seumateu_jomyeong", "test_within_context_ko.wav", "changeColor", new HashMap<String, String>() {{
+                    put("color", "파란색");
+                }}),
+                Arguments.of("pt", "luz_inteligente", "test_within_context_pt.wav", "ligueLuz", new HashMap<String, String>() {{
+                    put("lugar", "cozinha");
+                }})
+        );
+    }
+
+    @ParameterizedTest(name = "testOutOfContext for ''{0}''")
+    @MethodSource("outOfContextProvider")
+    void testOutOfContext(String language, String context, String audioFileName) throws IOException, UnsupportedAudioFileException, RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
-                .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
+                .setContextPath(RhinoTestUtils.getTestContextPath(language, context))
+                .setModelPath(RhinoTestUtils.getTestModelPath(language))
                 .build();
 
         runTestCase(
-                "test_out_of_context.wav",
+                audioFileName,
                 false,
                 null,
                 null
         );
     }
 
-    @Test
-    void testWithinContextDe() throws IOException, UnsupportedAudioFileException, RhinoException {
-
-        final String language = "de";
-        rhino = new Rhino.Builder()
-                .setAccessKey(accessKey)
-                .setContextPath(RhinoTestUtils.getTestContextPath(language, "beleuchtung"))
-                .setModelPath(RhinoTestUtils.getTestModelPath(language))
-                .build();
-
-        Map<String, String> expectedSlotValues = new HashMap<String, String>() {{
-            put("state", "aus");
-        }};
-        runTestCase(
-                "test_within_context_de.wav",
-                true,
-                "changeState",
-                expectedSlotValues
-        );
-    }
-
-    @Test
-    void testOutOfContextDe() throws IOException, UnsupportedAudioFileException, RhinoException {
-        final String language = "de";
-        rhino = new Rhino.Builder()
-                .setAccessKey(accessKey)
-                .setContextPath(RhinoTestUtils.getTestContextPath(language, "beleuchtung"))
-                .setModelPath(RhinoTestUtils.getTestModelPath(language))
-                .build();
-
-        runTestCase(
-                "test_out_of_context_de.wav",
-                false,
-                null,
-                null
-        );
-    }
-
-    @Test
-    void testWithinContextEs() throws IOException, UnsupportedAudioFileException, RhinoException {
-
-        final String language = "es";
-        rhino = new Rhino.Builder()
-                .setAccessKey(accessKey)
-                .setContextPath(RhinoTestUtils.getTestContextPath(language, "iluminación_inteligente"))
-                .setModelPath(RhinoTestUtils.getTestModelPath(language))
-                .build();
-
-        Map<String, String> expectedSlotValues = new HashMap<String, String>() {{
-            put("location", "habitación");
-            put("color", "rosado");
-        }};
-        runTestCase(
-                "test_within_context_es.wav",
-                true,
-                "changeColor",
-                expectedSlotValues
-        );
-    }
-
-    @Test
-    void testOutOfContextEs() throws IOException, UnsupportedAudioFileException, RhinoException {
-        final String language = "es";
-        rhino = new Rhino.Builder()
-                .setAccessKey(accessKey)
-                .setContextPath(RhinoTestUtils.getTestContextPath(language, "iluminación_inteligente"))
-                .setModelPath(RhinoTestUtils.getTestModelPath(language))
-                .build();
-
-        runTestCase(
-                "test_out_of_context_es.wav",
-                false,
-                null,
-                null
-        );
-    }
-
-    @Test
-    void testWithinContextFr() throws IOException, UnsupportedAudioFileException, RhinoException {
-
-        final String language = "fr";
-        rhino = new Rhino.Builder()
-                .setAccessKey(accessKey)
-                .setContextPath(RhinoTestUtils.getTestContextPath(language, "éclairage_intelligent"))
-                .setModelPath(RhinoTestUtils.getTestModelPath(language))
-                .build();
-
-        Map<String, String> expectedSlotValues = new HashMap<String, String>() {{
-            put("color", "violet");
-        }};
-        runTestCase(
-                "test_within_context_fr.wav",
-                true,
-                "changeColor",
-                expectedSlotValues
-        );
-    }
-
-    @Test
-    void testOutOfContextFr() throws IOException, UnsupportedAudioFileException, RhinoException {
-        final String language = "fr";
-        rhino = new Rhino.Builder()
-                .setAccessKey(accessKey)
-                .setContextPath(RhinoTestUtils.getTestContextPath(language, "éclairage_intelligent"))
-                .setModelPath(RhinoTestUtils.getTestModelPath(language))
-                .build();
-
-        runTestCase(
-                "test_out_of_context_fr.wav",
-                false,
-                null,
-                null
+    private static Stream<Arguments> outOfContextProvider() {
+        return Stream.of(
+                Arguments.of("en", "coffee_maker", "test_out_of_context.wav"),
+                Arguments.of("de", "beleuchtung", "test_out_of_context_de.wav"),
+                Arguments.of("es", "iluminación_inteligente", "test_out_of_context_es.wav"),
+                Arguments.of("fr", "éclairage_intelligent", "test_out_of_context_fr.wav"),
+                Arguments.of("it", "illuminazione", "test_out_of_context_it.wav"),
+                Arguments.of("ja", "sumāto_shōmei", "test_out_of_context_ja.wav"),
+                Arguments.of("ko", "seumateu_jomyeong", "test_out_of_context_ko.wav"),
+                Arguments.of("pt", "luz_inteligente", "test_out_of_context_pt.wav")
         );
     }
 }
