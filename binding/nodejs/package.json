@@ -1,7 +1,7 @@
 {
   "name": "@picovoice/rhino-node",
   "version": "2.1.10",
-  "description": "Picovoice Rhino NodeJS binding",
+  "description": "Picovoice Rhino Node.js binding",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "keywords": [
