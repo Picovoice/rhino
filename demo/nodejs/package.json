@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-node-demo",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "description": "Picovoice Rhino NodeJS file-based and microphone demos",
   "scripts": {
     "file": "node file.js",
@@ -17,7 +17,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@picovoice/pvrecorder-node": "1.1.0",
-    "@picovoice/rhino-node": "2.1.9",
+    "@picovoice/rhino-node": "2.1.10",
     "commander": "^6.1.0",
     "wavefile": "^11.0.0"
   },
