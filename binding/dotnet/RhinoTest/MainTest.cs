@@ -119,148 +119,62 @@ namespace RhinoTest
         }
 
         [TestMethod]
-        public void TestWithinContext()
+        [DataRow("en", "coffee_maker", "orderBeverage", new string[] {"size", "numberOfShots", "beverage"}, new string[] {"medium", "double shot", "americano"})]
+        [DataRow("de", "beleuchtung", "changeState", new string[] {"state"}, new string[] {"aus"})]
+        [DataRow("es", "iluminación_inteligente", "changeColor", new string[] {"location", "color"}, new string[] {"habitación", "rosado"})]
+        [DataRow("fr", "éclairage_intelligent", "changeColor", new string[] {"color"}, new string[] {"violet"})]
+        [DataRow("it", "illuminazione", "spegnereLuce", new string[] {"luogo"}, new string[] {"bagno"})]
+        [DataRow("ja", "sumāto_shōmei", "色変更", new string[] {"色"}, new string[] {"青"})]
+        [DataRow("ko", "seumateu_jomyeong", "changeColor", new string[] {"color"}, new string[] {"파란색"})]
+        [DataRow("pt", "luz_inteligente", "ligueLuz", new string[] {"lugar"}, new string[] {"cozinha"})]
+        public void TestWithinContext(
+            string language,
+            string contextName,
+            string expectedIntent,
+            string[] slotKeys,
+            string[] slotValues)
         {
-            using Rhino rhino = InitDefaultRhino();
+            using Rhino rhino = Rhino.Create(
+                ACCESS_KEY,
+                GetContextPath(language, contextName),
+                GetModelPath(language)
+            );
 
-            Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
-            {
-                {"size", "medium"},
-                {"numberOfShots", "double shot"},
-                {"beverage", "americano"},
-            };
+            Dictionary<string, string> expectedSlots = new Dictionary<string, string>();
+            for (int i = 0; i < slotKeys.Length; i++) {
+                expectedSlots[slotKeys[i]] = slotValues[i];
+            }
+
             RunTestCase(
                 rhino,
-                "test_within_context.wav",
+                String.Format("{0}.wav", AppendLanguage("test_within_context", language)),
                 true,
-                "orderBeverage",
+                expectedIntent,
                 expectedSlots
             );
         }
 
         [TestMethod]
-        public void TestOutOfContext()
+        [DataRow("en", "coffee_maker")]
+        [DataRow("de", "beleuchtung")]
+        [DataRow("es", "iluminación_inteligente")]
+        [DataRow("fr", "éclairage_intelligent")]
+        [DataRow("it", "illuminazione")]
+        [DataRow("ja", "sumāto_shōmei")]
+        [DataRow("ko", "seumateu_jomyeong")]
+        [DataRow("pt", "luz_inteligente")]
+        public void TestOutOfContext(string language, string contextName)
         {
-            using Rhino rhino = InitDefaultRhino();
-
-            RunTestCase(
-                rhino,
-                "test_out_of_context.wav",
-                false
-            );
-        }
-
-        [TestMethod]
-        public void TestWithinContextDe()
-        {
-            string language = "de";
             using Rhino rhino = Rhino.Create(
                 ACCESS_KEY,
-                GetContextPath(language, "beleuchtung"),
-                GetModelPath(language));
-
-            Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
-            {
-                {"state", "aus"}
-            };
-            RunTestCase(
-                rhino,
-                "test_within_context_de.wav",
-                true,
-                "changeState",
-                expectedSlots
+                GetContextPath(language, contextName),
+                GetModelPath(language)
             );
-        }
 
-        [TestMethod]
-        public void TestOutOfContextDe()
-        {
-            string language = "de";
-            using Rhino rhino = Rhino.Create(
-                ACCESS_KEY,
-                GetContextPath(language, "beleuchtung"),
-                GetModelPath(language));
-
+            Dictionary<string, string> expectedSlots = new Dictionary<string, string>();
             RunTestCase(
                 rhino,
-                "test_out_of_context_de.wav",
-                false
-            );
-        }
-
-        [TestMethod]
-        public void TestWithinContextEs()
-        {
-            string language = "es";
-            using Rhino rhino = Rhino.Create(
-                ACCESS_KEY,
-                GetContextPath(language, "iluminación_inteligente"),
-                GetModelPath(language));
-
-            Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
-            {
-                {"location", "habitación"},
-                {"color", "rosado"}
-            };
-            RunTestCase(
-                rhino,
-                "test_within_context_es.wav",
-                true,
-                "changeColor",
-                expectedSlots
-            );
-        }
-
-        [TestMethod]
-        public void TestOutOfContextEs()
-        {
-            string language = "es";
-            using Rhino rhino = Rhino.Create(
-                ACCESS_KEY,
-                GetContextPath(language, "iluminación_inteligente"),
-                GetModelPath(language));
-
-            RunTestCase(
-                rhino,
-                "test_out_of_context_es.wav",
-                false
-            );
-        }
-
-        [TestMethod]
-        public void TestWithinContextFr()
-        {
-            string language = "fr";
-            using Rhino rhino = Rhino.Create(
-                ACCESS_KEY,
-                GetContextPath(language, "éclairage_intelligent"),
-                GetModelPath(language));
-
-            Dictionary<string, string> expectedSlots = new Dictionary<string, string>()
-            {
-                {"color", "violet"}
-            };
-            RunTestCase(
-                rhino,
-                "test_within_context_fr.wav",
-                true,
-                "changeColor",
-                expectedSlots
-            );
-        }
-
-        [TestMethod]
-        public void TestOutOfContextFr()
-        {
-            string language = "fr";
-            using Rhino rhino = Rhino.Create(
-                ACCESS_KEY,
-                GetContextPath(language, "éclairage_intelligent"),
-                GetModelPath(language));
-
-            RunTestCase(
-                rhino,
-                "test_out_of_context_fr.wav",
+                String.Format("{0}.wav", AppendLanguage("test_out_of_context", language)),
                 false
             );
         }
