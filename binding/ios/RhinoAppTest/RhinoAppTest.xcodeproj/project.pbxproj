@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		049E74D6C17F04FC6ADCEDC9 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
-		1E00658E27D053CB006FF6E9 /* beleuchtung_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E00658D27D053CB006FF6E9 /* beleuchtung_ios.rhn */; };
-		1E00659027D053D9006FF6E9 /* éclairage_intelligent_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E00658F27D053D9006FF6E9 /* éclairage_intelligent_ios.rhn */; };
+		02B14C85286E37100086CA40 /* sumāto_shōmei_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 02B14C84286E37100086CA40 /* sumāto_shōmei_ios.rhn */; };
 		1E1A57D227CEC84000A05F37 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57D127CEC84000A05F37 /* AppDelegate.swift */; };
 		1E1A57D627CEC84000A05F37 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57D527CEC84000A05F37 /* ViewController.swift */; };
 		1E1A57D927CEC84000A05F37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A57D727CEC84000A05F37 /* Main.storyboard */; };
@@ -20,16 +18,42 @@
 		1E1A581F27CECE1B00A05F37 /* rhino_params_es.pv in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A581B27CECE1B00A05F37 /* rhino_params_es.pv */; };
 		1E1A582027CECE1B00A05F37 /* rhino_params.pv in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A581C27CECE1B00A05F37 /* rhino_params.pv */; };
 		1E1A582127CECE1B00A05F37 /* rhino_params_fr.pv in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A581D27CECE1B00A05F37 /* rhino_params_fr.pv */; };
-		1E1A582727CECE4C00A05F37 /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582627CECE4C00A05F37 /* coffee_maker_ios.rhn */; };
-		1E1A582927CECE5D00A05F37 /* coffee_maker_linux.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582827CECE5D00A05F37 /* coffee_maker_linux.rhn */; };
 		1E1A582C27CECE6900A05F37 /* test_within_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582A27CECE6900A05F37 /* test_within_context.wav */; };
 		1E1A582D27CECE6900A05F37 /* test_out_of_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A582B27CECE6900A05F37 /* test_out_of_context.wav */; };
-		1E1A583527CED02400A05F37 /* iluminación_inteligente_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A583427CED02400A05F37 /* iluminación_inteligente_ios.rhn */; };
 		1E5B7AD72800AC2700F8BDDB /* PerformanceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B7AD62800AC2700F8BDDB /* PerformanceTest.swift */; };
 		1E5B7ADA2800ADCD00F8BDDB /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E5B7AD92800ADCD00F8BDDB /* coffee_maker_ios.rhn */; };
 		1E5B7ADC2800ADD800F8BDDB /* test_within_context.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1E5B7ADB2800ADD800F8BDDB /* test_within_context.wav */; };
 		3C77A1FF7E9EE1E6942527E8 /* libPods-RhinoAppTestUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AA66651E907F4A1B2E5D84A /* libPods-RhinoAppTestUITests.a */; };
 		3D73D7DE0BB4828FC4E1B3C2 /* libPods-PerformanceTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F2642FE16C549581638C57 /* libPods-PerformanceTest.a */; };
+		A52A70B2FE21B957B2E78C2F /* test_within_context_ja.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A7C317172297967CAF095 /* test_within_context_ja.wav */; };
+		A52A7114561B04F3590BB768 /* test_out_of_context_it.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A77CC3B85357E69958291 /* test_out_of_context_it.wav */; };
+		A52A7177277E09FDB90873C8 /* luz_inteligente_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = A52A7CAA12CF53CD96D8956C /* luz_inteligente_ios.rhn */; };
+		A52A721679D3846A82FDB9C1 /* beleuchtung_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = A52A7D5B84DC9166971ACC2E /* beleuchtung_ios.rhn */; };
+		A52A72B92B4BB59C7390A530 /* smart_lighting_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = A52A75D0A1E0398CEA568FAC /* smart_lighting_ios.rhn */; };
+		A52A73812314C22000D4B475 /* iluminación_inteligente_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = A52A77BE24D51566250F0AA6 /* iluminación_inteligente_ios.rhn */; };
+		A52A7426A2CCB68C3F318B93 /* test_out_of_context_ko.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A7D89F934E536C65197FA /* test_out_of_context_ko.wav */; };
+		A52A745C6F69FD0460301204 /* test_within_context_de.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A798584A71C00A836BD0C /* test_within_context_de.wav */; };
+		A52A747A5189CD5DC58C8F42 /* éclairage_intelligent_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = A52A7D7AB80BFE9C930E958E /* éclairage_intelligent_ios.rhn */; };
+		A52A74B8508C612771C5C93D /* test_out_of_context_de.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A78910DF7D196A60BBB1A /* test_out_of_context_de.wav */; };
+		A52A74ECE4A9A3064CA97CB0 /* RhinoLanguageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52A7ACF80691513299515C9 /* RhinoLanguageTests.swift */; };
+		A52A758F74FC7EE61FE51665 /* rhino_params_ja.pv in Resources */ = {isa = PBXBuildFile; fileRef = A52A74A85E9B99A780E3F73C /* rhino_params_ja.pv */; };
+		A52A75AB462A6867C9727E36 /* test_out_of_context_ja.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A7FC109142E4DE41A9E79 /* test_out_of_context_ja.wav */; };
+		A52A765EAE3B24860A29043F /* test_out_of_context_fr.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A75735B7C28702793B60F /* test_out_of_context_fr.wav */; };
+		A52A7694C5D7357377595DC8 /* rhino_params_ko.pv in Resources */ = {isa = PBXBuildFile; fileRef = A52A7015B323CF213DD60612 /* rhino_params_ko.pv */; };
+		A52A76A9ACE212D5A3952749 /* rhino_params_it.pv in Resources */ = {isa = PBXBuildFile; fileRef = A52A71E731006092EDF49A1B /* rhino_params_it.pv */; };
+		A52A76B187489DF4FFAD2F39 /* test_within_context_fr.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A71E45C44ED0CDF0FAA2D /* test_within_context_fr.wav */; };
+		A52A77047368BCAF03F4AC7E /* test_out_of_context_pt.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A7380AEF46FAD883B6458 /* test_out_of_context_pt.wav */; };
+		A52A77158F4BF6E7BAA65B89 /* seumateu_jomyeong_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = A52A766D48FAA7438AB84582 /* seumateu_jomyeong_ios.rhn */; };
+		A52A774600DC8C5E6D594633 /* test_within_context_ko.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A7340569E0557708350E3 /* test_within_context_ko.wav */; };
+		A52A77762B113F4CE575C58D /* rhino_params_pt.pv in Resources */ = {isa = PBXBuildFile; fileRef = A52A7AAF5371E4E4D6C44FA3 /* rhino_params_pt.pv */; };
+		A52A7A0EE912254426D840F6 /* test_out_of_context_es.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A7575321E88D9EB1C821F /* test_out_of_context_es.wav */; };
+		A52A7A627A77D9FA5B08BD4E /* illuminazione_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = A52A7587094AF1759B64CB75 /* illuminazione_ios.rhn */; };
+		A52A7B7581570ED07581B18D /* test_within_context_pt.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A770C0870723A5D907546 /* test_within_context_pt.wav */; };
+		A52A7BCE7E59E6149B9AC7E3 /* test_within_context_it.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A7B23940A40444B02FB38 /* test_within_context_it.wav */; };
+		A52A7DC1A64A0142FFC6AAC3 /* BaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52A723849AED2DCDE7E4FF2 /* BaseTest.swift */; };
+		A52A7E3274619AAB464D5811 /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E5B7AD92800ADCD00F8BDDB /* coffee_maker_ios.rhn */; };
+		A52A7EA2853BFAF79C27BA3C /* test_within_context_es.wav in Resources */ = {isa = PBXBuildFile; fileRef = A52A77ACCD531D4E0B8C35F7 /* test_within_context_es.wav */; };
+		A52A7F6A192406F6C0CB47A2 /* coffee_maker_linux.rhn in Resources */ = {isa = PBXBuildFile; fileRef = A52A75EF86A1DA35D014A74D /* coffee_maker_linux.rhn */; };
 		B6D75F72F9368E5A4D8A47F7 /* libPods-RhinoAppTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C8B41DCF24254E027C2B30C /* libPods-RhinoAppTest.a */; };
 /* End PBXBuildFile section */
 
@@ -51,9 +75,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		02B14C84286E37100086CA40 /* sumāto_shōmei_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = "sumāto_shōmei_ios.rhn"; path = "../../../../resources/contexts_ja/ios/sumāto_shōmei_ios.rhn"; sourceTree = "<group>"; };
 		18FAB8FC8D086FF2500A0A6A /* Pods-RhinoAppTestUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTestUITests.debug.xcconfig"; path = "Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		1E00658D27D053CB006FF6E9 /* beleuchtung_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = beleuchtung_ios.rhn; path = ../../../../resources/contexts_de/ios/beleuchtung_ios.rhn; sourceTree = "<group>"; };
-		1E00658F27D053D9006FF6E9 /* éclairage_intelligent_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = "éclairage_intelligent_ios.rhn"; path = "../../../../resources/contexts_fr/ios/éclairage_intelligent_ios.rhn"; sourceTree = "<group>"; };
 		1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoAppTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E1A57D127CEC84000A05F37 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E1A57D527CEC84000A05F37 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -68,11 +91,8 @@
 		1E1A581B27CECE1B00A05F37 /* rhino_params_es.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params_es.pv; path = ../../../../lib/common/rhino_params_es.pv; sourceTree = "<group>"; };
 		1E1A581C27CECE1B00A05F37 /* rhino_params.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params.pv; path = ../../../../lib/common/rhino_params.pv; sourceTree = "<group>"; };
 		1E1A581D27CECE1B00A05F37 /* rhino_params_fr.pv */ = {isa = PBXFileReference; lastKnownFileType = file; name = rhino_params_fr.pv; path = ../../../../lib/common/rhino_params_fr.pv; sourceTree = "<group>"; };
-		1E1A582627CECE4C00A05F37 /* coffee_maker_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_ios.rhn; path = ../../../../resources/contexts/ios/coffee_maker_ios.rhn; sourceTree = "<group>"; };
-		1E1A582827CECE5D00A05F37 /* coffee_maker_linux.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_linux.rhn; path = ../../../../resources/contexts/linux/coffee_maker_linux.rhn; sourceTree = "<group>"; };
 		1E1A582A27CECE6900A05F37 /* test_within_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context.wav; path = ../../../../resources/audio_samples/test_within_context.wav; sourceTree = "<group>"; };
 		1E1A582B27CECE6900A05F37 /* test_out_of_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context.wav; path = ../../../../resources/audio_samples/test_out_of_context.wav; sourceTree = "<group>"; };
-		1E1A583427CED02400A05F37 /* iluminación_inteligente_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = "iluminación_inteligente_ios.rhn"; path = "../../../../resources/contexts_es/ios/iluminación_inteligente_ios.rhn"; sourceTree = "<group>"; };
 		1E5B7AD52800ABDE00F8BDDB /* PerformanceTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PerformanceTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E5B7AD62800AC2700F8BDDB /* PerformanceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTest.swift; sourceTree = "<group>"; };
 		1E5B7AD82800AC8F00F8BDDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -83,6 +103,34 @@
 		5C8B41DCF24254E027C2B30C /* libPods-RhinoAppTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoAppTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D3D0649948C17F6FF2875C0 /* Pods-RhinoAppTestUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTestUITests.release.xcconfig"; path = "Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests.release.xcconfig"; sourceTree = "<group>"; };
 		900FCBC5CECD2C71CA548677 /* Pods-RhinoAppTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTest.debug.xcconfig"; path = "Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest.debug.xcconfig"; sourceTree = "<group>"; };
+		A52A7015B323CF213DD60612 /* rhino_params_ko.pv */ = {isa = PBXFileReference; lastKnownFileType = file.pv; name = rhino_params_ko.pv; path = ../../../../lib/common/rhino_params_ko.pv; sourceTree = "<group>"; };
+		A52A71E45C44ED0CDF0FAA2D /* test_within_context_fr.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context_fr.wav; path = ../../../../resources/audio_samples/test_within_context_fr.wav; sourceTree = "<group>"; };
+		A52A71E731006092EDF49A1B /* rhino_params_it.pv */ = {isa = PBXFileReference; lastKnownFileType = file.pv; name = rhino_params_it.pv; path = ../../../../lib/common/rhino_params_it.pv; sourceTree = "<group>"; };
+		A52A723849AED2DCDE7E4FF2 /* BaseTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTest.swift; sourceTree = "<group>"; };
+		A52A7340569E0557708350E3 /* test_within_context_ko.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context_ko.wav; path = ../../../../resources/audio_samples/test_within_context_ko.wav; sourceTree = "<group>"; };
+		A52A7380AEF46FAD883B6458 /* test_out_of_context_pt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context_pt.wav; path = ../../../../resources/audio_samples/test_out_of_context_pt.wav; sourceTree = "<group>"; };
+		A52A74A85E9B99A780E3F73C /* rhino_params_ja.pv */ = {isa = PBXFileReference; lastKnownFileType = file.pv; name = rhino_params_ja.pv; path = ../../../../lib/common/rhino_params_ja.pv; sourceTree = "<group>"; };
+		A52A75735B7C28702793B60F /* test_out_of_context_fr.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context_fr.wav; path = ../../../../resources/audio_samples/test_out_of_context_fr.wav; sourceTree = "<group>"; };
+		A52A7575321E88D9EB1C821F /* test_out_of_context_es.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context_es.wav; path = ../../../../resources/audio_samples/test_out_of_context_es.wav; sourceTree = "<group>"; };
+		A52A7587094AF1759B64CB75 /* illuminazione_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file.rhn; name = illuminazione_ios.rhn; path = ../../../../resources/contexts_it/ios/illuminazione_ios.rhn; sourceTree = "<group>"; };
+		A52A75D0A1E0398CEA568FAC /* smart_lighting_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file.rhn; name = smart_lighting_ios.rhn; path = ../../../../resources/contexts/ios/smart_lighting_ios.rhn; sourceTree = "<group>"; };
+		A52A75EF86A1DA35D014A74D /* coffee_maker_linux.rhn */ = {isa = PBXFileReference; lastKnownFileType = file.rhn; name = coffee_maker_linux.rhn; path = ../../../../resources/contexts/linux/coffee_maker_linux.rhn; sourceTree = "<group>"; };
+		A52A766D48FAA7438AB84582 /* seumateu_jomyeong_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file.rhn; name = seumateu_jomyeong_ios.rhn; path = ../../../../resources/contexts_ko/ios/seumateu_jomyeong_ios.rhn; sourceTree = "<group>"; };
+		A52A770C0870723A5D907546 /* test_within_context_pt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context_pt.wav; path = ../../../../resources/audio_samples/test_within_context_pt.wav; sourceTree = "<group>"; };
+		A52A77ACCD531D4E0B8C35F7 /* test_within_context_es.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context_es.wav; path = ../../../../resources/audio_samples/test_within_context_es.wav; sourceTree = "<group>"; };
+		A52A77BE24D51566250F0AA6 /* iluminación_inteligente_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file.rhn; name = "iluminación_inteligente_ios.rhn"; path = "../../../../resources/contexts_es/ios/iluminación_inteligente_ios.rhn"; sourceTree = "<group>"; };
+		A52A77CC3B85357E69958291 /* test_out_of_context_it.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context_it.wav; path = ../../../../resources/audio_samples/test_out_of_context_it.wav; sourceTree = "<group>"; };
+		A52A78910DF7D196A60BBB1A /* test_out_of_context_de.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context_de.wav; path = ../../../../resources/audio_samples/test_out_of_context_de.wav; sourceTree = "<group>"; };
+		A52A798584A71C00A836BD0C /* test_within_context_de.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context_de.wav; path = ../../../../resources/audio_samples/test_within_context_de.wav; sourceTree = "<group>"; };
+		A52A7AAF5371E4E4D6C44FA3 /* rhino_params_pt.pv */ = {isa = PBXFileReference; lastKnownFileType = file.pv; name = rhino_params_pt.pv; path = ../../../../lib/common/rhino_params_pt.pv; sourceTree = "<group>"; };
+		A52A7ACF80691513299515C9 /* RhinoLanguageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RhinoLanguageTests.swift; sourceTree = "<group>"; };
+		A52A7B23940A40444B02FB38 /* test_within_context_it.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context_it.wav; path = ../../../../resources/audio_samples/test_within_context_it.wav; sourceTree = "<group>"; };
+		A52A7C317172297967CAF095 /* test_within_context_ja.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context_ja.wav; path = ../../../../resources/audio_samples/test_within_context_ja.wav; sourceTree = "<group>"; };
+		A52A7CAA12CF53CD96D8956C /* luz_inteligente_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file.rhn; name = luz_inteligente_ios.rhn; path = ../../../../resources/contexts_pt/ios/luz_inteligente_ios.rhn; sourceTree = "<group>"; };
+		A52A7D5B84DC9166971ACC2E /* beleuchtung_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file.rhn; name = beleuchtung_ios.rhn; path = ../../../../resources/contexts_de/ios/beleuchtung_ios.rhn; sourceTree = "<group>"; };
+		A52A7D7AB80BFE9C930E958E /* éclairage_intelligent_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file.rhn; name = "éclairage_intelligent_ios.rhn"; path = "../../../../resources/contexts_fr/ios/éclairage_intelligent_ios.rhn"; sourceTree = "<group>"; };
+		A52A7D89F934E536C65197FA /* test_out_of_context_ko.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context_ko.wav; path = ../../../../resources/audio_samples/test_out_of_context_ko.wav; sourceTree = "<group>"; };
+		A52A7FC109142E4DE41A9E79 /* test_out_of_context_ja.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_out_of_context_ja.wav; path = ../../../../resources/audio_samples/test_out_of_context_ja.wav; sourceTree = "<group>"; };
 		F10FFBFDE9AD2034FA8C0429 /* Pods-PerformanceTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.debug.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.debug.xcconfig"; sourceTree = "<group>"; };
 		F679D59C9F02B60A47B90200 /* Pods-PerformanceTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.release.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.release.xcconfig"; sourceTree = "<group>"; };
 		F7F2642FE16C549581638C57 /* libPods-PerformanceTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PerformanceTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,7 +149,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				049E74D6C17F04FC6ADCEDC9 /* (null) in Frameworks */,
 				3C77A1FF7E9EE1E6942527E8 /* libPods-RhinoAppTestUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -158,6 +205,8 @@
 				1E1A581627CECDE400A05F37 /* test_resources */,
 				1E1A580127CEC99400A05F37 /* Info.plist */,
 				1E1A57F227CEC84000A05F37 /* RhinoAppTestUITests.swift */,
+				A52A723849AED2DCDE7E4FF2 /* BaseTest.swift */,
+				A52A7ACF80691513299515C9 /* RhinoLanguageTests.swift */,
 			);
 			path = RhinoAppTestUITests;
 			sourceTree = "<group>";
@@ -179,6 +228,10 @@
 				1E1A581B27CECE1B00A05F37 /* rhino_params_es.pv */,
 				1E1A581D27CECE1B00A05F37 /* rhino_params_fr.pv */,
 				1E1A581C27CECE1B00A05F37 /* rhino_params.pv */,
+				A52A71E731006092EDF49A1B /* rhino_params_it.pv */,
+				A52A74A85E9B99A780E3F73C /* rhino_params_ja.pv */,
+				A52A7015B323CF213DD60612 /* rhino_params_ko.pv */,
+				A52A7AAF5371E4E4D6C44FA3 /* rhino_params_pt.pv */,
 			);
 			name = model_files;
 			sourceTree = "<group>";
@@ -186,10 +239,15 @@
 		1E1A581827CECDFC00A05F37 /* context_files */ = {
 			isa = PBXGroup;
 			children = (
-				1E1A582527CECE3A00A05F37 /* de */,
-				1E1A582327CECE3000A05F37 /* en */,
-				1E1A582427CECE3300A05F37 /* es */,
-				1E1A582227CECE2B00A05F37 /* fr */,
+				02B14C84286E37100086CA40 /* sumāto_shōmei_ios.rhn */,
+				A52A75D0A1E0398CEA568FAC /* smart_lighting_ios.rhn */,
+				A52A7D5B84DC9166971ACC2E /* beleuchtung_ios.rhn */,
+				A52A77BE24D51566250F0AA6 /* iluminación_inteligente_ios.rhn */,
+				A52A7D7AB80BFE9C930E958E /* éclairage_intelligent_ios.rhn */,
+				A52A7587094AF1759B64CB75 /* illuminazione_ios.rhn */,
+				A52A766D48FAA7438AB84582 /* seumateu_jomyeong_ios.rhn */,
+				A52A7CAA12CF53CD96D8956C /* luz_inteligente_ios.rhn */,
+				A52A75EF86A1DA35D014A74D /* coffee_maker_linux.rhn */,
 			);
 			name = context_files;
 			sourceTree = "<group>";
@@ -199,41 +257,22 @@
 			children = (
 				1E1A582B27CECE6900A05F37 /* test_out_of_context.wav */,
 				1E1A582A27CECE6900A05F37 /* test_within_context.wav */,
+				A52A78910DF7D196A60BBB1A /* test_out_of_context_de.wav */,
+				A52A7575321E88D9EB1C821F /* test_out_of_context_es.wav */,
+				A52A75735B7C28702793B60F /* test_out_of_context_fr.wav */,
+				A52A77CC3B85357E69958291 /* test_out_of_context_it.wav */,
+				A52A7FC109142E4DE41A9E79 /* test_out_of_context_ja.wav */,
+				A52A7D89F934E536C65197FA /* test_out_of_context_ko.wav */,
+				A52A7380AEF46FAD883B6458 /* test_out_of_context_pt.wav */,
+				A52A798584A71C00A836BD0C /* test_within_context_de.wav */,
+				A52A77ACCD531D4E0B8C35F7 /* test_within_context_es.wav */,
+				A52A71E45C44ED0CDF0FAA2D /* test_within_context_fr.wav */,
+				A52A7B23940A40444B02FB38 /* test_within_context_it.wav */,
+				A52A7C317172297967CAF095 /* test_within_context_ja.wav */,
+				A52A7340569E0557708350E3 /* test_within_context_ko.wav */,
+				A52A770C0870723A5D907546 /* test_within_context_pt.wav */,
 			);
 			name = audio_samples;
-			sourceTree = "<group>";
-		};
-		1E1A582227CECE2B00A05F37 /* fr */ = {
-			isa = PBXGroup;
-			children = (
-				1E00658F27D053D9006FF6E9 /* éclairage_intelligent_ios.rhn */,
-			);
-			name = fr;
-			sourceTree = "<group>";
-		};
-		1E1A582327CECE3000A05F37 /* en */ = {
-			isa = PBXGroup;
-			children = (
-				1E1A582827CECE5D00A05F37 /* coffee_maker_linux.rhn */,
-				1E1A582627CECE4C00A05F37 /* coffee_maker_ios.rhn */,
-			);
-			name = en;
-			sourceTree = "<group>";
-		};
-		1E1A582427CECE3300A05F37 /* es */ = {
-			isa = PBXGroup;
-			children = (
-				1E1A583427CED02400A05F37 /* iluminación_inteligente_ios.rhn */,
-			);
-			name = es;
-			sourceTree = "<group>";
-		};
-		1E1A582527CECE3A00A05F37 /* de */ = {
-			isa = PBXGroup;
-			children = (
-				1E00658D27D053CB006FF6E9 /* beleuchtung_ios.rhn */,
-			);
-			name = de;
 			sourceTree = "<group>";
 		};
 		1E5B7ABB2800ABC600F8BDDB /* PerformanceTest */ = {
@@ -392,17 +431,40 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E1A583527CED02400A05F37 /* iluminación_inteligente_ios.rhn in Resources */,
 				1E1A582127CECE1B00A05F37 /* rhino_params_fr.pv in Resources */,
-				1E00659027D053D9006FF6E9 /* éclairage_intelligent_ios.rhn in Resources */,
-				1E1A582727CECE4C00A05F37 /* coffee_maker_ios.rhn in Resources */,
 				1E1A582D27CECE6900A05F37 /* test_out_of_context.wav in Resources */,
 				1E1A582C27CECE6900A05F37 /* test_within_context.wav in Resources */,
-				1E00658E27D053CB006FF6E9 /* beleuchtung_ios.rhn in Resources */,
 				1E1A581F27CECE1B00A05F37 /* rhino_params_es.pv in Resources */,
 				1E1A582027CECE1B00A05F37 /* rhino_params.pv in Resources */,
-				1E1A582927CECE5D00A05F37 /* coffee_maker_linux.rhn in Resources */,
 				1E1A581E27CECE1B00A05F37 /* rhino_params_de.pv in Resources */,
+				A52A74B8508C612771C5C93D /* test_out_of_context_de.wav in Resources */,
+				A52A7A0EE912254426D840F6 /* test_out_of_context_es.wav in Resources */,
+				A52A765EAE3B24860A29043F /* test_out_of_context_fr.wav in Resources */,
+				A52A7114561B04F3590BB768 /* test_out_of_context_it.wav in Resources */,
+				A52A75AB462A6867C9727E36 /* test_out_of_context_ja.wav in Resources */,
+				A52A7426A2CCB68C3F318B93 /* test_out_of_context_ko.wav in Resources */,
+				A52A77047368BCAF03F4AC7E /* test_out_of_context_pt.wav in Resources */,
+				A52A745C6F69FD0460301204 /* test_within_context_de.wav in Resources */,
+				A52A7EA2853BFAF79C27BA3C /* test_within_context_es.wav in Resources */,
+				A52A76B187489DF4FFAD2F39 /* test_within_context_fr.wav in Resources */,
+				A52A7BCE7E59E6149B9AC7E3 /* test_within_context_it.wav in Resources */,
+				A52A70B2FE21B957B2E78C2F /* test_within_context_ja.wav in Resources */,
+				A52A774600DC8C5E6D594633 /* test_within_context_ko.wav in Resources */,
+				A52A7B7581570ED07581B18D /* test_within_context_pt.wav in Resources */,
+				A52A72B92B4BB59C7390A530 /* smart_lighting_ios.rhn in Resources */,
+				A52A721679D3846A82FDB9C1 /* beleuchtung_ios.rhn in Resources */,
+				A52A73812314C22000D4B475 /* iluminación_inteligente_ios.rhn in Resources */,
+				A52A747A5189CD5DC58C8F42 /* éclairage_intelligent_ios.rhn in Resources */,
+				A52A7A627A77D9FA5B08BD4E /* illuminazione_ios.rhn in Resources */,
+				A52A77158F4BF6E7BAA65B89 /* seumateu_jomyeong_ios.rhn in Resources */,
+				02B14C85286E37100086CA40 /* sumāto_shōmei_ios.rhn in Resources */,
+				A52A7177277E09FDB90873C8 /* luz_inteligente_ios.rhn in Resources */,
+				A52A76A9ACE212D5A3952749 /* rhino_params_it.pv in Resources */,
+				A52A758F74FC7EE61FE51665 /* rhino_params_ja.pv in Resources */,
+				A52A7694C5D7357377595DC8 /* rhino_params_ko.pv in Resources */,
+				A52A77762B113F4CE575C58D /* rhino_params_pt.pv in Resources */,
+				A52A7E3274619AAB464D5811 /* coffee_maker_ios.rhn in Resources */,
+				A52A7F6A192406F6C0CB47A2 /* coffee_maker_linux.rhn in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -603,6 +665,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E1A57F327CEC84000A05F37 /* RhinoAppTestUITests.swift in Sources */,
+				A52A7DC1A64A0142FFC6AAC3 /* BaseTest.swift in Sources */,
+				A52A74ECE4A9A3064CA97CB0 /* RhinoLanguageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
