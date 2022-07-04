@@ -43,11 +43,7 @@ jobs:
 
       - name: Inject AppID
         run: sed -i '.bak' 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
-          RhinoAppTestUITests/RhinoAppTestUITests.swift
-
-      - name: Inject Performance Threshold
-        run: sed -i '.bak' 's:{PERFORMANCE_THRESHOLD_SEC}:1.25:'
-          RhinoAppTestUITests/RhinoAppTestUITests.swift
+          RhinoAppTestUITests/BaseTest.swift
 
       - name: XCode Build
         run: xcrun xcodebuild build-for-testing
