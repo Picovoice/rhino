@@ -75,7 +75,7 @@ The module provides you with two levels of API to choose from depending on your 
 
 #### High-Level API
 
-[RhinoManager](/binding/flutter/lib/rhino_manager.dart) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
+[RhinoManager](https://github.com/Picovoice/rhino/tree/master/binding/flutter/lib/rhino_manager.dart) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
 
 The constructor `RhinoManager.create` will create an instance of the RhinoManager using a context file that you pass to it.
 ```dart
@@ -157,7 +157,7 @@ This is because it uses our [flutter_voice_processor](https://github.com/Picovoi
 
 #### Low-Level API
 
-[Rhino](/binding/flutter/lib/rhino.dart) provides low-level access to the inference engine for those who want to incorporate 
+[Rhino](https://github.com/Picovoice/rhino/tree/master/binding/flutter/lib/rhino.dart) provides low-level access to the inference engine for those who want to incorporate 
 speech-to-intent into an already existing audio processing pipeline.
 
 `Rhino` is created by passing a context file to its static constructor `create`:
@@ -235,8 +235,8 @@ try{
 
 ## Non-English Contexts
 
-In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](https://github.com/Picovoice/rhino/tree/master/lib/common).
 
 ## Demo App
 
-Check out the [Rhino Flutter demo](/demo/flutter) to see what it looks like to use Rhino in a cross-platform app!
+Check out the [Rhino Flutter demo](https://github.com/Picovoice/rhino/tree/master/demo/flutter) to see what it looks like to use Rhino in a cross-platform app!

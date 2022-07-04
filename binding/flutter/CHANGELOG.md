@@ -22,3 +22,6 @@
 
 ## [2.1.3] - 2022-06-16
 * Updated method for endpoint handling while inferring context.
+
+## [2.1.4] - 2022-06-30
+* Added additional language support (it, ja, ko, pt)
