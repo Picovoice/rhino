@@ -1,4 +1,4 @@
-// Copyright 2021 Picovoice Inc.
+// Copyright 2021-2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is
 // located in the "LICENSE" file accompanying this source.
@@ -203,68 +203,99 @@ import (
 	"unsafe"
 )
 
-var (
-	lib                                = C.open_dl(C.CString(libName))
-	pv_rhino_init_ptr                  = C.load_symbol(lib, C.CString("pv_rhino_init"))
-	pv_rhino_delete_ptr                = C.load_symbol(lib, C.CString("pv_rhino_delete"))
-	pv_rhino_process_ptr               = C.load_symbol(lib, C.CString("pv_rhino_process"))
-	pv_rhino_is_understood_ptr         = C.load_symbol(lib, C.CString("pv_rhino_is_understood"))
-	pv_rhino_get_intent_ptr            = C.load_symbol(lib, C.CString("pv_rhino_get_intent"))
-	pv_rhino_free_slots_and_values_ptr = C.load_symbol(lib, C.CString("pv_rhino_free_slots_and_values"))
-	pv_rhino_reset_ptr                 = C.load_symbol(lib, C.CString("pv_rhino_reset"))
-	pv_rhino_context_info_ptr          = C.load_symbol(lib, C.CString("pv_rhino_context_info"))
-	pv_rhino_version_ptr               = C.load_symbol(lib, C.CString("pv_rhino_version"))
-	pv_rhino_frame_length_ptr          = C.load_symbol(lib, C.CString("pv_rhino_frame_length"))
-	pv_sample_rate_ptr                 = C.load_symbol(lib, C.CString("pv_sample_rate"))
-)
+// native interface
+type nativeRhinoInterface interface {
+	nativeInit(*Rhino)
+	nativeProcess(*Rhino, []int)
+	nativeDelete(*Rhino)
 
-func (nr nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
+	nativeIsUnderstood(*Rhino)
+	nativeGetIntent(*Rhino)
+	nativeFreeSlotsAndValues(*Rhino)
+	nativeReset(*Rhino)
+
+	nativeContextInfo(*Rhino)
+	nativeSampleRate()
+	nativeFrameLength()
+	nativeVersion()
+}
+
+type nativeRhinoType struct {
+	libraryHandle                      unsafe.Pointer
+	pv_rhino_init_ptr                  unsafe.Pointer
+	pv_rhino_delete_ptr                unsafe.Pointer
+	pv_rhino_process_ptr               unsafe.Pointer
+	pv_rhino_is_understood_ptr         unsafe.Pointer
+	pv_rhino_get_intent_ptr            unsafe.Pointer
+	pv_rhino_free_slots_and_values_ptr unsafe.Pointer
+	pv_rhino_reset_ptr                 unsafe.Pointer
+	pv_rhino_context_info_ptr          unsafe.Pointer
+	pv_rhino_version_ptr               unsafe.Pointer
+	pv_rhino_frame_length_ptr          unsafe.Pointer
+	pv_sample_rate_ptr                 unsafe.Pointer
+	slotKeysPtr                        unsafe.Pointer
+	slotValuePtr                       unsafe.Pointer
+}
+
+func (nr *nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
 	var (
 		accessKeyC   = C.CString(rhino.AccessKey)
+		libraryPathC = C.CString(rhino.LibraryPath)
 		modelPathC   = C.CString(rhino.ModelPath)
 		contextPathC = C.CString(rhino.ContextPath)
-		ptrC         = make([]unsafe.Pointer, 1)
 	)
 	defer C.free(unsafe.Pointer(accessKeyC))
 	defer C.free(unsafe.Pointer(modelPathC))
 	defer C.free(unsafe.Pointer(contextPathC))
 
+	nr.libraryHandle = C.open_dl(libraryPathC)
+	nr.pv_rhino_init_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_init"))
+	nr.pv_rhino_delete_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_delete"))
+	nr.pv_rhino_process_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_process"))
+	nr.pv_rhino_is_understood_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_is_understood"))
+	nr.pv_rhino_get_intent_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_get_intent"))
+	nr.pv_rhino_free_slots_and_values_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_free_slots_and_values"))
+	nr.pv_rhino_reset_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_reset"))
+	nr.pv_rhino_context_info_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_context_info"))
+	nr.pv_rhino_version_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_version"))
+	nr.pv_rhino_frame_length_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_frame_length"))
+	nr.pv_sample_rate_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_sample_rate"))
+
 	var ret = C.pv_rhino_init_wrapper(
-		pv_rhino_init_ptr,
+		nr.pv_rhino_init_ptr,
 		accessKeyC,
 		modelPathC,
 		contextPathC,
 		(C.float)(rhino.Sensitivity),
 		(C.float)(rhino.EndpointDurationSec),
 		(C.bool)(rhino.RequireEndpoint),
-		&ptrC[0])
+		&rhino.handle)
 
-	rhino.handle = uintptr(ptrC[0])
 	return PvStatus(ret)
 }
 
-func (nr nativeRhinoType) nativeDelete(rhino *Rhino) {
+func (nr *nativeRhinoType) nativeDelete(rhino *Rhino) {
 	C.pv_rhino_delete_wrapper(
-		pv_rhino_delete_ptr,
-		unsafe.Pointer(rhino.handle))
-	rhino.handle = uintptr(0)
+		nr.pv_rhino_delete_ptr,
+		rhino.handle)
+	rhino.handle = nil
 }
 
-func (nr nativeRhinoType) nativeProcess(rhino *Rhino, pcm []int16) (status PvStatus, isFinalized bool) {
+func (nr *nativeRhinoType) nativeProcess(rhino *Rhino, pcm []int16) (status PvStatus, isFinalized bool) {
 	var finalized bool
 	var ret = C.pv_rhino_process_wrapper(
-		pv_rhino_process_ptr,
-		unsafe.Pointer(rhino.handle),
+		nr.pv_rhino_process_ptr,
+		rhino.handle,
 		(*C.int16_t)(unsafe.Pointer(&pcm[0])),
 		(*C.bool)(unsafe.Pointer(&finalized)))
 	return PvStatus(ret), finalized
 }
 
-func (nr nativeRhinoType) nativeIsUnderstood(rhino *Rhino) (status PvStatus, inUnderstood bool) {
+func (nr *nativeRhinoType) nativeIsUnderstood(rhino *Rhino) (status PvStatus, inUnderstood bool) {
 	var understood bool
 	var ret = C.pv_rhino_is_understood_wrapper(
-		pv_rhino_is_understood_ptr,
-		unsafe.Pointer(rhino.handle),
+		nr.pv_rhino_is_understood_ptr,
+		rhino.handle,
 		(*C.bool)(unsafe.Pointer(&understood)))
 	return PvStatus(ret), understood
 }
@@ -273,15 +304,15 @@ func (nr *nativeRhinoType) nativeGetIntent(rhino *Rhino) (status PvStatus, inten
 	var (
 		intentRet     string
 		slotsRet      = make(map[string]string)
-		intentPtr     uintptr
+		intentPtr     unsafe.Pointer
 		numSlots      int
-		slotKeysPtr   uintptr
-		slotValuesPtr uintptr
+		slotKeysPtr   unsafe.Pointer
+		slotValuesPtr unsafe.Pointer
 	)
 
 	var ret = C.pv_rhino_get_intent_wrapper(
-		pv_rhino_get_intent_ptr,
-		unsafe.Pointer(rhino.handle),
+		nr.pv_rhino_get_intent_ptr,
+		rhino.handle,
 		(**C.char)(unsafe.Pointer(&intentPtr)),
 		(*C.int32_t)(unsafe.Pointer(&numSlots)),
 		(***C.char)(unsafe.Pointer(&slotKeysPtr)),
@@ -290,8 +321,8 @@ func (nr *nativeRhinoType) nativeGetIntent(rhino *Rhino) (status PvStatus, inten
 
 	for i := 0; i < numSlots; i++ {
 		offset := uintptr(i) * unsafe.Sizeof(uintptr(0))
-		slotKeyPtr := (**C.char)(unsafe.Pointer(slotKeysPtr + offset))
-		slotValuePtr := (**C.char)(unsafe.Pointer(slotValuesPtr + offset))
+		slotKeyPtr := (**C.char)(unsafe.Pointer(uintptr(slotKeysPtr) + offset))
+		slotValuePtr := (**C.char)(unsafe.Pointer(uintptr(slotValuesPtr) + offset))
 		slotKey := C.GoString(*slotKeyPtr)
 		slotValue := C.GoString(*slotValuePtr)
 		slotsRet[slotKey] = slotValue
@@ -304,39 +335,39 @@ func (nr *nativeRhinoType) nativeGetIntent(rhino *Rhino) (status PvStatus, inten
 
 func (nr *nativeRhinoType) nativeFreeSlotsAndValues(rhino *Rhino) (status PvStatus) {
 	var ret = C.pv_rhino_free_slots_and_values_wrapper(
-		pv_rhino_free_slots_and_values_ptr,
-		unsafe.Pointer(rhino.handle),
-		(**C.char)(unsafe.Pointer(nr.slotKeysPtr)),
-		(**C.char)(unsafe.Pointer(nr.slotValuePtr)))
-	nr.slotKeysPtr = 0
-	nr.slotValuePtr = 0
+		nr.pv_rhino_free_slots_and_values_ptr,
+		rhino.handle,
+		(**C.char)(nr.slotKeysPtr),
+		(**C.char)(nr.slotValuePtr))
+	nr.slotKeysPtr = nil
+	nr.slotValuePtr = nil
 	return PvStatus(ret)
 }
 
-func (nr nativeRhinoType) nativeReset(rhino *Rhino) (status PvStatus) {
+func (nr *nativeRhinoType) nativeReset(rhino *Rhino) (status PvStatus) {
 	var ret = C.pv_rhino_reset_wrapper(
-		pv_rhino_reset_ptr,
-		unsafe.Pointer(rhino.handle))
+		nr.pv_rhino_reset_ptr,
+		rhino.handle)
 	return PvStatus(ret)
 }
 
-func (nr nativeRhinoType) nativeContextInfo(rhino *Rhino) (status PvStatus, contextInfo string) {
-	var contextInfoPtr uintptr
+func (nr *nativeRhinoType) nativeContextInfo(rhino *Rhino) (status PvStatus, contextInfo string) {
+	var contextInfoPtr unsafe.Pointer
 	var ret = C.pv_rhino_context_info_wrapper(
-		pv_rhino_context_info_ptr,
-		unsafe.Pointer(rhino.handle),
+		nr.pv_rhino_context_info_ptr,
+		rhino.handle,
 		(**C.char)(unsafe.Pointer(&contextInfoPtr)))
-	return PvStatus(ret), C.GoString((*C.char)(unsafe.Pointer(contextInfoPtr)))
+	return PvStatus(ret), C.GoString((*C.char)(contextInfoPtr))
 }
 
-func (nr nativeRhinoType) nativeVersion() (version string) {
-	return C.GoString(C.pv_rhino_version_wrapper(pv_rhino_version_ptr))
+func (nr *nativeRhinoType) nativeVersion() (version string) {
+	return C.GoString(C.pv_rhino_version_wrapper(nr.pv_rhino_version_ptr))
 }
 
-func (nr nativeRhinoType) nativeFrameLength() (frameLength int) {
-	return int(C.pv_rhino_frame_length_wrapper(pv_rhino_frame_length_ptr))
+func (nr *nativeRhinoType) nativeFrameLength() (frameLength int) {
+	return int(C.pv_rhino_frame_length_wrapper(nr.pv_rhino_frame_length_ptr))
 }
 
-func (nr nativeRhinoType) nativeSampleRate() (sampleRate int) {
-	return int(C.pv_rhino_sample_rate_wrapper(pv_sample_rate_ptr))
+func (nr *nativeRhinoType) nativeSampleRate() (sampleRate int) {
+	return int(C.pv_rhino_sample_rate_wrapper(nr.pv_sample_rate_ptr))
 }

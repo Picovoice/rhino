@@ -32,6 +32,7 @@ import (
 	"runtime"
 	"strings"
 )
+import "unsafe"
 
 //go:embed embedded
 var embeddedFS embed.FS
@@ -109,13 +110,16 @@ type RhinoInference struct {
 // Rhino struct
 type Rhino struct {
 	// pointer to native rhino instance
-	handle uintptr
+	handle unsafe.Pointer
 
 	// whether Rhino has made an inference
 	isFinalized bool
 
 	// AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
 	AccessKey string
+
+	// Absolute path to Rhino's dynamic library.
+	LibraryPath string
 
 	// Absolute path to the file containing model parameters.
 	ModelPath string
@@ -147,34 +151,14 @@ type Rhino struct {
 // Returns a Rhino struct with the given context file and default parameters
 func NewRhino(accessKey string, contextPath string) Rhino {
 	return Rhino{
-		AccessKey:       		accessKey,
-		ContextPath:     		contextPath,
-		Sensitivity:     		0.5,
-		EndpointDurationSec:	1.0,
-		ModelPath:       		defaultModelFile,
-		RequireEndpoint: 		true,
+		AccessKey:           accessKey,
+		ContextPath:         contextPath,
+		Sensitivity:         0.5,
+		EndpointDurationSec: 1.0,
+		LibraryPath:         defaultLibPath,
+		ModelPath:           defaultModelFile,
+		RequireEndpoint:     true,
 	}
-}
-
-// native interface
-type nativeRhinoInterface interface {
-	nativeInit(*Rhino)
-	nativeProcess(*Rhino, []int)
-	nativeDelete(*Rhino)
-
-	nativeIsUnderstood(*Rhino)
-	nativeGetIntent(*Rhino)
-	nativeFreeSlotsAndValues(*Rhino)
-	nativeReset(*Rhino)
-
-	nativeContextInfo(*Rhino)
-	nativeSampleRate()
-	nativeFrameLength()
-	nativeVersion()
-}
-type nativeRhinoType struct {
-	slotKeysPtr  uintptr
-	slotValuePtr uintptr
 }
 
 // private vars
@@ -183,19 +167,19 @@ var (
 	extractionDir = filepath.Join(os.TempDir(), "rhino")
 
 	defaultModelFile = extractDefaultModel()
-	libName          = extractLib()
+	defaultLibPath   = extractLib()
 	nativeRhino      = nativeRhinoType{}
 )
 
 var (
 	// Number of audio samples per frame.
-	FrameLength = nativeRhino.nativeFrameLength()
+	FrameLength int
 
 	// Audio sample rate accepted by Picovoice.
-	SampleRate = nativeRhino.nativeSampleRate()
+	SampleRate int
 
 	// Rhino version
-	Version = nativeRhino.nativeVersion()
+	Version string
 )
 
 // Init function for Rhino. Must be called before attempting process
@@ -204,6 +188,16 @@ func (rhino *Rhino) Init() error {
 		return &RhinoError{
 			INVALID_ARGUMENT,
 			"No AccessKey provided to Rhino"}
+	}
+
+	if rhino.LibraryPath == "" {
+		rhino.LibraryPath = defaultLibPath
+	}
+
+	if _, err := os.Stat(rhino.LibraryPath); os.IsNotExist(err) {
+		return &RhinoError{
+			INVALID_ARGUMENT,
+			fmt.Sprintf("Specified library file could not be found at %s", rhino.LibraryPath)}
 	}
 
 	if rhino.ModelPath == "" {
@@ -247,6 +241,10 @@ func (rhino *Rhino) Init() error {
 			"Rhino init failed"}
 	}
 
+	FrameLength = nativeRhino.nativeFrameLength()
+	SampleRate = nativeRhino.nativeSampleRate()
+	Version = nativeRhino.nativeVersion()
+
 	status, rhino.ContextInfo = nativeRhino.nativeContextInfo(rhino)
 	if PvStatus(status) != SUCCESS {
 		return &RhinoError{
@@ -259,7 +257,7 @@ func (rhino *Rhino) Init() error {
 
 // Releases resources acquired by Rhino
 func (rhino *Rhino) Delete() error {
-	if rhino.handle == 0 {
+	if rhino.handle == nil {
 		return &RhinoError{
 			INVALID_STATE,
 			"Rhino has not been initialized or has already been deleted"}
@@ -273,7 +271,7 @@ func (rhino *Rhino) Delete() error {
 // isFinalized returns true when Rhino has an inference ready to return
 func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 
-	if rhino.handle == 0 {
+	if rhino.handle == nil {
 		return false, &RhinoError{
 			INVALID_STATE,
 			"Rhino has not been initialized or has been deleted"}
