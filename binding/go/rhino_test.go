@@ -1,4 +1,4 @@
-// Copyright 2021 Picovoice Inc.
+// Copyright 2021-2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is
 // located in the "LICENSE" file accompanying this source.
@@ -26,6 +26,36 @@ var (
 	testAccessKey string
 	rhino         Rhino
 )
+
+var withinContextTestParameters = []struct {
+	language       string
+	context        string
+	expectedIntent string
+	expectedSlots  map[string]string
+}{
+	{"en", "coffee_maker", "orderBeverage", map[string]string{"beverage": "americano", "numberOfShots": "double shot", "size": "medium"}},
+	{"es", "iluminación_inteligente", "changeColor", map[string]string{"location": "habitación", "color": "rosado"}},
+	{"de", "beleuchtung", "changeState", map[string]string{"state": "aus"}},
+	{"fr", "éclairage_intelligent", "changeColor", map[string]string{"color": "violet"}},
+	{"it", "illuminazione", "spegnereLuce", map[string]string{"luogo": "bagno"}},
+	{"ja", "sumāto_shōmei", "色変更", map[string]string{"色": "青"}},
+	{"ko", "seumateu_jomyeong", "changeColor", map[string]string{"color": "파란색"}},
+	{"pt", "luz_inteligente", "ligueLuz", map[string]string{"lugar": "cozinha"}},
+}
+
+var outOfContextTestParameters = []struct {
+	language string
+	context  string
+}{
+	{"en", "coffee_maker"},
+	{"es", "iluminación_inteligente"},
+	{"de", "beleuchtung"},
+	{"fr", "éclairage_intelligent"},
+	{"it", "illuminazione"},
+	{"ja", "sumāto_shōmei"},
+	{"ko", "seumateu_jomyeong"},
+	{"pt", "luz_inteligente"},
+}
 
 func TestMain(m *testing.M) {
 
@@ -61,14 +91,14 @@ func getTestContextPath(language string, context string) string {
 	return contextPath
 }
 
-func runTestCase(t *testing.T, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
+func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
 	err := rhino.Init()
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
-	t.Logf("Rhino Version: %s", Version)
-	t.Logf("Frame Length: %d", FrameLength)
-	t.Logf("Sample Rate: %d", SampleRate)
+	fmt.Printf("Rhino Version: %s\n", Version)
+	fmt.Printf("Frame Length: %d\n", FrameLength)
+	fmt.Printf("Sample Rate: %d\n", SampleRate)
 
 	testAudioPath, _ := filepath.Abs(filepath.Join("../../resources/audio_samples", audioFileName))
 	data, err := ioutil.ReadFile(testAudioPath)
@@ -125,133 +155,44 @@ func runTestCase(t *testing.T, audioFileName string, isWithinContext bool, expec
 			t.Fatalf("Rhino understood a command outside of its context. %v", inference)
 		}
 	}
-
-	delErr := rhino.Delete()
-	if delErr != nil {
-		t.Fatalf("%v", delErr)
-	}
 }
 
 func TestWithinContext(t *testing.T) {
-
-	rhino = NewRhino(testAccessKey, getTestContextPath("en", "coffee_maker"))
-	runTestCase(
-		t,
-		"test_within_context.wav",
-		true,
-		"orderBeverage",
-		map[string]string{"beverage": "americano", "numberOfShots": "double shot", "size": "medium"})
+	for _, tt := range withinContextTestParameters {
+		t.Run(tt.language+" within context", func(t *testing.T) {
+			rhino = NewRhino(testAccessKey, getTestContextPath(tt.language, tt.context))
+			rhino.ModelPath = getTestModelPath(tt.language)
+			runTestCase(
+				t,
+				&rhino,
+				fmt.Sprintf("%s.wav", appendLanguage("test_within_context", tt.language)),
+				true,
+				tt.expectedIntent,
+				tt.expectedSlots)
+			delErr := rhino.Delete()
+			if delErr != nil {
+				t.Fatalf("%v", delErr)
+			}
+		})
+	}
 }
 
 func TestOutOfContext(t *testing.T) {
-
-	rhino = NewRhino(testAccessKey, getTestContextPath("en", "coffee_maker"))
-	runTestCase(
-		t,
-		"test_out_of_context.wav",
-		false,
-		"",
-		map[string]string{})
-}
-
-func TestWithinContextDe(t *testing.T) {
-
-	language := "de"
-	rhino = Rhino{
-		AccessKey:   testAccessKey,
-		ContextPath: getTestContextPath(language, "beleuchtung"),
-		Sensitivity: 0.5,
-		EndpointDurationSec: 1.0,
-		ModelPath:   getTestModelPath(language)}
-	runTestCase(
-		t,
-		"test_within_context_de.wav",
-		true,
-		"changeState",
-		map[string]string{"state": "aus"})
-}
-
-func TestOutOfContextDe(t *testing.T) {
-
-	language := "de"
-	rhino = Rhino{
-		AccessKey:   testAccessKey,
-		ContextPath: getTestContextPath(language, "beleuchtung"),
-		Sensitivity: 0.5,
-		EndpointDurationSec: 1.0,
-		ModelPath:   getTestModelPath(language)}
-	runTestCase(
-		t,
-		"test_out_of_context_de.wav",
-		false,
-		"",
-		map[string]string{})
-}
-
-func TestWithinContextEs(t *testing.T) {
-
-	language := "es"
-	rhino = Rhino{
-		AccessKey:   testAccessKey,
-		ContextPath: getTestContextPath(language, "iluminación_inteligente"),
-		Sensitivity: 0.5,
-		EndpointDurationSec: 1.0,
-		ModelPath:   getTestModelPath(language)}
-	runTestCase(
-		t,
-		"test_within_context_es.wav",
-		true,
-		"changeColor",
-		map[string]string{"location": "habitación", "color": "rosado"})
-}
-
-func TestOutOfContextEs(t *testing.T) {
-
-	language := "es"
-	rhino = Rhino{
-		AccessKey:   testAccessKey,
-		ContextPath: getTestContextPath(language, "iluminación_inteligente"),
-		Sensitivity: 0.5,
-		EndpointDurationSec: 1.0,
-		ModelPath:   getTestModelPath(language)}
-	runTestCase(
-		t,
-		"test_out_of_context_es.wav",
-		false,
-		"",
-		map[string]string{})
-}
-
-func TestWithinContextFr(t *testing.T) {
-
-	language := "fr"
-	rhino = Rhino{
-		AccessKey:   testAccessKey,
-		ContextPath: getTestContextPath(language, "éclairage_intelligent"),
-		Sensitivity: 0.5,
-		EndpointDurationSec: 1.0,
-		ModelPath:   getTestModelPath(language)}
-	runTestCase(
-		t,
-		"test_within_context_fr.wav",
-		true,
-		"changeColor",
-		map[string]string{"color": "violet"})
-}
-
-func TestOutOfContextFr(t *testing.T) {
-
-	language := "fr"
-	rhino = Rhino{
-		AccessKey:   testAccessKey,
-		ContextPath: getTestContextPath(language, "éclairage_intelligent"),
-		Sensitivity: 0.5,
-		EndpointDurationSec: 1.0,
-		ModelPath:   getTestModelPath(language)}
-	runTestCase(
-		t,
-		"test_out_of_context_fr.wav",
-		false,
-		"",
-		map[string]string{})
+	for _, tt := range outOfContextTestParameters {
+		t.Run(tt.language+" out of context", func(t *testing.T) {
+			rhino = NewRhino(testAccessKey, getTestContextPath(tt.language, tt.context))
+			rhino.ModelPath = getTestModelPath(tt.language)
+			runTestCase(
+				t,
+				&rhino,
+				fmt.Sprintf("%s.wav", appendLanguage("test_out_of_context", tt.language)),
+				false,
+				"",
+				nil)
+			delErr := rhino.Delete()
+			if delErr != nil {
+				t.Fatalf("%v", delErr)
+			}
+		})
+	}
 }

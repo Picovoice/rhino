@@ -1,4 +1,4 @@
-// Copyright 2021 Picovoice Inc.
+// Copyright 2021-2022 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is
 // located in the "LICENSE" file accompanying this source.
@@ -26,13 +26,14 @@ import (
 func main() {
 	accessKeyArg := flag.String("access_key", "", "AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)")
 	contextPathArg := flag.String("context_path", "", "Path to Rhino context file (.rhn)")
+	libraryPathArg := flag.String("model_path", "", "Path to Rhino dynamic library file (.so/.dylib/.dll)")
 	modelPathArg := flag.String("model_path", "", "Path to Rhino model file (.pv)")
 	sensitivityArg := flag.Float64("sensitivity", 0.5, "Inference sensitivity. "+
 		"The value should be a number within [0, 1]. A higher sensitivity value results in "+
 		"fewer misses at the cost of (potentially) increasing the erroneous inference rate. "+
 		"If not set, 0.5 will be used.")
-	endpointDurationArg := flag.Float64("endpoint_duration", 1.0, "Endpoint duration in seconds. " +
-		"An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command. " +
+	endpointDurationArg := flag.Float64("endpoint_duration", 1.0, "Endpoint duration in seconds. "+
+		"An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command. "+
 		"It should be a positive number within [0.5, 5]. If not set, 1.0 will be used.")
 	requireEndpointArg := flag.String("require_endpoint", "true",
 		"If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference.")
@@ -69,6 +70,16 @@ func main() {
 		log.Fatalf("AccessKey is required.")
 	}
 	r.AccessKey = *accessKeyArg
+
+	// validate library path
+	if *libraryPathArg != "" {
+		libraryPath, _ := filepath.Abs(*libraryPathArg)
+		if _, err := os.Stat(libraryPath); os.IsNotExist(err) {
+			log.Fatalf("Could not find model file at %s", libraryPath)
+		}
+
+		r.LibraryPath = libraryPath
+	}
 
 	// validate model
 	if *modelPathArg != "" {

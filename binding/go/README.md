@@ -64,7 +64,7 @@ The context file is a Speech-to-Intent context created either using
 
 The sensitivity of the engine can be tuned using the `sensitivity` parameter. It is a floating-point number within
 [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous
-inference rate. You can also override the default Rhino model (.pv), which is required when using a non-English context. 
+inference rate. You can also override the default Rhino model (.pv), which is required when using a non-English context.
 
 To override these parameters, you can create a Rhino struct directly and then call `Init()`:
 
@@ -118,9 +118,9 @@ Using a `defer` call to `Delete()` after `Init()` is also a good way to ensure c
 
 ## Non-English Contexts
 
-In order to detect non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+In order to detect non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](https://github.com/Picovoice/rhino/tree/master/lib/common).
 
 ## Demos
 
-Check out the Rhino Go demos [here](/demo/go)
+Check out the Rhino Go demos [here](https://github.com/Picovoice/rhino/tree/master/demo/go)
 
