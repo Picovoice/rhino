@@ -47,19 +47,6 @@ func main() {
 		return
 	}
 
-	var outputWav *wav.Encoder
-	if *outputPathArg != "" {
-		outputFilePath, _ := filepath.Abs(*outputPathArg)
-		outputFile, err := os.Create(outputFilePath)
-		if err != nil {
-			log.Fatalf("Failed to create output audio at path %s", outputFilePath)
-		}
-		defer outputFile.Close()
-
-		outputWav = wav.NewEncoder(outputFile, rhino.SampleRate, 16, 1, 1)
-		defer outputWav.Close()
-	}
-
 	r := rhino.Rhino{
 		RequireEndpoint: true,
 	}
@@ -120,6 +107,19 @@ func main() {
 		log.Fatal(err)
 	}
 	defer r.Delete()
+
+	var outputWav *wav.Encoder
+	if *outputPathArg != "" {
+		outputFilePath, _ := filepath.Abs(*outputPathArg)
+		outputFile, err := os.Create(outputFilePath)
+		if err != nil {
+			log.Fatalf("Failed to create output audio at path %s", outputFilePath)
+		}
+		defer outputFile.Close()
+
+		outputWav = wav.NewEncoder(outputFile, rhino.SampleRate, 16, 1, 1)
+		defer outputWav.Close()
+	}
 
 	recorder := pvrecorder.PvRecorder{
 		DeviceIndex:    *audioDeviceIndex,
