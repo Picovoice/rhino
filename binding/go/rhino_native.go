@@ -245,6 +245,7 @@ func (nr *nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
 		contextPathC = C.CString(rhino.ContextPath)
 	)
 	defer C.free(unsafe.Pointer(accessKeyC))
+	defer C.free(unsafe.Pointer(libraryPathC))
 	defer C.free(unsafe.Pointer(modelPathC))
 	defer C.free(unsafe.Pointer(contextPathC))
 
