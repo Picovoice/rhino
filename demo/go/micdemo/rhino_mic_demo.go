@@ -26,7 +26,7 @@ import (
 func main() {
 	accessKeyArg := flag.String("access_key", "", "AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)")
 	contextPathArg := flag.String("context_path", "", "Path to Rhino context file (.rhn)")
-	libraryPathArg := flag.String("model_path", "", "Path to Rhino dynamic library file (.so/.dylib/.dll)")
+	libraryPathArg := flag.String("library_path", "", "Path to Rhino dynamic library file (.so/.dylib/.dll)")
 	modelPathArg := flag.String("model_path", "", "Path to Rhino model file (.pv)")
 	sensitivityArg := flag.Float64("sensitivity", 0.5, "Inference sensitivity. "+
 		"The value should be a number within [0, 1]. A higher sensitivity value results in "+

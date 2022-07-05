@@ -25,7 +25,7 @@ import (
 func main() {
 	inputAudioPathArg := flag.String("input_audio_path", "", "Path to input audio file (mono, WAV, 16-bit, 16kHz)")
 	accessKeyArg := flag.String("access_key", "", "AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)")
-	libraryPathArg := flag.String("model_path", "", "Path to Rhino dynamic library file (.so/.dylib/.dll)")
+	libraryPathArg := flag.String("library_path", "", "Path to Rhino dynamic library file (.so/.dylib/.dll)")
 	contextPathArg := flag.String("context_path", "", "Path to Rhino context file (.rhn)")
 	modelPathArg := flag.String("model_path", "", "Path to Rhino model file (.pv)")
 	sensitivityArg := flag.Float64("sensitivity", 0.5, "Inference sensitivity. "+
