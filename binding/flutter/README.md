@@ -17,6 +17,7 @@ interest, in real-time. For example, given a spoken command *"Can I have a small
 
 Rhino is:
 
+* [accurate](https://picovoice.ai/docs/benchmark/nlu/)
 * using deep neural networks trained in real-world environments.
 * compact and computationally-efficient, making it perfect for IoT.
 * self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
@@ -30,17 +31,17 @@ This binding is for running Rhino on **Flutter 2.8.1+** on the following platfor
 
 ## Installation
 
-To start, you must have the [Flutter SDK](https://flutter.dev/docs/get-started/install) installed on your system. Once installed, you can run `flutter doctor` to determine any other missing requirements. 
+To start, you must have the [Flutter SDK](https://flutter.dev/docs/get-started/install) installed on your system. Once installed, you can run `flutter doctor` to determine any other missing requirements.
 
 To add the Rhino plugin to your app project, you can reference it in your pub.yaml:
 ```yaml
-dependencies:  
+dependencies:
   rhino_flutter: ^<version>
 ```
 
 If you prefer to clone the repo and use it locally, first run `copy_resources.sh` (**NOTE:** on Windows, Git Bash or another bash shell is required, or you will have to manually copy the libs into the project.). Then you can reference the local binding location:
 ```yaml
-dependencies:  
+dependencies:
   rhino_flutter:
     path: /path/to/rhino/flutter/binding
 ```
@@ -75,7 +76,7 @@ The module provides you with two levels of API to choose from depending on your 
 
 #### High-Level API
 
-[RhinoManager](https://github.com/Picovoice/rhino/tree/master/binding/flutter/lib/rhino_manager.dart) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
+[RhinoManager](https://picovoice.ai/docs/api/rhino-flutter/#rhinomanager) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
 
 The constructor `RhinoManager.create` will create an instance of the RhinoManager using a context file that you pass to it.
 ```dart
@@ -108,7 +109,7 @@ void _infererenceCallback(RhinoInference inference) {
     }
     else {
         // add code to handle unsupported commands
-    }    
+    }
 }
 ```
 
@@ -143,7 +144,7 @@ Audio capture stops and rhino resets once an inference result is returned via th
 try{
     await _rhinoManager.process();
 } on RhinoException catch (ex) {
-    // deal with either audio exception     
+    // deal with either audio exception
 }
 ```
 
@@ -157,7 +158,7 @@ This is because it uses our [flutter_voice_processor](https://github.com/Picovoi
 
 #### Low-Level API
 
-[Rhino](https://github.com/Picovoice/rhino/tree/master/binding/flutter/lib/rhino.dart) provides low-level access to the inference engine for those who want to incorporate 
+[Rhino](https://picovoice.ai/docs/api/rhino-flutter/#rhino) provides low-level access to the inference engine for those who want to incorporate
 speech-to-intent into an already existing audio processing pipeline.
 
 `Rhino` is created by passing a context file to its static constructor `create`:
@@ -203,7 +204,7 @@ try {
 ```
 
 For process to work correctly, the audio data must be in the audio format required by Picovoice.
-The required audio format is found by calling `.sampleRate` to get the required sample rate and `.frameLength` to get the required frame size. 
+The required audio format is found by calling `.sampleRate` to get the required sample rate and `.frameLength` to get the required frame size.
 Audio must be single-channel and 16-bit linearly-encoded.
 
 Finally, once you no longer need the speech-to-intent engine, be sure to explicitly release the resources allocated to Rhino:
