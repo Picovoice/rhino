@@ -1,7 +1,9 @@
 name: rhino_flutter
 description: A Flutter plugin for Picovoice's Rhino Speech-to-Intent engine
-version: 2.1.5
+version: 2.1.6
 homepage: https://picovoice.ai/
+repository: https://github.com/Picovoice/rhino/
+documentation: https://picovoice.ai/docs/rhino/
 
 environment:
   sdk: ">=2.14.0 <3.0.0"
