@@ -245,7 +245,7 @@ Similar to the model file (`.pv`), there are two ways to use a custom context mo
 ### Public Directory
 
 This method fetches the context model file from the public directory and feeds it to Porcupine.
-Copy the binary context model file (`.rhn`) into the public directory and then define a `rhinoContext` object,
+Copy the binary context model file (`.rhn`) into the public directory and then define a `RhinoContext` object,
 in which the `rhnPath` property is set to the path to the context model file.
 
 ```typescript
@@ -262,7 +262,7 @@ const handle = await Rhino.fromPublicDirectory(
 
 ### Base64
 
-Copy the base64 string and pass it as the `base64` property of a `rhinoContext` object.
+Copy the base64 string and pass it as the `base64` property of a `RhinoContext` object.
 
 ```typescript
 const customWakeWord = {
