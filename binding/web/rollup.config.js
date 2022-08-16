@@ -8,6 +8,7 @@ const pkg = require('./package.json');
 const { babel } = require('@rollup/plugin-babel');
 const terser = require('rollup-plugin-terser').terser;
 const { DEFAULT_EXTENSIONS } = require('@babel/core');
+const { base64 } = require('@picovoice/web-utils/plugins');
 
 const extensions = [...DEFAULT_EXTENSIONS, '.ts'];
 
@@ -29,7 +30,7 @@ export default {
   input: [path.resolve(__dirname, pkg.entry)],
   output: [
     {
-      file: path.resolve(__dirname, pkg['module']),
+      file: path.resolve(__dirname, pkg.module),
       format: 'esm',
       sourcemap: false,
     },
@@ -67,5 +68,8 @@ export default {
       babelHelpers: 'runtime',
       exclude: '**/node_modules/**',
     }),
+    base64({
+      include: ['./lib/**/*.wasm'],
+    })
   ],
 };

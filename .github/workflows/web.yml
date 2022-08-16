@@ -57,9 +57,10 @@ jobs:
       run: yarn install
 
     - name: Build
-      run: |
-        yarn build
-        for i in rhino-web*; do pushd $i; yarn && yarn build || exit 1; popd; done
+      run: yarn build
+
+    - name: Prepare Test
+      run: yarn setup-test
 
     - name: Test
-      run: python rhino-web-en-factory/test/selenium_test.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_file_in_context ../../resources/audio_samples/test_within_context.wav --audio_file_out_context ../../resources/audio_samples/test_out_of_context.wav
+      run: python test/selenium_test.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_file_in_context ../../resources/audio_samples/test_within_context.wav --audio_file_out_context ../../resources/audio_samples/test_out_of_context.wav
