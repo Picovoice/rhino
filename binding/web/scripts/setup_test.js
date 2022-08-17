@@ -5,14 +5,7 @@ const modelFiles = ['rhino_params.pv'];
 
 console.log('Copying the rhino model...');
 
-const sourceDirectory = join(
-  __dirname,
-  '..',
-  '..',
-  '..',
-  'lib',
-  'common',
-);
+const sourceDirectory = join(__dirname, '..', '..', '..', 'lib', 'common');
 
 const outputDirectory = join(__dirname, '..', 'test');
 

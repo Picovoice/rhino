@@ -70,6 +70,6 @@ export default {
     }),
     base64({
       include: ['./lib/**/*.wasm'],
-    })
+    }),
   ],
 };

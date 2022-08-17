@@ -1,7 +1,9 @@
 /*
   Copyright 2022 Picovoice Inc.
+
   You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
   file accompanying this source.
+
   Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
   an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
   specific language governing permissions and limitations under the License.
@@ -609,16 +611,29 @@ export class Rhino {
       exports.pv_status_to_string as pv_status_to_string_type;
     const pv_sample_rate = exports.pv_sample_rate as pv_sample_rate_type;
 
-    const { sensitivity = 0.5, endpointDurationSec = 1.0, requireEndpoint = false } = initConfig;
+    const {
+      sensitivity = 0.5,
+      endpointDurationSec = 1.0,
+      requireEndpoint = false,
+    } = initConfig;
     if (sensitivity && !(typeof sensitivity === 'number')) {
-      throw new Error('Rhino sensitivity is not a number (in the range [0, 1])');
+      throw new Error(
+        'Rhino sensitivity is not a number (in the range [0, 1])'
+      );
     } else if (sensitivity && (sensitivity < 0 || sensitivity > 1)) {
       throw new Error('Rhino sensitivity is outside of range [0, 1]');
     }
     if (endpointDurationSec && !(typeof endpointDurationSec === 'number')) {
-      throw new Error('Rhino endpointDurationSec is not a number (in the range [0.5, 5.0])');
-    } else if (endpointDurationSec && (endpointDurationSec < 0.5 || endpointDurationSec > 5.0)) {
-      throw new Error('Rhino endpointDurationSec is outside of range [0.5, 5.0]');
+      throw new Error(
+        'Rhino endpointDurationSec is not a number (in the range [0.5, 5.0])'
+      );
+    } else if (
+      endpointDurationSec &&
+      (endpointDurationSec < 0.5 || endpointDurationSec > 5.0)
+    ) {
+      throw new Error(
+        'Rhino endpointDurationSec is outside of range [0.5, 5.0]'
+      );
     }
 
     // acquire and init memory for c_object
@@ -675,7 +690,7 @@ export class Rhino {
       contextPathAddress,
       sensitivity,
       endpointDurationSec,
-      (requireEndpoint) ? 1 : 0,
+      requireEndpoint ? 1 : 0,
       objectAddressAddress
     );
 
