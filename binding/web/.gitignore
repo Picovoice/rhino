@@ -2,3 +2,5 @@ node_modules
 dist
 lib/pv_rhino*.wasm
 src/rhino_64.ts
+test/rhino_params.js
+test/rhino_params.pv

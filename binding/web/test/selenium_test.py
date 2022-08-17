@@ -94,8 +94,8 @@ def main():
     absolute_ic_audio_file = os.path.abspath(args.audio_file_in_context)
     absolute_ooc_audio_file = os.path.abspath(args.audio_file_out_context)
 
-    simple_server = SimpleHttpServer(port=4005, path=os.path.join(os.path.dirname(__file__), '..', '..'))
-    test_url = f'{simple_server.base_url}/rhino-web-en-factory/test/index.html'
+    simple_server = SimpleHttpServer(port=4005, path=os.path.join(os.path.dirname(__file__), '..'))
+    test_url = f'{simple_server.base_url}/test/index.html'
     simple_server.start()
     time.sleep(4)
 
