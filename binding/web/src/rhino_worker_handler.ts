@@ -19,8 +19,8 @@ import { RhinoWorkerRequest } from './types';
  * Rhino worker handler.
  */
 let rhino: Rhino | null = null;
-self.onmessage = async function(
-  event: MessageEvent<RhinoWorkerRequest>,
+self.onmessage = async function (
+  event: MessageEvent<RhinoWorkerRequest>
 ): Promise<void> {
   switch (event.data.command) {
     case 'init':
@@ -37,8 +37,9 @@ self.onmessage = async function(
         rhino = await Rhino.create(
           event.data.accessKey,
           event.data.contextPath,
-          event.data.sensitivity,
-          event.data.modelPath);
+          event.data.modelPath,
+          event.data.options
+        );
         self.postMessage({
           command: 'ok',
           version: rhino.version,

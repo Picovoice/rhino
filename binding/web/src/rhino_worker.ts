@@ -16,8 +16,9 @@ import PvWorker from 'web-worker:./rhino_worker_handler.ts';
 import { contextProcess } from './utils';
 
 import {
-  RhinoOptions,
   RhinoContext,
+  RhinoInference,
+  RhinoOptions,
   RhinoWorkerInitResponse,
   RhinoWorkerProcessResponse,
   RhinoWorkerReleaseResponse,
@@ -48,14 +49,14 @@ export class RhinoWorker {
   }
 
   /**
-   * Get Porcupine engine version.
+   * Get Rhino engine version.
    */
   get version(): string {
     return this._version;
   }
 
   /**
-   * Get Porcupine frame length.
+   * Get Rhino frame length.
    */
   get frameLength(): number {
     return this._frameLength;
@@ -69,7 +70,7 @@ export class RhinoWorker {
   }
 
   /**
-   * Get Porcupine worker instance.
+   * Get Rhino worker instance.
    */
   get worker(): Worker {
     return this._worker;
@@ -116,11 +117,10 @@ export class RhinoWorker {
       ...rest
     } = options;
     await fromBase64(customWritePath, modelBase64, forceWrite, version);
-    const [contextPath, sensitivity] = await contextProcess(context);
+    const contextPath = await contextProcess(context);
     return this.create(
       accessKey,
       contextPath,
-      sensitivity,
       inferenceDetectionCallback,
       customWritePath,
       rest
@@ -154,20 +154,19 @@ export class RhinoWorker {
     context: RhinoContext,
     inferenceDetectionCallback: (inference: RhinoInference) => void,
     publicPath: string,
-    options: PorcupineOptions = {}
-  ): Promise<PorcupineWorker> {
+    options: RhinoOptions = {}
+  ): Promise<RhinoWorker> {
     const {
-      customWritePath = 'porcupine_model',
+      customWritePath = 'rhino_model',
       forceWrite = false,
       version = 1,
       ...rest
     } = options;
     await fromPublicDirectory(customWritePath, publicPath, forceWrite, version);
-    const [contextPath, sensitivity] = await contextProcess(context);
+    const contextPath = await contextProcess(context);
     return this.create(
       accessKey,
       contextPath,
-      sensitivity,
       inferenceDetectionCallback,
       customWritePath,
       rest
@@ -214,7 +213,6 @@ export class RhinoWorker {
   private static async create(
     accessKey: string,
     contextPath: string,
-    sensitivity: number,
     inferenceDetectionCallback: (inference: RhinoInference) => void,
     modelPath: string,
     options: RhinoOptions = {}
@@ -281,7 +279,6 @@ export class RhinoWorker {
       accessKey: accessKey,
       modelPath: modelPath,
       contextPath: contextPath,
-      sensitivity: sensitivity,
       wasm: this._wasm,
       wasmSimd: this._wasmSimd,
       options: options,

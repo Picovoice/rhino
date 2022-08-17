@@ -9,7 +9,16 @@
   specific language governing permissions and limitations under the License.
 */
 
-export type RhinoOptions = {
+export type RhinoInitConfig = {
+  /** @defaultValue '0.5' */
+  sensitivity?: number;
+  /** @defaultValue '1.0' */
+  endpointDurationSec?: number;
+  /** @defaultValue 'false' */
+  requireEndpoint?: boolean;
+};
+
+export type RhinoInputConfig = {
   processErrorCallback?: (error: string) => void;
   /** @defaultValue 'porcupine_model' */
   customWritePath?: string;
@@ -17,19 +26,20 @@ export type RhinoOptions = {
   forceWrite?: boolean;
   /** @defaultValue 1 */
   version?: number;
-  /** @defaultValue '1.0' */
-  endpointDurationSec?: number;
-  /** @defaultValue 'false' */
-  requireEndpoint?: boolean;
 };
 
+export type RhinoOptions = RhinoInitConfig & RhinoInputConfig;
+
 export type RhinoContext = {
+  /** An arbitrary label used for caching purposes */
+  label: string;
   /** Base64 representation of a trained Rhino context (`.rhn` file) */
   base64?: string;
   /** The Rhino context (`.rhn` file) path relative to the public directory */
   rhnPath?: string;
-  /** Value in range [0,1] that trades off miss rate for false alarm. @defaultValue '0.5' */
-  sensitivity?: number;
+  /** A flag that indicates whether the cached keyword should be used */
+  /** @defaultValue false */
+  usedCachedKeyword?: boolean;
 };
 
 export type RhinoInference = {
@@ -73,7 +83,7 @@ export type RhinoWorkerFailureResponse = {
 };
 
 export type RhinoWorkerInitResponse =
-  | PorcupineWorkerFailureResponse
+  | RhinoWorkerFailureResponse
   | {
       command: 'ok';
       frameLength: number;
@@ -83,14 +93,14 @@ export type RhinoWorkerInitResponse =
     };
 
 export type RhinoWorkerProcessResponse =
-  | PorcupineWorkerFailureResponse
+  | RhinoWorkerFailureResponse
   | {
       command: 'ok';
-      keywordIndex: number;
+      inference: RhinoInference;
     };
 
 export type RhinoWorkerReleaseResponse =
-  | PorcupineWorkerFailureResponse
+  | RhinoWorkerFailureResponse
   | {
       command: 'ok';
       inference: RhinoInference;

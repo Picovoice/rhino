@@ -13,17 +13,22 @@ import { Mutex } from 'async-mutex';
 
 import {
   aligned_alloc_type,
-  pv_free_type,
-  buildWasm,
   arrayBufferToStringAtIndex,
-  isAccessKeyValid,
+  buildWasm,
   fromBase64,
   fromPublicDirectory,
+  isAccessKeyValid,
+  pv_free_type,
 } from '@picovoice/web-utils';
 
 import { simd } from 'wasm-feature-detect';
 
-import { RhinoOptions, RhinoContext } from './types';
+import {
+  RhinoContext,
+  RhinoInference,
+  RhinoInitConfig,
+  RhinoOptions,
+} from './types';
 
 import { contextProcess } from './utils';
 
@@ -45,11 +50,32 @@ type pv_rhino_process_type = (
   pcm: number,
   isFinalized: number
 ) => Promise<number>;
+type pv_rhino_context_info_type = (
+  object: number,
+  contextInfo: number
+) => Promise<number>;
 type pv_rhino_delete_type = (object: number) => Promise<void>;
-type pv_status_to_string_type = (status: number) => Promise<number>;
-type pv_sample_rate_type = () => Promise<number>;
 type pv_rhino_frame_length_type = () => Promise<number>;
+type pv_rhino_free_slots_and_values_type = (
+  object: number,
+  slots: number,
+  values: number
+) => Promise<number>;
+type pv_rhino_get_intent_type = (
+  object: number,
+  intent: number,
+  numSlots: number,
+  slots: number,
+  values: number
+) => Promise<number>;
+type pv_rhino_is_understood_type = (
+  object: number,
+  isUnderstood: number
+) => Promise<number>;
+type pv_rhino_reset_type = (object: number) => Promise<number>;
 type pv_rhino_version_type = () => Promise<number>;
+type pv_sample_rate_type = () => Promise<number>;
+type pv_status_to_string_type = (status: number) => Promise<number>;
 
 /**
  * JavaScript/WebAssembly Binding for the Picovoice Rhino speech-to-intent engine.
@@ -215,7 +241,7 @@ export class Rhino {
     } = options;
     await fromBase64(customWritePath, modelBase64, forceWrite, version);
     const contextPath = await contextProcess(context);
-    return this.create(accessKey, contextPath, rest, customWritePath);
+    return this.create(accessKey, contextPath, customWritePath, rest);
   }
 
   /**
@@ -325,12 +351,12 @@ export class Rhino {
    * @param pcm A frame of audio with properties described above.
    * @return Index of detected keyword (phrase). When no keyword is detected, it returns -1.
    */
-  public async process(pcm: Int16Array): Promise<number> {
+  public async process(pcm: Int16Array): Promise<RhinoInference> {
     if (!(pcm instanceof Int16Array)) {
       throw new Error("The argument 'pcm' must be provided as an Int16Array");
     }
 
-    const returnPromise = new Promise<number>((resolve, reject) => {
+    const returnPromise = new Promise<RhinoInference>((resolve, reject) => {
       this._processMutex
         .runExclusive(async () => {
           if (this._wasmMemory === undefined) {
@@ -533,8 +559,14 @@ export class Rhino {
    */
   public async release(): Promise<void> {
     await this._pvRhinoDelete(this._objectAddress);
+    await this._pvFree(this._contextAddress);
     await this._pvFree(this._inputBufferAddress);
-    await this._pvFree(this._keywordIndexAddress);
+    await this._pvFree(this._intentAddressAddress);
+    await this._pvFree(this._isFinalizedAddress);
+    await this._pvFree(this._isUnderstoodAddress);
+    await this._pvFree(this._numSlotsAddress);
+    await this._pvFree(this._slotsAddressAddressAddress);
+    await this._pvFree(this._valuesAddressAddressAddress);
     delete this._wasmMemory;
     this._wasmMemory = undefined;
   }
@@ -621,7 +653,8 @@ export class Rhino {
       throw new Error('malloc failed: Cannot allocate memory');
     }
 
-    const status = await pv_rhino_init(
+    const { sensitivity, endpointDurationSec, requireEndpoint } = initConfig;
+    let status = await pv_rhino_init(
       accessKeyAddress,
       modelPathAddress,
       contextPathAddress,
