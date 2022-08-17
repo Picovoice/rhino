@@ -429,7 +429,7 @@
           try {
             let handle = await RhinoWeb.Rhino.fromPublicDirectory(
               accessKey,
-              { label: 'coffee2', base64: 'base64', usedCachedKeyword: false },
+              { label: 'coffee2', base64: 'base64', usedCachedContext: false },
               'rhino_params.pv',
               { forceWrite: true }
             );

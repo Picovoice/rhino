@@ -92,18 +92,21 @@ npx pvbase64 -h
 ### Init options
 
 Rhino saves and caches your model file in IndexedDB to be used by Web Assembly. Use a different `customWritePath`
-variableto hold multiple model values and set the `forceWrite` value to true to force re-save the model file.
+variable to hold multiple model values and set the `forceWrite` value to true to force re-save the model file.
 Set `processErrorCallback` to handle errors if an error occurs while transcribing.
 If the model file (`.pv`) changes, `version` should be incremented to force the cached model to be updated.
 
 ```typescript
 // these are default
 const options = {
+  sensitivity: 0.5,
+  endpointDurationSec: 1.0,
+  requireEndpoint: true,
   processErrorCallback: (error) => {
   },
-  customWritePath: "porcupine_model",
+  customWritePath: "rhino_model",
   forceWrite: false,
-  version: 1
+  version: 1,
 }
 ```
 
@@ -114,7 +117,7 @@ Use `Rhino` to initialize from public directory:
 ```typescript
 const handle = await Rhino.fromPublicDirectory(
   ${ACCESS_KEY},
-  ${CONTEXT_RELATIVE_PATH},
+  { label: "rhino_model", rhnPath: ${CONTEXT_RELATIVE_PATH} },
   ${MODEL_RELATIVE_PATH},
   options // optional options
 );
@@ -123,10 +126,12 @@ const handle = await Rhino.fromPublicDirectory(
 or initialize using a base64 string:
 
 ```typescript
+import rhinoContext from "${PATH_TO_BASE64_RHINO_CONTEXT}";
 import rhinoParams from "${PATH_TO_BASE64_RHINO_PARAMS}";
+
 const handle = await Rhino.fromBase64(
   ${ACCESS_KEY},
-  ${CONTEXT_RELATIVE_PATH},
+  { label: "rhino_model", base64: rhinoContext },
   rhinoParams,
   options // optional options
 )
@@ -179,8 +184,8 @@ Use `rhinoWorker` to initialize from public directory:
 ```typescript
 const handle = await RhinoWorker.fromPublicDirectory(
   ${ACCESS_KEY},
-  ${CONTEXT_RELATIVE_PATH}
-  keywordDetectionCallback,
+  { label: "rhino_model", rhnPath: ${CONTEXT_RELATIVE_PATH} },
+  inferenceDetectionCallback,
   ${MODEL_RELATIVE_PATH},
   options // optional options
 );
@@ -189,11 +194,13 @@ const handle = await RhinoWorker.fromPublicDirectory(
 or initialize using a base64 string:
 
 ```typescript
+import rhinoContext from "${PATH_TO_BASE64_RHINO_CONTEXT}";
 import rhinoParams from "${PATH_TO_BASE64_RHINO_PARAMS}";
+
 const handle = await Rhino.fromBase64(
   ${ACCESS_KEY},
-  ${CONTEXT_RELATIVE_PATH},
-  keywordDetectionCallback,
+  { label: "rhino_model", base64: rhinoContext },
+  inferenceDetectionCallback,
   rhinoParams,
   options // optional options
 )
@@ -244,14 +251,16 @@ Similar to the model file (`.pv`), there are two ways to use a custom context mo
 
 ### Public Directory
 
-This method fetches the context model file from the public directory and feeds it to Porcupine.
+This method fetches the context model file from the public directory and feeds it to Rhino.
 Copy the binary context model file (`.rhn`) into the public directory and then define a `RhinoContext` object,
 in which the `rhnPath` property is set to the path to the context model file.
 
 ```typescript
 const rhinoContext = {
+  label: "rhino_model"
   rhnPath: ${RHN_MODEL_RELATIVE_PATH},
 }
+
 const handle = await Rhino.fromPublicDirectory(
   ${ACCESS_KEY},
   rhinoContext,
@@ -265,9 +274,11 @@ const handle = await Rhino.fromPublicDirectory(
 Copy the base64 string and pass it as the `base64` property of a `RhinoContext` object.
 
 ```typescript
-const customWakeWord = {
+const rhinoContext = {
+  label: "rhino_model"
   base64: ${RHN_BASE64_STRING},
 }
+
 const handle = await Rhino.fromPublicDirectory(
   ${ACCESS_KEY},
   rhinoContext,
@@ -278,7 +289,7 @@ const handle = await Rhino.fromPublicDirectory(
 
 ## Non-English Languages
 
-In order to detect non-English wake words you need to use the corresponding model file (`.pv`). The model files for all
+In order to detect non-English inferences you need to use the corresponding model file (`.pv`). The model files for all
 supported languages are available [here](https://github.com/Picovoice/rhino/tree/master/lib/common).
 
 ## Demo

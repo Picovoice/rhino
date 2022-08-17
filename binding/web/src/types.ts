@@ -20,7 +20,7 @@ export type RhinoInitConfig = {
 
 export type RhinoInputConfig = {
   processErrorCallback?: (error: string) => void;
-  /** @defaultValue 'porcupine_model' */
+  /** @defaultValue 'rhino_model' */
   customWritePath?: string;
   /** @defaultValue false */
   forceWrite?: boolean;
@@ -37,9 +37,9 @@ export type RhinoContext = {
   base64?: string;
   /** The Rhino context (`.rhn` file) path relative to the public directory */
   rhnPath?: string;
-  /** A flag that indicates whether the cached keyword should be used */
+  /** A flag that indicates whether the cached context should be used */
   /** @defaultValue false */
-  usedCachedKeyword?: boolean;
+  usedCachedContext?: boolean;
 };
 
 export type RhinoInference = {
