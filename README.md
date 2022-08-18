@@ -1275,9 +1275,8 @@ Rhino is available on modern web browsers (i.e. not Internet Explorer) via [WebA
         document.getElementById("push-to-talk").disabled = false;
 
         writeMessage("WebVoiceProcessor initializing. Microphone permissions requested ...");
-        window.webVp = await WebVoiceProcessor.WebVoiceProcessor.init({
-          engines: [rhino.worker],
-        });
+        window.webVp = await WebVoiceProcessor.WebVoiceProcessor.instance();
+        window.webVp.subscribe(rhino.worker);
         writeMessage("WebVoiceProcessor ready! Press the 'Push to Talk' button to talk.");
       }
 
@@ -1334,17 +1333,16 @@ async function startRhino() {
     RHINO_MODEL_BASE64
   );
 
-  // Start up the web voice processor. It will request microphone permission
+  // Initialize the web voice processor.
   // It downsamples the audio to voice recognition standard format (16-bit 16kHz linear PCM, single-channel)
-  // The incoming microphone audio frames will then be forwarded to the Rhino Worker
-  // n.b. This promise will reject if the user refuses permission! Make sure you handle that possibility.
-  const webVp = await WebVoiceProcessor.init({
-    engines: [rhino.worker],
-    start: true,
-  });
+  // The incoming microphone audio frames will then be forwarded to the Rhino Worker.
+  webVp = await WebVoiceProcessor.WebVoiceProcessor.instance();
+  webVp.subscribe(rhino.worker);
 }
 
 // Start a voice interaction:
+// WebVoiceProcessor will request microphone permission.
+// n.b. This promise will reject if the user refuses permission! Make sure you handle that possibility.
 function pushToTalk() {
   webVp.start()
 }
