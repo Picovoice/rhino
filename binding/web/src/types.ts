@@ -105,7 +105,6 @@ export type RhinoWorkerReleaseResponse =
   | RhinoWorkerFailureResponse
   | {
       command: 'ok';
-      inference: RhinoInference;
     };
 
 export type RhinoWorkerResponse =

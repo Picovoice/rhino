@@ -262,10 +262,7 @@ await handle.terminate();
 
 Create custom contexts using the [Picovoice Console](https://console.picovoice.ai/).
 Train the Rhino context model for the target platform WebAssembly (WASM).
-Inside the downloaded `.zip` file, there are two files:
-
-- `.rhn` file which is the context model file in binary format
-- `_b64.txt` file which contains the same binary model encoded with Base64
+Inside the downloaded `.zip` file, there will be a `.rhn` file which is the context model file in binary format.
 
 Similar to the model file (`.pv`), there are two ways to use a custom context model:
 
@@ -292,7 +289,7 @@ const handle = await Rhino.fromPublicDirectory(
 
 ### Base64
 
-Copy the base64 string and pass it as the `base64` property of a `RhinoContext` object.
+Use a base64 string representation of the model and pass it as the `base64` property of a `RhinoContext` object.
 
 ```typescript
 const rhinoContext = {
