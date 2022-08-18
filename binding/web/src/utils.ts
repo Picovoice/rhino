@@ -22,14 +22,14 @@ export async function contextProcess(context: RhinoContext): Promise<string> {
     await fromBase64(
       context.label,
       context.base64,
-      context.usedCachedContext ?? false,
+      context.forceWrite ?? false,
       1
     );
   } else if (context.publicPath !== undefined && context.publicPath !== null) {
     await fromPublicDirectory(
       context.label,
       context.publicPath,
-      context.usedCachedContext ?? true,
+      context.forceWrite ?? true,
       1
     );
   } else {

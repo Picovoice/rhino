@@ -39,7 +39,7 @@ export type RhinoContext = {
   publicPath?: string;
   /** A flag that indicates whether the cached context should be used */
   /** @defaultValue false */
-  usedCachedContext?: boolean;
+  forceWrite?: boolean;
 };
 
 export type RhinoInference = {

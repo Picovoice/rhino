@@ -44,9 +44,8 @@
           document.getElementById("rhn-context-yaml").innerText = rhino.contextInfo;
 
           writeMessage("WebVoiceProcessor initializing. Microphone permissions requested ...");
-          window.webVp = await WebVoiceProcessor.WebVoiceProcessor.init({
-            engines: [rhino.worker],
-          });
+          window.webVp = await WebVoiceProcessor.WebVoiceProcessor.instance();
+          window.webVp.subscribe(rhino.worker);
           writeMessage("WebVoiceProcessor ready! Press the 'Push to Talk' button to talk. Then say e.g. 'Set a timer for one minute'");
 
         } catch (error) {

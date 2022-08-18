@@ -418,7 +418,7 @@
           try {
             let handle = await RhinoWeb.Rhino.fromPublicDirectory(
               accessKey,
-              { label: 'coffee2', base64: 'base64', usedCachedContext: false },
+              { label: 'coffee2', base64: 'base64', forceWrite: false },
               rhinoInferenceCallback,
               'rhino_params.pv',
               { forceWrite: true }
