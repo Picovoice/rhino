@@ -37,7 +37,7 @@ export type RhinoContext = {
   base64?: string;
   /** The Rhino context (`.rhn` file) path relative to the public directory */
   publicPath?: string;
-  /** A flag that indicates whether the cached context should be used */
+  /** A flag to indicate whether to overwrite the model in storage even if it exists */
   /** @defaultValue false */
   forceWrite?: boolean;
 };
