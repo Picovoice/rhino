@@ -240,7 +240,9 @@ export class RhinoWorker {
               ): void => {
                 switch (ev.data.command) {
                   case 'ok':
-                    inferenceDetectionCallback(ev.data.inference);
+                    if (ev.data.inference.isFinalized) {
+                      inferenceDetectionCallback(ev.data.inference);
+                    }
                     break;
                   case 'failed':
                   case 'error':
