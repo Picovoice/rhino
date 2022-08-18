@@ -81,7 +81,7 @@ type pv_sample_rate_type = () => Promise<number>;
 type pv_status_to_string_type = (status: number) => Promise<number>;
 
 /**
- * JavaScript/WebAssembly Binding for the Picovoice Rhino speech-to-intent engine.
+ * JavaScript/WebAssembly Binding for the Picovoice Rhino Speech-to-Intent engine.
  *
  * The instances have JavaScript bindings that wrap the calls to the C library and
  * do some rudimentary type checking and parameter validation.
@@ -224,7 +224,7 @@ export class Rhino {
   }
 
   /**
-   * Creates an instance of the Rhino speech-to-intent engine using a base64'd string
+   * Creates an instance of the Rhino Speech-to-Intent engine using a base64'd string
    * of the model file. The model size is large, hence it will try to use the
    * existing one if it exists, otherwise saves the model in storage.
    *
@@ -247,6 +247,8 @@ export class Rhino {
    * after the spoken command. If set to `false`, Rhino tries to detect silence, but if it cannot,
    * it still will provide inference regardless. Set to `false` only if operating in an
    * environment with overlapping speech (e.g. people talking in the background).
+   * @param options.processErrorCallback User-defined callback invoked if any error happens
+   * while processing the audio stream. Its only input argument is the error message.
    * @param options.customWritePath Custom path to save the model in storage.
    * Set to a different name to use multiple models across `rhino` instances.
    * @param options.forceWrite Flag to overwrite the model in storage even if it exists.
@@ -278,7 +280,7 @@ export class Rhino {
   }
 
   /**
-   * Creates an instance of the Rhino speech-to-intent engine using '.pv' file in
+   * Creates an instance of the Rhino Speech-to-Intent engine using '.pv' file in
    * public directory. The model size is large, hence it will try to use the existing one if it exists,
    * otherwise saves the model in storage.
    *
@@ -301,6 +303,8 @@ export class Rhino {
    * after the spoken command. If set to `false`, Rhino tries to detect silence, but if it cannot,
    * it still will provide inference regardless. Set to `false` only if operating in an
    * environment with overlapping speech (e.g. people talking in the background).
+   * @param options.processErrorCallback User-defined callback invoked if any error happens
+   * while processing the audio stream. Its only input argument is the error message.
    * @param options.customWritePath Custom path to save the model in storage.
    * Set to a different name to use multiple models across `rhino` instances.
    * @param options.forceWrite Flag to overwrite the model in storage even if it exists.
@@ -353,7 +357,7 @@ export class Rhino {
   }
 
   /**
-   * Creates an instance of the Rhino speech-to-intent engine.
+   * Creates an instance of the Rhino Speech-to-Intent engine.
    * Behind the scenes, it requires the WebAssembly code to load and initialize before
    * it can create an instance.
    *
@@ -614,6 +618,17 @@ export class Rhino {
     await this._pvFree(this._valuesAddressAddressAddress);
     delete this._wasmMemory;
     this._wasmMemory = undefined;
+  }
+
+  public async onmessage(e: MessageEvent): Promise<void> {
+    switch (e.data.command) {
+      case 'process':
+        await this.process(e.data.inputFrame);
+        break;
+      default:
+        // eslint-disable-next-line no-console
+        console.warn(`Unrecognized command: ${e.data.command}`);
+    }
   }
 
   private static async initWasm(

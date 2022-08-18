@@ -1,6 +1,6 @@
 # Rhino Binding for Web
 
-## Rhino speech-to-intent engine
+## Rhino Speech-to-Intent engine
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
@@ -138,7 +138,7 @@ Use `Rhino` to initialize from public directory:
 ```typescript
 const handle = await Rhino.fromPublicDirectory(
   ${ACCESS_KEY},
-  { label: "rhino_model", rhnPath: ${CONTEXT_RELATIVE_PATH} },
+  { label: "rhino_model", publicPath: ${CONTEXT_RELATIVE_PATH} },
   inferenceCallback,
   ${MODEL_RELATIVE_PATH},
   options // optional options
@@ -204,7 +204,7 @@ Use `rhinoWorker` to initialize from public directory:
 ```typescript
 const handle = await RhinoWorker.fromPublicDirectory(
   ${ACCESS_KEY},
-  { label: "rhino_model", rhnPath: ${CONTEXT_RELATIVE_PATH} },
+  { label: "rhino_model", publicPath: ${CONTEXT_RELATIVE_PATH} },
   inferenceCallback,
   ${MODEL_RELATIVE_PATH},
   options // optional options
@@ -270,12 +270,12 @@ Similar to the model file (`.pv`), there are two ways to use a custom context mo
 
 This method fetches the context model file from the public directory and feeds it to Rhino.
 Copy the binary context model file (`.rhn`) into the public directory and then define a `RhinoContext` object,
-in which the `rhnPath` property is set to the path to the context model file.
+in which the `publicPath` property is set to the path to the context model file.
 
 ```typescript
 const rhinoContext = {
   label: "rhino_model"
-  rhnPath: ${RHN_MODEL_RELATIVE_PATH},
+  publicPath: ${RHN_MODEL_RELATIVE_PATH},
 }
 
 const handle = await Rhino.fromPublicDirectory(

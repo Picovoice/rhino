@@ -34,7 +34,7 @@
           writeMessage("Rhino is loading. Please wait...");
           let rhino = await RhinoWeb.RhinoWorker.fromBase64(
               accessKey,
-              { label: "Clock Context", rhnPath: "clock_wasm.rhn" },
+              { label: "Clock Context", publicPath: "clock_wasm.rhn" },
               rhinoInferenceCallback,
               modelParams
           );

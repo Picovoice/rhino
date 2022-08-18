@@ -25,16 +25,16 @@ export async function contextProcess(context: RhinoContext): Promise<string> {
       context.usedCachedContext ?? false,
       1
     );
-  } else if (context.rhnPath !== undefined && context.rhnPath !== null) {
+  } else if (context.publicPath !== undefined && context.publicPath !== null) {
     await fromPublicDirectory(
       context.label,
-      context.rhnPath,
+      context.publicPath,
       context.usedCachedContext ?? true,
       1
     );
   } else {
     throw new Error(
-      "The context argument doesn't contain a valid rhnPath or base64 argument"
+      "The context argument doesn't contain a valid publicPath or base64 argument"
     );
   }
 

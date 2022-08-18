@@ -36,7 +36,7 @@ export type RhinoContext = {
   /** Base64 representation of a trained Rhino context (`.rhn` file) */
   base64?: string;
   /** The Rhino context (`.rhn` file) path relative to the public directory */
-  rhnPath?: string;
+  publicPath?: string;
   /** A flag that indicates whether the cached context should be used */
   /** @defaultValue false */
   usedCachedContext?: boolean;

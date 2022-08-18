@@ -142,7 +142,7 @@ export class RhinoWorker {
   }
 
   /**
-   * Creates a worker instance of the Rhino speech-to-intent engine using '.pv' file in
+   * Creates a worker instance of the Rhino Speech-to-Intent engine using '.pv' file in
    * public directory. The model size is large, hence it will try to use the existing one if it exists,
    * otherwise saves the model in storage.
    *
