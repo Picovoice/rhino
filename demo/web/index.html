@@ -21,10 +21,12 @@
       }
 
       function rhinoInferenceCallback(inference) {
-        writeMessage(`Inference detected: ${JSON.stringify(inference)}`, true);
-        window.webVp.stop()
-        document.getElementById("push-to-talk").disabled = false;
-        writeMessage("Press the 'Push to Talk' button to speak again.");
+        if (inference.isFinalized) {
+          writeMessage(`Inference detected: ${JSON.stringify(inference)}`, true);
+          window.webVp.stop()
+          document.getElementById("push-to-talk").disabled = false;
+          writeMessage("Press the 'Push to Talk' button to speak again.");
+        }
       }
 
       async function startRhino(accessKey) {

@@ -102,8 +102,7 @@ const options = {
   sensitivity: 0.5,
   endpointDurationSec: 1.0,
   requireEndpoint: true,
-  processErrorCallback: (error) => {
-  },
+  processErrorCallback: (error) => {},
   customWritePath: "rhino_model",
   forceWrite: false,
   version: 1,
@@ -112,12 +111,35 @@ const options = {
 
 ### Initialize in Main Thread
 
+Create a `inferenceCallback` function to get the results from the engine:
+
+```typescript
+function inferenceCallback(inference) {
+  if (inference.isFinalized) {
+    if (inference.isUnderstood) {
+      console.log(inference.intent)
+      console.log(inference.slots)
+    }
+  }
+}
+```
+
+Add to the `options` object an `processErrorCallback` function if you would like to catch errors:
+
+```typescript
+function processErrorCallback(error: string) {
+...
+}
+options.processErrorCallback = processErrorCallback;
+```
+
 Use `Rhino` to initialize from public directory:
 
 ```typescript
 const handle = await Rhino.fromPublicDirectory(
   ${ACCESS_KEY},
   { label: "rhino_model", rhnPath: ${CONTEXT_RELATIVE_PATH} },
+  inferenceCallback,
   ${MODEL_RELATIVE_PATH},
   options // optional options
 );
@@ -132,6 +154,7 @@ import rhinoParams from "${PATH_TO_BASE64_RHINO_PARAMS}";
 const handle = await Rhino.fromBase64(
   ${ACCESS_KEY},
   { label: "rhino_model", base64: rhinoContext },
+  inferenceCallback,
   rhinoParams,
   options // optional options
 )
@@ -139,33 +162,30 @@ const handle = await Rhino.fromBase64(
 
 ### Process Audio Frames in Main Thread
 
+The result is received from `inferenceCallback` as mentioned above.
+
 ```typescript
 function getAudioData(): Int16Array {
 ... // function to get audio data
   return new Int16Array();
 }
 for (; ;) {
-  const inference = await handle.process(getAudioData());
-  if (inference.isFinalized) {
-    if (inference.isUnderstood) {
-      console.log(inference.intent)
-      console.log(inference.slots)
-      // Insert inference event callback here
-    }
-  }
+  await handle.process(getAudioData());
   // break on some condition
 }
 ```
 
 ### Initialize in Worker Thread
 
-Create a `inferenceDetectionCallback` function to get the streaming results from the worker:
+Create a `inferenceCallback` function to get the streaming results from the worker:
 
 ```typescript
-function inferenceDetectionCallback(inference) {
-  if (inference.isUnderstood) {
-    console.log(inference.intent)
-    console.log(inference.slots)
+function inferenceCallback(inference) {
+  if (inference.isFinalized) {
+    if (inference.isUnderstood) {
+      console.log(inference.intent)
+      console.log(inference.slots)
+    }
   }
 }
 ```
@@ -185,7 +205,7 @@ Use `rhinoWorker` to initialize from public directory:
 const handle = await RhinoWorker.fromPublicDirectory(
   ${ACCESS_KEY},
   { label: "rhino_model", rhnPath: ${CONTEXT_RELATIVE_PATH} },
-  inferenceDetectionCallback,
+  inferenceCallback,
   ${MODEL_RELATIVE_PATH},
   options // optional options
 );
@@ -197,10 +217,10 @@ or initialize using a base64 string:
 import rhinoContext from "${PATH_TO_BASE64_RHINO_CONTEXT}";
 import rhinoParams from "${PATH_TO_BASE64_RHINO_PARAMS}";
 
-const handle = await Rhino.fromBase64(
+const handle = await RhinoWorker.fromBase64(
   ${ACCESS_KEY},
   { label: "rhino_model", base64: rhinoContext },
-  inferenceDetectionCallback,
+  inferenceCallback,
   rhinoParams,
   options // optional options
 )
@@ -209,7 +229,7 @@ const handle = await Rhino.fromBase64(
 ### Process Audio Frames in Worker Thread
 
 In a worker thread, the `process` function will send the input frames to the worker.
-The result is received from `inferenceDetectionCallback` as mentioned above.
+The result is received from `inferenceCallback` as mentioned above.
 
 ```typescript
 function getAudioData(): Int16Array {
@@ -264,6 +284,7 @@ const rhinoContext = {
 const handle = await Rhino.fromPublicDirectory(
   ${ACCESS_KEY},
   rhinoContext,
+  inferenceCallback,
   ${MODEL_RELATIVE_PATH},
   options // optional options
 );
@@ -282,6 +303,7 @@ const rhinoContext = {
 const handle = await Rhino.fromPublicDirectory(
   ${ACCESS_KEY},
   rhinoContext,
+  inferenceCallback,
   ${MODEL_RELATIVE_PATH},
   options // optional options
 );

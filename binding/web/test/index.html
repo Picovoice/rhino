@@ -107,33 +107,13 @@
         }
       }
 
-      async function rhinoProcessPCM(engineInstance, pcm) {
-        let frameLength = engineInstance.frameLength;
-        for (
-          let i = 0;
-          i < pcm.byteLength / pcm.BYTES_PER_ELEMENT;
-          i += frameLength
-        ) {
-          const inference = await engineInstance.process(
-            pcm.slice(i, i + frameLength)
-          );
-          if (inference.isFinalized) {
-            return inference;
-          }
-        }
-      }
-
       function rhinoInferenceCallback(inference) {
         if (inference.isFinalized) {
           workerInferences.push(inference);
         }
       }
 
-      async function rhinoWorkerProcessPCM(
-        engineInstance,
-        pcm,
-        inferenceIdx = 0
-      ) {
+      async function rhinoProcessPCM(engineInstance, pcm, inferenceIdx = 0) {
         workerInferences = [];
 
         let frameLength = engineInstance.frameLength;
@@ -173,6 +153,7 @@
           handle = await RhinoWeb.Rhino.fromBase64(
             accessKey,
             { label: 'coffee', base64: coffeeMaker64 },
+            rhinoInferenceCallback,
             modelParams,
             { forceWrite: true }
           );
@@ -191,6 +172,7 @@
           handle = await RhinoWeb.Rhino.fromPublicDirectory(
             accessKey,
             { label: 'coffee', base64: coffeeMaker64 },
+            rhinoInferenceCallback,
             'rhino_params.pv',
             { forceWrite: true }
           );
@@ -214,7 +196,7 @@
             { forceWrite: true }
           );
 
-          inference = await rhinoWorkerProcessPCM(handle, inContextPcm);
+          inference = await rhinoProcessPCM(handle, inContextPcm);
 
           assertTruthy(inference);
           assertTruthy(inference['isFinalized']);
@@ -233,7 +215,7 @@
             { forceWrite: true }
           );
 
-          inference = await rhinoWorkerProcessPCM(handle, inContextPcm);
+          inference = await rhinoProcessPCM(handle, inContextPcm);
 
           assertTruthy(inference);
           assertTruthy(inference['isFinalized']);
@@ -247,6 +229,7 @@
           handle = await RhinoWeb.Rhino.fromPublicDirectory(
             accessKey,
             { label: 'coffee', base64: coffeeMaker64 },
+            rhinoInferenceCallback,
             'rhino_params.pv',
             { forceWrite: true }
           );
@@ -270,7 +253,7 @@
             { forceWrite: true }
           );
 
-          inference = await rhinoWorkerProcessPCM(handle, outOfContextPcm);
+          inference = await rhinoProcessPCM(handle, outOfContextPcm);
 
           assertTruthy(inference);
           assertTruthy(inference['isFinalized']);
@@ -284,6 +267,7 @@
           handle = await RhinoWeb.Rhino.fromPublicDirectory(
             accessKey,
             { label: 'coffee', base64: coffeeMaker64 },
+            rhinoInferenceCallback,
             'rhino_params.pv',
             { forceWrite: true }
           );
@@ -314,6 +298,7 @@
           handle = await RhinoWeb.Rhino.fromPublicDirectory(
             accessKey,
             { label: 'coffee', base64: coffeeMaker64 },
+            rhinoInferenceCallback,
             'rhino_params.pv',
             { forceWrite: true }
           );
@@ -370,6 +355,7 @@
             let handle = await RhinoWeb.Rhino.fromPublicDirectory(
               '1234',
               { label: 'coffee', base64: coffeeMaker64 },
+              rhinoInferenceCallback,
               'rhino_params.pv',
               { forceWrite: true }
             );
@@ -385,6 +371,7 @@
             let handle = await RhinoWeb.Rhino.fromPublicDirectory(
               accessKey,
               { label: 'coffee', base64: coffeeMaker64 },
+              rhinoInferenceCallback,
               'invalid',
               { forceWrite: true }
             );
@@ -400,6 +387,7 @@
             let handle = await RhinoWeb.Rhino.fromBase64(
               accessKey,
               { label: 'coffee', base64: coffeeMaker64 },
+              rhinoInferenceCallback,
               'invalid',
               { forceWrite: true }
             );
@@ -415,6 +403,7 @@
             let handle = await RhinoWeb.Rhino.fromPublicDirectory(
               accessKey,
               null,
+              rhinoInferenceCallback,
               'rhino_params.pv',
               { forceWrite: true }
             );
@@ -430,6 +419,7 @@
             let handle = await RhinoWeb.Rhino.fromPublicDirectory(
               accessKey,
               { label: 'coffee2', base64: 'base64', usedCachedContext: false },
+              rhinoInferenceCallback,
               'rhino_params.pv',
               { forceWrite: true }
             );
@@ -449,9 +439,9 @@
             let handle = await RhinoWeb.Rhino.fromPublicDirectory(
               accessKey,
               { label: 'coffee', base64: coffeeMaker64 },
+              rhinoInferenceCallback,
               'rhino_params.pv',
-              { sensitivity: 4.2 },
-              { forceWrite: true }
+              { sensitivity: 4.2, forceWrite: true }
             );
           } catch (error) {
             is_failed = true;
@@ -469,9 +459,9 @@
             let handle = await RhinoWeb.Rhino.fromPublicDirectory(
               accessKey,
               { label: 'coffee', base64: coffeeMaker64 },
+              rhinoInferenceCallback,
               'rhino_params.pv',
-              { sensitivity: 'high' },
-              { forceWrite: true }
+              { sensitivity: 'high', forceWrite: true }
             );
           } catch (error) {
             is_failed = true;
@@ -527,7 +517,7 @@
           writeMessage('Starting process performance test!');
           start = Date.now();
           for (let i = 0; i < numIterations; i++) {
-            inference = await rhinoWorkerProcessPCM(handle, inContextPcm);
+            inference = await rhinoProcessPCM(handle, inContextPcm);
           }
           end = Date.now();
           writeMessage(

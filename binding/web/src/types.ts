@@ -10,6 +10,7 @@
 */
 
 export type RhinoInitConfig = {
+  processErrorCallback?: (error: string) => void;
   /** @defaultValue '0.5' */
   sensitivity?: number;
   /** @defaultValue '1.0' */
@@ -19,7 +20,6 @@ export type RhinoInitConfig = {
 };
 
 export type RhinoInputConfig = {
-  processErrorCallback?: (error: string) => void;
   /** @defaultValue 'rhino_model' */
   customWritePath?: string;
   /** @defaultValue false */
@@ -52,6 +52,8 @@ export type RhinoInference = {
   /** Map of the slot variables and values extracted from the utterance */
   slots?: Record<string, string>;
 };
+
+export type InferenceCallback = (inference: RhinoInference) => void;
 
 export type RhinoWorkerInitRequest = {
   command: 'init';

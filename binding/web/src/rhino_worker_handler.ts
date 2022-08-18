@@ -13,7 +13,21 @@
 /// <reference lib="webworker" />
 
 import { Rhino } from './rhino';
-import { RhinoWorkerRequest } from './types';
+import { RhinoWorkerRequest, RhinoInference } from './types';
+
+function inferenceCallback(inference: RhinoInference): void {
+  self.postMessage({
+    command: 'ok',
+    inference: inference,
+  });
+}
+
+function processErrorCallback(error: string): void {
+  self.postMessage({
+    command: 'error',
+    message: error,
+  });
+}
 
 /**
  * Rhino worker handler.
@@ -37,8 +51,9 @@ self.onmessage = async function (
         rhino = await Rhino.create(
           event.data.accessKey,
           event.data.contextPath,
+          inferenceCallback,
           event.data.modelPath,
-          event.data.options
+          { ...event.data.options, processErrorCallback }
         );
         self.postMessage({
           command: 'ok',
@@ -62,18 +77,7 @@ self.onmessage = async function (
         });
         return;
       }
-      try {
-        const inference = await rhino.process(event.data.inputFrame);
-        self.postMessage({
-          command: 'ok',
-          inference: inference,
-        });
-      } catch (e: any) {
-        self.postMessage({
-          command: 'error',
-          message: e.message,
-        });
-      }
+      await rhino.process(event.data.inputFrame);
       break;
     case 'release':
       if (rhino !== null) {
