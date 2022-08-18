@@ -1276,7 +1276,7 @@ Rhino is available on modern web browsers (i.e. not Internet Explorer) via [WebA
 
         writeMessage("WebVoiceProcessor initializing. Microphone permissions requested ...");
         window.webVp = await WebVoiceProcessor.WebVoiceProcessor.instance();
-        window.webVp.subscribe(rhino.worker);
+        window.webVp.subscribe(rhino);
         writeMessage("WebVoiceProcessor ready! Press the 'Push to Talk' button to talk.");
       }
 
@@ -1337,7 +1337,7 @@ async function startRhino() {
   // It downsamples the audio to voice recognition standard format (16-bit 16kHz linear PCM, single-channel)
   // The incoming microphone audio frames will then be forwarded to the Rhino Worker.
   webVp = await WebVoiceProcessor.WebVoiceProcessor.instance();
-  webVp.subscribe(rhino.worker);
+  webVp.subscribe(rhino);
 }
 
 // Start a voice interaction:

@@ -45,7 +45,7 @@
 
           writeMessage("WebVoiceProcessor initializing. Microphone permissions requested ...");
           window.webVp = await WebVoiceProcessor.WebVoiceProcessor.instance();
-          window.webVp.subscribe(rhino.worker);
+          window.webVp.subscribe(rhino);
           writeMessage("WebVoiceProcessor ready! Press the 'Push to Talk' button to talk. Then say e.g. 'Set a timer for one minute'");
 
         } catch (error) {
