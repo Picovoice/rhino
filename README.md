@@ -1327,7 +1327,7 @@ function rhinoInferenceCallback(inference) {
 
 async function startRhino() {
   // Create a Rhino Worker to listen for commands in the specified context
-  const rhino = await RhinoWeb.RhinoWorker.fromBase64(
+  const rhino = await RhinoWorker.fromBase64(
     accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
     { label: "rhino context", base64: RHINO_CONTEXT_BASE64 },
     rhinoInferenceCallback,
