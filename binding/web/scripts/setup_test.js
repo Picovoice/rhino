@@ -1,17 +1,17 @@
 const fs = require('fs');
 const { join } = require('path');
 
-const wasmFiles = ['pv_rhino.wasm', 'pv_rhino_simd.wasm'];
+const modelFiles = ['rhino_params.pv'];
 
-console.log('Copying the WASM model...');
+console.log('Copying the rhino model...');
 
-const sourceDirectory = join(__dirname, '..', '..', '..', 'lib', 'wasm');
+const sourceDirectory = join(__dirname, '..', '..', '..', 'lib', 'common');
 
-const outputDirectory = join(__dirname, '..', 'lib');
+const outputDirectory = join(__dirname, '..', 'test');
 
 try {
   fs.mkdirSync(outputDirectory, { recursive: true });
-  wasmFiles.forEach(file => {
+  modelFiles.forEach(file => {
     fs.copyFileSync(join(sourceDirectory, file), join(outputDirectory, file));
   });
 } catch (error) {

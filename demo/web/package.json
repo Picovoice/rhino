@@ -5,6 +5,7 @@
   "description": "A basic demo to show how to use Rhino for web browsers, using the IIFE version of the library",
   "main": "index.js",
   "scripts": {
+    "postinstall": "npx pvbase64 -i ../../lib/common/rhino_params.pv -o ./rhino_params.js && cp ../../resources/contexts/wasm/clock_wasm.rhn ./",
     "start": "yarn run http-server -a localhost -p 5000"
   },
   "keywords": [
@@ -22,8 +23,8 @@
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
   "dependencies": {
-    "@picovoice/rhino-web-en-worker": "^2.1.8",
-    "@picovoice/web-voice-processor": "^2.2.2"
+    "@picovoice/rhino-web": "=2.1.0",
+    "@picovoice/web-voice-processor": "=3.0.0"
   },
   "devDependencies": {
     "http-server": "^14.0.0"

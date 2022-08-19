@@ -47,7 +47,7 @@ Rhino is:
 - using deep neural networks trained in real-world environments.
 - compact and computationally-efficient. It is perfect for IoT.
 - cross-platform:
-  - Arm Cortex-M, STM32, PSoC, Arduino, and i.MX RT 
+  - Arm Cortex-M, STM32, PSoC, Arduino, and i.MX RT
   - Raspberry Pi, NVIDIA Jetson Nano, and BeagleBone
   - Android and iOS
   - Chrome, Safari, Firefox, and Edge
@@ -502,7 +502,7 @@ Run the demo using:
 
 Replace `${AUDIO_DEVICE_INDEX}` with the index of your audio device and `${ACCESS_KEY}` with your Picovoice AccessKey.
 
-The demo opens an audio stream and infers your intent from spoken commands in the context of a smart lighting system. 
+The demo opens an audio stream and infers your intent from spoken commands in the context of a smart lighting system.
 For example, you can say:
 
 > "Turn on the lights in the bedroom."
@@ -522,7 +522,7 @@ Run the demo using:
 ```console
 ./demo/c/build/rhino_demo_file -l ${LIBRARY_PATH} -m lib/common/rhino_params.pv \
 -c resources/contexts/${PLATFORM}/coffee_maker_${PLATFORM}.rhn -w resources/audio_samples/test_within_context.wav \
--a ${ACCESS_KEY} 
+-a ${ACCESS_KEY}
 ```
 
 Replace `${LIBRARY_PATH}` with path to appropriate library available under [lib](/lib), `${PLATFORM}` with the
@@ -1070,7 +1070,7 @@ this._rhino.delete();
 To include the package in your Android project, ensure you have included `mavenCentral()` in your top-level `build.gradle` file and then add the following to your app's `build.gradle`:
 
 ```groovy
-dependencies {    
+dependencies {
     implementation 'ai.picovoice:rhino-android:${LATEST_VERSION}'
 }
 ```
@@ -1091,7 +1091,7 @@ try {
                         .setAccessKey(accessKey)
                         .setContextPath("/path/to/context/file.rhn")
                         .setModelPath("/path/to/model/file.pv")
-                        .setSensitivity(0.35f)                        
+                        .setSensitivity(0.35f)
                         .build(appContext, new RhinoManagerCallback() {
                             @Override
                             public void invoke(RhinoInference inference) {
@@ -1108,7 +1108,7 @@ try {
 } catch (RhinoException e) { }
 ```
 
-The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. 
+The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK.
 Sensitivity is the parameter that enables developers to trade miss rate for false alarm. It is a floating-point number within
 [0, 1]. A higher sensitivity reduces miss rate at cost of increased false alarm rate.
 
@@ -1124,10 +1124,10 @@ import ai.picovoice.rhino.*;
 
 final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
-try {    
+try {
     Rhino rhino = new Rhino.Builder()
                         .setAccessKey(accessKey)
-                        .setContextPath("/path/to/context/file.rhn")                        
+                        .setContextPath("/path/to/context/file.rhn")
                         .build(appContext);
 } catch (RhinoException e) { }
 ```
@@ -1155,7 +1155,7 @@ handle.delete()
 
 ### iOS
 
-The Rhino iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`: 
+The Rhino iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`:
 
 ```ruby
 pod 'Rhino-iOS'
@@ -1173,8 +1173,8 @@ import Rhino
 let accessKey = "${ACCESS_KEY}" // Obtained from Picovoice Console (https://console.picovoice.ai)
 do {
     let manager = try RhinoManager(
-        accessKey: accessKey, 
-        contextPath: "/path/to/context/file.rhn", 
+        accessKey: accessKey,
+        contextPath: "/path/to/context/file.rhn",
         modelPath: "/path/to/model/file.pv",
         sensitivity: 0.35,
         onInferenceCallback: { inference in
@@ -1241,65 +1241,50 @@ handle.delete()
 
 Rhino is available on modern web browsers (i.e. not Internet Explorer) via [WebAssembly](https://webassembly.org/). Microphone audio is handled via the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and is abstracted by the WebVoiceProcessor, which also handles downsampling to the correct format. Rhino is provided pre-packaged as a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers).
 
-Each spoken language is available as a dedicated npm package (e.g. @picovoice/rhino-web-en-worker). These packages can be used with the @picovoice/web-voice-processor. They can also be used with the Angular, React, and Vue bindings, which abstract and hide the web worker communication details.
-
 #### Vanilla JavaScript and HTML (CDN Script Tag)
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script src="https://unpkg.com/@picovoice/rhino-web-en-worker/dist/iife/index.js"></script>
+    <script src="https://unpkg.com/@picovoice/rhino-web/dist/iife/index.js"></script>
     <script src="https://unpkg.com/@picovoice/web-voice-processor/dist/iife/index.js"></script>
     <script type="application/javascript">
-      const RHINO_CONTEXT_BASE64 = /* Base64 representation of .rhn file  */;
+      const RHINO_CONTEXT_BASE64 = /* Base64 representation of `.rhn` context file  */;
+      const RHINO_MODEL_BASE64 = /* Base64 representation of the `.pv` model file */;
 
-      async function startRhino() {
-        console.log("Rhino is loading. Please wait...");
-        window.rhinoWorker = await RhinoWebEnWorker.RhinoWorkerFactory.create(
-          {
-            accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-            context: {
-              base64: RHINO_CONTEXT_BASE64,
-              sensitivity: 0.5,
-            },
-            start: false,
-          }
-        );
-
-        console.log("Rhino worker ready!");
-
-        window.rhinoWorker.onmessage = (msg) => {
-          if (msg.data.command === "rhn-inference") {
-            console.log("Inference detected: " + JSON.stringify(msg.data.inference));
-            window.rhinoWorker.postMessage({ command: "pause" });
-            document.getElementById("push-to-talk").disabled = false;
-            console.log("Rhino is paused. Press the 'Push to Talk' button to speak again.")
-          }
-        };
-
-        console.log(
-          "WebVoiceProcessor initializing. Microphone permissions requested ..."
-        );
-
-        try {
-          let webVp = await WebVoiceProcessor.WebVoiceProcessor.init({
-            engines: [window.rhinoWorker],
-          });
-          console.log(
-            "WebVoiceProcessor ready! Press the 'Push to Talk' button to talk."
-          );
-        } catch (e) {
-          console.log("WebVoiceProcessor failed to initialize: " + e);
+      function rhinoInferenceCallback(inference) {
+        if (inference.isFinalized) {
+          console.log(`Inference detected: ${JSON.stringify(inference)}`);
+          window.webVp.stop()
+          document.getElementById("push-to-talk").disabled = false;
+          console.log("Press the 'Push to Talk' button to speak again.");
         }
       }
 
+      async function startRhino() {
+        console.log("Rhino is loading. Please wait...");
+        let rhino = await RhinoWeb.RhinoWorker.fromBase64(
+            accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+            { label: "rhino context", base64: RHINO_CONTEXT_BASE64 },
+            rhinoInferenceCallback,
+            RHINO_MODEL_BASE64
+        );
+
+        console.log("Rhino worker ready!");
+        document.getElementById("push-to-talk").disabled = false;
+
+        writeMessage("WebVoiceProcessor initializing. Microphone permissions requested ...");
+        window.webVp = await WebVoiceProcessor.WebVoiceProcessor.instance();
+        window.webVp.subscribe(rhino);
+        writeMessage("WebVoiceProcessor ready! Press the 'Push to Talk' button to talk.");
+      }
+
       document.addEventListener("DOMContentLoaded", function () {
-        startRhino();
         document.getElementById("push-to-talk").onclick = function (event) {
           console.log("Rhino is listening for your commands ...");
           this.disabled = true;
-          window.rhinoWorker.postMessage({ command: "resume" });
+          window.webVp.start()
         };
       });
     </script>
@@ -1314,71 +1299,63 @@ Each spoken language is available as a dedicated npm package (e.g. @picovoice/rh
 #### Vanilla JavaScript and HTML (ES Modules)
 
 ```console
-yarn add @picovoice/rhino-web-en-worker @picovoice/web-voice-processor
+yarn add @picovoice/rhino-web @picovoice/web-voice-processor
 ```
 
 (or)
 
 ```console
-npm install @picovoice/rhino-web-en-worker @picovoice/web-voice-processor
+npm install @picovoice/rhino-web @picovoice/web-voice-processor
 ```
 
 ```javascript
 import { WebVoiceProcessor } from "@picovoice/web-voice-processor"
-import { RhinoWorkerFactory } from "@picovoice/rhino-web-en-worker";
- 
-const RHN_CONTEXT_BASE64 = /* Base64 representation of a .rhn context */
- 
-async startRhino()
-  // Create a Rhino Worker (English language) to listen for
-  // commands in the specified context
-  const rhinoWorker = await RhinoWorkerFactory.create(
-    {
-      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-      context: RHN_CONTEXT_BASE64
-    }
-  );
- 
-  // The worker will send a message with data.command = "rhn-inference" upon concluding
-  // Here we tell it to log it to the console
-  rhinoWorker.onmessage = (msg) => {
-    switch (msg.data.command) {
-      case 'rhn-inference':
-        // Log the event
-        console.log("Rhino inference: " + msg.data.inference);
-        // Pause Rhino processing until the push-to-talk button is pressed again
-        rhinoWorker.postMessage({command: "pause"})
-        break;
-      default:
-        break;
-    }
-  };
- 
-  // Start up the web voice processor. It will request microphone permission
-  // It downsamples the audio to voice recognition standard format (16-bit 16kHz linear PCM, single-channel)
-  // The incoming microphone audio frames will then be forwarded to the Rhino Worker
-  // n.b. This promise will reject if the user refuses permission! Make sure you handle that possibility.
-  const webVp = await WebVoiceProcessor.init({
-    engines: [rhinoWorker],
-    start: true,
-  });
+import { RhinoWorker } from "@picovoice/rhino-web";
+
+const RHN_CONTEXT_BASE64 = /* Base64 representation of a `.rhn` context file */
+const RHINO_MODEL_BASE64 = /* Base64 representation of the `.pv` model file*/;
+
+let webvp = null
+
+function rhinoInferenceCallback(inference) {
+  if (inference.isFinalized) {
+    console.log(`Rhino inference: ${JSON.stringify(inference)}`);
+    webVp.stop()
   }
- 
-  // Rhino is push-to-talk. We need to to tell it that we
-  // are starting a voice interaction:
-  function pushToTalk() {
-    rhinoWorker.postMessage({command: "resume"})
-  }
- 
 }
+
+async function startRhino() {
+  // Create a Rhino Worker to listen for commands in the specified context
+  const rhino = await RhinoWorker.fromBase64(
+    accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+    { label: "rhino context", base64: RHINO_CONTEXT_BASE64 },
+    rhinoInferenceCallback,
+    RHINO_MODEL_BASE64
+  );
+
+  // Initialize the web voice processor.
+  // It downsamples the audio to voice recognition standard format (16-bit 16kHz linear PCM, single-channel)
+  // The incoming microphone audio frames will then be forwarded to the Rhino Worker.
+  webVp = await WebVoiceProcessor.WebVoiceProcessor.instance();
+  webVp.subscribe(rhino);
+}
+
+// Start a voice interaction:
+// WebVoiceProcessor will request microphone permission.
+// n.b. This promise will reject if the user refuses permission! Make sure you handle that possibility.
+function pushToTalk() {
+  webVp.start()
+}
+
 startRhino()
- 
+
 ...
- 
+
 // Finished with Rhino? Release the WebVoiceProcessor and the worker.
 if (done) {
   webVp.release()
-  rhinoWorker.sendMessage({command: "release"})
+  rhino.release()
+  rhino.terminate()
 }
 ```
 
@@ -1409,12 +1386,12 @@ async ngOnInit() {
     console.error(error)
   }
 }
- 
+
 ngOnDestroy() {
   this.rhinoDetection.unsubscribe()
   this.rhinoService.release()
 }
- 
+
 public pushToTalk() {
   this.rhinoService.pushToTalk();
 }
@@ -1436,17 +1413,17 @@ npm install @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
 mport React, { useState } from 'react';
 import { RhinoWorkerFactory } from '@picovoice/rhino-web-en-worker';
 import { useRhino } from '@picovoice/rhino-web-react';
- 
+
 const RHINO_CONTEXT_BASE64 = /* Base64 representation an English language .rhn file, omitted for brevity */
- 
+
 function VoiceWidget(props) {
   const [latestInference, setLatestInference] = useState(null)
- 
+
   const inferenceEventHandler = (rhinoInference) => {
     console.log(`Rhino inferred: ${rhinoInference}`);
     setLatestInference(rhinoInference)
   };
- 
+
   const {
     isLoaded,
     isListening,
@@ -1470,7 +1447,7 @@ function VoiceWidget(props) {
     }
     inferenceEventHandler
   );
- 
+
 return (
   <div className="voice-widget">
     <button onClick={() => pushToTalk()} disabled={isTalking || isError || !isLoaded}>

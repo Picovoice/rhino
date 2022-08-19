@@ -1,6 +1,0 @@
-node_modules
-dist
-*.worker.js
-**/rollup.config.js
-.eslintrc.js
-src/wasm/pv_*

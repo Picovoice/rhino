@@ -1,4 +1,4 @@
-name: Web
+name: Web Performance
 
 on:
   workflow_dispatch:
@@ -10,15 +10,16 @@ on:
       - 'lib/wasm/**'
       - 'lib/common/**'
       - 'resources/contexts/wasm/**'
-      - '.github/workflows/web.yml'
+      - '.github/workflows/web-perf.yml'
   pull_request:
     branches: [ master ]
     paths:
       - 'binding/web/**'
       - '!binding/web/README.md'
       - 'lib/wasm/**'
+      - 'lib/common/**'
       - 'resources/contexts/wasm/**'
-      - '.github/workflows/web.yml'
+      - '.github/workflows/web-perf.yml'
 
 defaults:
   run:
@@ -32,6 +33,10 @@ jobs:
       matrix:
         python-version: [3.8]
         node-version: [lts/*]
+        include:
+        - python-version: 3.8
+          initPerformanceThresholdSec: 0.5
+          procPerformanceThresholdSec: 1.2
 
     steps:
     - uses: actions/checkout@v2
@@ -64,4 +69,5 @@ jobs:
       run: yarn setup-test
 
     - name: Test
-      run: python test/selenium_test.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_file_in_context ../../resources/audio_samples/test_within_context.wav --audio_file_out_context ../../resources/audio_samples/test_out_of_context.wav
+      run: python test/perf_test.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_file_in_context ../../resources/audio_samples/test_within_context.wav --audio_file_out_context ../../resources/audio_samples/test_out_of_context.wav
+        --init_performance_threshold_sec ${{ matrix.initPerformanceThresholdSec }} --proc_performance_threshold_sec ${{ matrix.procPerformanceThresholdSec }}

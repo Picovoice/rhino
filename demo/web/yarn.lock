@@ -2,31 +2,24 @@
 # yarn lockfile v1
 
 
-"@babel/runtime@^7.12.18":
-  version "7.13.9"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.13.9.tgz#97dbe2116e2630c489f22e0656decd60aaa1fcee"
-  integrity sha512-aY2kU+xgJ3dJ1eU6FMB9EH8dIe8dmusF1xEku52joLvw6eAFN0AI+WxCLDnpev2LEejWBAy2sBvBOBAjI3zmvA==
+"@picovoice/rhino-web@=2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.0.tgz#219e23795823ddaa05e4bfda56ae7c960682e33b"
+  integrity sha512-yYI+MApuUtCL+Xj2rxtufaj2C33GHQIwbP2HBowda8g+BA52G9uexQTniWSRGQfgyD8QD3Dq4O0Ufhec10HVbQ==
   dependencies:
-    regenerator-runtime "^0.13.4"
+    "@picovoice/web-utils" "=1.2.3"
 
-"@picovoice/rhino-web-core@^2.1.2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-core/-/rhino-web-core-2.1.2.tgz#ef5e21f47e9973bbb11e6e4b21ff75fb44bf0e5a"
-  integrity sha512-svWBeS5vmUQIEq4zV08bjhL82mTtV3+ia8IJaZ3uAK3PAHtYI0vZrP2DY7ErG+aTWEAZkIrkoqdoz2+qXJ35mg==
-
-"@picovoice/rhino-web-en-worker@^2.1.8":
-  version "2.1.8"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-en-worker/-/rhino-web-en-worker-2.1.8.tgz#660c0ab359c28456edc5c101ae96e2e2a992b4ba"
-  integrity sha512-OEyYhBxNqZ51IDC32ZsruPc3kSxPsJEYSMDWjoWNd9CUhpwnjgcUHVvCyAf5Qk290EqO5mZaBSJcAWQEdo6Rrg==
+"@picovoice/web-utils@=1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.2.3.tgz#aa2eecca95fa55d74727645dab8ddd388dce8d13"
+  integrity sha512-ETZtPpjY1hPW3MkIxR2gialZAg+vAw4gdJW5zXoB2F/eJQ3B+LiTAcbV1sLHMB/fBsrO+2yb5yk80nVU0lMqIA==
   dependencies:
-    "@picovoice/rhino-web-core" "^2.1.2"
+    commander "^9.2.0"
 
-"@picovoice/web-voice-processor@^2.2.2":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-2.2.2.tgz#dcaa18349e2539bb33555532ea0d172b2bf6ba7a"
-  integrity sha512-66DuOQiaZX2OYgBq0+8qJ3r964ai5ebhJkv07SdJudmrSGu/1cCocjt0plMlOkLTWO8SL2J41JZraRf2lSdnDw==
-  dependencies:
-    "@babel/runtime" "^7.12.18"
+"@picovoice/web-voice-processor@=3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-3.0.0.tgz#0dbdbcfa79022fc54f6b51ee4294efb847fd736f"
+  integrity sha512-EtkCvUOklmWESabT2rVfrHsUGugg6zj1JBV9Jl9h7nzaGVXPMhDVuiwtZpT8TFVSLKXNOV31QsoSHnzN2CYjvQ==
 
 async@^2.6.2:
   version "2.6.3"
@@ -54,6 +47,11 @@ colors@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
   integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
+
+commander@^9.2.0:
+  version "9.4.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-9.4.0.tgz#bc4a40918fefe52e22450c111ecd6b7acce6f11c"
+  integrity sha512-sRPT+umqkz90UA8M1yqYfnHlZA7fF6nSphDtxeywPZ49ysjxDQybzk13CL+mXekDRG92skbcqCLVovuCusNmFw==
 
 corser@^2.0.1:
   version "2.0.1"
@@ -202,11 +200,6 @@ qs@^6.4.0:
   integrity sha512-M528Hph6wsSVOBiYUnGf+K/7w0hNshs/duGsNXPUCLH5XAqjEtiPGwNONLV0tBH8NoGb0mvD5JubnUTrujKDTg==
   dependencies:
     side-channel "^1.0.4"
-
-regenerator-runtime@^0.13.4:
-  version "0.13.7"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz#cac2dacc8a1ea675feaabaeb8ae833898ae46f55"
-  integrity sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==
 
 requires-port@^1.0.0:
   version "1.0.0"
