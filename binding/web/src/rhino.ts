@@ -244,6 +244,8 @@ export class Rhino {
 
   /**
    * Creates an instance of the Rhino Speech-to-Intent engine.
+   * The model size is large, hence it will try to use the existing one if it exists,
+   * otherwise saves the model in storage.
    * Behind the scenes, it requires the WebAssembly code to load and initialize before
    * it can create an instance.
    *
