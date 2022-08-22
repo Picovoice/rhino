@@ -102,9 +102,9 @@ const rhinoContext = {
   // or
   base64: ${CONTEXT_BASE64_STRING},
 
-  customWritePath: 'custom_context'; // Optional
-  forceWrite: true; // Optional
-  version: '1.0'; // Optional
+  customWritePath: 'custom_context', // Optional
+  forceWrite: true, // Optional
+  version: '1.0', // Optional
 }
 
 // Model (.pv)
@@ -113,9 +113,9 @@ const rhinoModel = {
   // or
   base64: ${MODEL_BASE64_STRING},
 
-  customWritePath: 'custom_model'; // Optional
-  forceWrite: true; // Optional
-  version: '1.0'; // Optional
+  customWritePath: 'custom_model', // Optional
+  forceWrite: true, // Optional
+  version: '1.0', // Optional
 }
 ```
 
@@ -167,21 +167,6 @@ const handle = await Rhino.create(
   rhinoModel,
   options // optional options
 );
-```
-
-or initialize using a base64 string:
-
-```typescript
-import rhinoContext from "${PATH_TO_BASE64_RHINO_CONTEXT}";
-import rhinoParams from "${PATH_TO_BASE64_RHINO_PARAMS}";
-
-const handle = await Rhino.create(
-  ${ACCESS_KEY},
-  { base64: rhinoContext },
-  inferenceCallback,
-  { base64: rhinoParams },
-  options // optional options
-)
 ```
 
 ### Process Audio Frames in Main Thread
