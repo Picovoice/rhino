@@ -93,18 +93,26 @@ npx pvbase64 -h
 
 Rhino saves and caches your model (`.pv`) and context (`.rhn`) files in the IndexedDB to be used by Web Assembly.
 Use a different `customWritePath` variable to hold multiple model values and set the `forceWrite` value to true to force a re-save of the model file.
-If the model file (`.pv`) changes, `version` should be incremented to force the cached model to be updated.
+If the model file (`.pv`) changes, `version` should be incremented to force the cached model to be updated. Either `base64` or `publicPath` must be set to instantiate Rhino. If both are set, Rhino will use the `base64` model.
 
 ```typescript
+// Context (.rhn)
 const rhinoContext = {
-  publicPath: ${CONTEXT_RELATIVE_PATH}, // or base64: ${CONTEXT_BASE64_STRING},
+  publicPath: ${CONTEXT_RELATIVE_PATH},
+  // or
+  base64: ${CONTEXT_BASE64_STRING},
+
   customWritePath: 'custom_context'; // Optional
   forceWrite: true; // Optional
   version: '1.0'; // Optional
 }
 
+// Model (.pv)
 const rhinoModel = {
-  publicPath: ${MODEL_RELATIVE_PATH}, // or base64: ${MODEL_BASE64_STRING},
+  publicPath: ${MODEL_RELATIVE_PATH},
+  // or
+  base64: ${MODEL_BASE64_STRING},
+
   customWritePath: 'custom_model'; // Optional
   forceWrite: true; // Optional
   version: '1.0'; // Optional
@@ -117,11 +125,11 @@ Use `endpointDurationSec` and `requireEndpoint` to control endpoint parameters.
 An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command.
 
 ```typescript
-// these are the default values
+// Optional. These are the default values
 const options = {
-  endpointDurationSec: 1.0, // Optional
-  requireEndpoint: true, // Optional
-  processErrorCallback: (error) => {}, // Optional
+  endpointDurationSec: 1.0,
+  requireEndpoint: true,
+  processErrorCallback: (error) => {},
 }
 ```
 
@@ -149,14 +157,14 @@ function processErrorCallback(error: string) {
 options.processErrorCallback = processErrorCallback;
 ```
 
-Use `Rhino` to initialize from public directory:
+Initialize an instance of `Rhino`:
 
 ```typescript
 const handle = await Rhino.create(
   ${ACCESS_KEY},
-  { publicPath: ${CONTEXT_RELATIVE_PATH} },
+  rhinoContext,
   inferenceCallback,
-  { publicPath: ${MODEL_RELATIVE_PATH} },
+  rhinoModel,
   options // optional options
 );
 ```
@@ -215,31 +223,16 @@ function processErrorCallback(error: string) {
 options.processErrorCallback = processErrorCallback;
 ```
 
-Use `rhinoWorker` to initialize from public directory:
+Initialize an instance of `RhinoWorker`:
 
 ```typescript
 const handle = await RhinoWorker.create(
   ${ACCESS_KEY},
-  { publicPath: ${CONTEXT_RELATIVE_PATH} },
+  rhinoContext,
   inferenceCallback,
-  { publicPath: ${MODEL_RELATIVE_PATH} },
+  rhinoModel,
   options // optional options
 );
-```
-
-or initialize using a base64 string:
-
-```typescript
-import rhinoContext from "${PATH_TO_BASE64_RHINO_CONTEXT}";
-import rhinoParams from "${PATH_TO_BASE64_RHINO_PARAMS}";
-
-const handle = await RhinoWorker.create(
-  ${ACCESS_KEY},
-  { base64: rhinoContext },
-  inferenceCallback,
-  { base64: rhinoParams },
-  options // optional options
-)
 ```
 
 ### Process Audio Frames in Worker Thread
@@ -279,46 +272,6 @@ await handle.terminate();
 Create custom contexts using the [Picovoice Console](https://console.picovoice.ai/).
 Train the Rhino context model for the target platform WebAssembly (WASM).
 Inside the downloaded `.zip` file, there will be a `.rhn` file which is the context model file in binary format.
-
-Similar to the model file (`.pv`), there are two ways to use a custom context model:
-
-### Public Directory
-
-This method fetches the context model file from the public directory and feeds it to Rhino.
-Copy the binary context model file (`.rhn`) into the public directory and then define a `RhinoContext` object,
-in which the `publicPath` property is set to the path to the context model file.
-
-```typescript
-const rhinoContext = {
-  publicPath: ${CONTEXT_RELATIVE_PATH},
-}
-
-const handle = await Rhino.create(
-  ${ACCESS_KEY},
-  rhinoContext,
-  inferenceCallback,
-  { publicPath: ${MODEL_RELATIVE_PATH} },
-  options // optional options
-);
-```
-
-### Base64
-
-Use a base64 string representation of the model and pass it as the `base64` property of a `RhinoContext` object.
-
-```typescript
-const rhinoContext = {
-  base64: ${CONTEXT_BASE64_STRING},
-}
-
-const handle = await Rhino.create(
-  ${ACCESS_KEY},
-  rhinoContext,
-  inferenceCallback,
-  { publicPath: ${MODEL_RELATIVE_PATH} },
-  options // optional options
-);
-```
 
 ## Non-English Languages
 

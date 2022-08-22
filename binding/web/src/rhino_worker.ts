@@ -201,19 +201,12 @@ export class RhinoWorker {
       }
     );
 
-    if (
-      context.customWritePath == null ||
-      context.customWritePath == undefined
-    ) {
-      context.customWritePath = 'rhino_context';
-    }
-    const contextPath = await loadModel(context);
+    let customWritePath = (context.customWritePath) ? context.customWritePath : 'rhino_context';
+    const contextPath = await loadModel({ ...context, customWritePath});
     const { sensitivity = 0.5 } = context;
 
-    if (model.customWritePath == null || model.customWritePath == undefined) {
-      model.customWritePath = 'rhino_model';
-    }
-    const modelPath = await loadModel(model);
+    customWritePath = (model.customWritePath) ? model.customWritePath : 'rhino_model';
+    const modelPath = await loadModel({ ...model, customWritePath});
 
     worker.postMessage({
       command: 'init',
