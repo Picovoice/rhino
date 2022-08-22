@@ -9,12 +9,7 @@
   specific language governing permissions and limitations under the License.
 */
 
-import {
-  fromBase64,
-  fromPublicDirectory,
-  isAccessKeyValid,
-  loadModel,
-} from '@picovoice/web-utils';
+import { loadModel } from '@picovoice/web-utils';
 
 import PvWorker from 'web-worker:./rhino_worker_handler.ts';
 
@@ -224,8 +219,7 @@ export class RhinoWorker {
 
   /**
    * Processes a frame of audio in a worker.
-   * The transcript result will be supplied with the callback provided when initializing the worker either
-   * by 'fromBase64' or 'fromPublicDirectory'.
+   * The transcript result will be supplied with the callback provided when initializing the worker.
    * Can also send a message directly using 'this.worker.postMessage({command: "process", pcm: [...]})'.
    *
    * @param pcm A frame of audio sample.
