@@ -72,6 +72,8 @@ This method fetches [the model file](https://github.com/Picovoice/rhino/blob/mas
 cp ${RHINO_MODEL_FILE} ${PATH_TO_PUBLIC_DIRECTORY}
 ```
 
+The same procedure can be used for the [Rhino context](https://github.com/Picovoice/rhino/tree/master/resources/contexts) (`.rhn`) files.
+
 ### Base64
 
 **NOTE**: This method works without hosting a server, but increases the size of the model file roughly by 33%.
@@ -89,6 +91,8 @@ run:
 npx pvbase64 -h
 ```
 
+The same procedure can be used for the [Rhino context](https://github.com/Picovoice/rhino/tree/master/resources/contexts) (`.rhn`) files.
+
 ### Init options
 
 Rhino saves and caches your model (`.pv`) and context (`.rhn`) files in the IndexedDB to be used by Web Assembly.
@@ -102,9 +106,11 @@ const rhinoContext = {
   // or
   base64: ${CONTEXT_BASE64_STRING},
 
-  customWritePath: 'custom_context', // Optional
-  forceWrite: true, // Optional
-  version: '1.0', // Optional
+  // Optionals
+  customWritePath: 'custom_context',
+  forceWrite: true,
+  version: '1.0',
+  sensitivity: 0.5,
 }
 
 // Model (.pv)
@@ -113,9 +119,10 @@ const rhinoModel = {
   // or
   base64: ${MODEL_BASE64_STRING},
 
-  customWritePath: 'custom_model', // Optional
-  forceWrite: true, // Optional
-  version: '1.0', // Optional
+  // Optionals
+  customWritePath: 'custom_model',
+  forceWrite: true,
+  version: '1.0',
 }
 ```
 
