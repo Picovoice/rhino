@@ -93,7 +93,7 @@ npx pvbase64 -h
 
 Rhino saves and caches your model (`.pv`) and context (`.rhn`) files in the IndexedDB to be used by Web Assembly.
 Use a different `customWritePath` variable to hold multiple model values and set the `forceWrite` value to true to force a re-save of the model file.
-If the model file (`.pv`) changes, `version` should be incremented to force the cached model to be updated. Either `base64` or `publicPath` must be set to instantiate Rhino. If both are set, Rhino will use the `base64` model.
+If the model (`.pv`) or context (`.rhn`) files change, `version` should be incremented to force the cached model to be updated. Either `base64` or `publicPath` must be set to instantiate Rhino. If both are set, Rhino will use the `base64` parameter.
 
 ```typescript
 // Context (.rhn)
