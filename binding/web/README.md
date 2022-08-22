@@ -91,17 +91,37 @@ npx pvbase64 -h
 
 ### Init options
 
-Rhino saves and caches your model (`.pv`) and context (`.rhn`) file in IndexedDB to be used by Web Assembly.
+Rhino saves and caches your model (`.pv`) and context (`.rhn`) files in the IndexedDB to be used by Web Assembly.
 Use a different `customWritePath` variable to hold multiple model values and set the `forceWrite` value to true to force a re-save of the model file.
-Set `processErrorCallback` to handle errors if an error occurs while processing audio.
 If the model file (`.pv`) changes, `version` should be incremented to force the cached model to be updated.
 
 ```typescript
-// these are default
+const rhinoContext = {
+  publicPath: ${CONTEXT_RELATIVE_PATH}, // or base64: ${CONTEXT_BASE64_STRING},
+  customWritePath: 'custom_context'; // Optional
+  forceWrite: true; // Optional
+  version: '1.0'; // Optional
+}
+
+const rhinoModel = {
+  publicPath: ${MODEL_RELATIVE_PATH}, // or base64: ${MODEL_BASE64_STRING},
+  customWritePath: 'custom_model'; // Optional
+  forceWrite: true; // Optional
+  version: '1.0'; // Optional
+}
+```
+
+Additional engine options are provided as the `options` parameter.
+Set `processErrorCallback` to handle errors if an error occurs while processing audio.
+Use `endpointDurationSec` and `requireEndpoint` to control endpoint parameters.
+An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command.
+
+```typescript
+// these are the default values
 const options = {
-  endpointDurationSec: 1.0,
-  requireEndpoint: true,
-  processErrorCallback: (error) => {},
+  endpointDurationSec: 1.0, // Optional
+  requireEndpoint: true, // Optional
+  processErrorCallback: (error) => {}, // Optional
 }
 ```
 
@@ -270,7 +290,7 @@ in which the `publicPath` property is set to the path to the context model file.
 
 ```typescript
 const rhinoContext = {
-  publicPath: ${RHN_MODEL_RELATIVE_PATH},
+  publicPath: ${CONTEXT_RELATIVE_PATH},
 }
 
 const handle = await Rhino.create(
@@ -288,7 +308,7 @@ Use a base64 string representation of the model and pass it as the `base64` prop
 
 ```typescript
 const rhinoContext = {
-  base64: ${RHN_BASE64_STRING},
+  base64: ${CONTEXT_BASE64_STRING},
 }
 
 const handle = await Rhino.create(
