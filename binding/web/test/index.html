@@ -149,13 +149,12 @@
           let handle = null;
           let inference = null;
 
-          writeMessage("Checking Rhino 'fromBase64'");
-          handle = await RhinoWeb.Rhino.fromBase64(
+          writeMessage("Checking Rhino 'base64'");
+          handle = await RhinoWeb.Rhino.create(
             accessKey,
-            { label: 'coffee', base64: coffeeMaker64 },
+            { base64: coffeeMaker64, forceWrite: true },
             rhinoInferenceCallback,
-            modelParams,
-            { forceWrite: true }
+            { base64: modelParams, forceWrite: true }
           );
 
           inference = await rhinoProcessPCM(handle, inContextPcm);
@@ -166,15 +165,14 @@
           assertEquals(inference['intent'], 'orderBeverage');
           assertEquals(inference['slots']['beverage'], 'americano');
           await handle.release();
-          writeMessage("Checking Rhino 'fromBase64'... done!");
+          writeMessage("Checking Rhino 'base64'... done!");
 
-          writeMessage("Checking Rhino 'fromPublicDirectory'");
-          handle = await RhinoWeb.Rhino.fromPublicDirectory(
+          writeMessage("Checking Rhino 'publicPath'");
+          handle = await RhinoWeb.Rhino.create(
             accessKey,
-            { label: 'coffee', base64: coffeeMaker64 },
+            { base64: coffeeMaker64, forceWrite: true },
             rhinoInferenceCallback,
-            'rhino_params.pv',
-            { forceWrite: true }
+            { publicPath: 'rhino_params.pv', forceWrite: true }
           );
 
           inference = await rhinoProcessPCM(handle, inContextPcm);
@@ -185,15 +183,14 @@
           assertEquals(inference['intent'], 'orderBeverage');
           assertEquals(inference['slots']['beverage'], 'americano');
           await handle.release();
-          writeMessage("Checking Rhino 'fromPublicDirectory'... done!");
+          writeMessage("Checking Rhino 'publicPath'... done!");
 
-          writeMessage("Checking RhinoWorker 'fromBase64'");
-          handle = await RhinoWeb.RhinoWorker.fromBase64(
+          writeMessage("Checking RhinoWorker 'base64'");
+          handle = await RhinoWeb.RhinoWorker.create(
             accessKey,
-            { label: 'coffee', base64: coffeeMaker64 },
+            { base64: coffeeMaker64, forceWrite: true },
             rhinoInferenceCallback,
-            modelParams,
-            { forceWrite: true }
+            { base64: modelParams, forceWrite: true }
           );
 
           inference = await rhinoProcessPCM(handle, inContextPcm);
@@ -204,15 +201,14 @@
           assertEquals(inference['intent'], 'orderBeverage');
           assertEquals(inference['slots']['beverage'], 'americano');
           await handle.release();
-          writeMessage("Checking RhinoWorker 'fromBase64'... done!");
+          writeMessage("Checking RhinoWorker 'base64'... done!");
 
-          writeMessage("Checking RhinoWorker 'fromPublicDirectory'");
-          handle = await RhinoWeb.RhinoWorker.fromPublicDirectory(
+          writeMessage("Checking RhinoWorker 'publicPath'");
+          handle = await RhinoWeb.RhinoWorker.create(
             accessKey,
-            { label: 'coffee', base64: coffeeMaker64 },
+            { base64: coffeeMaker64, forceWrite: true },
             rhinoInferenceCallback,
-            'rhino_params.pv',
-            { forceWrite: true }
+            { publicPath: 'rhino_params.pv', forceWrite: true }
           );
 
           inference = await rhinoProcessPCM(handle, inContextPcm);
@@ -223,15 +219,14 @@
           assertEquals(inference['intent'], 'orderBeverage');
           assertEquals(inference['slots']['beverage'], 'americano');
           await handle.release();
-          writeMessage("Checking RhinoWorker 'fromPublicDirectory'... done!");
+          writeMessage("Checking RhinoWorker 'publicPath'... done!");
 
           writeMessage('Checking Rhino out-of-context...');
-          handle = await RhinoWeb.Rhino.fromPublicDirectory(
+          handle = await RhinoWeb.Rhino.create(
             accessKey,
-            { label: 'coffee', base64: coffeeMaker64 },
+            { base64: coffeeMaker64, forceWrite: true },
             rhinoInferenceCallback,
-            'rhino_params.pv',
-            { forceWrite: true }
+            { publicPath: 'rhino_params.pv', forceWrite: true }
           );
 
           inference = await rhinoProcessPCM(handle, outOfContextPcm);
@@ -245,12 +240,11 @@
           writeMessage('Checking Rhino out-of-context... done!');
 
           writeMessage('Checking RhinoWorker out-of-context...');
-          handle = await RhinoWeb.RhinoWorker.fromPublicDirectory(
+          handle = await RhinoWeb.RhinoWorker.create(
             accessKey,
-            { label: 'coffee', base64: coffeeMaker64 },
+            { base64: coffeeMaker64, forceWrite: true },
             rhinoInferenceCallback,
-            'rhino_params.pv',
-            { forceWrite: true }
+            { publicPath: 'rhino_params.pv', forceWrite: true }
           );
 
           inference = await rhinoProcessPCM(handle, outOfContextPcm);
@@ -264,12 +258,11 @@
           writeMessage('Checking RhinoWorker out-of-context... done!');
 
           writeMessage('Checking Rhino version returned...');
-          handle = await RhinoWeb.Rhino.fromPublicDirectory(
+          handle = await RhinoWeb.Rhino.create(
             accessKey,
-            { label: 'coffee', base64: coffeeMaker64 },
+            { base64: coffeeMaker64, forceWrite: true },
             rhinoInferenceCallback,
-            'rhino_params.pv',
-            { forceWrite: true }
+            { publicPath: 'rhino_params.pv', forceWrite: true }
           );
 
           let version = handle.version;
@@ -279,12 +272,11 @@
           writeMessage('Checking Rhino version returned... done!');
 
           writeMessage('Checking RhinoWorker version returned...');
-          handle = await RhinoWeb.RhinoWorker.fromPublicDirectory(
+          handle = await RhinoWeb.RhinoWorker.create(
             accessKey,
-            { label: 'coffee', base64: coffeeMaker64 },
+            { base64: coffeeMaker64, forceWrite: true },
             rhinoInferenceCallback,
-            'rhino_params.pv',
-            { forceWrite: true }
+            { publicPath: 'rhino_params.pv', forceWrite: true }
           );
 
           version = '';
@@ -295,12 +287,11 @@
           writeMessage('Checking RhinoWorker version returned... done!');
 
           writeMessage('Checking Rhino context info returned...');
-          handle = await RhinoWeb.Rhino.fromPublicDirectory(
+          handle = await RhinoWeb.Rhino.create(
             accessKey,
-            { label: 'coffee', base64: coffeeMaker64 },
+            { base64: coffeeMaker64, forceWrite: true },
             rhinoInferenceCallback,
-            'rhino_params.pv',
-            { forceWrite: true }
+            { publicPath: 'rhino_params.pv', forceWrite: true }
           );
 
           let contextInfo = handle.contextInfo;
@@ -322,12 +313,11 @@
           writeMessage('Checking Rhino context info returned... done!');
 
           writeMessage('Checking RhinoWorker context info returned...');
-          handle = await RhinoWeb.RhinoWorker.fromPublicDirectory(
+          handle = await RhinoWeb.RhinoWorker.create(
             accessKey,
-            { label: 'coffee', base64: coffeeMaker64 },
+            { base64: coffeeMaker64, forceWrite: true },
             rhinoInferenceCallback,
-            'rhino_params.pv',
-            { forceWrite: true }
+            { publicPath: 'rhino_params.pv', forceWrite: true }
           );
 
           contextInfo = '';
@@ -352,12 +342,11 @@
           writeMessage('Checking Rhino invalid accesskey...');
           is_failed = false;
           try {
-            let handle = await RhinoWeb.Rhino.fromPublicDirectory(
+            let handle = await RhinoWeb.Rhino.create(
               '1234',
-              { label: 'coffee', base64: coffeeMaker64 },
+              { base64: coffeeMaker64, forceWrite: true },
               rhinoInferenceCallback,
-              'rhino_params.pv',
-              { forceWrite: true }
+              { publicPath: 'rhino_params.pv', forceWrite: true }
             );
           } catch (error) {
             is_failed = true;
@@ -368,12 +357,11 @@
           writeMessage('Checking Rhino invalid path...');
           is_failed = false;
           try {
-            let handle = await RhinoWeb.Rhino.fromPublicDirectory(
+            let handle = await RhinoWeb.Rhino.create(
               accessKey,
-              { label: 'coffee', base64: coffeeMaker64 },
+              { base64: coffeeMaker64, forceWrite: true },
               rhinoInferenceCallback,
-              'invalid',
-              { forceWrite: true }
+              { publicPath: 'invalid', forceWrite: true }
             );
           } catch (error) {
             is_failed = true;
@@ -384,12 +372,11 @@
           writeMessage('Checking Rhino invalid base64...');
           is_failed = false;
           try {
-            let handle = await RhinoWeb.Rhino.fromBase64(
+            let handle = await RhinoWeb.Rhino.create(
               accessKey,
-              { label: 'coffee', base64: coffeeMaker64 },
+              { base64: coffeeMaker64, forceWrite: true },
               rhinoInferenceCallback,
-              'invalid',
-              { forceWrite: true }
+              { base64: 'invalid', forceWrite: true }
             );
           } catch (error) {
             is_failed = true;
@@ -400,12 +387,11 @@
           writeMessage('Checking Rhino null context...');
           is_failed = false;
           try {
-            let handle = await RhinoWeb.Rhino.fromPublicDirectory(
+            let handle = await RhinoWeb.Rhino.create(
               accessKey,
               null,
               rhinoInferenceCallback,
-              'rhino_params.pv',
-              { forceWrite: true }
+              { base64: 'rhino_params.pv', forceWrite: true }
             );
           } catch (error) {
             is_failed = true;
@@ -416,12 +402,11 @@
           writeMessage('Checking Rhino invalid context base64...');
           is_failed = false;
           try {
-            let handle = await RhinoWeb.Rhino.fromPublicDirectory(
+            let handle = await RhinoWeb.Rhino.create(
               accessKey,
-              { label: 'coffee2', base64: 'base64', forceWrite: false },
+              { base64: 'invalid', forceWrite: true },
               rhinoInferenceCallback,
-              'rhino_params.pv',
-              { forceWrite: true }
+              { base64: 'rhino_params.pv', forceWrite: true }
             );
           } catch (error) {
             is_failed = true;
@@ -436,12 +421,11 @@
           writeMessage('Checking Rhino invalid sensitivity value...');
           is_failed = false;
           try {
-            let handle = await RhinoWeb.Rhino.fromPublicDirectory(
+            let handle = await RhinoWeb.Rhino.create(
               accessKey,
-              { label: 'coffee', base64: coffeeMaker64 },
+              { base64: coffeeMaker64, sensitivity: 4.2, forceWrite: true },
               rhinoInferenceCallback,
-              'rhino_params.pv',
-              { sensitivity: 4.2, forceWrite: true }
+              { publicPath: 'rhino_params.pv', forceWrite: true }
             );
           } catch (error) {
             is_failed = true;
@@ -456,12 +440,11 @@
           writeMessage('Checking Rhino invalid sensitivity type...');
           is_failed = false;
           try {
-            let handle = await RhinoWeb.Rhino.fromPublicDirectory(
+            let handle = await RhinoWeb.Rhino.create(
               accessKey,
-              { label: 'coffee', base64: coffeeMaker64 },
+              { base64: coffeeMaker64, sensitivity: 'high', forceWrite: true },
               rhinoInferenceCallback,
-              'rhino_params.pv',
-              { sensitivity: 'high', forceWrite: true }
+              { publicPath: 'rhino_params.pv', forceWrite: true }
             );
           } catch (error) {
             is_failed = true;
@@ -493,12 +476,11 @@
           writeMessage('Starting init performance test!');
           let start = Date.now();
           for (let i = 0; i < numIterations; i++) {
-            handle = await RhinoWeb.RhinoWorker.fromBase64(
+            handle = await RhinoWeb.RhinoWorker.create(
               accessKey,
-              { label: 'coffee', base64: coffeeMaker64 },
+              { base64: coffeeMaker64, forceWrite: true },
               rhinoInferenceCallback,
-              modelParams,
-              { forceWrite: true }
+              { base64: modelParams, forceWrite: true },
             );
             handle.terminate();
           }
@@ -507,12 +489,11 @@
             `Init Performance: ${(end - start) / 1000 / numIterations}`
           );
 
-          handle = await RhinoWeb.RhinoWorker.fromBase64(
+          handle = await RhinoWeb.RhinoWorker.create(
             accessKey,
-            { label: 'coffee', base64: coffeeMaker64 },
+            { base64: coffeeMaker64, forceWrite: true },
             rhinoInferenceCallback,
-            modelParams,
-            { forceWrite: true }
+            { base64: modelParams, forceWrite: true },
           );
           writeMessage('Starting process performance test!');
           start = Date.now();

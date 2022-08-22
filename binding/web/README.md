@@ -91,21 +91,17 @@ npx pvbase64 -h
 
 ### Init options
 
-Rhino saves and caches your model file in IndexedDB to be used by Web Assembly. Use a different `customWritePath`
-variable to hold multiple model values and set the `forceWrite` value to true to force re-save the model file.
-Set `processErrorCallback` to handle errors if an error occurs while transcribing.
+Rhino saves and caches your model (`.pv`) and context (`.rhn`) file in IndexedDB to be used by Web Assembly.
+Use a different `customWritePath` variable to hold multiple model values and set the `forceWrite` value to true to force a re-save of the model file.
+Set `processErrorCallback` to handle errors if an error occurs while processing audio.
 If the model file (`.pv`) changes, `version` should be incremented to force the cached model to be updated.
 
 ```typescript
 // these are default
 const options = {
-  sensitivity: 0.5,
   endpointDurationSec: 1.0,
   requireEndpoint: true,
   processErrorCallback: (error) => {},
-  customWritePath: "rhino_model",
-  forceWrite: false,
-  version: 1,
 }
 ```
 
@@ -136,11 +132,11 @@ options.processErrorCallback = processErrorCallback;
 Use `Rhino` to initialize from public directory:
 
 ```typescript
-const handle = await Rhino.fromPublicDirectory(
+const handle = await Rhino.create(
   ${ACCESS_KEY},
-  { label: "rhino_model", publicPath: ${CONTEXT_RELATIVE_PATH} },
+  { publicPath: ${CONTEXT_RELATIVE_PATH} },
   inferenceCallback,
-  ${MODEL_RELATIVE_PATH},
+  { publicPath: ${MODEL_RELATIVE_PATH} },
   options // optional options
 );
 ```
@@ -151,18 +147,18 @@ or initialize using a base64 string:
 import rhinoContext from "${PATH_TO_BASE64_RHINO_CONTEXT}";
 import rhinoParams from "${PATH_TO_BASE64_RHINO_PARAMS}";
 
-const handle = await Rhino.fromBase64(
+const handle = await Rhino.create(
   ${ACCESS_KEY},
-  { label: "rhino_model", base64: rhinoContext },
+  { base64: rhinoContext },
   inferenceCallback,
-  rhinoParams,
+  { base64: rhinoParams },
   options // optional options
 )
 ```
 
 ### Process Audio Frames in Main Thread
 
-The result is received from `inferenceCallback` as mentioned above.
+The result is received from `inferenceCallback` as defined above.
 
 ```typescript
 function getAudioData(): Int16Array {
@@ -202,11 +198,11 @@ options.processErrorCallback = processErrorCallback;
 Use `rhinoWorker` to initialize from public directory:
 
 ```typescript
-const handle = await RhinoWorker.fromPublicDirectory(
+const handle = await RhinoWorker.create(
   ${ACCESS_KEY},
-  { label: "rhino_model", publicPath: ${CONTEXT_RELATIVE_PATH} },
+  { publicPath: ${CONTEXT_RELATIVE_PATH} },
   inferenceCallback,
-  ${MODEL_RELATIVE_PATH},
+  { publicPath: ${MODEL_RELATIVE_PATH} },
   options // optional options
 );
 ```
@@ -217,11 +213,11 @@ or initialize using a base64 string:
 import rhinoContext from "${PATH_TO_BASE64_RHINO_CONTEXT}";
 import rhinoParams from "${PATH_TO_BASE64_RHINO_PARAMS}";
 
-const handle = await RhinoWorker.fromBase64(
+const handle = await RhinoWorker.create(
   ${ACCESS_KEY},
-  { label: "rhino_model", base64: rhinoContext },
+  { base64: rhinoContext },
   inferenceCallback,
-  rhinoParams,
+  { base64: rhinoParams },
   options // optional options
 )
 ```
@@ -274,15 +270,14 @@ in which the `publicPath` property is set to the path to the context model file.
 
 ```typescript
 const rhinoContext = {
-  label: "rhino_model"
   publicPath: ${RHN_MODEL_RELATIVE_PATH},
 }
 
-const handle = await Rhino.fromPublicDirectory(
+const handle = await Rhino.create(
   ${ACCESS_KEY},
   rhinoContext,
   inferenceCallback,
-  ${MODEL_RELATIVE_PATH},
+  { publicPath: ${MODEL_RELATIVE_PATH} },
   options // optional options
 );
 ```
@@ -293,15 +288,14 @@ Use a base64 string representation of the model and pass it as the `base64` prop
 
 ```typescript
 const rhinoContext = {
-  label: "rhino_model"
   base64: ${RHN_BASE64_STRING},
 }
 
-const handle = await Rhino.fromPublicDirectory(
+const handle = await Rhino.create(
   ${ACCESS_KEY},
   rhinoContext,
   inferenceCallback,
-  ${MODEL_RELATIVE_PATH},
+  { publicPath: ${MODEL_RELATIVE_PATH} },
   options // optional options
 );
 ```

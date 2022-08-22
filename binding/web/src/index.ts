@@ -2,16 +2,19 @@ import { Rhino } from './rhino';
 import { RhinoWorker } from './rhino_worker';
 
 import {
-  RhinoOptions,
+  InferenceCallback,
   RhinoContext,
-  RhinoWorkerInitRequest,
-  RhinoWorkerProcessRequest,
-  RhinoWorkerReleaseRequest,
-  RhinoWorkerRequest,
-  RhinoWorkerInitResponse,
-  RhinoWorkerProcessResponse,
-  RhinoWorkerReleaseResponse,
+  RhinoInference,
+  RhinoModel,
+  RhinoOptions,
   RhinoWorkerFailureResponse,
+  RhinoWorkerInitRequest,
+  RhinoWorkerInitResponse,
+  RhinoWorkerProcessRequest,
+  RhinoWorkerProcessResponse,
+  RhinoWorkerReleaseRequest,
+  RhinoWorkerReleaseResponse,
+  RhinoWorkerRequest,
   RhinoWorkerResponse,
 } from './types';
 
@@ -24,17 +27,20 @@ RhinoWorker.setWasm(rhinoWasm);
 RhinoWorker.setWasmSimd(rhinoWasmSimd);
 
 export {
+  InferenceCallback,
   Rhino,
-  RhinoOptions,
   RhinoContext,
+  RhinoInference,
+  RhinoModel,
+  RhinoOptions,
   RhinoWorker,
-  RhinoWorkerInitRequest,
-  RhinoWorkerProcessRequest,
-  RhinoWorkerReleaseRequest,
-  RhinoWorkerRequest,
-  RhinoWorkerInitResponse,
-  RhinoWorkerProcessResponse,
-  RhinoWorkerReleaseResponse,
   RhinoWorkerFailureResponse,
+  RhinoWorkerInitRequest,
+  RhinoWorkerInitResponse,
+  RhinoWorkerProcessRequest,
+  RhinoWorkerProcessResponse,
+  RhinoWorkerReleaseRequest,
+  RhinoWorkerReleaseResponse,
+  RhinoWorkerRequest,
   RhinoWorkerResponse,
 };
