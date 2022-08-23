@@ -1264,11 +1264,11 @@ Rhino is available on modern web browsers (i.e. not Internet Explorer) via [WebA
 
       async function startRhino() {
         console.log("Rhino is loading. Please wait...");
-        let rhino = await RhinoWeb.RhinoWorker.fromBase64(
+        let rhino = await RhinoWeb.RhinoWorker.create(
             accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-            { label: "rhino context", base64: RHINO_CONTEXT_BASE64 },
+            { base64: RHINO_CONTEXT_BASE64 },
             rhinoInferenceCallback,
-            RHINO_MODEL_BASE64
+            { base64: RHINO_MODEL_BASE64 }
         );
 
         console.log("Rhino worker ready!");
@@ -1326,11 +1326,11 @@ function rhinoInferenceCallback(inference) {
 
 async function startRhino() {
   // Create a Rhino Worker to listen for commands in the specified context
-  const rhino = await RhinoWorker.fromBase64(
+  const rhino = await RhinoWorker.create(
     accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-    { label: "rhino context", base64: RHINO_CONTEXT_BASE64 },
+    { base64: RHINO_CONTEXT_BASE64 },
     rhinoInferenceCallback,
-    RHINO_MODEL_BASE64
+    { base64: RHINO_MODEL_BASE64 }
   );
 
   // Initialize the web voice processor.

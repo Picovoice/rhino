@@ -48,9 +48,10 @@ self.onmessage = async function (
       try {
         Rhino.setWasm(event.data.wasm);
         Rhino.setWasmSimd(event.data.wasmSimd);
-        rhino = await Rhino.create(
+        rhino = await Rhino._init(
           event.data.accessKey,
           event.data.contextPath,
+          event.data.sensitivity,
           inferenceCallback,
           event.data.modelPath,
           { ...event.data.options, processErrorCallback }
@@ -78,6 +79,19 @@ self.onmessage = async function (
         return;
       }
       await rhino.process(event.data.inputFrame);
+      break;
+    case 'reset':
+      if (rhino === null) {
+        self.postMessage({
+          command: 'error',
+          message: 'Rhino not initialized',
+        });
+        return;
+      }
+      await rhino.reset();
+      self.postMessage({
+        command: 'ok',
+      });
       break;
     case 'release':
       if (rhino !== null) {

@@ -32,11 +32,11 @@
       async function startRhino(accessKey) {
         try {
           writeMessage("Rhino is loading. Please wait...");
-          let rhino = await RhinoWeb.RhinoWorker.fromBase64(
+          let rhino = await RhinoWeb.RhinoWorker.create(
               accessKey,
-              { label: "Clock Context", publicPath: "clock_wasm.rhn" },
+              { publicPath: "clock_wasm.rhn" },
               rhinoInferenceCallback,
-              modelParams
+              { base64: modelParams },
           );
 
           writeMessage("Rhino worker ready!");
