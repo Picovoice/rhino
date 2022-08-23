@@ -93,7 +93,7 @@ npx pvbase64 -h
 
 The same procedure can be used for the [Rhino context](https://github.com/Picovoice/rhino/tree/master/resources/contexts) (`.rhn`) files.
 
-### Init options
+### Rhino Model
 
 Rhino saves and caches your model (`.pv`) and context (`.rhn`) files in the IndexedDB to be used by Web Assembly.
 Use a different `customWritePath` variable to hold multiple model values and set the `forceWrite` value to true to force an overwrite of the model file.
@@ -140,7 +140,7 @@ const options = {
 }
 ```
 
-### Initialize in Main Thread
+### Initialize Rhino
 
 Create a `inferenceCallback` function to get the results from the engine:
 
@@ -155,7 +155,7 @@ function inferenceCallback(inference) {
 }
 ```
 
-Add to the `options` object an `processErrorCallback` function if you would like to catch errors:
+Create an `options` object and add a `processErrorCallback` function if you would like to catch errors:
 
 ```typescript
 function processErrorCallback(error: string) {
@@ -164,7 +164,7 @@ function processErrorCallback(error: string) {
 options.processErrorCallback = processErrorCallback;
 ```
 
-Initialize an instance of `Rhino`:
+Initialize an instance of `Rhino` in the main thread:
 
 ```typescript
 const handle = await Rhino.create(
@@ -176,46 +176,7 @@ const handle = await Rhino.create(
 );
 ```
 
-### Process Audio Frames in Main Thread
-
-The result is received from `inferenceCallback` as defined above.
-
-```typescript
-function getAudioData(): Int16Array {
-... // function to get audio data
-  return new Int16Array();
-}
-for (; ;) {
-  await handle.process(getAudioData());
-  // break on some condition
-}
-```
-
-### Initialize in Worker Thread
-
-Create a `inferenceCallback` function to get the streaming results from the worker:
-
-```typescript
-function inferenceCallback(inference) {
-  if (inference.isFinalized) {
-    if (inference.isUnderstood) {
-      console.log(inference.intent)
-      console.log(inference.slots)
-    }
-  }
-}
-```
-
-Add to the `options` object an `processErrorCallback` function if you would like to catch errors:
-
-```typescript
-function processErrorCallback(error: string) {
-...
-}
-options.processErrorCallback = processErrorCallback;
-```
-
-Initialize an instance of `RhinoWorker`:
+Or initialize an instance of `Rhino` in a worker thread:
 
 ```typescript
 const handle = await RhinoWorker.create(
@@ -227,10 +188,9 @@ const handle = await RhinoWorker.create(
 );
 ```
 
-### Process Audio Frames in Worker Thread
+### Process Audio Frames
 
-In a worker thread, the `process` function will send the input frames to the worker.
-The result is received from `inferenceCallback` as mentioned above.
+The result is received from `inferenceCallback` as defined above.
 
 ```typescript
 function getAudioData(): Int16Array {
@@ -238,7 +198,7 @@ function getAudioData(): Int16Array {
   return new Int16Array();
 }
 for (; ;) {
-  handle.process(getAudioData());
+  await handle.process(getAudioData());
   // break on some condition
 }
 ```
@@ -264,6 +224,10 @@ await handle.terminate();
 Create custom contexts using the [Picovoice Console](https://console.picovoice.ai/).
 Train the Rhino context model for the target platform WebAssembly (WASM).
 Inside the downloaded `.zip` file, there will be a `.rhn` file which is the context model file in binary format.
+
+Similar to the model file (`.pv`), keyword files (`.rhn`) are saved in IndexedDB to be used by Web Assembly.
+Either `base64` or `publicPath` must be set to instantiate Rhino. If both are set, Rhino will use
+the `base64` model.
 
 ## Non-English Languages
 
