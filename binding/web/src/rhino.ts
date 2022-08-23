@@ -154,11 +154,13 @@ export class Rhino {
   private readonly _processErrorCallback: (error: string) => void;
 
   private static _rhinoMutex = new Mutex();
+  private _paused: boolean;
 
   private constructor(
     handleWasm: RhinoWasmOutput,
     inferenceCallback: InferenceCallback,
-    processErrorCallback: (error: string) => void
+    processErrorCallback: (error: string) => void,
+    start: boolean
   ) {
     Rhino._frameLength = handleWasm.frameLength;
     Rhino._sampleRate = handleWasm.sampleRate;
@@ -192,6 +194,8 @@ export class Rhino {
 
     this._inferenceCallback = inferenceCallback;
     this._processErrorCallback = processErrorCallback;
+
+    this._paused = !start;
   }
 
   /**
@@ -278,12 +282,16 @@ export class Rhino {
     model: RhinoModel,
     options: RhinoOptions = {}
   ): Promise<Rhino> {
-    let customWritePath = (context.customWritePath) ? context.customWritePath : 'rhino_context';
-    const contextPath = await loadModel({ ...context, customWritePath});
+    let customWritePath = context.customWritePath
+      ? context.customWritePath
+      : 'rhino_context';
+    const contextPath = await loadModel({ ...context, customWritePath });
     const { sensitivity = 0.5 } = context;
 
-    customWritePath = (model.customWritePath) ? model.customWritePath : 'rhino_model';
-    const modelPath = await loadModel({ ...model, customWritePath});
+    customWritePath = model.customWritePath
+      ? model.customWritePath
+      : 'rhino_model';
+    const modelPath = await loadModel({ ...model, customWritePath });
 
     return Rhino._init(
       accessKey,
@@ -319,8 +327,13 @@ export class Rhino {
             modelPath,
             options
           );
-          const { processErrorCallback } = options;
-          return new Rhino(wasmOutput, inferenceCallback, processErrorCallback);
+          const { processErrorCallback, start = true } = options;
+          return new Rhino(
+            wasmOutput,
+            inferenceCallback,
+            processErrorCallback,
+            start
+          );
         })
         .then((result: Rhino) => {
           resolve(result);
@@ -341,6 +354,10 @@ export class Rhino {
   public async process(pcm: Int16Array): Promise<void> {
     if (!(pcm instanceof Int16Array)) {
       throw new Error("The argument 'pcm' must be provided as an Int16Array");
+    }
+
+    if (this._paused) {
+      return;
     }
 
     this._processMutex
@@ -529,6 +546,20 @@ export class Rhino {
     );
 
     return arrayBufferToStringAtIndex(this._memoryBufferUint8, valueAddress);
+  }
+
+  /**
+   * Places Rhino into a paused state.
+   */
+  public pause(): void {
+    this._paused = true;
+  }
+
+  /**
+   * Releases Rhino from it's paused state.
+   */
+  public resume(): void {
+    this._paused = false;
   }
 
   /**

@@ -80,6 +80,23 @@ self.onmessage = async function (
       }
       await rhino.process(event.data.inputFrame);
       break;
+    case 'pause':
+      if (rhino === null) {
+        self.postMessage({
+          command: 'error',
+          message: 'Rhino not initialized',
+        });
+        return;
+      }
+      if (event.data.pause) {
+        rhino.pause();
+      } else {
+        rhino.resume();
+      }
+      self.postMessage({
+        command: 'ok',
+      });
+      break;
     case 'release':
       if (rhino !== null) {
         await rhino.release();

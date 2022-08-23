@@ -196,12 +196,16 @@ export class RhinoWorker {
       }
     );
 
-    let customWritePath = (context.customWritePath) ? context.customWritePath : 'rhino_context';
-    const contextPath = await loadModel({ ...context, customWritePath});
+    let customWritePath = context.customWritePath
+      ? context.customWritePath
+      : 'rhino_context';
+    const contextPath = await loadModel({ ...context, customWritePath });
     const { sensitivity = 0.5 } = context;
 
-    customWritePath = (model.customWritePath) ? model.customWritePath : 'rhino_model';
-    const modelPath = await loadModel({ ...model, customWritePath});
+    customWritePath = model.customWritePath
+      ? model.customWritePath
+      : 'rhino_model';
+    const modelPath = await loadModel({ ...model, customWritePath });
 
     worker.postMessage({
       command: 'init',
@@ -228,6 +232,26 @@ export class RhinoWorker {
     this._worker.postMessage({
       command: 'process',
       inputFrame: pcm,
+    });
+  }
+
+  /**
+   * Places Rhino into a paused state.
+   */
+  public pause(): void {
+    this._worker.postMessage({
+      command: 'pause',
+      pause: true,
+    });
+  }
+
+  /**
+   * Releases Rhino from it's paused state.
+   */
+  public resume(): void {
+    this._worker.postMessage({
+      command: 'pause',
+      pause: false,
     });
   }
 
