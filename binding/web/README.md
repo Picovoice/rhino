@@ -96,7 +96,7 @@ The same procedure can be used for the [Rhino context](https://github.com/Picovo
 ### Init options
 
 Rhino saves and caches your model (`.pv`) and context (`.rhn`) files in the IndexedDB to be used by Web Assembly.
-Use a different `customWritePath` variable to hold multiple model values and set the `forceWrite` value to true to force a re-save of the model file.
+Use a different `customWritePath` variable to hold multiple model values and set the `forceWrite` value to true to force an overwrite of the model file.
 If the model (`.pv`) or context (`.rhn`) files change, `version` should be incremented to force the cached model to be updated. Either `base64` or `publicPath` must be set to instantiate Rhino. If both are set, Rhino will use the `base64` parameter.
 
 ```typescript
@@ -109,7 +109,7 @@ const rhinoContext = {
   // Optionals
   customWritePath: 'custom_context',
   forceWrite: true,
-  version: '1.0',
+  version: 1,
   sensitivity: 0.5,
 }
 
@@ -122,13 +122,13 @@ const rhinoModel = {
   // Optionals
   customWritePath: 'custom_model',
   forceWrite: true,
-  version: '1.0',
+  version: 1,
 }
 ```
 
-Additional engine options are provided as the `options` parameter.
+Additional engine options are provided via the `options` parameter.
 Set `processErrorCallback` to handle errors if an error occurs while processing audio.
-Use `endpointDurationSec` and `requireEndpoint` to control endpoint parameters.
+Use `endpointDurationSec` and `requireEndpoint` to control the engine's endpointing behaviour.
 An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command.
 
 ```typescript
