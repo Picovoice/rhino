@@ -16,7 +16,6 @@ import PvWorker from 'web-worker:./rhino_worker_handler.ts';
 import {
   InferenceCallback,
   RhinoContext,
-  RhinoInference,
   RhinoModel,
   RhinoOptions,
   RhinoWorkerInitResponse,
@@ -236,22 +235,11 @@ export class RhinoWorker {
   }
 
   /**
-   * Places Rhino into a paused state.
+   * Resets the internal Rhino state.
    */
-  public pause(): void {
+  public reset(): void {
     this._worker.postMessage({
-      command: 'pause',
-      pause: true,
-    });
-  }
-
-  /**
-   * Releases Rhino from it's paused state.
-   */
-  public resume(): void {
-    this._worker.postMessage({
-      command: 'pause',
-      pause: false,
+      command: 'reset',
     });
   }
 

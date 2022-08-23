@@ -80,7 +80,7 @@ self.onmessage = async function (
       }
       await rhino.process(event.data.inputFrame);
       break;
-    case 'pause':
+    case 'reset':
       if (rhino === null) {
         self.postMessage({
           command: 'error',
@@ -88,11 +88,7 @@ self.onmessage = async function (
         });
         return;
       }
-      if (event.data.pause) {
-        rhino.pause();
-      } else {
-        rhino.resume();
-      }
+      await rhino.reset();
       self.postMessage({
         command: 'ok',
       });

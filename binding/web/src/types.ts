@@ -25,8 +25,6 @@ export type RhinoOptions = {
   requireEndpoint?: boolean;
   /** @defaultValue '(error) => {}' */
   processErrorCallback?: (error: string) => void;
-  /** @defaultValue true */
-  start?: boolean;
 };
 
 export type RhinoInference = {
@@ -58,9 +56,8 @@ export type RhinoWorkerProcessRequest = {
   inputFrame: Int16Array;
 };
 
-export type RhinoWorkerPauseRequest = {
-  command: 'pause';
-  pause: boolean;
+export type RhinoWorkerResetRequest = {
+  command: 'reset';
 };
 
 export type RhinoWorkerReleaseRequest = {
@@ -70,7 +67,7 @@ export type RhinoWorkerReleaseRequest = {
 export type RhinoWorkerRequest =
   | RhinoWorkerInitRequest
   | RhinoWorkerProcessRequest
-  | RhinoWorkerPauseRequest
+  | RhinoWorkerResetRequest
   | RhinoWorkerReleaseRequest;
 
 export type RhinoWorkerFailureResponse = {
@@ -95,7 +92,7 @@ export type RhinoWorkerProcessResponse =
       inference: RhinoInference;
     };
 
-export type RhinoWorkerPauseResponse =
+export type RhinoWorkerResetResponse =
   | RhinoWorkerFailureResponse
   | {
       command: 'ok';
@@ -110,5 +107,5 @@ export type RhinoWorkerReleaseResponse =
 export type RhinoWorkerResponse =
   | RhinoWorkerInitResponse
   | RhinoWorkerProcessResponse
-  | RhinoWorkerPauseResponse
+  | RhinoWorkerResetResponse
   | RhinoWorkerReleaseResponse;

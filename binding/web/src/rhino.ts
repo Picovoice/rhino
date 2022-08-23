@@ -17,8 +17,6 @@ import {
   aligned_alloc_type,
   arrayBufferToStringAtIndex,
   buildWasm,
-  fromBase64,
-  fromPublicDirectory,
   isAccessKeyValid,
   loadModel,
   pv_free_type,
@@ -154,13 +152,11 @@ export class Rhino {
   private readonly _processErrorCallback: (error: string) => void;
 
   private static _rhinoMutex = new Mutex();
-  private _paused: boolean;
 
   private constructor(
     handleWasm: RhinoWasmOutput,
     inferenceCallback: InferenceCallback,
-    processErrorCallback: (error: string) => void,
-    start: boolean
+    processErrorCallback: (error: string) => void
   ) {
     Rhino._frameLength = handleWasm.frameLength;
     Rhino._sampleRate = handleWasm.sampleRate;
@@ -194,8 +190,6 @@ export class Rhino {
 
     this._inferenceCallback = inferenceCallback;
     this._processErrorCallback = processErrorCallback;
-
-    this._paused = !start;
   }
 
   /**
@@ -327,13 +321,8 @@ export class Rhino {
             modelPath,
             options
           );
-          const { processErrorCallback, start = true } = options;
-          return new Rhino(
-            wasmOutput,
-            inferenceCallback,
-            processErrorCallback,
-            start
-          );
+          const { processErrorCallback } = options;
+          return new Rhino(wasmOutput, inferenceCallback, processErrorCallback);
         })
         .then((result: Rhino) => {
           resolve(result);
@@ -354,10 +343,6 @@ export class Rhino {
   public async process(pcm: Int16Array): Promise<void> {
     if (!(pcm instanceof Int16Array)) {
       throw new Error("The argument 'pcm' must be provided as an Int16Array");
-    }
-
-    if (this._paused) {
-      return;
     }
 
     this._processMutex
@@ -549,17 +534,18 @@ export class Rhino {
   }
 
   /**
-   * Places Rhino into a paused state.
+   * Resets the internal Rhino state.
    */
-  public pause(): void {
-    this._paused = true;
-  }
-
-  /**
-   * Releases Rhino from it's paused state.
-   */
-  public resume(): void {
-    this._paused = false;
+  public async reset(): Promise<void> {
+    const status = await this._pvRhinoReset(this._objectAddress);
+    if (status !== PV_STATUS_SUCCESS) {
+      throw new Error(
+        `'pv_rhino_process' failed with status ${arrayBufferToStringAtIndex(
+          this._memoryBufferUint8,
+          await this._pvStatusToString(status)
+        )}`
+      );
+    }
   }
 
   /**
