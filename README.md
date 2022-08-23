@@ -1396,57 +1396,49 @@ public pushToTalk() {
 #### React
 
 ```console
-yarn add @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
+yarn add @picovoice/rhino-web-react @picovoice/web-voice-processor
 ```
 
 (or)
 
 ```console
-npm install @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
+npm install @picovoice/rhino-web-react @picovoice/web-voice-processor
 ```
 
 ```javascript
-mport React, { useState } from 'react';
-import { RhinoWorkerFactory } from '@picovoice/rhino-web-en-worker';
+import React, { useState } from 'react';
 import { useRhino } from '@picovoice/rhino-web-react';
 
-const RHINO_CONTEXT_BASE64 = /* Base64 representation an English language .rhn file, omitted for brevity */
+const RHINO_CONTEXT_BASE64 = /* Base64 representation of a Rhino context (.rhn) for WASM, omitted for brevity */
+const RHN_MODEL_BASE64 = /* Base64 representation of a Rhino parameter model (.pv), omitted for brevity */
 
 function VoiceWidget(props) {
   const [latestInference, setLatestInference] = useState(null)
 
-  const inferenceEventHandler = (rhinoInference) => {
+  const inferenceCallback = (rhinoInference) => {
     console.log(`Rhino inferred: ${rhinoInference}`);
     setLatestInference(rhinoInference)
   };
 
   const {
+    contextInfo,
+    error,
     isLoaded,
     isListening,
-    isError,
-    isTalking,
-    errorMessage,
     start,
-    resume,
-    pause,
+    stop,
     pushToTalk,
   } = useRhino(
-    // Pass in the factory to build Rhino workers. This needs to match the context language below
-    RhinoWorkerFactory,
-    // Initialize Rhino (in a paused state).
-    // Immediately start processing microphone audio,
-    // Although Rhino itself will not start listening until the Push to Talk button is pressed.
-    {
-      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-      context: { base64: RHINO_CONTEXT_BASE64 },
-      start: true,
-    }
-    inferenceEventHandler
+    "${ACCESS_KEY}", // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+    { base64: RHINO_CONTEXT_BASE64 },
+    inferenceCallback
+    { base64: RHN_MODEL_BASE64 },
   );
+  start();
 
 return (
   <div className="voice-widget">
-    <button onClick={() => pushToTalk()} disabled={isTalking || isError || !isLoaded}>
+    <button onClick={() => pushToTalk()} disabled={isListening || !isLoaded || error !== null}>
       Push to Talk
     </button>
     <p>{JSON.stringify(latestInference)}</p>

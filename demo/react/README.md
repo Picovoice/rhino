@@ -1,6 +1,6 @@
 # rhino-web-react-demo
 
-This demo application includes the `VoiceWidget` which uses the `useRhino` react hook to allow inferring naturally spoken commands from voice. The inference is handled via the `inferenceEvent Handler` callback function that updates a React `useState` hook, and then renders the results.
+This demo application includes the `VoiceWidget` which uses the `useRhino` react hook to allow inferring naturally spoken commands from voice. The inference is handled via the `inferenceCallback` function that updates a React `useState` hook, and then renders the results.
 
 If you decline microphone permission in the browser, or another such issue prevents Rhino from starting, the error will be displayed.
 
