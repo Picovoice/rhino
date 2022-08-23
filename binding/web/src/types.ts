@@ -16,7 +16,7 @@ export type RhinoContext = PvModel & {
   sensitivity?: number;
 };
 
-export type RhinoModel = PvModel & {};
+export type RhinoModel = PvModel;
 
 export type RhinoOptions = {
   /** @defaultValue '1.0' */
