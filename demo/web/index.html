@@ -23,7 +23,7 @@
       function rhinoInferenceCallback(inference) {
         if (inference.isFinalized) {
           writeMessage(`Inference detected: ${JSON.stringify(inference)}`, true);
-          window.webVp.stop()
+          WebVoiceProcessor.WebVoiceProcessor.unsubscribe(window.rhino);
           document.getElementById("push-to-talk").disabled = false;
           writeMessage("Press the 'Push to Talk' button to speak again.");
         }
@@ -32,7 +32,7 @@
       async function startRhino(accessKey) {
         try {
           writeMessage("Rhino is loading. Please wait...");
-          let rhino = await RhinoWeb.RhinoWorker.create(
+          window.rhino = await RhinoWeb.RhinoWorker.create(
               accessKey,
               { publicPath: "clock_wasm.rhn" },
               rhinoInferenceCallback,
@@ -43,11 +43,7 @@
           document.getElementById("push-to-talk").disabled = false;
           document.getElementById("rhn-context-yaml").innerText = rhino.contextInfo;
 
-          writeMessage("WebVoiceProcessor initializing. Microphone permissions requested ...");
-          window.webVp = await WebVoiceProcessor.WebVoiceProcessor.instance();
-          window.webVp.subscribe(rhino);
-          writeMessage("WebVoiceProcessor ready! Press the 'Push to Talk' button to talk. Then say e.g. 'Set a timer for one minute'");
-
+          writeMessage("Press the 'Push to Talk' button to talk. Then say e.g. 'Set a timer for one minute'");
         } catch (error) {
           writeMessage(error);
         }
@@ -57,7 +53,7 @@
         document.getElementById("push-to-talk").onclick = function (event) {
           writeMessage("Rhino is listening for your commands ...");
           this.disabled = true;
-          window.webVp.start()
+          WebVoiceProcessor.WebVoiceProcessor.subscribe(window.rhino);
         };
       });
     </script>
