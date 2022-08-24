@@ -7,9 +7,4 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'rhino-web-angular-demo-rhino';
-  show = true
-
-  toggle() {
-    this.show = !this.show
-  }
 }

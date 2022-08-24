@@ -19,13 +19,9 @@ export class VoiceWidget {
 
   title: "voice-widget"
   contextInfo: string | null
-  isChunkLoaded: boolean = false
   isLoaded: boolean = false
-  isError: boolean = false
-  error: Error | string | null = null
   isListening: boolean | null = null
-  isTalking: boolean = false
-  errorMessage: string
+  error: Error | string | null = null
   inference: RhinoInference | null = null
 
   constructor(private rhinoService: RhinoService) {
@@ -36,22 +32,17 @@ export class VoiceWidget {
         console.log(inference)
       })
 
-    // Subscribe to listening, isError, and error message
-    this.listeningDetection = rhinoService.listening$.subscribe(
-      listening => {
-        this.isListening = listening
+    this.isLoadedDetection = rhinoService.isLoaded.subscribe(
+      isListening => {
+        this.isLoaded = isLoaded
+      })
+    this.isListeningDetection = rhinoService.isListening.subscribe(
+      isListening => {
+        this.isListening = isListening
       })
     this.errorDetection = rhinoService.error$.subscribe(
       error => {
         this.error = error
-      })
-    this.isErrorDetection = rhinoService.isError$.subscribe(
-      isError => {
-        this.isError = isError
-      })
-    this.isTalkingDetection = rhinoService.isTalking$.subscribe(
-      isTalking => {
-        this.isTalking = isTalking
       })
   }
 
@@ -61,28 +52,22 @@ export class VoiceWidget {
 
   ngOnDestroy() {
     this.inferenceDetection.unsubscribe()
-    this.listeningDetection.unsubscribe()
+    this.isLoadedDetection.unsubscribe()
+    this.isListeningDetection.unsubscribe()
     this.errorDetection.unsubscribe()
-    this.isErrorDetection.unsubscribe()
-    this.isTalkingDetection.unsubscribe()
-    this.rhinoService.release()
   }
 
-  public pause() {
-    this.rhinoService.pause();
+  public async start() {
+    await this.rhinoService.start();
   }
 
-  public start() {
-    this.rhinoService.start();
+  public async stop() {
+    await this.rhinoService.stop();
   }
 
-  public stop() {
-    this.rhinoService.stop();
-  }
-
-  public pushToTalk() {
+  public async pushToTalk() {
     this.inference = null
-    this.rhinoService.pushToTalk()
+    await this.rhinoService.pushToTalk()
   }
 
   public async initEngine(accessKey: string) {
