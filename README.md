@@ -1406,39 +1406,37 @@ npm install @picovoice/rhino-web-react @picovoice/web-voice-processor
 ```
 
 ```javascript
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useRhino } from '@picovoice/rhino-web-react';
 
 const RHINO_CONTEXT_BASE64 = /* Base64 representation of a Rhino context (.rhn) for WASM, omitted for brevity */
 const RHN_MODEL_BASE64 = /* Base64 representation of a Rhino parameter model (.pv), omitted for brevity */
 
 function VoiceWidget(props) {
-  const [latestInference, setLatestInference] = useState(null)
-
-  const inferenceCallback = (rhinoInference) => {
-    console.log(`Rhino inferred: ${rhinoInference}`);
-    setLatestInference(rhinoInference)
-  };
-
   const {
+    inference,
     contextInfo,
-    error,
     isLoaded,
     isListening,
-    start,
-    stop,
-    pushToTalk,
-  } = useRhino(
-    "${ACCESS_KEY}", // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-    { base64: RHINO_CONTEXT_BASE64 },
-    inferenceCallback
-    { base64: RHN_MODEL_BASE64 },
-  );
-  start();
+    error,
+    init,
+    process,
+    release,
+  } = useRhino();
+
+  useEffect(() => {
+    if (!isLoaded) {
+      init(
+        "${ACCESS_KEY}", // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+        { base64: RHINO_CONTEXT_BASE64 },
+        { base64: RHN_MODEL_BASE64 }
+      );
+    }
+  }, [isLoaded])
 
 return (
   <div className="voice-widget">
-    <button onClick={() => pushToTalk()} disabled={isListening || !isLoaded || error !== null}>
+    <button onClick={() => process()} disabled={isListening || !isLoaded || error !== null}>
       Push to Talk
     </button>
     <p>{JSON.stringify(latestInference)}</p>

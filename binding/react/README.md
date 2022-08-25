@@ -130,7 +130,6 @@ const rhinoModel = {
 ```
 
 Additional engine options are provided via the `options` parameter.
-Set `processErrorCallback` to handle errors if an error occurs while processing audio.
 Use `endpointDurationSec` and `requireEndpoint` to control the engine's endpointing behaviour.
 An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command.
 
@@ -139,80 +138,57 @@ An endpoint is a chunk of silence at the end of an utterance that marks the end 
 const options = {
   endpointDurationSec: 1.0,
   requireEndpoint: true,
-  processErrorCallback: (error) => {},
 }
 ```
 
 ### Initialize Rhino
 
-Create a `inferenceCallback` function to get the results from the engine:
-
-```typescript
-function inferenceCallback(inference) {
-  if (inference.isFinalized) {
-    if (inference.isUnderstood) {
-      console.log(inference.intent)
-      console.log(inference.slots)
-    }
-  }
-}
-```
-
-Create an `options` object and add a `processErrorCallback` function if you would like to catch errors:
-
-```typescript
-function processErrorCallback(error: string) {
-...
-}
-options.processErrorCallback = processErrorCallback;
-```
-
-Use the `useRhino` hook to initialize `Rhino`:
+Use the `useRhino` hook and then the `init` function to initialize `Rhino`:
 
 ```typescript
 const {
+  inference,
   contextInfo,
-  error,
   isLoaded,
   isListening,
-  start,
-  stop,
-  pushToTalk,
-} = useRhino(
-  "${ACCESS_KEY}",
-  rhinoContext,
-  inferenceCallback
-  rhinoModel,
-  options,
-);
+  error,
+  init,
+  process,
+  release,
+} = useRhino();
+
+const initRhino = async () => {
+  await init(
+    "${ACCESS_KEY}",
+    rhinoContext,
+    rhinoModel,
+    options
+  )
+}
 ```
+
+The `init` process is asyncronous. Once complete, the `isLoaded` flag will be set to `true`.
 
 ### Process Audio Frames in Worker Thread
 
 The Rhino React binding uses [WebVoiceProcessor](https://github.com/Picovoice/web-voice-processor) to record audio.
-To start detecting detecting an inference, run the `start` function:
+To start detecting detecting an inference, run the `process` function:
 ```typescript
-await start();
+await process();
 ```
-The `start` function initializes Rhino and WebVoiceProcessor.
-Note: Only `inferenceCallback` will be affected by state changes once Rhino binding has started.
+The `process` function initializes WebVoiceProcessor.
+Rhino will then listen and process frames of microphone audio until it reaches a conclusion, then return the result via the `inference` variable.
+Once a conclusion is reached Rhino will enter a paused state. From the paused state Rhino call `process` again to detect another inference.
 
-Once started and `isLoaded` is `true`, call the `pushToTalk` function to start the Rhino "push-to-talk" experience:
-```typescript
-await pushToTalk();
-```
-Rhino will listen and process frames of microphone audio until it reaches a conclusion, then return the result via the supplied `inferenceCallback`. Once a conclusion is reached Rhino will enter a paused state. From the paused state Rhino will wait for subsequent calls to `pushToTalk`.
+### Cleanup
 
-### Stop
-
-Run `stop` to stop Rhino. This cleans up all resources used by Rhino and WebVoiceProcessor.
+When you are done with Rhino call `release`. This cleans up all resources used by Rhino and WebVoiceProcessor.
 
 ```typescript
-await stop();
+await release();
 ```
 
-If any arguments **except** for `inferenceCallback` require changes, call `stop` then `start` to initialize
-Rhino with the new settings.
+If any arguments require changes, call `release` then `init` again to initialize Rhino with the new settings.
 
 ## Contexts
 
