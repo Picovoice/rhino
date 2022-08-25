@@ -1253,10 +1253,12 @@ Rhino is available on modern web browsers (i.e. not Internet Explorer) via [WebA
       const RHINO_CONTEXT_BASE64 = /* Base64 representation of `.rhn` context file  */;
       const RHINO_MODEL_BASE64 = /* Base64 representation of the `.pv` model file */;
 
+      let rhino = null;
+
       function rhinoInferenceCallback(inference) {
         if (inference.isFinalized) {
           console.log(`Inference detected: ${JSON.stringify(inference)}`);
-          window.webVp.stop()
+          WebVoiceProcessor.WebVoiceProcessor.unsubscribe(rhino);
           document.getElementById("push-to-talk").disabled = false;
           console.log("Press the 'Push to Talk' button to speak again.");
         }
@@ -1264,7 +1266,7 @@ Rhino is available on modern web browsers (i.e. not Internet Explorer) via [WebA
 
       async function startRhino() {
         console.log("Rhino is loading. Please wait...");
-        let rhino = await RhinoWeb.RhinoWorker.create(
+        rhino = await RhinoWeb.RhinoWorker.create(
             accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
             { base64: RHINO_CONTEXT_BASE64 },
             rhinoInferenceCallback,
@@ -1273,18 +1275,16 @@ Rhino is available on modern web browsers (i.e. not Internet Explorer) via [WebA
 
         console.log("Rhino worker ready!");
         document.getElementById("push-to-talk").disabled = false;
-
-        writeMessage("WebVoiceProcessor initializing. Microphone permissions requested ...");
-        window.webVp = await WebVoiceProcessor.WebVoiceProcessor.instance();
-        window.webVp.subscribe(rhino);
-        writeMessage("WebVoiceProcessor ready! Press the 'Push to Talk' button to talk.");
+        writeMessage("Press the 'Push to Talk' button to talk.");
       }
 
       document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("push-to-talk").onclick = function (event) {
-          console.log("Rhino is listening for your commands ...");
-          this.disabled = true;
-          window.webVp.start()
+          if (rhino) {
+            console.log("Rhino is listening for your commands ...");
+            this.disabled = true;
+            WebVoiceProcessor.WebVoiceProcessor.subscribe(rhino);
+          }
         };
       });
     </script>
@@ -1315,36 +1315,32 @@ import { RhinoWorker } from "@picovoice/rhino-web";
 const RHN_CONTEXT_BASE64 = /* Base64 representation of a `.rhn` context file */
 const RHINO_MODEL_BASE64 = /* Base64 representation of the `.pv` model file*/;
 
-let webvp = null
+let rhino = null
 
 function rhinoInferenceCallback(inference) {
   if (inference.isFinalized) {
     console.log(`Rhino inference: ${JSON.stringify(inference)}`);
-    webVp.stop()
+    WebVoiceProcessor.unsubscribe(rhino);
   }
 }
 
 async function startRhino() {
   // Create a Rhino Worker to listen for commands in the specified context
-  const rhino = await RhinoWorker.create(
+  rhino = await RhinoWorker.create(
     accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
     { base64: RHINO_CONTEXT_BASE64 },
     rhinoInferenceCallback,
     { base64: RHINO_MODEL_BASE64 }
   );
-
-  // Initialize the web voice processor.
-  // It downsamples the audio to voice recognition standard format (16-bit 16kHz linear PCM, single-channel)
-  // The incoming microphone audio frames will then be forwarded to the Rhino Worker.
-  webVp = await WebVoiceProcessor.WebVoiceProcessor.instance();
-  webVp.subscribe(rhino);
 }
 
 // Start a voice interaction:
 // WebVoiceProcessor will request microphone permission.
 // n.b. This promise will reject if the user refuses permission! Make sure you handle that possibility.
 function pushToTalk() {
-  webVp.start()
+  if (rhino) {
+    WebVoiceProcessor.subscribe(rhino);
+  }
 }
 
 startRhino()
@@ -1353,7 +1349,7 @@ startRhino()
 
 // Finished with Rhino? Release the WebVoiceProcessor and the worker.
 if (done) {
-  webVp.release()
+  WebVoiceProcessor.unsubscribe(rhino);
   rhino.release()
   rhino.terminate()
 }
