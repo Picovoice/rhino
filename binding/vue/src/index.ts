@@ -24,7 +24,4 @@ if (GlobalVue) {
 export default rhinoMixin;
 
 // export types
-export { 
-  RhinoWorkerFactoryArgs,
-  RhinoVue
-};
+export { RhinoVue };

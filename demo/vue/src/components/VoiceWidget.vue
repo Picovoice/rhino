@@ -8,35 +8,25 @@
         <input
           type="text"
           name="accessKey"
-          v-on:change="updateInputValue"
+          v-on:change="updateAccesskey"
           :disabled="isLoaded"
         />
       </label>
-      <button class="start-button" v-on:click="initEngine" :disabled="isLoaded">
+      <button class="start-button" v-on:click="rhnInit" :disabled="isLoaded || accessKey.length == 0">
           Start Rhino
       </button>
     </h3>
     <h3>Rhino Loaded: {{ isLoaded }}</h3>
     <h3>Listening: {{ isListening }}</h3>
-    <h3>Error: {{ isError }}</h3>
-    <p class="error-message" v-if="isError">
+    <h3>Error: {{ error !== null }}</h3>
+    <p class="error-message" v-if="error !== null">
       {{ JSON.stringify(errorMessage) }}
     </p>
-    <h3>Talking: {{ isTalking }}</h3>
-    <button v-on:click="start" :disabled="!isLoaded || isError || isListening">
-      Start
+    <button v-on:click="rhnProcess" :disabled="error !== null || isListening || !isLoaded">
+      Process
     </button>
-    <button v-on:click="pause" :disabled="!isLoaded || isError || !isListening">
-      Pause
-    </button>
-    <button v-on:click="stop" :disabled="!isLoaded || isError || !isListening">
-      Stop
-    </button>
-    <button
-      v-on:click="pushToTalk"
-      :disabled="!isLoaded || isError || !isListening || isTalking"
-    >
-      Push to Talk
+    <button v-on:click="rhnRelease" :disabled="error !== null || !isListening || !isLoaded">
+      Release
     </button>
     <h3>Inference:</h3>
     <pre v-if="inference !== null">{{ JSON.stringify(inference, null, 2) }}</pre>
@@ -54,85 +44,69 @@
 import Vue, { VueConstructor } from "vue";
 
 import rhinoMixin, { RhinoVue } from "@picovoice/rhino-web-vue";
-import { RhinoWorkerFactory as RhinoWorkerFactoryEn } from "@picovoice/rhino-web-en-worker";
-import { RhinoInference } from "@picovoice/rhino-web-core";
-import { CLOCK_EN_64 } from "../dist/rhn_contexts_base64";
+import { RhinoInference } from "@picovoice/rhino-web";
+
+import { MODEL_BASE_64 } from "../dist/rhn_model_base64";
+import { CONTEXT_BASE_64 } from "../dist/rhn_context_base64";
 
 export default (Vue as VueConstructor<Vue & {$rhino: RhinoVue}>).extend({
   name: "VoiceWidget",
   mixins: [rhinoMixin],
   data: function () {
     return {
-      inputValue: "",
+      accessKey: "",
       inference: null as RhinoInference | null,
-      isError: false,
-      errorMessage: "",
+      error: null as Error | string | null,
       isLoaded: false,
       isListening: false,
-      isTalking: false,
       contextInfo: null as string | null,
-      factory: RhinoWorkerFactoryEn,
-      factoryArgs: {
-        accessKey: "",
-        context: {
-          base64: CLOCK_EN_64
-        },
-        start: false
-      }
     };
   },
   methods: {
-    initEngine: function (event: any) {
-      this.factoryArgs.accessKey = this.inputValue;
-      this.isError = false;
+    updateAccesskey: function (event: any) {
+      this.accessKey = event.target.value;
+    },
+    rhnInit: function (event: any) {
+      this.error = null;
       this.isLoaded = false;
       this.isListening = false;
+
+      const rhinoContext = { base64: CONTEXT_BASE_64 };
+      const rhinoModel = { base64: MODEL_BASE_64 };
+      const rhinoOptions = {};
+
       this.$rhino.init(
-        this.factoryArgs,
-        this.factory,
+        this.accessKey,
+        rhinoContext,
         this.rhnInferenceFn,
-        this.rhnInfoFn,
-        this.rhnReadyFn,
+        rhinoModel,
+        rhinoOptions,
+        this.rhnContextFn
+        this.rhnIsLoadedFn,
+        this.rhnIsListeningFn,
         this.rhnErrorFn
       )
     },
-    updateInputValue: function (event: any) {
-      this.inputValue = event.target.value;
+    rhnProcess: function () {
+      this.$rhino.process();
     },
-    start: function () {
-      if (this.$rhino.start()) {
-        this.isListening = !this.isListening;
-      }
-    },
-    stop: function () {
-      if (this.$rhino.stop()) {
-        this.isListening = !this.isListening;
-      }
-    },
-    pause: function () {
-      if (this.$rhino.pause()) {
-        this.isListening = !this.isListening;
-      }
-    },
-    pushToTalk: function () {
-      if (this.$rhino.pushToTalk()) {
-        this.isTalking = true;
-      }
-    },
-    rhnInfoFn: function (info: string) {
-      this.contextInfo = info;
-    },
-    rhnReadyFn: function () {
-      this.isLoaded = true;
-      this.isListening = true;
+    rhnRelease: function () {
+      this.$rhino.release();
     },
     rhnInferenceFn: function (inference: RhinoInference) {
       this.inference = inference;
-      this.isTalking = false;
+    },
+    rhnContextFn: function (info: string) {
+      this.contextInfo = info;
+    },
+    rhnIsLoadedFn: function (isLoaded: boolean) {
+      this.isLoaded = isLoaded;
+    },
+    rhnIsListeningFn: function (isListening: boolean) {
+      this.isListening = isListening;
     },
     rhnErrorFn: function (error: Error) {
-      this.isError = true;
-      this.errorMessage = error.toString();
+      this.error = error;
     },
   },
 });

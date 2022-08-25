@@ -10,18 +10,14 @@
 */
 
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
-import { RhinoContext, RhinoInference, RhinoWorkerFactory } from '@picovoice/rhino-web-core';
-
-/**
- * Type alias for RhinoWorkerFactory arguments.
- */
- export type RhinoWorkerFactoryArgs = {
-  accessKey: string;
-  context: RhinoContext;
-  endpointDurationSec?: number;
-  requireEndpoint?: boolean;
-  start: boolean;
-};
+import {
+  InferenceCallback,
+  RhinoContext,
+  RhinoOptions,
+  RhinoInference,
+  RhinoModel,
+  RhinoWorker
+} from '@picovoice/rhino-web';
 
 /**
  * Type alias for Rhino Vue Mixin.
@@ -31,17 +27,17 @@ import { RhinoContext, RhinoInference, RhinoWorkerFactory } from '@picovoice/rhi
   $_rhnWorker_: Worker | null;
   $_webVp_: WebVoiceProcessor | null;
   init: (
-    rhinoFactoryArgs: RhinoWorkerFactoryArgs,
-    rhinoFactory: RhinoWorkerFactory,
-    inferenceCallback: (inference: RhinoInference) => void,
+    accessKey: string,
+    context: RhinoContext,
+    inferenceCallback: InferenceCallback,
+    model: RhinoModel,
+    options: RhinoOptions,
     contextCallback: (info: string) => void,
-    readyCallback: () => void,
+    isLoadedCallback: (isLoaded: boolean) => void,
+    isListeningCallback: (isListening: boolean) => void,
     errorCallback: (error: Error) => void) => void;
-    start: () => Promise<boolean>;
-    stop: () => Promise<boolean>;
-    pause: () => boolean;
-    pushToTalk: () => boolean;
-    delete: () => void;
+  process: () => Promise<boolean>;
+  release: () => Promise<boolean>;
 }
 
 export default {
@@ -55,7 +51,7 @@ export default {
         $_webVp_: null as WebVoiceProcessor | null,
         /**
          * Init function for Rhino.
-         * 
+         *
          * @param rhinoFactoryArgs Arguments for RhinoWorkerFactory.
          * @param rhinoFactory The language-specific worker factory
          * @param inferenceCallback A method invoked upon completion of intent inference.
@@ -64,12 +60,15 @@ export default {
          * @param errorCallback A method invoked if an error occurs within `PorcupineWorkerFactory`.
          */
         async init(
-          rhinoFactoryArgs,
-          rhinoFactory,
-          inferenceCallback = (_: RhinoInference) => {},
-          contextCallback = (_: string) => {},
-          readyCallback = () => {},
-          errorCallback = (error: Error) => {console.error(error)}
+          accessKey: string,
+          context: RhinoContext,
+          inferenceCallback: InferenceCallback,
+          model: RhinoModel,
+          options: RhinoOptions = {},
+          contextCallback: (info: string) => void = (info: string) => {},
+          isLoadedCallback: (isLoaded: boolean) => void = (isLoaded: boolean) => {},
+          isListeningCallback: (isListening: boolean) => void = (isListening: boolean) => {},
+          errorCallback: (error: Error) => void = (error: Error) => {})
         ) {
           try {
             const { accessKey, context, endpointDurationSec, requireEndpoint, start } = rhinoFactoryArgs;
@@ -83,7 +82,7 @@ export default {
             this.$_webVp_ = await WebVoiceProcessor.init({
               engines: [this.$_rhnWorker_],
             });
-    
+
             this.$_rhnWorker_.onmessage = messageEvent => {
               switch (messageEvent.data.command) {
                 case 'rhn-inference':
@@ -104,41 +103,9 @@ export default {
           }
         },
         /**
-         * Start processing audio.
+         * Put Rhino in an active isListening state.
          */
-        async start() {
-          if (this.$_webVp_ !== null) {
-            await this.$_webVp_.start();
-            return true;
-          } else {
-            return false;
-          }
-        },
-         /**
-         * Start processing audio.
-         */
-        async stop() {
-          if (this.$_webVp_ !== null) {
-            await this.$_webVp_.stop();
-            return true;
-          } else {
-            return false;
-          }
-        },
-        /**
-         * Pause processing audio.
-         */
-        pause() {
-          if (this.$_webVp_ !== null) {
-            this.$_webVp_.pause();
-            return true;
-          }
-          return false;
-        },
-        /**
-         * Put Rhino in an active isTalking state.
-         */
-        pushToTalk() {
+        process() {
           if (this.$_webVp_ !== null) {
             this.$_webVp_.start();
             this.$_rhnWorker_?.postMessage({ command: 'resume' });
@@ -146,12 +113,7 @@ export default {
           }
           return false;
         },
-        /**
-         * Delete used resources.
-         */
-        delete() {
-          this.$_webVp_?.release();
-          this.$_rhnWorker_?.postMessage({ command: 'release' });
+        release() {
         }
       }
     }
