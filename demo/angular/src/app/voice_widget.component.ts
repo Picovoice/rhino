@@ -12,17 +12,16 @@ import { CLOCK_EN_64 } from "../dist/rhn_contexts_base64"
 })
 export class VoiceWidget {
   private inferenceDetection: Subscription
-  private isTalkingDetection: Subscription
-  private listeningDetection: Subscription
+  private isLoadedDetection: Subscription
+  private isListeningDetection: Subscription
   private errorDetection: Subscription
-  private isErrorDetection: Subscription
 
   title: "voice-widget"
   contextInfo: string | null
+  inference: RhinoInference | null = null
   isLoaded: boolean = false
   isListening: boolean | null = null
   error: Error | string | null = null
-  inference: RhinoInference | null = null
 
   constructor(private rhinoService: RhinoService) {
     // Subscribe to Rhino inference events
@@ -57,20 +56,7 @@ export class VoiceWidget {
     this.errorDetection.unsubscribe()
   }
 
-  public async start() {
-    await this.rhinoService.start();
-  }
-
-  public async stop() {
-    await this.rhinoService.stop();
-  }
-
-  public async pushToTalk() {
-    this.inference = null
-    await this.rhinoService.pushToTalk()
-  }
-
-  public async initEngine(accessKey: string) {
+  public async rhnInit(accessKey: string) {
     if (accessKey.length >= 0) {
       this.rhinoService.release();
       const rhinoServiceArgs: RhinoServiceArgs = {accessKey: accessKey, context: {base64: CLOCK_EN_64}};
@@ -93,5 +79,13 @@ export class VoiceWidget {
         this.errorMessage = error.toString();
       }
     }
+  }
+
+  public async rhnProcess() {
+    await this.rhinoService.process();
+  }
+
+  public async rhnRelease() {
+    await this.rhinoService.release();
   }
 }

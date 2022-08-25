@@ -34,36 +34,6 @@ export class RhinoService implements OnDestroy {
 
   constructor() {}
 
-  public async start(): Promise<boolean> {
-    if (this.webVoiceProcessor !== null) {
-      await this.webVoiceProcessor.start();
-      this.listening$.next(true);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public async stop(): Promise<boolean> {
-    if (this.webVoiceProcessor !== null) {
-      await this.webVoiceProcessor.stop();
-      this.listening$.next(false);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public async pushToTalk(): Promise<boolean> {
-    if (!this.isTalking && this.rhinoWorker !== null) {
-      this.isTalking = true;
-      this.isTalking$.next(true);
-      this.rhinoWorker.postMessage({ command: 'resume' });
-      return true;
-    }
-    return false;
-  }
-
   private InferenceCallback(inference: RhinoInference): void {
     this.inference$.next(inference)
   }
@@ -132,6 +102,26 @@ export class RhinoService implements OnDestroy {
       this.isError$.next(true);
       this.error$.next(error as Error);
       throw error;
+    }
+  }
+
+  public async process(): Promise<boolean> {
+    if (!this.isTalking && this.rhinoWorker !== null) {
+      this.isTalking = true;
+      this.isTalking$.next(true);
+      this.rhinoWorker.postMessage({ command: 'resume' });
+      return true;
+    }
+    return false;
+  }
+
+  public async stop(): Promise<boolean> {
+    if (this.webVoiceProcessor !== null) {
+      await this.webVoiceProcessor.stop();
+      this.listening$.next(false);
+      return true;
+    } else {
+      return false;
     }
   }
 
