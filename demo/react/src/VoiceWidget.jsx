@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRhino } from "@picovoice/rhino-web-react";
 
 import rhinoModelParams from "./rhino_params";
