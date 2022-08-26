@@ -84,6 +84,7 @@ export function useRhino(): {
           );
           setContextInfo(rhinoRef.current.contextInfo);
           setIsLoaded(true);
+          setError(null);
         }
       } catch (e: any) {
         errorCallback(e.toString());
@@ -98,6 +99,7 @@ export function useRhino(): {
         rhinoRef.current.reset();
         await WebVoiceProcessor.subscribe(rhinoRef.current);
         setIsListening(true);
+        setError(null);
       }
     } catch (e: any) {
       errorCallback(e.toString());
@@ -112,6 +114,7 @@ export function useRhino(): {
         rhinoRef.current.terminate();
         rhinoRef.current = null;
         setIsListening(false);
+        setError(null);
         setIsLoaded(false);
       }
     } catch (e: any) {
