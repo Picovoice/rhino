@@ -9,7 +9,7 @@
   specific language governing permissions and limitations under the License.
 */
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
 import {
@@ -25,12 +25,12 @@ export function useRhino(): {
   contextInfo: string | null;
   isLoaded: boolean;
   isListening: boolean;
-  error: string | null;
+  error: Error | string | null;
   init: (
     accessKey: string,
     context: RhinoContext,
     model: RhinoModel,
-    options: RhinoOptions
+    options?: RhinoOptions
   ) => Promise<void>;
   process: () => Promise<void>;
   release: () => Promise<void>;
@@ -40,7 +40,7 @@ export function useRhino(): {
   const [contextInfo, setContextInfo] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | string | null>(null);
 
   const inferenceCallback = useCallback(
     (newInference: RhinoInference): void => {
@@ -55,6 +55,10 @@ export function useRhino(): {
     []
   );
 
+  const errorCallback = useCallback((newError: any): void => {
+    setError(newError);
+  }, []);
+
   const init = useCallback(
     async (
       accessKey: string,
@@ -62,6 +66,13 @@ export function useRhino(): {
       model: RhinoModel,
       options: RhinoOptions = {}
     ): Promise<void> => {
+      if (options.processErrorCallback) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          "'processErrorCallback' options is not supported, use the 'error' hook variable instead."
+        );
+      }
+
       try {
         if (!rhinoRef.current) {
           rhinoRef.current = await RhinoWorker.create(
@@ -69,13 +80,13 @@ export function useRhino(): {
             context,
             inferenceCallback,
             model,
-            options
+            { ...options, processErrorCallback: errorCallback }
           );
           setContextInfo(rhinoRef.current.contextInfo);
           setIsLoaded(true);
         }
       } catch (e: any) {
-        setError(e.toString());
+        errorCallback(e.toString());
       }
     },
     [inferenceCallback]
@@ -89,7 +100,7 @@ export function useRhino(): {
         setIsListening(true);
       }
     } catch (e: any) {
-      setError(e.toString());
+      errorCallback(e.toString());
     }
   }, [isListening]);
 
@@ -104,9 +115,13 @@ export function useRhino(): {
         setIsLoaded(false);
       }
     } catch (e: any) {
-      setError(e.toString());
+      errorCallback(e.toString());
     }
     setIsListening(false);
+  }, []);
+
+  useEffect(() => (): void => {
+    release();
   }, []);
 
   return {

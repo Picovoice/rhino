@@ -1,11 +1,11 @@
 {
-  "name": "rhino-web-react-demo",
-  "version": "2.0.0",
+  "name": "rhino-react-demo",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
   "description": "Rhino React demo (made with Create React App)",
   "dependencies": {
-    "@picovoice/rhino-web-react": "../../binding/react",
+    "@picovoice/rhino-react": "../../binding/react",
     "@picovoice/web-voice-processor": "=4.0.0",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",

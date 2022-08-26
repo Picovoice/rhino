@@ -46,13 +46,13 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 Using `yarn`:
 
 ```console
-yarn add @picovoice/rhino-web-react @picovoice/web-voice-processor
+yarn add @picovoice/rhino-react @picovoice/web-voice-processor
 ```
 
 or using `npm`:
 
 ```console
-npm install --save @picovoice/rhino-web-react @picovoice/web-voice-processor
+npm install --save @picovoice/rhino-react @picovoice/web-voice-processor
 ```
 ### AccessKey
 
