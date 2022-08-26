@@ -138,7 +138,7 @@ export class RhinoWorker {
     model: RhinoModel,
     options: RhinoOptions = {}
   ): Promise<RhinoWorker> {
-    const { processErrorCallback } = options;
+    const { processErrorCallback, ...rest } = options;
 
     const worker = new PvWorker();
     const returnPromise: Promise<RhinoWorker> = new Promise(
@@ -211,10 +211,10 @@ export class RhinoWorker {
       accessKey: accessKey,
       contextPath: contextPath,
       sensitivity: sensitivity,
+      modelPath: modelPath,
+      options: rest,
       wasm: this._wasm,
       wasmSimd: this._wasmSimd,
-      modelPath: modelPath,
-      options: options,
     });
 
     return returnPromise;
