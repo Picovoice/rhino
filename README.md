@@ -1457,83 +1457,61 @@ return (
 #### Vue
 
 ```console
-yarn add @picovoice/rhino-vue @picovoice/rhino-web-en-worker
+yarn add @picovoice/rhino-vue @picovoice/web-voice-processor
 ```
 
 (or)
 
 ```console
-npm install @picovoice/rhino-vue @picovoice/rhino-web-en-worker
+npm install @picovoice/rhino-vue @picovoice/web-voice-processor
 ```
 
 ```html
 <script lang="ts">
-import rhinoMixin, { RhinoInferenceFinalized } from "@picovoice/rhino-vue";
-import { RhinoWorkerFactory as RhinoWorkerFactoryEn } from "@picovoice/rhino-web-en-worker";
+import rhinoMixin from "@picovoice/rhino-vue";
+
+import rhinoParams from "${PATH_TO_RHINO_PARAMS_BASE64}";
+import rhinoContext from "${PATH_TO_RHINO_CONTEXT_BASE64}";
 
 export default {
-  name: "VoiceWidget",
-  mixins: [rhinoMixin],
-  data: function () {
-    return {
-      inference: null as RhinoInferenceFinalized | null,
-      isError: false,
-      isLoaded: false,
-      isListening: false,
-      isTalking: false,
-      contextInfo: '',
-      factory: RhinoWorkerFactoryEn,
-      factoryArgs: {
-        accessKey: '${ACCESS_KEY}',  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-        context: {
-          base64: `RHINO_TRAINED_CONTEXT_BASE_64_STRING`
-        },
-      }
-    };
-  },
-  async created() {
-    await this.$rhino.init(
-      factoryArgs,      // Rhino factory arguments
-      factory,          // Rhino Web Worker component
-      rhnInferenceFn,   // Rhino inference callback
-      rhnInfoFn,        // Rhino context information callback
-      rhnReadyFn,       // Rhino ready callback
-      rhnErrorFn        // Rhino error callback
-    );
-  },
-  methods: {
-    start: function () {
-      if (this.$rhino.start()) {
-        this.isListening = !this.isListening;
+    mixins: [rhinoMixin],
+    mounted() {
+      const rhinoContext = { publicPath: "clock_wasm.rhn" };
+      const rhinoModel = { base64: rhinoParams };
+
+      this.$rhino.init(
+        this.accessKey,
+        rhinoContext,
+        this.inferenceCallback,
+        rhinoModel,
+        this.contextCallback,
+        this.isLoadedCallback,
+        this.isListeningCallback,
+        this.errorCallback
+      );
+    },
+    methods: {
+      inferenceCallback: function(inference) {
+        console.log(`Detected inference: ${inference}`);
+      },
+      contextCallback: function(context) {
+        console.log(context);
+      },
+      isLoadedCallback: function(isLoaded) {
+        console.log(isLoaded);
+      },
+      isListeningCallback: function(isListening) {
+        console.log(isListening);
+      },
+      errorCallback: function(error) {
+        console.error(error);
       }
     },
-    pause: function () {
-      if (this.$rhino.pause()) {
-        this.isListening = !this.isListening;
-      }
-    },
-    pushToTalk: function () {
-      if (this.$rhino.pushToTalk()) {
-        this.isTalking = true;
-      }
-    },
-    rhnReadyFn: function () {
-      this.isLoaded = true;
-      this.isListening = true;
-    },
-    rhnInferenceFn: function (inference) {
-      this.inference = inference;
-      this.isTalking = false;
-    },
-    rhnInfoFn: function (info) {
-      this.contextInfo = info;
-    },
-    rhnErrorFn: function (error) {
-      this.isError = true;
-      this.errorMessage = error.toString();
-    },
-  },
-};
+    // beforeDestroy for Vue 2.
+    beforeUnmount() {
+      this.$porcupine.release();
+    }
+  }
 </script>
 ```
 

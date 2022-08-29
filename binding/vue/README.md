@@ -1,48 +1,38 @@
-# rhino-vue
+# Rhino Binding for Vue
 
-Vue mixin for Rhino Web.
+## Rhino Speech-to-Intent engine
 
-## Rhino
+Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of interest, in real-time.
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
+interest, in real-time. For example, given a spoken command:
 
-E.g. using the [demo "Clock" Rhino context (English language)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn), Rhino performs inference on a spoken phrase:
-
-> "Set a timer for ten minutes"
+> Can I have a small double-shot espresso?
+Rhino infers that the user would like to order a drink and emits the following inference result:
 
 ```json
 {
-  "isFinalized": true,
-  "isUnderstood": true,
-  "intent": "setTimer",
+  "isUnderstood": "true",
+  "intent": "orderBeverage",
   "slots": {
-    "minutes": "10"
+    "beverage": "espresso",
+    "size": "small",
+    "numberOfShots": "2"
   }
 }
 ```
 
-> "Tell me a joke"
+Rhino is:
 
-```json
-{
-  "isFinalized": true,
-  "isUnderstood": false
-}
-```
-
-The key `isFinalized` tells you whether Rhino has reached a conclusion or is still awaiting more frames of audio to reach a decision. Upon `isFinalized=true`, `isUnderstood` will be set to true/false. If true, the `intent` will be available, as will `slots` if any were captured in this expression.
+* using deep neural networks trained in real-world environments.
+* compact and computationally-efficient, making it perfect for IoT.
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Compatibility
 
-This library is compatible with Vue:
-- Vue.js 2.6.11+
-- Vue.js 3.0.0+
-
-The Picovoice SDKs for Web are powered by WebAssembly (WASM), the Web Audio API, and Web Workers.
-
-All modern browsers (Chrome/Edge/Opera, Firefox, Safari) are supported, including on mobile. Internet Explorer is _not_ supported.
-
-Using the Web Audio API requires a secure context (HTTPS connection) - except `localhost` - for local development.
+- Chrome / Edge
+- Firefox
+- Safari
 
 ## AccessKey
 
@@ -52,154 +42,198 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ## Installation
 
-Install the package using `npm` or `yarn`. You will also need to add `@picovoice/web-voice-processor` and one of the `@picovoice/rhino-web-**-worker` series of packages for the specific language model:
-
-E.g. English:
+Using `yarn`:
 
 ```console
-yarn add @picovoice/rhino-vue @picovoice/rhino-web-en-worker @picovoice/web-voice-processor
+yarn add @picovoice/rhino-vue @picovoice/web-voice-processor
 ```
+
+or using `npm`:
+
+```console
+npm install --save @picovoice/rhino-vue @picovoice/web-voice-processor
+```
+### AccessKey
+
+Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using
+Rhino SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Usage
 
-The Rhino SDK for Vue is based on the Rhino SDK for Web. The library provides a mixin: `rhinoMixin`, which exposes the variable `$rhino` to your component. The mixin exposes the following functions:
+There are two methods to initialize Rhino:
 
-- `init`: initializes Rhino.
-- `start`: starts processing audio and infer context.
-- `pause`: stops processing audio.
-- `pushToTalk`: sets Rhino in an active `isTalking` state.
-- `delete`: cleans up used resources.
+### Public Directory
 
-The Rhino library is by default a "push-to-talk" experience. You can use a button to trigger the `isTalking` state. Rhino will listen and process frames of microphone audio until it reaches a conclusion. If the utterance matched something in your Rhino context (e.g. "make me a coffee" in a coffee maker context), the details of the inference are returned.
+**NOTE**: Due to modern browser limitations of using a file URL, this method does __not__ work if used without hosting a server.
 
-## Parameters
+This method fetches [the model file](https://github.com/Picovoice/rhino/blob/master/lib/common/rhino_params.pv) from the public directory and feeds it to Rhino. Copy the model file into the public directory:
 
-The `Rhino` mixin has the following parameters:
+```console
+cp ${RHINO_MODEL_FILE} ${PATH_TO_PUBLIC_DIRECTORY}
+```
 
-1. The `rhinoFactoryArgs` (i.e. what specific context we want Rhino to understand).
-2. The `rhinoWorkerFactory` (language-specific, imported as `RhinoWorkerFactory` from the `@picovoice/rhino-web-xx-worker` series of packages, where `xx` is the two-letter language code).
-3. The `inferenceCallback` invoked after Rhino processes audio, the inference can be understood or not.
-4. The `infoCallback` invoked when Rhino is ready and also model's context (as a string) is ready.
-5. The `readyCallback` invoked after Rhino has been initialized successfully.
-6. The `errorCallback` invoked if any error occurs while initializing Rhino or processing audio.
+The same procedure can be used for the [Rhino context](https://github.com/Picovoice/rhino/tree/master/resources/contexts) (`.rhn`) files.
 
-Provide a Rhino context via `rhinoFactoryArgs`:
+### Base64
+
+**NOTE**: This method works without hosting a server, but increases the size of the model file roughly by 33%.
+
+This method uses a base64 string of the model file and feeds it to Rhino. Use the built-in script `pvbase64` to base64 your model file:
+
+```console
+npx pvbase64 -i ${RHINO_MODEL_FILE} -o ${OUTPUT_DIRECTORY}/${MODEL_NAME}.js
+```
+
+The output will be a js file which you can import into any file of your project. For detailed information about `pvbase64`,
+run:
+
+```console
+npx pvbase64 -h
+```
+
+The same procedure can be used for the [Rhino context](https://github.com/Picovoice/rhino/tree/master/resources/contexts) (`.rhn`) files.
+
+### Rhino Model
+
+Rhino saves and caches your model (`.pv`) and context (`.rhn`) files in the IndexedDB to be used by Web Assembly.
+Use a different `customWritePath` variable to hold multiple model values and set the `forceWrite` value to true to force an overwrite of the model file.
+If the model (`.pv`) or context (`.rhn`) files change, `version` should be incremented to force the cached model to be updated. Either `base64` or `publicPath` must be set to instantiate Rhino. If both are set, Rhino will use the `base64` parameter.
 
 ```typescript
-export type RhinoContext = {
-  /** Base64 representation of a trained Rhino context (`.rhn` file) */
-  base64: string
-  /** Value in range [0,1] that trades off miss rate for false alarm */
-  sensitivity?: number
+// Context (.rhn)
+const rhinoContext = {
+  publicPath: ${CONTEXT_RELATIVE_PATH},
+  // or
+  base64: ${CONTEXT_BASE64_STRING},
+  // Optionals
+  customWritePath: 'custom_context',
+  forceWrite: true,
+  version: 1,
+  sensitivity: 0.5,
 }
+// Model (.pv)
+const rhinoModel = {
+  publicPath: ${MODEL_RELATIVE_PATH},
+  // or
+  base64: ${MODEL_BASE64_STRING},
+  // Optionals
+  customWritePath: 'custom_model',
+  forceWrite: true,
+  version: 1,
+}
+```
 
-export type RhinoFactoryArgs = {
-  /** AccessKey obtained from Picovoice Console (https://console.picovoice.ai/) */
-  accessKey: string;
-  /** The context to instantiate */
-  context: RhinoContext;
-  /** If set to `true`, Rhino requires an endpoint (chunk of silence) before finishing inference. **/
-  requireEndpoint?: boolean;
+Additional engine options are provided via the `options` parameter.
+Use `endpointDurationSec` and `requireEndpoint` to control the engine's endpointing behaviour.
+An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command.
+
+```typescript
+// Optional. These are the default values
+const options = {
+  endpointDurationSec: 1.0,
+  requireEndpoint: true,
+}
+```
+
+### Initialize Rhino
+
+**Note**: Due to limitations on Vue, one component can only have one instance of Rhino. To use multiple instances of Rhino instead, check out [Rhino Web binding](https://www.npmjs.com/package/@picovoice/rhino-web).
+
+Create the following functions:
+ - `inferenceCallback` function to get the streaming results from the worker
+ - `contextCallback` function to get the context info from Rhino once the owrker is loaded
+ - `isLoadedCallback` function to check if Rhino has loaded
+ - `isListeningCallback` function to check if Rhino is listening for an inference
+ - `errorCallback` function to catch any error occurred
+
+```typescript
+...
+methods: {
+  keywordDetectionCallback: function(inference) {
+    console.log(`Detected inference: ${inference}`);
+  },
+  contextCallback: function(context) {
+    console.log(context);
+  },
+  isLoadedCallback: function(isLoaded) {
+    console.log(isLoaded);
+  },
+  isListeningCallback: function(isListening) {
+    console.log(isListening);
+  },
+  errorCallback: function(error) {
+    console.error(error);
+  }
 };
+...
 ```
-The inference callback takes a `RhinoInference` object after processing audio:
+
+Import `Rhino` mixin, add it to your component and initialize Rhino:
+
+```html
+<script lang="ts">
+  import {BuiltInKeyword} from "@picovoice/rhino-web";
+  import rhinoMixin from "@picovoice/rhino-vue";
+
+  import rhinoParams from "${PATH_TO_RHINO_PARAMS_BASE64}"
+  import rhinoContext from "${PATH_TO_RHINO_CONTEXT_BASE64}"
+
+  export default {
+    mixins: [rhinoMixin],
+    mounted() {
+      this.$rhino.init(
+              ${ACCESS_KEY},
+              { base64: rhinoContext },
+              this.inferenceCallback,
+              { base64: rhinoParams },
+              this.contextCallback,
+              this.isLoadedCallback,
+              this.isListeningCallback,
+              this.errorCallback
+      );
+    }
+  }
+</script>
+```
+
+### Process Audio Frames in Worker Thread
+
+The Rhino React binding uses [WebVoiceProcessor](https://github.com/Picovoice/web-voice-processor) to record audio.
+To start detecting detecting an inference, run the `process` function:
+```typescript
+await this.$rhino.start();();
+```
+The `process` function initializes WebVoiceProcessor.
+Rhino will then listen and process frames of microphone audio until it reaches a conclusion, then return the result via the `inference` variable.
+Once a conclusion is reached Rhino will enter a paused state. From the paused state Rhino call `process` again to detect another inference.
+
+### Cleanup
+
+When you are done with Rhino call `release`. This cleans up all resources used by Rhino and WebVoiceProcessor.
 
 ```typescript
-export type RhinoInference = {
-  /** Rhino has concluded the inference (isUnderstood is now set) */
-  isFinalized: boolean
-  /** The intent was understood (it matched an expression in the context) */
-  isUnderstood?: boolean
-  /** The name of the intent */
-  intent?: string
-  /** Map of the slot variables and values extracted from the utterance */
-  slots?: Record<string, string>
-}
+await this.$rhino.release();
 ```
 
-Make sure you handle the possibility of errors with the `errorCallback` function. Users may not have a working microphone, and they can always decline (and revoke) permissions; your application code should anticipate these scenarios. 
+If any arguments require changes, call `release` then `init` again to initialize Rhino with the new settings.
 
-```typescript
-import rhinoMixin, { RhinoInferenceFinalized } from "@picovoice/rhino-vue";
-import { RhinoWorkerFactory as RhinoWorkerFactoryEn } from "@picovoice/rhino-web-en-worker";
+## Contexts
 
-export default {
-  name: "VoiceWidget",
-  mixins: [rhinoMixin],
-  data: function () {
-    return {
-      inference: null as RhinoInferenceFinalized | null,
-      isError: false,
-      isLoaded: false,
-      isListening: false,
-      isTalking: false,
-      contextInfo: '',
-      factory: RhinoWorkerFactoryEn,
-      factoryArgs: {
-        accessKey: '${ACCESS_KEY}',  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-        context: {
-          base64: `RHINO_TRAINED_CONTEXT_BASE_64_STRING`
-        },
-      }
-    };
-  },
-  async created() {
-    await this.$rhino.init(
-      factoryArgs,      // Rhino factory arguments
-      factory,          // Rhino Web Worker component
-      rhnInferenceFn,   // Rhino inference callback
-      rhnInfoFn,        // Rhino context information callback
-      rhnReadyFn,       // Rhino ready callback
-      rhnErrorFn        // Rhino error callback
-    );
-  },
-  methods: {
-    start: function () {
-      if (this.$rhino.start()) {
-        this.isListening = !this.isListening;
-      }
-    },
-    pause: function () {
-      if (this.$rhino.pause()) {
-        this.isListening = !this.isListening;
-      }
-    },
-    pushToTalk: function () {
-      if (this.$rhino.pushToTalk()) {
-        this.isTalking = true;
-      }
-    },
-    rhnReadyFn: function () {
-      this.isLoaded = true;
-      this.isListening = true;
-    },
-    rhnInferenceFn: function (inference) {
-      this.inference = inference;
-      this.isTalking = false;
-    },
-    rhnInfoFn: function (info) {
-      this.contextInfo = info;
-    },
-    rhnErrorFn: function (error) {
-      this.isError = true;
-      this.errorMessage = error.toString();
-    },
-  },
-};
-```
+Create custom contexts using the [Picovoice Console](https://console.picovoice.ai/).
+Train the Rhino context model for the target platform WebAssembly (WASM).
+Inside the downloaded `.zip` file, there will be a `.rhn` file which is the context model file in binary format.
 
-### Custom contexts
+Similar to the model file (`.pv`), keyword files (`.rhn`) are saved in IndexedDB to be used by Web Assembly.
+Either `base64` or `publicPath` must be set to instantiate Rhino. If both are set, Rhino will use
+the `base64` model.
 
-Custom contexts are generated using [Picovoice Console](https://console.picovoice.ai/). They are trained from text using transfer learning into bespoke Rhino context files with a `.rhn` extension. The target platform is WebAssembly (WASM), as that is what backs the Vue library.
+## Non-English Languages
 
-The `.zip` file contains a `.rhn` file and a `_b64.txt` file which contains the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.
+In order to detect non-English inferences you need to use the corresponding model file (`.pv`). The model files for all
+supported languages are available [here](https://github.com/Picovoice/rhino/tree/master/lib/common).
 
-```typescript
-factoryArgs: {
-  accessKey: "${ACCESS_KEY}", // AccessKey obtained from Picovoice Console(https://console.picovoice.ai/)",
-  context: {
-    base64: '${CONTEXT_FILE_64}'
-  },
-  start: false
-}
-```
+## Demo
+
+For example usage refer to our [Web demo application](https://github.com/Picovoice/rhino/tree/master/demo/web).

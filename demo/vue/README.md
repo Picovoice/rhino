@@ -1,14 +1,44 @@
-# rhino-vue-demo
+# Rhino demo for Rect
 
-This demo application includes a sample `VoiceWidget` Vue component which uses the `rhinoMixin` service to allow processing naturally spoken phrases within a domain (context) of interest. Rhino inference events are handled via the `inferenceCallback` function.
+## Rhino Speech-to-Intent engine
 
-The demo uses dynamic imports to split the VoiceWidget away from the main application bundle. This means that the initial download size of the Vue app will not be impacted by the ~3-4 MB requirement of Rhino. While small for all-in-one offline Voice AI, the size is large for an initial web app load.
+Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-If you decline microphone permission in the browser, or another such issue prevents Rhino from starting, the error will be displayed.
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
+interest, in real-time. For example, given a spoken command:
 
-The widget shows the various loading and error events, as well as mounting/unmounting the `VoiceWidget` with a toggle, demonstrating the complete lifecycle of Rhino with in a Vue app.
+> Can I have a small double-shot espresso?
+Rhino infers that the user would like to order a drink and emits the following inference result:
 
-This project was bootstrapped with Vue CLI. See the [Configuration Reference](https://cli.vuejs.org/config/).
+```json
+{
+  "isUnderstood": "true",
+  "intent": "orderBeverage",
+  "slots": {
+    "beverage": "espresso",
+    "size": "small",
+    "numberOfShots": "2"
+  }
+}
+```
+
+Rhino is:
+
+* using deep neural networks trained in real-world environments.
+* compact and computationally-efficient, making it perfect for IoT.
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
+
+## Compatibility
+
+- Chrome / Edge
+- Firefox
+- Safari
+
+## AccessKey
+
+Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Install & run
 
@@ -28,7 +58,13 @@ The command-line output will provide you with a localhost link and port to open 
 
 ## Try Rhino
 
-Use the "Push to Talk" button to start Rhino, and then speak a phrase within the "Clock" context, e.g.:
+This demo application includes the `VoiceWidget` which uses the `rhinoMixin` mixin to allow inferring naturally spoken commands from voice.
+
+If you decline microphone permission in the browser, or another such issue prevents Rhino from starting, the error will be displayed.
+
+The demo is running a context called "Clock" (available as a `.rhn` file in the GitHub repository). Enter your `AccessKey` in the provided textbox the press the "Start Rhino" button to initialize Rhino. Once loaded, press the "Process" button to start a voice interaction.
+
+Try a phrase that is in the context:
 
 > "Set a timer for ten seconds"
 
