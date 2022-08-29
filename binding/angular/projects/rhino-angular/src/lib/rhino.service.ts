@@ -38,11 +38,13 @@ export class RhinoService implements OnDestroy {
   constructor() {}
 
   private InferenceCallback(inference: RhinoInference): void {
-    if (this.rhino) {
-      WebVoiceProcessor.unsubscribe(this.rhino);
+    if (inference && inference.isFinalized) {
+      if (this.rhino) {
+        WebVoiceProcessor.unsubscribe(this.rhino);
+      }
+      this.isListening$.next(false);
+      this.inference$.next(inference);
     }
-    this.isListening$.next(false);
-    this.inference$.next(inference)
   }
 
   private errorCallback = (error: string) => {
@@ -65,10 +67,11 @@ export class RhinoService implements OnDestroy {
         this.rhino = await RhinoWorker.create(
           accessKey,
           context,
-          this.InferenceCallback,
+          (inference: RhinoInference) => this.InferenceCallback(inference),
           model,
           { processErrorCallback: this.errorCallback }
         );
+        this.contextInfo$.next(this.rhino.contextInfo);
         this.isLoaded$.next(true);
         this.error$.next(null);
       }

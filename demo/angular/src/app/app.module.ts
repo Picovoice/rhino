@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { VoiceWidget } from "./voice_widget.component"
+import { VoiceWidget } from './voice_widget.component';
 
 @NgModule({
   declarations: [

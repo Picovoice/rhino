@@ -1,91 +1,83 @@
-import { Component } from "@angular/core"
-import { Subscription } from "rxjs"
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
-import { RhinoService, RhinoServiceArgs } from "@picovoice/rhino-angular"
-import { RhinoInference } from "@picovoice/rhino-web-core"
-import { CLOCK_EN_64 } from "../dist/rhn_contexts_base64"
+import { RhinoInference } from '@picovoice/rhino-web';
+import { RhinoService } from '@picovoice/rhino-angular';
+
+import rhinoParams from '../lib/rhino_params';
 
 @Component({
-  selector: 'voice-widget',
+  selector: 'app-voice-widget',
   templateUrl: './voice_widget.component.html',
   styleUrls: ['./voice_widget.component.scss']
 })
-export class VoiceWidget {
-  private inferenceDetection: Subscription
-  private isLoadedDetection: Subscription
-  private isListeningDetection: Subscription
-  private errorDetection: Subscription
+export class VoiceWidget implements OnDestroy {
+  private contextInfoDetection: Subscription;
+  private inferenceDetection: Subscription;
+  private isLoadedDetection: Subscription;
+  private isListeningDetection: Subscription;
+  private errorDetection: Subscription;
 
-  title: "voice-widget"
-  contextInfo: string | null
-  inference: RhinoInference | null = null
-  isLoaded: boolean = false
-  isListening: boolean | null = null
-  error: Error | string | null = null
+  contextInfo: string | null = null;
+  inference: RhinoInference | null = null;
+  isLoaded = false;
+  isListening = false;
+  error: Error | string | null = null;
 
   constructor(private rhinoService: RhinoService) {
-    // Subscribe to Rhino inference events
+    this.contextInfoDetection = rhinoService.contextInfo$.subscribe(
+      contextInfo => {
+        this.contextInfo = contextInfo;
+      });
     this.inferenceDetection = rhinoService.inference$.subscribe(
       inference => {
-        this.inference = inference
-        console.log(inference)
-      })
-
-    this.isLoadedDetection = rhinoService.isLoaded.subscribe(
+        this.inference = inference;
+        console.log(inference);
+      });
+    this.isLoadedDetection = rhinoService.isLoaded$.subscribe(
+      isLoaded => {
+        this.isLoaded = isLoaded;
+      });
+    this.isListeningDetection = rhinoService.isListening$.subscribe(
       isListening => {
-        this.isLoaded = isLoaded
-      })
-    this.isListeningDetection = rhinoService.isListening.subscribe(
-      isListening => {
-        this.isListening = isListening
-      })
+        this.isListening = isListening;
+      });
     this.errorDetection = rhinoService.error$.subscribe(
       error => {
-        this.error = error
-      })
+        this.error = error;
+      });
   }
 
-  async ngOnInit() {
-
+  ngOnDestroy(): void {
+    this.contextInfoDetection.unsubscribe();
+    this.inferenceDetection.unsubscribe();
+    this.isLoadedDetection.unsubscribe();
+    this.isListeningDetection.unsubscribe();
+    this.errorDetection.unsubscribe();
+    this.rhinoService.release();
   }
 
-  ngOnDestroy() {
-    this.inferenceDetection.unsubscribe()
-    this.isLoadedDetection.unsubscribe()
-    this.isListeningDetection.unsubscribe()
-    this.errorDetection.unsubscribe()
-  }
-
-  public async rhnInit(accessKey: string) {
+  public async rhnInit(accessKey: string): Promise<void> {
     if (accessKey.length >= 0) {
-      this.rhinoService.release();
-      const rhinoServiceArgs: RhinoServiceArgs = {accessKey: accessKey, context: {base64: CLOCK_EN_64}};
-
-      // Load Rhino worker chunk with specific language model (large ~3-4MB chunk; needs to be dynamically imported)
-      const rhinoFactoryEn = (await import('@picovoice/rhino-web-en-worker')).RhinoWorkerFactory;
-      this.isChunkLoaded = true;
-      console.info("Rhino EN is loaded.");
-      // Initialize Rhino Service
+      await this.rhinoService.release();
       try {
-        await this.rhinoService.init(rhinoFactoryEn, rhinoServiceArgs);
-        console.info("Rhino is ready!");
-        this.isError = false;
-        this.isLoaded = true;
-        this.contextInfo = this.rhinoService.contextInfo;
+        await this.rhinoService.init(
+          accessKey,
+          { publicPath: 'assets/clock_wasm.rhn' },
+          { base64: rhinoParams }
+        );
       }
       catch (error) {
-        console.error(error);
-        this.isError = true;
-        this.errorMessage = error.toString();
+        this.error = error;
       }
     }
   }
 
-  public async rhnProcess() {
+  public async rhnProcess(): Promise<void> {
     await this.rhinoService.process();
   }
 
-  public async rhnRelease() {
+  public async rhnRelease(): Promise<void> {
     await this.rhinoService.release();
   }
 }
