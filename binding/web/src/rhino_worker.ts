@@ -21,6 +21,7 @@ import {
   RhinoWorkerInitResponse,
   RhinoWorkerProcessResponse,
   RhinoWorkerReleaseResponse,
+  RhinoWorkerResetResponse,
 } from './types';
 
 export class RhinoWorker {
@@ -151,11 +152,13 @@ export class RhinoWorker {
           switch (event.data.command) {
             case 'ok':
               worker.onmessage = (
-                ev: MessageEvent<RhinoWorkerProcessResponse>
+                ev: MessageEvent<RhinoWorkerProcessResponse | RhinoWorkerResetResponse>
               ): void => {
                 switch (ev.data.command) {
-                  case 'ok':
+                  case 'ok-process':
                     inferenceCallback(ev.data.inference);
+                    break;
+                  case 'ok':
                     break;
                   case 'failed':
                   case 'error':

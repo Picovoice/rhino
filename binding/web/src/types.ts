@@ -88,7 +88,7 @@ export type RhinoWorkerInitResponse =
 export type RhinoWorkerProcessResponse =
   | RhinoWorkerFailureResponse
   | {
-      command: 'ok';
+      command: 'ok-process';
       inference: RhinoInference;
     };
 

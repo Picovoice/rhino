@@ -17,7 +17,7 @@ import { RhinoWorkerRequest, RhinoInference } from './types';
 
 function inferenceCallback(inference: RhinoInference): void {
   self.postMessage({
-    command: 'ok',
+    command: 'ok-process',
     inference: inference,
   });
 }
