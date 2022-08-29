@@ -1,48 +1,37 @@
-# rhino-angular
+# Rhino Binding for Angular
 
-Angular service for Rhino for Web.
+## Rhino Speech-to-Intent engine
 
-## Rhino
+Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-This library processes naturally spoken commands in-browser, offline. All processing is done via WebAssembly and Workers in a separate thread. Speech results are converted into inference directly, without intermediate Speech-to-Text. Rhino can be used standalone (push-to-talk), or with the [Porcupine Wake Word engine](https://picovoice.ai/platform/porcupine/).
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
+interest, in real-time. For example, given a spoken command:
 
-Rhino operates on speech in a bespoke context. E.g. using the [demo "Clock" Rhino context (English language)](https://github.com/Picovoice/rhino/blob/master/resources/contexts/wasm/clock_wasm.rhn):
-
-> "Set a timer for ten minutes"
-
+> Can I have a small double-shot espresso?
+Rhino infers that the user would like to order a drink and emits the following inference result:
 ```json
 {
-  "isFinalized": true,
-  "isUnderstood": true,
-  "intent": "setTimer",
+  "isUnderstood": "true",
+  "intent": "orderBeverage",
   "slots": {
-    "minutes": "10"
+    "beverage": "espresso",
+    "size": "small",
+    "numberOfShots": "2"
   }
 }
 ```
 
-> "Tell me a joke"
+Rhino is:
 
-```json
-{
-  "isFinalized": true,
-  "isUnderstood": false
-}
-```
-
-The key `isFinalized` tells you whether Rhino has reached a conclusion or is still awaiting more frames of audio to reach a decision. Upon `isFinalized=true`, `isUnderstood` will be set to true/false. If true, the `intent` will be available, as will `slots` if any were captured in this expression.
-
-## Introduction
-
-The Rhino SDK for Angular is based on the Rhino SDK for Web. The library provides an Angular service called `RhinoService`. The package will take care of microphone access and audio downsampling (via `@picovoice/web-voice-processor`) and provide an `inference$` event to which your Angular component can subscribe.
+* using deep neural networks trained in real-world environments.
+* compact and computationally-efficient, making it perfect for IoT.
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Compatibility
 
-The Picovoice SDKs for Web are powered by WebAssembly (WASM), the Web Audio API, and Web Workers.
-
-All modern browsers (Chrome/Edge/Opera, Firefox, Safari) are supported, including on mobile. Internet Explorer is _not_ supported.
-
-Using the Web Audio API requires a secure context (HTTPS connection) - except `localhost` - for local development.
+- Chrome / Edge
+- Firefox
+- Safari
 
 ## AccessKey
 
@@ -52,115 +41,194 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ## Installation
 
-Use `npm` or `yarn` to install the package and its peer dependencies. Each spoken language (e.g. 'en', 'de') is a separate package. For this example we'll use English:
+Using `yarn`:
 
-`yarn add @picovoice/rhino-angular @picovoice/web-voice-processor @picovoice/rhino-web-en-worker`
+```console
+yarn add @picovoice/rhino-angular
+```
 
-(or)
+or using `npm`:
 
-`npm install @picovoice/rhino-angular @picovoice/web-voice-processor @picovoice/rhino-web-en-worker`
+```console
+npm install --save @picovoice/rhino-angular
+```
+### AccessKey
+
+Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using
+Rhino SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Usage
 
-In your Angular component, add the RhinoService. The RhinoService has an inference event to which you can subscribe:
+There are two methods to initialize Rhino:
+
+### Public Directory
+
+**NOTE**: Due to modern browser limitations of using a file URL, this method does __not__ work if used without hosting a server.
+
+This method fetches [the model file](https://github.com/Picovoice/rhino/blob/master/lib/common/rhino_params.pv) from the public directory and feeds it to Rhino. Copy the model file into the public directory:
+
+```console
+cp ${RHINO_MODEL_FILE} ${PATH_TO_PUBLIC_DIRECTORY}
+```
+
+The same procedure can be used for the [Rhino context](https://github.com/Picovoice/rhino/tree/master/resources/contexts) (`.rhn`) files.
+
+### Base64
+
+**NOTE**: This method works without hosting a server, but increases the size of the model file roughly by 33%.
+
+This method uses a base64 string of the model file and feeds it to Rhino. Use the built-in script `pvbase64` to base64 your model file:
+
+```console
+npx pvbase64 -i ${RHINO_MODEL_FILE} -o ${OUTPUT_DIRECTORY}/${MODEL_NAME}.js
+```
+
+The output will be a js file which you can import into any file of your project. For detailed information about `pvbase64`,
+run:
+
+```console
+npx pvbase64 -h
+```
+
+The same procedure can be used for the [Rhino context](https://github.com/Picovoice/rhino/tree/master/resources/contexts) (`.rhn`) files.
+
+### Rhino Model
+
+Rhino saves and caches your model (`.pv`) and context (`.rhn`) files in the IndexedDB to be used by Web Assembly.
+Use a different `customWritePath` variable to hold multiple model values and set the `forceWrite` value to true to force an overwrite of the model file.
+If the model (`.pv`) or context (`.rhn`) files change, `version` should be incremented to force the cached model to be updated. Either `base64` or `publicPath` must be set to instantiate Rhino. If both are set, Rhino will use the `base64` parameter.
+
+```typescript
+// Context (.rhn)
+const rhinoContext = {
+  publicPath: ${CONTEXT_RELATIVE_PATH},
+  // or
+  base64: ${CONTEXT_BASE64_STRING},
+  // Optionals
+  customWritePath: 'custom_context',
+  forceWrite: true,
+  version: 1,
+  sensitivity: 0.5,
+}
+// Model (.pv)
+const rhinoModel = {
+  publicPath: ${MODEL_RELATIVE_PATH},
+  // or
+  base64: ${MODEL_BASE64_STRING},
+  // Optionals
+  customWritePath: 'custom_model',
+  forceWrite: true,
+  version: 1,
+}
+```
+
+Additional engine options are provided via the `options` parameter.
+Use `endpointDurationSec` and `requireEndpoint` to control the engine's endpointing behaviour.
+An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command.
+
+```typescript
+// Optional. These are the default values
+const options = {
+  endpointDurationSec: 1.0,
+  requireEndpoint: true,
+}
+```
+
+### Initialize Rhino
+
+First subscribe to the events from `RhinoService`. There are five subscription events:
+
+- `inference$`: Returns the inference.
+- `contextInfo$`: Returns the context info once `Rhino` has loaded successfully.
+- `isLoaded$`: Returns true if `Rhino` has loaded successfully.
+- `isListening$`: Returns true if `WebVoiceProcessor` has started successfully and Rhino is listening for an utterance.
+- `error$`:  Returns any errors occurred.
 
 ```typescript
 import { Subscription } from "rxjs"
 import { RhinoService } from "@picovoice/rhino-angular"
-
 ...
-
-  constructor(private rhinoService: RhinoService) {
-    // Subscribe to Rhino inference detections
-    // Store each detection so we can display it in an HTML list
-    this.rhinoDetection = rhinoService.inference$.subscribe(
-      inference => console.log(`Rhino Detected "${inference}"`))
+  constructor(private porcupineService: PorcupineService) {
+    this.contextInfoDetection = rhinoService.contextInfo$.subscribe(
+      contextInfo => {
+        console.log(contextInfo);
+      });
+    this.inferenceDetection = rhinoService.inference$.subscribe(
+      inference => {
+        console.log(inference);
+      });
+    this.isLoadedDetection = rhinoService.isLoaded$.subscribe(
+      isLoaded => {
+        console.log(isLoaded);
+      });
+    this.isListeningDetection = rhinoService.isListening$.subscribe(
+      isListening => {
+        console.log(isListening);
+      });
+    this.errorDetection = rhinoService.error$.subscribe(
+      error => {
+        console.log(error);
+      });
   }
 ```
 
-Where inference is a `RhinoInference`:
+After setting up the subscriber events, initialize `Rhino`:
 
 ```typescript
-export type RhinoInference = {
-  /** Rhino has concluded the inference (isUnderstood is now set) */
-  isFinalized: boolean;
-  /** The intent was understood (it matched an expression in the context) */
-  isUnderstood?: boolean;
-  /** The name of the intent */
-  intent?: string;
-  /** Map of the slot variables and values extracted from the utterance */
-  slots?: Record<string, string>;
-};
+async ngOnInit() {
+  await this.rhinoService.init(
+    ${ACCESS_KEY},
+    rhinoContext,
+    rhinoModel,
+  );
+}
+````
+
+### Process Audio Frames in Worker Thread
+
+The Rhino Angular binding uses [WebVoiceProcessor](https://github.com/Picovoice/web-voice-processor) to record audio.
+To start detecting detecting an inference, run the `process` function:
+```typescript
+await this.rhinoService.process();
 ```
+The `process` function initializes WebVoiceProcessor.
+Rhino will then listen and process frames of microphone audio until it reaches a conclusion, then return the result via the `inference$` event.
+Once a conclusion is reached Rhino will enter a paused state. From the paused state Rhino call `process` again to detect another inference.
 
-We need to initialize Rhino to tell it which context we want to listen to (and at what sensitivity). We can use the Angular lifecycle hooks `ngOnInit` and `ngOnDestroy` to start up and later tear down the Rhino engine.
+### Cleanup
 
-### Imports
-
-You can use Rhino by importing the worker package statically or dynamically. Static is more straightforward to implement, but will impact your initial bundle size with an additional ~4 MB. Depending on your requirements, this may or may not be feasible. If you require a small bundle size, see dynamic importing below.
-
-#### Static Import
+When you are done with Rhino call `release`. This cleans up all resources used by Rhino and WebVoiceProcessor.
 
 ```typescript
-import {RhinoWorkerFactory as RhinoWorkerFactoryEn} from'@picovoice/rhino-web-en-worker'
-
-  async ngOnInit() {
-    // Initialize Rhino Service
-    try {
-      await this.rhinoService.init(RhinoWorkerFactoryEn, {accessKey: accessKey, context: { base64: RHINO_CLOCK_64 }})
-      console.log("Rhino is now loaded. Press the Push-to-Talk button to activate.")
-    }
-    catch (error) {
-      console.error(error)
-    }
-  }
-
-  ngOnDestroy() {
-    this.rhinoDetection.unsubscribe()
-    this.rhinoService.release()
-  }
-
-  public pushToTalk() {
-    this.rhinoService.pushToTalk();
-  }
-
+ngOnDestroy() {
+  this.contextInfoDetection.unsubscribe();
+  this.inferenceDetection.unsubscribe();
+  this.isLoadedDetection.unsubscribe();
+  this.isListeningDetection.unsubscribe();
+  this.errorDetection.unsubscribe();
+  this.rhinoService.release();
+}
 ```
 
-#### Dynamic Import
+If any arguments require changes, call `release` then `init` again to initialize Rhino with the new settings.
 
-```typescript
-  async ngOnInit() {
-    // Load Rhino worker chunk with specific language model (large ~3-4MB chunk; dynamically imported)
-    const rhinoFactoryEn = (await import('@picovoice/rhino-web-en-worker')).RhinoWorkerFactory
-    // Initialize Rhino Service
-    try {
-      await this.rhinoService.init(rhinoFactoryEn, {accessKey: accessKey, context: { base64: RHINO_CLOCK_64 }})
-      console.log("Rhino is now loaded. Press the Push-to-Talk button to activate.")
-    }
-    catch (error) {
-      console.error(error)
-    }
-  }
+## Contexts
 
-  ngOnDestroy() {
-    this.rhinoDetection.unsubscribe()
-    this.rhinoService.release()
-  }
+Create custom contexts using the [Picovoice Console](https://console.picovoice.ai/).
+Train the Rhino context model for the target platform WebAssembly (WASM).
+Inside the downloaded `.zip` file, there will be a `.rhn` file which is the context model file in binary format.
 
-  public pushToTalk() {
-    this.rhinoService.pushToTalk();
-  }
+Similar to the model file (`.pv`), keyword files (`.rhn`) are saved in IndexedDB to be used by Web Assembly.
+Either `base64` or `publicPath` must be set to instantiate Rhino. If both are set, Rhino will use
+the `base64` model.
 
-```
+## Non-English Languages
 
-## Microphone and Push to Talk
+In order to detect non-English inferences you need to use the corresponding model file (`.pv`). The model files for all
+supported languages are available [here](https://github.com/Picovoice/rhino/tree/master/lib/common).
 
-Upon mounting, the component will request microphone permission from the user, instantiate the audio stream and start up an instance of Rhino.
+## Demo
 
-Rhino requires a trigger to begin listening. To start listening for natural language commands, there is a `pushToTalk` method on the RhinoService, which we can connect to a button press event, for example. If you want to trigger Rhino using voice (a wake word / trigger word / hotword), see the [Picovoice SDK for Angular](https://npmjs.com/package/@picovoice/picovoice-web-angular), which includes both the Porcupine and Rhino engines and switches between them automatically for a continuous hands-free Voice AI interaction loop. The [Porcupine SDK for Angular](https://npmjs.com/package/@picovoice/porcupine-web-angular) is also available individually.
-
-### Custom contexts
-
-Custom contexts are generated using [Picovoice Console](https://console.picovoice.ai/). They are trained from text using transfer learning into bespoke Rhino context files with a `.rhn` extension. The target platform is WebAssembly (WASM), as that is what backs the Angular library.
-
-The `.zip` file contains a `.rhn` file and a `_b64.txt` file which contains the binary model encoded with Base64. Provide the base64 encoded string as an argument to Rhino as in the above example. You may wish to store the base64 string in a separate JavaScript file and `export` it to keep your application code separate.
+For example usage refer to our [Web demo application](https://github.com/Picovoice/rhino/tree/master/demo/web).
