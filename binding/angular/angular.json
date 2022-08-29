@@ -3,43 +3,43 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "rhino-web-angular": {
+    "rhino-angular": {
       "projectType": "library",
-      "root": "projects/rhino-web-angular",
-      "sourceRoot": "projects/rhino-web-angular/src",
+      "root": "projects/rhino-angular",
+      "sourceRoot": "projects/rhino-angular/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/rhino-web-angular/tsconfig.lib.json",
-            "project": "projects/rhino-web-angular/ng-package.json"
+            "tsConfig": "projects/rhino-angular/tsconfig.lib.json",
+            "project": "projects/rhino-angular/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/rhino-web-angular/tsconfig.lib.prod.json"
+              "tsConfig": "projects/rhino-angular/tsconfig.lib.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/rhino-web-angular/src/test.ts",
-            "tsConfig": "projects/rhino-web-angular/tsconfig.spec.json",
-            "karmaConfig": "projects/rhino-web-angular/karma.conf.js"
+            "main": "projects/rhino-angular/src/test.ts",
+            "tsConfig": "projects/rhino-angular/tsconfig.spec.json",
+            "karmaConfig": "projects/rhino-angular/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "projects/rhino-web-angular/**/*.ts",
-              "projects/rhino-web-angular/**/*.html"
+              "projects/rhino-angular/**/*.ts",
+              "projects/rhino-angular/**/*.html"
             ]
           }
         }
       }
     }
   },
-  "defaultProject": "rhino-web-angular"
+  "defaultProject": "rhino-angular"
 }

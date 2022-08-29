@@ -1,4 +1,4 @@
-# rhino-web-angular
+# rhino-angular
 
 Angular service for Rhino for Web.
 
@@ -54,11 +54,11 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 Use `npm` or `yarn` to install the package and its peer dependencies. Each spoken language (e.g. 'en', 'de') is a separate package. For this example we'll use English:
 
-`yarn add @picovoice/rhino-web-angular @picovoice/web-voice-processor @picovoice/rhino-web-en-worker`
+`yarn add @picovoice/rhino-angular @picovoice/web-voice-processor @picovoice/rhino-web-en-worker`
 
 (or)
 
-`npm install @picovoice/rhino-web-angular @picovoice/web-voice-processor @picovoice/rhino-web-en-worker`
+`npm install @picovoice/rhino-angular @picovoice/web-voice-processor @picovoice/rhino-web-en-worker`
 
 ## Usage
 
@@ -66,7 +66,7 @@ In your Angular component, add the RhinoService. The RhinoService has an inferen
 
 ```typescript
 import { Subscription } from "rxjs"
-import { RhinoService } from "@picovoice/rhino-web-angular"
+import { RhinoService } from "@picovoice/rhino-angular"
 
 ...
 

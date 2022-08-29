@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/rhino-web-angular-demo'),
+      dir: require('path').join(__dirname, './coverage/rhino-angular-demo'),
       subdir: '.',
       reporters: [
         { type: 'html' },

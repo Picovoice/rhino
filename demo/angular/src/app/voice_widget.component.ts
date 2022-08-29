@@ -1,7 +1,7 @@
 import { Component } from "@angular/core"
 import { Subscription } from "rxjs"
 
-import { RhinoService, RhinoServiceArgs } from "@picovoice/rhino-web-angular"
+import { RhinoService, RhinoServiceArgs } from "@picovoice/rhino-angular"
 import { RhinoInference } from "@picovoice/rhino-web-core"
 import { CLOCK_EN_64 } from "../dist/rhn_contexts_base64"
 

@@ -46,7 +46,7 @@ jobs:
       run: yarn install
 
     - name: Build
-      run: yarn build rhino-web-angular --prod
+      run: yarn build rhino-angular --prod
 
     - name: Lint
       run: yarn lint

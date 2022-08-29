@@ -6,8 +6,8 @@
       "files": ["*.ts"],
       "parserOptions": {
         "project": [
-          "projects/rhino-web-angular/tsconfig.lib.json",
-          "projects/rhino-web-angular/tsconfig.spec.json"
+          "projects/rhino-angular/tsconfig.lib.json",
+          "projects/rhino-angular/tsconfig.spec.json"
         ],
         "createDefaultProgram": true
       },

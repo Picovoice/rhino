@@ -1285,9 +1285,9 @@
     node-gyp "^7.1.0"
     read-package-json-fast "^2.0.1"
 
-"@picovoice/rhino-web-angular@^2.1.3":
+"@picovoice/rhino-angular@^2.1.3":
   version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web-angular/-/rhino-web-angular-2.1.3.tgz#5bbe8e870246b09242170679efc77e08634ea153"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-2.1.3.tgz#5bbe8e870246b09242170679efc77e08634ea153"
   integrity sha512-q/6JJrh3+ls7OgqBk6CoUepJAujeghQ614Uv90juCWrRxv5k/zxD4sgg0bL7IXv4ApfKAj359vk8vzdeMUJXsg==
   dependencies:
     "@picovoice/rhino-web-core" "^2.1.2"

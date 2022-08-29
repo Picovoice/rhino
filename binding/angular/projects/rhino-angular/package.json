@@ -1,11 +1,11 @@
 {
-  "name": "@picovoice/rhino-web-angular",
-  "description": "Angular service for Porcupine Web SDK",
-  "version": "2.1.3",
+  "name": "@picovoice/rhino-angular",
+  "description": "Angular service for Rhino Web SDK",
+  "version": "2.1.0",
   "peerDependencies": {
     "@angular/common": "^11.0.9",
     "@angular/core": "^11.0.9",
-    "@picovoice/web-voice-processor": "^2.2.2",
+    "@picovoice/web-voice-processor": "~4.0.0",
     "rxjs": "~6.6.0"
   },
   "keywords": [
@@ -23,7 +23,7 @@
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
   "dependencies": {
-    "@picovoice/rhino-web-core": "^2.1.2",
+    "@picovoice/rhino-web": "=2.1.3",
     "tslib": "^2.0.0"
   }
 }

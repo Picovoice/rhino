@@ -1,4 +1,4 @@
-# rhino-web-angular-demo
+# rhino-angular-demo
 
 This demo application includes a sample `VoiceWidget` Angular component which uses the `RhinoService` Angular service to allow naturally spoken commands to be converted to intents. Rhino inference is handled via the `inference$` event. Our VoiceWidget subscribes to this event and displays the results.
 

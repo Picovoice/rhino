@@ -1,10 +1,10 @@
-# RhinoWebAngular
+# Rhino Angular
 
-This is the Angular workspace for building the `rhino-web-angular` package.
+This is the Angular workspace for building the `rhino-angular` package.
 
-## rhino-web-angular
+## rhino-angular
 
-## Install dependencies
+## Install
 
 Run `yarn` to install the Angular workspace dependencies:
 
@@ -15,7 +15,7 @@ yarn
 To build the project, run:
 
 ```console
-yarn build rhino-web-angular --prod
+yarn build rhino-angular --prod
 ```
 
 ## Format and Lint
