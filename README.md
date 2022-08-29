@@ -14,7 +14,7 @@
 [![Cocoapods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://github.com/Picovoice/rhino/tree/master/binding/ios)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-angular?label=npm%20%5Bangular%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-angular)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-react)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-vue)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-vue)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
 [![Crates.io](https://img.shields.io/crates/v/pv_rhino)](https://crates.io/crates/pv_rhino)
 
@@ -1457,18 +1457,18 @@ return (
 #### Vue
 
 ```console
-yarn add @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
+yarn add @picovoice/rhino-vue @picovoice/rhino-web-en-worker
 ```
 
 (or)
 
 ```console
-npm install @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
+npm install @picovoice/rhino-vue @picovoice/rhino-web-en-worker
 ```
 
 ```html
 <script lang="ts">
-import rhinoMixin, { RhinoInferenceFinalized } from "@picovoice/rhino-web-vue";
+import rhinoMixin, { RhinoInferenceFinalized } from "@picovoice/rhino-vue";
 import { RhinoWorkerFactory as RhinoWorkerFactoryEn } from "@picovoice/rhino-web-en-worker";
 
 export default {

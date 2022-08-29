@@ -1,4 +1,4 @@
-# rhino-web-vue-demo
+# rhino-vue-demo
 
 This demo application includes a sample `VoiceWidget` Vue component which uses the `rhinoMixin` service to allow processing naturally spoken phrases within a domain (context) of interest. Rhino inference events are handled via the `inferenceCallback` function.
 

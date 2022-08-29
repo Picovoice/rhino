@@ -1,4 +1,4 @@
-import rhinoMixin, { RhinoVue, RhinoWorkerFactoryArgs } from './rhino';
+import rhinoMixin, { RhinoVue } from './rhino';
 
 // Create module definition for Vue.use()
 const plugin = {

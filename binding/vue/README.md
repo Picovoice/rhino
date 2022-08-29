@@ -1,4 +1,4 @@
-# rhino-web-vue
+# rhino-vue
 
 Vue mixin for Rhino Web.
 
@@ -57,7 +57,7 @@ Install the package using `npm` or `yarn`. You will also need to add `@picovoice
 E.g. English:
 
 ```console
-yarn add @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker @picovoice/web-voice-processor
+yarn add @picovoice/rhino-vue @picovoice/rhino-web-en-worker @picovoice/web-voice-processor
 ```
 
 ## Usage
@@ -120,7 +120,7 @@ export type RhinoInference = {
 Make sure you handle the possibility of errors with the `errorCallback` function. Users may not have a working microphone, and they can always decline (and revoke) permissions; your application code should anticipate these scenarios. 
 
 ```typescript
-import rhinoMixin, { RhinoInferenceFinalized } from "@picovoice/rhino-web-vue";
+import rhinoMixin, { RhinoInferenceFinalized } from "@picovoice/rhino-vue";
 import { RhinoWorkerFactory as RhinoWorkerFactoryEn } from "@picovoice/rhino-web-en-worker";
 
 export default {

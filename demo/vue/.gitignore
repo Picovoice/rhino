@@ -22,4 +22,5 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-src/dist
+/src/lib/rhino_params.js
+/public/*.rhn

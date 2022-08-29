@@ -1,19 +1,17 @@
 <template>
-  <div class="rhino-web-vue-demo">
+  <div class="rhino-vue-demo">
     <h1>Rhino Web + Vue ("Rhino" Renderless Component)</h1>
     <VoiceWidget />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
-export default Vue.extend({
+import { defineComponent, defineAsyncComponent } from "vue";
+export default defineComponent({
   name: "App",
   components: {
-    VoiceWidget: Vue.component(
-      'VoiceWidget',
-      async () => await import("./components/VoiceWidget.vue")
+    VoiceWidget: defineAsyncComponent(() =>
+      import("./components/VoiceWidget.vue")
     ),
   },
   data: function () {
