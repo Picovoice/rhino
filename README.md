@@ -1358,13 +1358,13 @@ if (done) {
 #### Angular
 
 ```console
-yarn add @picovoice/rhino-angular
+yarn add @picovoice/rhino-angular @picovoice/web-voice-processor
 ```
 
 (or)
 
 ```console
-npm install @picovoice/rhino-angular
+npm install @picovoice/rhino-angular @picovoice/web-voice-processor
 ```
 
 ```typescript

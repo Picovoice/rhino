@@ -44,13 +44,13 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 Using `yarn`:
 
 ```console
-yarn add @picovoice/rhino-angular
+yarn add @picovoice/rhino-angular @picovoice/web-voice-processor
 ```
 
 or using `npm`:
 
 ```console
-npm install --save @picovoice/rhino-angular
+npm install --save @picovoice/rhino-angular @picovoice/web-voice-processor
 ```
 ### AccessKey
 
