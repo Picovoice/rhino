@@ -35,7 +35,7 @@ import {
     isLoadedCallback: (isLoaded: boolean) => void,
     isListeningCallback: (isListening: boolean) => void,
     errorCallback: (error: any) => void,
-    options?: RhinoOptions) => void;
+    options?: RhinoOptions) => Promise<void>;
   process: () => Promise<void>;
   release: () => Promise<void>;
   isLoadedCallback: (isLoaded: boolean) => void,
