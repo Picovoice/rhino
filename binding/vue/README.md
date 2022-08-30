@@ -45,13 +45,13 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 Using `yarn`:
 
 ```console
-yarn add @picovoice/rhino-vue @picovoice/web-voice-processor
+yarn add @picovoice/rhino-vue
 ```
 
 or using `npm`:
 
 ```console
-npm install --save @picovoice/rhino-vue @picovoice/web-voice-processor
+npm install --save @picovoice/rhino-vue
 ```
 ### AccessKey
 
@@ -198,12 +198,12 @@ Import `Rhino` mixin, add it to your component and initialize Rhino:
 </script>
 ```
 
-### Process Audio Frames in Worker Thread
+### Process Audio Frames
 
-The Rhino React binding uses [WebVoiceProcessor](https://github.com/Picovoice/web-voice-processor) to record audio.
+The Rhino Vue binding uses [WebVoiceProcessor](https://github.com/Picovoice/web-voice-processor) to record audio.
 To start detecting detecting an inference, run the `process` function:
 ```typescript
-await this.$rhino.start();();
+await this.$rhino.process();
 ```
 The `process` function initializes WebVoiceProcessor.
 Rhino will then listen and process frames of microphone audio until it reaches a conclusion, then return the result via the `inference` variable.

@@ -1457,13 +1457,13 @@ return (
 #### Vue
 
 ```console
-yarn add @picovoice/rhino-vue @picovoice/web-voice-processor
+yarn add @picovoice/rhino-vue
 ```
 
 (or)
 
 ```console
-npm install @picovoice/rhino-vue @picovoice/web-voice-processor
+npm install @picovoice/rhino-vue
 ```
 
 ```html
