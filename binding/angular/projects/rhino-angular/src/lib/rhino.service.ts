@@ -37,20 +37,6 @@ export class RhinoService implements OnDestroy {
 
   constructor() {}
 
-  private InferenceCallback(inference: RhinoInference): void {
-    if (inference && inference.isFinalized) {
-      if (this.rhino) {
-        WebVoiceProcessor.unsubscribe(this.rhino);
-      }
-      this.isListening$.next(false);
-      this.inference$.next(inference);
-    }
-  }
-
-  private errorCallback = (error: string) => {
-    this.error$.next(error);
-  };
-
   public async init(
     accessKey: string,
     context: RhinoContext,
@@ -67,7 +53,7 @@ export class RhinoService implements OnDestroy {
         this.rhino = await RhinoWorker.create(
           accessKey,
           context,
-          (inference: RhinoInference) => this.InferenceCallback(inference),
+          this.inferenceCallback,
           model,
           { processErrorCallback: this.errorCallback }
         );
@@ -115,4 +101,18 @@ export class RhinoService implements OnDestroy {
   async ngOnDestroy(): Promise<void> {
     await this.release();
   }
+
+  private inferenceCallback = (inference: RhinoInference) => {
+    if (inference && inference.isFinalized) {
+      if (this.rhino) {
+        WebVoiceProcessor.unsubscribe(this.rhino);
+      }
+      this.isListening$.next(false);
+      this.inference$.next(inference);
+    }
+  };
+
+  private errorCallback = (error: string) => {
+    this.error$.next(error);
+  };
 }
