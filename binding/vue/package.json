@@ -46,6 +46,6 @@
     "vue": "^2.6.11 || ^3.0.0"
   },
   "dependencies": {
-    "@picovoice/rhino-web": "=2.1.3"
+    "@picovoice/rhino-web": "=2.1.4"
   }
 }

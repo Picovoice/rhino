@@ -1474,44 +1474,44 @@ import rhinoParams from "${PATH_TO_RHINO_PARAMS_BASE64}";
 import rhinoContext from "${PATH_TO_RHINO_CONTEXT_BASE64}";
 
 export default {
-    mixins: [rhinoMixin],
-    mounted() {
-      const rhinoContext = { publicPath: "clock_wasm.rhn" };
-      const rhinoModel = { base64: rhinoParams };
-
-      this.$rhino.init(
-        this.accessKey,
-        rhinoContext,
-        this.inferenceCallback,
-        rhinoModel,
-        this.contextCallback,
-        this.isLoadedCallback,
-        this.isListeningCallback,
-        this.errorCallback
-      );
+  mixins: [rhinoMixin],
+  mounted() {
+    this.$rhino.init(
+      this.accessKey,
+      { base64: rhinoContext },
+      this.inferenceCallback,
+      { base64: rhinoParams },
+      this.contextCallback,
+      this.isLoadedCallback,
+      this.isListeningCallback,
+      this.errorCallback
+    );
+  },
+  methods: {
+    process: function () {
+      this.$rhino.process();
     },
-    methods: {
-      inferenceCallback: function(inference) {
-        console.log(`Detected inference: ${inference}`);
-      },
-      contextCallback: function(context) {
-        console.log(context);
-      },
-      isLoadedCallback: function(isLoaded) {
-        console.log(isLoaded);
-      },
-      isListeningCallback: function(isListening) {
-        console.log(isListening);
-      },
-      errorCallback: function(error) {
-        console.error(error);
-      }
+    inferenceCallback: function(inference) {
+      console.log(`Detected inference: ${inference}`);
     },
-    // beforeDestroy for Vue 2.
-    beforeUnmount() {
-      this.$porcupine.release();
+    contextCallback: function(context) {
+      console.log(context);
+    },
+    isLoadedCallback: function(isLoaded) {
+      console.log(isLoaded);
+    },
+    isListeningCallback: function(isListening) {
+      console.log(isListening);
+    },
+    errorCallback: function(error) {
+      console.error(error);
     }
+  },
+  // beforeDestroy for Vue 2.
+  beforeUnmount() {
+    this.$rhino.release();
   }
+}
 </script>
 ```
 
