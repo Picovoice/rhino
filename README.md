@@ -1396,13 +1396,13 @@ public pushToTalk() {
 #### React
 
 ```console
-yarn add @picovoice/rhino-react @picovoice/web-voice-processor
+yarn add @picovoice/rhino-react
 ```
 
 (or)
 
 ```console
-npm install @picovoice/rhino-react @picovoice/web-voice-processor
+npm install @picovoice/rhino-react
 ```
 
 ```javascript

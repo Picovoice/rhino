@@ -1,4 +1,4 @@
-# Rhino Binding for Web
+# Rhino Binding for React
 
 ## Rhino Speech-to-Intent engine
 
@@ -46,13 +46,13 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 Using `yarn`:
 
 ```console
-yarn add @picovoice/rhino-react @picovoice/web-voice-processor
+yarn add @picovoice/rhino-react
 ```
 
 or using `npm`:
 
 ```console
-npm install --save @picovoice/rhino-react @picovoice/web-voice-processor
+npm install --save @picovoice/rhino-react
 ```
 ### AccessKey
 
@@ -169,7 +169,7 @@ const initRhino = async () => {
 
 The `init` process is asyncronous. Once complete, the `isLoaded` flag will be set to `true`.
 
-### Process Audio Frames in Worker Thread
+### Process Audio Frames
 
 The Rhino React binding uses [WebVoiceProcessor](https://github.com/Picovoice/web-voice-processor) to record audio.
 To start detecting detecting an inference, run the `process` function:
@@ -207,4 +207,4 @@ supported languages are available [here](https://github.com/Picovoice/rhino/tree
 
 ## Demo
 
-For example usage refer to our [Web demo application](https://github.com/Picovoice/rhino/tree/master/demo/web).
+For example usage, refer to our [React demo application](https://github.com/Picovoice/rhino/tree/master/demo/react).

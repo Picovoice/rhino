@@ -40,7 +40,7 @@ export function useRhino(): {
   const [contextInfo, setContextInfo] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [error, setError] = useState<Error | string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const inferenceCallback = useCallback(
     (newInference: RhinoInference): void => {
@@ -55,7 +55,7 @@ export function useRhino(): {
     []
   );
 
-  const errorCallback = useCallback((newError: any): void => {
+  const errorCallback = useCallback((newError: string): void => {
     setError(newError);
   }, []);
 
@@ -69,7 +69,7 @@ export function useRhino(): {
       if (options.processErrorCallback) {
         // eslint-disable-next-line no-console
         console.warn(
-          "'processErrorCallback' options is not supported, use the 'error' hook variable instead."
+          "'processErrorCallback' is only supported in the Rhino Web SDK. Use the 'error' state to monitor for errors in the React SDK."
         );
       }
 
@@ -95,7 +95,12 @@ export function useRhino(): {
 
   const process = useCallback(async (): Promise<void> => {
     try {
-      if (rhinoRef.current && !isListening) {
+      if (!rhinoRef.current) {
+        setError('Rhino has not been initialized or has been released');
+        return;
+      }
+
+      if (!isListening) {
         rhinoRef.current.reset();
         await WebVoiceProcessor.subscribe(rhinoRef.current);
         setIsListening(true);
@@ -110,7 +115,6 @@ export function useRhino(): {
     try {
       if (rhinoRef.current) {
         await WebVoiceProcessor.unsubscribe(rhinoRef.current);
-        rhinoRef.current.release();
         rhinoRef.current.terminate();
         rhinoRef.current = null;
         setIsListening(false);

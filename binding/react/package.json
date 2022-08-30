@@ -63,6 +63,6 @@
     "react-dom": ">=17"
   },
   "dependencies": {
-    "@picovoice/rhino-web": "=2.1.2"
+    "@picovoice/rhino-web": "=2.1.3"
   }
 }

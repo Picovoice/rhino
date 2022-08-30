@@ -48,7 +48,7 @@ export default function VoiceWidget() {
           />
         </label>
         <button className="start-button" onClick={() => rhnInit()} disabled={isLoaded || accessKey.length === 0}>
-          Start Rhino
+          Init Rhino
         </button>
       </h3>
       <h3>Rhino Loaded: {JSON.stringify(isLoaded)}</h3>
