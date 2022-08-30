@@ -24,14 +24,14 @@ import {
  * Type alias for Rhino Vue Mixin.
  * Use with `Vue as VueConstructor extends {$rhino: RhinoVue}` to get types in typescript.
  */
- export interface RhinoVue {
+export interface RhinoVue {
   $_rhino_: RhinoWorker | null;
   init: (
     accessKey: string,
     context: RhinoContext,
     inferenceCallback: InferenceCallback,
     model: RhinoModel,
-    contextCallback: (info: string) => void,
+    contextInfoCallback: (info: string) => void,
     isLoadedCallback: (isLoaded: boolean) => void,
     isListeningCallback: (isListening: boolean) => void,
     errorCallback: (error: any) => void,
@@ -65,17 +65,21 @@ export default {
           context: RhinoContext,
           inferenceCallback: InferenceCallback,
           model: RhinoModel,
-          contextCallback: (info: string) => void,
-          isLoadedCallback: (isLoaded: boolean) => void ,
-          isListeningCallback: (isListening: boolean) => void ,
+          contextInfoCallback: (info: string) => void,
+          isLoadedCallback: (isLoaded: boolean) => void,
+          isListeningCallback: (isListening: boolean) => void,
           errorCallback: (error: any) => void,
           options: RhinoOptions = {}
         ): Promise<void> {
           if (options.processErrorCallback) {
-            console.warn("'processErrorCallback' options is not supported, use 'errorCallback' instead.");
+            // eslint-disable-next-line no-console
+            console.warn(
+              "'processErrorCallback' is only supported in the Porcupine Web SDK. " +
+                "Use the 'errorCallback' state to monitor for errors in the Vue SDK."
+            );
           }
 
-          const inferenceCallbackInner = (newInference: RhinoInference) => {
+          const inferenceCallbackInner = (newInference: RhinoInference): void => {
             if (newInference && newInference.isFinalized) {
               if (this.$_rhino_) {
                 WebVoiceProcessor.unsubscribe(this.$_rhino_);
@@ -95,7 +99,7 @@ export default {
                 {...options, processErrorCallback: errorCallback}
               );
 
-              contextCallback(this.$_rhino_.contextInfo);
+              contextInfoCallback(this.$_rhino_.contextInfo);
 
               this.isListeningCallback = isListeningCallback;
               this.isLoadedCallback = isLoadedCallback;
@@ -129,7 +133,7 @@ export default {
             this.isLoadedCallback(false);
           }
         },
-      }
+      };
     }
   },
   // Vue 3 method to clean resources.

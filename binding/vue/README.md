@@ -28,11 +28,16 @@ Rhino is:
 * compact and computationally-efficient, making it perfect for IoT.
 * self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
-## Compatibility
+## Browser Compatibility
 
 - Chrome / Edge
 - Firefox
 - Safari
+
+## Framework Compatibility
+
+- Vue.js 2.6.11+
+- Vue.js 3.0.0+
 
 ## AccessKey
 
@@ -142,19 +147,19 @@ const options = {
 **Note**: Due to limitations on Vue, one component can only have one instance of Rhino. To use multiple instances of Rhino instead, check out [Rhino Web binding](https://www.npmjs.com/package/@picovoice/rhino-web).
 
 Create the following functions:
- - `inferenceCallback` function to get the streaming results from the worker
- - `contextCallback` function to get the context info from Rhino once the owrker is loaded
- - `isLoadedCallback` function to check if Rhino has loaded
- - `isListeningCallback` function to check if Rhino is listening for an inference
+ - `inferenceCallback` streams inference results from Rhino
+ - `contextInfoCallback` function that delivers context info when Rhino has completed initialization
+ - `isLoadedCallback` function that executes when Rhino has loaded or unloaded
+ - `isListeningCallback` function that executes when Rhino is listening for an inference
  - `errorCallback` function to catch any error occurred
 
 ```typescript
 ...
 methods: {
-  keywordDetectionCallback: function(inference) {
+  inferenceCallback: function(inference) {
     console.log(`Detected inference: ${inference}`);
   },
-  contextCallback: function(context) {
+  contextInfoCallback: function(context) {
     console.log(context);
   },
   isLoadedCallback: function(isLoaded) {
@@ -188,7 +193,7 @@ Import `Rhino` mixin, add it to your component and initialize Rhino:
               { base64: rhinoContext },
               this.inferenceCallback,
               { base64: rhinoParams },
-              this.contextCallback,
+              this.contextInfoCallback,
               this.isLoadedCallback,
               this.isListeningCallback,
               this.errorCallback
@@ -236,4 +241,4 @@ supported languages are available [here](https://github.com/Picovoice/rhino/tree
 
 ## Demo
 
-For example usage refer to our [Web demo application](https://github.com/Picovoice/rhino/tree/master/demo/web).
+For example usage, refer to our [Vue demo application](https://github.com/Picovoice/rhino/tree/master/demo/vue).

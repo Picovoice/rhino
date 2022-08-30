@@ -2,7 +2,7 @@ import rhinoMixin, { RhinoVue } from './rhino';
 
 // Create module definition for Vue.use()
 const plugin = {
-  install: function(Vue: any) {
+  install: function(Vue: any): void {
     Vue.mixin(rhinoMixin);
   }
 };

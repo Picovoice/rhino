@@ -1481,7 +1481,7 @@ export default {
       { base64: rhinoContext },
       this.inferenceCallback,
       { base64: rhinoParams },
-      this.contextCallback,
+      this.contextInfoCallback,
       this.isLoadedCallback,
       this.isListeningCallback,
       this.errorCallback
@@ -1494,7 +1494,7 @@ export default {
     inferenceCallback: function(inference) {
       console.log(`Detected inference: ${inference}`);
     },
-    contextCallback: function(context) {
+    contextInfoCallback: function(context) {
       console.log(context);
     },
     isLoadedCallback: function(isLoaded) {

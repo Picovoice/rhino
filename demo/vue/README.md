@@ -1,4 +1,4 @@
-# Rhino demo for Rect
+# Rhino demo for Vue
 
 ## Rhino Speech-to-Intent engine
 
@@ -28,17 +28,26 @@ Rhino is:
 * compact and computationally-efficient, making it perfect for IoT.
 * self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
-## Compatibility
+## Browser Compatibility
 
 - Chrome / Edge
 - Firefox
 - Safari
+
+## Framework Compatibility
+
+- Vue.js 2.6.11+
+- Vue.js 3.0.0+
+
+**NOTE**: Although this demo uses Vue 3, the [Picovoice Vue SDK](https://github.com/Picovoice/picovoice/tree/master/sdk/vue)
+is compatible with both Vue 2 and Vue 3.
 
 ## AccessKey
 
 Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
 You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
+
 
 ## Install & run
 

@@ -76,7 +76,7 @@ const VoiceWidget = defineComponent({
         rhinoContext,
         this.inferenceCallback,
         rhinoModel,
-        this.contextCallback,
+        this.contextInfoCallback,
         this.isLoadedCallback,
         this.isListeningCallback,
         this.errorCallback
@@ -85,7 +85,7 @@ const VoiceWidget = defineComponent({
     updateAccesskey: function (event: any) {
       this.accessKey = event.target.value;
     },
-    contextCallback: function (context: string) {
+    contextInfoCallback: function (context: string) {
       this.contextInfo = context;
     },
     inferenceCallback: function (
