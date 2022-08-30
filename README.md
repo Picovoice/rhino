@@ -1372,6 +1372,7 @@ import { Subscription } from "rxjs";
 import { RhinoService } from "@picovoice/rhino-angular";
 import rhinoParams from "${PATH_TO_RHINO_PARAMS_BASE64}";
 import rhinoContext from "${PATH_TO_RHINO_CONTEXT_BASE64}";
+
 constructor(private rhinoService: RhinoService) {
   this.contextInfoDetection = rhinoService.contextInfo$.subscribe(
     contextInfo => {
@@ -1394,6 +1395,7 @@ constructor(private rhinoService: RhinoService) {
       console.error(error);
     });
 }
+
 async ngOnInit() {
   await this.rhinoService.init(
     ${ACCESS_KEY},
@@ -1401,9 +1403,11 @@ async ngOnInit() {
     { base64: rhinoParams },
   )
 }
+
 async process() {
   await this.rhinoService.process();
 }
+
 ngOnDestroy() {
   this.contextInfoDetection.unsubscribe();
   this.inferenceDetection.unsubscribe();

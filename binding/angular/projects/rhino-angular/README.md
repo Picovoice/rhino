@@ -186,7 +186,7 @@ async ngOnInit() {
 }
 ````
 
-### Process Audio Frames in Worker Thread
+### Process Audio Frames
 
 The Rhino Angular binding uses [WebVoiceProcessor](https://github.com/Picovoice/web-voice-processor) to record audio.
 To start detecting detecting an inference, run the `process` function:
