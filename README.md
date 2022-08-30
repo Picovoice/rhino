@@ -1437,9 +1437,9 @@ function VoiceWidget(props) {
 return (
   <div className="voice-widget">
     <button onClick={() => process()} disabled={isListening || !isLoaded || error !== null}>
-      Push to Talk
+      Process
     </button>
-    <p>{JSON.stringify(latestInference)}</p>
+    <p>{JSON.stringify(inference)}</p>
   </div>
 )
 ```
