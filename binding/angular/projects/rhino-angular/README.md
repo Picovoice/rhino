@@ -52,12 +52,6 @@ or using `npm`:
 ```console
 npm install --save @picovoice/rhino-angular @picovoice/web-voice-processor
 ```
-### AccessKey
-
-Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using
-Rhino SDKs.
-You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
-Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Usage
 
@@ -231,4 +225,4 @@ supported languages are available [here](https://github.com/Picovoice/rhino/tree
 
 ## Demo
 
-For example usage refer to our [Web demo application](https://github.com/Picovoice/rhino/tree/master/demo/web).
+For example usage, refer to our [Angular demo application](https://github.com/Picovoice/rhino/tree/master/demo/angular).

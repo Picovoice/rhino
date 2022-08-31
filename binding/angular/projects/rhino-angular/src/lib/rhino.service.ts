@@ -55,7 +55,7 @@ export class RhinoService implements OnDestroy {
           context,
           this.inferenceCallback,
           model,
-          { processErrorCallback: this.errorCallback }
+          { ...options, processErrorCallback: this.errorCallback }
         );
         this.contextInfo$.next(this.rhino.contextInfo);
         this.isLoaded$.next(true);
