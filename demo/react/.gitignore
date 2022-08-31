@@ -22,5 +22,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+/src/dist
 /src/rhino_params.js
 /public/*.rhn

@@ -10,38 +10,37 @@
 */
 
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
-import { RhinoContext, RhinoInference, RhinoWorkerFactory } from '@picovoice/rhino-web-core';
 
-/**
- * Type alias for RhinoWorkerFactory arguments.
- */
- export type RhinoWorkerFactoryArgs = {
-  accessKey: string;
-  context: RhinoContext;
-  endpointDurationSec?: number;
-  requireEndpoint?: boolean;
-  start: boolean;
-};
+import {
+  InferenceCallback,
+  RhinoContext,
+  RhinoOptions,
+  RhinoInference,
+  RhinoModel,
+  RhinoWorker
+} from '@picovoice/rhino-web';
 
 /**
  * Type alias for Rhino Vue Mixin.
  * Use with `Vue as VueConstructor extends {$rhino: RhinoVue}` to get types in typescript.
  */
- export interface RhinoVue {
-  $_rhnWorker_: Worker | null;
-  $_webVp_: WebVoiceProcessor | null;
+export interface RhinoVue {
+  $_rhino_: RhinoWorker | null;
   init: (
-    rhinoFactoryArgs: RhinoWorkerFactoryArgs,
-    rhinoFactory: RhinoWorkerFactory,
-    inferenceCallback: (inference: RhinoInference) => void,
-    contextCallback: (info: string) => void,
-    readyCallback: () => void,
-    errorCallback: (error: Error) => void) => void;
-    start: () => Promise<boolean>;
-    stop: () => Promise<boolean>;
-    pause: () => boolean;
-    pushToTalk: () => boolean;
-    delete: () => void;
+    accessKey: string,
+    context: RhinoContext,
+    inferenceCallback: InferenceCallback,
+    model: RhinoModel,
+    contextInfoCallback: (info: string) => void,
+    isLoadedCallback: (isLoaded: boolean) => void,
+    isListeningCallback: (isListening: boolean) => void,
+    errorCallback: (error: any) => void,
+    options?: RhinoOptions) => Promise<void>;
+  process: () => Promise<void>;
+  release: () => Promise<void>;
+  isLoadedCallback: (isLoaded: boolean) => void,
+  isListeningCallback: (isListening: boolean) => void,
+  errorCallback: (error: string | null) => void,
 }
 
 export default {
@@ -51,117 +50,98 @@ export default {
      */
     $rhino(): RhinoVue {
       return {
-        $_rhnWorker_: null as Worker | null,
-        $_webVp_: null as WebVoiceProcessor | null,
-        /**
-         * Init function for Rhino.
-         * 
-         * @param rhinoFactoryArgs Arguments for RhinoWorkerFactory.
-         * @param rhinoFactory The language-specific worker factory
-         * @param inferenceCallback A method invoked upon completion of intent inference.
-         * @param contextCallback A method invoked after context information is ready.
-         * @param readyCallback A method invoked after Rhino has initialized.
-         * @param errorCallback A method invoked if an error occurs within `PorcupineWorkerFactory`.
-         */
+        $_rhino_: null as RhinoWorker | null,
+        isLoadedCallback: function (): void {
+          return;
+        },
+        isListeningCallback: function (): void {
+          return;
+        },
+        errorCallback: function (): void {
+          return;
+        },
         async init(
-          rhinoFactoryArgs,
-          rhinoFactory,
-          inferenceCallback = (_: RhinoInference) => {},
-          contextCallback = (_: string) => {},
-          readyCallback = () => {},
-          errorCallback = (error: Error) => {console.error(error)}
-        ) {
-          try {
-            const { accessKey, context, endpointDurationSec, requireEndpoint, start } = rhinoFactoryArgs;
-            this.$_rhnWorker_ = await rhinoFactory.create({
-              accessKey,
-              context: JSON.parse(JSON.stringify(context)),
-              endpointDurationSec,
-              requireEndpoint,
-              start
-            });
-            this.$_webVp_ = await WebVoiceProcessor.init({
-              engines: [this.$_rhnWorker_],
-            });
-    
-            this.$_rhnWorker_.onmessage = messageEvent => {
-              switch (messageEvent.data.command) {
-                case 'rhn-inference':
-                  inferenceCallback(messageEvent.data.inference);
-                  // Reset Push-to-Talk
-                  this.$_rhnWorker_?.postMessage({ command: 'pause' });
-                  break;
-                case 'rhn-info':
-                  const info = messageEvent.data.info;
-                  contextCallback(info);
-                  break;
+          accessKey: string,
+          context: RhinoContext,
+          inferenceCallback: InferenceCallback,
+          model: RhinoModel,
+          contextInfoCallback: (info: string) => void,
+          isLoadedCallback: (isLoaded: boolean) => void,
+          isListeningCallback: (isListening: boolean) => void,
+          errorCallback: (error: any) => void,
+          options: RhinoOptions = {}
+        ): Promise<void> {
+          if (options.processErrorCallback) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              "'processErrorCallback' is only supported in the Porcupine Web SDK. " +
+                "Use the 'errorCallback' state to monitor for errors in the Vue SDK."
+            );
+          }
+
+          const inferenceCallbackInner = (newInference: RhinoInference): void => {
+            if (newInference && newInference.isFinalized) {
+              if (this.$_rhino_) {
+                WebVoiceProcessor.unsubscribe(this.$_rhino_);
               }
-            };
-            this.$_rhnWorker_.postMessage({ command: 'info' });
-            readyCallback();
-          } catch (error) {
-            errorCallback(error as Error);
+              isListeningCallback(false);
+              inferenceCallback(newInference);
+            }
+          };
+
+          try {
+            if (!this.$_rhino_) {
+              this.$_rhino_ = await RhinoWorker.create(
+                accessKey,
+                context,
+                inferenceCallbackInner,
+                model,
+                {...options, processErrorCallback: errorCallback}
+              );
+
+              contextInfoCallback(this.$_rhino_.contextInfo);
+
+              this.isListeningCallback = isListeningCallback;
+              this.isLoadedCallback = isLoadedCallback;
+              this.errorCallback = errorCallback;
+              isLoadedCallback(true);
+              errorCallback(null);
+            }
+          } catch (error: any) {
+            errorCallback(error.toString());
           }
         },
-        /**
-         * Start processing audio.
-         */
-        async start() {
-          if (this.$_webVp_ !== null) {
-            await this.$_webVp_.start();
-            return true;
-          } else {
-            return false;
+        async process(): Promise<void> {
+          try {
+            if (!this.$_rhino_) {
+              this.errorCallback('Rhino not initialized');
+              return;
+            }
+            await WebVoiceProcessor.subscribe(this.$_rhino_);
+            this.isListeningCallback(true);
+            this.errorCallback(null);
+          } catch (error: any) {
+            this.errorCallback(error.toString());
           }
         },
-         /**
-         * Start processing audio.
-         */
-        async stop() {
-          if (this.$_webVp_ !== null) {
-            await this.$_webVp_.stop();
-            return true;
-          } else {
-            return false;
+        async release(): Promise<void> {
+          if (this.$_rhino_) {
+            await WebVoiceProcessor.unsubscribe(this.$_rhino_);
+            this.$_rhino_.terminate();
+            this.$_rhino_ = null;
+
+            this.isLoadedCallback(false);
           }
         },
-        /**
-         * Pause processing audio.
-         */
-        pause() {
-          if (this.$_webVp_ !== null) {
-            this.$_webVp_.pause();
-            return true;
-          }
-          return false;
-        },
-        /**
-         * Put Rhino in an active isTalking state.
-         */
-        pushToTalk() {
-          if (this.$_webVp_ !== null) {
-            this.$_webVp_.start();
-            this.$_rhnWorker_?.postMessage({ command: 'resume' });
-            return true;
-          }
-          return false;
-        },
-        /**
-         * Delete used resources.
-         */
-        delete() {
-          this.$_webVp_?.release();
-          this.$_rhnWorker_?.postMessage({ command: 'release' });
-        }
-      }
+      };
     }
   },
   // Vue 3 method to clean resources.
-  beforeUnmount(this: any) {
-    this.$rhino.delete();
+  beforeUnmount(this: any): void {
+    this.$rhino.release();
   },
   // Vue 2 method to clean resources.
-  beforeDestory(this: any) {
-    this.$rhino.delete();
+  beforeDestroy(this: any): void {
+    this.$rhino.release();
   }
 };
