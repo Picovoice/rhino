@@ -12,8 +12,8 @@
     "postinstall": "npx pvbase64 -i ../../lib/common/rhino_params.pv -o ./src/lib/rhino_params.js && cp ../../resources/contexts/wasm/clock_wasm.rhn ./public"
   },
   "dependencies": {
-    "@picovoice/rhino-vue": "../../binding/vue",
-    "@picovoice/web-voice-processor": "~4.0.1",
+    "@picovoice/rhino-vue": "=2.1.0",
+    "@picovoice/web-voice-processor": "=4.0.1",
     "core-js": "^3.6.5",
     "vue": "^3.2.37",
     "vue-template-compiler": "^2.6.11"
