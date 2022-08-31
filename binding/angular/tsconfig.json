@@ -17,9 +17,9 @@
     "module": "es2020",
     "lib": ["es2018", "dom"],
     "paths": {
-      "rhino-web-angular": [
-        "dist/rhino-web-angular/rhino-web-angular",
-        "dist/rhino-web-angular"
+      "rhino-angular": [
+        "dist/rhino-angular/rhino-angular",
+        "dist/rhino-angular"
       ]
     }
   },

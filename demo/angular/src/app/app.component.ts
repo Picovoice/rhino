@@ -6,10 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'rhino-web-angular-demo-rhino';
-  show = true
-
-  toggle() {
-    this.show = !this.show
-  }
+  title = 'rhino-angular-demo-rhino';
 }

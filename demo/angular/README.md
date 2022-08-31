@@ -1,14 +1,43 @@
-# rhino-web-angular-demo
+# Rhino demo for Angular
 
-This demo application includes a sample `VoiceWidget` Angular component which uses the `RhinoService` Angular service to allow naturally spoken commands to be converted to intents. Rhino inference is handled via the `inference$` event. Our VoiceWidget subscribes to this event and displays the results.
+## Rhino Speech-to-Intent engine
 
-The demo uses dynamic imports to split the RhinoService away from the main application bundle. This means that the initial download size of the Angular app will not be impacted by the ~3-4 MB requirement of Rhino. While small for all-in-one offline Voice AI, the size is large for an initial web app load.
+Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-If you decline microphone permission in the browser, or another such issue prevents Rhino from starting, the error will be displayed.
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
+interest, in real-time. For example, given a spoken command:
 
-The widget shows the various loading and error events, as well as mounting/unmounting the `VoiceWidget` with a toggle, demonstrating the complete lifecycle of Rhino with in an Angular app.
+> Can I have a small double-shot espresso?
+Rhino infers that the user would like to order a drink and emits the following inference result:
+```json
+{
+  "isUnderstood": "true",
+  "intent": "orderBeverage",
+  "slots": {
+    "beverage": "espresso",
+    "size": "small",
+    "numberOfShots": "2"
+  }
+}
+```
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.5.
+Rhino is:
+
+* using deep neural networks trained in real-world environments.
+* compact and computationally-efficient, making it perfect for IoT.
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
+
+## Compatibility
+
+- Chrome / Edge
+- Firefox
+- Safari
+
+## AccessKey
+
+Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Install and run
 

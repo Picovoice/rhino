@@ -12,7 +12,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-android?label=maven%20central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-android/)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-java?label=maven%20central%20%5Bjava%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-java/)
 [![Cocoapods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://github.com/Picovoice/rhino/tree/master/binding/ios)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-angular?label=npm%20%5Bangular%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-an
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-angular?label=npm%20%5Bangular%5D)](https://www.npmjs.com/package/@picovoice/rhino-angular)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-vue)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-react)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
@@ -1358,38 +1358,63 @@ if (done) {
 #### Angular
 
 ```console
-yarn add @picovoice/rhino-web-angular @picovoice/rhino-web-en-worker
+yarn add @picovoice/rhino-angular @picovoice/web-voice-processor
 ```
 
 (or)
 
 ```console
-npm install @picovoice/rhino-web-angular @picovoice/rhino-web-en-worker
+npm install @picovoice/rhino-angular @picovoice/web-voice-processor
 ```
 
 ```typescript
+import { Subscription } from "rxjs";
+import { RhinoService } from "@picovoice/rhino-angular";
+import rhinoParams from "${PATH_TO_RHINO_PARAMS_BASE64}";
+import rhinoContext from "${PATH_TO_RHINO_CONTEXT_BASE64}";
+
+constructor(private rhinoService: RhinoService) {
+  this.contextInfoDetection = rhinoService.contextInfo$.subscribe(
+    contextInfo => {
+      console.log(contextInfo);
+    });
+  this.inferenceDetection = rhinoService.inference$.subscribe(
+    inference => {
+      console.log(inference);
+    });
+  this.isLoadedDetection = porcupineService.isLoaded$.subscribe(
+    isLoaded => {
+      console.log(isLoaded);
+    });
+  this.isListeningDetection = porcupineService.isListening$.subscribe(
+    isListening => {
+      console.log(isListening);
+    });
+  this.errorDetection = porcupineService.error$.subscribe(
+    error => {
+      console.error(error);
+    });
+}
+
 async ngOnInit() {
-  const rhinoFactoryEn = (await import('@picovoice/rhino-web-en-worker')).RhinoWorkerFactory
-  // Initialize Rhino Service
-  try {
-    await this.rhinoService.init(rhinoFactoryEn, {
-      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-      context: { base64: RHN_CONTEXT_BASE64 }
-    })
-    console.log("Rhino is now loaded. Press the Push-to-Talk button to activate.")
-  }
-  catch (error) {
-    console.error(error)
-  }
+  await this.rhinoService.init(
+    ${ACCESS_KEY},
+    { base64: rhinoContext },
+    { base64: rhinoParams },
+  )
+}
+
+async process() {
+  await this.rhinoService.process();
 }
 
 ngOnDestroy() {
-  this.rhinoDetection.unsubscribe()
-  this.rhinoService.release()
-}
-
-public pushToTalk() {
-  this.rhinoService.pushToTalk();
+  this.contextInfoDetection.unsubscribe();
+  this.inferenceDetection.unsubscribe();
+  this.isLoadedDetection.unsubscribe();
+  this.isListeningDetection.unsubscribe();
+  this.errorDetection.unsubscribe();
+  this.rhinoService.release();
 }
 ```
 

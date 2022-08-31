@@ -45,4 +45,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-src/dist
+src/lib/rhino_params.js
+src/assets/clock_wasm.rhn

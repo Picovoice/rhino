@@ -1,5 +1,5 @@
 /*
- * Public API Surface of rhino-web-angular
+ * Public API Surface of rhino-angular
  */
 
 export * from './lib/rhino.service';
