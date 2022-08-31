@@ -1,12 +1,45 @@
-# rhino-web-react-demo
+# Rhino demo for Rect
 
-This demo application includes the `VoiceWidget` which uses the `useRhino` react hook to allow inferring naturally spoken commands from voice. The inference is handled via the `inferenceEvent Handler` callback function that updates a React `useState` hook, and then renders the results.
+## Rhino Speech-to-Intent engine
 
-If you decline microphone permission in the browser, or another such issue prevents Rhino from starting, the error will be displayed.
+Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-The widget shows the various loading and error states, as well as mounting/unmounting the `VoiceWidget` with a toggle, demonstrating the complete lifecycle of Rhino with in a React app.
+Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
+interest, in real-time. For example, given a spoken command:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> Can I have a small double-shot espresso?
+
+Rhino infers that the user would like to order a drink and emits the following inference result:
+
+```json
+{
+  "isUnderstood": "true",
+  "intent": "orderBeverage",
+  "slots": {
+    "beverage": "espresso",
+    "size": "small",
+    "numberOfShots": "2"
+  }
+}
+```
+
+Rhino is:
+
+* using deep neural networks trained in real-world environments.
+* compact and computationally-efficient, making it perfect for IoT.
+* self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
+
+## Compatibility
+
+- Chrome / Edge
+- Firefox
+- Safari
+
+## AccessKey
+
+Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
+You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
+Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
 ## Install and Run
 
@@ -26,7 +59,13 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ## Try Rhino
 
-The demo is running a context called "Clock" (available as a `.rhn` file in the GitHub repository). Press the "Push to Talk" button to start a voice interaction.
+This demo application includes the `VoiceWidget` which uses the `useRhino` react hook to allow inferring naturally spoken commands from voice.
+
+If you decline microphone permission in the browser, or another such issue prevents Rhino from starting, the error will be displayed.
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+The demo is running a context called "Clock" (available as a `.rhn` file in the GitHub repository). Enter your `AccessKey` in the provided textbox the press the "Start Rhino" button to initialize Rhino. Once loaded, press the "Process" button to start a voice interaction.
 
 Try a phrase that is in the context:
 
