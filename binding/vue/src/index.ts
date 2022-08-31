@@ -1,8 +1,8 @@
-import rhinoMixin, { RhinoVue, RhinoWorkerFactoryArgs } from './rhino';
+import rhinoMixin, { RhinoVue } from './rhino';
 
 // Create module definition for Vue.use()
 const plugin = {
-  install: function(Vue: any) {
+  install: function(Vue: any): void {
     Vue.mixin(rhinoMixin);
   }
 };
@@ -24,7 +24,4 @@ if (GlobalVue) {
 export default rhinoMixin;
 
 // export types
-export { 
-  RhinoWorkerFactoryArgs,
-  RhinoVue
-};
+export { RhinoVue };

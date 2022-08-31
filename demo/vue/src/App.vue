@@ -1,24 +1,17 @@
 <template>
-  <div class="rhino-web-vue-demo">
+  <div class="rhino-vue-demo">
     <h1>Rhino Web + Vue ("Rhino" Renderless Component)</h1>
-    <button v-on:click="toggle">
-      Toggle VoiceWidget <span v-if="show">"OFF"</span><span v-else>"ON"</span>
-    </button>
-    <br />
-    <br />
-    <VoiceWidget v-if="show" />
+    <VoiceWidget />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
-export default Vue.extend({
+import { defineComponent, defineAsyncComponent } from "vue";
+export default defineComponent({
   name: "App",
   components: {
-    VoiceWidget: Vue.component(
-      'VoiceWidget',
-      async () => await import("./components/VoiceWidget.vue")
+    VoiceWidget: defineAsyncComponent(() =>
+      import("./components/VoiceWidget.vue")
     ),
   },
   data: function () {

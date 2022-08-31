@@ -13,8 +13,8 @@
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-java?label=maven%20central%20%5Bjava%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-java/)
 [![Cocoapods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://github.com/Picovoice/rhino/tree/master/binding/ios)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-angular?label=npm%20%5Bangular%5D)](https://www.npmjs.com/package/@picovoice/rhino-angular)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-react)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-vue)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-vue)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-react)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
 [![Crates.io](https://img.shields.io/crates/v/pv_rhino)](https://crates.io/crates/pv_rhino)
 
@@ -1421,60 +1421,50 @@ ngOnDestroy() {
 #### React
 
 ```console
-yarn add @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
+yarn add @picovoice/rhino-react @picovoice/web-voice-processor
 ```
 
 (or)
 
 ```console
-npm install @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
+npm install @picovoice/rhino-react @picovoice/web-voice-processor
 ```
 
 ```javascript
-mport React, { useState } from 'react';
-import { RhinoWorkerFactory } from '@picovoice/rhino-web-en-worker';
-import { useRhino } from '@picovoice/rhino-web-react';
+import React, { useEffect } from 'react';
+import { useRhino } from '@picovoice/rhino-react';
 
-const RHINO_CONTEXT_BASE64 = /* Base64 representation an English language .rhn file, omitted for brevity */
+const RHINO_CONTEXT_BASE64 = /* Base64 representation of a Rhino context (.rhn) for WASM, omitted for brevity */
+const RHN_MODEL_BASE64 = /* Base64 representation of a Rhino parameter model (.pv), omitted for brevity */
 
 function VoiceWidget(props) {
-  const [latestInference, setLatestInference] = useState(null)
-
-  const inferenceEventHandler = (rhinoInference) => {
-    console.log(`Rhino inferred: ${rhinoInference}`);
-    setLatestInference(rhinoInference)
-  };
-
   const {
+    inference,
+    contextInfo,
     isLoaded,
     isListening,
-    isError,
-    isTalking,
-    errorMessage,
-    start,
-    resume,
-    pause,
-    pushToTalk,
-  } = useRhino(
-    // Pass in the factory to build Rhino workers. This needs to match the context language below
-    RhinoWorkerFactory,
-    // Initialize Rhino (in a paused state).
-    // Immediately start processing microphone audio,
-    // Although Rhino itself will not start listening until the Push to Talk button is pressed.
-    {
-      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-      context: { base64: RHINO_CONTEXT_BASE64 },
-      start: true,
+    error,
+    init,
+    process,
+    release,
+  } = useRhino();
+
+  useEffect(() => {
+    if (!isLoaded) {
+      init(
+        "${ACCESS_KEY}", // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+        { base64: RHINO_CONTEXT_BASE64 },
+        { base64: RHN_MODEL_BASE64 }
+      );
     }
-    inferenceEventHandler
-  );
+  }, [isLoaded])
 
 return (
   <div className="voice-widget">
-    <button onClick={() => pushToTalk()} disabled={isTalking || isError || !isLoaded}>
-      Push to Talk
+    <button onClick={() => process()} disabled={isListening || !isLoaded || error !== null}>
+      Process
     </button>
-    <p>{JSON.stringify(latestInference)}</p>
+    <p>{JSON.stringify(inference)}</p>
   </div>
 )
 ```
@@ -1482,83 +1472,61 @@ return (
 #### Vue
 
 ```console
-yarn add @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
+yarn add @picovoice/rhino-vue @picovoice/web-voice-processor
 ```
 
 (or)
 
 ```console
-npm install @picovoice/rhino-web-vue @picovoice/rhino-web-en-worker
+npm install @picovoice/rhino-vue @picovoice/web-voice-processor
 ```
 
 ```html
 <script lang="ts">
-import rhinoMixin, { RhinoInferenceFinalized } from "@picovoice/rhino-web-vue";
-import { RhinoWorkerFactory as RhinoWorkerFactoryEn } from "@picovoice/rhino-web-en-worker";
+import rhinoMixin from "@picovoice/rhino-vue";
+
+import rhinoParams from "${PATH_TO_RHINO_PARAMS_BASE64}";
+import rhinoContext from "${PATH_TO_RHINO_CONTEXT_BASE64}";
 
 export default {
-  name: "VoiceWidget",
   mixins: [rhinoMixin],
-  data: function () {
-    return {
-      inference: null as RhinoInferenceFinalized | null,
-      isError: false,
-      isLoaded: false,
-      isListening: false,
-      isTalking: false,
-      contextInfo: '',
-      factory: RhinoWorkerFactoryEn,
-      factoryArgs: {
-        accessKey: '${ACCESS_KEY}',  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-        context: {
-          base64: `RHINO_TRAINED_CONTEXT_BASE_64_STRING`
-        },
-      }
-    };
-  },
-  async created() {
-    await this.$rhino.init(
-      factoryArgs,      // Rhino factory arguments
-      factory,          // Rhino Web Worker component
-      rhnInferenceFn,   // Rhino inference callback
-      rhnInfoFn,        // Rhino context information callback
-      rhnReadyFn,       // Rhino ready callback
-      rhnErrorFn        // Rhino error callback
+  mounted() {
+    this.$rhino.init(
+      this.accessKey,
+      { base64: rhinoContext },
+      this.inferenceCallback,
+      { base64: rhinoParams },
+      this.contextInfoCallback,
+      this.isLoadedCallback,
+      this.isListeningCallback,
+      this.errorCallback
     );
   },
   methods: {
-    start: function () {
-      if (this.$rhino.start()) {
-        this.isListening = !this.isListening;
-      }
+    process: function () {
+      this.$rhino.process();
     },
-    pause: function () {
-      if (this.$rhino.pause()) {
-        this.isListening = !this.isListening;
-      }
+    inferenceCallback: function(inference) {
+      console.log(`Detected inference: ${inference}`);
     },
-    pushToTalk: function () {
-      if (this.$rhino.pushToTalk()) {
-        this.isTalking = true;
-      }
+    contextInfoCallback: function(context) {
+      console.log(context);
     },
-    rhnReadyFn: function () {
-      this.isLoaded = true;
-      this.isListening = true;
+    isLoadedCallback: function(isLoaded) {
+      console.log(isLoaded);
     },
-    rhnInferenceFn: function (inference) {
-      this.inference = inference;
-      this.isTalking = false;
+    isListeningCallback: function(isListening) {
+      console.log(isListening);
     },
-    rhnInfoFn: function (info) {
-      this.contextInfo = info;
-    },
-    rhnErrorFn: function (error) {
-      this.isError = true;
-      this.errorMessage = error.toString();
-    },
+    errorCallback: function(error) {
+      console.error(error);
+    }
   },
-};
+  // beforeDestroy for Vue 2.
+  beforeUnmount() {
+    this.$rhino.release();
+  }
+}
 </script>
 ```
 

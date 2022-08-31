@@ -1,6 +1,3 @@
-import { useRhino, RhinoHookArgs } from './use_rhino';
+import { useRhino } from './use_rhino';
 
-export {
-  useRhino,
-  RhinoHookArgs,
-};
+export { useRhino };
