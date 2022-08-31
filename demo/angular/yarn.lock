@@ -1431,8 +1431,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@picovoice/rhino-angular@../../binding/angular/dist/rhino-angular":
+"@picovoice/rhino-angular@=2.1.0":
   version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-2.1.0.tgz#961c87f1ce5ea1e8d7f2c6ccd9c12c93832f2c69"
+  integrity sha512-A8Ytbdywr7+HqNFGJT64iYEhBf0t0Xrn6ZQuKT3/jw2j15xTz1q4yZunCNKKkZ163SDH9CrJUnA2uWt8cUsOGA==
   dependencies:
     "@picovoice/rhino-web" "=2.1.4"
     tslib "^2.0.0"
@@ -1451,7 +1453,7 @@
   dependencies:
     commander "^9.2.0"
 
-"@picovoice/web-voice-processor@~4.0.1":
+"@picovoice/web-voice-processor@>=4.0.1":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.1.tgz#9a47dcd56efa5431870a25f0c8093f3eee6923ea"
   integrity sha512-RmzeovecBG7WpxTksqTCDNID1lcbJse8rdp/R+HrriufDgkilNXAfKyIm7VknzHA48Pw9e/eJJPLrntAQwzdcw==
