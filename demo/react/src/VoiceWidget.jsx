@@ -1,63 +1,37 @@
-import { useState, useEffect } from "react";
-import { useRhino } from "@picovoice/rhino-web-react";
+import { useState } from "react";
+import { useRhino } from "@picovoice/rhino-react";
 
-import { CLOCK_EN_64 } from "./dist/rhn_contexts_base64";
+import rhinoModelParams from "./rhino_params";
 
 export default function VoiceWidget() {
-  const [inference, setInference] = useState(null);
-  const [workerChunk, setWorkerChunk] = useState({ factory: null });
-  const [isChunkLoaded, setIsChunkLoaded] = useState(false);
   const [accessKey, setAccessKey] = useState("");
-  const [inputValue, setInputValue] = useState("");
-
-  useEffect(() => {
-    if (workerChunk.factory === null) {
-      let isCanceled = false;
-      const loadRhino = async () => {
-        // Dynamically import the worker
-        const rhnEnWorkerFactory = (
-          await import("@picovoice/rhino-web-en-worker")
-        ).RhinoWorkerFactory;
-
-        // If the component unmounted while loading, don't attempt to update it
-        if (!isCanceled) {
-          setWorkerChunk({ factory: rhnEnWorkerFactory });
-          setIsChunkLoaded(true);
-        }
-      };
-
-      loadRhino();
-
-      return () => {
-        isCanceled = true;
-      };
-    }
-  }, [workerChunk]);
-
-  const inferenceEventHandler = (rhinoInference) => {
-    setInference(rhinoInference);
-  };
 
   const {
+    inference,
     contextInfo,
     isLoaded,
     isListening,
-    isError,
-    isTalking,
-    errorMessage,
-    pushToTalk,
-    start,
-    pause,
-    stop,
-  } = useRhino(
-    workerChunk.factory,
-    {
+    error,
+    init,
+    process,
+    release,
+  } = useRhino();
+
+  const rhnInit = async () => {
+    await init(
       accessKey,
-      context: { base64: CLOCK_EN_64 },
-      start: true
-    },
-    inferenceEventHandler
-  );
+      { publicPath: "clock_wasm.rhn" },
+      { base64: rhinoModelParams },
+    );
+  }
+
+  const rhnProcess = async () => {
+    await process()
+  }
+
+  const rhnRelease = async () => {
+    await release()
+  }
 
   return (
     <div className="voice-widget">
@@ -69,50 +43,37 @@ export default function VoiceWidget() {
           <input
             type="text"
             name="accessKey"
-            onChange={(value) => setInputValue(value.target.value)}
+            onChange={(value) => setAccessKey(value.target.value)}
             disabled={isLoaded}
           />
         </label>
-        <button className="start-button" onClick={() => setAccessKey(inputValue)} disabled={isLoaded}>
-          Start Rhino
+        <button className="start-button" onClick={() => rhnInit()} disabled={isLoaded || accessKey.length === 0}>
+          Init Rhino
         </button>
       </h3>
-      <h3>Dynamic Import Loaded: {JSON.stringify(isChunkLoaded)}</h3>
       <h3>Rhino Loaded: {JSON.stringify(isLoaded)}</h3>
       <h3>Listening: {JSON.stringify(isListening)}</h3>
-      <h3>Error: {JSON.stringify(isError)}</h3>
-      {isError && accessKey && (
-        <p className="error-message">{JSON.stringify(errorMessage)}</p>
+      <h3>Error: {JSON.stringify(error !== null)}</h3>
+      {error && accessKey && (
+        <p className="error-message">{JSON.stringify(error)}</p>
       )}
-      <h3>Talking: {JSON.stringify(isTalking)}</h3>
 
       <br />
       <button
-        onClick={() => start()}
-        disabled={isError || isListening || !isLoaded}
+        onClick={() => rhnProcess()}
+        disabled={error || isListening || !isLoaded}
       >
-        Start
+        Process
       </button>
       <button
-        onClick={() => pause()}
-        disabled={isError || !isListening || !isLoaded}
+        onClick={() => rhnRelease()}
+        disabled={error || isListening || !isLoaded}
       >
-        Pause
+        Release
       </button>
-      <button
-        onClick={() => stop()}
-        disabled={isError || !isListening || !isLoaded}
-      >
-        Stop
-      </button>
-      <button
-        onClick={() => pushToTalk()}
-        disabled={!isListening || isTalking || isError || !isLoaded}
-      >
-        Push to Talk
-      </button>
+
       <h3>Inference:</h3>
-      {inference !== null && <pre>{JSON.stringify(inference, null, 2)}</pre>}
+      {inference && <pre>{JSON.stringify(inference, null, 2)}</pre>}
       <hr />
       <h3>Context Info:</h3>
       <pre>{contextInfo}</pre>

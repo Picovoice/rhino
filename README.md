@@ -12,9 +12,9 @@
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-android?label=maven%20central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-android/)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-java?label=maven%20central%20%5Bjava%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-java/)
 [![Cocoapods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://github.com/Picovoice/rhino/tree/master/binding/ios)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-angular?label=npm%20%5Bangular%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-angular)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-react)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web-angular?label=npm%20%5Bangular%5D)](https://www.npmjs.com/package/@picovoice/rhino-web-an
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-vue)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-react)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
 [![Crates.io](https://img.shields.io/crates/v/pv_rhino)](https://crates.io/crates/pv_rhino)
 
@@ -1396,60 +1396,50 @@ public pushToTalk() {
 #### React
 
 ```console
-yarn add @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
+yarn add @picovoice/rhino-react @picovoice/web-voice-processor
 ```
 
 (or)
 
 ```console
-npm install @picovoice/rhino-web-react @picovoice/rhino-web-en-worker
+npm install @picovoice/rhino-react @picovoice/web-voice-processor
 ```
 
 ```javascript
-mport React, { useState } from 'react';
-import { RhinoWorkerFactory } from '@picovoice/rhino-web-en-worker';
-import { useRhino } from '@picovoice/rhino-web-react';
+import React, { useEffect } from 'react';
+import { useRhino } from '@picovoice/rhino-react';
 
-const RHINO_CONTEXT_BASE64 = /* Base64 representation an English language .rhn file, omitted for brevity */
+const RHINO_CONTEXT_BASE64 = /* Base64 representation of a Rhino context (.rhn) for WASM, omitted for brevity */
+const RHN_MODEL_BASE64 = /* Base64 representation of a Rhino parameter model (.pv), omitted for brevity */
 
 function VoiceWidget(props) {
-  const [latestInference, setLatestInference] = useState(null)
-
-  const inferenceEventHandler = (rhinoInference) => {
-    console.log(`Rhino inferred: ${rhinoInference}`);
-    setLatestInference(rhinoInference)
-  };
-
   const {
+    inference,
+    contextInfo,
     isLoaded,
     isListening,
-    isError,
-    isTalking,
-    errorMessage,
-    start,
-    resume,
-    pause,
-    pushToTalk,
-  } = useRhino(
-    // Pass in the factory to build Rhino workers. This needs to match the context language below
-    RhinoWorkerFactory,
-    // Initialize Rhino (in a paused state).
-    // Immediately start processing microphone audio,
-    // Although Rhino itself will not start listening until the Push to Talk button is pressed.
-    {
-      accessKey: "${ACCESS_KEY}",  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-      context: { base64: RHINO_CONTEXT_BASE64 },
-      start: true,
+    error,
+    init,
+    process,
+    release,
+  } = useRhino();
+
+  useEffect(() => {
+    if (!isLoaded) {
+      init(
+        "${ACCESS_KEY}", // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+        { base64: RHINO_CONTEXT_BASE64 },
+        { base64: RHN_MODEL_BASE64 }
+      );
     }
-    inferenceEventHandler
-  );
+  }, [isLoaded])
 
 return (
   <div className="voice-widget">
-    <button onClick={() => pushToTalk()} disabled={isTalking || isError || !isLoaded}>
-      Push to Talk
+    <button onClick={() => process()} disabled={isListening || !isLoaded || error !== null}>
+      Process
     </button>
-    <p>{JSON.stringify(latestInference)}</p>
+    <p>{JSON.stringify(inference)}</p>
   </div>
 )
 ```
