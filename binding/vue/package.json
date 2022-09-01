@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-vue",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Vue component (renderless) for Rhino Web SDK",
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
@@ -42,10 +42,10 @@
     "typescript": "^4.6.3"
   },
   "peerDependencies": {
-    "@picovoice/web-voice-processor": "~4.0.1",
+    "@picovoice/web-voice-processor": "=4.0.1",
     "vue": "^2.6.11 || ^3.0.0"
   },
   "dependencies": {
-    "@picovoice/rhino-web": "=2.1.4"
+    "@picovoice/rhino-web": "=2.1.5"
   }
 }
