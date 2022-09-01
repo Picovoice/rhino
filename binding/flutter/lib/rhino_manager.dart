@@ -19,7 +19,7 @@ import 'package:rhino_flutter/rhino_error.dart';
 /// type for function that receives inference result from Rhino
 typedef InferenceCallback = Function(RhinoInference inference);
 
-/// type for RhinoExceeption that occurs while recording audio
+/// type for RhinoException that occurs while recording audio
 typedef ProcessErrorCallback = Function(RhinoException error);
 
 class RhinoManager {
@@ -50,7 +50,7 @@ class RhinoManager {
   /// [endpointDurationSec] (Optional) Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
   /// utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
   /// duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
-  /// pre-emptively in case the user pauses before finishing the request.
+  /// preemptively in case the user pauses before finishing the request.
   ///
   /// [requireEndpoint] (Optional) If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
   /// If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
@@ -59,7 +59,7 @@ class RhinoManager {
   /// [processErrorCallback] (Optional) Reports errors that are encountered while
   /// the engine is processing audio.
   ///
-  /// Thows a `RhinoException` if not initialized correctly
+  /// Throws a `RhinoException` if not initialized correctly
   ///
   /// returns an instance of the speech-to-intent engine
   static Future<RhinoManager> create(
@@ -153,7 +153,7 @@ class RhinoManager {
     }
   }
 
-  /// Releases Rhino and audio resouces
+  /// Releases Rhino and audio resources
   Future<void> delete() async {
     if (_voiceProcessor?.isRecording ?? false) {
       await _voiceProcessor!.stop();

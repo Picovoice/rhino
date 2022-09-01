@@ -67,7 +67,7 @@ let access_key = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (
 let rhino: Rhino = RhinoBuilder::new(access_key, "/path/to/context/file.rhn").init().expect("Unable to create Rhino");
 ```
 The context file is a Speech-to-Intent context created either using
-[Picovoice Console](https://console.picovoice.ai/) or one of the default contexts available on [Rhino's GitHub repository](/resources/contexts).
+[Picovoice Console](https://console.picovoice.ai/) or one of the default contexts available on [Rhino's GitHub repository](../../resources/contexts).
 
 The sensitivity of the engine can be tuned using the `sensitivity` parameter.
 It is a floating-point number within [0, 1].
@@ -111,9 +111,9 @@ loop {
 ## Non-English Contexts
 
 In order to detect non-English contexts you need to use the corresponding model file.
-The model files for all supported languages are available [here](/lib/common).
+The model files for all supported languages are available [here](../../lib/common).
 
 ## Demos
 
-Check out the Rhino Rust demos [here](/demo/rust)
+Check out the Rhino Rust demos [here](../../demo/rust)
 

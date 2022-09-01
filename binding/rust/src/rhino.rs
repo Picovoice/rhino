@@ -230,7 +230,7 @@ impl Rhino {
 }
 
 /// Safety:
-/// The caller must uphold that the library is alive as long as the rawsymbol
+/// The caller must uphold that the library is alive as long as the raw symbol
 /// will be used. See the libloading documentation for details.
 unsafe fn load_library_fn<T>(
     library: &Library,

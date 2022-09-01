@@ -23,7 +23,7 @@ Rhino is:
 
 ## Installation
 
-The Rhino iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`: 
+The Rhino iOS binding is available via [CocoaPods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`: 
 
 ```ruby
 pod 'Rhino-iOS'
@@ -49,7 +49,7 @@ The module provides you with two levels of API to choose from depending on your 
 
 ### High-Level API
 
-[RhinoManager](/binding/ios/RhinoManager.swift) provides a high-level API that takes care of audio recording and intent inference. This class is the quickest way to get started.
+[RhinoManager](./RhinoManager.swift) provides a high-level API that takes care of audio recording and intent inference. This class is the quickest way to get started.
 
 To create an instance of RhinoManager, pass a Picovoice `AccessKey` and a Rhino context file to the constructor:
 ```swift
@@ -112,7 +112,7 @@ rhinoManager.delete()
 
 ### Low-Level API
 
-[Rhino](/binding/ios/Rhino.swift) provides low-level access to the Speech-to-Intent engine for those who want to incorporate intent inference into an already existing audio processing pipeline.
+[Rhino](./Rhino.swift) provides low-level access to the Speech-to-Intent engine for those who want to incorporate intent inference into an already existing audio processing pipeline.
 
 Create an instance of `Rhino` by passing it a Picovoice `AccessKey` and a Rhino context file (.rhn).
 
@@ -174,7 +174,7 @@ let contextPath = Bundle.main.path(forResource: "context_ios", ofType: "rhn")
 
 ## Non-English Contexts
 
-In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](../../lib/common).
 
 ## Running Unit Tests
 
@@ -182,4 +182,4 @@ Copy your `AccessKey` into the `accessKey` variable in [`RhinoAppTestUITests.swi
 
 ## Demo App
 
-For example usage refer to the [Rhino iOS demo app](/demo/ios).
+For example usage refer to the [Rhino iOS demo app](../../demo/ios).

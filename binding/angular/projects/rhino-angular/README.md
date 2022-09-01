@@ -119,7 +119,7 @@ const rhinoModel = {
 ```
 
 Additional engine options are provided via the `options` parameter.
-Use `endpointDurationSec` and `requireEndpoint` to control the engine's endpointing behaviour.
+Use `endpointDurationSec` and `requireEndpoint` to control the engine's endpointing behavior.
 An endpoint is a chunk of silence at the end of an utterance that marks the end of spoken command.
 
 ```typescript

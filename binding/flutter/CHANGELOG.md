@@ -30,4 +30,4 @@
 * Improved documentation
 
 ## [2.1.6] - 2022-08-02
-* Added repository and documenation links
+* Added repository and documentation links

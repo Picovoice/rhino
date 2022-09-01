@@ -23,7 +23,7 @@ Rhino is:
 
 ## Compatibility
 
-[Rhino unity package](./rhino-2.1.0.unitypackage) is for running Rhino on **Unity 2017.4+** on the following platforms:
+[Rhino unity package](./rhino-2.1.4.unitypackage) is for running Rhino on **Unity 2017.4+** on the following platforms:
 
 - Android 4.4+ (API 19+) (ARM only)
 - iOS 9.0+
@@ -31,11 +31,11 @@ Rhino is:
 - macOS (x86_64)
 - Linux (x86_64)
 
-For running Rhino on **macOS m1 (arm64)**, use the [Apple silicon](./rhino-2.1.0-Apple-silicon.unitypackage) version on **Unity 2021.2+**.
+For running Rhino on **macOS m1 (arm64)**, use the [Apple silicon](./rhino-2.1.4-Apple-silicon.unitypackage) version on **Unity 2021.2+**.
 
 ## Installation
 
-The easiest way to install the Rhino Unity SDK is to import the [Rhino Unity Package](/binding/unity/rhino-2.0.0.unitypackage) into your Unity project by either dropping it into the Unity editor or going to _Assets>Import Package>Custom Package..._
+The easiest way to install the Rhino Unity SDK is to import the [Rhino Unity Package](./rhino-2.1.4.unitypackage) into your Unity project by either dropping it into the Unity editor or going to _Assets>Import Package>Custom Package..._
 
 **NOTE:** On macOS, the Rhino library may get flagged as having come from an unverified source if you've downloaded the  `.unitypackage` directly from github. This should only come up when running your project in the Editor. To disable this warning, go to Security & Preferences and choose to allow pv_rhino.dylib to run.
 
@@ -53,15 +53,15 @@ git clone --recurse-submodules git@github.com:Picovoice/rhino.git
 git clone --recurse-submodules https://github.com/Picovoice/rhino.git
 ```
 
-You then have to run the `copy.sh` file to copy the package resources from various locations in the repo to the Unity project located at [/binding/unity](/binding/unity) (**NOTE:** on Windows, Git Bash or another bash shell is required, or you will have to manually copy the resources into the project.). Then, open the Unity project, right click the Assets folder and select Export Package. The resulting Unity package can be imported into other Unity projects as desired.
+You then have to run the `copy.sh` file to copy the package resources from various locations in the repo to the Unity project located at [/binding/unity](.) (**NOTE:** on Windows, Git Bash or another bash shell is required, or you will have to manually copy the resources into the project.). Then, open the Unity project, right click the Assets folder and select Export Package. The resulting Unity package can be imported into other Unity projects as desired.
 
 ## Usage
 
 The module provides you with two levels of API to choose from depending on your needs.
 
 #### High-Level API
-
-[RhinoManager](/binding/unity/Assets/Rhino/RhinoManager.cs) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
+/
+[RhinoManager](./Assets/Rhino/RhinoManager.cs) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
 
 >**NOTE:** If running on iOS, you must fill in the Microphone Usage Description under Project Settings>Other Settings in order to enable audio recording.
 
@@ -142,7 +142,7 @@ Unity package to capture frames of audio and automatically pass it to the infere
 
 #### Low-Level API
 
-[Rhino](/binding/unity/Assets/Rhino/Rhino.cs) provides low-level access to the inference engine for those who want to incorporate speech-to-intent into an already existing audio processing pipeline.
+[Rhino](./Assets/Rhino/Rhino.cs) provides low-level access to the inference engine for those who want to incorporate speech-to-intent into an already existing audio processing pipeline.
 
 To create an instance of `Rhino`, use the `.Create` static constructor, and a context file.
 
@@ -217,8 +217,8 @@ string contextPath = Path.Combine(Application.streamingAssetsPath, "context.rhn"
 
 ## Non-English Contexts
 
-In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](../../lib/common).
 
 ## Demo
 
-The Rhino Unity demo can be imported along with the SDK when you import the Rhino Unity package. Browse the source of the demo [here](/demo/unity).
+The Rhino Unity demo can be imported along with the SDK when you import the Rhino Unity package. Browse the source of the demo [here](../../demo/unity).

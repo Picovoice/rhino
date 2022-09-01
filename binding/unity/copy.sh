@@ -1,4 +1,4 @@
-echo "Copying Android resouces..."
+echo "Copying Android resources..."
 cp ../../lib/android/arm64-v8a/libpv_rhino.so ./Assets/Rhino/Plugins/android/arm64-v8a/libpv_rhino.so
 cp ../../lib/android/armeabi-v7a/libpv_rhino.so ./Assets/Rhino/Plugins/android/armeabi-v7a/libpv_rhino.so
 

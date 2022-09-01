@@ -1,0 +1,72 @@
+{
+    "language": "en",
+    "dictionaries": [
+      "dict"
+    ],
+    "dictionaryDefinitions": [
+      {
+        "name": "dict",
+        "path": "./dict.txt",
+        "addWords": true
+      }
+    ],
+    "ignorePaths": [
+      "../../demo/c/dr_libs/**/*",
+      "../../demo/c/pvrecorder/**/*",
+  
+      "**/*.a",
+      "**/*.dll",
+      "**/*.dylib",
+      "**/*.jar",
+      "**/*.mp3",
+      "**/*.node",
+      "**/*.rhn",
+      "**/*.pv",
+      "**/*.so",
+      "**/*.wasm",
+      "**/*.wav",
+      "**/*.unitypackage",
+      "../../lib/ios/**/*",
+  
+      "**/*.unity",
+      "**/*.mixer",
+      "**/*.meta",
+      "../../binding/unity/Packages/**/*",
+      "../../binding/unity/ProjectSettings/**/*",
+
+
+      "**/*.csproj",
+      "**/*.targets",
+  
+      "**/AndroidManifest.xml",
+      "**/activity_main.xml",
+  
+      "**/*.xcconfig",
+      "**/*.podspec",
+      "**/Podfile",
+      "**/*.plist",
+      "**/contents.xcworkspacedata",
+      "**/*.storyboard",
+      "**/*.pbxproj",
+      "**/*.xcscheme",
+      "**/*.m",
+  
+      "**/build.gradle",
+      "**/gradle-wrapper.properties",
+      "**/gradle.properties",
+      "**/gradlew",
+      "**/gradlew.bat",
+      "**/proguard-rules.pro",
+  
+      "**/package.json",
+      "**/packages-lock.json",
+      "**/tsconfig.json",
+      "**/tslint.json",
+  
+      "**/*.keystore",
+      "**/BUCK",
+      "**/build_defs.bzl",
+
+      "**/Cargo.toml"
+    ]
+  }

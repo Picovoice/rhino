@@ -11,7 +11,7 @@
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-react-native?label=npm%20%5Breact-native%5D)](https://www.npmjs.com/package/@picovoice/rhino-react-native)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-android?label=maven%20central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-android/)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-java?label=maven%20central%20%5Bjava%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-java/)
-[![Cocoapods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://github.com/Picovoice/rhino/tree/master/binding/ios)
+[![CocoaPods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://github.com/Picovoice/rhino/tree/master/binding/ios)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-angular?label=npm%20%5Bangular%5D)](https://www.npmjs.com/package/@picovoice/rhino-angular)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-vue)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-react)
@@ -78,7 +78,7 @@ Rhino is:
       - [Angular](#angular-demos)
       - [React](#react-demos)
       - [Vue](#vue-demos)
-    - [NodeJS](#nodejs-demos)
+    - [Node.js](#nodejs-demos)
     - [Rust](#rust-demos)
     - [C](#c-demos)
   - [SDKs](#sdks)
@@ -97,7 +97,7 @@ Rhino is:
       - [Angular](#angular)
       - [React](#react)
       - [Vue](#vue)
-    - [NodeJS](#nodejs)
+    - [Node.js](#nodejs)
     - [Rust](#rust)
     - [C](#c)
   - [Releases](#releases)
@@ -331,7 +331,7 @@ For more information about Android demo and the complete list of available expre
 
 ### iOS Demos
 
-Copy your `AccessKey` into the `ACCESS_KEY` variable in `RhinoDemo/ContentView.swift` before building the demo. Then, run the following from this directory to install the Rhino-iOS Cocoapod:
+Copy your `AccessKey` into the `ACCESS_KEY` variable in `RhinoDemo/ContentView.swift` before building the demo. Then, run the following from this directory to install the Rhino-iOS CocoaPods:
 ```ruby
 pod install
 ```
@@ -421,7 +421,7 @@ npm run serve
 
 Open http://localhost:8080 in your browser to try the demo.
 
-### NodeJS Demos
+### Node.js Demos
 
 Install the demo package:
 
@@ -437,7 +437,7 @@ rhn-mic-demo --access_key ${ACCESS_KEY} --context_path ${CONTEXT_FILE_PATH}
 
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
-For more information about NodeJS demos go to [demo/nodejs](/demo/nodejs).
+For more information about Node.js demos go to [demo/nodejs](/demo/nodejs).
 
 ### Rust Demos
 
@@ -900,7 +900,7 @@ The `inferenceCallback` parameter is a function that you want to execute when Rh
 The function should accept a `RhinoInference` instance that represents the inference result.
 
 ```dart
-void _infererence(RhinoInference inference){
+void _inference(RhinoInference inference){
     if(inference.isUnderstood!){
         String intent = inference.intent!
         Map<String, String> = inference.slots!
@@ -1155,7 +1155,7 @@ handle.delete()
 
 ### iOS
 
-The Rhino iOS binding is available via [Cocoapods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`:
+The Rhino iOS binding is available via [CocoaPods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`:
 
 ```ruby
 pod 'Rhino-iOS'
@@ -1530,9 +1530,9 @@ export default {
 </script>
 ```
 
-### NodeJS
+### Node.js
 
-Install the NodeJS SDK:
+Install the Node.js SDK:
 
 ```console
 yarn add @picovoice/rhino-node
