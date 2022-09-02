@@ -15,7 +15,7 @@ yarn
 To build the project, run:
 
 ```console
-yarn build rhino-angular --prod
+yarn build
 ```
 
 ## Format and Lint
