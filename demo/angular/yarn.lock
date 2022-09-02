@@ -1647,8 +1647,10 @@
   dependencies:
     esquery "^1.0.1"
 
-"@picovoice/rhino-angular@../../binding/angular/dist/rhino-angular":
+"@picovoice/rhino-angular@~2.1.2":
   version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-2.1.2.tgz#d2f9eee541c985230f7454703478a0e34b56b962"
+  integrity sha512-xtzufdo+prL859ecNik6f+qjjxyTF/a8IRqPVE8tJUBewuCQJOIs3GDWNfvmP6SVslHg7GTzswQkbkI5XD4fUg==
   dependencies:
     "@picovoice/rhino-web" "=2.1.5"
     tslib "^2.3.0"
