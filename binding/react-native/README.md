@@ -112,7 +112,7 @@ The module provides you with two levels of API to choose from depending on your 
 
 #### High-Level API
 
-[RhinoManager](/binding/react-native/src/rhino_manager.tsx) provides a high-level API that takes care of
+[RhinoManager](./src/rhino_manager.tsx) provides a high-level API that takes care of
 audio recording. This class is the quickest way to get started.
 
 The constructor `RhinoManager.create` will create an instance of a RhinoManager using a context file that you pass to it.
@@ -187,7 +187,7 @@ module to capture frames of audio and automatically pass it to the inference eng
 
 #### Low-Level API
 
-[Rhino](/binding/react-native/src/rhino.tsx) provides low-level access to the inference engine for those
+[Rhino](./src/rhino.tsx) provides low-level access to the inference engine for those
 who want to incorporate speech-to-intent into an already existing audio processing pipeline.
 
 `Rhino` is created by passing a context file to its static constructor `create`:
@@ -280,10 +280,10 @@ try {
 
 ## Non-English Contexts
 
-In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](../../lib/common).
 
 ## Demo App
 
-Check out the [Rhino React Native demo](/demo/react-native) to see what it looks like to use Rhino in a cross-platform app!
+Check out the [Rhino React Native demo](../../demo/react-native) to see what it looks like to use Rhino in a cross-platform app!
 
 

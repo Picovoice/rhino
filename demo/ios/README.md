@@ -8,7 +8,7 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ## Running the Demo
 
-Before building the demo app, run the following from this directory to install the Rhino Cocoapod:
+Before building the demo app, run the following from this directory to install the Rhino CocoaPods:
 ```ruby
 pod install
 ```

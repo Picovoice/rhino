@@ -134,7 +134,7 @@ namespace Pv.Unity
         /// Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
         /// utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
         /// duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
-        /// pre-emptively in case the user pauses before finishing the request.
+        /// preemptively in case the user pauses before finishing the request.
         /// </param>
         /// <param name="requireEndpoint">
         /// If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
@@ -170,7 +170,7 @@ namespace Pv.Unity
         /// Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
         /// utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
         /// duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
-        /// pre-emptively in case the user pauses before finishing the request.
+        /// preemptively in case the user pauses before finishing the request.
         /// </param>
         /// <param name="requireEndpoint">
         /// If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
@@ -384,7 +384,7 @@ namespace Pv.Unity
 
 
         /// <summary>
-        /// Coverts status codes to relavent .NET exceptions
+        /// Coverts status codes to relevant .NET exceptions
         /// </summary>
         /// <param name="status">Picovoice library status code.</param>
         /// <returns>.NET exception</returns>

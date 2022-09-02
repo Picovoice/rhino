@@ -91,7 +91,7 @@ func main() {
 	// validate sensitivity
 	sensitivityFloat := float32(*sensitivityArg)
 	if sensitivityFloat < 0 || sensitivityFloat > 1 {
-		log.Fatalf("Senstivity value of '%f' is invalid. Must be between [0, 1].", sensitivityFloat)
+		log.Fatalf("Sensitivity value of '%f' is invalid. Must be between [0, 1].", sensitivityFloat)
 	}
 	r.Sensitivity = sensitivityFloat
 

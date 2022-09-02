@@ -101,7 +101,7 @@ The `inferenceCallback` parameter is a function that you want to execute when Rh
 The function should accept a `RhinoInference` instance that represents the inference result.
 
 ```dart
-void _infererenceCallback(RhinoInference inference) {
+void _inferenceCallback(RhinoInference inference) {
     if(inference.isUnderstood!){
         String intent = inference.intent!
         Map<String, String> slots = inference.slots!

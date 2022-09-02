@@ -161,7 +161,7 @@ const initRhino = async () => {
 }
 ```
 
-The `init` process is asyncronous. Once complete, the `isLoaded` flag will be set to `true`.
+The `init` process is asynchronous. Once complete, the `isLoaded` flag will be set to `true`.
 
 ### Process Audio Frames
 

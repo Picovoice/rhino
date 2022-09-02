@@ -52,7 +52,7 @@ The module provides you with two levels of API to choose from depending on your 
 
 ### High-Level API
 
-[RhinoManager](/binding/android/Rhino/rhino/src/main/java/ai/picovoice/rhino/RhinoManager.java) provides a high-level API that takes care of audio recording and intent inference. This class is the quickest way to get started.
+[RhinoManager](./Rhino/rhino/src/main/java/ai/picovoice/rhino/RhinoManager.java) provides a high-level API that takes care of audio recording and intent inference. This class is the quickest way to get started.
 
 To create an instance of RhinoManager, use the RhinoManager Builder:
 ```java
@@ -102,7 +102,7 @@ to `false` only if operating in an environment with overlapping speech (e.g. peo
 
 Endpoint duration indicates how much silence (in seconds) Rhino will wait for before marking the end of a spoken command. A lower endpoint
 duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
-pre-emptively in case the user pauses before finishing the request. 
+preemptively in case the user pauses before finishing the request. 
 
 These optional parameters can be set through the Builder functions `setModelPath`, `setSensitivity`, `setErrorCallback`, `setRequireEndpoint` and `endpointDurationSec`:
 ```java
@@ -118,7 +118,7 @@ try {
                         .setSensitivity(0.35f)
                         .setErrorCallback(new RhinoManagerErrorCallback() {
                             @Override
-                            public void invoke(RhinoExcpetion e) {
+                            public void invoke(RhinoException e) {
                                 // process error
                             }
                         })                
@@ -142,7 +142,7 @@ rhinoManager.delete();
 
 ### Low-Level API
 
-[Rhino](/binding/android/Rhino/rhino/src/main/java/ai/picovoice/rhino/Rhino.java) provides low-level access to the Speech-To-Intent engine for those who want to incorporate intent inference into an already existing audio processing pipeline.
+[Rhino](./Rhino/rhino/src/main/java/ai/picovoice/rhino/Rhino.java) provides low-level access to the Speech-To-Intent engine for those who want to incorporate intent inference into an already existing audio processing pipeline.
 
 `Rhino` uses a Builder pattern to construct instances. You must pass a context file via the `setContextPath` function.
 
@@ -215,8 +215,8 @@ try {
 
 ## Non-English Contexts
 
-In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](../../lib/common).
 
 ## Demo App
 
-For example usage refer to the [Rhino Activity demo](/demo/android/Activity).
+For example usage refer to the [Rhino Activity demo](../../demo/android/Activity).

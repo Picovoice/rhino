@@ -52,7 +52,7 @@ mod tests {
     fn run_rhino_test(
         language: &str,
         context: &str,
-        is_whithin_context: bool,
+        is_within_context: bool,
         intent: &str,
         slots: HashMap<String, String>,
         audio_file_name: &str,
@@ -91,9 +91,9 @@ mod tests {
         assert!(is_finalized);
         let inference = rhino.get_inference().unwrap();
 
-        assert!(inference.is_understood == is_whithin_context);
+        assert!(inference.is_understood == is_within_context);
 
-        if is_whithin_context {
+        if is_within_context {
             assert_eq!(inference.intent.unwrap(), intent);
 
             assert_eq!(inference.slots, slots);
@@ -105,14 +105,14 @@ mod tests {
         $(
             #[test]
             fn $test_name() {
-                let (language, context, is_whithin_context, intent, slots):
+                let (language, context, is_within_context, intent, slots):
                     (&str, &str, bool, &str, HashMap<&str, &str>) = $values;
                 let mut string_slots = HashMap::new();
                 for (key, value) in slots {
                     string_slots.insert(String::from(key), String::from(value));
                 }
                 let audio_file_name = format!("{}.wav", stringify!($test_name));
-                run_rhino_test(language, context, is_whithin_context, intent, string_slots, &audio_file_name);
+                run_rhino_test(language, context, is_within_context, intent, string_slots, &audio_file_name);
             }
         )*
         }

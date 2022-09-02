@@ -66,7 +66,7 @@ def main():
         help="Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an utterance that marks "
              "the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint duration "
              "reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return "
-             "inference pre-emptively in case the user pauses before finishing the request.",
+             "inference preemptively in case the user pauses before finishing the request.",
         type=float,
         default=1.)
 

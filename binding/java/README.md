@@ -134,9 +134,9 @@ handle.delete();
 
 ## Non-English Contexts
 
-In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](/lib/common).
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](../../lib/common).
 
 ## Demos
 
-The [Rhino Java demo](/demo/java) is a Java command-line application that allows for 
+The [Rhino Java demo](../../demo/java) is a Java command-line application that allows for 
 processing real-time audio (i.e. microphone) and files using Rhino.

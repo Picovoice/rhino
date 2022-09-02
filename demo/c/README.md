@@ -6,7 +6,7 @@ You need a C99-compatible compiler to build these demos.
 
 ## Requirements
 - The demo requires [CMake](https://cmake.org/) version 3.13 or higher.
-- **For Windows Only**: [MinGW](http://mingw-w64.org/doku.php) is required to build the demo.
+- **For Windows Only**: [MinGW](https://www.mingw-w64.org/) is required to build the demo.
 
 ## AccessKey
 
@@ -156,7 +156,7 @@ usage : .\\demo\\c\\build\\rhino_demo_file.exe -a ACCESS_KEY -l LIBRARY_PATH -m 
 **Note that the demo expects a single-channel WAV file with a sampling rate of 16kHz and 16-bit linear PCM encoding. If you
 provide a file with incorrect format the demo does not perform any format validation and simply outputs incorrect results.**
 
-The following processes a WAV file under the [audio_samples](/resources/audio_samples) directory and infers the intent 
+The following processes a WAV file under the [audio_samples](../../resources/audio_samples) directory and infers the intent 
 in the context of a coffee-maker system. Replace `${ACCESS_KEY}` with your Picovoice AccessKey.
 
 #### Linux
