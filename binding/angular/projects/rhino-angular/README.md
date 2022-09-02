@@ -145,23 +145,23 @@ import { Subscription } from "rxjs"
 import { RhinoService } from "@picovoice/rhino-angular"
 ...
   constructor(private rhinoService: RhinoService) {
-    this.contextInfoDetection = rhinoService.contextInfo$.subscribe(
+    this.contextInfoSubscription = rhinoService.contextInfo$.subscribe(
       contextInfo => {
         console.log(contextInfo);
       });
-    this.inferenceDetection = rhinoService.inference$.subscribe(
+    this.inferenceSubscription = rhinoService.inference$.subscribe(
       inference => {
         console.log(inference);
       });
-    this.isLoadedDetection = rhinoService.isLoaded$.subscribe(
+    this.isLoadedSubscription = rhinoService.isLoaded$.subscribe(
       isLoaded => {
         console.log(isLoaded);
       });
-    this.isListeningDetection = rhinoService.isListening$.subscribe(
+    this.isListeningSubscription = rhinoService.isListening$.subscribe(
       isListening => {
         console.log(isListening);
       });
-    this.errorDetection = rhinoService.error$.subscribe(
+    this.errorSubscription = rhinoService.error$.subscribe(
       error => {
         console.log(error);
       });
@@ -197,11 +197,11 @@ When you are done with Rhino call `release`. This cleans up all resources used b
 
 ```typescript
 ngOnDestroy() {
-  this.contextInfoDetection.unsubscribe();
-  this.inferenceDetection.unsubscribe();
-  this.isLoadedDetection.unsubscribe();
-  this.isListeningDetection.unsubscribe();
-  this.errorDetection.unsubscribe();
+  this.contextInfoSubscription.unsubscribe();
+  this.inferenceSubscription.unsubscribe();
+  this.isLoadedSubscription.unsubscribe();
+  this.isListeningSubscription.unsubscribe();
+  this.errorSubscription.unsubscribe();
   this.rhinoService.release();
 }
 ```

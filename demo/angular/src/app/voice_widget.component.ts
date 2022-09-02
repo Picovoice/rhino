@@ -13,11 +13,11 @@ import rhinoParams from '../lib/rhino_params';
   styleUrls: ['./voice_widget.component.scss']
 })
 export class VoiceWidget implements OnDestroy {
-  private contextInfoDetection: Subscription;
-  private inferenceDetection: Subscription;
-  private isLoadedDetection: Subscription;
-  private isListeningDetection: Subscription;
-  private errorDetection: Subscription;
+  private contextInfoSubscription: Subscription;
+  private inferenceSubscription: Subscription;
+  private isLoadedSubscription: Subscription;
+  private isListeningSubscription: Subscription;
+  private errorSubscription: Subscription;
 
   contextInfo: string | null = null;
   inference: RhinoInference | null = null;
@@ -26,34 +26,34 @@ export class VoiceWidget implements OnDestroy {
   error: Error | string | null = null;
 
   constructor(private rhinoService: RhinoService) {
-    this.contextInfoDetection = rhinoService.contextInfo$.subscribe(
+    this.contextInfoSubscription = rhinoService.contextInfo$.subscribe(
       contextInfo => {
         this.contextInfo = contextInfo;
       });
-    this.inferenceDetection = rhinoService.inference$.subscribe(
+    this.inferenceSubscription = rhinoService.inference$.subscribe(
       inference => {
         this.inference = inference;
       });
-    this.isLoadedDetection = rhinoService.isLoaded$.subscribe(
+    this.isLoadedSubscription = rhinoService.isLoaded$.subscribe(
       isLoaded => {
         this.isLoaded = isLoaded;
       });
-    this.isListeningDetection = rhinoService.isListening$.subscribe(
+    this.isListeningSubscription = rhinoService.isListening$.subscribe(
       isListening => {
         this.isListening = isListening;
       });
-    this.errorDetection = rhinoService.error$.subscribe(
+    this.errorSubscription = rhinoService.error$.subscribe(
       error => {
         this.error = error;
       });
   }
 
   ngOnDestroy(): void {
-    this.contextInfoDetection.unsubscribe();
-    this.inferenceDetection.unsubscribe();
-    this.isLoadedDetection.unsubscribe();
-    this.isListeningDetection.unsubscribe();
-    this.errorDetection.unsubscribe();
+    this.contextInfoSubscription.unsubscribe();
+    this.inferenceSubscription.unsubscribe();
+    this.isLoadedSubscription.unsubscribe();
+    this.isListeningSubscription.unsubscribe();
+    this.errorSubscription.unsubscribe();
     this.rhinoService.release();
   }
 
