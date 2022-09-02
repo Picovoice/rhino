@@ -144,7 +144,7 @@ First subscribe to the events from `RhinoService`. There are five subscription e
 import { Subscription } from "rxjs"
 import { RhinoService } from "@picovoice/rhino-angular"
 ...
-  constructor(private porcupineService: PorcupineService) {
+  constructor(private rhinoService: RhinoService) {
     this.contextInfoDetection = rhinoService.contextInfo$.subscribe(
       contextInfo => {
         console.log(contextInfo);

@@ -14,7 +14,6 @@ import { Subject } from 'rxjs';
 
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
 import {
-  InferenceCallback,
   RhinoContext,
   RhinoOptions,
   RhinoInference,
@@ -61,7 +60,7 @@ export class RhinoService implements OnDestroy {
         this.isLoaded$.next(true);
         this.error$.next(null);
       }
-    } catch (error) {
+    } catch (error: any) {
       this.error$.next(error.toString());
     }
   }

@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { RhinoInference } from '@picovoice/rhino-web';
 import { RhinoService } from '@picovoice/rhino-angular';
 
+// @ts-ignore
 import rhinoParams from '../lib/rhino_params';
 
 @Component({
@@ -32,7 +33,6 @@ export class VoiceWidget implements OnDestroy {
     this.inferenceDetection = rhinoService.inference$.subscribe(
       inference => {
         this.inference = inference;
-        console.log(inference);
       });
     this.isLoadedDetection = rhinoService.isLoaded$.subscribe(
       isLoaded => {
@@ -67,7 +67,7 @@ export class VoiceWidget implements OnDestroy {
           { base64: rhinoParams }
         );
       }
-      catch (error) {
+      catch (error: any) {
         this.error = error;
       }
     }
