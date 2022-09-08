@@ -2,24 +2,24 @@
 # yarn lockfile v1
 
 
-"@picovoice/rhino-web@=2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.4.tgz#704c22701f2550e5b7158b007dc7915b91cd17bb"
-  integrity sha512-Q3IWwvBp5vdy8oa7ZajwTEHJ4228jhDrTBWPPp9eedGUywl8vYLpJHpYXBqJVXdCjkqhXmzSbO6rZEY6Az8Emw==
+"@picovoice/rhino-web@=2.1.6":
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.6.tgz#33353b9d80b0403c5861e0590a0d07a4cce67032"
+  integrity sha512-5OpkjG3uooZLu67FKzlLMEVvT6DY4mWvq64PWkH/2oWPa/twVxXWHAMC9O8UkC6js1ZVu7o1Dy30aCUfY0Y2Tg==
   dependencies:
-    "@picovoice/web-utils" "=1.2.5"
+    "@picovoice/web-utils" "=1.2.6"
 
-"@picovoice/web-utils@=1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.2.5.tgz#55461fb78ddfe8b8b755cba2caf863e262988dd0"
-  integrity sha512-3eoGSewOO2vllsYs/Q9FVHMzFQqy2Mg1mBJTbRChuZMpDG2wCv+AB3vD34w4bb++wwGpo/iS7PB1SwP0vBzYig==
+"@picovoice/web-utils@=1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.2.6.tgz#a3b53de19b15438e48f74516c91ca1f6bb90e786"
+  integrity sha512-Nr+qGUeZRy3nfN8JdGoz2NE1O6WE50JI4weHb95gsadstQApOppKNmK9iuCK+3NCh7tGXYZLyyZJ1Ny+Sfo1WA==
   dependencies:
     commander "^9.2.0"
 
-"@picovoice/web-voice-processor@=4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.0.tgz#fd1f9b60f8daf050d764d5549ad19ca64a0d1184"
-  integrity sha512-EMZrl/dbZou6vVxfElS9N+IQDMCRfYNYYh2CCFQjrPGwXLez9CaKGdF07N5GoIaf5wyM4l8pZzVTcGxoZCKY4Q==
+"@picovoice/web-voice-processor@=4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.1.tgz#9a47dcd56efa5431870a25f0c8093f3eee6923ea"
+  integrity sha512-RmzeovecBG7WpxTksqTCDNID1lcbJse8rdp/R+HrriufDgkilNXAfKyIm7VknzHA48Pw9e/eJJPLrntAQwzdcw==
 
 async@^2.6.2:
   version "2.6.3"

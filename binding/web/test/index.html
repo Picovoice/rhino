@@ -514,6 +514,18 @@
           );
           writeMessage('Checking Rhino invalid sensitivity type.. done!.');
 
+          writeMessage("Test UTF-8 path...");
+          handle = await RhinoWeb.RhinoWorker.create(
+            accessKey,
+            { base64: coffeeMaker64, forceWrite: true, customWritePath: "큰시험" },
+            rhinoInferenceCallback,
+            { publicPath: 'rhino_params.pv', forceWrite: true, customWritePath: "테스트" },
+            { processErrorCallback }
+          );
+
+          await handle.release();
+          writeMessage("Test UTF-8 path... done!")
+
           writeMessage('Test passed!');
         } catch (error) {
           writeMessage(error);

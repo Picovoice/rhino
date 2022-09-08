@@ -657,30 +657,28 @@ export class Rhino {
     memoryBufferUint8[accessKeyAddress + accessKey.length] = 0;
 
     // acquire and init memory for c_model_path
+    const encodedModelPath = new TextEncoder().encode(modelPath);
     const modelPathAddress = await aligned_alloc(
       Uint8Array.BYTES_PER_ELEMENT,
-      (modelPath.length + 1) * Uint8Array.BYTES_PER_ELEMENT
+      (encodedModelPath.length + 1) * Uint8Array.BYTES_PER_ELEMENT
     );
     if (modelPathAddress === 0) {
       throw new Error('malloc failed: Cannot allocate memory');
     }
-    for (let i = 0; i < modelPath.length; i++) {
-      memoryBufferUint8[modelPathAddress + i] = modelPath.charCodeAt(i);
-    }
-    memoryBufferUint8[modelPathAddress + modelPath.length] = 0;
+    memoryBufferUint8.set(encodedModelPath, modelPathAddress);
+    memoryBufferUint8[modelPathAddress + encodedModelPath.length] = 0;
 
     // acquire and init memory for c_context_path
+    const encodedContextPath = new TextEncoder().encode(contextPath);
     const contextPathAddress = await aligned_alloc(
       Uint8Array.BYTES_PER_ELEMENT,
-      (contextPath.length + 1) * Uint8Array.BYTES_PER_ELEMENT
+      (encodedContextPath.length + 1) * Uint8Array.BYTES_PER_ELEMENT
     );
     if (contextPathAddress === 0) {
       throw new Error('malloc failed: Cannot allocate memory');
     }
-    for (let i = 0; i < contextPath.length; i++) {
-      memoryBufferUint8[contextPathAddress + i] = contextPath.charCodeAt(i);
-    }
-    memoryBufferUint8[contextPathAddress + contextPath.length] = 0;
+    memoryBufferUint8.set(encodedContextPath, contextPathAddress);
+    memoryBufferUint8[contextPathAddress + encodedContextPath.length] = 0;
 
     let status = await pv_rhino_init(
       accessKeyAddress,
