@@ -1481,52 +1481,59 @@ yarn add @picovoice/rhino-vue @picovoice/web-voice-processor
 npm install @picovoice/rhino-vue @picovoice/web-voice-processor
 ```
 
-```html
-<script lang="ts">
-import rhinoMixin from "@picovoice/rhino-vue";
+```vue
+<script lang='ts'>
+import { useRhino } from '@picovoice/rhino-vue';
 
 import rhinoParams from "${PATH_TO_RHINO_PARAMS_BASE64}";
 import rhinoContext from "${PATH_TO_RHINO_CONTEXT_BASE64}";
 
 export default {
-  mixins: [rhinoMixin],
-  mounted() {
-    this.$rhino.init(
-      this.accessKey,
+  data() {
+    const {
+      state,
+      init,
+      process,
+      release
+    } = useRhino();
+
+    init(
+      ${ACCESS_KEY},
       { base64: rhinoContext },
-      this.inferenceCallback,
       { base64: rhinoParams },
-      this.contextInfoCallback,
-      this.isLoadedCallback,
-      this.isListeningCallback,
-      this.errorCallback
     );
-  },
-  methods: {
-    process: function () {
-      this.$rhino.process();
-    },
-    inferenceCallback: function(inference) {
-      console.log(`Detected inference: ${inference}`);
-    },
-    contextInfoCallback: function(context) {
-      console.log(context);
-    },
-    isLoadedCallback: function(isLoaded) {
-      console.log(isLoaded);
-    },
-    isListeningCallback: function(isListening) {
-      console.log(isListening);
-    },
-    errorCallback: function(error) {
-      console.error(error);
+
+    return {
+      state,
+      process,
+      release
     }
   },
-  // beforeDestroy for Vue 2.
-  beforeUnmount() {
-    this.$rhino.release();
-  }
-}
+  watch: {
+    "state.inference": function(inference) {
+      if (inference !== null) {
+        console.log(inference)
+      }
+    },
+    "state.contextInfo": function(contextInfo) {
+      if (contextInfo !== null) {
+        console.log(contextInfo)
+      }
+    },
+    "state.isLoaded": function(isLoaded) {
+      console.log(isLoaded)
+    },
+    "state.isListening": function(isListening) {
+      console.log(isListening)
+    },
+    "state.error": function(error) {
+      console.error(error)
+    },
+  },
+  onBeforeDestroy() {
+    this.release();
+  },
+};
 </script>
 ```
 

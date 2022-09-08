@@ -8,100 +8,81 @@
         <input
           type="text"
           name="accessKey"
-          v-on:change="updateAccesskey"
-          :disabled="isLoaded"
+          v-on:change="updateAccessKey"
+          :disabled="state.isLoaded"
         />
       </label>
       <button class="start-button" v-on:click="rhnInit">
           Start Rhino
       </button>
     </h3>
-    <h3>Rhino Loaded: {{ isLoaded }}</h3>
-    <h3>Listening: {{ isListening }}</h3>
-    <h3>Error: {{ error !== null }}</h3>
-    <p class="error-message" v-if="error !== null">
-      {{ JSON.stringify(error) }}
+    <h3>Rhino Loaded: {{ state.isLoaded }}</h3>
+    <h3>Listening: {{ state.isListening }}</h3>
+    <h3>Error: {{ state.error !== null }}</h3>
+    <p class="error-message" v-if="state.error !== null">
+      {{ JSON.stringify(state.error) }}
     </p>
-    <button v-on:click="rhnProcess" :disabled="error !== null || isListening || !isLoaded">
+    <button v-on:click="rhnProcess" :disabled="state.error !== null || state.isListening || !state.isLoaded">
       Process
     </button>
-    <button v-on:click="rhnRelease" :disabled="error !== null || isListening || !isLoaded">
+    <button v-on:click="rhnRelease" :disabled="state.error !== null || state.isListening || !state.isLoaded">
       Release
     </button>
     <h3>Inference:</h3>
-    <pre v-if="inference !== null">{{ JSON.stringify(inference, null, 2) }}</pre>
+    <pre v-if="state.inference !== null">{{ JSON.stringify(state.inference, null, 2) }}</pre>
     <hr />
     <div>
       <h3>Context Info:</h3>
       <pre>
-      {{ contextInfo }}
+      {{ state.contextInfo }}
       </pre>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { RhinoInference } from "@picovoice/rhino-web";
-import rhinoMixin, { RhinoVue } from "@picovoice/rhino-vue";
+import { defineComponent, onBeforeUnmount, ref } from "vue";
+import { useRhino } from "@picovoice/rhino-vue";
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import rhinoParams from "@/lib/rhino_params";
+
 const VoiceWidget = defineComponent({
   name: "VoiceWidget",
-  mixins: [rhinoMixin],
-  data() {
-    return {
-      accessKey: "",
-      inference: null as RhinoInference | null,
-      error: null as Error | string | null,
-      isLoaded: false,
-      isListening: false,
-      contextInfo: null as string | null,
-      $rhino: {} as RhinoVue,
+  setup() {
+    const {
+      state,
+      init,
+      process,
+      release
+    } = useRhino();
+
+    const accessKey = ref("");
+
+    const updateAccessKey = (event: any) => {
+      accessKey.value = event.target.value;
     };
-  },
-  methods: {
-    rhnProcess: function () {
-      this.$rhino.process();
-    },
-    rhnRelease: function () {
-      this.$rhino.release();
-    },
-    rhnInit: function () {
+
+    const rhnInit = () => {
       const rhinoContext = { publicPath: "clock_wasm.rhn" };
       const rhinoModel = { base64: rhinoParams };
 
-      this.$rhino.init(
-        this.accessKey,
-        rhinoContext,
-        this.inferenceCallback,
-        rhinoModel,
-        this.contextInfoCallback,
-        this.isLoadedCallback,
-        this.isListeningCallback,
-        this.errorCallback
-      );
-    },
-    updateAccesskey: function (event: any) {
-      this.accessKey = event.target.value;
-    },
-    contextInfoCallback: function (context: string) {
-      this.contextInfo = context;
-    },
-    inferenceCallback: function (
-      inference: RhinoInference
-    ) {
-      this.inference = inference;
-    },
-    isLoadedCallback: function (isLoaded: boolean) {
-      this.isLoaded = isLoaded;
-    },
-    isListeningCallback: function (isListening: boolean) {
-      this.isListening = isListening;
-    },
-    errorCallback: function (error: string | null) {
-      this.error = error;
-    },
+      init(accessKey.value, rhinoContext, rhinoModel);
+    };
+
+    onBeforeUnmount(() => {
+      release();
+    });
+
+    return {
+      state,
+      accessKey,
+      updateAccessKey,
+      rhnInit,
+      rhnProcess: process,
+      rhnRelease: release,
+    };
   },
 });
 
