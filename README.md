@@ -16,7 +16,11 @@
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-vue)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-react)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
+<!-- markdown-link-check-disable -->
 [![Crates.io](https://img.shields.io/crates/v/pv_rhino)](https://crates.io/crates/pv_rhino)
+<!-- markdown-link-check-enable -->
+
+[![GitHub issues](https://img.shields.io/github/issues/Picovoice/rhino)](
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
@@ -213,14 +217,14 @@ rhino_demo_mic --access_key ${ACCESS_KEY} --context_path ${CONTEXT_PATH}
 
 Replace `${CONTEXT_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
-For more information about Python demos, go to [demo/python](/demo/python).
+For more information about Python demos, go to [demo/python](./demo/python).
 
 ### .NET Demos
 
-[Rhino .NET demo](/demo/dotnet) is a command-line application that lets you choose between running Rhino on an audio
+[Rhino .NET demo](./demo/dotnet) is a command-line application that lets you choose between running Rhino on an audio
 file or on real-time microphone input.
 
-Make sure there is a working microphone connected to your device. From [demo/dotnet/RhinoDemo](/demo/dotnet/RhinoDemo)
+Make sure there is a working microphone connected to your device. From [demo/dotnet/RhinoDemo](./demo/dotnet/RhinoDemo)
 run the following in the terminal:
 
 ```console
@@ -229,11 +233,11 @@ dotnet run -c MicDemo.Release -- --access_key ${ACCESS_KEY} --context_path ${CON
 
 Replace `${ACCESS_KEY}` with your Picovoice `AccessKey` and `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
-For more information about .NET demos, go to [demo/dotnet](/demo/dotnet).
+For more information about .NET demos, go to [demo/dotnet](./demo/dotnet).
 
 ### Java Demos
 
-The [Rhino Java demo](/demo/java) is a command-line application that lets you choose between running Rhino on an
+The [Rhino Java demo](./demo/java) is a command-line application that lets you choose between running Rhino on an
 audio file or on real-time microphone input.
 
 To try the real-time demo, make sure there is a working microphone connected to your device. Then invoke the following commands from the terminal:
@@ -247,34 +251,34 @@ java -jar rhino-mic-demo.jar -a ${ACCESS_KEY} -c ${CONTEXT_FILE_PATH}
 
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
-For more information about Java demos go to [demo/java](/demo/java).
+For more information about Java demos go to [demo/java](./demo/java).
 
 ### Go Demos
 
-The demo requires `cgo`, which on Windows may mean that you need to install a gcc compiler like [Mingw](http://mingw-w64.org/doku.php) to build it properly.
+The demo requires `cgo`, which on Windows may mean that you need to install a gcc compiler like [Mingw](http://mingw-w64.org) to build it properly.
 
-From [demo/go](/demo/go) run the following command from the terminal to build and run the mic demo:
+From [demo/go](./demo/go) run the following command from the terminal to build and run the mic demo:
 ```console
 go run micdemo/rhino_mic_demo.go -access_key ${ACCESS_KEY} -context_path ${CONTEXT_FILE_PATH}
 ```
 
 Replace `${ACCESS_KEY}` with your Picovoice AccessKey and `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one from the Rhino GitHub repository.
 
-For more information about Go demos go to [demo/go](/demo/go).
+For more information about Go demos go to [demo/go](./demo/go).
 
 ### Unity Demos
 
-To run the Rhino Unity demo, import the [Rhino Unity package](/binding/unity/rhino-2.0.0.unitypackage) into your project, open the RhinoDemo scene and hit play. To run on other platforms or in the player, go to _File > Build Settings_, choose your platform and hit the `Build and Run` button.
-
-To browse the demo source go to [demo/unity](/demo/unity).
+To run the Rhino Unity demo, import the [Rhino Unity package](./binding/unity/rhino-2.1.4.unitypackage) into your project, open the RhinoDemo scene and hit play. To run on other platforms or in the player, go to _File > Build Settings_, choose your platform and hit the `Build and Run` button.
+/
+To browse the demo source go to [demo/unity](./demo/unity).
 
 ### Flutter Demos
 
 To run the Rhino demo on Android or iOS with Flutter, you must have the [Flutter SDK](https://flutter.dev/docs/get-started/install) installed on your system. Once installed, you can run `flutter doctor` to determine any other missing requirements for your relevant platform. Once your environment has been set up, launch a simulator or connect an Android/iOS device.
 
-Before launching the app, use the [copy_assets.sh](/demo/flutter/copy_assets.sh) script to copy the rhino demo context file into the demo project. (**NOTE**: on Windows, Git Bash or another bash shell is required, or you will have to manually copy the context into the project.).
+Before launching the app, use the [copy_assets.sh](./demo/flutter/copy_assets.sh) script to copy the rhino demo context file into the demo project. (**NOTE**: on Windows, Git Bash or another bash shell is required, or you will have to manually copy the context into the project.).
 
-Run the following command from [demo/flutter](/demo/flutter) to build and deploy the demo to your device:
+Run the following command from [demo/flutter](./demo/flutter) to build and deploy the demo to your device:
 
 ```console
 flutter run
@@ -292,7 +296,7 @@ or
 
 To run the React Native Rhino demo app you will first need to set up your React Native environment. For this,
 please refer to [React Native's documentation](https://reactnative.dev/docs/environment-setup). Once your environment has
-been set up, navigate to [demo/react-native](/demo/react-native) to run the following commands:
+been set up, navigate to [demo/react-native](./demo/react-native) to run the following commands:
 
 For Android:
 
@@ -318,7 +322,7 @@ or
 
 ### Android Demos
 
-Using Android Studio, open [demo/android/Activity](/demo/android/Activity) as an Android project and then run the
+Using Android Studio, open [demo/android/Activity](./demo/android/Activity) as an Android project and then run the
 application. After pressing the start button you can issue commands such as:
 
 > Turn off the lights.
@@ -327,7 +331,7 @@ or:
 
 > Set the lights in the living room to purple.
 
-For more information about Android demo and the complete list of available expressions, go to [demo/android](/demo/android).
+For more information about Android demo and the complete list of available expressions, go to [demo/android](./demo/android).
 
 ### iOS Demos
 
@@ -345,13 +349,13 @@ or:
 
 > Set the lights in the living room to purple.
 
-For more information about Android demo, and the complete list of available expressions, go to [demo/ios](/demo/ios).
+For more information about Android demo, and the complete list of available expressions, go to [demo/ios](./demo/ios).
 
 ### Web Demos
 
 #### Vanilla JavaScript and HTML
 
-From [demo/web](/demo/web) run the following in the terminal:
+From [demo/web](./demo/web) run the following in the terminal:
 
 ```console
 yarn
@@ -365,11 +369,11 @@ npm install
 npm run start
 ```
 
-Open http://localhost:5000 in your browser to try the demo.
+Open `http://localhost:5000` in your browser to try the demo.
 
 #### Angular Demos
 
-From [demo/angular](/demo/angular) run the following in the terminal:
+From [demo/angular](./demo/angular) run the following in the terminal:
 
 ```console
 yarn
@@ -383,11 +387,11 @@ npm install
 npm run start
 ```
 
-Open http://localhost:4200 in your browser to try the demo.
+Open `http://localhost:4200` in your browser to try the demo.
 
 #### React Demos
 
-From [demo/react](/demo/react) run the following in the terminal:
+From [demo/react](./demo/react) run the following in the terminal:
 
 ```console
 yarn
@@ -401,11 +405,11 @@ npm install
 npm run start
 ```
 
-Open http://localhost:3000 in your browser to try the demo.
+Open `http://localhost:3000` in your browser to try the demo.
 
 #### Vue Demos
 
-From [demo/vue](/demo/vue) run the following in the terminal:
+From [demo/vue](./demo/vue) run the following in the terminal:
 
 ```console
 yarn
@@ -437,12 +441,12 @@ rhn-mic-demo --access_key ${ACCESS_KEY} --context_path ${CONTEXT_FILE_PATH}
 
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
-For more information about Node.js demos go to [demo/nodejs](/demo/nodejs).
+For more information about Node.js demos go to [demo/nodejs](./demo/nodejs).
 
 ### Rust Demos
 
 This demo opens an audio stream from a microphone and performs inference on spoken commands.
-From [demo/rust/micdemo](/demo/rust/micdemo) run the following:
+From [demo/rust/micdemo](./demo/rust/micdemo) run the following:
 
 ```console
 cargo run --release -- --access_key ${ACCESS_KEY} --context_path ${CONTEXT_FILE_PATH}
@@ -450,13 +454,13 @@ cargo run --release -- --access_key ${ACCESS_KEY} --context_path ${CONTEXT_FILE_
 
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
-For more information about Rust demos go to [demo/rust](/demo/rust).
+For more information about Rust demos go to [demo/rust](./demo/rust).
 
 ### C Demos
 
 The C demo requires [CMake](https://cmake.org/) version 3.4 or higher.
 
-**Windows Requires [MinGW](http://mingw-w64.org/doku.php) to build the demo.**
+**Windows Requires [MinGW](http://mingw-w64.org) to build the demo.**
 
 #### Microphone Demo
 
@@ -541,7 +545,7 @@ Replace `${ACCESS_KEY}` with your Picovoice AccessKey.
 
 The demo opens up the WAV file and infers the intent in the context of a coffee-maker system.
 
-For more information about C demos go to [demo/c](/demo/c).
+For more information about C demos go to [demo/c](./demo/c).
 
 ## SDKs
 
@@ -752,13 +756,13 @@ rhino.Delete()
 
 ### Unity
 
-Import the [Rhino Unity Package](/binding/unity/rhino-2.0.0.unitypackage) into your Unity project.
+Import the [Rhino Unity Package](./binding/unity/rhino-2.1.4.unitypackage) into your Unity project.
 
 The SDK provides two APIs:
 
 #### High-Level API
 
-[RhinoManager](/binding/unity/Assets/Rhino/RhinoManager.cs) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
+[RhinoManager](./binding/unity/Assets/Rhino/RhinoManager.cs) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
 
 Using the constructor `RhinoManager.Create` will create an instance of the RhinoManager using the provided context file.
 
@@ -801,7 +805,7 @@ Unity package to capture frames of audio and automatically pass it to the infere
 
 #### Low-Level API
 
-[Rhino](/binding/unity/Assets/Rhino/Rhino.cs) provides low-level access to the inference engine for those who want to incorporate speech-to-intent into an already existing audio processing pipeline.
+[Rhino](./binding/unity/Assets/Rhino/Rhino.cs) provides low-level access to the inference engine for those who want to incorporate speech-to-intent into an already existing audio processing pipeline.
 
 To create an instance of `Rhino`, use the `.Create` static constructor, and a context file.
 
@@ -874,7 +878,7 @@ The SDK provides two APIs:
 
 #### High-Level API
 
-[RhinoManager](/binding/flutter/lib/rhino_manager.dart) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
+[RhinoManager](./binding/flutter/lib/rhino_manager.dart) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
 
 The constructor `RhinoManager.create` will create an instance of the RhinoManager using a context file that you pass to it.
 
@@ -931,7 +935,7 @@ Our [flutter_voice_processor](https://github.com/Picovoice/flutter-voice-process
 
 #### Low-Level API
 
-[Rhino](/binding/flutter/lib/rhino.dart) provides low-level access to the inference engine for those who want to incorporate
+[Rhino](./binding/flutter/lib/rhino.dart) provides low-level access to the inference engine for those who want to incorporate
 speech-to-intent into an already existing audio processing pipeline.
 
 `Rhino` is created by passing a context file to its static constructor `create`:
@@ -986,7 +990,7 @@ Install [@picovoice/react-native-voice-processor](https://www.npmjs.com/package/
 
 #### High-Level API
 
-[RhinoManager](/binding/react-native/src/rhino_manager.tsx) provides a high-level API that takes care of
+[RhinoManager](./binding/react-native/src/rhino_manager.tsx) provides a high-level API that takes care of
 audio recording. This class is the quickest way to get started.
 
 The constructor `RhinoManager.create` will create an instance of a RhinoManager using a context file that you pass to it.
@@ -1025,7 +1029,7 @@ audio capture and RhinoManager passes frames to the inference engine for you.
 
 #### Low-Level API
 
-[Rhino](/binding/react-native/src/rhino.tsx) provides low-level access to the inference engine for those
+[Rhino](./binding/react-native/src/rhino.tsx) provides low-level access to the inference engine for those
 who want to incorporate speech-to-intent into an already existing audio processing pipeline.
 
 `Rhino` is created by passing a context file to its static constructor `create`:
@@ -1165,7 +1169,7 @@ There are two approaches for integrating Rhino into an iOS application: The high
 
 #### High-Level API
 
-[RhinoManager](/binding/ios/RhinoManager.swift) provides a high-level API
+[RhinoManager](./binding/ios/RhinoManager.swift) provides a high-level API
 for integrating Rhino into iOS applications. It manages all activities related to creating an input audio stream, feeding it to the engine, and invoking a user-provided inference callback.
 ```swift
 import Rhino
@@ -1195,7 +1199,7 @@ using `manager.delete()`.
 
 #### Low-Level API
 
-[Rhino](/binding/ios/Rhino.swift) provides low-level access to the Speech-to-Intent engine for those who want to incorporate intent inference into an already existing audio processing pipeline.
+[Rhino](./binding/ios/Rhino.swift) provides low-level access to the Speech-to-Intent engine for those who want to incorporate intent inference into an already existing audio processing pipeline.
 
 ```swift
 import Rhino
@@ -1614,7 +1618,7 @@ loop {
 
 ### C
 
-Rhino is implemented in ANSI C and therefore can be directly linked to C applications. The [pv_rhino.h](/include/pv_rhino.h)
+Rhino is implemented in ANSI C and therefore can be directly linked to C applications. The [pv_rhino.h](./include/pv_rhino.h)
 header file contains relevant information. An instance of the Rhino object can be constructed as follows:
 
 ```c
