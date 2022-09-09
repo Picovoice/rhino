@@ -1075,8 +1075,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@picovoice/rhino-vue@../../binding/vue":
+"@picovoice/rhino-vue@~2.1.2":
   version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-vue/-/rhino-vue-2.1.2.tgz#ed08ae5a60f122f1d2183324796c7e127fbc1703"
+  integrity sha512-U6aVP3CyhlXfMvIGm3UorSOIo6e5yLhkduupO1Fg2/PFU3lPOOyVgu8OCAD6VweDxAg+7CWVKh5SVQQ4ZI9Hug==
   dependencies:
     "@picovoice/rhino-web" "=2.1.6"
 
