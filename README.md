@@ -421,7 +421,7 @@ npm install
 npm run serve
 ```
 
-Open http://localhost:8080 in your browser to try the demo.
+Open `http://localhost:8080` in your browser to try the demo.
 
 ### Node.js Demos
 
