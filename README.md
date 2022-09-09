@@ -20,8 +20,6 @@
 [![Crates.io](https://img.shields.io/crates/v/pv_rhino)](https://crates.io/crates/pv_rhino)
 <!-- markdown-link-check-enable -->
 
-[![GitHub issues](https://img.shields.io/github/issues/Picovoice/rhino)](
-
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 [![Twitter URL](https://img.shields.io/twitter/url?label=%40AiPicovoice&style=social&url=https%3A%2F%2Ftwitter.com%2FAiPicovoice)](https://twitter.com/AiPicovoice)
