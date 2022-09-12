@@ -1,6 +1,6 @@
 <template>
   <div class="rhino-vue-demo">
-    <h1>Rhino Web + Vue ("Rhino" Renderless Component)</h1>
+    <h1>Rhino Web + Vue ("Rhino" Component)</h1>
     <VoiceWidget />
   </div>
 </template>

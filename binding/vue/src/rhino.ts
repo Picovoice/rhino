@@ -9,6 +9,8 @@
   specific language governing permissions and limitations under the License.
 */
 
+import { reactive, Ref, ref, UnwrapNestedRefs, UnwrapRef, version } from 'vue';
+
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
 
 import {
@@ -20,128 +22,149 @@ import {
   RhinoWorker
 } from '@picovoice/rhino-web';
 
-/**
- * Type alias for Rhino Vue Mixin.
- * Use with `Vue as VueConstructor extends {$rhino: RhinoVue}` to get types in typescript.
- */
-export interface RhinoVue {
-  $_rhino_: RhinoWorker | null;
+const createRef = <T>(data: T): Ref<UnwrapRef<T>> => {
+  if (!ref || !version || version.charAt(0) < "3") {
+    const obj = {
+      value: data
+    };
+
+    return new Proxy(obj as Ref<UnwrapRef<T>>, {
+      get(target, property, receiver): T {
+        return Reflect.get(target, property, receiver);
+      },
+      set(target, property, newValue: T, receiver): boolean {
+        return Reflect.set(target, property, newValue, receiver);
+      }
+    });
+  }
+
+  return ref<T>(data);
+};
+
+const createReactive = <T extends object>(data: T): UnwrapNestedRefs<T> => {
+  if (!reactive || !version || version.charAt(0) < "3") {
+    return data as UnwrapNestedRefs<T>;
+  }
+
+  return reactive<T>(data);
+};
+
+export type RhinoVue = {
+  state: {
+    inference: RhinoInference | null;
+    contextInfo: string | null;
+    isLoaded: boolean;
+    isListening: boolean;
+    error: string | null;
+  },
   init: (
     accessKey: string,
     context: RhinoContext,
-    inferenceCallback: InferenceCallback,
     model: RhinoModel,
-    contextInfoCallback: (info: string) => void,
-    isLoadedCallback: (isLoaded: boolean) => void,
-    isListeningCallback: (isListening: boolean) => void,
-    errorCallback: (error: any) => void,
     options?: RhinoOptions) => Promise<void>;
   process: () => Promise<void>;
   release: () => Promise<void>;
-  isLoadedCallback: (isLoaded: boolean) => void,
-  isListeningCallback: (isListening: boolean) => void,
-  errorCallback: (error: string | null) => void,
 }
 
-export default {
-  computed: {
-    /**
-     * Rhino Vue Mixin.
-     */
-    $rhino(): RhinoVue {
-      return {
-        $_rhino_: null as RhinoWorker | null,
-        isLoadedCallback: function (): void {
-          return;
-        },
-        isListeningCallback: function (): void {
-          return;
-        },
-        errorCallback: function (): void {
-          return;
-        },
-        async init(
-          accessKey: string,
-          context: RhinoContext,
-          inferenceCallback: InferenceCallback,
-          model: RhinoModel,
-          contextInfoCallback: (info: string) => void,
-          isLoadedCallback: (isLoaded: boolean) => void,
-          isListeningCallback: (isListening: boolean) => void,
-          errorCallback: (error: any) => void,
-          options: RhinoOptions = {}
-        ): Promise<void> {
-          if (options.processErrorCallback) {
-            // eslint-disable-next-line no-console
-            console.warn(
-              "'processErrorCallback' is only supported in the Porcupine Web SDK. " +
-                "Use the 'errorCallback' state to monitor for errors in the Vue SDK."
-            );
-          }
+export function useRhino(): RhinoVue {
+  const rhinoRef = createRef<RhinoWorker | null>(null);
 
-          const inferenceCallbackInner = (newInference: RhinoInference): void => {
-            if (newInference && newInference.isFinalized) {
-              if (this.$_rhino_) {
-                WebVoiceProcessor.unsubscribe(this.$_rhino_);
-              }
-              isListeningCallback(false);
-              inferenceCallback(newInference);
-            }
-          };
+  const state = createReactive<{
+    inference: RhinoInference | null;
+    contextInfo: string | null;
+    isLoaded: boolean;
+    isListening: boolean;
+    error: string | null;
+  }>({
+    inference: null,
+    contextInfo: null,
+    isLoaded: false,
+    isListening: false,
+    error: null
+  });
 
-          try {
-            if (!this.$_rhino_) {
-              this.$_rhino_ = await RhinoWorker.create(
-                accessKey,
-                context,
-                inferenceCallbackInner,
-                model,
-                {...options, processErrorCallback: errorCallback}
-              );
-
-              contextInfoCallback(this.$_rhino_.contextInfo);
-
-              this.isListeningCallback = isListeningCallback;
-              this.isLoadedCallback = isLoadedCallback;
-              this.errorCallback = errorCallback;
-              isLoadedCallback(true);
-              errorCallback(null);
-            }
-          } catch (error: any) {
-            errorCallback(error.toString());
-          }
-        },
-        async process(): Promise<void> {
-          try {
-            if (!this.$_rhino_) {
-              this.errorCallback('Rhino not initialized');
-              return;
-            }
-            await WebVoiceProcessor.subscribe(this.$_rhino_);
-            this.isListeningCallback(true);
-            this.errorCallback(null);
-          } catch (error: any) {
-            this.errorCallback(error.toString());
-          }
-        },
-        async release(): Promise<void> {
-          if (this.$_rhino_) {
-            await WebVoiceProcessor.unsubscribe(this.$_rhino_);
-            this.$_rhino_.terminate();
-            this.$_rhino_ = null;
-
-            this.isLoadedCallback(false);
-          }
-        },
-      };
+  const inferenceCallback = async(newInference: RhinoInference): Promise<void> => {
+    if (newInference && newInference.isFinalized) {
+      if (rhinoRef.value) {
+        await WebVoiceProcessor.unsubscribe(rhinoRef.value);
+      }
+      state.isListening = false;
+      state.inference = newInference;
     }
-  },
-  // Vue 3 method to clean resources.
-  beforeUnmount(this: any): void {
-    this.$rhino.release();
-  },
-  // Vue 2 method to clean resources.
-  beforeDestroy(this: any): void {
-    this.$rhino.release();
-  }
-};
+  };
+
+  const errorCallback = (newError: string): void => {
+    state.error = newError;
+  };
+
+  const init = async (
+    accessKey: string,
+    context: RhinoContext,
+    model: RhinoModel,
+    options: RhinoOptions = {}
+  ): Promise<void> => {
+    if (options.processErrorCallback) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "'processErrorCallback' is only supported in the Rhino Web SDK. Use the 'error' state to monitor for errors in the React SDK."
+      );
+    }
+
+    try {
+      if (!rhinoRef.value) {
+        rhinoRef.value = await RhinoWorker.create(
+          accessKey,
+          context,
+          inferenceCallback,
+          model,
+          { ...options, processErrorCallback: errorCallback }
+        );
+        state.contextInfo = rhinoRef.value.contextInfo;
+        state.isLoaded = true;
+        state.error = null;
+      }
+    } catch (e: any) {
+      errorCallback(e.toString());
+    }
+  };
+
+  const process = async (): Promise<void> => {
+    try {
+      if (!rhinoRef.value) {
+        state.error = 'Rhino has not been initialized or has been released';
+        return;
+      }
+
+      if (!state.isListening) {
+        rhinoRef.value.reset();
+        await WebVoiceProcessor.subscribe(rhinoRef.value);
+        state.isListening = true;
+        state.error = null;
+      }
+    } catch (e: any) {
+      errorCallback(e.toString());
+    }
+  };
+
+  const release = async (): Promise<void> => {
+    try {
+      if (rhinoRef.value) {
+        await WebVoiceProcessor.unsubscribe(rhinoRef.value);
+        rhinoRef.value.terminate();
+        rhinoRef.value = null;
+        state.isListening = false;
+        state.error = null;
+        state.isLoaded = false;
+      }
+    } catch (e: any) {
+      errorCallback(e.toString());
+    }
+  };
+
+  return {
+    state,
+    init,
+    process,
+    release,
+  };
+}

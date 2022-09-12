@@ -138,85 +138,157 @@ const options = {
 
 ### Initialize Rhino
 
-**Note**: Due to limitations on Vue, one component can only have one instance of Rhino. To use multiple instances of Rhino instead, check out [Rhino Web binding](https://www.npmjs.com/package/@picovoice/rhino-web).
+Use `useRhino` and `init` to initialize `Rhino`.
 
-Create the following functions:
- - `inferenceCallback` streams inference results from Rhino
- - `contextInfoCallback` function that delivers context info when Rhino has completed initialization
- - `isLoadedCallback` function that executes when Rhino has loaded or unloaded
- - `isListeningCallback` function that executes when Rhino is listening for an inference
- - `errorCallback` function to catch any error occurred
+In case of any errors, watch for `state.error` to check the error message, otherwise watch `state.isLoaded` to check if `Rhino` has loaded. Also watch for `state.contextInfo` for current context information.
 
-```typescript
-...
-methods: {
-  inferenceCallback: function(inference) {
-    console.log(`Detected inference: ${inference}`);
+#### Rhino in Vue 2
+
+**NOTE**: If you need to call `useRhino` outside of `data`, make sure to add observer property via `Vue.set` or `observable`.
+
+```vue
+<script lang='ts'>
+import Vue, { VueConstructor } from 'vue';
+import { RhinoVue, useRhino } from '@picovoice/rhino-vue';
+
+// Use Vue.extend for JavaScript
+export default (Vue as VueConstructor<Vue & RhinoVue>).extend({
+  data() {
+    const {
+      state,
+      init,
+      process,
+      release
+    } = useRhino();
+
+    init(
+      ${ACCESS_KEY},
+      rhinoContext,
+      rhinoModel,
+      options
+    );
+
+    return {
+      state,
+      process,
+      release
+    }
   },
-  contextInfoCallback: function(context) {
-    console.log(context);
+  watch: {
+    "state.inference": function(inference) {
+      if (inference !== null) {
+        console.log(inference)
+      }
+    },
+    "state.contextInfo": function(contextInfo) {
+      if (contextInfo !== null) {
+        console.log(contextInfo)
+      }
+    },
+    "state.isLoaded": function(isLoaded) {
+      console.log(isLoaded)
+    },
+    "state.isListening": function(isListening) {
+      console.log(isListening)
+    },
+    "state.error": function(error) {
+      console.error(error)
+    },
   },
-  isLoadedCallback: function(isLoaded) {
-    console.log(isLoaded);
+  onBeforeDestroy() {
+    this.release();
   },
-  isListeningCallback: function(isListening) {
-    console.log(isListening);
-  },
-  errorCallback: function(error) {
-    console.error(error);
-  }
-};
-...
+});
+</script>
 ```
 
-Import `Rhino` mixin, add it to your component and initialize Rhino:
+#### Rhino in Vue 3
 
-```html
-<script lang="ts">
-  import {BuiltInKeyword} from "@picovoice/rhino-web";
-  import rhinoMixin from "@picovoice/rhino-vue";
+In Vue 3, we take advantage of the [Composition API](https://vuejs.org/api/composition-api-setup.html), especially the use of `reactive`.
 
-  import rhinoParams from "${PATH_TO_RHINO_PARAMS_BASE64}"
-  import rhinoContext from "${PATH_TO_RHINO_CONTEXT_BASE64}"
+```vue
+<script lang='ts'>
+import { defineComponent, onBeforeUnmount, watch } from 'vue';
+import { useRhino } from '@picovoice/rhino-vue';
 
-  export default {
-    mixins: [rhinoMixin],
-    mounted() {
-      this.$rhino.init(
-              ${ACCESS_KEY},
-              { base64: rhinoContext },
-              this.inferenceCallback,
-              { base64: rhinoParams },
-              this.contextInfoCallback,
-              this.isLoadedCallback,
-              this.isListeningCallback,
-              this.errorCallback
-      );
+// Use Vue.extend for JavaScript
+export default defineComponent({
+  setup() {
+    const { 
+      state,
+      init,
+      process,
+      release
+    } = useRhino();
+    
+    watch(() => state.isLoaded, (newVal) => {
+      console.log(newVal);
+    });
+
+    watch(() => state.isListening, (newVal) => {
+      console.log(newVal);
+    });
+
+    watch(() => state.inference, (inference) => {
+      if (inference !== null) {
+        console.log(inference);
+      }
+    });
+    
+    watch(() => state.contextInfo, (contextInfo) => {
+      if (contextInfo !== null) {
+        console.log(contextInfo);
+      }
+    });
+    
+    watch(() => state.error, (err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+
+    onBeforeUnmount(() => {
+      release();
+    });
+
+    init(
+      ${ACCESS_KEY},
+      rhinoContext,
+      rhinoModel,
+      options
+    );
+    
+    return {
+      process,
+      release
     }
   }
+});
 </script>
 ```
 
 ### Process Audio Frames
 
 The Rhino Vue binding uses [WebVoiceProcessor](https://github.com/Picovoice/web-voice-processor) to record audio.
-To start detecting detecting an inference, run the `process` function:
+To start detecting an inference, run the `process` function:
+
 ```typescript
-await this.$rhino.process();
+await this.process();
 ```
+
 The `process` function initializes WebVoiceProcessor.
-Rhino will then listen and process frames of microphone audio until it reaches a conclusion, then return the result via the `inference` variable.
+Rhino will then listen and process frames of microphone audio until it reaches a conclusion, then return the result via the `state.inference` variable.
 Once a conclusion is reached Rhino will enter a paused state. From the paused state Rhino call `process` again to detect another inference.
 
-### Cleanup
+### Release
 
-When you are done with Rhino call `release`. This cleans up all resources used by Rhino and WebVoiceProcessor.
+Run release explicitly to clean up all resources used by `Rhino` and `WebVoiceProcessor`:
 
 ```typescript
-await this.$rhino.release();
+this.release();
 ```
 
-If any arguments require changes, call `release` then `init` again to initialize Rhino with the new settings.
+This will set `state.isLoaded` and `state.isListening` to false.
 
 ## Contexts
 
