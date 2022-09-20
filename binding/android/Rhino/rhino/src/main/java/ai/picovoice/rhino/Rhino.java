@@ -128,6 +128,10 @@ public class Rhino {
      * @throws RhinoException if inference retrieval fails.
      */
     public RhinoInference getInference() throws RhinoException {
+        if (handle == 0) {
+            throw new RhinoInvalidStateException("Attempted to call Rhino getInference after delete.");
+        }
+
         if (!isFinialized) {
             throw new RhinoInvalidStateException("getInference called before Rhino had finalized. " +
                     "Call getInference only after process has returned true");
@@ -140,7 +144,11 @@ public class Rhino {
      *
      * @return Context information.
      */
-    public String getContextInformation() {
+    public String getContextInformation() throws RhinoException {
+        if (handle == 0) {
+            throw new RhinoInvalidStateException("Attempted to call Rhino getContextInformation after delete.");
+        }
+
         return RhinoNative.getContextInfo(handle);
     }
 

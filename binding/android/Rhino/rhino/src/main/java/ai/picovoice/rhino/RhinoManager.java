@@ -151,7 +151,7 @@ public class RhinoManager {
      *
      * @return Context information.
      */
-    public String getContextInformation() {
+    public String getContextInformation() throws RhinoException {
         return rhino.getContextInformation();
     }
 
