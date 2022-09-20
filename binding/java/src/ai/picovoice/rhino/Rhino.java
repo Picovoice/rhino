@@ -13,9 +13,6 @@
 package ai.picovoice.rhino;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 
 /**
@@ -121,8 +118,8 @@ public class Rhino {
                             "Received frame of size %d.", getFrameLength(), pcm.length));
         }
 
-        isFinialized = RhinoNative.process(handle, pcm);
-        return isFinialized;
+        isFinalized = RhinoNative.process(handle, pcm);
+        return isFinalized;
     }
 
     /**
@@ -135,7 +132,11 @@ public class Rhino {
      * @throws RhinoException if inference retrieval fails.
      */
     public RhinoInference getInference() throws RhinoException {
-        if (!isFinialized) {
+        if (handle == 0) {
+            throw new RhinoInvalidStateException("Attempted to call Rhino getInference after delete.");
+        }
+
+        if (!isFinalized) {
             throw new RhinoInvalidStateException("getInference called before Rhino had finalized. " +
                     "Call getInference only after process has returned true");
         }
@@ -147,7 +148,10 @@ public class Rhino {
      *
      * @return Context information.
      */
-    public String getContextInformation() {
+    public String getContextInformation() throws RhinoException {
+        if (handle == 0) {
+            throw new RhinoInvalidStateException("Attempted to call Rhino getContextInformation after delete.");
+        }
         return RhinoNative.getContextInfo(handle);
     }
 
