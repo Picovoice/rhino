@@ -7,7 +7,7 @@ plugins {
 
 ext {
     PUBLISH_GROUP_ID = 'ai.picovoice'
-    PUBLISH_VERSION = '2.1.5'
+    PUBLISH_VERSION = '2.1.6'
     PUBLISH_ARTIFACT_ID = 'rhino-java'
 }
 
