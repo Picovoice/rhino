@@ -277,11 +277,11 @@ PODS:
     - React-jsi (= 0.67.3)
     - React-logger (= 0.67.3)
     - React-perflogger (= 0.67.3)
-  - Rhino-iOS (2.1.2):
+  - Rhino-iOS (2.1.3):
     - ios-voice-processor (~> 1.0.2)
-  - rhino-react-native (2.1.4):
+  - rhino-react-native (2.1.6):
     - React
-    - Rhino-iOS (~> 2.1.1)
+    - Rhino-iOS (~> 2.1.3)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -425,8 +425,8 @@ SPEC CHECKSUMS:
   React-RCTVibration: d0361f15ea978958fab7ffb6960f475b5063d83f
   React-runtimeexecutor: af1946623656f9c5fd64ca6f36f3863516193446
   ReactCommon: 650e33cde4fb7d36781cd3143f5276da0abb2f96
-  Rhino-iOS: 334035c5c9883123d0ff776b634b227e5664c65b
-  rhino-react-native: ffc71037b7a6c40b52b1b933bd76a106b12d3ddd
+  Rhino-iOS: a211c1c9da37d4c9187e1ce5bba6a2c06c6ce4b0
+  rhino-react-native: 05c458c7c872fe6c3eaa085f3c520dc0243d90b0
   Yoga: 90dcd029e45d8a7c1ff059e8b3c6612ff409061a
 
 PODFILE CHECKSUM: 1bbfabf6f1c66bdf4ed7e43ff0bea37f3ae08498
