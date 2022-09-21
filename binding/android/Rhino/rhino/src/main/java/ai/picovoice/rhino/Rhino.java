@@ -40,7 +40,7 @@ public class Rhino {
     }
 
     private long handle;
-    private boolean isFinialized;
+    private boolean isFinalized;
 
     /**
      * Constructor.
@@ -114,8 +114,8 @@ public class Rhino {
                             "Received frame of size %d.", getFrameLength(), pcm.length));
         }
 
-        isFinialized = RhinoNative.process(handle, pcm);
-        return isFinialized;
+        isFinalized = RhinoNative.process(handle, pcm);
+        return isFinalized;
     }
 
     /**
@@ -132,7 +132,7 @@ public class Rhino {
             throw new RhinoInvalidStateException("Attempted to call Rhino getInference after delete.");
         }
 
-        if (!isFinialized) {
+        if (!isFinalized) {
             throw new RhinoInvalidStateException("getInference called before Rhino had finalized. " +
                     "Call getInference only after process has returned true");
         }
