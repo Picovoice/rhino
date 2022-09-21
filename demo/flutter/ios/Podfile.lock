@@ -7,7 +7,7 @@ PODS:
     - Flutter
   - Rhino-iOS (2.1.3):
     - ios-voice-processor (~> 1.0.2)
-  - rhino_flutter (2.1.4):
+  - rhino_flutter (2.1.7):
     - Flutter
     - Rhino-iOS (~> 2.1.3)
 
@@ -38,7 +38,7 @@ SPEC CHECKSUMS:
   ios-voice-processor: 65b25a8db69ea25ffba0eeef37bae71a982f34cc
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   Rhino-iOS: a211c1c9da37d4c9187e1ce5bba6a2c06c6ce4b0
-  rhino_flutter: c80a37aad74a8977b0451eae2fb396f5ff847cb1
+  rhino_flutter: 8d30b0223b5a95f380060651f83818f4fcb3b082
 
 PODFILE CHECKSUM: a75497545d4391e2d394c3668e20cfb1c2bbd4aa
 

@@ -80,7 +80,7 @@ packages:
       name: flutter_voice_processor
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.7"
+    version: "1.0.9"
   lints:
     dependency: "direct dev"
     description:
@@ -192,7 +192,7 @@ packages:
       name: rhino_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.7"
   sky_engine:
     dependency: transitive
     description: flutter
