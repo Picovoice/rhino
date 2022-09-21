@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Android binding for Rhino Speech-to-Intent engine. It directly infers the user's intent from
@@ -42,6 +40,7 @@ public class Rhino {
     }
 
     private long handle;
+    private boolean isFinalized;
 
     /**
      * Constructor.
@@ -61,14 +60,16 @@ public class Rhino {
      * @param requireEndpoint     If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
      *                            If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
      *                            to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
+     *
+     * @throws RhinoException if there is an error while initializing Rhino.
      */
     private Rhino(String accessKey,
                   String modelPath,
                   String contextPath,
                   float sensitivity,
                   float endpointDurationSec,
-                  boolean requireEndpoint) {
-        handle = init(
+                  boolean requireEndpoint) throws RhinoException{
+        handle = RhinoNative.init(
                 accessKey,
                 modelPath,
                 contextPath,
@@ -82,7 +83,7 @@ public class Rhino {
      */
     public void delete() {
         if (handle != 0) {
-            delete(handle);
+            RhinoNative.delete(handle);
             handle = 0;
         }
     }
@@ -101,23 +102,20 @@ public class Rhino {
      */
     public boolean process(short[] pcm) throws RhinoException {
         if (handle == 0) {
-            new RhinoInvalidArgumentException("Attempted to call Rhino process after delete.");
+            throw new RhinoInvalidStateException("Attempted to call Rhino process after delete.");
         }
         if (pcm == null) {
-            new RhinoInvalidArgumentException("Passed null frame to Rhino process.");
+            throw new RhinoInvalidArgumentException("Passed null frame to Rhino process.");
         }
 
         if (pcm.length != getFrameLength()) {
-            new RhinoInvalidArgumentException(
+            throw new RhinoInvalidArgumentException(
                     String.format("Rhino process requires frames of length %d. " +
                             "Received frame of size %d.", getFrameLength(), pcm.length));
         }
 
-        try {
-            return process(handle, pcm);
-        } catch (Exception e) {
-            throw new RhinoException(e);
-        }
+        isFinalized = RhinoNative.process(handle, pcm);
+        return isFinalized;
     }
 
     /**
@@ -130,35 +128,15 @@ public class Rhino {
      * @throws RhinoException if inference retrieval fails.
      */
     public RhinoInference getInference() throws RhinoException {
-
-        final boolean isUnderstood = isUnderstood(handle);
-
-        RhinoInference inference;
-
-        if (isUnderstood) {
-            final String intentPacked = getIntent(handle);
-            String[] parts = intentPacked.split(",");
-            if (parts.length == 0) {
-                throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
-            }
-
-            Map<String, String> slots = new LinkedHashMap<>();
-            for (int i = 1; i < parts.length; i++) {
-                String[] slotAndValue = parts[i].split(":");
-                if (slotAndValue.length != 2) {
-                    throw new RhinoException(String.format("Failed to retrieve intent from '%s'.", intentPacked));
-                }
-                slots.put(slotAndValue[0], slotAndValue[1]);
-            }
-
-            inference = new RhinoInference(true, parts[0], slots);
-        } else {
-            inference = new RhinoInference(false, null, null);
+        if (handle == 0) {
+            throw new RhinoInvalidStateException("Attempted to call Rhino getInference after delete.");
         }
 
-        reset(handle);
-
-        return inference;
+        if (!isFinalized) {
+            throw new RhinoInvalidStateException("getInference called before Rhino had finalized. " +
+                    "Call getInference only after process has returned true");
+        }
+        return RhinoNative.getInference(handle);
     }
 
     /**
@@ -166,8 +144,12 @@ public class Rhino {
      *
      * @return Context information.
      */
-    public String getContextInformation() {
-        return getContextInfo(handle);
+    public String getContextInformation() throws RhinoException {
+        if (handle == 0) {
+            throw new RhinoInvalidStateException("Attempted to call Rhino getContextInformation after delete.");
+        }
+
+        return RhinoNative.getContextInfo(handle);
     }
 
     /**
@@ -175,41 +157,27 @@ public class Rhino {
      *
      * @return Number of audio samples per frame.
      */
-    public native int getFrameLength();
+    public int getFrameLength() {
+        return RhinoNative.getFrameLength();
+    }
 
     /**
      * Getter for audio sample rate accepted by Picovoice.
      *
      * @return Audio sample rate accepted by Picovoice.
      */
-    public native int getSampleRate();
+    public int getSampleRate() {
+        return RhinoNative.getSampleRate();
+    }
 
     /**
      * Getter for version.
      *
      * @return Version.
      */
-    public native String getVersion();
-
-    private native long init(
-            String accessKey,
-            String modelPath,
-            String contextPath,
-            float sensitivity,
-            float endpointDurationSec,
-            boolean requireEndpoint);
-
-    private native void delete(long object);
-
-    private native boolean process(long object, short[] pcm);
-
-    private native boolean isUnderstood(long object);
-
-    private native String getIntent(long object);
-
-    private native boolean reset(long object);
-
-    private native String getContextInfo(long object);
+    public String getVersion() {
+        return RhinoNative.getVersion();
+    }
 
     /**
      * Builder for creating an instance of Rhino with a mixture of default arguments

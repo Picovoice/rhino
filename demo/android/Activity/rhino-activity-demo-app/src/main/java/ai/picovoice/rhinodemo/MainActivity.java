@@ -195,7 +195,11 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(dialogView);
 
         TextView contextField = (TextView) dialogView.findViewById(R.id.contextField);
-        contextField.setText(rhinoManager.getContextInformation());
+        try {
+            contextField.setText(rhinoManager.getContextInformation());
+        } catch (RhinoException e) {
+            Log.e("Rhino", "Could not get Rhino context information: \n" + e);
+        }
 
         AlertDialog dialog = builder.create();
         dialog.show();
