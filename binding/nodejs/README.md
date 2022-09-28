@@ -55,7 +55,7 @@ The binding provides the Rhino class. Create instances of the Rhino class to mak
 ### Quick Start
 
 ```javascript
-const Rhino = require("@picovoice/rhino-node");
+const {Rhino} = require("@picovoice/rhino-node");
 
 const coffeeMakerContextPath = "./coffee_maker.rhn";
 const accessKey = "${ACCESS_KEY}" // Obtained from the Picovoice Console (https://console.picovoice.ai/)
