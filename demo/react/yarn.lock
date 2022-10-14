@@ -1519,31 +1519,31 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@picovoice/rhino-react@=2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-2.1.3.tgz#d0a953a93a36f1a0d7efa1f28c5437be1c2ed3e9"
-  integrity sha512-TFYynJNMlfQ6YUZhsmuZvx/h7UJxPQQ/19wCBov4oCgEhUyAnQyUVJvhtt3uzbLj9STRR/T33PRPXvmkvtov+Q==
+"@picovoice/rhino-react@=2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-2.1.4.tgz#4eb5e1e3a5b36c4dd42db21ba28e0153363c3912"
+  integrity sha512-C1FdimnbLivScNXeEqxKS/SA+BXxNZURM2+trUqctTy3fMRcWD59TH28+Du6WIS/4QrL3QeB/yeAU9lD84bvmw==
   dependencies:
-    "@picovoice/rhino-web" "=2.1.6"
+    "@picovoice/rhino-web" "=2.1.7"
 
-"@picovoice/rhino-web@=2.1.6":
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.6.tgz#33353b9d80b0403c5861e0590a0d07a4cce67032"
-  integrity sha512-5OpkjG3uooZLu67FKzlLMEVvT6DY4mWvq64PWkH/2oWPa/twVxXWHAMC9O8UkC6js1ZVu7o1Dy30aCUfY0Y2Tg==
+"@picovoice/rhino-web@=2.1.7":
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.7.tgz#25d415d6c8e89cfe51586e765da8f57ea63298f7"
+  integrity sha512-RC6jYgxIJbLFtvnRuh464Fb97XydIC+dEeAGxf6GQeTZgVvSzTsJTjga2Hn+pPDGbYN9ILhMBZ0xNKefXe5DkA==
   dependencies:
-    "@picovoice/web-utils" "=1.2.6"
+    "@picovoice/web-utils" "=1.2.8"
 
-"@picovoice/web-utils@=1.2.6":
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.2.6.tgz#a3b53de19b15438e48f74516c91ca1f6bb90e786"
-  integrity sha512-Nr+qGUeZRy3nfN8JdGoz2NE1O6WE50JI4weHb95gsadstQApOppKNmK9iuCK+3NCh7tGXYZLyyZJ1Ny+Sfo1WA==
+"@picovoice/web-utils@=1.2.8":
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.2.8.tgz#ae74f6fa55b0db08a8d2331a9a20f75d5e5e9373"
+  integrity sha512-XeKXFwDGU323OxNmp504hR3i12t5dyvgUD62yLzfqX3wPilRtpQ/uUUmf7O/sFcxYE0AXT5FDyLqaCAZFlDBsw==
   dependencies:
     commander "^9.2.0"
 
-"@picovoice/web-voice-processor@=4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.1.tgz#9a47dcd56efa5431870a25f0c8093f3eee6923ea"
-  integrity sha512-RmzeovecBG7WpxTksqTCDNID1lcbJse8rdp/R+HrriufDgkilNXAfKyIm7VknzHA48Pw9e/eJJPLrntAQwzdcw==
+"@picovoice/web-voice-processor@=4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.2.tgz#e7593e560ce7cbe82bd5bae67259643eb099b852"
+  integrity sha512-6T4sY2mqKNNUWNg+Yov+VY3mhoo1JmyJqJIvxnWbQoHHNKgOAUsq8nDQHdXizFVnpdkg33va3KC0KNaSdP+TXA==
 
 "@pmmmwh/react-refresh-webpack-plugin@0.4.3":
   version "0.4.3"

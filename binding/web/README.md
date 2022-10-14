@@ -35,6 +35,11 @@ Rhino is:
 - Firefox
 - Safari
 
+### Restrictions
+
+IndexedDB is required to use `Rhino` in a worker thread. Browsers without IndexedDB support
+(i.e. Firefox Incognito Mode) should use `Rhino` in the main thread.
+
 ## Installation
 
 ### Package

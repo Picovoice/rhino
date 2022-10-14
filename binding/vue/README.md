@@ -34,6 +34,11 @@ Rhino is:
 - Firefox
 - Safari
 
+### Restrictions
+
+IndexedDB and WebWorkers are required to use `Rhino Vue`. Browsers without support (i.e. Firefox Incognito Mode) 
+should use the [`RhinoWeb binding`](https://github.com/Picovoice/rhino/tree/master/binding/web) main thread method.
+
 ## Framework Compatibility
 
 - Vue.js 2.6.11+
