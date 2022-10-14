@@ -33,6 +33,11 @@ Rhino is:
 - Firefox
 - Safari
 
+### Restrictions
+
+IndexedDB and WebWorkers are required to use `Rhino Angular`. Browsers without support (i.e. Firefox Incognito Mode) 
+should use the [`RhinoWeb binding`](https://github.com/Picovoice/rhino/tree/master/binding/web) main thread method.
+
 ## AccessKey
 
 Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts as your credentials when using Rhino SDKs.
