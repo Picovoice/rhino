@@ -177,17 +177,21 @@ await process();
 ```
 The `process` function initializes WebVoiceProcessor.
 Rhino will then listen and process frames of microphone audio until it reaches a conclusion, then return the result via the `inference` variable.
-Once a conclusion is reached Rhino will enter a paused state. From the paused state Rhino call `process` again to detect another inference.
+Rhino will enter a paused state once a conclusion is reached. From the paused state, call `process` again to detect another inference.
 
-### Cleanup
+### Release
 
-When you are done with Rhino call `release`. This cleans up all resources used by Rhino and WebVoiceProcessor.
+While running in a component, you can call `release` to clean up all resources used by Rhino and WebVoiceProcessor.
 
 ```typescript
 await release();
 ```
 
+This will set `isLoaded` and `isListening` to false.
+
 If any arguments require changes, call `release` then `init` again to initialize Rhino with the new settings.
+
+You do not need to call `release` when your component is unmounted - the hook will clean up automatically on unmount.
 
 ## Contexts
 

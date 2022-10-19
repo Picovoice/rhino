@@ -61,13 +61,13 @@ export default function VoiceWidget() {
       <br />
       <button
         onClick={() => rhnProcess()}
-        disabled={error || isListening || !isLoaded}
+        disabled={error !== null || !isLoaded || isListening}
       >
         Process
       </button>
       <button
         onClick={() => rhnRelease()}
-        disabled={error || isListening || !isLoaded}
+        disabled={error !== null || !isLoaded || isListening}
       >
         Release
       </button>

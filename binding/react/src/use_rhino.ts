@@ -87,7 +87,7 @@ export function useRhino(): {
           setError(null);
         }
       } catch (e: any) {
-        errorCallback(e.toString());
+        setError(e.toString());
       }
     },
     [inferenceCallback]
@@ -107,7 +107,7 @@ export function useRhino(): {
         setError(null);
       }
     } catch (e: any) {
-      errorCallback(e.toString());
+      setError(e.toString());
     }
   }, [isListening]);
 
@@ -122,13 +122,16 @@ export function useRhino(): {
         setIsLoaded(false);
       }
     } catch (e: any) {
-      errorCallback(e.toString());
+      setError(e.toString());
     }
-    setIsListening(false);
   }, []);
 
   useEffect(() => (): void => {
-    release();
+    if (rhinoRef.current) {
+      WebVoiceProcessor.unsubscribe(rhinoRef.current);
+      rhinoRef.current.terminate();
+      rhinoRef.current = null;
+    }
   }, []);
 
   return {
