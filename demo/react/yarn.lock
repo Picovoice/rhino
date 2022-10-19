@@ -1411,8 +1411,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@picovoice/rhino-react@../../binding/react":
+"@picovoice/rhino-react@~2.1.5":
   version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-2.1.5.tgz#18e939d18d0bd9203cfd312ac6dadec02c0f4b71"
+  integrity sha512-EB6geK0yU6A/AceeRphtqb9kCojHiuISdtDaLLqumQ3r1KroWiCWO4bDsW0xRs9ZnI+GaBnP0dhqG+PUVlnm/w==
   dependencies:
     "@picovoice/rhino-web" "=2.1.7"
 
@@ -1430,7 +1432,7 @@
   dependencies:
     commander "^9.2.0"
 
-"@picovoice/web-voice-processor@=4.0.2":
+"@picovoice/web-voice-processor@~4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.2.tgz#e7593e560ce7cbe82bd5bae67259643eb099b852"
   integrity sha512-6T4sY2mqKNNUWNg+Yov+VY3mhoo1JmyJqJIvxnWbQoHHNKgOAUsq8nDQHdXizFVnpdkg33va3KC0KNaSdP+TXA==
