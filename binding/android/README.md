@@ -21,6 +21,10 @@ Rhino is:
 * compact and computationally-efficient, making it perfect for IoT.
 * self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
+## Compatibility
+
+- Android 5.0+ (API 21+)
+
 ## Installation
 
 Rhino can be found on Maven Central. To include the package in your Android project, ensure you have included `mavenCentral()` in your top-level `build.gradle` file and then add the following to your app's `build.gradle`:
@@ -68,7 +72,7 @@ try {
 } catch (RhinoException e) { }
 ```
 
-The context file is an .rhn file obtained from the [Picovoice Console](https://console.picovoice.ai/) that you can store in your Android assets folder (`src/main/assets`) and pass into the Rhino Builder. The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. The `inferenceCallback` parameter is a `RhinoManagerCallback` that will be invoked when Rhino has returned an inference result.
+The context file is an .rhn file obtained from the [Picovoice Console](https://console.picovoice.ai/) that you can store in your Android assets folder (`src/main/assets`) and pass the relative path into the Rhino Builder. The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. The `inferenceCallback` parameter is a `RhinoManagerCallback` that will be invoked when Rhino has returned an inference result.
 The callback should accept a `RhinoInference` object that will contain the inference results.
 
 ```java
@@ -82,27 +86,27 @@ RhinoManagerCallback inferenceCallback = new RhinoManagerCallback() {
                 }
                 else {
                     // add code to handle unsupported commands
-                }   
+                }
             }
 }
 ```
 
-You can override the default Rhino model file and/or the inference sensitivity. 
+You can override the default Rhino model file and/or the inference sensitivity.
 
-Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating-point number within [0, 1]. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate. 
+Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating-point number within [0, 1]. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate.
 
-The model file contains the parameters for the speech-to-intent engine. To change the language that Rhino understands, you'll pass in a different model file. This should also be placed in the `assets` folder. 
+The model file contains the parameters for the speech-to-intent engine. To change the language that Rhino understands, you'll pass in a different model file. This should also be placed under the `assets` folder.
 
 There is also the option to pass an error callback, which will be invoked if an error is encountered while RhinoManager is processing audio.
 
-RequireEndpoint is the parameter which indicates if Rhino should wait for a silence before inferring context. 
-If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command. If set to `false`, 
+RequireEndpoint is the parameter which indicates if Rhino should wait for a silence before inferring context.
+If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command. If set to `false`,
 Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
 to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
 
 Endpoint duration indicates how much silence (in seconds) Rhino will wait for before marking the end of a spoken command. A lower endpoint
 duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
-preemptively in case the user pauses before finishing the request. 
+preemptively in case the user pauses before finishing the request.
 
 These optional parameters can be set through the Builder functions `setModelPath`, `setSensitivity`, `setErrorCallback`, `setRequireEndpoint` and `endpointDurationSec`:
 ```java
@@ -121,15 +125,15 @@ try {
                             public void invoke(RhinoException e) {
                                 // process error
                             }
-                        })                
-                        .setRequireEndpoint(false)      
+                        })
+                        .setRequireEndpoint(false)
                         .setEndpointDurationSec(1.5f)
                         .build(context, inferenceCallback);
 } catch (RhinoException e) { }
 ```
 
 Once you have instantiated a RhinoManager, you can start audio capture and intent inference using the `.process()` function.
-Audio capture stops and rhino resets once an inference result is returned via the inference callback. 
+Audio capture stops and rhino resets once an inference result is returned via the inference callback.
 
 ```java
 rhinoManager.process();
@@ -151,7 +155,7 @@ import ai.picovoice.rhino.*;
 
 final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
-try {    
+try {
     Rhino rhino = new Rhino.Builder()
                         .setAccessKey(accessKey)
                         .setContextPath("assets_sub_folder/file.rhn")
@@ -200,12 +204,12 @@ rhino.delete();
 
 ## Custom Context Integration
 
-To add a custom context or model file to your application, add the files to your assets folder (`src/main/assets`) and then pass the path to the Rhino Builder:
+To add a custom context or model file to your application, add the files to your assets folder (`src/main/assets`) and then pass the relative path to the Rhino Builder.
 
+In this example our files are located in the assets folder under subdirectory `picovoice_files`:
 
 ```java
-// in this example our files are located at '/assets/picovoice_files/context.rhn' and '/assets/picovoice_files/model.pv' 
-try {    
+try {
     Rhino rhino = new Rhino.Builder()
                         .setContextPath("picovoice_files/context.rhn")
                         .setModelPath("picovoice_files/model.pv")

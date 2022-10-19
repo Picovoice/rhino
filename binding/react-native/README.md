@@ -112,7 +112,7 @@ The module provides you with two levels of API to choose from depending on your 
 
 #### High-Level API
 
-[RhinoManager](./src/rhino_manager.tsx) provides a high-level API that takes care of
+[RhinoManager](https://github.com/Picovoice/rhino/blob/master/binding/react-native/src/rhino_manager.tsx) provides a high-level API that takes care of
 audio recording. This class is the quickest way to get started.
 
 The constructor `RhinoManager.create` will create an instance of a RhinoManager using a context file that you pass to it.
@@ -132,6 +132,8 @@ async createRhinoManager() {
 ```
 NOTE: the call is asynchronous and therefore should be called in an async block with a try/catch.
 
+To use a context file in your React Native application you'll need to add the `.rhn` file to your platform projects. Android models must be added to `./android/app/src/main/assets/`, while iOS models can be added anywhere under `./ios`, but must be included as a bundled resource in your iOS (i.e. add via XCode) project. The paths used as initialization arguments are relative to these device-specific directories.
+
 The `inferenceCallback` parameter is a function that you want to execute when Rhino makes an inference.
 The function should accept a `RhinoInference` instance.
 
@@ -146,6 +148,7 @@ inferenceCallback(object) {
 ```
 
 Rhino accepts the following optional parameters:
+ - `modelPath`: path to a `.pv` file containing the model parameters for the speech-to-intent engine
  - `sensitivity`: overrides the default inference sensitivity.
  - `processErrorCallback`: called if there is a problem encountered while processing audio.
  - `endpointDurationSec`: sets how much silence is required after a spoken command.
@@ -158,10 +161,10 @@ const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console 
 
 this._rhinoManager = await RhinoManager.create(
     accessKey,
-    "/path/to/context/file.rhn",
+    "/path/to/context.rhn",
     inferenceCallback,
     processErrorCallback,
-    'path/to/model/file.pv',
+    'path/to/model.pv',
     sensitivity,
     endpointDurationSec,
     requireEndpoint);
@@ -180,14 +183,13 @@ Once your app is done with using RhinoManager, be sure you explicitly release th
 this._rhinoManager.delete();
 ```
 
-As you may have noticed, there is no need to deal with audio capture to enable intent inference with RhinoManager.
-This is because it uses our
+With `RhinoManager`, the
 [@picovoice/react-native-voice-processor](https://github.com/Picovoice/react-native-voice-processor/)
-module to capture frames of audio and automatically pass it to the inference engine.
+module handles audio capture and automatically passes it to the inference engine.
 
 #### Low-Level API
 
-[Rhino](./src/rhino.tsx) provides low-level access to the inference engine for those
+[Rhino](https://github.com/Picovoice/rhino/blob/master/binding/react-native/src/rhino.tsx) provides low-level access to the inference engine for those
 who want to incorporate speech-to-intent into an already existing audio processing pipeline.
 
 `Rhino` is created by passing a context file to its static constructor `create`:
@@ -195,9 +197,11 @@ who want to incorporate speech-to-intent into an already existing audio processi
 ```javascript
 const accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
-async createRhino(){
-    try{
-        this._rhino = await Rhino.create(accessKey, '/path/to/context/file.rhn');
+async createRhino() {
+    try {
+        this._rhino = await Rhino.create(
+            accessKey,
+            '/path/to/context/file.rhn');
     } catch (err) {
         // handle error
     }
@@ -239,7 +243,7 @@ this._rhino.delete();
 
 ## Custom Context Integration
 
-To add a custom context to your React Native application you'll need to add the rhn files to your platform projects.
+To add a custom context to your React Native application you'll need to add the `.rhn` file to your platform projects.
 
 ### Adding Android Models
 
@@ -280,10 +284,10 @@ try {
 
 ## Non-English Contexts
 
-In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](../../lib/common).
+In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](https://github.com/Picovoice/rhino/tree/master/lib/common).
 
 ## Demo App
 
-Check out the [Rhino React Native demo](../../demo/react-native) to see what it looks like to use Rhino in a cross-platform app!
+Check out the [Rhino React Native demo](https://github.com/Picovoice/rhino/tree/master/demo/react-native) to see what it looks like to use Rhino in a cross-platform app!
 
 
