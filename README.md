@@ -1083,7 +1083,8 @@ There are two possibilities for integrating Rhino into an Android application: t
 
 [RhinoManager](binding/android/Rhino/rhino/src/main/java/ai/picovoice/rhino/RhinoManager.java) provides a high-level API
 for integrating Rhino into Android applications. It manages all activities related to creating an input audio stream,
-feeding it into Rhino, and invoking a user-provided inference callback.
+feeding it into Rhino, and invoking a user-provided inference callback. Context files
+should be placed under the Android project assets folder (`src/main/assets/`).
 
 ```java
 final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
@@ -1091,14 +1092,13 @@ final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice C
 try {
     RhinoManager rhinoManager = new RhinoManager.Builder()
                         .setAccessKey(accessKey)
-                        .setContextPath("/path/to/context/file.rhn")
-                        .setModelPath("/path/to/model/file.pv")
+                        .setContextPath("/path/to/context.rhn")
                         .setSensitivity(0.35f)
                         .build(appContext, new RhinoManagerCallback() {
                             @Override
                             public void invoke(RhinoInference inference) {
                                 if (inference.getIsUnderstood()) {
-                                    final String intent = inference.getIntent()));
+                                    final String intent = inference.getIntent();
                                     final Map<String, String> slots = inference.getSlots();
                                     // add code to take action based on inferred intent and slot values
                                 }
@@ -1129,7 +1129,7 @@ final String accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice C
 try {
     Rhino rhino = new Rhino.Builder()
                         .setAccessKey(accessKey)
-                        .setContextPath("/path/to/context/file.rhn")
+                        .setContextPath("/path/to/context.rhn")
                         .build(appContext);
 } catch (RhinoException e) { }
 ```
