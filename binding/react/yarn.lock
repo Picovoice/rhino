@@ -1089,10 +1089,10 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
-"@picovoice/rhino-web@=2.1.7":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.7.tgz#25d415d6c8e89cfe51586e765da8f57ea63298f7"
-  integrity sha512-RC6jYgxIJbLFtvnRuh464Fb97XydIC+dEeAGxf6GQeTZgVvSzTsJTjga2Hn+pPDGbYN9ILhMBZ0xNKefXe5DkA==
+"@picovoice/rhino-web@=2.1.8":
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.8.tgz#f38eb598482d4c34ab403019aa0a13d347c9135d"
+  integrity sha512-g6VnEMWcmnc/9IamyRBjj8CuQcJgSBjPC0uqYdVNXphaqTPtMWTvfeO33wN3Nl1zmcSsUJXkGH2gZyCjw337Mg==
   dependencies:
     "@picovoice/web-utils" "=1.2.8"
 
@@ -1103,7 +1103,7 @@
   dependencies:
     commander "^9.2.0"
 
-"@picovoice/web-voice-processor@=4.0.2":
+"@picovoice/web-voice-processor@~4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.2.tgz#e7593e560ce7cbe82bd5bae67259643eb099b852"
   integrity sha512-6T4sY2mqKNNUWNg+Yov+VY3mhoo1JmyJqJIvxnWbQoHHNKgOAUsq8nDQHdXizFVnpdkg33va3KC0KNaSdP+TXA==

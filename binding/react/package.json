@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-react",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "React component for Rhino Web SDK",
   "entry": "src/index.ts",
   "module": "dist/esm/index.js",
@@ -37,7 +37,7 @@
     "@babel/plugin-transform-runtime": "^7.18.2",
     "@babel/preset-env": "^7.18.2",
     "@babel/runtime": "^7.18.3",
-    "@picovoice/web-voice-processor": "=4.0.2",
+    "@picovoice/web-voice-processor": "~4.0.2",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^18.1.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
@@ -63,6 +63,6 @@
     "react-dom": ">=17"
   },
   "dependencies": {
-    "@picovoice/rhino-web": "=2.1.7"
+    "@picovoice/rhino-web": "=2.1.8"
   }
 }

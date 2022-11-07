@@ -1647,18 +1647,18 @@
   dependencies:
     esquery "^1.0.1"
 
-"@picovoice/rhino-angular@=2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-2.1.4.tgz#bc009efbb65d511c7a16126fa4410b951bd7b422"
-  integrity sha512-znfm4Ku9R5XbPPBIirGaW7AQ6rrZgJ5BNCcXj6KF60T0PVuVdZt56kcuW4QC6UOi6QSAnReewbeyb6j8HxhoBA==
+"@picovoice/rhino-angular@latest":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-2.1.5.tgz#1b37092ce7f8f5202bbe1e945fe4e7685761d524"
+  integrity sha512-jsujKoQy7uqsYt5NWyGg4KllxdIlUUvWIH28we5lNuTx/o6fdai84xFC6OBeJxoj7F4KFz7Tu+7PpQNJa3nHnQ==
   dependencies:
-    "@picovoice/rhino-web" "=2.1.7"
+    "@picovoice/rhino-web" "=2.1.8"
     tslib "^2.3.0"
 
-"@picovoice/rhino-web@=2.1.7":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.7.tgz#25d415d6c8e89cfe51586e765da8f57ea63298f7"
-  integrity sha512-RC6jYgxIJbLFtvnRuh464Fb97XydIC+dEeAGxf6GQeTZgVvSzTsJTjga2Hn+pPDGbYN9ILhMBZ0xNKefXe5DkA==
+"@picovoice/rhino-web@=2.1.8":
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.8.tgz#f38eb598482d4c34ab403019aa0a13d347c9135d"
+  integrity sha512-g6VnEMWcmnc/9IamyRBjj8CuQcJgSBjPC0uqYdVNXphaqTPtMWTvfeO33wN3Nl1zmcSsUJXkGH2gZyCjw337Mg==
   dependencies:
     "@picovoice/web-utils" "=1.2.8"
 

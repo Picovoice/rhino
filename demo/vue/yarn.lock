@@ -1075,17 +1075,17 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@picovoice/rhino-vue@~2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-vue/-/rhino-vue-2.1.3.tgz#86168156d221cb5b332d5b3f938c242eb822bd73"
-  integrity sha512-cHHU8zo6Mp2ojvPt7bAPCAwMHqLPnZD7t5lbMFoGsJmHI/vS+Nb5IJdxr5ucSno/uFECDxygIKxIy7MsoQ1+bw==
+"@picovoice/rhino-vue@latest":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-vue/-/rhino-vue-2.1.4.tgz#6005401a95d9448ba45e45779231d75ff2f0d40a"
+  integrity sha512-hp008AJklKyYclym2lFzsGDNkGdclYeBv7Gpi+3ahsqlecHWa57v5QAWNe7yqzU2XqjSnbX4dBcNvR6jTIMkVQ==
   dependencies:
-    "@picovoice/rhino-web" "=2.1.7"
+    "@picovoice/rhino-web" "=2.1.8"
 
-"@picovoice/rhino-web@=2.1.7":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.7.tgz#25d415d6c8e89cfe51586e765da8f57ea63298f7"
-  integrity sha512-RC6jYgxIJbLFtvnRuh464Fb97XydIC+dEeAGxf6GQeTZgVvSzTsJTjga2Hn+pPDGbYN9ILhMBZ0xNKefXe5DkA==
+"@picovoice/rhino-web@=2.1.8":
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.8.tgz#f38eb598482d4c34ab403019aa0a13d347c9135d"
+  integrity sha512-g6VnEMWcmnc/9IamyRBjj8CuQcJgSBjPC0uqYdVNXphaqTPtMWTvfeO33wN3Nl1zmcSsUJXkGH2gZyCjw337Mg==
   dependencies:
     "@picovoice/web-utils" "=1.2.8"
 

@@ -1411,17 +1411,17 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@picovoice/rhino-react@~2.1.5":
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-2.1.5.tgz#18e939d18d0bd9203cfd312ac6dadec02c0f4b71"
-  integrity sha512-EB6geK0yU6A/AceeRphtqb9kCojHiuISdtDaLLqumQ3r1KroWiCWO4bDsW0xRs9ZnI+GaBnP0dhqG+PUVlnm/w==
+"@picovoice/rhino-react@latest":
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-2.1.6.tgz#1bc9fb88ecc9eef5e5f3a58f9fb8f79b4cf6aaa9"
+  integrity sha512-Q81zSw1xJFRjpA+GAqQig4YV8eNu9JMwLIVqES0qXCcJjeuRmADVeAGLgg4sJEIjDTUgt6JtD2NtebVZOEJAvg==
   dependencies:
-    "@picovoice/rhino-web" "=2.1.7"
+    "@picovoice/rhino-web" "=2.1.8"
 
-"@picovoice/rhino-web@=2.1.7":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.7.tgz#25d415d6c8e89cfe51586e765da8f57ea63298f7"
-  integrity sha512-RC6jYgxIJbLFtvnRuh464Fb97XydIC+dEeAGxf6GQeTZgVvSzTsJTjga2Hn+pPDGbYN9ILhMBZ0xNKefXe5DkA==
+"@picovoice/rhino-web@=2.1.8":
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.8.tgz#f38eb598482d4c34ab403019aa0a13d347c9135d"
+  integrity sha512-g6VnEMWcmnc/9IamyRBjj8CuQcJgSBjPC0uqYdVNXphaqTPtMWTvfeO33wN3Nl1zmcSsUJXkGH2gZyCjw337Mg==
   dependencies:
     "@picovoice/web-utils" "=1.2.8"
 

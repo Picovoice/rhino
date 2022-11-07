@@ -3,7 +3,7 @@
   "description": "Rhino Speech-to-Intent engine for web browsers (via WebAssembly)",
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "keywords": [
     "rhino",
     "web",
@@ -27,7 +27,6 @@
     "start": "cross-env TARGET='debug' rollup --config --watch",
     "watch": "rollup --config --watch",
     "format": "prettier --write \"**/*.{js,ts,json}\"",
-    "postinstall": "yarn copywasm",
     "copywasm": "node scripts/copy_wasm.js",
     "setup-test": "node scripts/setup_test.js && npx pvbase64 -i ./test/rhino_params.pv -o ./test/rhino_params.js"
   },
