@@ -216,17 +216,30 @@ If any arguments require changes, call `release` then `init` again to initialize
 ## Contexts
 
 Create custom contexts using the [Picovoice Console](https://console.picovoice.ai/).
-Train the Rhino context model for the target platform WebAssembly (WASM).
-Inside the downloaded `.zip` file, there will be a `.rhn` file which is the context model file in binary format.
+Train and download a Rhino context file (`.rhn`) for the target platform `Web (WASM)`.
+This model file can be used directly with `publicPath`, but, if `base64` is preferable, convert the `.rhn` file to a
+base64 JavaScript variable using the built-in `pvbase64` script:
 
-Similar to the model file (`.pv`), keyword files (`.rhn`) are saved in IndexedDB to be used by Web Assembly.
-Either `base64` or `publicPath` must be set to instantiate Rhino. If both are set, Rhino will use
-the `base64` model.
+```console
+npx pvbase64 -i ${CONTEXT_FILE}.rhn -o ${CONTEXT_BASE64}.js -n ${CONTEXT_BASE64_VAR_NAME}
+```
 
-## Non-English Languages
+Similar to the model file (`.pv`), context files (`.rhn`) are saved in IndexedDB to be used by Web Assembly.
+Either `base64` or `publicPath` must be set for the context to instantiate Rhino.
+If both are set, Rhino will use the `base64` model.
 
-In order to detect non-English inferences you need to use the corresponding model file (`.pv`). The model files for all
-supported languages are available [here](https://github.com/Picovoice/rhino/tree/master/lib/common).
+```typescript
+const contextModel = {
+  publicPath: "${CONTEXT_RELATIVE_PATH}",
+  // or
+  base64: "${CONTEXT_BASE64_STRING}",
+}
+```
+
+## Switching Languages
+
+In order to make inferences in different language you need to use the corresponding model file (`.pv`).
+The model files for all supported languages are available [here](https://github.com/Picovoice/rhino/tree/master/lib/common).
 
 ## Demo
 

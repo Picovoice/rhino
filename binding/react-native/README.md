@@ -123,7 +123,7 @@ async createRhinoManager() {
     try{
         this._rhinoManager = await RhinoManager.create(
             accessKey,
-            '/path/to/context/file.rhn',
+            "/path/to/context/file.rhn",
             inferenceCallback);
     } catch (err) {
         // handle error
@@ -201,7 +201,7 @@ async createRhino() {
     try {
         this._rhino = await Rhino.create(
             accessKey,
-            '/path/to/context/file.rhn');
+            "/path/to/context/file.rhn");
     } catch (err) {
         // handle error
     }
@@ -263,6 +263,8 @@ This will bundle your models together when the app is built.
 
 ### Using Custom Context
 
+Pass the file paths (relative to the assets/resource) directory:
+
 ```javascript
 const accessKey = "${ACCESS_KEY}"
 
@@ -282,6 +284,8 @@ try {
 }
 ```
 
+Alternatively, if the context file is deployed to the device with a different method, the absolute path to the file on device can be used.
+
 ## Non-English Contexts
 
 In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](https://github.com/Picovoice/rhino/tree/master/lib/common).
@@ -289,5 +293,3 @@ In order to run inference on non-English contexts you need to use the correspond
 ## Demo App
 
 Check out the [Rhino React Native demo](https://github.com/Picovoice/rhino/tree/master/demo/react-native) to see what it looks like to use Rhino in a cross-platform app!
-
-

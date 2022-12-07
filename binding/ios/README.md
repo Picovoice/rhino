@@ -172,6 +172,8 @@ To add a custom context to your iOS application you must include it in your app 
 let contextPath = Bundle.main.path(forResource: "context_ios", ofType: "rhn")
 ```
 
+Alternatively, if the context file is deployed to the device with a different method, the absolute path to the file on device can be used.
+
 ## Non-English Contexts
 
 In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](../../lib/common).
