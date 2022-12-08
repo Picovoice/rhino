@@ -72,7 +72,9 @@ try {
 } catch (RhinoException e) { }
 ```
 
-The context file is an .rhn file obtained from the [Picovoice Console](https://console.picovoice.ai/) that you can store in your Android assets folder (`src/main/assets`) and pass the relative path into the Rhino Builder. The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. The `inferenceCallback` parameter is a `RhinoManagerCallback` that will be invoked when Rhino has returned an inference result.
+The context file is an .rhn file obtained from the [Picovoice Console](https://console.picovoice.ai/) that you can store in your Android assets folder (`src/main/assets`) and pass the relative path into the Rhino Builder. The `appContext` parameter is the Android application context - this is used to extract Rhino resources from the APK. Alternatively, if the context file is deployed to the device with a different method, the absolute path to the file on device can be used.
+
+The `inferenceCallback` parameter is a `RhinoManagerCallback` that will be invoked when Rhino has returned an inference result.
 The callback should accept a `RhinoInference` object that will contain the inference results.
 
 ```java
@@ -95,7 +97,7 @@ You can override the default Rhino model file and/or the inference sensitivity.
 
 Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating-point number within [0, 1]. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate.
 
-The model file contains the parameters for the speech-to-intent engine. To change the language that Rhino understands, you'll pass in a different model file. This should also be placed under the `assets` folder.
+The model file contains the parameters for the speech-to-intent engine. To change the language that Rhino understands, you'll pass in a different model file. This should also be placed under the `assets` folder. Alternatively, if the model file is deployed to the device with a different method, the absolute path to the file on device can be used.
 
 There is also the option to pass an error callback, which will be invoked if an error is encountered while RhinoManager is processing audio.
 
@@ -216,6 +218,8 @@ try {
                         .build(appContext);
 } catch (RhinoException e) { }
 ```
+
+Alternatively, if the context file is deployed to the device with a different method, the absolute path to the file on device can be used.
 
 ## Non-English Contexts
 
