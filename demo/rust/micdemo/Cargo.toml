@@ -4,7 +4,7 @@ version = "0.1.1"
 edition = "2018"
 
 [dependencies]
-chrono = "0.4.19"
+chrono = "0.4.23"
 clap = "3.2.3"
 ctrlc = "3.2.2"
 hound = "3.4.0"
