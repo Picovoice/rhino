@@ -41,6 +41,7 @@
   "homepage": "https://github.com/Picovoice/rhino/#readme",
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
+    "@picovoice/react-native-voice-processor": "^1.0.4",
     "@react-native-community/bob": "^0.16.2",
     "@react-native-community/eslint-config": "^2.0.0",
     "@release-it/conventional-changelog": "^1.1.4",
@@ -60,13 +61,12 @@
     "react": "16.11.0",
     "react-native": "0.62.2",
     "release-it": "^13.5.8",
-    "typescript": "^3.8.3",
-    "@picovoice/react-native-voice-processor": "^1.0.4"
+    "typescript": "^3.8.3"
   },
   "peerDependencies": {
+    "@picovoice/react-native-voice-processor": "*",
     "react": ">= 16.11",
-    "react-native": ">= 0.62",
-    "@picovoice/react-native-voice-processor": "*"
+    "react-native": ">= 0.62"
   },
   "jest": {
     "preset": "react-native",
@@ -134,5 +134,5 @@
       "typescript"
     ]
   },
-  "dependencies": { }
+  "dependencies": {}
 }
