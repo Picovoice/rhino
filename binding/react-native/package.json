@@ -125,5 +125,19 @@
     "trailingComma": "es5",
     "useTabs": false
   },
-  "dependencies": {}
+  "dependencies": {},
+  "files": [
+    "*",
+    "!node_modules",
+    "!pkg"
+  ],
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  }
 }
