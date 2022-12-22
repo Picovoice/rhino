@@ -12,9 +12,7 @@
           :disabled="state.isLoaded"
         />
       </label>
-      <button class="start-button" v-on:click="rhnInit">
-          Start Rhino
-      </button>
+      <button class="start-button" v-on:click="rhnInit">Start Rhino</button>
     </h3>
     <h3>Rhino Loaded: {{ state.isLoaded }}</h3>
     <h3>Listening: {{ state.isListening }}</h3>
@@ -22,14 +20,22 @@
     <p class="error-message" v-if="state.error !== null">
       {{ JSON.stringify(state.error) }}
     </p>
-    <button v-on:click="rhnProcess" :disabled="state.error !== null || state.isListening || !state.isLoaded">
+    <button
+      v-on:click="rhnProcess"
+      :disabled="state.error !== null || state.isListening || !state.isLoaded"
+    >
       Process
     </button>
-    <button v-on:click="rhnRelease" :disabled="state.error !== null || state.isListening || !state.isLoaded">
+    <button
+      v-on:click="rhnRelease"
+      :disabled="state.error !== null || state.isListening || !state.isLoaded"
+    >
       Release
     </button>
     <h3>Inference:</h3>
-    <pre v-if="state.inference !== null">{{ JSON.stringify(state.inference, null, 2) }}</pre>
+    <pre v-if="state.inference !== null">{{
+      JSON.stringify(state.inference, null, 2)
+    }}</pre>
     <hr />
     <div>
       <h3>Context Info:</h3>
@@ -46,17 +52,12 @@ import { useRhino } from "@picovoice/rhino-vue";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import rhinoParams from "@/lib/rhino_params";
+import rhinoParams from "@/lib/rhino_params.js";
 
 const VoiceWidget = defineComponent({
   name: "VoiceWidget",
   setup() {
-    const {
-      state,
-      init,
-      process,
-      release
-    } = useRhino();
+    const { state, init, process, release } = useRhino();
 
     const accessKey = ref("");
 

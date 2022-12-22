@@ -53,14 +53,14 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ```console
 yarn
-yarn serve
+yarn start
 ```
 
 (or)
 
 ```console
 npm install
-npm run serve
+npm run start
 ```
 
 The command-line output will provide you with a localhost link and port to open in your browser.
