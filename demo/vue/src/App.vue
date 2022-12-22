@@ -10,8 +10,8 @@ import { defineComponent, defineAsyncComponent } from "vue";
 export default defineComponent({
   name: "App",
   components: {
-    VoiceWidget: defineAsyncComponent(() =>
-      import("./components/VoiceWidget.vue")
+    VoiceWidget: defineAsyncComponent(
+      () => import("./components/VoiceWidget.vue")
     ),
   },
   data: function () {
@@ -25,7 +25,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 body {
   padding: 2rem;
 }
