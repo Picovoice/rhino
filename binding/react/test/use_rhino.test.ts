@@ -106,7 +106,7 @@ describe('Rhino binding', () => {
         expect(result.current.inference?.slots).to.deep.eq(testInfo.inference.slots);
       }).then(() => {
         expect(result.current.isListening).to.be.false;
-      })
+      });
     });
   }
 
@@ -140,7 +140,7 @@ describe('Rhino binding', () => {
         expect(result.current.inference?.intent).to.be.null;
       }).then(() => {
         expect(result.current.isListening).to.be.false;
-      })
+      });
     });
   }
 });
