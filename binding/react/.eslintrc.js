@@ -36,6 +36,13 @@ module.exports = {
           }
         ]
       }
+    },
+    {
+      files: ['test/**/*.ts', 'cypress/**/*.ts'],
+      extends: ['plugin:cypress/recommended'],
+      rules: {
+        'no-unused-expressions': 0
+      }
     }
   ],
 

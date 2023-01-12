@@ -11,11 +11,30 @@
       let workerInferences = [];
       let processError = null;
 
+      let audioContext;
+
       const coffeeMaker64 =
         'cmhpbm8yLjEuMNEaAAAJAAAAcGljb3ZvaWNl//////////8AAAAAkAsAACBjb250ZXh0OgogIGV4cHJlc3Npb25zOgogICAgb3JkZXJCZXZlcmFnZToKICAgICAgLSAiJGJldmVyYWdlOmJldmVyYWdlIgogICAgICAtICIkbnVtYmVyT2ZTaG90czpudW1iZXJPZlNob3RzICRiZXZlcmFnZTpiZXZlcmFnZSIKICAgICAgLSAiJHNpemU6c2l6ZSAkYmV2ZXJhZ2U6YmV2ZXJhZ2UiCiAgICAgIC0gIiRudW1iZXJPZlNob3RzOm51bWJlck9mU2hvdHMgJHNpemU6c2l6ZSAkYmV2ZXJhZ2U6YmV2ZXJhZ2UiCiAgICAgIC0gIiRzaXplOnNpemUgJG51bWJlck9mU2hvdHM6bnVtYmVyT2ZTaG90cyAkYmV2ZXJhZ2U6YmV2ZXJhZ2UiCiAgICAgIC0gIlticmV3LCBjYW4gSSBnZXQsIGNhbiBJIGhhdmUsIEkgd2FudCwgZ2V0IG1lLCBnaXZlIG1lLCBJJ2QgbGlrZSwgbWFrZSBtZSwgbWF5IEkgaGF2ZSwgSSdsbCBoYXZlLCBJJ2xsIHRha2UsIEknbGwgZ2V0XSBbYSwgYW5dICRiZXZlcmFnZTpiZXZlcmFnZSIKICAgICAgLSAiW2JyZXcsIGNhbiBJIGdldCwgY2FuIEkgaGF2ZSwgSSB3YW50LCBnZXQgbWUsIGdpdmUgbWUsIEknZCBsaWtlLCBtYWtlIG1lLCBtYXkgSSBoYXZlLCBJJ2xsIGhhdmUsIEknbGwgdGFrZSwgSSdsbCBnZXRdIFthLCBhbl0gJG51bWJlck9mU2hvdHM6bnVtYmVyT2ZTaG90cyAkYmV2ZXJhZ2U6YmV2ZXJhZ2UiCiAgICAgIC0gIlticmV3LCBjYW4gSSBnZXQsIGNhbiBJIGhhdmUsIEkgd2FudCwgZ2V0IG1lLCBnaXZlIG1lLCBJJ2QgbGlrZSwgbWFrZSBtZSwgbWF5IEkgaGF2ZSwgSSdsbCBoYXZlLCBJJ2xsIHRha2UsIEknbGwgZ2V0XSBbYSwgYW5dICRzaXplOnNpemUgJGJldmVyYWdlOmJldmVyYWdlIgogICAgICAtICJbYnJldywgY2FuIEkgZ2V0LCBjYW4gSSBoYXZlLCBJIHdh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';
 
+      function convertAudioBuffer(audioBuffer) {
+        const f32PCM = audioBuffer.getChannelData(0);
+        const i16PCM = new Int16Array(f32PCM.length);
+
+        const INT16_MAX = 32767;
+        const INT16_MIN = -32768;
+        i16PCM.set(
+          f32PCM.map((f) => {
+            let i = Math.trunc(f * INT16_MAX);
+            if (f > INT16_MAX) i = INT16_MAX;
+            if (f < INT16_MIN) i = INT16_MIN;
+            return i;
+          })
+        );
+        return i16PCM;
+      }
+
       window.onload = function () {
-        const audioContext = new (window.AudioContext ||
+        audioContext = new (window.AudioContext ||
           window.webKitAudioContext)({ sampleRate: 16000 });
 
         function readAudioFile(selectedFile, callback) {
@@ -29,20 +48,7 @@
 
         function audioToPCM(selectedFile, callback) {
           readAudioFile(selectedFile, audioBuffer => {
-            const f32PCM = audioBuffer.getChannelData(0);
-            const i16PCM = new Int16Array(f32PCM.length);
-
-            const INT16_MAX = 32767;
-            const INT16_MIN = -32768;
-            i16PCM.set(
-              f32PCM.map(f => {
-                let i = Math.trunc(f * INT16_MAX);
-                if (f > INT16_MAX) i = INT16_MAX;
-                if (f < INT16_MIN) i = INT16_MIN;
-                return i;
-              })
-            );
-            callback(i16PCM);
+            callback(convertAudioBuffer(audioBuffer));
           });
         }
 
@@ -84,10 +90,37 @@
         document.body.appendChild(p);
       }
 
+      async function loadAudioFile(filepath) {
+        return fetch(filepath)
+          .then(data => data.arrayBuffer())
+          .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+          .then(audioBuffer => convertAudioBuffer(audioBuffer))
+      }
+
+      async function loadTestData() {
+        return fetch('test_data.json').then((response) => response.json())
+      }
+
       function assertEquals(expected, actual, failureMessage) {
-        if (expected !== actual) {
-          throw new Error(failureMessage);
+        if (expected === actual) {
+          return;
         }
+
+        if (typeof expected === "object" && typeof actual === "object") {
+          if (Object.keys(expected).length !== Object.keys(actual).length) {
+            throw new Error(failureMessage);
+          }
+
+          for (const key of Object.keys(expected)) {
+            if (expected[key] !== actual[key]) {
+              throw new Error(failureMessage);
+            }
+          }
+
+          return;
+        }
+
+        throw new Error(failureMessage);
       }
 
       function assertTruthy(expected, failureMessage) {
@@ -525,6 +558,54 @@
 
           await handle.release();
           writeMessage("Test UTF-8 path... done!")
+
+          const testData = await loadTestData()
+          for (const testInfo of testData.tests.within_context) {
+            writeMessage(`Testing within_context for ${testInfo.language}...`);
+            let handle = await RhinoWeb.Rhino.create(
+              accessKey,
+              {
+                publicPath: `contexts/${testInfo.context_name}_wasm.rhn`,
+                forceWrite: true,
+              },
+              rhinoInferenceCallback,
+              {
+                publicPath: testInfo.language === 'en' ? "rhino_params.pv" : `rhino_params_${testInfo.language}.pv`,
+                forceWrite: true,
+              });
+              const testPcm = await loadAudioFile(
+                `audio_samples/test_within_context${(testInfo.language === 'en' ? '': '_' + testInfo.language)}.wav`
+              )
+
+            inference = await rhinoProcessPCM(handle, testPcm);
+            assertEquals(inference.intent, testInfo.inference.intent);
+            assertEquals(inference.slots, testInfo.inference.slots);
+            handle.release()
+            writeMessage(`Testing within_context for ${testInfo.language}... done!`);
+          }
+
+          for (const testInfo of testData.tests.out_of_context) {
+            writeMessage(`Testing out_of_context for ${testInfo.language}...`);
+            let handle = await RhinoWeb.Rhino.create(
+              accessKey,
+              {
+                publicPath: `contexts/${testInfo.context_name}_wasm.rhn`,
+                forceWrite: true,
+              },
+              rhinoInferenceCallback,
+              {
+                publicPath: testInfo.language === 'en' ? "rhino_params.pv" : `rhino_params_${testInfo.language}.pv`,
+                forceWrite: true,
+              });
+              const testPcm = await loadAudioFile(
+                `audio_samples/test_out_of_context${(testInfo.language === 'en' ? '': '_' + testInfo.language)}.wav`
+              )
+
+            inference = await rhinoProcessPCM(handle, testPcm);
+            assertEquals(inference.intent, null);
+            handle.release()
+            writeMessage(`Testing out_of_context for ${testInfo.language}... done!`);
+          }
 
           writeMessage('Test passed!');
         } catch (error) {

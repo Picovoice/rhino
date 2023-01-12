@@ -2,5 +2,9 @@ node_modules
 dist
 lib/pv_rhino*.wasm
 src/rhino_64.ts
-test/rhino_params.js
-test/rhino_params.pv
+contexts/*.rhn
+test/rhino_params*.js
+test/rhino_params*.pv
+test/test_data.json
+test/contexts
+test/audio_samples
