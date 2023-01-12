@@ -3,7 +3,9 @@ const { join } = require('path');
 
 console.log('Copying the rhino models...');
 
-const outputDirectory = join(__dirname, '..', 'test');
+const fixturesDirectory = join(__dirname, '..', 'cypress', 'fixtures');
+const staticDirectory = join(__dirname, '..', 'static');
+const testDirectory = join(__dirname, '..', 'test');
 
 const paramsSourceDirectory = join(
   __dirname,
@@ -25,7 +27,7 @@ const testDataSource = join(
 );
 
 
-console.log("Copying the RHN model...");
+console.log("Copying the PPN model...");
 
 const sourceDirectory = join(
   __dirname,
@@ -36,26 +38,25 @@ const sourceDirectory = join(
 );
 
 try {
-  fs.mkdirSync(outputDirectory, { recursive: true });
-
+  fs.mkdirSync(join(staticDirectory), { recursive: true });
   fs.readdirSync(paramsSourceDirectory).forEach(file => {
-    fs.copyFileSync(join(paramsSourceDirectory, file), join(outputDirectory, file));
+    fs.copyFileSync(join(paramsSourceDirectory, file), join(staticDirectory, file));
   });
 
-  fs.copyFileSync(testDataSource, join(outputDirectory, 'test_data.json'));
+  fs.copyFileSync(testDataSource, join(testDirectory, 'test_data.json'));
 
-  fs.mkdirSync(join(outputDirectory, 'contexts'), { recursive: true });
+  fs.mkdirSync(join(staticDirectory, 'contexts'), { recursive: true });
   fs.readdirSync(sourceDirectory).forEach(folder => {
     if (folder.includes("contexts")) {
       fs.readdirSync(join(sourceDirectory, folder, 'wasm')).forEach(file => {
-        fs.copyFileSync(join(sourceDirectory, folder, 'wasm', file), join(outputDirectory, 'contexts', file));
+        fs.copyFileSync(join(sourceDirectory, folder, 'wasm', file), join(staticDirectory, 'contexts', file));
       })
     }
   });
 
-  fs.mkdirSync(join(outputDirectory, 'audio_samples'), { recursive: true });
+  fs.mkdirSync(join(fixturesDirectory, 'audio_samples'), { recursive: true });
   fs.readdirSync(join(sourceDirectory, 'audio_samples')).forEach(file => {
-    fs.copyFileSync(join(sourceDirectory, 'audio_samples', file), join(outputDirectory, 'audio_samples', file));
+    fs.copyFileSync(join(sourceDirectory, 'audio_samples', file), join(fixturesDirectory, 'audio_samples', file));
   });
 } catch (error) {
   console.error(error);

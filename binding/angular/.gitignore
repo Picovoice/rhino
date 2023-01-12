@@ -40,3 +40,10 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Test files
+cypress/**/*.wav
+static/*.pv
+static/**/*.rhn
+test/*.js
+test/**/*.json

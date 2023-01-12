@@ -46,7 +46,13 @@ jobs:
       run: yarn install
 
     - name: Build
-      run: yarn build rhino-angular --prod
+      run: yarn build rhino-angular
 
     - name: Lint
       run: yarn lint
+    
+    - name: Setup test
+      run: yarn setup-test
+
+    - name: Run test
+      run: yarn test --env ACCESS_KEY=${{secrets.PV_VALID_ACCESS_KEY}}
