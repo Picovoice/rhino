@@ -5,7 +5,7 @@
   "description": "A basic demo to show how to use Rhino for web browsers, using the IIFE version of the library",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npx pvbase64 -i ../../lib/common/rhino_params.pv -o ./rhino_params.js && ncp ../../resources/contexts/wasm/clock_wasm.rhn ./",
+    "postinstall": "npx pvbase64 -i ../../lib/common/rhino_params.pv -o ./rhino_params.js && ncp ../../resources/contexts/wasm/clock_wasm.rhn ./clock_wasm.rhn",
     "start": "http-server -a localhost -p 5000"
   },
   "keywords": [
