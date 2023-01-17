@@ -100,7 +100,8 @@ static struct option long_options[] = {
 };
 
 void print_usage(const char *program_name) {
-    fprintf(stderr,
+    fprintf(
+            stderr,
             "Usage : %s -a ACCESS_KEY -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -w WAV_PATH [-t SENSITIVITY] "
             "[-u, --endpoint_duration_sec] [-e, --require_endpoint (true,false)]\n",
             program_name);
