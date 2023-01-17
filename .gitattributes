@@ -10,4 +10,6 @@ binding/react/** linguist-detectable=false
 binding/react-native/** linguist-detectable=false
 binding/unity/** linguist-detectable=false
 binding/vue/** linguist-detectable=false
+binding/web/scripts/** linguist-detectable=false
+binding/web/test/** linguist-detectable=false
 *.py linguist-detectable=true
