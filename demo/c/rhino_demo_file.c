@@ -214,14 +214,14 @@ int picovoice_main(int argc, char *argv[]) {
     (*pv_rhino_get_intent_func)(const pv_rhino_t *, const char **, int32_t *, const char ***, const char ***) =
     load_symbol(rhino_library, "pv_rhino_get_intent");
     if (!pv_rhino_get_intent_func) {
-        print_dl_error("failed to load 'pv_rhino_get_intent'");
+        print_dl_error("failed to load `pv_rhino_get_intent`");
         exit(1);
     }
 
     pv_status_t (*pv_rhino_free_slots_and_values_func)(const pv_rhino_t *, const char **, const char **) =
     load_symbol(rhino_library, "pv_rhino_free_slots_and_values");
     if (!pv_rhino_free_slots_and_values_func) {
-        print_dl_error("failed to load 'pv_rhino_free_slots_and_values'");
+        print_dl_error("failed to load `pv_rhino_free_slots_and_values`");
         exit(1);
     }
 
