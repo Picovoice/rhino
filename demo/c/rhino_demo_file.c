@@ -166,13 +166,13 @@ int picovoice_main(int argc, char *argv[]) {
 
     const char *(*pv_status_to_string_func)(pv_status_t) = load_symbol(rhino_library, "pv_status_to_string");
     if (!pv_status_to_string_func) {
-        print_dl_error("failed to load 'pv_status_to_string'");
+        print_dl_error("failed to load `pv_status_to_string`");
         exit(1);
     }
 
     int32_t (*pv_sample_rate_func)() = load_symbol(rhino_library, "pv_sample_rate");
     if (!pv_sample_rate_func) {
-        print_dl_error("failed to load 'pv_sample_rate'");
+        print_dl_error("failed to load `pv_sample_rate`");
         exit(1);
     }
 
