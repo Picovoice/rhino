@@ -11,5 +11,5 @@ binding/react-native/** linguist-detectable=false
 binding/unity/** linguist-detectable=false
 binding/vue/** linguist-detectable=false
 binding/web/ linguist-detectable=false
-binding/web/src linguist-detectable=true
+binding/web/src/rhino.ts linguist-detectable=true
 *.py linguist-detectable=true

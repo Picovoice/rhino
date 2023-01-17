@@ -240,7 +240,7 @@ int picovoice_main(int argc, char *argv[]) {
     drwav f;
 
     if (!drwav_init_file(&f, wav_path, NULL)) {
-        fprintf(stderr, "failed to open wav file at '%s'.", wav_path);
+        fprintf(stderr, "failed to open wav file at `%s`.", wav_path);
         exit(1);
     }
 
