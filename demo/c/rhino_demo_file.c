@@ -227,13 +227,13 @@ int picovoice_main(int argc, char *argv[]) {
 
     int32_t (*pv_rhino_frame_length_func)() = load_symbol(rhino_library, "pv_rhino_frame_length");
     if (!pv_rhino_frame_length_func) {
-        print_dl_error("failed to load 'pv_rhino_frame_length'n");
+        print_dl_error("failed to load `pv_rhino_frame_length`");
         exit(1);
     }
 
     const char *(*pv_rhino_version_func)() = load_symbol(rhino_library, "pv_rhino_version");
     if (!pv_rhino_version_func) {
-        print_dl_error("failed to load 'pv_rhino_version'");
+        print_dl_error("failed to load `pv_rhino_version`");
         exit(1);
     }
 
