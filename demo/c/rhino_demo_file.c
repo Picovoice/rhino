@@ -186,13 +186,13 @@ int picovoice_main(int argc, char *argv[]) {
             pv_rhino_t **) =
     load_symbol(rhino_library, "pv_rhino_init");
     if (!pv_rhino_init_func) {
-        print_dl_error("failed to load 'pv_rhino_init'");
+        print_dl_error("failed to load `pv_rhino_init`");
         exit(1);
     }
 
     void (*pv_rhino_delete_func)(pv_rhino_t *) = load_symbol(rhino_library, "pv_rhino_delete");
     if (!pv_rhino_delete_func) {
-        print_dl_error("failed to load 'pv_rhino_delete'");
+        print_dl_error("failed to load `pv_rhino_delete`");
         exit(1);
     }
 
