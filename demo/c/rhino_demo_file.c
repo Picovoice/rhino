@@ -199,14 +199,14 @@ int picovoice_main(int argc, char *argv[]) {
     pv_status_t (*pv_rhino_process_func)(pv_rhino_t *, const int16_t *, bool *) =
     load_symbol(rhino_library, "pv_rhino_process");
     if (!pv_rhino_process_func) {
-        print_dl_error("failed to load 'pv_rhino_process'");
+        print_dl_error("failed to load `pv_rhino_process`");
         exit(1);
     }
 
     pv_status_t (*pv_rhino_is_understood_func)(const pv_rhino_t *, bool *) =
     load_symbol(rhino_library, "pv_rhino_is_understood");
     if (!pv_rhino_is_understood_func) {
-        print_dl_error("failed to load 'pv_rhino_is_understood'");
+        print_dl_error("failed to load `pv_rhino_is_understood`");
         exit(1);
     }
 
