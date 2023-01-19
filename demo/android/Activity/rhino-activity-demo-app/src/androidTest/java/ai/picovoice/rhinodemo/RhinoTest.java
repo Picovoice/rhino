@@ -16,16 +16,25 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ai.picovoice.rhino.Rhino;
 import ai.picovoice.rhino.RhinoException;
@@ -39,7 +48,7 @@ public class RhinoTest {
 
         @Test
         public void testInitSuccessSimple() throws RhinoException {
-            File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
             Rhino r = new Rhino.Builder()
                     .setAccessKey(accessKey)
                     .setContextPath(contextPath.getAbsolutePath())
@@ -55,7 +64,7 @@ public class RhinoTest {
 
         @Test
         public void testInitSuccessWithCustomModelPath() throws RhinoException {
-            File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
             File modelPath = new File(testResourcesPath, "model_files/rhino_params.pv");
             Rhino r = new Rhino.Builder()
                     .setAccessKey(accessKey)
@@ -69,7 +78,7 @@ public class RhinoTest {
 
         @Test
         public void testInitSuccessWithCustomSensitivity() throws RhinoException {
-            File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
             Rhino r = new Rhino.Builder()
                     .setAccessKey(accessKey)
                     .setContextPath(contextPath.getAbsolutePath())
@@ -82,7 +91,7 @@ public class RhinoTest {
 
         @Test
         public void testInitSuccessWithCustomEndpointDurationSec() throws RhinoException {
-            File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
             Rhino r = new Rhino.Builder()
                     .setAccessKey(accessKey)
                     .setContextPath(contextPath.getAbsolutePath())
@@ -95,7 +104,7 @@ public class RhinoTest {
 
         @Test
         public void testInitSuccessWithRequireEndpointFalse() throws RhinoException {
-            File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
             Rhino r = new Rhino.Builder()
                     .setAccessKey(accessKey)
                     .setContextPath(contextPath.getAbsolutePath())
@@ -109,7 +118,7 @@ public class RhinoTest {
         @Test
         public void testInitFailWithMismatchedLanguage() {
             boolean didFail = false;
-            File contextPath = new File(testResourcesPath, "context_files/beleuchtung_android.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/de/beleuchtung_android.rhn");
             File modelPath = new File(testResourcesPath, "model_files/rhino_params.pv");
             try {
                 new Rhino.Builder()
@@ -127,7 +136,7 @@ public class RhinoTest {
         @Test
         public void testInitFailWithNoAccessKey() {
             boolean didFail = false;
-            File contextPath = new File(testResourcesPath, "context_files/éclairage_intelligent_android.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/fr/éclairage_intelligent_android.rhn");
             try {
                 new Rhino.Builder()
                         .setContextPath(contextPath.getAbsolutePath())
@@ -172,7 +181,7 @@ public class RhinoTest {
         @Test
         public void testInitFailWithInvalidModelPath() {
             boolean didFail = false;
-            File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
             File modelPath = new File(testResourcesPath, "bad_path/bad_path.pv");
             try {
                 new Rhino.Builder()
@@ -190,7 +199,7 @@ public class RhinoTest {
         @Test
         public void testInitFailWithInvalidSensitivity() {
             boolean didFail = false;
-            File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
             try {
                 new Rhino.Builder()
                         .setAccessKey(accessKey)
@@ -207,7 +216,7 @@ public class RhinoTest {
         @Test
         public void testInitFailWithInvalidEndpointDurationSec() {
             boolean didFail = false;
-            File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
             try {
                 new Rhino.Builder()
                         .setAccessKey(accessKey)
@@ -224,7 +233,7 @@ public class RhinoTest {
         @Test
         public void testInitFailWithWrongPlatform() {
             boolean didFail = false;
-            File contextPath = new File(testResourcesPath, "context_files/coffee_maker_linux.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_linux.rhn");
             try {
                 new Rhino.Builder()
                         .setAccessKey(accessKey)
@@ -240,7 +249,7 @@ public class RhinoTest {
 
         @Test
         public void testInitWithNonAsciiModelName() throws RhinoException {
-            File contextPath = new File(testResourcesPath, "context_files/iluminación_inteligente_android.rhn");
+            File contextPath = new File(testResourcesPath, "context_files/es/iluminación_inteligente_android.rhn");
             File modelPath = new File(testResourcesPath, "model_files/rhino_params_es.pv");
             Rhino r = new Rhino.Builder()
                     .setAccessKey(accessKey)
@@ -275,92 +284,45 @@ public class RhinoTest {
         public Map<String, String> expectedSlots;
 
         @Parameterized.Parameters(name = "{2}")
-        public static Collection<Object[]> initParameters() {
-            return Arrays.asList(new Object[][]{
-                    {
-                            "model_files/rhino_params.pv",
-                            "context_files/coffee_maker_android.rhn",
-                            "audio_samples/test_within_context.wav",
-                            true,
-                            "orderBeverage",
-                            new HashMap<String, String>() {{
-                                put("beverage", "americano");
-                                put("numberOfShots", "double shot");
-                                put("size", "medium");
-                            }}
-                    },
-                    {
-                            "model_files/rhino_params_es.pv",
-                            "context_files/iluminación_inteligente_android.rhn",
-                            "audio_samples/test_within_context_es.wav",
-                            true,
-                            "changeColor",
-                            new HashMap<String, String>() {{
-                                put("location", "habitación");
-                                put("color", "rosado");
-                            }}
-                    },
-                    {
-                            "model_files/rhino_params_de.pv",
-                            "context_files/beleuchtung_android.rhn",
-                            "audio_samples/test_within_context_de.wav",
-                            true,
-                            "changeState",
-                            new HashMap<String, String>() {{
-                                put("state", "aus");
-                            }}
-                    },
-                    {
-                            "model_files/rhino_params_fr.pv",
-                            "context_files/éclairage_intelligent_android.rhn",
-                            "audio_samples/test_within_context_fr.wav",
-                            true,
-                            "changeColor",
-                            new HashMap<String, String>() {{
-                                put("color", "violet");
-                            }}
-                    },
-                    {
-                            "model_files/rhino_params_it.pv",
-                            "context_files/illuminazione_android.rhn",
-                            "audio_samples/test_within_context_it.wav",
-                            true,
-                            "spegnereLuce",
-                            new HashMap<String, String>() {{
-                                put("luogo", "bagno");
-                            }}
-                    },
-                    {
-                            "model_files/rhino_params_ja.pv",
-                            "context_files/sumāto_shōmei_android.rhn",
-                            "audio_samples/test_within_context_ja.wav",
-                            true,
-                            "色変更",
-                            new HashMap<String, String>() {{
-                                put("色", "青");
-                            }}
-                    },
-                    {
-                            "model_files/rhino_params_ko.pv",
-                            "context_files/seumateu_jomyeong_android.rhn",
-                            "audio_samples/test_within_context_ko.wav",
-                            true,
-                            "changeColor",
-                            new HashMap<String, String>() {{
-                                put("color", "파란색");
-                            }}
-                    },
-                    {
-                            "model_files/rhino_params_pt.pv",
-                            "context_files/luz_inteligente_android.rhn",
-                            "audio_samples/test_within_context_pt.wav",
-                            true,
-                            "ligueLuz",
-                            new HashMap<String, String>() {{
-                                put("lugar", "cozinha");
-                            }}
-                    },
-            });
+        public static Collection<Object[]> initParameters() throws IOException {
+            String testDataJsonString = getTestDataString();
+
+            JsonObject testDataJson = JsonParser.parseString(testDataJsonString).getAsJsonObject();
+            JsonArray withinContextDataJson = testDataJson.getAsJsonObject("tests").getAsJsonArray("within_context");
+
+            List<Object[]> parameters = new ArrayList<>();
+            for (int i = 0; i < withinContextDataJson.size(); i++) {
+                JsonObject testData = withinContextDataJson.get(i).getAsJsonObject();
+                String language = testData.get("language").getAsString();
+                String contextName = testData.get("context_name").getAsString();
+                JsonObject inferenceJson = testData.getAsJsonObject("inference");
+
+                String modelFile = String.format("model_files/rhino_params_%s.pv", language);
+                String contextFile = String.format("context_files/%s/%s_android.rhn", language, contextName);
+                String audioFile = String.format("audio_samples/test_within_context_%s.wav", language);
+
+                String intent = inferenceJson.get("intent").getAsString();
+                HashMap<String, String> slots = new HashMap<String, String>();
+                for (Map.Entry<String, JsonElement> entry : inferenceJson.getAsJsonObject("slots").asMap().entrySet()) {
+                    slots.put(entry.getKey(), entry.getValue().getAsString());
+                }
+
+                if (Objects.equals(language, "en")) {
+                    modelFile = "model_files/rhino_params.pv";
+                    audioFile = "audio_samples/test_within_context.wav";
+                }
+
+                parameters.add(new Object[] {
+                        modelFile,
+                        contextFile,
+                        audioFile,
+                        true,
+                        intent,
+                        slots,
+                });
+            }
+
+            return parameters;
         }
 
         @Test
@@ -400,49 +362,35 @@ public class RhinoTest {
         public String testAudioFile;
 
         @Parameterized.Parameters(name = "{2}")
-        public static Collection<Object[]> initParameters() {
-            return Arrays.asList(new Object[][]{
-                    {
-                            "model_files/rhino_params.pv",
-                            "context_files/coffee_maker_android.rhn",
-                            "audio_samples/test_out_of_context.wav",
-                    },
-                    {
-                            "model_files/rhino_params_es.pv",
-                            "context_files/iluminación_inteligente_android.rhn",
-                            "audio_samples/test_out_of_context_es.wav",
-                    },
-                    {
-                            "model_files/rhino_params_de.pv",
-                            "context_files/beleuchtung_android.rhn",
-                            "audio_samples/test_out_of_context_de.wav",
-                    },
-                    {
-                            "model_files/rhino_params_fr.pv",
-                            "context_files/éclairage_intelligent_android.rhn",
-                            "audio_samples/test_out_of_context_fr.wav",
-                    },
-                    {
-                            "model_files/rhino_params_it.pv",
-                            "context_files/illuminazione_android.rhn",
-                            "audio_samples/test_out_of_context_it.wav",
-                    },
-                    {
-                            "model_files/rhino_params_ja.pv",
-                            "context_files/sumāto_shōmei_android.rhn",
-                            "audio_samples/test_out_of_context_ja.wav",
-                    },
-                    {
-                            "model_files/rhino_params_ko.pv",
-                            "context_files/seumateu_jomyeong_android.rhn",
-                            "audio_samples/test_out_of_context_ko.wav",
-                    },
-                    {
-                            "model_files/rhino_params_pt.pv",
-                            "context_files/luz_inteligente_android.rhn",
-                            "audio_samples/test_out_of_context_pt.wav",
-                    },
-            });
+        public static Collection<Object[]> initParameters() throws IOException {
+            String testDataJsonString = getTestDataString();
+
+            JsonObject testDataJson = JsonParser.parseString(testDataJsonString).getAsJsonObject();
+            JsonArray outOfContextDataJson = testDataJson.getAsJsonObject("tests").getAsJsonArray("out_of_context");
+
+            List<Object[]> parameters = new ArrayList<>();
+            for (int i = 0; i < outOfContextDataJson.size(); i++) {
+                JsonObject testData = outOfContextDataJson.get(i).getAsJsonObject();
+                String language = testData.get("language").getAsString();
+                String contextName = testData.get("context_name").getAsString();
+
+                String modelFile = String.format("model_files/rhino_params_%s.pv", language);
+                String contextFile = String.format("context_files/%s/%s_android.rhn", language, contextName);
+                String audioFile = String.format("audio_samples/test_out_of_context_%s.wav", language);
+
+                if (Objects.equals(language, "en")) {
+                    modelFile = "model_files/rhino_params.pv";
+                    audioFile = "audio_samples/test_out_of_context.wav";
+                }
+
+                parameters.add(new Object[] {
+                        modelFile,
+                        contextFile,
+                        audioFile,
+                });
+            }
+
+            return parameters;
         }
 
         @Test

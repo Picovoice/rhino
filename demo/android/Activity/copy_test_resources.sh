@@ -1,34 +1,42 @@
-if [ ! -d "./rhino-activity-demo-app/src/androidTest/assets/test_resources/audio_samples" ]
-then 
+LIB_DIR=../../../lib
+RESOURCE_DIR=../../../resources
+ASSET_DIR=./rhino-activity-demo-app/src/androidTest/assets/test_resources
+
+if [ ! -d "${ASSET_DIR}/audio_samples" ]
+then
     echo "Creating test audio samples directory..."
-    mkdir -p ./rhino-activity-demo-app/src/androidTest/assets/test_resources/audio_samples
+    mkdir -p ${ASSET_DIR}/audio_samples
 fi
 
 echo "Copying test audio samples..."
-cp ../../../resources/audio_samples/*.wav ./rhino-activity-demo-app/src/androidTest/assets/test_resources/audio_samples
+cp ${RESOURCE_DIR}/audio_samples/*.wav ${ASSET_DIR}/audio_samples
 
-if [ ! -d "./rhino-activity-demo-app/src/androidTest/assets/test_resources/model_files" ]
-then 
+if [ ! -d "${ASSET_DIR}/model_files" ]
+then
     echo "Creating test model files directory..."
-    mkdir -p ./rhino-activity-demo-app/src/androidTest/assets/test_resources/model_files
+    mkdir -p ${ASSET_DIR}/model_files
 fi
 
 echo "Copying test model files..."
-cp ../../../lib/common/*.pv ./rhino-activity-demo-app/src/androidTest/assets/test_resources/model_files
+cp ${LIB_DIR}/common/*.pv ${ASSET_DIR}/model_files
 
-if [ ! -d "./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files" ]
+if [ ! -d "${ASSET_DIR}/context_files" ]
 then
     echo "Creating test context files directory..."
-    mkdir -p ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files
+    mkdir -p ${ASSET_DIR}/context_files
 fi
 
 echo "Copying test context files..."
-cp ../../../resources/contexts/android/coffee_maker_android.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/coffee_maker_android.rhn
-cp ../../../resources/contexts/linux/coffee_maker_linux.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/coffee_maker_linux.rhn
-cp ../../../resources/contexts_de/android/beleuchtung_android.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/beleuchtung_android.rhn
-cp ../../../resources/contexts_es/android/iluminación_inteligente_android.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/iluminación_inteligente_android.rhn
-cp ../../../resources/contexts_fr/android/éclairage_intelligent_android.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/éclairage_intelligent_android.rhn
-cp ../../../resources/contexts_it/android/illuminazione_android.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/illuminazione_android.rhn
-cp ../../../resources/contexts_ja/android/sumāto_shōmei_android.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/sumāto_shōmei_android.rhn
-cp ../../../resources/contexts_ko/android/seumateu_jomyeong_android.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/seumateu_jomyeong_android.rhn
-cp ../../../resources/contexts_pt/android/luz_inteligente_android.rhn ./rhino-activity-demo-app/src/androidTest/assets/test_resources/context_files/luz_inteligente_android.rhn
+mkdir -p ${ASSET_DIR}/context_files/en/
+cp ${RESOURCE_DIR}/contexts/linux/coffee_maker_linux.rhn ${ASSET_DIR}/context_files/en/
+cp ${RESOURCE_DIR}/contexts/android/*_android.rhn ${ASSET_DIR}/context_files/en/
+
+for d in ${RESOURCE_DIR}/contexts_*; do
+    LANGUAGE=$(echo "${d}" | cut -d'_' -f2)
+
+    mkdir -p ${ASSET_DIR}/context_files/${LANGUAGE}
+    cp ${RESOURCE_DIR}/contexts_${LANGUAGE}/android/*_android.rhn ${ASSET_DIR}/context_files/${LANGUAGE}/
+done
+
+echo "Copying test data file..."
+cp ${RESOURCE_DIR}/test/test_data.json ${ASSET_DIR}/
