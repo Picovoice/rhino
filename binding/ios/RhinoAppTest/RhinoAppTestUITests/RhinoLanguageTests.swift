@@ -12,17 +12,32 @@ import XCTest
 
 import Rhino
 
-class RhinoWithinContextTests: BaseTest {
-    static var testData: [[Any]] = [
-        ["en", "coffee_maker", "orderBeverage", ["beverage": "americano", "numberOfShots": "double shot", "size": "medium"]],
-        ["es", "iluminación_inteligente", "changeColor", ["location": "habitación", "color": "rosado"]],
-        ["de", "beleuchtung", "changeState", ["state": "aus"]],
-        ["fr", "éclairage_intelligent", "changeColor", ["color": "violet"]],
-        ["it", "illuminazione", "spegnereLuce", ["luogo": "bagno"]],
-        ["ja", "sumāto_shōmei", "色変更", ["色": "青"]],
-        ["ko", "seumateu_jomyeong", "changeColor", ["color": "파란색"]],
-        ["pt", "luz_inteligente", "ligueLuz", ["lugar": "cozinha"]]]
+struct TestData : Decodable {
+    var tests: TestDataTests
+}
 
+struct TestDataTests : Decodable {
+    var within_context: [TestDataWithinContextTest]
+    var out_of_context: [TestDataOutOfContextTest]
+}
+
+struct TestDataWithinContextTest : Decodable {
+    var language: String
+    var context_name: String
+    var inference: TestDataInference
+}
+
+struct TestDataInference : Decodable {
+    var intent: String
+    var slots: [String : String]
+}
+
+struct TestDataOutOfContextTest : Decodable {
+    var language: String
+    var context_name: String
+}
+
+class RhinoWithinContextTests: BaseTest {
     var language: String = ""
     var modelPath: String = ""
     var contextPath: String = ""
@@ -34,21 +49,29 @@ class RhinoWithinContextTests: BaseTest {
         get {
             let xcTestSuite = XCTestSuite(name: NSStringFromClass(self))
             let bundle = Bundle(for: self)
-
-            for testCase in testData {
-                let suffix = (testCase[0]) as! String == "en" ? "" : "_\(testCase[0])"
-                for invocation in testInvocations {
-                    let newTestCase = RhinoWithinContextTests(invocation: invocation)
-                    newTestCase.language = testCase[0] as! String
-                    newTestCase.modelPath = bundle.path(forResource: "rhino_params\(suffix)", ofType: "pv")!
-                    newTestCase.contextPath = bundle.path(forResource: "\(testCase[1])_ios", ofType: "rhn")!
-                    newTestCase.testAudioPath = bundle.url(forResource: "test_within_context\(suffix)", withExtension: "wav")!
-                    newTestCase.expectedIntent = testCase[2] as! String
-                    newTestCase.expectedSlots = testCase[3] as! [String: String]
-                    xcTestSuite.addTest(newTestCase)
+            
+            let testDataJsonUrl = bundle.url(forResource: "test_data", withExtension: "json", subdirectory: "test_resources")!
+            do {
+                let testDataJsonData = try Data(contentsOf: testDataJsonUrl)
+                let testData = try JSONDecoder().decode(TestData.self, from: testDataJsonData)
+            
+                for testCase in testData.tests.within_context {
+                    let suffix = testCase.language == "en" ? "" : "_\(testCase.language)"
+                    for invocation in testInvocations {
+                        let newTestCase = RhinoWithinContextTests(invocation: invocation)
+                        newTestCase.language = testCase.language
+                        newTestCase.modelPath = bundle.path(forResource: "rhino_params\(suffix)", ofType: "pv", inDirectory: "test_resources/model_files")!
+                        newTestCase.contextPath = bundle.path(forResource: "\(testCase.context_name)_ios", ofType: "rhn", inDirectory: "test_resources/context_files/\(testCase.language)")!
+                        newTestCase.testAudioPath = bundle.url(forResource: "test_within_context\(suffix)", withExtension: "wav", subdirectory: "test_resources/audio_samples")!
+                        newTestCase.expectedIntent = testCase.inference.intent
+                        newTestCase.expectedSlots = testCase.inference.slots
+                        xcTestSuite.addTest(newTestCase)
+                    }
                 }
+            } catch {
+                return xcTestSuite
             }
-
+            
             return xcTestSuite
         }
     }
@@ -76,16 +99,6 @@ class RhinoWithinContextTests: BaseTest {
 }
 
 class RhinoOutOfContextTests: BaseTest {
-    static var testData: [[Any]] = [
-        ["en", "coffee_maker"],
-        ["es", "iluminación_inteligente"],
-        ["de", "beleuchtung"],
-        ["fr", "éclairage_intelligent"],
-        ["it", "illuminazione"],
-        ["ja", "sumāto_shōmei"],
-        ["ko", "seumateu_jomyeong"],
-        ["pt", "luz_inteligente"]]
-
     var language: String = ""
     var modelPath: String = ""
     var contextPath: String = ""
@@ -96,18 +109,26 @@ class RhinoOutOfContextTests: BaseTest {
             let xcTestSuite = XCTestSuite(name: NSStringFromClass(self))
             let bundle = Bundle(for: self)
 
-            for testCase in testData {
-                let suffix = (testCase[0]) as! String == "en" ? "" : "_\(testCase[0])"
-                for invocation in testInvocations {
-                    let newTestCase = RhinoOutOfContextTests(invocation: invocation)
-                    newTestCase.language = testCase[0] as! String
-                    newTestCase.modelPath = bundle.path(forResource: "rhino_params\(suffix)", ofType: "pv")!
-                    newTestCase.contextPath = bundle.path(forResource: "\(testCase[1])_ios", ofType: "rhn")!
-                    newTestCase.testAudioPath = bundle.url(forResource: "test_out_of_context\(suffix)", withExtension: "wav")!
-                    xcTestSuite.addTest(newTestCase)
+            let testDataJsonUrl = bundle.url(forResource: "test_data", withExtension: "json", subdirectory: "test_resources")!
+            do {
+                let testDataJsonData = try Data(contentsOf: testDataJsonUrl)
+                let testData = try JSONDecoder().decode(TestData.self, from: testDataJsonData)
+            
+                for testCase in testData.tests.out_of_context {
+                    let suffix = testCase.language == "en" ? "" : "_\(testCase.language)"
+                    for invocation in testInvocations {
+                        let newTestCase = RhinoOutOfContextTests(invocation: invocation)
+                        newTestCase.language = testCase.language
+                        newTestCase.modelPath = bundle.path(forResource: "rhino_params\(suffix)", ofType: "pv", inDirectory: "test_resources/model_files")!
+                        newTestCase.contextPath = bundle.path(forResource: "\(testCase.context_name)_ios", ofType: "rhn", inDirectory: "test_resources/context_files/\(testCase.language)")!
+                        newTestCase.testAudioPath = bundle.url(forResource: "test_out_of_context\(suffix)", withExtension: "wav", subdirectory: "test_resources/audio_samples")!
+                        xcTestSuite.addTest(newTestCase)
+                    }
                 }
+            } catch {
+                return xcTestSuite
             }
-
+            
             return xcTestSuite
         }
     }
