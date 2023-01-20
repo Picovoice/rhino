@@ -11,9 +11,9 @@
       }
     ],
     "ignorePaths": [
-      "../../demo/c/dr_libs/**/*",
-      "../../demo/c/pvrecorder/**/*",
-  
+      "../../../demo/c/dr_libs/**/*",
+      "../../../demo/c/pvrecorder/**/*",
+
       "**/*.a",
       "**/*.dll",
       "**/*.dylib",
@@ -26,21 +26,21 @@
       "**/*.wasm",
       "**/*.wav",
       "**/*.unitypackage",
-      "../../lib/ios/**/*",
-  
+      "../../../lib/ios/**/*",
+
       "**/*.unity",
       "**/*.mixer",
       "**/*.meta",
-      "../../binding/unity/Packages/**/*",
-      "../../binding/unity/ProjectSettings/**/*",
+      "../../../binding/unity/Packages/**/*",
+      "../../../binding/unity/ProjectSettings/**/*",
 
 
       "**/*.csproj",
       "**/*.targets",
-  
+
       "**/AndroidManifest.xml",
       "**/activity_main.xml",
-  
+
       "**/*.xcconfig",
       "**/*.podspec",
       "**/Podfile",
@@ -50,19 +50,19 @@
       "**/*.pbxproj",
       "**/*.xcscheme",
       "**/*.m",
-  
+
       "**/build.gradle",
       "**/gradle-wrapper.properties",
       "**/gradle.properties",
       "**/gradlew",
       "**/gradlew.bat",
       "**/proguard-rules.pro",
-  
+
       "**/package.json",
       "**/packages-lock.json",
       "**/tsconfig.json",
       "**/tslint.json",
-  
+
       "**/*.keystore",
       "**/BUCK",
       "**/build_defs.bzl",
