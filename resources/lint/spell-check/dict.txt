@@ -8,7 +8,6 @@ bagno
 beaglebone
 behaviour
 beleuchtung
-beleuchtung
 calcsize
 camelcase
 Cdecl
@@ -36,8 +35,6 @@ downsampled
 downsampling
 drwav
 dylib
-éclairage
-éclairage
 endpointing
 exopackage
 filedemo
@@ -48,13 +45,8 @@ habitación
 HMODULE
 IIFE
 illuminazione
-illuminazione
-iluminación
 iluminación
 instanceof
-inteligente
-inteligente
-inteligente
 inteligente
 IntelliJ
 interactable
@@ -94,7 +86,6 @@ pvrecorder
 pvrhino
 pvrhinodemo
 reactnative
-reactnative
 Realtek
 Renderless
 repr
@@ -106,18 +97,15 @@ rodio
 rosado
 RTLD
 seumateu
-seumateu
-shōmei
 shōmei
 signup
 soundfile
-spegnere
 spegnere
 stdbool
 stdint
 stdlib
 struct
-sumāto
+sublist
 sumāto
 tmpdir
 TTFB
@@ -130,3 +118,4 @@ wavefile
 wavspec
 xcframework
 xcworkspace
+éclairage
