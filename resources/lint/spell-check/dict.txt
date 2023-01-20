@@ -68,7 +68,9 @@ Mathf
 micdemo
 microcontrollers
 NETCOREAPP
+Newtonsoft
 NumChans
+nunit
 Okhttp
 Overridable
 packagr

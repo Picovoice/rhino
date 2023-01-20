@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Rhino/Demo/PorcupineDemo.unity
+    path: Assets/Rhino/Demo/RhinoDemo.unity
     guid: e9e580b23954aaf4cb292ba1066ff433
   m_configObjects: {}
