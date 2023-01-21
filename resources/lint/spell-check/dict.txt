@@ -93,6 +93,7 @@ RGBO
 rhinodemo
 rhinofiledemo
 rhinomicdemo
+rhinotestapp
 rodio
 rosado
 RTLD
@@ -107,6 +108,8 @@ stdlib
 struct
 sublist
 sumāto
+testcase
+testcases
 tmpdir
 TTFB
 unitypackage

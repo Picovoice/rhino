@@ -145,7 +145,7 @@ async function withinContextTest(testcases): Result[] {
       audioFilePath,
       testcase.inference,
     );
-    result.testName = `Within context test for ${testcase.language} ${testcase.wakeword}`;
+    result.testName = `Within context test for ${testcase.language} ${testcase.context_name}`;
     results.push(result);
   }
   return results;
@@ -164,7 +164,7 @@ async function outOfContextTest(testcases): Result[] {
       audioFilePath,
       null,
     );
-    result.testName = `Out of context test for ${testcase.language}`;
+    result.testName = `Out of context test for ${testcase.language} ${testcase.context_name}`;
     results.push(result);
   }
   return results;
