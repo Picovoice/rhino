@@ -79,11 +79,6 @@ PODS:
   - ios-voice-processor (1.0.3)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
-  - Rhino-iOS (2.1.2):
-    - ios-voice-processor (~> 1.0.2)
-  - rhino-react-native (2.1.4):
-    - Rhino-iOS (~> 2.1.2)
-    - React
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -386,6 +381,11 @@ PODS:
     - React-jsi (= 0.71.0)
     - React-logger (= 0.71.0)
     - React-perflogger (= 0.71.0)
+  - Rhino-iOS (2.1.3):
+    - ios-voice-processor (~> 1.0.2)
+  - rhino-react-native (2.1.6):
+    - React
+    - Rhino-iOS (~> 2.1.3)
   - RNFS (2.20.0):
     - React-Core
   - SocketRocket (0.6.0)
@@ -423,7 +423,6 @@ DEPENDENCIES:
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
   - OpenSSL-Universal (= 1.1.1100)
-  - "rhino-react-native (from `../node_modules/@picovoice/rhino-react-native`)"
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -454,6 +453,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "rhino-react-native (from `../node_modules/@picovoice/rhino-react-native`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -490,8 +490,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
-  rhino-react-native:
-    :path: "../node_modules/@picovoice/rhino-react-native"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -548,6 +546,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  rhino-react-native:
+    :path: "../node_modules/@picovoice/rhino-react-native"
   RNFS:
     :path: "../node_modules/react-native-fs"
   Yoga:
@@ -574,8 +574,6 @@ SPEC CHECKSUMS:
   ios-voice-processor: 65b25a8db69ea25ffba0eeef37bae71a982f34cc
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  Rhino-iOS: 884f40edadf4b72fac6fae768d3247bdb48841f7
-  rhino-react-native: 08b9c7fba702ea5068f490c66d4d51ccc18c4333
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: dea3e4163184ea57c50288c15c32c1529265c58f
   RCTTypeSafety: a0834ab89159a346731e8aae55ad6e2cce61c327
@@ -604,11 +602,13 @@ SPEC CHECKSUMS:
   React-RCTVibration: 55c91eccdbd435d7634efbe847086944389475b0
   React-runtimeexecutor: ac80782d9d76ba2b0f709f4de0c427fe33c352dc
   ReactCommon: 20e38a9be5fe1341b5e422220877cc94034776ba
+  Rhino-iOS: a211c1c9da37d4c9187e1ce5bba6a2c06c6ce4b0
+  rhino-react-native: 05c458c7c872fe6c3eaa085f3c520dc0243d90b0
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: c618b544ff8bd8865cdca602f00cbcdb92fd6d31
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: fb1d50a66017a3c342cb20b8a61e6ff53757e3ba
+PODFILE CHECKSUM: c3e6af2e1218c8d216a4030cfcc1eeb4829f5ec1
 
 COCOAPODS: 1.11.2
