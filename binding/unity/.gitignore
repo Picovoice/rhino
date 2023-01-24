@@ -68,3 +68,6 @@ Assets/Rhino/Plugins/**/*.dll
 Assets/Rhino/VoiceProcessor/**
 Assets/Rhino/Demo/**
 .vsconfig
+
+Assets/StreamingAssets/test/
+Assets/InitTestScene*
