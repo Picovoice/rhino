@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'demo/react-native/test-app/**'
+      - 'binding/react-native/test-app/**'
       - 'lib/common/**'
       - 'lib/android/**'
       - 'lib/ios/**'
@@ -14,7 +14,7 @@ on:
   pull_request:
     branches: [ master ]
     paths:
-      - 'demo/react-native/test-app/**'
+      - 'binding/react-native/test-app/**'
       - 'lib/common/**'
       - 'lib/android/**'
       - 'lib/ios/**'
@@ -24,7 +24,7 @@ on:
 
 defaults:
   run:
-    working-directory: demo/react-native/test-app/RhinoTestApp
+    working-directory: binding/react-native/test-app/RhinoTestApp
 
 jobs:
   test-android:
@@ -65,7 +65,7 @@ jobs:
         ./copy_test_resources.sh
 
     - name: Cocoapods install
-      working-directory: demo/react-native/test-app/RhinoTestApp/ios
+      working-directory: binding/react-native/test-app/RhinoTestApp/ios
       run: pod install
 
     - name: Inject AppID
