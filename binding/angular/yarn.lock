@@ -1662,24 +1662,24 @@
     node-addon-api "^3.2.1"
     node-gyp-build "^4.3.0"
 
-"@picovoice/rhino-web@=2.1.9":
-  version "2.1.9"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.9.tgz#5b391de6af03af0c1e6c39dc635cc9742e992982"
-  integrity sha512-APAJO+rkg4+UAO5LWpVsWTOvZidMTDbb9MAI8CvRIm9+UJ9pl2H42IkhesusAwD7qtuoAWfcpcsgDppO7GFpBw==
+"@picovoice/rhino-web@=2.1.10":
+  version "2.1.10"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.10.tgz#dea3c296e04d5ef8a66494208271caf091c8e074"
+  integrity sha512-fbyuc7djpR4XK5XP8m24jYA494jpA0q3TrIWLCl39H+7DMjpeENrJHXbvodfXhiT2HZeEtCYOanISmnekVqrrA==
   dependencies:
-    "@picovoice/web-utils" "=1.2.9"
+    "@picovoice/web-utils" "=1.2.11"
 
-"@picovoice/web-utils@=1.2.9":
-  version "1.2.9"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.2.9.tgz#080bc377e2fa71388f40655904d2485ef586f517"
-  integrity sha512-vYAV/izQuzy/+3QF/6LlSSJh7l9cIIvD4t9ZJ91vYg2XA9yk0k7V5S+6jxPcyiVMSy8Zlc9kBwCOWZchhlSMwA==
+"@picovoice/web-utils@=1.2.11":
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.2.11.tgz#4a9564eacbacf1b74ba9d0df27c78646fe200e7d"
+  integrity sha512-DtgRXr618LjNLHvcIMKehy7THiJm6Lm1DFaHjHEDLFmIh9NrfYrbw9yosytHq1+n/mV2VfePQPhWsrPMI1JlVw==
   dependencies:
     commander "^9.2.0"
 
-"@picovoice/web-voice-processor@~4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.2.tgz#e7593e560ce7cbe82bd5bae67259643eb099b852"
-  integrity sha512-6T4sY2mqKNNUWNg+Yov+VY3mhoo1JmyJqJIvxnWbQoHHNKgOAUsq8nDQHdXizFVnpdkg33va3KC0KNaSdP+TXA==
+"@picovoice/web-voice-processor@~4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.4.tgz#12140c9a0120e0db9dda80bcf00d7f827f1a8c99"
+  integrity sha512-WZ4PPXU0i/yPzIjd+jbx9VSMF6Shbyf2BXt2U7a6MASJ2KWeG9+zDx6nteDF10cyG3T78G+4EB24tLsdyLVmWw==
 
 "@rollup/plugin-json@^4.1.0":
   version "4.1.0"
