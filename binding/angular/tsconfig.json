@@ -33,5 +33,5 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
-  "exclude": ["node_modules", "dist", "cypress", "test", "cypress.config.ts"]
+  "exclude": ["node_modules", "dist", "cypress"]
 }
