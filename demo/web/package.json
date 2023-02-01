@@ -23,7 +23,7 @@
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
   "dependencies": {
-    "@picovoice/rhino-web": "latest",
+    "@picovoice/rhino-web": "^2.1.10",
     "@picovoice/web-voice-processor": "~4.0.2"
   },
   "devDependencies": {
