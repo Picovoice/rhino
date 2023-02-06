@@ -13,9 +13,10 @@
 mod tests {
     use itertools::Itertools;
     use rodio::{source::Source, Decoder};
+    use serde_json::Value;
     use std::collections::HashMap;
     use std::env;
-    use std::fs::File;
+    use std::fs::{read_to_string, File};
     use std::io::BufReader;
 
     use rhino::util::pv_platform;
@@ -25,16 +26,28 @@ mod tests {
         if language == "en" {
             String::from(path)
         } else {
-            format!("{}_{}", path, language)
+            format!("{path}_{language}")
         }
+    }
+
+    fn load_test_data() -> Value {
+        let test_json_path = format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../resources/test/test_data.json"
+        );
+        let contents: String =
+            read_to_string(test_json_path).expect("Unable to read test_data.json");
+        let test_json: Value =
+            serde_json::from_str(&contents).expect("Unable to parse test_data.json");
+        test_json
     }
 
     fn model_path_by_language(language: &str) -> String {
         format!(
-            "{}{}{}",
+            "{}{}.pv",
             env!("CARGO_MANIFEST_DIR"),
-            append_lang("/../../lib/common/rhino_params", language),
-            ".pv"
+            append_lang("/../../lib/common/rhino_params", language)
         )
     }
 
@@ -95,216 +108,39 @@ mod tests {
 
         if is_within_context {
             assert_eq!(inference.intent.unwrap(), intent);
-
             assert_eq!(inference.slots, slots);
         }
     }
 
-    macro_rules! rhino_tests {
-        ($($test_name:ident: $values:expr,)*) => {
-        $(
-            #[test]
-            fn $test_name() {
-                let (language, context, is_within_context, intent, slots):
-                    (&str, &str, bool, &str, HashMap<&str, &str>) = $values;
-                let mut string_slots = HashMap::new();
-                for (key, value) in slots {
-                    string_slots.insert(String::from(key), String::from(value));
-                }
-                let audio_file_name = format!("{}.wav", stringify!($test_name));
-                run_rhino_test(language, context, is_within_context, intent, string_slots, &audio_file_name);
-            }
-        )*
-        }
-    }
-
-    rhino_tests! {
-        test_within_context_es: (
-            "es",
-            &"iluminación_inteligente",
-            true,
-            "changeColor",
-            HashMap::from([("location", "habitación"), ("color", "rosado")]),
-        ),
-        test_out_of_context_es: (
-            "es",
-            &"iluminación_inteligente",
-            false,
-            "changeColor",
-            HashMap::new(),
-        ),
-        test_within_context_de: (
-            "de",
-            &"beleuchtung",
-            true,
-            "changeState",
-            HashMap::from([("state", "aus")]),
-        ),
-        test_out_of_context_de: (
-            "de",
-            &"beleuchtung",
-            false,
-            "changeState",
-            HashMap::new(),
-        ),
-        test_within_context_fr: (
-            "fr",
-            &"éclairage_intelligent",
-            true,
-            "changeColor",
-            HashMap::from([("color", "violet")]),
-        ),
-        test_out_of_context_fr: (
-            "fr",
-            &"éclairage_intelligent",
-            false,
-            "changeColor",
-            HashMap::new(),
-        ),
-        test_within_context_it: (
-            "it",
-            &"illuminazione",
-            true,
-            "spegnereLuce",
-            HashMap::from([("luogo", "bagno")]),
-        ),
-        test_out_of_context_it: (
-            "it",
-            &"illuminazione",
-            false,
-            "spegnereLuce",
-            HashMap::new(),
-        ),
-        test_within_context_ja: (
-            "ja",
-            &"sumāto_shōmei",
-            true,
-            "色変更",
-            HashMap::from([("色", "青")]),
-        ),
-        test_out_of_context_ja: (
-            "ja",
-            &"sumāto_shōmei",
-            false,
-            "色変更",
-            HashMap::new(),
-        ),
-        test_within_context_ko: (
-            "ko",
-            &"seumateu_jomyeong",
-            true,
-            "changeColor",
-            HashMap::from([("color", "파란색")]),
-        ),
-        test_out_of_context_ko: (
-            "ko",
-            &"seumateu_jomyeong",
-            false,
-            "changeColor",
-            HashMap::new(),
-        ),
-        test_within_context_pt: (
-            "pt",
-            &"luz_inteligente",
-            true,
-            "ligueLuz",
-            HashMap::from([("lugar", "cozinha")]),
-        ),
-        test_out_of_context_pt: (
-            "pt",
-            &"luz_inteligente",
-            false,
-            "ligueLuz",
-            HashMap::new(),
-        ),
-    }
-
     #[test]
     fn test_within_context() {
-        let access_key = env::var("PV_ACCESS_KEY")
-            .expect("Pass the AccessKey in using the PV_ACCESS_KEY env variable");
-        let context_path = format!(
-            "../../resources/contexts/{}/coffee_maker_{}.rhn",
-            pv_platform(),
-            pv_platform(),
-        );
-        let rhino = RhinoBuilder::new(access_key, context_path)
-            .init()
-            .expect("Unable to create Rhino");
+        let test_json: Value = load_test_data();
 
-        let soundfile = BufReader::new(
-            File::open(concat!(
-                env!("CARGO_MANIFEST_DIR"),
-                "/../../resources/audio_samples/test_within_context.wav"
-            ))
-            .unwrap(),
-        );
-        let source = Decoder::new(soundfile).unwrap();
+        for t in test_json["tests"]["within_context"].as_array().unwrap() {
+            let language = t["language"].as_str().unwrap();
+            let context = t["context_name"].as_str().unwrap();
+            let intent = t["inference"]["intent"].as_str().unwrap();
+            let slots_json = t["inference"]["slots"].as_object().unwrap();
+            let mut slots = HashMap::new();
+            slots_json.iter().for_each(|(key, value)| {
+                slots.insert(key.to_string(), String::from(value.as_str().unwrap()));
+            });
 
-        assert_eq!(rhino.sample_rate(), source.sample_rate());
-
-        let mut is_finalized = false;
-        for frame in &source.chunks(rhino.frame_length() as usize) {
-            let frame = frame.collect_vec();
-            if frame.len() == rhino.frame_length() as usize {
-                is_finalized = rhino.process(&frame).unwrap();
-                if is_finalized {
-                    break;
-                }
-            }
+            let test_audio = append_lang("test_within_context", language) + ".wav";
+            run_rhino_test(language, context, true, intent, slots, &test_audio);
         }
-
-        assert!(is_finalized);
-
-        let inference = rhino.get_inference().unwrap();
-
-        assert!(inference.is_understood);
-        assert_eq!(inference.intent.unwrap(), "orderBeverage");
-
-        let mut expected_slot_values = HashMap::new();
-        expected_slot_values.insert(String::from("beverage"), String::from("americano"));
-        expected_slot_values.insert(String::from("numberOfShots"), String::from("double shot"));
-        expected_slot_values.insert(String::from("size"), String::from("medium"));
-
-        assert_eq!(inference.slots, expected_slot_values);
     }
 
     #[test]
     fn test_out_of_context() {
-        let access_key = env::var("PV_ACCESS_KEY")
-            .expect("Pass the AccessKey in using the PV_ACCESS_KEY env variable");
-        let context_path = format!(
-            "../../resources/contexts/{}/coffee_maker_{}.rhn",
-            pv_platform(),
-            pv_platform(),
-        );
-        let rhino = RhinoBuilder::new(access_key, context_path)
-            .init()
-            .expect("Unable to create Rhino");
+        let test_json: Value = load_test_data();
 
-        let soundfile = BufReader::new(
-            File::open(concat!(
-                env!("CARGO_MANIFEST_DIR"),
-                "/../../resources/audio_samples/test_out_of_context.wav"
-            ))
-            .unwrap(),
-        );
-        let source = Decoder::new(soundfile).unwrap();
+        for t in test_json["tests"]["out_of_context"].as_array().unwrap() {
+            let language = t["language"].as_str().unwrap();
+            let context = t["context_name"].as_str().unwrap();
 
-        assert_eq!(rhino.sample_rate(), source.sample_rate());
-
-        let mut is_finalized = false;
-        for frame in &source.chunks(rhino.frame_length() as usize) {
-            let frame = frame.collect_vec();
-            if frame.len() == rhino.frame_length() as usize {
-                is_finalized = rhino.process(&frame).unwrap();
-                if is_finalized {
-                    break;
-                }
-            }
+            let test_audio = append_lang("test_out_of_context", language) + ".wav";
+            run_rhino_test(language, context, false, "", HashMap::new(), &test_audio);
         }
-
-        assert!(is_finalized);
-        assert!(!rhino.get_inference().unwrap().is_understood);
     }
 }

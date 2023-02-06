@@ -1,4 +1,4 @@
-// Copyright 2021-2022 Picovoice Inc.
+// Copyright 2021-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is
 // located in the "LICENSE" file accompanying this source.
@@ -12,9 +12,11 @@ package rhino
 
 import (
 	"encoding/binary"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math"
 	"os"
 	"path/filepath"
@@ -25,36 +27,20 @@ import (
 var (
 	testAccessKey string
 	rhino         Rhino
+	withinContextTestParameters []WithinContextTestData
+	outOfContextTestParameters  []OutOfContextTestData
 )
 
-var withinContextTestParameters = []struct {
+type WithinContextTestData struct {
 	language       string
 	context        string
 	expectedIntent string
 	expectedSlots  map[string]string
-}{
-	{"en", "coffee_maker", "orderBeverage", map[string]string{"beverage": "americano", "numberOfShots": "double shot", "size": "medium"}},
-	{"es", "iluminación_inteligente", "changeColor", map[string]string{"location": "habitación", "color": "rosado"}},
-	{"de", "beleuchtung", "changeState", map[string]string{"state": "aus"}},
-	{"fr", "éclairage_intelligent", "changeColor", map[string]string{"color": "violet"}},
-	{"it", "illuminazione", "spegnereLuce", map[string]string{"luogo": "bagno"}},
-	{"ja", "sumāto_shōmei", "色変更", map[string]string{"色": "青"}},
-	{"ko", "seumateu_jomyeong", "changeColor", map[string]string{"color": "파란색"}},
-	{"pt", "luz_inteligente", "ligueLuz", map[string]string{"lugar": "cozinha"}},
 }
 
-var outOfContextTestParameters = []struct {
+type OutOfContextTestData struct {
 	language string
 	context  string
-}{
-	{"en", "coffee_maker"},
-	{"es", "iluminación_inteligente"},
-	{"de", "beleuchtung"},
-	{"fr", "éclairage_intelligent"},
-	{"it", "illuminazione"},
-	{"ja", "sumāto_shōmei"},
-	{"ko", "seumateu_jomyeong"},
-	{"pt", "luz_inteligente"},
 }
 
 func TestMain(m *testing.M) {
@@ -62,6 +48,7 @@ func TestMain(m *testing.M) {
 	flag.StringVar(&testAccessKey, "access_key", "", "AccessKey for testing")
 	flag.Parse()
 
+	withinContextTestParameters, outOfContextTestParameters = loadTestData()
 	os.Exit(m.Run())
 }
 
@@ -89,6 +76,55 @@ func getTestContextPath(language string, context string) string {
 		osName)
 	contextPath, _ := filepath.Abs(contextRelPath)
 	return contextPath
+}
+
+func loadTestData() ([]WithinContextTestData, []OutOfContextTestData) {
+	content, err := ioutil.ReadFile("../../resources/test/test_data.json")
+	if err != nil {
+		log.Fatalf("Could not read test data json: %v", err)
+	}
+
+	var testData struct {
+		Tests struct {
+			WithinContext []struct {
+				Language string `json:"language"`
+				ContextName  string `json:"context_name"`
+				Inference struct {
+					Intent string `json:"intent"`
+					Slots map[string]string `json:"slots"`
+				} `json:"inference"`
+			} `json:"within_context"`
+			OutOfContext []struct {
+				Language string `json:"language"`
+				ContextName  string `json:"context_name"`
+			} `json:"out_of_context"`
+		} `json:"tests"`
+	}
+	err = json.Unmarshal(content, &testData)
+	if err != nil {
+		log.Fatalf("Could not decode test data json: %v", err)
+	}
+
+	for _, x := range testData.Tests.WithinContext {
+		withinContextTestData := WithinContextTestData{
+			language:      	x.Language,
+			context:       	x.ContextName,
+			expectedIntent:	x.Inference.Intent,
+			expectedSlots:  x.Inference.Slots,
+		}
+
+		withinContextTestParameters = append(withinContextTestParameters, withinContextTestData)
+	}
+
+	for _, x := range testData.Tests.OutOfContext {
+		outOfContextTestData := OutOfContextTestData{
+			language:      	x.Language,
+			context:       	x.ContextName,
+		}
+
+		outOfContextTestParameters = append(outOfContextTestParameters, outOfContextTestData)
+	}
+	return withinContextTestParameters, outOfContextTestParameters
 }
 
 func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {

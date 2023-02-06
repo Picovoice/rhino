@@ -41,6 +41,7 @@ OUT_OF_CONTEXT_PARAMETERS = [
     ['pt', 'luz_inteligente'],
 ]
 
+within_context_parameters, out_of_context_parameters = load_test_data()
 
 class RhinoTestCase(unittest.TestCase):
 
@@ -80,7 +81,7 @@ class RhinoTestCase(unittest.TestCase):
         else:
             self.assertFalse(inference.is_understood, "Shouldn't be able to understand.")
 
-    @parameterized.expand(WITHIN_CONTEXT_PARAMETERS)
+    @parameterized.expand(within_context_parameters)
     def test_within_context(self, language, context_name, is_within_context, intent, slots):
         self.run_rhino(
             language=language,
@@ -89,7 +90,7 @@ class RhinoTestCase(unittest.TestCase):
             intent=intent,
             slots=slots)
 
-    @parameterized.expand(OUT_OF_CONTEXT_PARAMETERS)
+    @parameterized.expand(out_of_context_parameters)
     def test_out_of_context(self, language, context_name):
         self.run_rhino(
             language=language,

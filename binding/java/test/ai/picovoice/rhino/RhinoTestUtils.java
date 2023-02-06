@@ -12,6 +12,13 @@
 
 package ai.picovoice.rhino;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class RhinoTestUtils {
@@ -49,5 +56,13 @@ public class RhinoTestUtils {
                 .resolve("../../resources/audio_samples")
                 .resolve(audioFileName)
                 .toString();
+    }
+
+    public static JsonObject loadTestData() throws IOException {
+        final Path testDataPath = Paths.get(System.getProperty("user.dir"))
+                .resolve("../../resources/test")
+                .resolve("test_data.json");
+        final String testDataContent = new String(Files.readAllBytes(testDataPath), StandardCharsets.UTF_8);
+        return JsonParser.parseString(testDataContent).getAsJsonObject();
     }
 }

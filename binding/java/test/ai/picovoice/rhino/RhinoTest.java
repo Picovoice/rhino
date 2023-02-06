@@ -12,6 +12,9 @@
 
 package ai.picovoice.rhino;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -36,6 +40,55 @@ public class RhinoTest {
 
     private final String accessKey = System.getProperty("pvTestingAccessKey");
     private Rhino rhino;
+
+    private static Stream<Arguments> withinContextProvider() throws IOException {
+        final JsonObject testDataJson = RhinoTestUtils.loadTestData();
+        final JsonArray withinContextData = testDataJson
+                .getAsJsonObject("tests")
+                .getAsJsonArray("within_context");
+
+        final ArrayList<Arguments> testArgs = new ArrayList<>();
+        for (int i = 0; i < withinContextData.size(); i++) {
+            final JsonObject testData = withinContextData.get(i).getAsJsonObject();
+            final String language = testData.get("language").getAsString();
+            final String context = testData.get("context_name").getAsString();
+            final String intent = testData.getAsJsonObject("inference").get("intent").getAsString();
+            HashMap<String, String> expectedSlotValues = new HashMap<String, String>();
+            for (Map.Entry<String, JsonElement> entry : testData.getAsJsonObject("inference").getAsJsonObject("slots").asMap().entrySet()) {
+                expectedSlotValues.put(entry.getKey(), entry.getValue().getAsString());
+            }
+            final String audioFileName = RhinoTestUtils.appendLanguage("test_within_context", language) + ".wav";
+            testArgs.add(Arguments.of(
+                    language,
+                    context,
+                    audioFileName,
+                    intent,
+                    expectedSlotValues)
+            );
+        }
+        return testArgs.stream();
+    }
+
+    private static Stream<Arguments> outOfContextProvider() throws IOException {
+        final JsonObject testDataJson = RhinoTestUtils.loadTestData();
+        final JsonArray outOfContextData = testDataJson
+                .getAsJsonObject("tests")
+                .getAsJsonArray("out_of_context");
+
+        final ArrayList<Arguments> testArgs = new ArrayList<>();
+        for (int i = 0; i < outOfContextData.size(); i++) {
+            final JsonObject testData = outOfContextData.get(i).getAsJsonObject();
+            final String language = testData.get("language").getAsString();
+            final String context = testData.get("context_name").getAsString();
+            final String audioFileName = RhinoTestUtils.appendLanguage("test_out_of_context", language) + ".wav";
+            testArgs.add(Arguments.of(
+                    language,
+                    context,
+                    audioFileName)
+            );
+        }
+        return testArgs.stream();
+    }
 
     @AfterEach
     void tearDown() {
@@ -121,38 +174,6 @@ public class RhinoTest {
         );
     }
 
-    private static Stream<Arguments> withinContextProvider() {
-        return Stream.of(
-                Arguments.of("en", "coffee_maker", "test_within_context.wav", "orderBeverage", new HashMap<String, String>() {{
-                    put("size", "medium");
-                    put("numberOfShots", "double shot");
-                    put("beverage", "americano");
-                }}),
-                Arguments.of("de", "beleuchtung", "test_within_context_de.wav", "changeState", new HashMap<String, String>() {{
-                    put("state", "aus");
-                }}),
-                Arguments.of("es", "iluminación_inteligente", "test_within_context_es.wav", "changeColor", new HashMap<String, String>() {{
-                    put("location", "habitación");
-                    put("color", "rosado");
-                }}),
-                Arguments.of("fr", "éclairage_intelligent", "test_within_context_fr.wav", "changeColor", new HashMap<String, String>() {{
-                    put("color", "violet");
-                }}),
-                Arguments.of("it", "illuminazione", "test_within_context_it.wav", "spegnereLuce", new HashMap<String, String>() {{
-                    put("luogo", "bagno");
-                }}),
-                Arguments.of("ja", "sumāto_shōmei", "test_within_context_ja.wav", "色変更", new HashMap<String, String>() {{
-                    put("色", "青");
-                }}),
-                Arguments.of("ko", "seumateu_jomyeong", "test_within_context_ko.wav", "changeColor", new HashMap<String, String>() {{
-                    put("color", "파란색");
-                }}),
-                Arguments.of("pt", "luz_inteligente", "test_within_context_pt.wav", "ligueLuz", new HashMap<String, String>() {{
-                    put("lugar", "cozinha");
-                }})
-        );
-    }
-
     @ParameterizedTest(name = "testOutOfContext for ''{0}''")
     @MethodSource("outOfContextProvider")
     void testOutOfContext(String language, String context, String audioFileName) throws IOException, UnsupportedAudioFileException, RhinoException {
@@ -167,19 +188,6 @@ public class RhinoTest {
                 false,
                 null,
                 null
-        );
-    }
-
-    private static Stream<Arguments> outOfContextProvider() {
-        return Stream.of(
-                Arguments.of("en", "coffee_maker", "test_out_of_context.wav"),
-                Arguments.of("de", "beleuchtung", "test_out_of_context_de.wav"),
-                Arguments.of("es", "iluminación_inteligente", "test_out_of_context_es.wav"),
-                Arguments.of("fr", "éclairage_intelligent", "test_out_of_context_fr.wav"),
-                Arguments.of("it", "illuminazione", "test_out_of_context_it.wav"),
-                Arguments.of("ja", "sumāto_shōmei", "test_out_of_context_ja.wav"),
-                Arguments.of("ko", "seumateu_jomyeong", "test_out_of_context_ko.wav"),
-                Arguments.of("pt", "luz_inteligente", "test_out_of_context_pt.wav")
         );
     }
 }

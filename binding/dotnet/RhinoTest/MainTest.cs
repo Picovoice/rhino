@@ -17,6 +17,9 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 using Pv;
 
 namespace RhinoTest
@@ -24,12 +27,73 @@ namespace RhinoTest
     [TestClass]
     public class MainTest
     {
-        private static string ACCESS_KEY;
+        private static string _accessKey;
+        private static readonly string _rootDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../../../..");
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext _)
         {
-            ACCESS_KEY = Environment.GetEnvironmentVariable("ACCESS_KEY");
+            _accessKey = Environment.GetEnvironmentVariable("ACCESS_KEY");
+        }
+
+        private static JObject LoadJsonTestData()
+        {
+            string content = File.ReadAllText(Path.Combine(_rootDir, "resources/test/test_data.json"));
+            return JObject.Parse(content);
+        }
+
+        [Serializable]
+        private class InferenceJson
+        {
+            public string intent { get; set; }
+            public Dictionary<string, string> slots { get; set; }
+        }
+
+        [Serializable]
+        private class WithinContextJson
+        {
+            public string language { get; set; }
+            public string context_name { get; set; }
+            public InferenceJson inference { get; set; }
+        }
+
+        public static IEnumerable<object[]> WithinContextTestData
+        {
+            get
+            {
+                JObject testDataJson = LoadJsonTestData();
+                IList<WithinContextJson> withinContextJson = ((JArray)testDataJson["tests"]["within_context"]).ToObject<IList<WithinContextJson>>();
+                return withinContextJson
+                    .Select(x => new object[] {
+                        x.language,
+                        x.context_name,
+                        x.inference.intent,
+                        x.inference.slots
+                    });
+            }
+        }
+
+
+        [Serializable]
+        private class OutOfContextJson
+        {
+            public string language { get; set; }
+            public string context_name { get; set; }
+        }
+
+
+        public static IEnumerable<object[]> OutOfContextTestData
+        {
+            get
+            {
+                JObject testDataJson = LoadJsonTestData();
+                IList<OutOfContextJson> outOfContextJson = ((JArray)testDataJson["tests"]["out_of_context"]).ToObject<IList<OutOfContextJson>>();
+                return outOfContextJson
+                    .Select(x => new object[] {
+                        x.language,
+                        x.context_name,
+                    });
+            }
         }
 
         private static string AppendLanguage(string s, string language) => language == "en" ? s : $"{s}_{language}";
@@ -37,8 +101,8 @@ namespace RhinoTest
         private static string GetContextPath(string language, string context)
         {
             return Path.Combine(
-                _relativeDir,
-                "../../../../../../resources",
+                _rootDir,
+                "resources",
                 AppendLanguage("contexts", language),
                 $"{_env}/{context}_{_env}.rhn"
             );
@@ -48,8 +112,8 @@ namespace RhinoTest
         {
             string file_name = AppendLanguage("rhino_params", language);
             return Path.Combine(
-                _relativeDir,
-                "../../../../../../lib/common",
+                _rootDir,
+                "lib/common",
                 $"{file_name}.pv"
             );
         }
@@ -119,31 +183,18 @@ namespace RhinoTest
         }
 
         [TestMethod]
-        [DataRow("en", "coffee_maker", "orderBeverage", new string[] {"size", "numberOfShots", "beverage"}, new string[] {"medium", "double shot", "americano"})]
-        [DataRow("de", "beleuchtung", "changeState", new string[] {"state"}, new string[] {"aus"})]
-        [DataRow("es", "iluminación_inteligente", "changeColor", new string[] {"location", "color"}, new string[] {"habitación", "rosado"})]
-        [DataRow("fr", "éclairage_intelligent", "changeColor", new string[] {"color"}, new string[] {"violet"})]
-        [DataRow("it", "illuminazione", "spegnereLuce", new string[] {"luogo"}, new string[] {"bagno"})]
-        [DataRow("ja", "sumāto_shōmei", "色変更", new string[] {"色"}, new string[] {"青"})]
-        [DataRow("ko", "seumateu_jomyeong", "changeColor", new string[] {"color"}, new string[] {"파란색"})]
-        [DataRow("pt", "luz_inteligente", "ligueLuz", new string[] {"lugar"}, new string[] {"cozinha"})]
+        [DynamicData(nameof(WithinContextTestData))]
         public void TestWithinContext(
             string language,
             string contextName,
             string expectedIntent,
-            string[] slotKeys,
-            string[] slotValues)
+            Dictionary<string, string> expectedSlots)
         {
             using Rhino rhino = Rhino.Create(
-                ACCESS_KEY,
+                _accessKey,
                 GetContextPath(language, contextName),
                 GetModelPath(language)
             );
-
-            Dictionary<string, string> expectedSlots = new Dictionary<string, string>();
-            for (int i = 0; i < slotKeys.Length; i++) {
-                expectedSlots[slotKeys[i]] = slotValues[i];
-            }
 
             RunTestCase(
                 rhino,
@@ -155,18 +206,11 @@ namespace RhinoTest
         }
 
         [TestMethod]
-        [DataRow("en", "coffee_maker")]
-        [DataRow("de", "beleuchtung")]
-        [DataRow("es", "iluminación_inteligente")]
-        [DataRow("fr", "éclairage_intelligent")]
-        [DataRow("it", "illuminazione")]
-        [DataRow("ja", "sumāto_shōmei")]
-        [DataRow("ko", "seumateu_jomyeong")]
-        [DataRow("pt", "luz_inteligente")]
+        [DynamicData(nameof(OutOfContextTestData))]
         public void TestOutOfContext(string language, string contextName)
         {
             using Rhino rhino = Rhino.Create(
-                ACCESS_KEY,
+                _accessKey,
                 GetContextPath(language, contextName),
                 GetModelPath(language)
             );
@@ -206,7 +250,7 @@ namespace RhinoTest
                                                  RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
                                                     (_arch == Architecture.Arm || _arch == Architecture.Arm64) ? PvLinuxEnv() : "";
 
-        private Rhino InitDefaultRhino() => Rhino.Create(ACCESS_KEY, Path.Combine(_relativeDir, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
+        private Rhino InitDefaultRhino() => Rhino.Create(_accessKey, Path.Combine(_relativeDir, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
 
         public static string PvLinuxEnv()
         {
