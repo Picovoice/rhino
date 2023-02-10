@@ -1,5 +1,5 @@
 /*
-    Copyright 2021 Picovoice Inc.
+    Copyright 2021-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -88,7 +88,11 @@ mod tests {
         let soundfile = BufReader::new(File::open(&soundfile_path).expect(&soundfile_path));
         let source = Decoder::new(soundfile).unwrap();
 
-        assert_eq!(rhino.sample_rate(), source.sample_rate());
+        assert_eq!(
+            rhino.sample_rate(),
+            source.sample_rate(),
+            "`{language}` sample_rate failed for context `{context}`"
+        );
 
         let mut is_finalized = false;
         for frame in &source.chunks(rhino.frame_length() as usize) {
@@ -101,14 +105,27 @@ mod tests {
             }
         }
 
-        assert!(is_finalized);
+        assert_eq!(
+            is_finalized, true,
+            "`{language}` is_finalized failed for context `{context}`"
+        );
         let inference = rhino.get_inference().unwrap();
 
-        assert!(inference.is_understood == is_within_context);
+        assert_eq!(
+            inference.is_understood, is_within_context,
+            "`{language}` is_understood failed for context `{context}`"
+        );
 
         if is_within_context {
-            assert_eq!(inference.intent.unwrap(), intent);
-            assert_eq!(inference.slots, slots);
+            assert_eq!(
+                inference.intent.unwrap(),
+                intent,
+                "`{language}` intent failed for context `{context}`"
+            );
+            assert_eq!(
+                inference.slots, slots,
+                "`{language}` slots failed for context `{context}`"
+            );
         }
     }
 

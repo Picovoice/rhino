@@ -12,8 +12,13 @@ on:
       - 'lib/linux/**'
       - 'lib/mac/**'
       - 'lib/windows/**'
-      - 'resources/**'
-      - '!resources/lint/**'
+      - 'resources/audio_samples/**'
+      - 'resources/contexts*/android/**'
+      - 'resources/contexts*/ios/**'
+      - 'resources/contexts*/linux/**'
+      - 'resources/contexts*/mac/**'
+      - 'resources/contexts*/windows/**'
+      - 'resources/test/**'
       - '.github/workflows/unity.yml'
   pull_request:
     branches: [ master ]
@@ -25,8 +30,13 @@ on:
       - 'lib/linux/**'
       - 'lib/mac/**'
       - 'lib/windows/**'
-      - 'resources/**'
-      - '!resources/lint/**'
+      - 'resources/audio_samples/**'
+      - 'resources/contexts*/android/**'
+      - 'resources/contexts*/ios/**'
+      - 'resources/contexts*/linux/**'
+      - 'resources/contexts*/mac/**'
+      - 'resources/contexts*/windows/**'
+      - 'resources/test/**'
       - '.github/workflows/unity.yml'
 
 defaults:
