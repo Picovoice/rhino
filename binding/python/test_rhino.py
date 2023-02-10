@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2022 Picovoice Inc.
+# Copyright 2018-2023 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -18,29 +18,8 @@ from rhino import Rhino
 from test_util import *
 from util import *
 
-WITHIN_CONTEXT_PARAMETERS = [
-    ['en', 'coffee_maker', True, 'orderBeverage',
-     dict(beverage='americano', numberOfShots='double shot', size='medium')],
-    ['es', 'iluminación_inteligente', True, 'changeColor', dict(location='habitación', color='rosado')],
-    ['de', 'beleuchtung', True, 'changeState', dict(state='aus')],
-    ['fr', 'éclairage_intelligent', True, 'changeColor', dict(color='violet')],
-    ['it', 'illuminazione', True, 'spegnereLuce', dict(luogo='bagno')],
-    ['ja', 'sumāto_shōmei', True, '色変更', dict(色='青')],
-    ['ko', 'seumateu_jomyeong', True, 'changeColor', dict(color='파란색')],
-    ['pt', 'luz_inteligente', True, 'ligueLuz', dict(lugar='cozinha')],
-]
 
-OUT_OF_CONTEXT_PARAMETERS = [
-    ['en', 'coffee_maker'],
-    ['es', 'iluminación_inteligente'],
-    ['de', 'beleuchtung'],
-    ['fr', 'éclairage_intelligent'],
-    ['it', 'illuminazione'],
-    ['ja', 'sumāto_shōmei'],
-    ['ko', 'seumateu_jomyeong'],
-    ['pt', 'luz_inteligente'],
-]
-
+within_context_parameters, out_of_context_parameters = load_test_data()
 
 class RhinoTestCase(unittest.TestCase):
 
@@ -80,7 +59,7 @@ class RhinoTestCase(unittest.TestCase):
         else:
             self.assertFalse(inference.is_understood, "Shouldn't be able to understand.")
 
-    @parameterized.expand(WITHIN_CONTEXT_PARAMETERS)
+    @parameterized.expand(within_context_parameters)
     def test_within_context(self, language, context_name, is_within_context, intent, slots):
         self.run_rhino(
             language=language,
@@ -89,7 +68,7 @@ class RhinoTestCase(unittest.TestCase):
             intent=intent,
             slots=slots)
 
-    @parameterized.expand(OUT_OF_CONTEXT_PARAMETERS)
+    @parameterized.expand(out_of_context_parameters)
     def test_out_of_context(self, language, context_name):
         self.run_rhino(
             language=language,

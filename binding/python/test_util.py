@@ -1,5 +1,5 @@
 #
-# Copyright 2022 Picovoice Inc.
+# Copyright 2022-2023 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -9,10 +9,26 @@
 # specific language governing permissions and limitations under the License.
 #
 
+import json
 import struct
 import wave
 
 from util import *
+
+
+def load_test_data():
+    data_file_path = os.path.join(os.path.dirname(__file__), "../../resources/test/test_data.json")
+    with open(data_file_path, encoding="utf8") as data_file:
+        json_test_data = data_file.read()
+    test_data = json.loads(json_test_data)['tests']
+
+    within_context_parameters = [
+        (t['language'], t['context_name'], True, t['inference']['intent'], t['inference']['slots'])
+        for t in test_data['within_context']]
+    out_of_context_parameters = [
+        (t['language'], t['context_name']) for t in test_data['out_of_context']]
+
+    return within_context_parameters, out_of_context_parameters
 
 
 def _append_language(s, language):

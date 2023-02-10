@@ -1,5 +1,5 @@
 //
-// Copyright 2020-2022 Picovoice Inc.
+// Copyright 2020-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -17,30 +17,16 @@ import {checkWaveFile, getInt16Frames} from "../src";
 import {WaveFile} from "wavefile";
 
 import {RhinoInvalidArgumentError} from "../src/errors";
-import {getAudioFileByLanguage, getContextPathsByLanguage, getModelPathByLanguage} from "./test_utils"
+import {
+    getAudioFileByLanguage,
+    getContextPathsByLanguage,
+    getModelPathByLanguage,
+    getWithinContextParameters,
+    getOutOfContextParameters
+} from "./test_utils";
 
-const WITHIN_CONTEXT_PARAMETERS: [string, string, string, Record<string, string>][] = [
-    ['en', 'coffee_maker', 'orderBeverage',
-        {'beverage': 'americano', 'numberOfShots': 'double shot', 'size': 'medium'}],
-    ['es', 'iluminación_inteligente', 'changeColor', {'location': 'habitación', 'color': 'rosado'}],
-    ['de', 'beleuchtung', 'changeState', {'state': 'aus'}],
-    ['fr', 'éclairage_intelligent', 'changeColor', {'color': 'violet'}],
-    ['it', 'illuminazione', 'spegnereLuce', {'luogo': 'bagno'}],
-    ['ja', 'sumāto_shōmei', '色変更', {'色': '青'}],
-    ['ko', 'seumateu_jomyeong', 'changeColor', {'color': '파란색'}],
-    ['pt', 'luz_inteligente', 'ligueLuz', {'lugar': 'cozinha'}],
-]
-
-const OUT_OF_CONTEXT_PARAMETERS = [
-    ['en', 'coffee_maker'],
-    ['es', 'iluminación_inteligente'],
-    ['de', 'beleuchtung'],
-    ['fr', 'éclairage_intelligent'],
-    ['it', 'illuminazione'],
-    ['ja', 'sumāto_shōmei'],
-    ['ko', 'seumateu_jomyeong'],
-    ['pt', 'luz_inteligente'],
-]
+const WITHIN_CONTEXT_PARAMETERS = getWithinContextParameters();
+const OUT_OF_CONTEXT_PARAMETERS = getOutOfContextParameters();
 
 const ACCESS_KEY = process.argv.filter((x) => x.startsWith('--access_key='))[0]?.split('--access_key=')[1] ?? "";
 const PERFORMANCE_THRESHOLD_SEC = Number(process.argv.filter((x) => x.startsWith('--performance_threshold_sec='))[0]?.split('--performance_threshold_sec=')[1] ?? 0);
@@ -53,9 +39,9 @@ function testRhinoDetection(
     is_within_context: boolean,
     groundTruth: RhinoInference | null = null): void {
 
-    const contextPath = getContextPathsByLanguage("../../../", language, context);
+    const contextPath = getContextPathsByLanguage(language, context);
 
-    const modelPath = getModelPathByLanguage("../../../", language);
+    const modelPath = getModelPathByLanguage(language);
     const engineInstance = new Rhino(
         ACCESS_KEY,
         contextPath,
@@ -65,7 +51,7 @@ function testRhinoDetection(
         modelPath,
     );
 
-    const waveFilePath = getAudioFileByLanguage("../../../", language, is_within_context);
+    const waveFilePath = getAudioFileByLanguage(language, is_within_context);
     const waveBuffer = fs.readFileSync(waveFilePath);
     const waveAudioFile = new WaveFile(waveBuffer);
 
@@ -95,7 +81,7 @@ function testRhinoDetection(
 
 describe("intent detection", () => {
         it.each(WITHIN_CONTEXT_PARAMETERS)(
-            'successful inference for %p with %p', (language, context, intent, slots) => {
+            'successful inference for %p with %p', (language: string, context: string, intent: string, slots: Record<string, string>) => {
                 const inference: RhinoInference = {
                     isUnderstood: true,
                     intent: intent,
@@ -105,7 +91,7 @@ describe("intent detection", () => {
             });
 
         it.each(OUT_OF_CONTEXT_PARAMETERS)(
-            'out-of-context phrase for %p with %p', (language, context) => {
+            'out-of-context phrase for %p with %p', (language: string, context: string) => {
                 testRhinoDetection(language, context, false);
             });
 
@@ -117,7 +103,7 @@ describe("basic parameter validation", () => {
         expect(() => {
             new Rhino(
                 ACCESS_KEY,
-                getContextPathsByLanguage("../../../", 'en', 'coffee_maker'),
+                getContextPathsByLanguage('en', 'coffee_maker'),
                 2.99);
         }).toThrow(RangeError);
     });
@@ -126,7 +112,7 @@ describe("basic parameter validation", () => {
         expect(() => {
             const rhinoEngine = new Rhino(
                 ACCESS_KEY,
-                getContextPathsByLanguage("../../../", 'en', 'coffee_maker'),
+                getContextPathsByLanguage('en', 'coffee_maker'),
                 // @ts-expect-error
                 "invalid_sensitivity"
             );
@@ -138,7 +124,7 @@ describe("frame validation", () => {
     test("accepts non Int16Array if array is valid", () => {
         const rhinoEngine = new Rhino(
             ACCESS_KEY,
-            getContextPathsByLanguage("../../../", 'en', 'coffee_maker'));
+            getContextPathsByLanguage('en', 'coffee_maker'));
         const emptyArray = Array.apply(null, Array(rhinoEngine.frameLength)).map((x, i) => i)
         // @ts-expect-error
         rhinoEngine.process(emptyArray);
@@ -148,7 +134,7 @@ describe("frame validation", () => {
     test("mismatched frameLength throws error", () => {
         const rhinoEngine = new Rhino(
             ACCESS_KEY,
-            getContextPathsByLanguage("../../../", 'en', 'coffee_maker'));
+            getContextPathsByLanguage('en', 'coffee_maker'));
         expect(() => {
             // @ts-expect-error
             rhinoEngine.process([1, 2, 3]);
@@ -159,7 +145,7 @@ describe("frame validation", () => {
     test("null/undefined frames throws error", () => {
         const rhinoEngine = new Rhino(
             ACCESS_KEY,
-            getContextPathsByLanguage("../../../", 'en', 'coffee_maker'),
+            getContextPathsByLanguage('en', 'coffee_maker'),
         );
         expect(() => {
             // @ts-expect-error
@@ -175,7 +161,7 @@ describe("frame validation", () => {
     test("passing floating point frame values throws RhinoInvalidArgumentError", () => {
         const rhinoEngine = new Rhino(
             ACCESS_KEY,
-            getContextPathsByLanguage("../../../", 'en', 'coffee_maker'),
+            getContextPathsByLanguage('en', 'coffee_maker'),
         );
         const floatFrames = Array.from({length: rhinoEngine.frameLength}).map(
             (x) => 3.1415
@@ -192,7 +178,7 @@ describe("getContextInfo", () => {
     test("coffee maker expressions and slots are returned", () => {
         const rhinoEngine = new Rhino(
             ACCESS_KEY,
-            getContextPathsByLanguage("../../../", 'en', 'coffee_maker'),
+            getContextPathsByLanguage('en', 'coffee_maker'),
         );
 
         const contextInfo = rhinoEngine.getContextInfo();
