@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-vue",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "description": "Vue binding for Rhino Web SDK",
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
@@ -51,6 +51,6 @@
     "vue": "^2.6.11 || ^3.0.0"
   },
   "dependencies": {
-    "@picovoice/rhino-web": "=2.1.10"
+    "@picovoice/rhino-web": "=2.1.11"
   }
 }

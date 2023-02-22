@@ -1662,24 +1662,24 @@
     node-addon-api "^3.2.1"
     node-gyp-build "^4.3.0"
 
-"@picovoice/rhino-web@=2.1.10":
-  version "2.1.10"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.10.tgz#dea3c296e04d5ef8a66494208271caf091c8e074"
-  integrity sha512-fbyuc7djpR4XK5XP8m24jYA494jpA0q3TrIWLCl39H+7DMjpeENrJHXbvodfXhiT2HZeEtCYOanISmnekVqrrA==
+"@picovoice/rhino-web@=2.1.11":
+  version "2.1.11"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.1.11.tgz#45802d6e4cd8353e3bdea69ed8af166ac5169049"
+  integrity sha512-I9EJhORtEqoIOsk+uiWeMoWtB1MGdnO2/F/iR5DYHkTyaLUaU5EJLKkcyvw7Ts8CKXchs56SdxUIJIjDmkQ+ZA==
   dependencies:
-    "@picovoice/web-utils" "=1.2.11"
+    "@picovoice/web-utils" "=1.2.12"
 
-"@picovoice/web-utils@=1.2.11":
-  version "1.2.11"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.2.11.tgz#4a9564eacbacf1b74ba9d0df27c78646fe200e7d"
-  integrity sha512-DtgRXr618LjNLHvcIMKehy7THiJm6Lm1DFaHjHEDLFmIh9NrfYrbw9yosytHq1+n/mV2VfePQPhWsrPMI1JlVw==
+"@picovoice/web-utils@=1.2.12":
+  version "1.2.12"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.2.12.tgz#65437c3fdb69c5a2f875fd803a89f7cdbb93d607"
+  integrity sha512-u5G9PPIlhG2TvSe9lj8oyjYfQae0cWCp6W6DCl3Wk6X8hyG6m2c3Y4nkJ6Jgy7/T38SekKu01CjPrKnXCuRohQ==
   dependencies:
     commander "^9.2.0"
 
-"@picovoice/web-voice-processor@~4.0.4":
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.4.tgz#12140c9a0120e0db9dda80bcf00d7f827f1a8c99"
-  integrity sha512-WZ4PPXU0i/yPzIjd+jbx9VSMF6Shbyf2BXt2U7a6MASJ2KWeG9+zDx6nteDF10cyG3T78G+4EB24tLsdyLVmWw==
+"@picovoice/web-voice-processor@~4.0.5":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.5.tgz#f62ab49d03e13f870a49e505e4eb3a6f6206d19f"
+  integrity sha512-k93u3EQRU+9ahF7Gr5s/QgtqtAgwMAHCA+It5mDKWxGe1bzNBr/RWxKLcfey8A16WAA9GiDcsES1bd9ZQOXwWQ==
 
 "@rollup/plugin-json@^4.1.0":
   version "4.1.0"
