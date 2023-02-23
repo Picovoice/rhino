@@ -1,5 +1,6 @@
 import {Platform} from 'react-native';
 import fs from 'react-native-fs';
+// @ts-ignore
 import {decode as atob} from 'base-64';
 
 import {Rhino} from '@picovoice/rhino-react-native';
@@ -15,17 +16,20 @@ export type Result = {
   errorString?: string;
 };
 
-function getPath(filePath) {
-  if (platform === "ios") {
+function getPath(filePath: string) {
+  if (platform === 'ios') {
     return `Assets.bundle/${filePath}`;
   }
   return filePath;
 }
 
-async function getBinaryFile(audioFilePath) {
+async function getBinaryFile(audioFilePath: string) {
   let fileBase64;
-  if (platform === "ios") {
-    fileBase64 = await fs.readFile(`${fs.MainBundlePath}/${audioFilePath}`, 'base64');
+  if (platform === 'ios') {
+    fileBase64 = await fs.readFile(
+      `${fs.MainBundlePath}/${audioFilePath}`,
+      'base64',
+    );
   } else {
     fileBase64 = await fs.readFileAssets(audioFilePath, 'base64');
   }
@@ -38,7 +42,10 @@ async function getBinaryFile(audioFilePath) {
   return bytes;
 }
 
-async function getPcmFromFile(audioFilePath, expectedSampleRate) {
+async function getPcmFromFile(
+  audioFilePath: string,
+  expectedSampleRate: number,
+) {
   const headerSampleRateOffset = 24;
   const headerOffset = 44;
 
@@ -60,7 +67,7 @@ async function getPcmFromFile(audioFilePath, expectedSampleRate) {
   return pcm;
 }
 
-async function getInference(rhino, audioFilePath) {
+async function getInference(rhino: Rhino, audioFilePath: string) {
   const pcm = await getPcmFromFile(audioFilePath, rhino.sampleRate);
   const frameLength = rhino.frameLength;
   for (let i = 0; i < pcm.length - frameLength; i += frameLength) {
@@ -73,7 +80,7 @@ async function getInference(rhino, audioFilePath) {
   return null;
 }
 
-function inferencesEqual(inference, groundTruth) {
+function inferencesEqual(inference: any, groundTruth: any) {
   if (inference.isUnderstood === false && groundTruth === null) {
     return true;
   }
@@ -98,24 +105,22 @@ function inferencesEqual(inference, groundTruth) {
 }
 
 async function runTestcase(
-  language,
-  contextName,
-  audioFilePath,
-  groundTruth,
-): Result {
-  const result = {testName: '', success: false};
+  language: string,
+  contextName: string,
+  audioFilePath: string,
+  groundTruth: any,
+): Promise<Result> {
+  const result: Result = {testName: '', success: false};
   let rhino = null;
   try {
-    const contextPath = getPath(`context_files/${language}/${contextName}_${platform}.rhn`)
+    const contextPath = getPath(
+      `context_files/${language}/${contextName}_${platform}.rhn`,
+    );
     const modelPath =
       language === 'en'
         ? getPath('model_files/rhino_params.pv')
         : getPath(`model_files/rhino_params_${language}.pv`);
-    rhino = await Rhino.create(
-      accessKey,
-      contextPath,
-      modelPath,
-    );
+    rhino = await Rhino.create(accessKey, contextPath, modelPath);
     const inference = await getInference(rhino, audioFilePath);
     if (inferencesEqual(inference, groundTruth)) {
       result.success = true;
@@ -133,10 +138,11 @@ async function runTestcase(
   return result;
 }
 
-async function withinContextTest(testcases): Result[] {
+async function withinContextTest(testcases: any): Promise<Result[]> {
   const results = [];
   for (const testcase of testcases) {
-    const audioFilePath = testcase.language === 'en'
+    const audioFilePath =
+      testcase.language === 'en'
         ? getPath('audio_samples/test_within_context.wav')
         : getPath(`audio_samples/test_within_context_${testcase.language}.wav`);
     const result = await runTestcase(
@@ -151,7 +157,7 @@ async function withinContextTest(testcases): Result[] {
   return results;
 }
 
-async function outOfContextTest(testcases): Result[] {
+async function outOfContextTest(testcases: any): Promise<Result[]> {
   const results = [];
   for (const testcase of testcases) {
     const audioFilePath =
@@ -170,7 +176,7 @@ async function outOfContextTest(testcases): Result[] {
   return results;
 }
 
-export async function runRhinoTests(): Result[] {
+export async function runRhinoTests(): Promise<Result[]> {
   const withinContextResults = await withinContextTest(
     testData.tests.within_context,
   );

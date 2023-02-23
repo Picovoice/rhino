@@ -1,5 +1,5 @@
 //
-// Copyright 2021 Picovoice Inc.
+// Copyright 2021-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -10,100 +10,100 @@
 //
 
 class RhinoError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoError';
+  }
 }
 
 class RhinoMemoryError extends RhinoError {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoMemoryError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoMemoryError';
+  }
 }
 
 class RhinoIOError extends RhinoError {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoIOError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoIOError';
+  }
 }
 
 class RhinoInvalidArgumentError extends RhinoError {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoInvalidArgumentError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoInvalidArgumentError';
+  }
 }
 
 class RhinoStopIterationError extends RhinoError {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoStopIterationError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoStopIterationError';
+  }
 }
 
 class RhinoKeyError extends RhinoError {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoKeyError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoKeyError';
+  }
 }
 
 class RhinoInvalidStateError extends RhinoError {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoInvalidStateError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoInvalidStateError';
+  }
 }
 
 class RhinoRuntimeError extends RhinoError {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoRuntimeError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoRuntimeError';
+  }
 }
 
 class RhinoActivationError extends RhinoError {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoActivationError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoActivationError';
+  }
 }
 
 class RhinoActivationLimitError extends RhinoError {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoActivationLimitError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoActivationLimitError';
+  }
 }
 
 class RhinoActivationThrottledError extends RhinoError {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoActivationThrottledError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoActivationThrottledError';
+  }
 }
 
 class RhinoActivationRefusedError extends RhinoError {
-    constructor(message: string) {
-        super(message);
-        this.name = "RhinoActivationRefusedError";
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'RhinoActivationRefusedError';
+  }
 }
 
 export {
-    RhinoError,
-    RhinoMemoryError,
-    RhinoIOError,
-    RhinoInvalidArgumentError,
-    RhinoStopIterationError,
-    RhinoKeyError,
-    RhinoInvalidStateError,
-    RhinoRuntimeError,
-    RhinoActivationError,
-    RhinoActivationLimitError,
-    RhinoActivationThrottledError,
-    RhinoActivationRefusedError
+  RhinoError,
+  RhinoMemoryError,
+  RhinoIOError,
+  RhinoInvalidArgumentError,
+  RhinoStopIterationError,
+  RhinoKeyError,
+  RhinoInvalidStateError,
+  RhinoRuntimeError,
+  RhinoActivationError,
+  RhinoActivationLimitError,
+  RhinoActivationThrottledError,
+  RhinoActivationRefusedError,
 };
