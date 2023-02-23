@@ -14,8 +14,8 @@
     "android-install": "yarn && yarn copy"
   },
   "dependencies": {
-    "@picovoice/react-native-voice-processor": "^1.0.4",
-    "@picovoice/rhino-react-native": "2.1.6",
+    "@picovoice/react-native-voice-processor": "~1.1.0",
+    "@picovoice/rhino-react-native": "~2.1.7",
     "react": "^17.0.2",
     "react-native": "^0.68.5"
   },

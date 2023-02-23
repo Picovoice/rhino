@@ -48,7 +48,7 @@ function App(): JSX.Element {
   };
 
   const [running, setRunning] = useState(false);
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Result[]>([]);
 
   const runTests = async () => {
     setRunning(true);

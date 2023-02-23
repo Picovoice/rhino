@@ -8,14 +8,20 @@
 // an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 //
-"use strict";
+'use strict';
 
-const fs = require("fs")
-const mkdirp = require("mkdirp");
+const fs = require('fs');
+const mkdirp = require('mkdirp');
 
 // copy Android resources
-mkdirp.sync("./android/rhino-rn-demo-app/src/main/assets")
-fs.copyFileSync('../../resources/contexts/android/smart_lighting_android.rhn','./android/rhino-rn-demo-app/src/main/assets/smart_lighting_android.rhn')
+mkdirp.sync('./android/rhino-rn-demo-app/src/main/assets');
+fs.copyFileSync(
+  '../../resources/contexts/android/smart_lighting_android.rhn',
+  './android/rhino-rn-demo-app/src/main/assets/smart_lighting_android.rhn',
+);
 
 // copy iOS resources
-fs.copyFileSync('../../resources/contexts/ios/smart_lighting_ios.rhn','./ios/smart_lighting_ios.rhn')
+fs.copyFileSync(
+  '../../resources/contexts/ios/smart_lighting_ios.rhn',
+  './ios/smart_lighting_ios.rhn',
+);
