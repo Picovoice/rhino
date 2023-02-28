@@ -16,7 +16,7 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitSuccessSimple() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
         let r = try Rhino.init(
                 accessKey: accessKey,
                 contextPath: contextPath)
@@ -43,7 +43,7 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitSuccessWithCustomSensitivity() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
 
         let r = try Rhino.init(
                 accessKey: accessKey,
@@ -55,7 +55,7 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitSuccessWithCustomEndpointDuration() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
 
         let r = try Rhino.init(
                 accessKey: accessKey,
@@ -67,7 +67,7 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitSuccessWithRequireEndpointOff() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
 
         let r = try Rhino.init(
                 accessKey: accessKey,
@@ -112,7 +112,7 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithInvalidModelPath() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
         let modelPath = "/bad_path/bad_path.pv"
 
         var didFail = false
@@ -130,7 +130,7 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithInvalidSensitivity() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
 
         var didFail = false
         do {
@@ -147,7 +147,7 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithInvalidEndpointDuration() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
 
         var didFail = false
         do {
@@ -193,7 +193,7 @@ class RhinoAppTestUITests: BaseTest {
 
     func testProcWithinContext() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
         let r = try Rhino.init(
                 accessKey: accessKey,
                 contextPath: contextPath)
@@ -217,7 +217,7 @@ class RhinoAppTestUITests: BaseTest {
 
     func testProcOutOfContext() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
+        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
         let r = try Rhino.init(
                 accessKey: accessKey,
                 contextPath: contextPath)

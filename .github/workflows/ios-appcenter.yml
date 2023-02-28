@@ -38,30 +38,35 @@ jobs:
       - name: Make build dir
         run: mkdir ddp
 
+      - name: Install resource script dependency
+        run: |
+          brew update
+          brew install convmv
+
       - name: Copy test_resources
         run: ./copy_test_resources.sh
 
-      # - name: Run Cocoapods
-      #   run: pod install
+      - name: Run Cocoapods
+        run: pod install
 
-      # - name: Inject AppID
-      #   run: sed -i '.bak' 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
-      #     RhinoAppTestUITests/BaseTest.swift
+      - name: Inject AppID
+        run: sed -i '.bak' 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
+          RhinoAppTestUITests/BaseTest.swift
 
-      # - name: XCode Build
-      #   run: xcrun xcodebuild build-for-testing
-      #     -configuration Debug
-      #     -workspace RhinoAppTest.xcworkspace
-      #     -sdk iphoneos
-      #     -scheme RhinoAppTest
-      #     -derivedDataPath ddp
-      #     CODE_SIGNING_ALLOWED=NO
+      - name: XCode Build
+        run: xcrun xcodebuild build-for-testing
+          -configuration Debug
+          -workspace RhinoAppTest.xcworkspace
+          -sdk iphoneos
+          -scheme RhinoAppTest
+          -derivedDataPath ddp
+          CODE_SIGNING_ALLOWED=NO
 
-      # - name: Run Tests on AppCenter
-      #   run: appcenter test run xcuitest
-      #     --token ${{secrets.APPCENTERAPITOKEN}}
-      #     --app "Picovoice/Rhino-iOS"
-      #     --devices "Picovoice/ios-min-max"
-      #     --test-series "rhino-ios"
-      #     --locale "en_US"
-      #     --build-dir ddp/Build/Products/Debug-iphoneos
+      - name: Run Tests on AppCenter
+        run: appcenter test run xcuitest
+          --token ${{secrets.APPCENTERAPITOKEN}}
+          --app "Picovoice/Rhino-iOS"
+          --devices "Picovoice/ios-min-max"
+          --test-series "rhino-ios"
+          --locale "en_US"
+          --build-dir ddp/Build/Products/Debug-iphoneos
