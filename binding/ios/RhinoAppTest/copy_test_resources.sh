@@ -21,6 +21,7 @@ for d in ${RESOURCE_DIR}/contexts_*; do
 
     mkdir -p ${ASSETS_DIR}/context_files/${LANGUAGE}
     cp ${RESOURCE_DIR}/contexts_${LANGUAGE}/ios/*.rhn ${ASSETS_DIR}/context_files/${LANGUAGE}
+    ls -la ${ASSETS_DIR}/context_files/${LANGUAGE}
 done
 
 echo "Copying test model files..."
