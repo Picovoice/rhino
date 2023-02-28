@@ -1,6 +1,7 @@
 aarch
 Alexa
 androidx
+Appcenter
 armeabi
 armv
 armv7l
@@ -22,6 +23,7 @@ Colour
 commandline
 Compat
 constraintlayout
+convmv
 cozinha
 crhino
 cstring
@@ -70,6 +72,7 @@ microcontrollers
 NETCOREAPP
 newtonsoft
 Newtonsoft
+notest
 NumChans
 nunit
 Okhttp
