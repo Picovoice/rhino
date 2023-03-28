@@ -41,13 +41,13 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        '--wav_path',
-        help='Absolute path to input audio file.',
+        '--access_key',
+        help='AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)',
         required=True)
 
     parser.add_argument(
-        '--access_key',
-        help='AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)',
+        '--wav_path',
+        help='Absolute path to input audio file.',
         required=True)
 
     parser.add_argument(
@@ -65,7 +65,7 @@ def main():
 
     parser.add_argument(
         '--sensitivity',
-        help="Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
+        help="Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in "
              "fewer misses at the cost of (potentially) increasing the erroneous inference rate.",
         type=float,
         default=0.5)

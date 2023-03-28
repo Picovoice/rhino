@@ -40,7 +40,7 @@ def main():
 
     parser.add_argument(
         '--sensitivity',
-        help="Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
+        help="Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in "
              "fewer misses at the cost of (potentially) increasing the erroneous inference rate.",
         type=float,
         default=0.5)
@@ -81,14 +81,41 @@ def main():
             print('Device %d: %s' % (i, device))
         return
 
-    rhino = pvrhino.create(
-        access_key=args.access_key,
-        library_path=args.library_path,
-        model_path=args.model_path,
-        context_path=args.context_path,
-        sensitivity=args.sensitivity,
-        endpoint_duration_sec=args.endpoint_duration_sec,
-        require_endpoint=require_endpoint)
+    try:
+        rhino = pvrhino.create(
+            access_key=args.access_key,
+            library_path=args.library_path,
+            model_path=args.model_path,
+            context_path=args.context_path,
+            sensitivity=args.sensitivity,
+            endpoint_duration_sec=args.endpoint_duration_sec,
+            require_endpoint=require_endpoint)
+    except pvrhino.RhinoInvalidArgumentError as e:
+        args = (
+            args.access_key,
+            args.library_path,
+            args.model_path,
+            args.context_path,
+            args.require_endpoint
+        )
+        print("One or more arguments provided to Rhino is invalid: ", args)
+        print("If all other arguments seem valid, ensure that '%s' is a valid AccessKey" % args.access_key)
+        raise e
+    except pvrhino.RhinoActivationError as e:
+        print("AccessKey activation error")
+        raise e
+    except pvrhino.RhinoActivationLimitError as e:
+        print("AccessKey '%s' has reached it's temporary device limit" % args.access_key)
+        raise e
+    except pvrhino.RhinoActivationRefusedError as e:
+        print("AccessKey '%s' refused" % args.access_key)
+        raise e
+    except pvrhino.RhinoActivationThrottledError as e:
+        print("AccessKey '%s' has been throttled" % args.access_key)
+        raise e
+    except pvrhino.RhinoError as e:
+        print("Failed to initialize Rhino")
+        raise e
 
     print('Rhino version: %s' % rhino.version)
     print('Context info: %s' % rhino.context_info)

@@ -15,11 +15,11 @@ import unittest
 from parameterized import parameterized
 
 from _rhino import Rhino
-from test_util import *
 from _util import *
-
+from test_util import *
 
 within_context_parameters, out_of_context_parameters = load_test_data()
+
 
 class RhinoTestCase(unittest.TestCase):
 

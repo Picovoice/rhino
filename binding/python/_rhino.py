@@ -8,11 +8,11 @@
 # an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 #
-
 import os
 from collections import namedtuple
 from ctypes import *
 from enum import Enum
+from typing import Sequence
 
 
 class RhinoError(Exception):
@@ -63,6 +63,16 @@ class RhinoActivationRefusedError(RhinoError):
     pass
 
 
+Inference = namedtuple('Inference', ['is_understood', 'intent', 'slots'])
+Inference.__doc__ = """"\
+Immutable object with `.is_understood`, `.intent` , and `.slots` getters.
+
+:param is_understood: Indicates whether the intent was understood by Rhino.
+:param intent: Name of intent that was inferred
+:param slots: Dictionary of the slot keys and values extracted from the utterance.
+"""
+
+
 class Rhino(object):
     """
     Python binding for Rhino Speech-to-Intent engine. It directly infers the user's intent from spoken commands in
@@ -101,20 +111,11 @@ class Rhino(object):
         PicovoiceStatuses.ACTIVATION_REFUSED: RhinoActivationRefusedError
     }
 
-    Inference = namedtuple('Inference', ['is_understood', 'intent', 'slots'])
-    Inference.__doc__ = """"\
-    Immutable object with `.is_understood`, `.intent` , and `.slots` getters.
-    
-    :param is_understood: Indicates whether the intent was understood by Rhino.
-    :param intent: Name of intent that was inferred
-    :param slots: Dictionary of the slot keys and values extracted from the utterance.
-    """
-
     class CRhino(Structure):
         pass
 
     def __init__(
-            serf,
+            self,
             access_key: str,
             library_path: str,
             model_path: str,
@@ -307,7 +308,7 @@ class Rhino(object):
         if status is not self.PicovoiceStatuses.SUCCESS:
             raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
 
-        return self.Inference(is_understood=is_understood, intent=intent, slots=slots)
+        return Inference(is_understood=is_understood, intent=intent, slots=slots)
 
     @property
     def context_info(self) -> str:
@@ -333,6 +334,7 @@ class Rhino(object):
 
         return self._sample_rate
 
+
 __all__ = [
     'Rhino',
     'Inference',
@@ -345,7 +347,7 @@ __all__ = [
     'RhinoInvalidStateError',
     'RhinoRuntimeError',
     'RhinoActivationError',
-    'RhinoActivationTimeoutError',
+    'RhinoActivationLimitError',
     'RhinoActivationThrottledError',
     'RhinoActivationRefusedError',
 ]

@@ -13,6 +13,7 @@ from typing import Optional
 from ._rhino import Rhino
 from ._util import *
 
+
 def create(
         access_key: str,
         context_path: str,
@@ -21,7 +22,6 @@ def create(
         sensitivity: float = 0.5,
         endpoint_duration_sec: float = 1.,
         require_endpoint: bool = True) -> Rhino:
-
     """
     Factory method for Rhino Speech-to-Intent engine.
 
@@ -60,6 +60,7 @@ def create(
         sensitivity=sensitivity,
         endpoint_duration_sec=endpoint_duration_sec,
         require_endpoint=require_endpoint)
+
 
 __all__ = [
     'create',
