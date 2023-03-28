@@ -14,9 +14,9 @@ import unittest
 
 from parameterized import parameterized
 
-from rhino import Rhino
+from _rhino import Rhino
 from test_util import *
-from util import *
+from _util import *
 
 
 within_context_parameters, out_of_context_parameters = load_test_data()

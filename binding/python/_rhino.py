@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2022 Picovoice Inc.
+# Copyright 2018-2023 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -114,14 +114,15 @@ class Rhino(object):
         pass
 
     def __init__(
-            self,
-            access_key,
-            library_path,
-            model_path,
-            context_path,
-            sensitivity=0.5,
-            endpoint_duration_sec=1.,
-            require_endpoint=True):
+            serf,
+            access_key: str,
+            library_path: str,
+            model_path: str,
+            context_path: str,
+            sensitivity: float = 0.5,
+            endpoint_duration_sec: float = 1.,
+            require_endpoint: bool = True):
+
         """
         Constructor.
 
@@ -240,7 +241,7 @@ class Rhino(object):
 
         self._delete_func(self._handle)
 
-    def process(self, pcm):
+    def process(self, pcm: Sequence[int]) -> bool:
         """
         Processes a frame of audio and emits a flag indicating if the inference is finalized. When finalized,
         `.get_inference()` should be called to retrieve the intent and slots, if the spoken command is considered valid.
@@ -261,7 +262,7 @@ class Rhino(object):
 
         return is_finalized.value
 
-    def get_inference(self):
+    def get_inference(self) -> Inference:
         """
          Gets inference results from Rhino. If the spoken command was understood, it includes the specific intent name
          that was inferred, and (if applicable) slot keys and specific slot values. Should only be called after the
@@ -309,25 +310,42 @@ class Rhino(object):
         return self.Inference(is_understood=is_understood, intent=intent, slots=slots)
 
     @property
-    def context_info(self):
+    def context_info(self) -> str:
         """Context information."""
 
         return self._context_info
 
     @property
-    def version(self):
+    def version(self) -> str:
         """Version."""
 
         return self._version
 
     @property
-    def frame_length(self):
+    def frame_length(self) -> int:
         """Number of audio samples per frame."""
 
         return self._frame_length
 
     @property
-    def sample_rate(self):
+    def sample_rate(self) -> int:
         """Audio sample rate accepted by Picovoice."""
 
         return self._sample_rate
+
+__all__ = [
+    'Rhino',
+    'Inference',
+    'RhinoError',
+    'RhinoMemoryError',
+    'RhinoIOError',
+    'RhinoInvalidArgumentError',
+    'RhinoStopIterationError',
+    'RhinoKeyError',
+    'RhinoInvalidStateError',
+    'RhinoRuntimeError',
+    'RhinoActivationError',
+    'RhinoActivationTimeoutError',
+    'RhinoActivationThrottledError',
+    'RhinoActivationRefusedError',
+]

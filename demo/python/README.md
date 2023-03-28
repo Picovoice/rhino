@@ -59,7 +59,7 @@ provided it only processes the first (left) channel. Note that only the relevant
 file and no other speech. There also needs to be at least one second of silence at the end of the file.
 
 ```console
-rhino_demo_file --input_audio_path ${AUDIO_PATH} --access_key ${ACCESS_KEY} --context_path ${CONTEXT_PATH} 
+rhino_demo_file --wav_path ${AUDIO_PATH} --access_key ${ACCESS_KEY} --context_path ${CONTEXT_PATH} 
 ```
 
 ### Microphone Demo

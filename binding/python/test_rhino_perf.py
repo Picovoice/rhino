@@ -13,9 +13,9 @@ import sys
 import time
 import unittest
 
-from rhino import Rhino
+from _rhino import Rhino
 from test_util import *
-from util import *
+from _util import *
 
 
 class RhinoPerformanceTestCase(unittest.TestCase):
@@ -46,9 +46,9 @@ class RhinoPerformanceTestCase(unittest.TestCase):
             proc_time = 0
             for j in range(len(audio) // rhino.frame_length):
                 frame = audio[j * rhino.frame_length:(j + 1) * rhino.frame_length]
-                start = time.time()
+                start = time.perf_counter()
                 rhino.process(frame)
-                proc_time += time.time() - start
+                proc_time += time.perf_counter() - start
 
             if i > 0:
                 perf_results.append(proc_time)
