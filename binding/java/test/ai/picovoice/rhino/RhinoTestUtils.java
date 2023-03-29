@@ -60,7 +60,7 @@ public class RhinoTestUtils {
 
     public static JsonObject loadTestData() throws IOException {
         final Path testDataPath = Paths.get(System.getProperty("user.dir"))
-                .resolve("../../resources/test")
+                .resolve("../../resources/.test")
                 .resolve("test_data.json");
         final String testDataContent = new String(Files.readAllBytes(testDataPath), StandardCharsets.UTF_8);
         return JsonParser.parseString(testDataContent).getAsJsonObject();

@@ -129,7 +129,7 @@ Rhino is the right choice if the domain of voice interactions is specific (limit
 A comparison between the accuracy of Rhino and major cloud-based alternatives is provided
 [here](https://github.com/Picovoice/speech-to-intent-benchmark). Below is the summary of the benchmark:
 
-![](resources/doc/benchmark.png)
+![](resources/.doc/benchmark.png)
 
 ## Terminology
 

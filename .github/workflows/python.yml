@@ -21,7 +21,7 @@ on:
       - 'resources/contexts*/mac/**'
       - 'resources/contexts*/raspberry-pi/**'
       - 'resources/contexts*/windows/**'
-      - 'resources/test/**'
+      - 'resources/.test/**'
       - '.github/workflows/python.yml'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+' ]
@@ -42,7 +42,7 @@ on:
       - 'resources/contexts*/mac/**'
       - 'resources/contexts*/raspberry-pi/**'
       - 'resources/contexts*/windows/**'
-      - 'resources/test/**'
+      - 'resources/.test/**'
       - '.github/workflows/python.yml'
 
 defaults:
