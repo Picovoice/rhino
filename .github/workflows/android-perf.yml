@@ -10,7 +10,7 @@ on:
       - 'resources/contexts/android/**'
       - '.github/workflows/android-perf.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
       - 'lib/android/**'
       - 'lib/common/**'

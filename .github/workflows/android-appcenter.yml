@@ -8,7 +8,7 @@ on:
       - 'demo/android/Activity/rhino-activity-demo-app/build.gradle'
       - '.github/workflows/android-appcenter.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
       - 'demo/android/Activity/rhino-activity-demo-app/build.gradle'
       - '.github/workflows/android-appcenter.yml'

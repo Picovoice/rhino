@@ -11,7 +11,7 @@ on:
       - 'resources/contexts/wasm/**'
       - '.github/workflows/angular.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
       - 'binding/angular/**'
       - '!binding/angular/README.md'
@@ -50,7 +50,7 @@ jobs:
 
     - name: Lint
       run: yarn lint
-    
+
     - name: Setup test
       run: yarn setup-test
 
