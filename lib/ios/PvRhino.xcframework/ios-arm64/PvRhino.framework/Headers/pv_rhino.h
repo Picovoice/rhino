@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2021 Picovoice Inc.
+    Copyright 2018-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -33,72 +33,6 @@ extern "C" {
  */
 typedef struct pv_rhino pv_rhino_t;
 
-#if defined(__PV_NO_DYNAMIC_MEMORY__) && defined(__PV_NO_FILE_SYSTEM__)
-
-/**
- * Constructor.
- *
- * @param access_key AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
- * @param memory Memory needs to be 8-byte aligned.
- * @param memory_size Memory size in bytes.
- * @param context Context parameters. A context represents the set of expressions (spoken commands), intents, and intent
- * arguments (slots) within a domain of interest.
- * @param context_size Size of the context in bytes.
- * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in
- * fewer misses at the cost of (potentially) increasing the erroneous inference rate.
- * @param endpoint_duration_sec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
- * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
- * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
- * preemptively in case the user pauses before finishing the request.
- * @param require_endpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
- * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
- * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
- * @param[out] object Constructed Speech-to-Intent object.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY' on failure.
- */
-PV_API pv_status_t pv_rhino_init(
-        const char *access_key,
-        void *memory_buffer,
-        int32_t memory_size,
-        const void *context,
-        int32_t context_size,
-        float sensitivity,
-        float endpoint_duration_sec,
-        bool require_endpoint,
-        pv_rhino_t **object);
-
-#elif !defined(__PV_NO_DYNAMIC_MEMORY__) && defined(__PV_NO_FILE_SYSTEM__)
-
-/**
- * Constructor.
- *
- * @param access_key AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
- * @param context Context parameters. A context represents the set of expressions (spoken commands), intents, and intent
- * arguments (slots) within a domain of interest.
- * @param context_size Size of context in bytes.
- * @param sensitivity Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in
- * fewer misses at the cost of (potentially) increasing the erroneous inference rate.
- * @param endpoint_duration_sec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
- * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
- * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
- * preemptively in case the user pauses before finishing the request.
- * @param require_endpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
- * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
- * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
- * @param[out] object Constructed Speech-to-Intent object.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT' or 'PV_STATUS_OUT_OF_MEMORY' on failure.
- */
-PV_API pv_status_t pv_rhino_init(
-        const char *access_key,
-        const void *context,
-        int32_t context_size,
-        float sensitivity,
-        float endpoint_duration_sec,
-        bool require_endpoint,
-        pv_rhino_t **object);
-
-#elif !defined(__PV_NO_DYNAMIC_MEMORY__) && !defined(__PV_NO_FILE_SYSTEM__)
-
 /**
  * Constructor.
  *
@@ -111,7 +45,7 @@ PV_API pv_status_t pv_rhino_init(
  * @param endpoint_duration_sec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
  * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
  * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
- * preemptively in case the user pauses before finishing the request.
+ * pre-emptively in case the user pauses before finishing the request.
  * @param require_endpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
  * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
  * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
@@ -126,12 +60,6 @@ PV_API pv_status_t pv_rhino_init(
         float endpoint_duration_sec,
         bool require_endpoint,
         pv_rhino_t **object);
-
-#else
-
-#error
-
-#endif
 
 /**
  * Destructor.
@@ -215,31 +143,6 @@ PV_API pv_status_t pv_rhino_reset(pv_rhino_t *object);
  */
 PV_API pv_status_t pv_rhino_context_info(const pv_rhino_t *object, const char **context_info);
 
-#if defined(__PV_NO_DYNAMIC_MEMORY__) && defined(__PV_NO_FILE_SYSTEM__)
-
-/**
- * Computes the minimum required memory buffer size, in bytes, for the given context model.
- * A relatively large value for 'preliminary_memory_buffer' is suggested (e.g., 50 kilobytes).
- * Then, 'pv_rhino_init' can be called optimally passing a memory buffer with the size of 'min_memory_buffer_size'.
- *
- * @param preliminary_memory_size Memory size in bytes.
- * @param preliminary_memory_buffer Memory needs to be 8-byte aligned.
- * @param context_model Context parameters.
- * @param context_model_size Size of the context in bytes.
- * @param[out] min_memory_buffer_size minimum required memory buffer size in bytes.
- * @return Status code. Returns 'PV_STATUS_INVALID_ARGUMENT', 'PV_STATUS_INVALID_STATE', or 'PV_STATUS_OUT_OF_MEMORY'
- * on failure.
- * */
-
-PV_API pv_status_t pv_rhino_get_min_memory_buffer_size(
-        void *preliminary_memory_buffer,
-        int32_t preliminary_memory_size,
-        const void *context_model,
-        int32_t context_model_size,
-        int32_t *min_memory_buffer_size);
-
-#endif
-
 /**
  * Getter for version.
  *
@@ -255,6 +158,7 @@ PV_API const char *pv_rhino_version(void);
 PV_API int32_t pv_rhino_frame_length(void);
 
 #ifdef __cplusplus
+
 }
 
 #endif

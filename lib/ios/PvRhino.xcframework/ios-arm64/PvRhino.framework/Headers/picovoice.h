@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2021 Picovoice Inc.
+    Copyright 2018-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -31,17 +31,7 @@ PV_API int32_t pv_sample_rate(void);
  * Status codes.
  */
 typedef enum {
-
-#ifdef __PV_PLATFORM_WASM__
-
-    PV_STATUS_SUCCESS = 10000,
-
-#else
-
     PV_STATUS_SUCCESS = 0,
-
-#endif
-
     PV_STATUS_OUT_OF_MEMORY,
     PV_STATUS_IO_ERROR,
     PV_STATUS_INVALID_ARGUMENT,
@@ -64,6 +54,7 @@ typedef enum {
 PV_API const char *pv_status_to_string(pv_status_t status);
 
 #ifdef __cplusplus
+
 }
 
 #endif

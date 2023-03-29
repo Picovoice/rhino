@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2022 Picovoice Inc.
+    Copyright 2018-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -45,7 +45,7 @@ typedef struct pv_rhino pv_rhino_t;
  * @param endpoint_duration_sec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
  * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
  * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
- * preemptively in case the user pauses before finishing the request.
+ * pre-emptively in case the user pauses before finishing the request.
  * @param require_endpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
  * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
  * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
