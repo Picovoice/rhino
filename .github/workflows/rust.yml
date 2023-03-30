@@ -5,6 +5,7 @@ on:
   push:
     branches: [ master ]
     paths:
+      - '.github/workflows/rust.yml'
       - 'binding/rust/**'
       - '!binding/rust/README.md'
       - 'lib/beaglebone/**'
@@ -22,10 +23,10 @@ on:
       - 'resources/contexts*/raspberry-pi/**'
       - 'resources/contexts*/windows/**'
       - 'resources/.test/**'
-      - '.github/workflows/rust.yml'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
+      - '.github/workflows/rust.yml'
       - 'binding/rust/**'
       - '!binding/rust/README.md'
       - 'lib/beaglebone/**'
@@ -43,7 +44,6 @@ on:
       - 'resources/contexts*/raspberry-pi/**'
       - 'resources/contexts*/windows/**'
       - 'resources/.test/**'
-      - '.github/workflows/rust.yml'
 
 env:
   CARGO_TERM_COLOR: always
@@ -62,7 +62,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Rust pre-build
       run: bash copy.sh
@@ -92,7 +92,7 @@ jobs:
         machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Rust pre-build
       run: bash copy.sh

@@ -11,14 +11,13 @@
 
 use chrono::prelude::*;
 use clap::{App, Arg, ArgGroup};
-use ctrlc;
-use hound;
 use pv_recorder::RecorderBuilder;
 use rhino::RhinoBuilder;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 static LISTENING: AtomicBool = AtomicBool::new(false);
 
+#[allow(clippy::too_many_arguments)]
 fn rhino_demo(
     audio_device_index: i32,
     access_key: &str,
@@ -87,7 +86,7 @@ fn rhino_demo(
             }
         }
 
-        if !output_path.is_none() {
+        if output_path.is_some() {
             audio_data.extend_from_slice(&pcm);
         }
     }
@@ -176,7 +175,7 @@ fn main() {
             .value_name("BOOL")
             .help("If set, Rhino requires an endpoint (chunk of silence) before finishing inference.")
             .takes_value(true)
-            .possible_values(&["TRUE", "true", "FALSE", "false"])
+            .possible_values(["TRUE", "true", "FALSE", "false"])
         )
         .arg(
             Arg::with_name("audio_device_index")
