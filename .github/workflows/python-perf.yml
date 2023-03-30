@@ -19,6 +19,7 @@ on:
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
       - '.github/workflows/python-perf.yml'
+      - 'binding/python/test_rhino_perf.py'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
@@ -36,6 +37,7 @@ on:
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
       - '.github/workflows/python-perf.yml'
+      - 'binding/python/test_rhino_perf.py'
 
 defaults:
   run:
@@ -58,10 +60,10 @@ jobs:
           performance_threshold_sec: 0.25
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Set up Python '3.10'
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 

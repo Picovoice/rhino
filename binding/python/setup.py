@@ -11,8 +11,9 @@ os.mkdir(package_folder)
 shutil.copy(os.path.join(os.path.dirname(__file__), '../../LICENSE'), package_folder)
 
 shutil.copy(os.path.join(os.path.dirname(__file__), '__init__.py'), os.path.join(package_folder, '__init__.py'))
-shutil.copy(os.path.join(os.path.dirname(__file__), 'rhino.py'), os.path.join(package_folder, 'rhino.py'))
-shutil.copy(os.path.join(os.path.dirname(__file__), 'util.py'), os.path.join(package_folder, 'util.py'))
+shutil.copy(os.path.join(os.path.dirname(__file__), '_rhino.py'), os.path.join(package_folder, '_rhino.py'))
+shutil.copy(os.path.join(os.path.dirname(__file__), '_factory.py'), os.path.join(package_folder, '_factory.py'))
+shutil.copy(os.path.join(os.path.dirname(__file__), '_util.py'), os.path.join(package_folder, '_util.py'))
 
 platforms = ('beaglebone', 'jetson', 'linux', 'mac', 'raspberry-pi', 'windows')
 
@@ -25,8 +26,9 @@ for platform in ('common',) + platforms:
 MANIFEST_IN = """
 include pvrhino/LICENSE
 include pvrhino/__init__.py
-include pvrhino/rhino.py
-include pvrhino/util.py
+include pvrhino/_rhino.py
+include pvrhino/_factory.py
+include pvrhino/_util.py
 include pvrhino/lib/common/rhino_params.pv
 include pvrhino/lib/beaglebone/libpv_rhino.so
 recursive-include pvrhino/lib/jetson *
@@ -45,7 +47,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
 
 setuptools.setup(
     name="pvrhino",
-    version="2.1.7",
+    version="2.2.0",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Rhino Speech-to-Intent engine.",

@@ -13,7 +13,7 @@ import json
 import struct
 import wave
 
-from util import *
+from _util import *
 
 
 def load_test_data():
