@@ -60,7 +60,7 @@
         "inference": {
           "intent": "shopping",
           "slots": {
-            "vrucht": "रसभर"
+            "vrucht": "रसभरी"
           }
         }
       },
@@ -78,9 +78,9 @@
         "language": "ja",
         "context_name": "sumāto_shōmei",
         "inference": {
-          "intent": "色変更",
+          "intent": "ライト状態オフ",
           "slots": {
-            "色": "青"
+            "場所": "廊下"
           }
         }
       },
