@@ -91,13 +91,6 @@ def main():
             endpoint_duration_sec=args.endpoint_duration_sec,
             require_endpoint=require_endpoint)
     except pvrhino.RhinoInvalidArgumentError as e:
-        args = (
-            args.access_key,
-            args.library_path,
-            args.model_path,
-            args.context_path,
-            args.require_endpoint
-        )
         print("One or more arguments provided to Rhino is invalid: ", args)
         print("If all other arguments seem valid, ensure that '%s' is a valid AccessKey" % args.access_key)
         raise e
