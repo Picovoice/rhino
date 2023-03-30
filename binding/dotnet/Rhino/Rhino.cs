@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2020-2022 Picovoice Inc.
+    Copyright 2020-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -67,20 +67,27 @@ namespace Pv
 
         static Rhino()
         {
-#if NETCOREAPP3_1_OR_GREATER
+
+#if NETCOREAPP3_0_OR_GREATER
+
             NativeLibrary.SetDllImportResolver(typeof(Rhino).Assembly, ImportResolver);
+
 #endif
+
             DEFAULT_MODEL_PATH = Utils.PvModelPath();
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP3_0_OR_GREATER
+
         private static IntPtr ImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
         {
             IntPtr libHandle = IntPtr.Zero;
             NativeLibrary.TryLoad(Utils.PvLibraryPath(libraryName), out libHandle);
             return libHandle;
         }
+
 #endif
+
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_init(
             IntPtr accessKey,
