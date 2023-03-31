@@ -11,7 +11,6 @@
 
 use chrono::Duration;
 use clap::{App, Arg};
-use hound;
 use itertools::Itertools;
 use rhino::RhinoBuilder;
 use std::path::PathBuf;
@@ -162,7 +161,7 @@ fn main() {
             .value_name("BOOL")
             .help("If set, Rhino requires an endpoint (chunk of silence) before finishing inference.")
             .takes_value(true)
-            .possible_values(&["TRUE", "true", "FALSE", "false"])
+            .possible_values(["TRUE", "true", "FALSE", "false"])
         )
         .get_matches();
 
