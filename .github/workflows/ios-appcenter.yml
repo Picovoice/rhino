@@ -5,7 +5,6 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'binding/ios/RhinoAppTest/Podfile.lock'
       - '.github/workflows/ios-appcenter.yml'
       - 'binding/ios/RhinoAppTest/**'
       - 'resources/.test/**'
@@ -13,7 +12,6 @@ on:
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
-      - 'binding/ios/RhinoAppTest/Podfile.lock'
       - '.github/workflows/ios-appcenter.yml'
       - 'binding/ios/RhinoAppTest/**'
       - 'resources/.test/**'
