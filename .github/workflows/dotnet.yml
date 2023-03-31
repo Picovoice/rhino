@@ -103,7 +103,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Build binding
-      run: dotnet build Porcupine/Porcupine.csproj --framework net6.0
+      run: dotnet build Rhino/Rhino.csproj --framework net6.0
 
     - name: Test
       run: dotnet test --framework net6.0 -v d
