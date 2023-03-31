@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_test/flutter_test.dart';
@@ -22,7 +20,7 @@ void main() {
       const INT16_MIN = -32768;
 
       var audioFileData = await rootBundle.load(audioPath);
-      Wav audioFile = await Wav.read(audioFileData.buffer.asUint8List());
+      Wav audioFile = Wav.read(audioFileData.buffer.asUint8List());
       List<int> pcm = audioFile.channels[0].map((f) {
           var i = (f * INT16_MAX).truncate();
           if (f > INT16_MAX) i = INT16_MAX;
@@ -47,8 +45,8 @@ void main() {
           String contextName = testData['tests']['within_context'][t]['context_name'];
           var expectedInference = testData['tests']['within_context'][t]['inference'];
 
-          String contextPath = "assets/test_resources/context_files/${contextName}_${platform}.rhn";
-          String modelPath = "assets/test_resources/model_files/rhino_params${language != "en" ? "_${language}" : ""}.pv";
+          String contextPath = "assets/test_resources/context_files/${contextName}_$platform.rhn";
+          String modelPath = "assets/test_resources/model_files/rhino_params${language != "en" ? "_$language" : ""}.pv";
 
           Rhino rhino;
           try {
@@ -57,11 +55,11 @@ void main() {
               contextPath,
               modelPath: modelPath);
           } on RhinoException catch (ex) {
-            expect(ex, equals(null), reason: "Failed to initialize Rhino for ${language}: ${ex}");
+            expect(ex, equals(null), reason: "Failed to initialize Rhino for $language: $ex");
             return;
           }
 
-          String audioPath = "assets/test_resources/audio_samples/test_within_context${language != "en" ? "_${language}" : ""}.wav";
+          String audioPath = "assets/test_resources/audio_samples/test_within_context${language != "en" ? "_$language" : ""}.wav";
           List<int> pcm = await loadAudioFile(audioPath);
 
           RhinoInference? inference;
@@ -74,10 +72,10 @@ void main() {
           }
 
           rhino.delete();
-          expect(inference, isNot(equals(null)), reason: "Rhino returned wrong inference for ${language} ${contextName}");
-          expect(inference?.isUnderstood, equals(true), reason: "Rhino returned wrong inference for ${language} ${contextName}");
-          expect(inference?.intent, equals(expectedInference['intent']), reason: "Rhino returned wrong inference for ${language} ${contextName}");
-          expect(inference?.slots, equals(expectedInference['slots']), reason: "Rhino returned wrong inference for ${language} ${contextName}");
+          expect(inference, isNot(equals(null)), reason: "Rhino returned wrong inference for $language $contextName");
+          expect(inference?.isUnderstood, equals(true), reason: "Rhino returned wrong inference for $language $contextName");
+          expect(inference?.intent, equals(expectedInference['intent']), reason: "Rhino returned wrong inference for $language $contextName");
+          expect(inference?.slots, equals(expectedInference['slots']), reason: "Rhino returned wrong inference for $language $contextName");
         }
       });
 
@@ -87,8 +85,8 @@ testWidgets('Test out_of_context all languages',
           String language = testData['tests']['out_of_context'][t]['language'];
           String contextName = testData['tests']['out_of_context'][t]['context_name'];
 
-          String contextPath = "assets/test_resources/context_files/${contextName}_${platform}.rhn";
-          String modelPath = "assets/test_resources/model_files/rhino_params${language != "en" ? "_${language}" : ""}.pv";
+          String contextPath = "assets/test_resources/context_files/${contextName}_$platform.rhn";
+          String modelPath = "assets/test_resources/model_files/rhino_params${language != "en" ? "_$language" : ""}.pv";
 
           Rhino rhino;
           try {
@@ -97,11 +95,11 @@ testWidgets('Test out_of_context all languages',
               contextPath,
               modelPath: modelPath);
           } on RhinoException catch (ex) {
-            expect(ex, equals(null), reason: "Failed to initialize Rhino for ${language}: ${ex}");
+            expect(ex, equals(null), reason: "Failed to initialize Rhino for $language: $ex");
             return;
           }
 
-          String audioPath = "assets/test_resources/audio_samples/test_out_of_context${language != "en" ? "_${language}" : ""}.wav";
+          String audioPath = "assets/test_resources/audio_samples/test_out_of_context${language != "en" ? "_$language" : ""}.wav";
           List<int> pcm = await loadAudioFile(audioPath);
 
           RhinoInference? inference;
@@ -114,8 +112,8 @@ testWidgets('Test out_of_context all languages',
           }
 
           rhino.delete();
-          expect(inference, isNot(equals(null)), reason: "Rhino returned wrong inference for ${language} ${contextName}");
-          expect(inference?.isUnderstood, equals(false), reason: "Rhino returned wrong inference for ${language} ${contextName}");
+          expect(inference, isNot(equals(null)), reason: "Rhino returned wrong inference for $language $contextName");
+          expect(inference?.isUnderstood, equals(false), reason: "Rhino returned wrong inference for $language $contextName");
         }
       });
   });
