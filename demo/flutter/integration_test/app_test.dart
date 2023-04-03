@@ -16,17 +16,11 @@ void main() {
   final String platform = Platform.isAndroid ? "android" : Platform.isIOS ? "ios" : throw ("Unsupported platform");
 
   Future<List<int>> loadAudioFile(String audioPath) async {
-      const INT16_MAX = 32767;
-      const INT16_MIN = -32768;
-
-      var audioFileData = await rootBundle.load(audioPath);
-      Wav audioFile = Wav.read(audioFileData.buffer.asUint8List());
-      List<int> pcm = audioFile.channels[0].map((f) {
-          var i = (f * INT16_MAX).truncate();
-          if (f > INT16_MAX) i = INT16_MAX;
-          if (f < INT16_MIN) i = INT16_MIN;
-          return i;
-        }).toList();
+    List<int> pcm = [];
+    var audioFileData = await rootBundle.load(audioPath);
+    for (int i = 44; i < audioFileData.lengthInBytes; i += 2) {
+      pcm.add(audioFileData.getInt16(i, Endian.little));
+    }
     return pcm;
   }
 
