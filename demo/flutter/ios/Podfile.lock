@@ -2,44 +2,52 @@ PODS:
   - Flutter (1.0.0)
   - flutter_voice_processor (1.0.6):
     - Flutter
+  - integration_test (0.0.1):
+    - Flutter
   - ios-voice-processor (1.0.3)
   - path_provider_ios (0.0.1):
     - Flutter
-  - Rhino-iOS (2.1.3):
+  - Rhino-iOS (2.2.0):
     - ios-voice-processor (~> 1.0.2)
-  - rhino_flutter (2.1.7):
+  - rhino_flutter (2.2.0):
     - Flutter
-    - Rhino-iOS (~> 2.1.3)
+    - Rhino-iOS (~> 2.2.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_voice_processor (from `.symlinks/plugins/flutter_voice_processor/ios`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
+  - Rhino-iOS (from `https://raw.githubusercontent.com/Picovoice/rhino/v2.2/binding/ios/Rhino-iOS.podspec`)
   - rhino_flutter (from `.symlinks/plugins/rhino_flutter/ios`)
 
 SPEC REPOS:
   trunk:
     - ios-voice-processor
-    - Rhino-iOS
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   flutter_voice_processor:
     :path: ".symlinks/plugins/flutter_voice_processor/ios"
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
+  Rhino-iOS:
+    :podspec: https://raw.githubusercontent.com/Picovoice/rhino/v2.2/binding/ios/Rhino-iOS.podspec
   rhino_flutter:
     :path: ".symlinks/plugins/rhino_flutter/ios"
 
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_voice_processor: afb59b604d99397a1ccf15c935ac8f2c2327f09f
+  integration_test: a1e7d09bd98eca2fc37aefd79d4f41ad37bdbbe5
   ios-voice-processor: 65b25a8db69ea25ffba0eeef37bae71a982f34cc
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
-  Rhino-iOS: a211c1c9da37d4c9187e1ce5bba6a2c06c6ce4b0
-  rhino_flutter: 8d30b0223b5a95f380060651f83818f4fcb3b082
+  Rhino-iOS: e17c24081302f221a1697e81779f8e6037809910
+  rhino_flutter: 4c3b4bbe00206617c38ea6f7c2f17d23b2879e90
 
-PODFILE CHECKSUM: a75497545d4391e2d394c3668e20cfb1c2bbd4aa
+PODFILE CHECKSUM: 7a17a4965c90e9f29990670a44f9698a675eed4c
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

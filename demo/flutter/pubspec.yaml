@@ -13,7 +13,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  rhino_flutter: ^2.1.7
+  rhino_flutter:
+    path: ../../binding/flutter
 
 dev_dependencies:
   integration_test:
@@ -21,7 +22,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   lints: ^1.0.1
-  wav: ^1.2.0
 
 flutter:
   uses-material-design: true

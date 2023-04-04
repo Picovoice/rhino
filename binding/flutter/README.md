@@ -27,7 +27,7 @@ Rhino is:
 This binding is for running Rhino on **Flutter 2.8.1+** on the following platforms:
 
 - Android 5.0+ (API 21+)
-- iOS 9.0+
+- iOS 11.0+
 
 ## Installation
 
