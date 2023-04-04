@@ -35,10 +35,16 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 }
 
-
 task copyLibs(type: Copy) {
-    from("${rootDir}/../../lib/android")
+    from("${rootDir}/../../../lib/android")
     into("${rootDir}/rhino/src/main/jniLibs")
 }
 
-preBuild.dependsOn copyLibs
+task copyParams(type: Copy) {
+    from("${rootDir}/../../../lib/common")
+    include('rhino_params.pv')
+    into("${rootDir}/rhino/src/main/res/raw")
+}
+
+preBuild.dependsOn(copyLibs)
+preBuild.dependsOn(copyParams)
