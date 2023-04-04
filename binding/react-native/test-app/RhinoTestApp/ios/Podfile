@@ -48,4 +48,7 @@ target 'RhinoTestApp' do
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
+
+  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/v2.2/binding/ios/Rhino-iOS.podspec'
+
 end
