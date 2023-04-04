@@ -120,5 +120,5 @@ repositories {
 dependencies {
   // noinspection GradleDynamicVersion
   api 'com.facebook.react:react-native:+'
-  implementation 'ai.picovoice:rhino-android:2.1.4'
+  implementation 'ai.picovoice:rhino-android:2.2.0'
 }
