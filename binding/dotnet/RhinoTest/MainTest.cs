@@ -10,14 +10,14 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using Pv;
@@ -27,8 +27,16 @@ namespace RhinoTest
     [TestClass]
     public class MainTest
     {
+        private static readonly string ROOT_DIR = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../../../..");
+
+        private static Architecture _arch => RuntimeInformation.ProcessArchitecture;
+        private static string _env => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "mac" :
+                                                 RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "windows" :
+                                                 RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && _arch == Architecture.X64 ? "linux" :
+                                                 RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
+                                                    (_arch == Architecture.Arm || _arch == Architecture.Arm64) ? PvLinuxEnv() : "";
+
         private static string _accessKey;
-        private static readonly string _rootDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../../../../..");
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext _)
@@ -38,7 +46,7 @@ namespace RhinoTest
 
         private static JObject LoadJsonTestData()
         {
-            string content = File.ReadAllText(Path.Combine(_rootDir, "resources/.test/test_data.json"));
+            string content = File.ReadAllText(Path.Combine(ROOT_DIR, "resources/.test/test_data.json"));
             return JObject.Parse(content);
         }
 
@@ -101,7 +109,7 @@ namespace RhinoTest
         private static string GetContextPath(string language, string context)
         {
             return Path.Combine(
-                _rootDir,
+                ROOT_DIR,
                 "resources",
                 AppendLanguage("contexts", language),
                 $"{_env}/{context}_{_env}.rhn"
@@ -112,11 +120,15 @@ namespace RhinoTest
         {
             string file_name = AppendLanguage("rhino_params", language);
             return Path.Combine(
-                _rootDir,
+                ROOT_DIR,
                 "lib/common",
                 $"{file_name}.pv"
             );
         }
+
+
+        private static Rhino InitDefaultRhino() => Rhino.Create(_accessKey, Path.Combine(ROOT_DIR, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
+
 
         private void RunTestCase(
             Rhino rhino,
@@ -126,7 +138,7 @@ namespace RhinoTest
             Dictionary<string, string> expectedSlots = null)
         {
             int frameLen = rhino.FrameLength;
-            string testAudioPath = Path.Combine(_relativeDir, "resources/audio_samples", audioFileName);
+            string testAudioPath = Path.Combine(ROOT_DIR, "resources/audio_samples", audioFileName);
             List<short> data = GetPcmFromFile(testAudioPath, rhino.SampleRate);
 
             bool isFinalized = false;
@@ -164,22 +176,28 @@ namespace RhinoTest
         [TestMethod]
         public void TestFrameLength()
         {
-            using Rhino rhino = InitDefaultRhino();
-            Assert.IsTrue(rhino?.FrameLength > 0, "Specified frame length was not a valid number.");
+            using (Rhino rhino = InitDefaultRhino())
+            {
+                Assert.IsTrue(rhino?.FrameLength > 0, "Specified frame length was not a valid number.");
+            }
         }
 
         [TestMethod]
         public void TestVersion()
         {
-            using Rhino rhino = InitDefaultRhino();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(rhino?.Version), "Rhino did not return a valid version number.");
+            using (Rhino rhino = InitDefaultRhino())
+            {
+                Assert.IsFalse(string.IsNullOrWhiteSpace(rhino?.Version), "Rhino did not return a valid version number.");
+            }
         }
 
         [TestMethod]
         public void TestContextInfo()
         {
-            using Rhino rhino = InitDefaultRhino();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(rhino?.ContextInfo), "Rhino did not return any context information.");
+            using (Rhino rhino = InitDefaultRhino())
+            {
+                Assert.IsFalse(string.IsNullOrWhiteSpace(rhino?.ContextInfo), "Rhino did not return any context information.");
+            }
         }
 
         [TestMethod]
@@ -190,37 +208,40 @@ namespace RhinoTest
             string expectedIntent,
             Dictionary<string, string> expectedSlots)
         {
-            using Rhino rhino = Rhino.Create(
+
+            using (Rhino rhino = Rhino.Create(
                 _accessKey,
                 GetContextPath(language, contextName),
                 GetModelPath(language)
-            );
-
-            RunTestCase(
-                rhino,
-                String.Format("{0}.wav", AppendLanguage("test_within_context", language)),
-                true,
-                expectedIntent,
-                expectedSlots
-            );
+            ))
+            {
+                RunTestCase(
+                    rhino,
+                    String.Format("{0}.wav", AppendLanguage("test_within_context", language)),
+                    true,
+                    expectedIntent,
+                    expectedSlots
+                );
+            }
         }
 
         [TestMethod]
         [DynamicData(nameof(OutOfContextTestData))]
         public void TestOutOfContext(string language, string contextName)
         {
-            using Rhino rhino = Rhino.Create(
+            using (Rhino rhino = Rhino.Create(
                 _accessKey,
                 GetContextPath(language, contextName),
                 GetModelPath(language)
-            );
-
-            Dictionary<string, string> expectedSlots = new Dictionary<string, string>();
-            RunTestCase(
-                rhino,
-                String.Format("{0}.wav", AppendLanguage("test_out_of_context", language)),
-                false
-            );
+            ))
+            {
+                Dictionary<string, string> expectedSlots = new Dictionary<string, string>();
+                RunTestCase(
+                    rhino,
+                    String.Format("{0}.wav", AppendLanguage("test_out_of_context", language)),
+                    false
+                );
+            }
         }
 
         private List<short> GetPcmFromFile(string audioFilePath, int expectedSampleRate)
@@ -240,17 +261,6 @@ namespace RhinoTest
 
             return data;
         }
-
-        private static string _relativeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-        private static Architecture _arch => RuntimeInformation.ProcessArchitecture;
-        private static string _env => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "mac" :
-                                                 RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "windows" :
-                                                 RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && _arch == Architecture.X64 ? "linux" :
-                                                 RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
-                                                    (_arch == Architecture.Arm || _arch == Architecture.Arm64) ? PvLinuxEnv() : "";
-
-        private Rhino InitDefaultRhino() => Rhino.Create(_accessKey, Path.Combine(_relativeDir, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
 
         public static string PvLinuxEnv()
         {

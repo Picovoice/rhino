@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;netcoreapp3.1;netstandard2.0</TargetFrameworks>
-		<Version>2.1.8</Version>
+		<TargetFrameworks>net6.0;netcoreapp3.0;netstandard2.0</TargetFrameworks>
+		<Version>2.2.0</Version>
 		<Authors>Picovoice</Authors>
 		<Company />
 		<Product>Rhino Speech-to-Intent Engine</Product>
@@ -29,19 +29,30 @@ Rhino is:
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageIcon>pv_circle_512.png</PackageIcon>
 	</PropertyGroup>
-	<ItemGroup>
-		<Content Include="Rhino.targets">
-			<PackagePath>
-				build/netstandard2.0;
-				build/netcoreapp3.1;
-				build/net6.0;
-			</PackagePath>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
+
+    <!--Target Files-->
+    <ItemGroup>
+        <Content Include="Rhino.netstandard2.0.targets">
+            <PackagePath>
+                build/netstandard2.0/Rhino.targets;
+            </PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Rhino.targets">
+            <PackagePath>
+                build/netcoreapp3.0/Rhino.targets;
+                build/net6.0/Rhino.targets;
+            </PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <!--.NET Standard 2.0+ Libs-->
+    <ItemGroup>
 		<Content Include="..\..\..\lib\windows\amd64\libpv_rhino.dll">
 			<PackagePath>
-				build/netstandard2.0/lib/windows/amd64/libpv_rhino.dll;
-				build/netcoreapp3.1/lib/windows/amd64/libpv_rhino.dll;
+				build/netstandard2.0/libpv_rhino.dll;
+				build/netcoreapp3.0/lib/windows/amd64/libpv_rhino.dll;
 				build/net6.0/lib/windows/amd64/libpv_rhino.dll;
 			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -50,18 +61,31 @@ Rhino is:
 		</Content>
 		<Content Include="..\..\..\lib\linux\x86_64\libpv_rhino.so">
 			<PackagePath>
-				build/netstandard2.0/lib/linux/x86_64/libpv_rhino.so;
-				build/netcoreapp3.1/lib/linux/x86_64/libpv_rhino.so;
+				build/netstandard2.0/libpv_rhino.so;
+				build/netcoreapp3.0/lib/linux/x86_64/libpv_rhino.so;
 				build/net6.0/lib/linux/x86_64/libpv_rhino.so;
 			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>lib\linux\x86_64\libpv_rhino.so</Link>
 			<Visible>false</Visible>
 		</Content>
+        <Content Include="..\..\..\lib\mac\x86_64\libpv_rhino.dylib">
+            <PackagePath>
+                build/netstandard2.0/libpv_rhino.dylib;
+                build/netcoreapp3.0/lib/mac/x86_64/libpv_rhino.dylib;
+                build/net6.0/lib/mac/x86_64/libpv_rhino.dylib;
+            </PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>lib\mac\x86_64\libpv_rhino.dylib</Link>
+            <Visible>false</Visible>
+        </Content>
+    </ItemGroup>
+
+    <!--.NET Core 3.0+ Libs-->
+    <ItemGroup>
 		<Content Include="..\..\..\lib\raspberry-pi\**\*" Exclude="..\..\..\lib\raspberry-pi\arm11\*">
 			<PackagePath>
-				build/netstandard2.0/lib/raspberry-pi;
-				build/netcoreapp3.1/lib/raspberry-pi;
+				build/netcoreapp3.0/lib/raspberry-pi;
 				build/net6.0/lib/raspberry-pi;
 			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -69,9 +93,8 @@ Rhino is:
 			<Visible>false</Visible>
 		</Content>
 		<Content Include="..\..\..\lib\jetson\cortex-a57-aarch64\libpv_rhino.so">
-			<PackagePath>
-				build/netstandard2.0/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
-				build/netcoreapp3.1/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
+			<PackagePath>				
+				build/netcoreapp3.0/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
 				build/net6.0/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
 			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -79,29 +102,34 @@ Rhino is:
 			<Visible>false</Visible>
 		</Content>
 		<Content Include="..\..\..\lib\beaglebone\libpv_rhino.so">
-			<PackagePath>
-				build/netstandard2.0/lib/beaglebone/libpv_rhino.so;
-				build/netcoreapp3.1/lib/beaglebone/libpv_rhino.so;
+			<PackagePath>				
+				build/netcoreapp3.0/lib/beaglebone/libpv_rhino.so;
 				build/net6.0/lib/beaglebone/libpv_rhino.so;
 			</PackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Link>lib\beaglebone\libpv_rhino.so</Link>
 			<Visible>false</Visible>
 		</Content>
-		<Content Include="..\..\..\lib\mac\**\*">
-			<PackagePath>
-				build/netstandard2.0/lib/mac;
-				build/netcoreapp3.1/lib/mac;
-				build/net6.0/lib/mac;
-			</PackagePath>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<Link>lib\mac\%(RecursiveDir)%(Filename)%(Extension)</Link>
-			<Visible>false</Visible>
-		</Content>
+    </ItemGroup>
+
+    <!--.NET 6.0+ libs-->
+    <ItemGroup>
+        <Content Include="..\..\..\lib\mac\arm64\libpv_rhino.dylib">
+            <PackagePath>
+                build/net6.0/lib/mac/arm64/libpv_rhino.dylib;
+            </PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>lib\mac\arm64\libpv_rhino.dylib</Link>
+            <Visible>false</Visible>
+        </Content>
+    </ItemGroup>
+
+    <!--Resources-->
+    <ItemGroup>
 		<Content Include="..\..\..\lib\common\rhino_params.pv">
 			<PackagePath>
 				build/netstandard2.0/lib/common/rhino_params.pv;
-				build/netcoreapp3.1/lib/common/rhino_params.pv;
+				build/netcoreapp3.0/lib/common/rhino_params.pv;
 				build/net6.0/lib/common/rhino_params.pv;
 			</PackagePath>
 			<Link>lib\common\rhino_params.pv</Link>
