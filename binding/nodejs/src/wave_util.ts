@@ -37,7 +37,7 @@ export function checkWaveFile(
   if (waveFile.fmt.sampleRate !== engineSampleRate) {
     // eslint-disable-next-line no-console
     console.error(
-      `Audio sample rate ${waveFile.sampleRate} does not match Porcupine sample rate ${engineSampleRate}`
+      `Audio sample rate ${waveFile.sampleRate} does not match Rhino sample rate ${engineSampleRate}`
     );
     valid = false;
   }
