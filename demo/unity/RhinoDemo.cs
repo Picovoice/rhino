@@ -1,5 +1,5 @@
 ﻿//
-// Copyright 2021 Picovoice Inc.
+// Copyright 2021-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -26,7 +26,7 @@ public class RhinoDemo : MonoBehaviour
     Button _startButton;
     Image[] _locationStates;
     Text _errorMessage;
-        
+
     private bool _isProcessing;
 
     RhinoManager _rhinoManager;
@@ -58,7 +58,7 @@ public class RhinoDemo : MonoBehaviour
         _startButton.onClick.AddListener(ToggleProcessing);
         _locationStates = gameObject.GetComponentsInChildren<Image>().Where(i => i.name != "ToggleListeningButton").ToArray();
         _errorMessage = gameObject.transform.Find("ErrorMessage").GetComponent<Text>();
-        
+
         try
         {
             _rhinoManager = RhinoManager.Create(ACCESS_KEY, _contextPath, OnInferenceResult, processErrorCallback: ErrorCallback);
@@ -131,14 +131,14 @@ public class RhinoDemo : MonoBehaviour
                 bool state = false;
                 if (inference.Slots.ContainsKey("state"))
                 {
-                    state = inference.Slots["state"] == "on";                    
+                    state = inference.Slots["state"] == "on";
                 }
 
                 Image[] locations = _locationStates;
                 if (inference.Slots.ContainsKey("location"))
                 {
                     string locationName = inference.Slots["location"];
-                    locations = _locationStates.Where(g => g.name == locationName).ToArray();                       
+                    locations = _locationStates.Where(g => g.name == locationName).ToArray();
                 }
 
                 ChangeLightState(locations, state);
@@ -165,8 +165,8 @@ public class RhinoDemo : MonoBehaviour
         _isProcessing = false;
     }
 
-    private void ChangeLightState(Image[] locations, bool state) 
-    {        
+    private void ChangeLightState(Image[] locations, bool state)
+    {
         float alphaValue = state ? 1 : 0.1f;
         for (int i = 0; i < locations.Length; i++)
         {

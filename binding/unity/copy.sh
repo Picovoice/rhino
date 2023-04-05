@@ -3,7 +3,7 @@ cp ../../lib/android/arm64-v8a/libpv_rhino.so ./Assets/Rhino/Plugins/android/arm
 cp ../../lib/android/armeabi-v7a/libpv_rhino.so ./Assets/Rhino/Plugins/android/armeabi-v7a/libpv_rhino.so
 
 echo "Copying iOS lib..."
-cp -R ../../lib/ios/PvRhino.xcframework/ios-arm64_armv7/PvRhino.framework ./Assets/Rhino/Plugins/ios/PvRhino.framework
+cp -R ../../lib/ios/PvRhino.xcframework/ios-arm64/PvRhino.framework ./Assets/Rhino/Plugins/ios
 
 echo "Copying Linux lib..."
 cp ../../lib/linux/x86_64/libpv_rhino.so ./Assets/Rhino/Plugins/linux/x86_64/libpv_rhino.so
@@ -22,7 +22,7 @@ cp ../../lib/common/rhino_params.pv ./Assets/StreamingAssets/rhino_params.pv
 
 echo "Copying demo files..."
 if [ ! -d "./Assets/Rhino/Demo" ]
-then 
+then
     mkdir -p ./Assets/Rhino/Demo
 fi
 cp -rp ../../demo/unity/* ./Assets/Rhino/Demo
