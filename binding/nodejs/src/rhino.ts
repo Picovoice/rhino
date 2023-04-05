@@ -1,5 +1,5 @@
 //
-// Copyright 2020-2022 Picovoice Inc.
+// Copyright 2020-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -8,36 +8,36 @@
 // an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 //
-"use strict";
+'use strict';
 
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
-import PvStatus from "./pv_status_t";
+import PvStatus from './pv_status_t';
 import {
   RhinoInvalidArgumentError,
   RhinoInvalidStateError,
   pvStatusToException,
-} from "./errors";
-import { getSystemLibraryPath } from "./platforms";
+} from './errors';
+import { getSystemLibraryPath } from './platforms';
 
-const MODEL_PATH_DEFAULT = "../lib/common/rhino_params.pv";
+const MODEL_PATH_DEFAULT = '../lib/common/rhino_params.pv';
 
 export type RhinoInference = {
-  isUnderstood: boolean
-  intent?: string
-  slots?: Record<string, string>
-}
+  isUnderstood: boolean;
+  intent?: string;
+  slots?: Record<string, string>;
+};
 
-type RhinoHandleAndStatus = { handle: any, status: PvStatus };
-type FinalizedAndStatus = { is_finalized: number, status: PvStatus }
+type RhinoHandleAndStatus = { handle: any; status: PvStatus };
+type FinalizedAndStatus = { is_finalized: number; status: PvStatus };
 type InferenceAndStatus = {
-  is_understood: number
-  intent?: string
-  slots?: Record<string, string>
-  status: PvStatus
-}
-type ContextAndStatus = { context_info: string, status: PvStatus }
+  is_understood: number;
+  intent?: string;
+  slots?: Record<string, string>;
+  status: PvStatus;
+};
+type ContextAndStatus = { context_info: string; status: PvStatus };
 
 /**
  * Wraps the Rhino engine and context.
@@ -104,7 +104,9 @@ export default class Rhino {
     }
 
     if (!fs.existsSync(modelPath)) {
-      throw new RhinoInvalidArgumentError(`File not found at 'modelPath': ${modelPath}`);
+      throw new RhinoInvalidArgumentError(
+        `File not found at 'modelPath': ${modelPath}`
+      );
     }
 
     if (!fs.existsSync(contextPath)) {
@@ -119,30 +121,35 @@ export default class Rhino {
       );
     }
 
-    if (endpointDurationSec < 0.5 || endpointDurationSec > 5.0 || isNaN(endpointDurationSec)) {
+    if (
+      endpointDurationSec < 0.5 ||
+      endpointDurationSec > 5.0 ||
+      isNaN(endpointDurationSec)
+    ) {
       throw new RangeError(
-          `Endpoint duration should be within [0.5, 5]: ${endpointDurationSec}`
+        `Endpoint duration should be within [0.5, 5]: ${endpointDurationSec}`
       );
     }
 
-    const pvRhino = require(libraryPath);
+    const pvRhino = require(libraryPath); // eslint-disable-line
 
     let rhinoHandleAndStatus: RhinoHandleAndStatus | null = null;
     try {
       rhinoHandleAndStatus = pvRhino.init(
-          accessKey,
-          modelPath,
-          contextPath,
-          sensitivity,
-          endpointDurationSec,
-          requireEndpoint);
+        accessKey,
+        modelPath,
+        contextPath,
+        sensitivity,
+        endpointDurationSec,
+        requireEndpoint
+      );
     } catch (err: any) {
       pvStatusToException(<PvStatus>err.code, err);
     }
 
     const status = rhinoHandleAndStatus!.status;
     if (status !== PvStatus.SUCCESS) {
-      pvStatusToException(status, "Rhino failed to initialize");
+      pvStatusToException(status, 'Rhino failed to initialize');
     }
 
     this._handle = rhinoHandleAndStatus!.handle;
@@ -189,7 +196,7 @@ export default class Rhino {
       this._handle === null ||
       this._handle === undefined
     ) {
-      throw new RhinoInvalidStateError("Rhino is not initialized");
+      throw new RhinoInvalidStateError('Rhino is not initialized');
     }
 
     if (frame === undefined || frame === null) {
@@ -220,7 +227,7 @@ export default class Rhino {
 
     const status = finalizedAndStatus!.status;
     if (status !== PvStatus.SUCCESS) {
-      pvStatusToException(status, "Rhino failed to process the frame");
+      pvStatusToException(status, 'Rhino failed to process the frame');
     }
 
     this.isFinalized = finalizedAndStatus!.is_finalized === 1;
@@ -264,7 +271,7 @@ export default class Rhino {
       this._handle === null ||
       this._handle === undefined
     ) {
-      throw new RhinoInvalidStateError("Rhino is not initialized");
+      throw new RhinoInvalidStateError('Rhino is not initialized');
     }
 
     let inferenceAndStatus: InferenceAndStatus | null = null;
@@ -279,7 +286,7 @@ export default class Rhino {
       pvStatusToException(status, `Rhino failed to get inference: ${status}`);
     }
 
-    let inference: RhinoInference = {
+    const inference: RhinoInference = {
       isUnderstood: inferenceAndStatus!.is_understood === 1,
       intent: inferenceAndStatus!.intent,
       slots: inferenceAndStatus!.slots,
@@ -300,7 +307,7 @@ export default class Rhino {
       this._handle === null ||
       this._handle === undefined
     ) {
-      throw new RhinoInvalidStateError("Rhino is not initialized");
+      throw new RhinoInvalidStateError('Rhino is not initialized');
     }
 
     let contextAndStatus: ContextAndStatus | null = null;
@@ -312,7 +319,10 @@ export default class Rhino {
 
     const status = contextAndStatus!.status;
     if (status !== PvStatus.SUCCESS) {
-      pvStatusToException(status, `Rhino failed to get context info: ${status}`);
+      pvStatusToException(
+        status,
+        `Rhino failed to get context info: ${status}`
+      );
     }
 
     return contextAndStatus!.context_info;
@@ -324,12 +334,13 @@ export default class Rhino {
    * Be sure to call this when finished with the instance
    * to reclaim the memory that was allocated by the C library.
    */
-  release() {
+  release(): void {
     if (this._handle !== 0) {
       this._pvRhino.delete(this._handle);
       this._handle = 0;
     } else {
-      console.warn("Rhino is not initialized; nothing to destroy");
+      // eslint-disable-next-line no-console
+      console.warn('Rhino is not initialized; nothing to destroy');
     }
   }
 }
