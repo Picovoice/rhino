@@ -118,7 +118,7 @@ int picovoice_main(int argc, char *argv[]) {
     const char *wav_path = NULL;
     float sensitivity = 0.5f;
     float endpoint_duration_sec = 1.f;
-    bool require_endpoint = false;
+    bool require_endpoint = true;
     double performance_threshold_sec = 0;
 
     int c;

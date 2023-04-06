@@ -140,7 +140,7 @@ int picovoice_main(int argc, char *argv[]) {
     int32_t device_index = -1;
     float sensitivity = 0.5f;
     float endpoint_duration_sec = 1.f;
-    bool require_endpoint = false;
+    bool require_endpoint = true;
 
     int c;
     while ((c = getopt_long(argc, argv, "a:l:m:c:d:t:u:e:s", long_options, NULL)) != -1) {
