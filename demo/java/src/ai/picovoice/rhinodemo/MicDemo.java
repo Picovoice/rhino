@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2021 Picovoice Inc.
+    Copyright 2018-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -25,8 +25,16 @@ import java.util.Map;
 import javax.sound.sampled.*;
 
 public class MicDemo {
-    public static void runDemo(String accessKey, String contextPath, String libraryPath, String modelPath,
-                               float sensitivity, float endpointDuration, int audioDeviceIndex, String outputPath, boolean requireEndpoint) {
+    public static void runDemo(
+            String accessKey,
+            String contextPath,
+            String libraryPath,
+            String modelPath,
+            float sensitivity,
+            float endpointDuration,
+            int audioDeviceIndex,
+            String outputPath,
+            boolean requireEndpoint) {
 
         // for file output
         File outputFile = null;
@@ -125,7 +133,10 @@ public class MicDemo {
 
                 // need to transfer to input stream to write
                 ByteArrayInputStream writeArray = new ByteArrayInputStream(outputStream.toByteArray());
-                AudioInputStream writeStream = new AudioInputStream(writeArray, format, totalBytesCaptured / format.getFrameSize());
+                AudioInputStream writeStream = new AudioInputStream(
+                        writeArray,
+                        format,
+                        totalBytesCaptured / format.getFrameSize());
 
                 try {
                     AudioSystem.write(writeStream, AudioFileFormat.Type.WAVE, outputFile);
@@ -167,7 +178,9 @@ public class MicDemo {
         return (TargetDataLine) AudioSystem.getLine(dataLineInfo);
     }
 
-    private static TargetDataLine getAudioDevice(int deviceIndex, DataLine.Info dataLineInfo) throws LineUnavailableException {
+    private static TargetDataLine getAudioDevice(
+            int deviceIndex,
+            DataLine.Info dataLineInfo) throws LineUnavailableException {
 
         if (deviceIndex >= 0) {
             try {
@@ -177,7 +190,8 @@ public class MicDemo {
                 if (mixer.isLineSupported(dataLineInfo)) {
                     return (TargetDataLine) mixer.getLine(dataLineInfo);
                 } else {
-                    System.err.printf("Audio capture device at index %s does not support the audio format required by " +
+                    System.err.printf(
+                            "Audio capture device at index %s does not support the audio format required by " +
                             "Picovoice. Using default capture device.", deviceIndex);
                 }
             } catch (Exception e) {
@@ -191,7 +205,7 @@ public class MicDemo {
 
     public static void main(String[] args) {
 
-        Options options = BuildCommandLineOptions();
+        Options options = buildCommandLineOptions();
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
 
@@ -261,7 +275,7 @@ public class MicDemo {
             }
         }
 
-        if(contextPath == null){
+        if (contextPath == null) {
             throw new IllegalArgumentException("No context file provided. This is a required argument.");
         }
         File contextFile = new File(contextPath);
@@ -296,10 +310,18 @@ public class MicDemo {
             requireEndpoint = false;
         }
 
-        runDemo(accessKey, contextPath, libraryPath, modelPath, sensitivity, endpointDuration, audioDeviceIndex, outputPath, requireEndpoint);
+        runDemo(accessKey,
+                contextPath,
+                libraryPath,
+                modelPath,
+                sensitivity,
+                endpointDuration,
+                audioDeviceIndex,
+                outputPath,
+                requireEndpoint);
     }
 
-    private static Options BuildCommandLineOptions() {
+    private static Options buildCommandLineOptions() {
         Options options = new Options();
 
         options.addOption(Option.builder("a")
@@ -329,7 +351,8 @@ public class MicDemo {
         options.addOption(Option.builder("s")
                 .longOpt("sensitivity")
                 .hasArgs()
-                .desc("Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
+                .desc("Inference sensitivity. It should be a number within [0, 1]. " +
+                        "A higher sensitivity value results in " +
                         "fewer misses at the cost of (potentially) increasing the erroneous inference rate. " +
                         "If not set 0.5 will be used.")
                 .build());
@@ -338,8 +361,10 @@ public class MicDemo {
                 .longOpt("endpoint_duration")
                 .hasArgs()
                 .desc("Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an " +
-                        "utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint " +
-                        "duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference " +
+                        "utterance that marks the end of spoken command. It should be a positive number within " +
+                        "[0.5, 5]. A lower endpoint " +
+                        "duration reduces delay and improves responsiveness. A higher endpoint duration assures " +
+                        "Rhino doesn't return inference " +
                         "preemptively in case the user pauses before finishing the request.")
                 .build());
 
@@ -347,8 +372,10 @@ public class MicDemo {
                 .longOpt("require_endpoint")
                 .hasArg(true)
                 .desc("If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command. " +
-                        "If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set " +
-                        "to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).")
+                        "If set to `false`, Rhino tries to detect silence, but if it cannot, it still will " +
+                        "provide inference regardless. Set " +
+                        "to `false` only if operating in an environment with overlapping speech (e.g. people " +
+                        "talking in the background).")
                 .build());
 
         options.addOption(Option.builder("o")

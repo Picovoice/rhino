@@ -12,10 +12,13 @@ package ai.picovoice.rhino;
 
 import java.util.Map;
 
+/**
+ * Class that contains inference results returned from Rhino.
+ */
 public class RhinoInference {
-    final private boolean isUnderstood;
-    final private String intent;
-    final private Map<String, String> slots;
+    private final boolean isUnderstood;
+    private final String intent;
+    private final Map<String, String> slots;
 
     RhinoInference(boolean isUnderstood, String intent, Map<String, String> slots) {
         this.isUnderstood = isUnderstood;

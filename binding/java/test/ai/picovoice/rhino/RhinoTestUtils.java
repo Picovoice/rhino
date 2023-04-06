@@ -30,8 +30,9 @@ public class RhinoTestUtils {
     }
 
     static String appendLanguage(String s, String language) {
-        if (language.equals("en"))
+        if (language.equals("en")) {
             return s;
+        }
         return s + "_" + language;
     }
 
@@ -47,7 +48,7 @@ public class RhinoTestUtils {
     static String getTestModelPath(String language) {
         return Paths.get(System.getProperty("user.dir"))
                 .resolve("../../lib/common")
-                .resolve(appendLanguage("rhino_params", language)+".pv")
+                .resolve(appendLanguage("rhino_params", language) + ".pv")
                 .toString();
     }
 

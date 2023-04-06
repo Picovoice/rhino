@@ -54,7 +54,10 @@ public class RhinoTest {
             final String context = testData.get("context_name").getAsString();
             final String intent = testData.getAsJsonObject("inference").get("intent").getAsString();
             HashMap<String, String> expectedSlotValues = new HashMap<String, String>();
-            for (Map.Entry<String, JsonElement> entry : testData.getAsJsonObject("inference").getAsJsonObject("slots").asMap().entrySet()) {
+            for (Map.Entry<String, JsonElement> entry : testData.getAsJsonObject("inference")
+                                                                .getAsJsonObject("slots")
+                                                                .asMap()
+                                                                .entrySet()) {
                 expectedSlotValues.put(entry.getKey(), entry.getValue().getAsString());
             }
             final String audioFileName = RhinoTestUtils.appendLanguage("test_within_context", language) + ".wav";
@@ -122,7 +125,11 @@ public class RhinoTest {
         assertTrue(rhino.getSampleRate() > 0);
     }
 
-    void runTestCase(String audioFileName, boolean isWithinContext, String expectedIntent, Map<String, String> expectedSlots) throws IOException, UnsupportedAudioFileException, RhinoException {
+    void runTestCase(String audioFileName,
+                     boolean isWithinContext,
+                     String expectedIntent,
+                     Map<String, String> expectedSlots)
+                     throws IOException, UnsupportedAudioFileException, RhinoException {
         int frameLen = rhino.getFrameLength();
         String audioFilePath = RhinoTestUtils.getAudioFilePath(audioFileName);
         File testAudioPath = new File(audioFilePath);
@@ -159,7 +166,12 @@ public class RhinoTest {
 
     @ParameterizedTest(name = "testWithinContext for ''{0}''")
     @MethodSource("withinContextProvider")
-    void testWithinContext(String language, String context, String audioFileName, String intent, Map<String, String> expectedSlotValues) throws IOException, UnsupportedAudioFileException, RhinoException {
+    void testWithinContext(String language,
+                           String context,
+                           String audioFileName,
+                           String intent,
+                           Map<String, String> expectedSlotValues)
+                           throws IOException, UnsupportedAudioFileException, RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(RhinoTestUtils.getTestContextPath(language, context))
@@ -176,7 +188,10 @@ public class RhinoTest {
 
     @ParameterizedTest(name = "testOutOfContext for ''{0}''")
     @MethodSource("outOfContextProvider")
-    void testOutOfContext(String language, String context, String audioFileName) throws IOException, UnsupportedAudioFileException, RhinoException {
+    void testOutOfContext(String language,
+                          String context,
+                          String audioFileName)
+                          throws IOException, UnsupportedAudioFileException, RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(RhinoTestUtils.getTestContextPath(language, context))

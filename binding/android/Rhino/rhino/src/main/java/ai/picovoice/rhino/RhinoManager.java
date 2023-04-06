@@ -156,7 +156,7 @@ public class RhinoManager {
     }
 
     /**
-     * Builder for creating an instance of RhinoManager with a mixture of default arguments
+     * Builder for creating an instance of RhinoManager with a mixture of default arguments.
      */
     public static class Builder {
 

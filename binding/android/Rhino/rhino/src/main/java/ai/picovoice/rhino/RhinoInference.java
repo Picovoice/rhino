@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2021 Picovoice Inc.
+    Copyright 2018-2023 Picovoice Inc.
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
     Unless required by applicable law or agreed to in writing, software distributed under the
@@ -12,10 +12,13 @@ package ai.picovoice.rhino;
 
 import java.util.Map;
 
+/**
+ * Class that contains inference results returned from Rhino.
+ */
 public class RhinoInference {
-    final private boolean isUnderstood;
-    final private String intent;
-    final private Map<String, String> slots;
+    private final boolean isUnderstood;
+    private final String intent;
+    private final Map<String, String> slots;
 
     RhinoInference(boolean isUnderstood, String intent, Map<String, String> slots) {
         this.isUnderstood = isUnderstood;

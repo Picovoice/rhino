@@ -54,12 +54,15 @@ public class Rhino {
      *                            sensitivity value results in fewer misses at the cost of (potentially)
      *                            increasing the erroneous inference rate.
      * @param endpointDurationSec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
-     *                            utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
-     *                            duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
+     *                            utterance that marks the end of spoken command. It should be a positive
+     *                            number within [0.5, 5]. A lower endpoint duration reduces delay and improves
+     *                            responsiveness. A higher endpoint duration assures Rhino doesn't return inference
      *                            preemptively in case the user pauses before finishing the request.
-     * @param requireEndpoint     If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
-     *                            If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
-     *                            to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
+     * @param requireEndpoint     If set to `true`, Rhino requires an endpoint (a chunk of silence) after the
+     *                            spoken command. If set to `false`, Rhino tries to detect silence, but if it
+     *                            cannot, it still will provide inference regardless. Set to `false` only if
+     *                            operating in an environment with overlapping speech (e.g. people talking in
+     *                            the background).
      *
      * @throws RhinoException if there is an error while initializing Rhino.
      */
@@ -68,7 +71,7 @@ public class Rhino {
                   String contextPath,
                   float sensitivity,
                   float endpointDurationSec,
-                  boolean requireEndpoint) throws RhinoException{
+                  boolean requireEndpoint) throws RhinoException {
         handle = RhinoNative.init(
                 accessKey,
                 modelPath,
@@ -180,7 +183,7 @@ public class Rhino {
     }
 
     /**
-     * Builder for creating an instance of Rhino with a mixture of default arguments
+     * Builder for creating an instance of Rhino with a mixture of default arguments.
      */
     public static class Builder {
         private String accessKey = null;
@@ -234,7 +237,9 @@ public class Rhino {
             }
         }
 
-        private String extractResource(Context context, InputStream srcFileStream, String dstFilename) throws IOException {
+        private String extractResource(Context context,
+                                       InputStream srcFileStream,
+                                       String dstFilename) throws IOException {
             InputStream is = new BufferedInputStream(srcFileStream, 256);
             OutputStream os = new BufferedOutputStream(context.openFileOutput(dstFilename, Context.MODE_PRIVATE), 256);
             int r;
@@ -249,7 +254,7 @@ public class Rhino {
         }
 
         /**
-         * Validates properties and creates an instance of the Rhino Speech-To-Intent engine
+         * Validates properties and creates an instance of the Rhino Speech-To-Intent engine.
          *
          * @param context Android app context (for extracting Rhino resources)
          * @return An instance of Rhino Speech-To-Intent engine
