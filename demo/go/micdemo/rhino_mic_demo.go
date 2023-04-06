@@ -197,7 +197,6 @@ waitLoop:
 						log.Fatal(err)
 					}
 				}
-				}
 			}
 		}
 	}
