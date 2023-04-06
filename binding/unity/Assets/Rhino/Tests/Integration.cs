@@ -25,36 +25,36 @@ namespace Tests
     [Serializable]
     public class TestData
     {
-      public Tests tests;
+        public Tests tests;
     }
 
     [Serializable]
     public class Tests
     {
-      public WithinContextTest[] within_context;
-      public OutOfContextTest[] out_of_context;
+        public WithinContextTest[] within_context;
+        public OutOfContextTest[] out_of_context;
     }
 
     [Serializable]
     public class WithinContextTest
     {
-      public string language;
-      public string context_name;
-      public TestDataInference inference;
+        public string language;
+        public string context_name;
+        public TestDataInference inference;
     }
 
     [Serializable]
     public class TestDataInference
     {
-      public string intent;
-      public Dictionary<string, string> slots;
+        public string intent;
+        public Dictionary<string, string> slots;
     }
 
     [Serializable]
     public class OutOfContextTest
     {
-      public string language;
-      public string context_name;
+        public string language;
+        public string context_name;
     }
 
     public class Integration
@@ -124,7 +124,8 @@ namespace Tests
 #endif
         }
 
-        private static TestData LoadJsonTestData() {
+        private static TestData LoadJsonTestData()
+        {
             string dataAsJson = File.ReadAllText(ExtractResource(Path.Combine(Application.streamingAssetsPath, "test/test_data.json")));
             return JsonConvert.DeserializeObject<TestData>(dataAsJson);
         }
