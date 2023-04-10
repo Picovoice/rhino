@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2022 Picovoice Inc.
+# Copyright 2018-2023 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -18,15 +18,17 @@ log = logging.getLogger('RHN')
 log.setLevel(logging.WARNING)
 
 
+def _is_64bit():
+    return '64bit' in platform.architecture()[0]
+
+
 def _pv_linux_machine(machine):
     if machine == 'x86_64':
         return machine
-    elif machine == 'aarch64':
-        arch_info = '-' + machine
-    elif machine in ['armv7l', 'armv6l']:
-        arch_info = ''
+    elif machine in ['aarch64', 'armv7l', 'armv6l']:
+        arch_info = ('-' + machine) if _is_64bit() else ''
     else:
-        raise NotImplementedError("Unsupported CPU architecture: '%s'" % machine)
+        raise NotImplementedError("Unsupported CPU architecture: `%s`" % machine)
 
     cpu_info = ''
     try:
