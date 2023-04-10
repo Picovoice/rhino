@@ -3,8 +3,8 @@ dist
 lib/pv_rhino*.wasm
 src/rhino_64.ts
 contexts/*.rhn
+test/contexts/*.rhn
+cypress/fixtures/audio_samples/*
 test/rhino_params*.js
 test/rhino_params*.pv
 test/test_data.json
-test/contexts
-test/audio_samples

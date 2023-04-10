@@ -7,17 +7,20 @@ on:
     paths:
       - 'binding/web/**'
       - '!binding/web/README.md'
-      - 'lib/wasm/**'
       - 'lib/common/**'
-      - 'resources/contexts/wasm/**'
+      - 'lib/wasm/**'
+      - 'resources/**'
+      - '!resources/lint/**'
       - '.github/workflows/web.yml'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
       - 'binding/web/**'
       - '!binding/web/README.md'
+      - 'lib/common/**'
       - 'lib/wasm/**'
-      - 'resources/contexts/wasm/**'
+      - 'resources/**'
+      - '!resources/lint/**'
       - '.github/workflows/web.yml'
 
 defaults:
@@ -30,42 +33,30 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.8]
         node-version: [lts/*]
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Set up Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Pre-build dependencies
+        run: npm install yarn
 
-    - name: Install system dependencies
-      run: |
-        pip install packaging
-        pip install selenium
-        pip install webdriver-manager
+      - name: Install dependencies
+        run: yarn install
 
-    - name: Pre-build dependencies
-      run: npm install yarn
+      - name: Copy libs
+        run: yarn copywasm && yarn copyppn
 
-    - name: Install dependencies
-      run: yarn install
+      - name: Build
+        run: yarn build
 
-    - name: Copy libs
-      run: yarn copywasm
+      - name: Prepare Test
+        run: yarn setup-test
 
-    - name: Build
-      run: yarn build
-
-    - name: Prepare Test
-      run: yarn setup-test
-
-    - name: Test
-      run: python test/selenium_test.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_file_in_context ../../resources/audio_samples/test_within_context.wav --audio_file_out_context ../../resources/audio_samples/test_out_of_context.wav
+      - name: Test
+        run: yarn test --env ACCESS_KEY=${{secrets.PV_VALID_ACCESS_KEY}}
