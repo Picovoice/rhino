@@ -5,8 +5,9 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'demo/c/**'
       - '!demo/c/README.md'
+      - '.github/workflows/c-demos.yml'
+      - 'demo/c/**'
       - 'lib/beaglebone/**'
       - 'lib/common/**'
       - 'lib/jetson/**'
@@ -14,6 +15,7 @@ on:
       - 'lib/mac/**'
       - 'lib/raspberry-pi/**'
       - 'lib/windows/**'
+      - 'resources/.test/**'
       - 'resources/audio_samples/**'
       - 'resources/contexts*/beaglebone/**'
       - 'resources/contexts*/jetson/**'
@@ -21,13 +23,12 @@ on:
       - 'resources/contexts*/mac/**'
       - 'resources/contexts*/raspberry-pi/**'
       - 'resources/contexts*/windows/**'
-      - 'resources/.test/**'
-      - '.github/workflows/c-demos.yml'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
-      - 'demo/c/**'
       - '!demo/c/README.md'
+      - '.github/workflows/c-demos.yml'
+      - 'demo/c/**'
       - 'lib/beaglebone/**'
       - 'lib/common/**'
       - 'lib/jetson/**'
@@ -35,6 +36,7 @@ on:
       - 'lib/mac/**'
       - 'lib/raspberry-pi/**'
       - 'lib/windows/**'
+      - 'resources/.test/**'
       - 'resources/audio_samples/**'
       - 'resources/contexts*/beaglebone/**'
       - 'resources/contexts*/jetson/**'
@@ -42,8 +44,6 @@ on:
       - 'resources/contexts*/mac/**'
       - 'resources/contexts*/raspberry-pi/**'
       - 'resources/contexts*/windows/**'
-      - 'resources/.test/**'
-      - '.github/workflows/c-demos.yml'
 
 defaults:
   run:
@@ -58,7 +58,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -76,7 +76,7 @@ jobs:
         machine: [rpi2, rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson, beaglebone]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -109,7 +109,7 @@ jobs:
         submodules: recursive
 
     - name: Set up Python '3.10'
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
@@ -155,7 +155,7 @@ jobs:
           arch: ''
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
 
