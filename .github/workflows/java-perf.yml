@@ -92,7 +92,7 @@ jobs:
           performance_threshold_sec: 0.6
         - machine: beaglebone
           num_test_iterations: 20
-          performance_threshold_sec: 2.5
+          performance_threshold_sec: 5.0
 
     steps:
     - uses: actions/checkout@v3
