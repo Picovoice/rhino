@@ -176,6 +176,7 @@ public class RhinoTest {
                 .setAccessKey(accessKey)
                 .setContextPath(RhinoTestUtils.getTestContextPath(language, context))
                 .setModelPath(RhinoTestUtils.getTestModelPath(language))
+                .setRequireEndpoint(true)
                 .build();
 
         runTestCase(
@@ -196,6 +197,7 @@ public class RhinoTest {
                 .setAccessKey(accessKey)
                 .setContextPath(RhinoTestUtils.getTestContextPath(language, context))
                 .setModelPath(RhinoTestUtils.getTestModelPath(language))
+                .setRequireEndpoint(true)
                 .build();
 
         runTestCase(
