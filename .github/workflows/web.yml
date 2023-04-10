@@ -50,7 +50,7 @@ jobs:
         run: yarn install
 
       - name: Copy libs
-        run: yarn copywasm && yarn copyppn
+        run: yarn copywasm
 
       - name: Build
         run: yarn build
