@@ -1,10 +1,6 @@
 import { WebVoiceProcessor } from '@picovoice/web-voice-processor';
 
-Cypress.Commands.add("wrapFn", (fn) => {
-  return cy.wrap(null).then(async () => {
-    return await fn();
-  });
-});
+Cypress.Commands.add("wrapFn", fn => cy.wrap(null).then(async () => await fn()));
 Cypress.Commands.add("mockRecording", (path: string, delayMs = 1000) => {
   // @ts-ignore
   const instance = WebVoiceProcessor.instance();
