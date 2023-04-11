@@ -52,7 +52,7 @@ describe('Rhino binding', () => {
       )
     ).then(() => {
       expect(rhn.state.isLoaded).to.be.false;
-      expect(rhn.state.error).to.contain("Error response returned while fetching model from '/rhino_params_failed.pv'");
+      expect(rhn.state.error?.toString()).to.contain("Error response returned while fetching model from '/rhino_params_failed.pv'");
     });
   });
 
@@ -67,7 +67,7 @@ describe('Rhino binding', () => {
       )
     ).then(() => {
       expect(rhn.state.isLoaded).to.be.false;
-      expect(rhn.state.error).to.contain("Invalid AccessKey");
+      expect(rhn.state.error?.toString()).to.contain("Invalid AccessKey");
     });
   });
 

@@ -1,5 +1,5 @@
 /*
-  Copyright 2022 Picovoice Inc.
+  Copyright 2022-2023 Picovoice Inc.
 
   You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
   file accompanying this source.
@@ -40,7 +40,7 @@ export function useRhino(): {
   const [contextInfo, setContextInfo] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | string | null>(null);
 
   const inferenceCallback = useCallback(
     (newInference: RhinoInference): void => {
@@ -87,7 +87,7 @@ export function useRhino(): {
           setError(null);
         }
       } catch (e: any) {
-        setError(e.toString());
+        setError(e);
       }
     },
     [inferenceCallback]
@@ -107,7 +107,7 @@ export function useRhino(): {
         setError(null);
       }
     } catch (e: any) {
-      setError(e.toString());
+      setError(e);
     }
   }, [isListening]);
 
@@ -122,7 +122,7 @@ export function useRhino(): {
         setIsLoaded(false);
       }
     } catch (e: any) {
-      setError(e.toString());
+      setError(e);
     }
   }, []);
 

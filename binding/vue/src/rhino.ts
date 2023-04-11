@@ -55,7 +55,7 @@ export type RhinoVue = {
     contextInfo: string | null;
     isLoaded: boolean;
     isListening: boolean;
-    error: string | null;
+    error: Error | string | null;
   },
   init: (
     accessKey: string,
@@ -74,7 +74,7 @@ export function useRhino(): RhinoVue {
     contextInfo: string | null;
     isLoaded: boolean;
     isListening: boolean;
-    error: string | null;
+    error: Error | string | null;
   }>({
     inference: null,
     contextInfo: null,
@@ -124,7 +124,7 @@ export function useRhino(): RhinoVue {
         state.error = null;
       }
     } catch (e: any) {
-      errorCallback(e.toString());
+      errorCallback(e);
     }
   };
 
@@ -142,7 +142,7 @@ export function useRhino(): RhinoVue {
         state.error = null;
       }
     } catch (e: any) {
-      errorCallback(e.toString());
+      errorCallback(e);
     }
   };
 
@@ -157,7 +157,7 @@ export function useRhino(): RhinoVue {
         state.isLoaded = false;
       }
     } catch (e: any) {
-      errorCallback(e.toString());
+      errorCallback(e);
     }
   };
 

@@ -1,5 +1,5 @@
 /*
-  Copyright 2022 Picovoice Inc.
+  Copyright 2022-2023 Picovoice Inc.
 
   You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
   file accompanying this source.
@@ -61,7 +61,7 @@ export class RhinoService implements OnDestroy {
         this.error$.next(null);
       }
     } catch (error: any) {
-      this.error$.next(error.toString());
+      this.error$.next(error);
     }
   }
 
@@ -76,7 +76,7 @@ export class RhinoService implements OnDestroy {
       this.isListening$.next(true);
       this.error$.next(null);
     } catch (error: any) {
-      this.error$.next(error.toString());
+      this.error$.next(error);
       this.isListening$.next(false);
     }
   }
@@ -93,7 +93,7 @@ export class RhinoService implements OnDestroy {
         this.error$.next(null);
       }
     } catch (error: any) {
-      this.error$.next(error.toString());
+      this.error$.next(error);
     }
   }
 
