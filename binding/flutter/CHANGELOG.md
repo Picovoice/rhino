@@ -34,3 +34,6 @@
 
 ## [2.1.7] - 2022-09-21
 * Update Android libs
+
+## [2.2.0] - 2023-04-12
+* Additional language support added (ar, hi, nl, pl, ru, sv, vn, zh)
