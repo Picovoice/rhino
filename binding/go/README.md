@@ -51,7 +51,7 @@ To create an instance of the engine with default parameters, pass an `AccessKey`
 ```go
 import . "github.com/Picovoice/rhino/binding/go"
 
-const accessKey = "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
+const accessKey string = "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
 
 rhino = NewRhino(accessKey, "/path/to/context/file.rhn")
 err := rhino.Init()
@@ -71,7 +71,7 @@ To override these parameters, you can create a Rhino struct directly and then ca
 ```go
 import . "github.com/Picovoice/rhino/binding/go/v2"
 
-const accessKey := "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
+const accessKey string = "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
 
 rhino := Rhino{
     AccessKey: accessKey,
