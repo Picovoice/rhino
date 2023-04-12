@@ -162,7 +162,7 @@ export class RhinoWorker {
                     break;
                   case 'failed':
                   case 'error':
-                    const error = new Error(ev.data.message)
+                    const error = new Error(ev.data.message);
                     if (processErrorCallback) {
                       processErrorCallback(error);
                     } else {
