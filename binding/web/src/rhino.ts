@@ -701,7 +701,7 @@ export class Rhino {
       const msg = `'pv_rhino_init' failed with status ${arrayBufferToStringAtIndex(
         memoryBufferUint8,
         await pv_status_to_string(status)
-      )}`
+      )}`;
 
       throw new Error(
         `${msg}\nDetails: ${pvError.getErrorString()}`
