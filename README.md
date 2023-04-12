@@ -602,7 +602,7 @@ dotnet add package Rhino
 The SDK exposes a factory method to create instances of the engine as below:
 
 ```csharp
-using Pv
+using Pv;
 
 const string accessKey = "${ACCESS_KEY}";
 string contextPath = "/absolute/path/to/context.rhn";
@@ -710,11 +710,11 @@ go get github.com/Picovoice/rhino/binding/go
 To create an instance of the engine with default parameters, pass an `AccessKey` and a path to a Rhino context file (.rhn) to the `NewRhino` function and then make a call to `.Init()`.
 
 ```go
-import . "github.com/Picovoice/rhino/binding/go"
+import . "github.com/Picovoice/rhino/binding/go/v2"
 
-const accessKey = "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
+const accessKey string = "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
 
-rhino = NewRhino(accessKey, "/path/to/context/file.rhn")
+rhino := NewRhino(accessKey, "/path/to/context/file.rhn")
 err := rhino.Init()
 if err != nil {
     // handle error
@@ -726,7 +726,7 @@ single-channel audio. The sample rate that is required by the engine is given by
 
 To feed audio into Rhino, use the `Process` function in your capture loop. You must have called `Init()` before calling `Process`.
 ```go
-func getNextFrameAudio() []int16{
+func getNextFrameAudio() []int16 {
     // get audio frame
 }
 
@@ -883,7 +883,7 @@ The constructor `RhinoManager.create` will create an instance of the RhinoManage
 import 'package:rhino_flutter/rhino_manager.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 
-const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+final String accessKey = "{ACCESS_KEY}";  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 void createRhinoManager() async {
     try{
@@ -901,13 +901,13 @@ The `inferenceCallback` parameter is a function that you want to execute when Rh
 The function should accept a `RhinoInference` instance that represents the inference result.
 
 ```dart
-void _inference(RhinoInference inference){
-    if(inference.isUnderstood!){
-        String intent = inference.intent!
-        Map<String, String> = inference.slots!
+void _inference(RhinoInference inference) {
+    if(inference.isUnderstood!) {
+        String intent = inference.intent!;
+        Map<String, String> = inference.slots!;
         // add code to take action based on inferred intent and slot values
     }
-    else{
+    else {
         // add code to handle unsupported commands
     }
 }
@@ -917,7 +917,7 @@ Once you have instantiated a RhinoManager, you can start audio capture and inten
 Audio capture stops and rhino resets once an inference result is returned via the inference callback.
 
 ```dart
-try{
+try {
     await _rhinoManager.process();
 } on RhinoException catch (ex) { }
 ```
@@ -941,10 +941,10 @@ speech-to-intent into an already existing audio processing pipeline.
 import 'package:rhino_flutter/rhino_manager.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 
-const accessKey = "{ACCESS_KEY}"  // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+final String accessKey = "{ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 void createRhino() async {
-    try{
+    try {
         _rhino = await Rhino.create(accessKey, '/path/to/context/file.rhn');
     } on RhinoException catch (err) {
         // handle rhino init error
@@ -966,9 +966,9 @@ List<int> buffer = getAudioFrame();
 try {
     RhinoInference inference = await _rhino.process(buffer);
     if(inference.isFinalized) {
-        if(inference.isUnderstood!){
-            String intent = inference.intent!
-            Map<String, String> = inference.slots!
+        if(inference.isUnderstood!) {
+            String intent = inference.intent!;
+            Map<String, String> = inference.slots!;
             // add code to take action based on inferred intent and slot values
         }
     }
@@ -1692,6 +1692,13 @@ pv_rhino_delete(rhino);
 ```
 
 ## Releases
+
+### v2.2.0 - April 12th, 2023
+
+* Added language support for Arabic, Dutch, Hindi, Mandarin, Polish, Russian, Swedish and Vietnamese
+* Added support for .NET 7.0 and fixed support for .NET Standard 2.0
+* iOS minimum support moved to 11.0
+* Improved stability and performance
 
 ### v2.1.0 - January 20th, 2022
 
