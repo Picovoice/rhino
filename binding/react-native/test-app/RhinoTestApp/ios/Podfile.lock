@@ -453,7 +453,6 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - Rhino-iOS (from `https://raw.githubusercontent.com/Picovoice/rhino/v2.2/binding/ios/Rhino-iOS.podspec`)
   - "rhino-react-native (from `../node_modules/@picovoice/rhino-react-native`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -474,6 +473,7 @@ SPEC REPOS:
     - ios-voice-processor
     - libevent
     - OpenSSL-Universal
+    - Rhino-iOS
     - SocketRocket
     - YogaKit
 
@@ -546,19 +546,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
-  Rhino-iOS:
-    :podspec: https://raw.githubusercontent.com/Picovoice/rhino/v2.2/binding/ios/Rhino-iOS.podspec
   rhino-react-native:
     :path: "../node_modules/@picovoice/rhino-react-native"
   RNFS:
     :path: "../node_modules/react-native-fs"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
-
-CHECKOUT OPTIONS:
-  Rhino-iOS:
-    :commit: cd7633354917baa59d1efef409d42bb57569ed58
-    :git: https://github.com/Picovoice/rhino.git
 
 SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
@@ -609,13 +602,13 @@ SPEC CHECKSUMS:
   React-RCTVibration: 55c91eccdbd435d7634efbe847086944389475b0
   React-runtimeexecutor: ac80782d9d76ba2b0f709f4de0c427fe33c352dc
   ReactCommon: 20e38a9be5fe1341b5e422220877cc94034776ba
-  Rhino-iOS: e17c24081302f221a1697e81779f8e6037809910
-  rhino-react-native: 062fc11149cb4d1800db3ea60c2d42e3ae26a620
+  Rhino-iOS: 5f6c2edc809a913f7559da93fc92c0e66c7bf711
+  rhino-react-native: 9bb0bb2ad01af0f4e8e254f21314d65d981ebe0b
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: c618b544ff8bd8865cdca602f00cbcdb92fd6d31
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 012a34a7b6aab728305ab96ac93965c93f24c12b
+PODFILE CHECKSUM: c3e6af2e1218c8d216a4030cfcc1eeb4829f5ec1
 
 COCOAPODS: 1.11.3
