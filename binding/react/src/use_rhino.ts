@@ -25,7 +25,7 @@ export function useRhino(): {
   contextInfo: string | null;
   isLoaded: boolean;
   isListening: boolean;
-  error: Error | string | null;
+  error: Error | null;
   init: (
     accessKey: string,
     context: RhinoContext,
@@ -40,7 +40,7 @@ export function useRhino(): {
   const [contextInfo, setContextInfo] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [error, setError] = useState<Error | string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const inferenceCallback = useCallback(
     (newInference: RhinoInference): void => {
@@ -55,7 +55,7 @@ export function useRhino(): {
     []
   );
 
-  const errorCallback = useCallback((newError: string): void => {
+  const errorCallback = useCallback((newError: Error): void => {
     setError(newError);
   }, []);
 
@@ -96,7 +96,7 @@ export function useRhino(): {
   const process = useCallback(async (): Promise<void> => {
     try {
       if (!rhinoRef.current) {
-        setError('Rhino has not been initialized or has been released');
+        setError(new Error('Rhino has not been initialized or has been released'));
         return;
       }
 

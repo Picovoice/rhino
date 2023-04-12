@@ -30,7 +30,7 @@ export class RhinoService implements OnDestroy {
   public contextInfo$: Subject<string | null> = new Subject<string | null>();
   public isLoaded$: Subject<boolean> = new Subject<boolean>();
   public isListening$: Subject<boolean> = new Subject<boolean>();
-  public error$: Subject<Error | string | null> = new Subject<Error | string | null>();
+  public error$: Subject<Error | null> = new Subject<Error | null>();
 
   private rhino: RhinoWorker | null = null;
 
@@ -67,7 +67,7 @@ export class RhinoService implements OnDestroy {
 
   public async process(): Promise<void> {
     if (this.rhino === null) {
-      this.error$.next('Rhino has not been initialized or has been released');
+      this.error$.next(new Error('Rhino has not been initialized or has been released'));
       return;
     }
 
@@ -111,7 +111,7 @@ export class RhinoService implements OnDestroy {
     }
   };
 
-  private errorCallback = (error: string) => {
+  private errorCallback = (error: Error) => {
     this.error$.next(error);
   };
 }

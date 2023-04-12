@@ -54,7 +54,7 @@ export type RhinoVue = {
     contextInfo: string | null;
     isLoaded: boolean;
     isListening: boolean;
-    error: Error | string | null;
+    error: Error | null;
   },
   init: (
     accessKey: string,
@@ -73,7 +73,7 @@ export function useRhino(): RhinoVue {
     contextInfo: string | null;
     isLoaded: boolean;
     isListening: boolean;
-    error: Error | string | null;
+    error: Error | null;
   }>({
     inference: null,
     contextInfo: null,
@@ -92,7 +92,7 @@ export function useRhino(): RhinoVue {
     }
   };
 
-  const errorCallback = (newError: string): void => {
+  const errorCallback = (newError: Error): void => {
     state.error = newError;
   };
 
@@ -130,7 +130,7 @@ export function useRhino(): RhinoVue {
   const process = async (): Promise<void> => {
     try {
       if (!rhinoRef.value) {
-        state.error = 'Rhino has not been initialized or has been released';
+        state.error = new Error('Rhino has not been initialized or has been released');
         return;
       }
 
