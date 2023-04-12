@@ -31,7 +31,6 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/v2.2/binding/ios/Rhino-iOS.podspec'
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
