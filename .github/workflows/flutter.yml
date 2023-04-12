@@ -96,6 +96,9 @@ jobs:
     - name: Copy assets
       run: ./copy_assets.sh
 
+    - name: Update Cocoapods repo
+      run: pod repo update
+
     - name: Install dependencies
       run: flutter pub get
 
