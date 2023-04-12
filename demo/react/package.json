@@ -14,11 +14,14 @@
     "react-scripts": "5.0.1",
     "typescript": "^4.6.4"
   },
+  "devDependencies": {
+    "eslint": "^8.13.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint": "eslint .",
     "postinstall": "npx pvbase64 -i ../../lib/common/rhino_params.pv -o ./src/rhino_params.js && cp ../../resources/contexts/wasm/clock_wasm.rhn ./public"
   },
   "eslintConfig": {

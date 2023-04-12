@@ -150,14 +150,14 @@ export class Rhino {
   private static _wasmSimd: string;
 
   private readonly _inferenceCallback: InferenceCallback;
-  private readonly _processErrorCallback: (error: string) => void;
+  private readonly _processErrorCallback: (error: Error) => void;
 
   private static _rhinoMutex = new Mutex();
 
   private constructor(
     handleWasm: RhinoWasmOutput,
     inferenceCallback: InferenceCallback,
-    processErrorCallback: (error: string) => void
+    processErrorCallback: (error: Error) => void
   ) {
     Rhino._frameLength = handleWasm.frameLength;
     Rhino._sampleRate = handleWasm.sampleRate;
