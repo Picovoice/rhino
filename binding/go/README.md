@@ -35,7 +35,7 @@ Rhino is:
 ## Installation
 
 ```console
-go get github.com/Picovoice/rhino/binding/go
+go get github.com/Picovoice/rhino/binding/go/v2
 ```
 
 ## AccessKey
@@ -69,11 +69,11 @@ inference rate. You can also override the default Rhino model (.pv), which is re
 To override these parameters, you can create a Rhino struct directly and then call `Init()`:
 
 ```go
-import . "github.com/Picovoice/rhino/binding/go"
+import . "github.com/Picovoice/rhino/binding/go/v2"
 
-const accessKey = "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
+const accessKey := "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
 
-rhino = Rhino{
+rhino := Rhino{
     AccessKey: accessKey,
     ContextPath: "/path/to/context/file.rhn",
     Sensitivity: 0.7,
