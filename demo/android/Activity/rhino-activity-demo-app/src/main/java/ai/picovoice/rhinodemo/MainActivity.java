@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2021 Picovoice Inc.
+    Copyright 2018-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -37,7 +37,7 @@ import ai.picovoice.rhino.*;
 
 
 public class MainActivity extends AppCompatActivity {
-    private final String ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+    private static final String ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
     private ToggleButton recordButton;
     private Button cheatSheetButton;
@@ -85,14 +85,17 @@ public class MainActivity extends AppCompatActivity {
                     recordButton.setText("START");
                     recordButton.toggle();
                     intentTextView.setText("\n    {\n");
-                    intentTextView.append(String.format("        \"isUnderstood\" : \"%b\",\n", inference.getIsUnderstood()));
+                    intentTextView.append(
+                            String.format("        \"isUnderstood\" : \"%b\",\n", inference.getIsUnderstood()));
                     if (inference.getIsUnderstood()) {
-                        intentTextView.append(String.format("        \"intent\" : \"%s\",\n", inference.getIntent()));
+                        intentTextView.append(
+                                String.format("        \"intent\" : \"%s\",\n", inference.getIntent()));
                         final Map<String, String> slots = inference.getSlots();
                         if (slots.size() > 0) {
                             intentTextView.append("        \"slots\" : {\n");
                             for (String key : slots.keySet()) {
-                                intentTextView.append(String.format("            \"%s\" : \"%s\",\n", key, slots.get(key)));
+                                intentTextView.append(
+                                        String.format("            \"%s\" : \"%s\",\n", key, slots.get(key)));
                             }
                             intentTextView.append("        }\n");
                         }
@@ -153,7 +156,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean hasRecordPermission() {
-        return ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
+                PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestRecordPermission() {
@@ -161,7 +165,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
             recordButton.setEnabled(true);
@@ -191,7 +198,8 @@ public class MainActivity extends AppCompatActivity {
     public void showContextCheatSheet(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         ViewGroup viewGroup = findViewById(R.id.content);
-        View dialogView = LayoutInflater.from(view.getContext()).inflate(R.layout.context_cheat_sheet, viewGroup, false);
+        View dialogView = LayoutInflater.from(
+                view.getContext()).inflate(R.layout.context_cheat_sheet, viewGroup, false);
         builder.setView(dialogView);
 
         TextView contextField = (TextView) dialogView.findViewById(R.id.contextField);

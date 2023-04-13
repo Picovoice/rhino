@@ -1,1 +1,4 @@
 /build
+
+src/main/jniLibs/**
+src/main/res/**

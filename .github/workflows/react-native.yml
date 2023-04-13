@@ -10,17 +10,21 @@ on:
       - 'lib/android/**'
       - 'lib/common/**'
       - 'lib/ios/**'
+      - 'resources/.test/test_data.json'
+      - 'resources/audio_samples/**'
       - 'resources/android/**'
       - 'resources/ios/**'
       - '.github/workflows/react-native.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
       - 'binding/react-native/**'
       - '!binding/react-native/README.md'
       - 'lib/android/**'
       - 'lib/common/**'
       - 'lib/ios/**'
+      - 'resources/.test/test_data.json'
+      - 'resources/audio_samples/**'
       - 'resources/android/**'
       - 'resources/ios/**'
       - '.github/workflows/react-native.yml'
@@ -38,7 +42,7 @@ jobs:
         node-version: [16.x, 18.x]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2

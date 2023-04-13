@@ -1,9 +1,8 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 
 ext {
     PUBLISH_GROUP_ID = 'ai.picovoice'
-    PUBLISH_VERSION = '2.1.4'
+    PUBLISH_VERSION = '2.2.0'
     PUBLISH_ARTIFACT_ID = 'rhino-android'
 }
 
@@ -35,3 +34,17 @@ if (file("${rootDir}/publish-mavencentral.gradle").exists()) {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 }
+
+task copyLibs(type: Copy) {
+    from("${rootDir}/../../../lib/android")
+    into("${rootDir}/rhino/src/main/jniLibs")
+}
+
+task copyParams(type: Copy) {
+    from("${rootDir}/../../../lib/common")
+    include('rhino_params.pv')
+    into("${rootDir}/rhino/src/main/res/raw")
+}
+
+preBuild.dependsOn(copyLibs)
+preBuild.dependsOn(copyParams)

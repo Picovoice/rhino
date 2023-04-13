@@ -39,4 +39,4 @@ for d in ${RESOURCE_DIR}/contexts_*; do
 done
 
 echo "Copying test data file..."
-cp ${RESOURCE_DIR}/test/test_data.json ${ASSET_DIR}/
+cp ${RESOURCE_DIR}/.test/test_data.json ${ASSET_DIR}/

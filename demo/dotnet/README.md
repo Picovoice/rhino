@@ -33,7 +33,7 @@ Rhino is:
 
 ## Requirements
 
-- .NET Core 3.1
+- .NET 6.0
 
 ## Compatibility
 
@@ -74,12 +74,12 @@ rhino/demo/dotnet/RhinoDemo
 
 ### File Demo
 
-The file demo uses Rhino to get an inference result from an audio file. This demo is mainly useful for quantitative performance 
-benchmarking against a corpus of audio data. Note that only the relevant spoken command should be present in the file 
+The file demo uses Rhino to get an inference result from an audio file. This demo is mainly useful for quantitative performance
+benchmarking against a corpus of audio data. Note that only the relevant spoken command should be present in the file
 and no other speech. There also needs to be at least one second of silence at the end of the file.
 
 ```console
-dotnet run -c FileDemo.Release -- \ 
+dotnet run -c FileDemo.Release -- \
 --input_audio_path ${AUDIO_PATH} \
 --access_key ${ACCESS_KEY} \
 --context_path ${CONTEXT_PATH}
@@ -107,9 +107,9 @@ It provides information about various audio input devices on the box. This is an
 ```
 index: 0, device name: USB Audio Device
 index: 1, device name: MacBook Air Microphone
-``` 
+```
 
-You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the USB Audio Device 
+You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the USB Audio Device
 in the above example, you can invoke the demo application as below:
 
 ```console
@@ -124,7 +124,7 @@ If the problem persists we suggest storing the recorded audio into a file for in
 ```console
 dotnet run -c MicDemo.Release -- \
 --access_key ${ACCESS_KEY} \
---context_path ${CONTEXT_PATH} \ 
+--context_path ${CONTEXT_PATH} \
 --output_path ./test.wav
 ```
 

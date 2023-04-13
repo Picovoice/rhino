@@ -150,14 +150,14 @@ export class Rhino {
   private static _wasmSimd: string;
 
   private readonly _inferenceCallback: InferenceCallback;
-  private readonly _processErrorCallback: (error: string) => void;
+  private readonly _processErrorCallback: (error: Error) => void;
 
   private static _rhinoMutex = new Mutex();
 
   private constructor(
     handleWasm: RhinoWasmOutput,
     inferenceCallback: InferenceCallback,
-    processErrorCallback: (error: string) => void
+    processErrorCallback: (error: Error) => void
   ) {
     Rhino._frameLength = handleWasm.frameLength;
     Rhino._sampleRate = handleWasm.sampleRate;
@@ -701,7 +701,7 @@ export class Rhino {
       const msg = `'pv_rhino_init' failed with status ${arrayBufferToStringAtIndex(
         memoryBufferUint8,
         await pv_status_to_string(status)
-      )}`
+      )}`;
 
       throw new Error(
         `${msg}\nDetails: ${pvError.getErrorString()}`

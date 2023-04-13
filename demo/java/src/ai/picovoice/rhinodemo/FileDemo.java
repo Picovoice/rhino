@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2020 Picovoice Inc.
+    Copyright 2018-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -116,7 +116,7 @@ public class FileDemo {
 
     public static void main(String[] args) {
 
-        Options options = BuildCommandLineOptions();
+        Options options = buildCommandLineOptions();
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
 
@@ -180,7 +180,7 @@ public class FileDemo {
             }
         }
 
-        if(inputAudioPath == null){
+        if (inputAudioPath == null) {
             throw new IllegalArgumentException("No input audio file provided. This is a required argument.");
         }
         File inputAudioFile = new File(inputAudioPath);
@@ -188,7 +188,7 @@ public class FileDemo {
             throw new IllegalArgumentException(String.format("Audio file at path %s does not exits.", inputAudioPath));
         }
 
-        if(contextPath == null){
+        if (contextPath == null) {
             throw new IllegalArgumentException("No context file provided. This is a required argument.");
         }
         File contextFile = new File(contextPath);
@@ -209,10 +209,17 @@ public class FileDemo {
             requireEndpoint = false;
         }
 
-        runDemo(accessKey, inputAudioFile, libraryPath, modelPath, contextPath, sensitivity, endpointDuration, requireEndpoint);
+        runDemo(accessKey,
+                inputAudioFile,
+                libraryPath,
+                modelPath,
+                contextPath,
+                sensitivity,
+                endpointDuration,
+                requireEndpoint);
     }
 
-    private static Options BuildCommandLineOptions() {
+    private static Options buildCommandLineOptions() {
         Options options = new Options();
 
         options.addOption(Option.builder("a")
@@ -248,7 +255,8 @@ public class FileDemo {
         options.addOption(Option.builder("s")
                 .longOpt("sensitivity")
                 .hasArgs()
-                .desc("Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
+                .desc("Inference sensitivity. It should be a number within [0, 1]. " +
+                        "A higher sensitivity value results in " +
                         "fewer misses at the cost of (potentially) increasing the erroneous inference rate. " +
                         "If not set 0.5 will be used.")
                 .build());
@@ -257,8 +265,10 @@ public class FileDemo {
                 .longOpt("endpoint_duration")
                 .hasArgs()
                 .desc("Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an " +
-                        "utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint " +
-                        "duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference " +
+                        "utterance that marks the end of spoken command. It should be a positive number " +
+                        "within [0.5, 5]. A lower endpoint " +
+                        "duration reduces delay and improves responsiveness. A higher endpoint duration " +
+                        "assures Rhino doesn't return inference " +
                         "preemptively in case the user pauses before finishing the request.")
                 .build());
 
@@ -266,8 +276,9 @@ public class FileDemo {
                 .longOpt("require_endpoint")
                 .hasArg(true)
                 .desc("If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command. " +
-                        "If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set " +
-                        "to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).")
+                        "If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide " +
+                        "inference regardless. Set to `false` only if operating in an environment with overlapping " +
+                        "speech (e.g. people talking in the background).")
                 .build());
 
         options.addOption(new Option("h", "help", false, ""));

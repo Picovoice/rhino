@@ -1,4 +1,4 @@
-// Copyright 2021-2022 Picovoice Inc.
+// Copyright 2021-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is
 // located in the "LICENSE" file accompanying this source.
@@ -115,7 +115,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer r.Delete()
+	defer func() {
+		err := r.Delete()
+		if err != nil {
+			log.Fatalf("Failed to release resources: %s", err)
+		}
+	}()
 
 	buf := &audio.IntBuffer{
 		Format: &audio.Format{

@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name = 'Rhino-iOS'
     s.module_name = 'Rhino'
-    s.version = '2.1.3'
+    s.version = '2.2.0'
     s.license = {:type => 'Apache 2.0'}
     s.summary = 'iOS SDK for Picovoice\'s Rhino Speech-to-Intent engine'
     s.description = 
@@ -24,8 +24,8 @@ Pod::Spec.new do |s|
     DESC
     s.homepage = 'https://github.com/Picovoice/rhino/tree/master/binding/ios'
     s.author = { 'Picovoice' => 'hello@picovoice.ai' }
-    s.source = { :git => "https://github.com/Picovoice/rhino.git", :tag => "Rhino-iOS-v2.1.3" }
-    s.ios.deployment_target = '9.0'
+    s.source = { :git => "https://github.com/Picovoice/rhino.git", :tag => "Rhino-iOS-v2.2.0" }
+    s.ios.deployment_target = '11.0'
     s.swift_version = '5.0'
     s.vendored_frameworks = 'lib/ios/PvRhino.xcframework'
     s.resource_bundles = {

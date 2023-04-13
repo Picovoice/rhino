@@ -9,7 +9,7 @@ echo "Copying test audio samples..."
 mkdir -p ${ASSETS_DIR}/audio_samples
 cp ${RESOURCE_DIR}/audio_samples/*.wav ${ASSETS_DIR}/audio_samples
 
-echo "Copying test keyword files..."
+echo "Copying test context files..."
 mkdir -p ${ASSETS_DIR}/context_files
 cp -r ${RESOURCE_DIR}/contexts/android ${ASSETS_DIR}/context_files/
 cp -r ${RESOURCE_DIR}/contexts/ios ${ASSETS_DIR}/context_files/
@@ -33,4 +33,4 @@ mkdir -p ${ASSETS_DIR}/model_files
 cp ${LIB_DIR}/common/*.pv ${ASSETS_DIR}/model_files
 
 echo "Copying test data file..."
-cp ${RESOURCE_DIR}/test/test_data.json ${ASSETS_DIR}
+cp ${RESOURCE_DIR}/.test/test_data.json ${ASSETS_DIR}

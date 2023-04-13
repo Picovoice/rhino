@@ -32,7 +32,7 @@ public class PerformanceTest extends BaseTest {
         }
         double performanceThresholdSec = Double.parseDouble(thresholdString);
 
-        File contextPath = new File(testResourcesPath, "context_files/coffee_maker_android.rhn");
+        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())

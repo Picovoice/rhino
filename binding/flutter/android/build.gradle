@@ -1,5 +1,5 @@
 group 'ai.picovoice.flutter.rhino'
-version '2.1.7'
+version '2.2.0'
 
 buildscript {
     repositories {
@@ -33,5 +33,5 @@ android {
 }
 
 dependencies {
-    implementation 'ai.picovoice:rhino-android:2.1.4'
+    implementation 'ai.picovoice:rhino-android:2.2.0'
 }

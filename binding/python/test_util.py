@@ -13,11 +13,11 @@ import json
 import struct
 import wave
 
-from util import *
+from _util import *
 
 
 def load_test_data():
-    data_file_path = os.path.join(os.path.dirname(__file__), "../../resources/test/test_data.json")
+    data_file_path = os.path.join(os.path.dirname(__file__), "../../resources/.test/test_data.json")
     with open(data_file_path, encoding="utf8") as data_file:
         json_test_data = data_file.read()
     test_data = json.loads(json_test_data)['tests']

@@ -52,7 +52,7 @@ describe('Rhino binding', () => {
       )
     ).then(() => {
       expect(rhn.state.isLoaded).to.be.false;
-      expect(rhn.state.error).to.contain("Error response returned while fetching model from '/rhino_params_failed.pv'");
+      expect(rhn.state.error?.toString()).to.contain("Error response returned while fetching model from '/rhino_params_failed.pv'");
     });
   });
 
@@ -67,7 +67,7 @@ describe('Rhino binding', () => {
       )
     ).then(() => {
       expect(rhn.state.isLoaded).to.be.false;
-      expect(rhn.state.error).to.contain("Invalid AccessKey");
+      expect(rhn.state.error?.toString()).to.contain("Invalid AccessKey");
     });
   });
 
@@ -104,7 +104,7 @@ describe('Rhino binding', () => {
         expect(rhn.state.inference?.slots).to.deep.eq(testInfo.inference.slots);
       }).then(() => {
         expect(rhn.state.isListening).to.be.false;
-      })
+      });
     });
   }
 
@@ -138,7 +138,7 @@ describe('Rhino binding', () => {
         expect(rhn.state.inference?.intent).to.be.null;
       }).then(() => {
         expect(rhn.state.isListening).to.be.false;
-      })
+      });
     });
   }
 });

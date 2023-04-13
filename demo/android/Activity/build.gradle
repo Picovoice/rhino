@@ -4,7 +4,6 @@ ext {
 }
 
 buildscript {
-    
     repositories {
         google()
         mavenCentral()
@@ -21,6 +20,7 @@ allprojects {
             options.compilerArgs << "-Xlint:deprecation"
         }
     }
+
     repositories {
         google()
         mavenCentral()

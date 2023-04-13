@@ -1,11 +1,11 @@
 {
   "name": "rhino-react-demo",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "description": "Rhino React demo (made with Create React App)",
   "dependencies": {
-    "@picovoice/rhino-react": "~2.1.9",
-    "@picovoice/web-voice-processor": "~4.0.5",
+    "@picovoice/rhino-react": "~2.2.0",
+    "@picovoice/web-voice-processor": "~4.0.6",
     "@types/node": "^14.14.41",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
@@ -14,11 +14,14 @@
     "react-scripts": "5.0.1",
     "typescript": "^4.6.4"
   },
+  "devDependencies": {
+    "eslint": "^8.13.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint": "eslint .",
     "postinstall": "npx pvbase64 -i ../../lib/common/rhino_params.pv -o ./src/rhino_params.js && cp ../../resources/contexts/wasm/clock_wasm.rhn ./public"
   },
   "eslintConfig": {

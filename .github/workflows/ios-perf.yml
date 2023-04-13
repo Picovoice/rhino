@@ -10,7 +10,7 @@ on:
       - 'resources/contexts/ios/**'
       - '.github/workflows/ios-perf.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
       - 'lib/ios/**'
       - 'lib/common/**'
@@ -35,10 +35,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v3
 
       - name: Install Cocoapods
         run: gem install cocoapods

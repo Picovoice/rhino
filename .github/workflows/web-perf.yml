@@ -5,20 +5,14 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'binding/web/**'
-      - '!binding/web/README.md'
       - 'lib/wasm/**'
       - 'lib/common/**'
-      - 'resources/contexts/wasm/**'
       - '.github/workflows/web-perf.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
-      - 'binding/web/**'
-      - '!binding/web/README.md'
       - 'lib/wasm/**'
       - 'lib/common/**'
-      - 'resources/contexts/wasm/**'
       - '.github/workflows/web-perf.yml'
 
 defaults:
@@ -31,47 +25,34 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.8]
         node-version: [lts/*]
         include:
-        - python-version: 3.8
-          initPerformanceThresholdSec: 0.5
-          procPerformanceThresholdSec: 1.2
+          - node-version: lts/*
+            initPerformanceThresholdSec: 0.5
+            procPerformanceThresholdSec: 1.2
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Set up Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Pre-build dependencies
+        run: npm install yarn
 
-    - name: Install system dependencies
-      run: |
-        pip install packaging
-        pip install selenium
-        pip install webdriver-manager
+      - name: Install dependencies
+        run: yarn install
 
-    - name: Pre-build dependencies
-      run: npm install yarn
+      - name: Copy libs
+        run: yarn copywasm
 
-    - name: Install dependencies
-      run: yarn install
+      - name: Build
+        run: yarn build
 
-    - name: Copy libs
-      run: yarn copywasm
+      - name: Prepare Test
+        run: yarn setup-test
 
-    - name: Build
-      run: yarn build
-
-    - name: Prepare Test
-      run: yarn setup-test
-
-    - name: Test
-      run: python test/perf_test.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --audio_file_in_context ../../resources/audio_samples/test_within_context.wav --audio_file_out_context ../../resources/audio_samples/test_out_of_context.wav
-        --init_performance_threshold_sec ${{ matrix.initPerformanceThresholdSec }} --proc_performance_threshold_sec ${{ matrix.procPerformanceThresholdSec }}
+      - name: Test
+        run: yarn test-perf --env ACCESS_KEY=${{secrets.PV_VALID_ACCESS_KEY}},NUM_TEST_ITERATIONS=20,INIT_PERFORMANCE_THRESHOLD_SEC=${{matrix.initPerformanceThresholdSec}},PROC_PERFORMANCE_THRESHOLD_SEC=${{matrix.procPerformanceThresholdSec}}

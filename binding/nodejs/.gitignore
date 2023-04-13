@@ -3,3 +3,4 @@ lib
 resources
 package-lock.json
 dist
+yarn-error.log

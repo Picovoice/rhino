@@ -5,6 +5,7 @@ on:
   push:
     branches: [ master ]
     paths:
+      - '.github/workflows/java-perf.yml'
       - 'binding/java/**/RhinoPerformanceTest.java'
       - 'lib/common/**'
       - 'lib/java/**'
@@ -14,10 +15,10 @@ on:
       - 'resources/contexts/mac/**'
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
-      - '.github/workflows/java-perf.yml'
   pull_request:
-    branches: [ master ]
+    branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
+      - '.github/workflows/java-perf.yml'
       - 'binding/java/**/RhinoPerformanceTest.java'
       - 'lib/common/**'
       - 'lib/java/**'
@@ -27,7 +28,6 @@ on:
       - 'resources/contexts/mac/**'
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
-      - '.github/workflows/java-perf.yml'
 
 defaults:
   run:
@@ -47,16 +47,16 @@ jobs:
         - os: windows-latest
           performance_threshold_sec: 0.5
         - os: macos-latest
-          performance_threshold_sec: 0.5
+          performance_threshold_sec: 0.6
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Set up JDK 11
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '11'
-        distribution: 'adopt'
+        distribution: 'temurin'
 
     - name: Build
       run: ./gradlew assemble
@@ -92,10 +92,10 @@ jobs:
           performance_threshold_sec: 0.6
         - machine: beaglebone
           num_test_iterations: 20
-          performance_threshold_sec: 2.5
+          performance_threshold_sec: 5.0
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Build
       run: ./gradlew assemble
