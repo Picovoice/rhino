@@ -118,7 +118,7 @@ def main():
         frame_length=rhino.frame_length)
     recorder.start()
 
-    print('Using device: %s' % recorder.device)
+    print('Using device: %s' % recorder.selected_device)
     print('Listening ... Press Ctrl+C to exit.\n')
 
     wav_file = None
