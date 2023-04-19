@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 //
-// Copyright 2020-2021 Picovoice Inc.
+// Copyright 2020-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -15,7 +15,7 @@ const fs = require("fs");
 const { program } = require("commander");
 const { Rhino } = require("@picovoice/rhino-node");
 const { RhinoInvalidArgumentError } = require("@picovoice/rhino-node/dist/errors");
-const PvRecorder = require("@picovoice/pvrecorder-node");
+const { PvRecorder } = require("@picovoice/pvrecorder-node");
 
 program
   .requiredOption(
@@ -68,7 +68,7 @@ program.parse(process.argv);
 let isInterrupted = false;
 
 async function micDemo() {
-  let accessKey = program["access_key"]  
+  let accessKey = program["access_key"]
   let contextPath = program["context_path"];
   let libraryFilePath = program["library_file_path"];
   let modelFilePath = program["model_file_path"];
