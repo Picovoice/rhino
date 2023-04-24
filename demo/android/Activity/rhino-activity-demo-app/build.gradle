@@ -67,3 +67,11 @@ dependencies {
 
     androidTestImplementation('com.microsoft.appcenter:espresso-test-extension:1.4')
 }
+
+task copyContext(type: Copy) {
+    from("${rootDir}/../../../resources/contexts/android/")
+    include('smart_lighting_android.rhn')
+    into("${rootDir}/rhino-activity-demo-app/src/main/assets")
+}
+
+preBuild.dependsOn(copyContext)
