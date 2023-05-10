@@ -37,10 +37,10 @@ class RhinoAppTestUITests: BaseTest {
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
-        let modelPath = bundle.path
-        (forResource: "rhino_params",
-        ofType: "pv",
-        inDirectory: "test_resources/model_files")!
+        let modelPath = bundle.path(
+            forResource: "rhino_params",
+            ofType: "pv",
+            inDirectory: "test_resources/model_files")!
 
         let r = try Rhino.init(
             accessKey: accessKey,
