@@ -17,3 +17,6 @@ build/*
 *.pbxuser
 xcuserdata
 Pods
+
+*.rhn
+*.pv
