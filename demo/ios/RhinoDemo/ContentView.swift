@@ -1,5 +1,5 @@
 //
-//  Copyright 2018-2021 Picovoice Inc.
+//  Copyright 2018-2023 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -11,7 +11,8 @@ import SwiftUI
 import Rhino
 struct ContentView: View {
     
-    let contextPath = Bundle.main.path(forResource: "smart_lighting_ios", ofType: "rhn")
+    let language: String = ProcessInfo.processInfo.environment["LANGUAGE"]!
+    let context: String = ProcessInfo.processInfo.environment["CONTEXT"]!
     
     @State var rhinoManager: RhinoManager!
     @State var buttonLabel = "START"
@@ -40,11 +41,17 @@ struct ContentView: View {
             Button(action: {
                 if self.buttonLabel == "START" {
                     self.result = ""
+
+                    let token = (language == "en") ? "" : "_\(language)"
+                    
+                    let contextPath = Bundle.main.url(forResource: "\(context)_ios", withExtension: "rhn", subdirectory: "contexts")!
+                    let modelPath = Bundle.main.url(forResource: "rhino_params\(token)", withExtension: "pv", subdirectory: "models")!
                     
                     do {
                         self.rhinoManager = try RhinoManager(
                             accessKey: self.ACCESS_KEY,
-                            contextPath: self.contextPath!,
+                            contextPath: contextPath.path,
+                            modelPath: modelPath.path,
                             onInferenceCallback: { x in
                                 DispatchQueue.main.async {
                                     result = "{\n"

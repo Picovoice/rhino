@@ -7,13 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E6041B52A0C30CB00A10522 /* models in Resources */ = {isa = PBXBuildFile; fileRef = 1E6041B22A0C30CB00A10522 /* models */; };
+		1E6041B62A0C30CB00A10522 /* pre-build.sh in Resources */ = {isa = PBXBuildFile; fileRef = 1E6041B32A0C30CB00A10522 /* pre-build.sh */; };
+		1E6041B72A0C30CB00A10522 /* contexts in Resources */ = {isa = PBXBuildFile; fileRef = 1E6041B42A0C30CB00A10522 /* contexts */; };
 		BB193E922370C4EC00556136 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E912370C4EC00556136 /* AppDelegate.swift */; };
 		BB193E942370C4EC00556136 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E932370C4EC00556136 /* SceneDelegate.swift */; };
 		BB193E962370C4EC00556136 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB193E952370C4EC00556136 /* ContentView.swift */; };
 		BB193E982370C4F500556136 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB193E972370C4F500556136 /* Assets.xcassets */; };
 		BB193E9B2370C4F500556136 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9A2370C4F500556136 /* Preview Assets.xcassets */; };
 		BB193E9E2370C4F500556136 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9C2370C4F500556136 /* LaunchScreen.storyboard */; };
-		BB5334A123723091003B6FD1 /* smart_lighting_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */; };
 		FB63B28C2141FEF4A95C51A6 /* libPods-RhinoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +33,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1E6041B22A0C30CB00A10522 /* models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = models; sourceTree = "<group>"; };
+		1E6041B32A0C30CB00A10522 /* pre-build.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "pre-build.sh"; sourceTree = "<group>"; };
+		1E6041B42A0C30CB00A10522 /* contexts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = contexts; sourceTree = "<group>"; };
 		2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemoUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.release.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -43,7 +48,6 @@
 		BB193E9A2370C4F500556136 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BB193E9D2370C4F500556136 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB193E9F2370C4F500556136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = smart_lighting_ios.rhn; path = ../../../resources/contexts/ios/smart_lighting_ios.rhn; sourceTree = "<group>"; };
 		D3368C9D35E7379BF386625E /* Pods-RhinoDemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemoUITests.release.xcconfig"; path = "Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F5652D86CACC859DFD1FAF1F /* Pods-RhinoDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.debug.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -63,6 +67,9 @@
 		BB193E852370C4EC00556136 = {
 			isa = PBXGroup;
 			children = (
+				1E6041B42A0C30CB00A10522 /* contexts */,
+				1E6041B22A0C30CB00A10522 /* models */,
+				1E6041B32A0C30CB00A10522 /* pre-build.sh */,
 				BB193E902370C4EC00556136 /* RhinoDemo */,
 				BB193E8F2370C4EC00556136 /* Products */,
 				BB53349B2372152D003B6FD1 /* Frameworks */,
@@ -81,7 +88,6 @@
 		BB193E902370C4EC00556136 /* RhinoDemo */ = {
 			isa = PBXGroup;
 			children = (
-				BB53349F23723091003B6FD1 /* smart_lighting_ios.rhn */,
 				BB193E912370C4EC00556136 /* AppDelegate.swift */,
 				BB193E932370C4EC00556136 /* SceneDelegate.swift */,
 				BB193E952370C4EC00556136 /* ContentView.swift */,
@@ -184,8 +190,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB193E9E2370C4F500556136 /* LaunchScreen.storyboard in Resources */,
+				1E6041B62A0C30CB00A10522 /* pre-build.sh in Resources */,
 				BB193E9B2370C4F500556136 /* Preview Assets.xcassets in Resources */,
-				BB5334A123723091003B6FD1 /* smart_lighting_ios.rhn in Resources */,
+				1E6041B52A0C30CB00A10522 /* models in Resources */,
+				1E6041B72A0C30CB00A10522 /* contexts in Resources */,
 				BB193E982370C4F500556136 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

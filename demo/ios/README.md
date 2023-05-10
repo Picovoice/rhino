@@ -8,13 +8,21 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ## Running the Demo
 
-Before building the demo app, run the following from this directory to install the Rhino CocoaPods:
-```ruby
+To run the application demo:
+
+1) In the (demo)[./] directory run:
+
+```console
 pod install
 ```
-Open `RhinoDemo.xcworkspace` and run the demo.
 
-Copy your `AccessKey` into the `ACCESS_KEY` variable in `RhinoDemo/ContentView.swift` before building the demo.
+2) Open `RhinoDemo.xcworkspace` in XCode.
+
+3) Replace `let accessKey = "${YOUR_ACCESS_KEY_HERE}"` in the file [ContentView.swift](./RhinoDemo/ContentView.swift) with your `AccessKey`.
+
+4) Go to `Product > Scheme` and select the scheme for the language you would like to demo (e.g. `arScheme` -> Arabic Demo, `deScheme` -> German Demo)
+
+5) Run the demo with a simulator or connected iOS device.
 
 The default context for this demo is `Smart Lighting`. Simply press start, and the engine can recognize commands such as
 
