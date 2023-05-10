@@ -10,17 +10,17 @@
 import SwiftUI
 import Rhino
 struct ContentView: View {
-    
+
     let language: String = ProcessInfo.processInfo.environment["LANGUAGE"]!
     let context: String = ProcessInfo.processInfo.environment["CONTEXT"]!
-    
+
     @State var rhinoManager: RhinoManager!
     @State var buttonLabel = "START"
     @State var result: String = ""
     @State var errorMessage: String = ""
-    
+
     let ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}" // Obtained from Picovoice Console (https://console.picovoice.ai)
-    
+
     var body: some View {
         VStack {
             Spacer()
@@ -28,7 +28,7 @@ struct ContentView: View {
             Text("\(result)")
                 .foregroundColor(Color.black)
                 .padding()
-            
+
             Text(errorMessage)
                 .padding()
                 .background(Color.red)
@@ -38,15 +38,21 @@ struct ContentView: View {
                 .opacity(errorMessage.isEmpty ? 0 : 1)
                 .cornerRadius(.infinity)
             Spacer()
-            Button(action: {
+            Button {
                 if self.buttonLabel == "START" {
                     self.result = ""
 
                     let token = (language == "en") ? "" : "_\(language)"
-                    
-                    let contextPath = Bundle.main.url(forResource: "\(context)_ios", withExtension: "rhn", subdirectory: "contexts")!
-                    let modelPath = Bundle.main.url(forResource: "rhino_params\(token)", withExtension: "pv", subdirectory: "models")!
-                    
+
+                    let contextPath = Bundle.main.url(
+                        forResource: "\(context)_ios",
+                        withExtension: "rhn",
+                        subdirectory: "contexts")!
+                    let modelPath = Bundle.main.url(
+                        forResource: "rhino_params\(token)",
+                        withExtension: "pv",
+                        subdirectory: "models")!
+
                     do {
                         self.rhinoManager = try RhinoManager(
                             accessKey: self.ACCESS_KEY,
@@ -67,13 +73,13 @@ struct ContentView: View {
                                         }
                                     }
                                     result += "}\n"
-                                    
+
                                     self.buttonLabel = "START"
                                 }
                             })
                         try self.rhinoManager.process()
                         self.buttonLabel = "    ...    "
-                    } catch let error as RhinoInvalidArgumentError{
+                    } catch let error as RhinoInvalidArgumentError {
                         errorMessage = "\(error.localizedDescription)\nEnsure your AccessKey '\(ACCESS_KEY)' is valid"
                     } catch is RhinoActivationError {
                         errorMessage = "ACCESS_KEY activation error"
@@ -81,22 +87,22 @@ struct ContentView: View {
                         errorMessage = "ACCESS_KEY activation refused"
                     } catch is RhinoActivationLimitError {
                         errorMessage = "ACCESS_KEY reached its limit"
-                    } catch is RhinoActivationThrottledError  {
+                    } catch is RhinoActivationThrottledError {
                         errorMessage = "ACCESS_KEY is throttled"
                     } catch {
                         errorMessage = "\(error)"
                     }
-                    
+
                 } else {
                     self.buttonLabel = "START"
                 }
-            }) {
+            } label: {
                 Text("\(buttonLabel)")
                     .padding()
-                    .background(errorMessage.isEmpty ? Color.blue : Color.gray)
+                    .background(errorMessage.isEmpty ? Color.blue: Color.gray)
                     .foregroundColor(Color.white)
                     .font(.largeTitle)
-                    
+
             }.disabled(!errorMessage.isEmpty)
         }
         .padding()

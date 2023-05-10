@@ -109,6 +109,7 @@ shōmei
 signup
 soundfile
 spegnere
+SRCROOT
 stdbool
 stdint
 stdlib

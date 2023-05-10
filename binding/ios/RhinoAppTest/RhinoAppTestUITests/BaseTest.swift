@@ -28,16 +28,16 @@ class BaseTest: XCTestCase {
     func processFile(rhino: Rhino, testAudioURL: URL) throws -> Inference {
         let data = try Data(contentsOf: testAudioURL)
         let frameLengthBytes = Int(Rhino.frameLength) * 2
-        var pcmBuffer = Array<Int16>(repeating: 0, count: Int(Rhino.frameLength))
+        var pcmBuffer = [Int16](repeating: 0, count: Int(Rhino.frameLength))
         var isFinalized = false
         var index = 44
-        while (index + frameLengthBytes < data.count) {
+        while index + frameLengthBytes < data.count {
             _ = pcmBuffer.withUnsafeMutableBytes {
                 data.copyBytes(to: $0, from: index..<(index + frameLengthBytes))
             }
             isFinalized = try rhino.process(pcm: pcmBuffer)
             if isFinalized {
-                break;
+                break
             }
 
             index += frameLengthBytes

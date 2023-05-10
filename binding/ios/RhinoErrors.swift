@@ -7,13 +7,13 @@
 //  specific language governing permissions and limitations under the License.
 //
 
-public class RhinoError : LocalizedError {
-    private let message: String;
-    
+public class RhinoError: LocalizedError {
+    private let message: String
+
     public init (_ message: String) {
         self.message = message
     }
-    
+
     public var errorDescription: String? {
         return message
     }
@@ -25,24 +25,24 @@ public class RhinoError : LocalizedError {
     }
 }
 
-public class RhinoMemoryError : RhinoError {}
+public class RhinoMemoryError: RhinoError {}
 
-public class RhinoIOError : RhinoError {}
+public class RhinoIOError: RhinoError {}
 
-public class RhinoInvalidArgumentError : RhinoError {}
+public class RhinoInvalidArgumentError: RhinoError {}
 
-public class RhinoStopIterationError : RhinoError {}
+public class RhinoStopIterationError: RhinoError {}
 
-public class RhinoKeyError : RhinoError {}
+public class RhinoKeyError: RhinoError {}
 
-public class RhinoInvalidStateError : RhinoError {}
+public class RhinoInvalidStateError: RhinoError {}
 
-public class RhinoRuntimeError : RhinoError {}
+public class RhinoRuntimeError: RhinoError {}
 
-public class RhinoActivationError : RhinoError {}
+public class RhinoActivationError: RhinoError {}
 
-public class RhinoActivationLimitError : RhinoError {}
+public class RhinoActivationLimitError: RhinoError {}
 
-public class RhinoActivationThrottledError : RhinoError {}
+public class RhinoActivationThrottledError: RhinoError {}
 
-public class RhinoActivationRefusedError : RhinoError {}
+public class RhinoActivationRefusedError: RhinoError {}

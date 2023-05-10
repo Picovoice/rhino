@@ -14,7 +14,8 @@ public enum RhinoManagerError: Error {
     case objectDisposed
 }
 
-/// High-level iOS binding for Rhino Speech-to-Intent engine. It handles recording audio from microphone, processes it in real-time using Rhino, and notifies the client
+/// High-level iOS binding for Rhino Speech-to-Intent engine. It handles recording
+/// audio from microphone, processes it in real-time using Rhino, and notifies the client
 /// when an intent is inferred from the spoken command.
 public class RhinoManager {
     private var onInferenceCallback: ((Inference) -> Void)?
@@ -29,37 +30,41 @@ public class RhinoManager {
     /// - Parameters:
     ///   - accessKey: AccessKey obtained from Picovoice Console (https://console.picovoice.ai).
     ///   - modelPath: Absolute path to file containing model parameters.
-    ///   - contextPath: Absolute path to file containing context parameters. A context represents the set of expressions (spoken commands), intents, and
-    ///   intent arguments (slots) within a domain of interest.
-    ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in fewer misses at the cost of (potentially)
-    ///   increasing the erroneous inference rate.
+    ///   - contextPath: Absolute path to file containing context parameters. A context represents the
+    ///   set of expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
+    ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity
+    ///   value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
     ///   - endpointDurationSec: Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
-    ///   utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
-    ///   duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
-    ///   preemptively in case the user pauses before finishing the request.
+    ///   utterance that marks the end of spoken command. It should be a positive number
+    ///   within [0.5, 5]. A lower endpoint duration reduces delay and improves responsiveness. A
+    ///   higher endpoint duration assures Rhino doesn't return inference preemptively in case the user pauses
+    ///   before finishing the request.
     ///   - requireEndpoint: If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
-    ///   If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
-    ///   to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
+    ///   If set to `false`, Rhino tries to detect silence, but if it cannot, it 
+    ///   still will provide inference regardless. Set to `false` only if operating
+    ///   in an environment with overlapping speech
+    ///   (e.g. people talking in the background).
     ///   - onInferenceCallback: It is invoked upon completion of intent inference.
-    ///   - processErrorCallback: Invoked if an error occurs while processing frames. If missing, error will be printed to console.
+    ///   - processErrorCallback: Invoked if an error occurs while processing frames. 
+    ///   If missing, error will be printed to console.
     /// - Throws: RhinoManagerError
     public init(
-            accessKey: String,
-            contextPath: String,
-            modelPath: String? = nil,
-            sensitivity: Float32 = 0.5,
-            endpointDurationSec: Float32 = 1.0,
-            requireEndpoint: Bool = true,
-            onInferenceCallback: ((Inference) -> Void)?,
-            processErrorCallback: ((Error) -> Void)? = nil) throws {
+        accessKey: String,
+        contextPath: String,
+        modelPath: String? = nil,
+        sensitivity: Float32 = 0.5,
+        endpointDurationSec: Float32 = 1.0,
+        requireEndpoint: Bool = true,
+        onInferenceCallback: ((Inference) -> Void)?,
+        processErrorCallback: ((Error) -> Void)? = nil) throws {
         self.onInferenceCallback = onInferenceCallback
         self.processErrorCallback = processErrorCallback
         self.rhino = try Rhino(
-                accessKey: accessKey,
-                contextPath: contextPath,
-                modelPath: modelPath,
-                sensitivity: sensitivity,
-                requireEndpoint: requireEndpoint)
+            accessKey: accessKey,
+            contextPath: contextPath,
+            modelPath: modelPath,
+            sensitivity: sensitivity,
+            requireEndpoint: requireEndpoint)
     }
 
     deinit {
@@ -78,7 +83,8 @@ public class RhinoManager {
         }
     }
 
-    /// Start recording audio from the microphone and infers the user's intent from the spoken command. Once the inference is finalized it will invoke the user
+    /// Start recording audio from the microphone and infers the user's intent 
+    /// from the spoken command. Once the inference is finalized it will invoke the user
     /// provided callback and terminates recording audio.
     ///
     /// - Throws: AVAudioSession, AVAudioEngine errors. Additionally RhinoManagerError if
@@ -109,9 +115,9 @@ public class RhinoManager {
         }
 
         try VoiceProcessor.shared.start(
-                frameLength: Rhino.frameLength,
-                sampleRate: Rhino.sampleRate,
-                audioCallback: self.audioCallback
+            frameLength: Rhino.frameLength,
+            sampleRate: Rhino.sampleRate,
+            audioCallback: self.audioCallback
         )
 
         self.started = true
