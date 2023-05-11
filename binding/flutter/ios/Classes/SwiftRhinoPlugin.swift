@@ -68,7 +68,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                     result(param)
                 } else {
                     result(errorToFlutterError(
-                        RhinoInvalidArgumentError("missing required arguments 'accessKey' and 'contextPath'")))
+                            RhinoInvalidArgumentError("missing required arguments 'accessKey' and 'contextPath'")))
                 }
             } catch let error as RhinoError {
                 result(errorToFlutterError(error))
@@ -98,7 +98,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                         result(param)
                     } else {
                         result(errorToFlutterError(
-                            RhinoInvalidStateError("Invalid handle provided to Rhino 'process'")))
+                                RhinoInvalidStateError("Invalid handle provided to Rhino 'process'")))
                     }
                 } else {
                     result(errorToFlutterError(RhinoInvalidArgumentError("missing required arguments 'frame'")))

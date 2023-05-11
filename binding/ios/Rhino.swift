@@ -56,11 +56,11 @@ public class Rhino {
     ///   - contextPath: Absolute path to file containing context parameters. A context represents the
     ///   set of expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
     ///   - modelPath: Absolute path to file containing model parameters.
-    ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value 
+    ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value
     ///   results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
     ///   - endpointDurationSec: Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
     ///   utterance that marks the end of spoken command. It should be a positive number within [0.5, 5].
-    ///   A lower endpoint duration reduces delay and improves responsiveness. A higher endpoint duration 
+    ///   A lower endpoint duration reduces delay and improves responsiveness. A higher endpoint duration
     ///   assures Rhino doesn't return inference preemptively in case the user pauses before finishing the request.
     ///   - requireEndpoint: If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
     ///   If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide
@@ -234,8 +234,8 @@ public class Rhino {
         }
 
         throw RhinoIOError(
-            "Could not find file at path '\(filePath)'. If this is a
-            packaged asset, ensure you have added it to your xcode project.")
+            "Could not find file at path '\(filePath)'. If this is a " +
+            "packaged asset, ensure you have added it to your xcode project.")
     }
 
     private func pvStatusToRhinoError(_ status: pv_status_t, _ message: String) -> RhinoError {

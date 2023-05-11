@@ -46,12 +46,12 @@ public class RhinoManager {
     ///   higher endpoint duration assures Rhino doesn't return inference preemptively in case the user pauses
     ///   before finishing the request.
     ///   - requireEndpoint: If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
-    ///   If set to `false`, Rhino tries to detect silence, but if it cannot, it 
+    ///   If set to `false`, Rhino tries to detect silence, but if it cannot, it
     ///   still will provide inference regardless. Set to `false` only if operating
     ///   in an environment with overlapping speech
     ///   (e.g. people talking in the background).
     ///   - onInferenceCallback: It is invoked upon completion of intent inference.
-    ///   - processErrorCallback: Invoked if an error occurs while processing frames. 
+    ///   - processErrorCallback: Invoked if an error occurs while processing frames.
     ///   If missing, error will be printed to console.
     /// - Throws: RhinoManagerError
     public init(
@@ -89,7 +89,7 @@ public class RhinoManager {
         }
     }
 
-    /// Start recording audio from the microphone and infers the user's intent 
+    /// Start recording audio from the microphone and infers the user's intent
     /// from the spoken command. Once the inference is finalized it will invoke the user
     /// provided callback and terminates recording audio.
     ///

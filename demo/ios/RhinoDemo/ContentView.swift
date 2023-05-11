@@ -40,7 +40,7 @@ struct ContentView: View {
                 Text("\(result)")
                     .foregroundColor(Color.black)
                     .padding()
-                
+
                 Text(errorMessage)
                     .padding()
                     .background(Color.red)
@@ -53,9 +53,9 @@ struct ContentView: View {
                 Button {
                     if self.buttonLabel == "START" {
                         self.result = ""
-                        
+
                         let token = (language == "en") ? "" : "_\(language)"
-                        
+
                         let contextPath = Bundle.main.url(
                             forResource: "\(context)_ios",
                             withExtension: "rhn",
@@ -64,7 +64,7 @@ struct ContentView: View {
                             forResource: "rhino_params\(token)",
                             withExtension: "pv",
                             subdirectory: "models")!
-                        
+
                         do {
                             self.rhinoManager = try RhinoManager(
                                 accessKey: self.ACCESS_KEY,
@@ -73,7 +73,8 @@ struct ContentView: View {
                                 onInferenceCallback: { x in
                                     DispatchQueue.main.async {
                                         result = "{\n"
-                                        self.result += "    \"isUnderstood\" : \"" + x.isUnderstood.description + "\",\n"
+                                        self.result += "    \"isUnderstood\" : \"" +
+                                            x.isUnderstood.description + "\",\n"
                                         if x.isUnderstood {
                                             self.result += "    \"intent : \"" + x.intent + "\",\n"
                                             if !x.slots.isEmpty {
@@ -85,7 +86,7 @@ struct ContentView: View {
                                             }
                                         }
                                         result += "}\n"
-                                        
+
                                         self.buttonLabel = "START"
                                     }
                                 })
@@ -93,7 +94,8 @@ struct ContentView: View {
                             try self.rhinoManager.process()
                             self.buttonLabel = "    ...    "
                         } catch let error as RhinoInvalidArgumentError {
-                            errorMessage = "\(error.localizedDescription)\nEnsure your AccessKey '\(ACCESS_KEY)' is valid"
+                            errorMessage =
+                                "\(error.localizedDescription)\nEnsure your AccessKey '\(ACCESS_KEY)' is valid"
                         } catch is RhinoActivationError {
                             errorMessage = "ACCESS_KEY activation error"
                         } catch is RhinoActivationRefusedError {
@@ -105,7 +107,7 @@ struct ContentView: View {
                         } catch {
                             errorMessage = "\(error)"
                         }
-                        
+
                     } else {
                         self.buttonLabel = "START"
                     }
@@ -115,7 +117,7 @@ struct ContentView: View {
                         .background(errorMessage.isEmpty ? Color.blue: Color.gray)
                         .foregroundColor(Color.white)
                         .font(.largeTitle)
-                    
+
                 }.disabled(!errorMessage.isEmpty)
             }
             .padding()
