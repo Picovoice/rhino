@@ -2,8 +2,7 @@
    <BuildAction parallelizeBuildables="YES" buildImplicitDependencies="YES">
       <PreActions>
          <ExecutionAction ActionType="Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
-            <ActionContent title="Run Script" scriptText="${SRCROOT}/pre-build.sh pt
-">
+            <ActionContent title="Run Script" scriptText="${SRCROOT}/pre-build.sh pt luz_inteligente">
                <EnvironmentBuildable>
                   <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="BBE66BC9205DD6F7006005B1" BuildableName="RhinoDemo.app" BlueprintName="RhinoDemo" ReferencedContainer="container:RhinoDemo.xcodeproj">
                   </BuildableReference>

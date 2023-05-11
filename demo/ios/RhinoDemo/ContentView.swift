@@ -18,96 +18,105 @@ struct ContentView: View {
     @State var buttonLabel = "START"
     @State var result: String = ""
     @State var errorMessage: String = ""
+    @State var contextInfo: String?
 
     let ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}" // Obtained from Picovoice Console (https://console.picovoice.ai)
 
     var body: some View {
-        VStack {
-            Spacer()
-            Spacer()
-            Text("\(result)")
-                .foregroundColor(Color.black)
-                .padding()
-
-            Text(errorMessage)
-                .padding()
-                .background(Color.red)
-                .foregroundColor(Color.white)
-                .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width - 50)
-                .font(.body)
-                .opacity(errorMessage.isEmpty ? 0 : 1)
-                .cornerRadius(.infinity)
-            Spacer()
-            Button {
-                if self.buttonLabel == "START" {
-                    self.result = ""
-
-                    let token = (language == "en") ? "" : "_\(language)"
-
-                    let contextPath = Bundle.main.url(
-                        forResource: "\(context)_ios",
-                        withExtension: "rhn",
-                        subdirectory: "contexts")!
-                    let modelPath = Bundle.main.url(
-                        forResource: "rhino_params\(token)",
-                        withExtension: "pv",
-                        subdirectory: "models")!
-
-                    do {
-                        self.rhinoManager = try RhinoManager(
-                            accessKey: self.ACCESS_KEY,
-                            contextPath: contextPath.path,
-                            modelPath: modelPath.path,
-                            onInferenceCallback: { x in
-                                DispatchQueue.main.async {
-                                    result = "{\n"
-                                    self.result += "    \"isUnderstood\" : \"" + x.isUnderstood.description + "\",\n"
-                                    if x.isUnderstood {
-                                        self.result += "    \"intent : \"" + x.intent + "\",\n"
-                                        if !x.slots.isEmpty {
-                                            result += "    \"slots\" : {\n"
-                                            for (k, v) in x.slots {
-                                                self.result += "        \"" + k + "\" : \"" + v + "\",\n"
-                                            }
-                                            result += "    }\n"
-                                        }
-                                    }
-                                    result += "}\n"
-
-                                    self.buttonLabel = "START"
-                                }
-                            })
-                        try self.rhinoManager.process()
-                        self.buttonLabel = "    ...    "
-                    } catch let error as RhinoInvalidArgumentError {
-                        errorMessage = "\(error.localizedDescription)\nEnsure your AccessKey '\(ACCESS_KEY)' is valid"
-                    } catch is RhinoActivationError {
-                        errorMessage = "ACCESS_KEY activation error"
-                    } catch is RhinoActivationRefusedError {
-                        errorMessage = "ACCESS_KEY activation refused"
-                    } catch is RhinoActivationLimitError {
-                        errorMessage = "ACCESS_KEY reached its limit"
-                    } catch is RhinoActivationThrottledError {
-                        errorMessage = "ACCESS_KEY is throttled"
-                    } catch {
-                        errorMessage = "\(error)"
-                    }
-
-                } else {
-                    self.buttonLabel = "START"
-                }
-            } label: {
-                Text("\(buttonLabel)")
+        NavigationView {
+            VStack {
+                Spacer()
+                Spacer()
+                Text("\(result)")
+                    .foregroundColor(Color.black)
                     .padding()
-                    .background(errorMessage.isEmpty ? Color.blue: Color.gray)
+                
+                Text(errorMessage)
+                    .padding()
+                    .background(Color.red)
                     .foregroundColor(Color.white)
-                    .font(.largeTitle)
-
-            }.disabled(!errorMessage.isEmpty)
+                    .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width - 50)
+                    .font(.body)
+                    .opacity(errorMessage.isEmpty ? 0 : 1)
+                    .cornerRadius(.infinity)
+                Spacer()
+                Button {
+                    if self.buttonLabel == "START" {
+                        self.result = ""
+                        
+                        let token = (language == "en") ? "" : "_\(language)"
+                        
+                        let contextPath = Bundle.main.url(
+                            forResource: "\(context)_ios",
+                            withExtension: "rhn",
+                            subdirectory: "contexts")!
+                        let modelPath = Bundle.main.url(
+                            forResource: "rhino_params\(token)",
+                            withExtension: "pv",
+                            subdirectory: "models")!
+                        
+                        do {
+                            self.rhinoManager = try RhinoManager(
+                                accessKey: self.ACCESS_KEY,
+                                contextPath: contextPath.path,
+                                modelPath: modelPath.path,
+                                onInferenceCallback: { x in
+                                    DispatchQueue.main.async {
+                                        result = "{\n"
+                                        self.result += "    \"isUnderstood\" : \"" + x.isUnderstood.description + "\",\n"
+                                        if x.isUnderstood {
+                                            self.result += "    \"intent : \"" + x.intent + "\",\n"
+                                            if !x.slots.isEmpty {
+                                                result += "    \"slots\" : {\n"
+                                                for (k, v) in x.slots {
+                                                    self.result += "        \"" + k + "\" : \"" + v + "\",\n"
+                                                }
+                                                result += "    }\n"
+                                            }
+                                        }
+                                        result += "}\n"
+                                        
+                                        self.buttonLabel = "START"
+                                    }
+                                })
+                            self.contextInfo = self.rhinoManager.ge
+                            try self.rhinoManager.process()
+                            self.buttonLabel = "    ...    "
+                        } catch let error as RhinoInvalidArgumentError {
+                            errorMessage = "\(error.localizedDescription)\nEnsure your AccessKey '\(ACCESS_KEY)' is valid"
+                        } catch is RhinoActivationError {
+                            errorMessage = "ACCESS_KEY activation error"
+                        } catch is RhinoActivationRefusedError {
+                            errorMessage = "ACCESS_KEY activation refused"
+                        } catch is RhinoActivationLimitError {
+                            errorMessage = "ACCESS_KEY reached its limit"
+                        } catch is RhinoActivationThrottledError {
+                            errorMessage = "ACCESS_KEY is throttled"
+                        } catch {
+                            errorMessage = "\(error)"
+                        }
+                        
+                    } else {
+                        self.buttonLabel = "START"
+                    }
+                } label: {
+                    Text("\(buttonLabel)")
+                        .padding()
+                        .background(errorMessage.isEmpty ? Color.blue: Color.gray)
+                        .foregroundColor(Color.white)
+                        .font(.largeTitle)
+                    
+                }.disabled(!errorMessage.isEmpty)
+            }
+            .padding()
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+            .background(Color.white)
+            .navigationBarItems(trailing:
+                Button("Context Info") {
+                }
+                .disabled(self.contextInfo == nil)
+            )
         }
-        .padding()
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-        .background(Color.white)
     }
 }
 

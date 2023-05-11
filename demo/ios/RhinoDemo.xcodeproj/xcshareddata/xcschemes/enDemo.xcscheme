@@ -10,11 +10,11 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "${SRCROOT}/pre-build.sh en&#10;">
+               scriptText = "${SRCROOT}/pre-build.sh en smart_lighting&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "BBE66BC9205DD6F7006005B1"
+                     BlueprintIdentifier = "BB193E8D2370C4EC00556136"
                      BuildableName = "RhinoDemo.app"
                      BlueprintName = "RhinoDemo"
                      ReferencedContainer = "container:RhinoDemo.xcodeproj">
@@ -59,9 +59,9 @@
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release"
-      selectedDebuggerIdentifier = ""
-      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
