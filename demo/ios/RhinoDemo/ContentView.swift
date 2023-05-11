@@ -9,6 +9,15 @@
 
 import SwiftUI
 import Rhino
+
+struct SheetView: View {
+    @Binding var contextInfo: String
+
+    var body: some View {
+        Text(self.contextInfo)
+    }
+}
+
 struct ContentView: View {
 
     let language: String = ProcessInfo.processInfo.environment["LANGUAGE"]!
@@ -18,7 +27,8 @@ struct ContentView: View {
     @State var buttonLabel = "START"
     @State var result: String = ""
     @State var errorMessage: String = ""
-    @State var contextInfo: String?
+    @State var contextInfo: String = ""
+    @State var showInfo: Bool = false
 
     let ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}" // Obtained from Picovoice Console (https://console.picovoice.ai)
 
@@ -79,7 +89,7 @@ struct ContentView: View {
                                         self.buttonLabel = "START"
                                     }
                                 })
-                            self.contextInfo = self.rhinoManager.ge
+                            self.contextInfo = ""
                             try self.rhinoManager.process()
                             self.buttonLabel = "    ...    "
                         } catch let error as RhinoInvalidArgumentError {
@@ -111,11 +121,12 @@ struct ContentView: View {
             .padding()
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
             .background(Color.white)
-            .navigationBarItems(trailing:
-                Button("Context Info") {
-                }
-                .disabled(self.contextInfo == nil)
-            )
+            .navigationBarItems(trailing: Button("Context Info") {
+                self.showInfo = true
+            })
+        }
+        .sheet(isPresented: self.$showInfo) {
+            SheetView(contextInfo: self.$contextInfo)
         }
     }
 }

@@ -25,6 +25,12 @@ public class RhinoManager {
     private var started = false
     private var stop = false
 
+    public var contextInfo: String {
+        get {
+            return (self.rhino != nil) ? self.rhino.contextInfo : ""
+        }
+    }
+
     /// Constructor.
     ///
     /// - Parameters:
