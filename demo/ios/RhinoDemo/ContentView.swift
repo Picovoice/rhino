@@ -111,13 +111,15 @@ struct ContentView: View {
                 Button {
                     if self.buttonLabel == "START" {
                         self.result = ""
+                        if self.rhinoManager == nil {
+                            initRhino()
+                        }
 
                         do {
-                            if self.rhinoManager == nil {
-                                initRhino()
+                            if self.rhinoManager != nil {
+                                try self.rhinoManager.process()
+                                self.buttonLabel = "    ...    "
                             }
-                            try self.rhinoManager.process()
-                            self.buttonLabel = "    ...    "
                         } catch {
                             errorMessage = "\(error)"
                         }
