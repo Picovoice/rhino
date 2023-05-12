@@ -35,6 +35,54 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    def testDataFile = file('../../../../resources/.test/test_data.json')
+    def parsedJson = new groovy.json.JsonSlurper().parseText(testDataFile.text)
+    def languages = []
+    parsedJson.tests.within_context.each { a ->
+        def languageInfo = new Tuple(a.language, a.context_name)
+        languages.add(languageInfo)
+    }
+
+    flavorDimensions "language"
+    productFlavors {
+        languages.each { languageInfo ->
+            "${languageInfo.get(0)}" {
+                applicationIdSuffix ".${languageInfo.get(0)}"
+                ext.contextName "${languageInfo.get(1)}"
+            }
+        }
+
+        all { flavor ->
+            delete fileTree("$projectDir/src/main/assets") {
+                exclude '**/.gitkeep'
+            }
+            task("${flavor.name}CopyParams", type: Copy) {
+                from("$projectDir/../../../../lib/common/")
+                if (flavor.name != 'en') {
+                    include("rhino_params_${flavor.name}.pv")
+                } else {
+                    include("rhino_params.pv")
+                }
+                into("$projectDir/src/main/assets/models")
+            }
+            task("${flavor.name}CopyContext", type: Copy) {
+                description = "Copy ${flavor.name} resources"
+                if (flavor.name != 'en') {
+                    from("$projectDir/../../../../resources/contexts_${flavor.name}/android")
+                } else {
+                    from("$projectDir/../../../../resources/contexts/android")
+                }
+                include('*.rhn')
+                into("$projectDir/src/main/assets/contexts")
+                rename { String fileName ->
+                    fileName.replace("_android", "").replace(" ", "_")
+                }
+            }
+            task("${flavor.name}ContextName") {
+                resValue 'string', 'pvContextName', flavor.ext.contextName
+            }
+        }
+    }
     sourceSets {
         androidTest {
             java {
@@ -68,10 +116,14 @@ dependencies {
     androidTestImplementation('com.microsoft.appcenter:espresso-test-extension:1.4')
 }
 
-task copyContext(type: Copy) {
-    from("${rootDir}/../../../resources/contexts/android/")
-    include('smart_lighting_android.rhn')
-    into("${rootDir}/rhino-activity-demo-app/src/main/assets")
+afterEvaluate {
+    android.productFlavors.all {
+        flavor ->
+            tasks."merge${flavor.name.capitalize()}DebugAssets".dependsOn "${flavor.name}CopyParams"
+            tasks."merge${flavor.name.capitalize()}ReleaseAssets".dependsOn "${flavor.name}CopyParams"
+            tasks."merge${flavor.name.capitalize()}DebugAssets".dependsOn "${flavor.name}CopyContext"
+            tasks."merge${flavor.name.capitalize()}ReleaseAssets".dependsOn "${flavor.name}CopyContext"
+            tasks."merge${flavor.name.capitalize()}DebugAssets".dependsOn "${flavor.name}ContextName"
+            tasks."merge${flavor.name.capitalize()}ReleaseAssets".dependsOn "${flavor.name}ContextName"
+    }
 }
-
-preBuild.dependsOn(copyContext)
