@@ -27,7 +27,7 @@ public class RhinoManager {
 
     public var contextInfo: String {
         get {
-            return (self.rhino != nil) ? self.rhino?.contextInfo : ""
+            return (self.rhino != nil) ? self.rhino!.contextInfo : ""
         }
     }
 
