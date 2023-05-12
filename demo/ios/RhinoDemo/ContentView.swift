@@ -47,7 +47,7 @@ struct ContentView: View {
                 forResource: "rhino_params_\(language)",
                 withExtension: "pv",
                 subdirectory: "models")!.path
-        
+
         do {
             self.rhinoManager = try RhinoManager(
                 accessKey: self.ACCESS_KEY,
@@ -57,7 +57,7 @@ struct ContentView: View {
                     DispatchQueue.main.async {
                         result = "{\n"
                         self.result += "    \"isUnderstood\" : \"" +
-                        x.isUnderstood.description + "\",\n"
+                            x.isUnderstood.description + "\",\n"
                         if x.isUnderstood {
                             self.result += "    \"intent : \"" + x.intent + "\",\n"
                             if !x.slots.isEmpty {
@@ -69,7 +69,7 @@ struct ContentView: View {
                             }
                         }
                         result += "}\n"
-                        
+
                         self.buttonLabel = "START"
                     }
                 })
@@ -89,7 +89,7 @@ struct ContentView: View {
             errorMessage = "\(error)"
         }
     }
-    
+
     var body: some View {
         NavigationView {
             VStack {
@@ -113,7 +113,7 @@ struct ContentView: View {
                         self.result = ""
 
                         do {
-                            if (self.rhinoManager == nil) {
+                            if self.rhinoManager == nil {
                                 initRhino()
                             }
                             try self.rhinoManager.process()
@@ -138,7 +138,7 @@ struct ContentView: View {
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
             .background(Color.white)
             .navigationBarItems(trailing: Button("Context Info") {
-                if (self.rhinoManager == nil) {
+                if self.rhinoManager == nil {
                     initRhino()
                 }
                 self.showInfo = true

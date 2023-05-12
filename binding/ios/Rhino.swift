@@ -235,7 +235,7 @@ public class Rhino {
 
         throw RhinoIOError(
             "Could not find file at path '\(filePath)'. If this is a " +
-            "packaged asset, ensure you have added it to your xcode project.")
+                "packaged asset, ensure you have added it to your xcode project.")
     }
 
     private func pvStatusToRhinoError(_ status: pv_status_t, _ message: String) -> RhinoError {
