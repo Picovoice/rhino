@@ -2,7 +2,7 @@ source 'https://cdn.cocoapods.org/'
 platform :ios, '11.0'
 
 target 'RhinoAppTest' do
-  pod 'Rhino-iOS', '~> 2.2.0'
+  pod 'Rhino-iOS', '~> 2.2.1'
 end
 
 target 'RhinoAppTestUITests' do
@@ -10,5 +10,5 @@ target 'RhinoAppTestUITests' do
 end
 
 target 'PerformanceTest' do
-  pod 'Rhino-iOS', '~> 2.2.0'
+  pod 'Rhino-iOS', '~> 2.2.1'
 end
