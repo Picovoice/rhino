@@ -54,16 +54,16 @@ struct ContentView: View {
                     if self.buttonLabel == "START" {
                         self.result = ""
 
-                        let token = (language == "en") ? "" : "_\(language)"
-
                         let contextPath = Bundle.main.url(
                             forResource: "\(context)_ios",
                             withExtension: "rhn",
                             subdirectory: "contexts")!
-                        let modelPath = Bundle.main.url(
-                            forResource: "rhino_params\(token)",
-                            withExtension: "pv",
-                            subdirectory: "models")!
+
+                        let modelPath = (langage == "en") ? nil :
+                            Bundle.main.url(
+                                forResource: "rhino_params_\(language)",
+                                withExtension: "pv",
+                                subdirectory: "models")!
 
                         do {
                             self.rhinoManager = try RhinoManager(

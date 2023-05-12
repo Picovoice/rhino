@@ -11,6 +11,7 @@ on:
       - 'lib/wasm/**'
       - 'resources/audio_samples/**'
       - 'resources/contexts/wasm/**'
+      - 'resources/.test/**'
       - '.github/workflows/web.yml'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+' ]
@@ -21,6 +22,7 @@ on:
       - 'lib/wasm/**'
       - 'resources/audio_samples/**'
       - 'resources/contexts/wasm/**'
+      - 'resources/.test/**'
       - '.github/workflows/web.yml'
 
 defaults:

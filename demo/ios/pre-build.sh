@@ -11,7 +11,6 @@ echo "${SRCROOT}/../../resources/contexts/ios/$2_ios.rhn"
 if [ $1 == 'en' ];
 then
     cp "${SRCROOT}/../../resources/contexts/ios/$2_ios.rhn" "${SRCROOT}/contexts/"
-    cp "${SRCROOT}/../../lib/common/rhino_params.pv" "${SRCROOT}/models/"
 else
     cp "${SRCROOT}/../../resources/contexts_$1/ios/$2_ios.rhn" "${SRCROOT}/contexts/"
     cp "${SRCROOT}/../../lib/common/rhino_params_$1.pv" "${SRCROOT}/models/"
