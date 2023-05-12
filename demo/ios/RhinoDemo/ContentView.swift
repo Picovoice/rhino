@@ -57,19 +57,19 @@ struct ContentView: View {
                         let contextPath = Bundle.main.url(
                             forResource: "\(context)_ios",
                             withExtension: "rhn",
-                            subdirectory: "contexts")!
+                            subdirectory: "contexts")!.path
 
-                        let modelPath = (langage == "en") ? nil :
+                        let modelPath = (language == "en") ? nil :
                             Bundle.main.url(
                                 forResource: "rhino_params_\(language)",
                                 withExtension: "pv",
-                                subdirectory: "models")!
+                                subdirectory: "models")!.path
 
                         do {
                             self.rhinoManager = try RhinoManager(
                                 accessKey: self.ACCESS_KEY,
-                                contextPath: contextPath.path,
-                                modelPath: modelPath.path,
+                                contextPath: contextPath,
+                                modelPath: modelPath,
                                 onInferenceCallback: { x in
                                     DispatchQueue.main.async {
                                         result = "{\n"
