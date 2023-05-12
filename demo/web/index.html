@@ -3,7 +3,8 @@
   <head>
     <script src="node_modules/@picovoice/rhino-web/dist/iife/index.js"></script>
     <script src="node_modules/@picovoice/web-voice-processor/dist/iife/index.js"></script>
-    <script src="rhino_params.js"></script>
+    <script src="contexts/rhinoContext.js"></script>
+    <script src="models/rhinoModel.js"></script>
     <script type="application/javascript">
       let rhino = null;
 
@@ -38,16 +39,16 @@
           writeMessage("Rhino is loading. Please wait...");
           rhino = await RhinoWeb.RhinoWorker.create(
               accessKey,
-              { publicPath: "clock_wasm.rhn" },
+              rhinoContext,
               rhinoInferenceCallback,
-              { base64: modelParams },
+              rhinoModel,
           );
 
           writeMessage("Rhino worker ready!");
           document.getElementById("push-to-talk").disabled = false;
           document.getElementById("rhn-context-yaml").innerText = rhino.contextInfo;
 
-          writeMessage("Press the 'Push to Talk' button to talk. Then say e.g. 'Set a timer for one minute'");
+          writeMessage("Press the 'Push to Talk' button to talk. Then say something from the context info below.");
         } catch (error) {
           writeMessage(error);
         }
@@ -69,8 +70,7 @@
     <p>This demo uses Rhino for Web and the WebVoiceProcessor to:</p>
     <ol>
       <li>
-        Create an English instance of Rhino that understands commands in the
-        "Pico Clock" context;
+        Create an instance of Rhino that understands commands in the within a given sample context;
       </li>
       <li>
         Acquire microphone (& ask permission) data stream and convert to voice
@@ -100,8 +100,6 @@
     <button id="push-to-talk" disabled>Push to Talk</button>
     <hr />
     <div id="messages"></div>
-    <br />
-    <br />
     <br />
     <hr />
     <h2>Context info:</h2>
