@@ -143,7 +143,9 @@ struct ContentView: View {
                 if self.rhinoManager == nil {
                     initRhino()
                 }
-                self.showInfo = true
+                if self.rhinoManager != nil {
+                    self.showInfo = true
+                }
             })
         }
         .sheet(isPresented: self.$showInfo) {
