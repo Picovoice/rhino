@@ -10,18 +10,20 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ## Install & run
 
-Use `yarn` or `npm` to install the dependencies, and the `start` script to start a local web server hosting the demo.
+Use `yarn` or `npm` to install the dependencies, and the `start` script with a language code
+to start a local web server hosting the demo in the language of your choice (e.g. `pl` -> Polish, `ko` -> Korean).
+To see a list of available languages, run `start` without a language code.
 
 ```console
 yarn
-yarn start
+yarn start ${LANGUAGE}
 ```
 
 (or)
 
 ```console
 npm install
-npm run start
+npm run start ${LANGUAGE}
 ```
 
 Open `localhost:5000` in your web browser, as hinted at in the output:
@@ -34,9 +36,10 @@ Hit CTRL-C to stop the server
 
 ### Try Rhino
 
-Wait until Rhino and the WebVoiceProcessor have initialized. The demo is running a context called "Clock" (available as a `.rhn` file in the GitHub repository). Press the "Push to Talk" button to start a voice interaction.
+Wait until Rhino and the WebVoiceProcessor have initialized. You will see the contents of the sample context at the 
+bottom of the page. Press the "Push to Talk" button to start a voice interaction.
 
-Try a phrase that is in the context:
+Try a phrase that is in the context. E.g:
 
 > "Set a timer for two minutes"
 
@@ -64,34 +67,4 @@ Try a phrase that is out-of-context:
 }
 ```
 
-This command falls outside the domain of "Alarm Clock" and is therefore not understood.
-
-#### Demo context source
-
-The Alarm Clock was trained to understand a particular set of expressions. These are built using a simple grammar and grouped together into a YAML file. This file is trained by [Picovoice Console](https://console.picovoice.ai/) to create a `.rhn` file for the WebAssembly (WASM) platform.
-
-```yaml
-context:
-  expressions:
-    setAlarm:
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:minutes [minute, minutes] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:minutes [minute, minutes]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:hours [hour, hours]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:minutes [minute, minutes] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:minutes [minute, minutes]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "$pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:minutes [minute, minutes] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "$pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:minutes [minute, minutes]"
-      - "$pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "$pv.TwoDigitInteger:hours [hour, hours]"
-      - "$pv.TwoDigitInteger:minutes [minute, minutes] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "$pv.TwoDigitInteger:minutes [minute, minutes]"
-      - "$pv.TwoDigitInteger:seconds [second, seconds]"
-    reset:
-      - "reset (the) (timer)"
-    pause:
-      - "[pause, stop] (the) (timer)"
-    resume:
-      - "resume (the) (timer)"
-```
+This command falls outside the domain of the context and is therefore not understood.
