@@ -16,10 +16,13 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitSuccessSimple() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
         let r = try Rhino.init(
-                accessKey: accessKey,
-                contextPath: contextPath)
+            accessKey: accessKey,
+            contextPath: contextPath)
 
         XCTAssert(Rhino.version != "")
         XCTAssert(Rhino.frameLength > 0)
@@ -30,64 +33,85 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitSuccessWithCustomModelPath() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
-        let modelPath = bundle.path(forResource: "rhino_params", ofType: "pv", inDirectory: "test_resources/model_files")!
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
+        let modelPath = bundle.path(
+            forResource: "rhino_params",
+            ofType: "pv",
+            inDirectory: "test_resources/model_files")!
 
         let r = try Rhino.init(
-                accessKey: accessKey,
-                contextPath: contextPath,
-                modelPath: modelPath)
+            accessKey: accessKey,
+            contextPath: contextPath,
+            modelPath: modelPath)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
 
     func testInitSuccessWithCustomSensitivity() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
 
         let r = try Rhino.init(
-                accessKey: accessKey,
-                contextPath: contextPath,
-                sensitivity: 0.7)
+            accessKey: accessKey,
+            contextPath: contextPath,
+            sensitivity: 0.7)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
 
     func testInitSuccessWithCustomEndpointDuration() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
 
         let r = try Rhino.init(
-                accessKey: accessKey,
-                contextPath: contextPath,
-                endpointDurationSec: 3.0)
+            accessKey: accessKey,
+            contextPath: contextPath,
+            endpointDurationSec: 3.0)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
 
     func testInitSuccessWithRequireEndpointOff() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
 
         let r = try Rhino.init(
-                accessKey: accessKey,
-                contextPath: contextPath,
-                requireEndpoint: false)
+            accessKey: accessKey,
+            contextPath: contextPath,
+            requireEndpoint: false)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
 
     func testInitFailWithMismatchedLanguage() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "beleuchtung_ios", ofType: "rhn", inDirectory: "test_resources/context_files/de")!
-        let modelPath = bundle.path(forResource: "rhino_params", ofType: "pv", inDirectory: "test_resources/model_files")!
+        let contextPath = bundle.path(
+            forResource: "beleuchtung_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/de")!
+        let modelPath = bundle.path(
+            forResource: "rhino_params",
+            ofType: "pv",
+            inDirectory: "test_resources/model_files")!
 
         var didFail = false
         do {
             _ = try Rhino.init(
-                    accessKey: accessKey,
-                    contextPath: contextPath,
-                    modelPath: modelPath)
+                accessKey: accessKey,
+                contextPath: contextPath,
+                modelPath: modelPath)
         } catch {
             didFail = true
         }
@@ -101,8 +125,8 @@ class RhinoAppTestUITests: BaseTest {
         var didFail = false
         do {
             _ = try Rhino.init(
-                    accessKey: accessKey,
-                    contextPath: contextPath)
+                accessKey: accessKey,
+                contextPath: contextPath)
         } catch {
             didFail = true
         }
@@ -112,15 +136,18 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithInvalidModelPath() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
         let modelPath = "/bad_path/bad_path.pv"
 
         var didFail = false
         do {
             _ = try Rhino.init(
-                    accessKey: accessKey,
-                    contextPath: contextPath,
-                    modelPath: modelPath)
+                accessKey: accessKey,
+                contextPath: contextPath,
+                modelPath: modelPath)
         } catch {
             didFail = true
         }
@@ -130,14 +157,17 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithInvalidSensitivity() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
 
         var didFail = false
         do {
             _ = try Rhino.init(
-                    accessKey: accessKey,
-                    contextPath: contextPath,
-                    sensitivity: 10)
+                accessKey: accessKey,
+                contextPath: contextPath,
+                sensitivity: 10)
         } catch {
             didFail = true
         }
@@ -147,14 +177,17 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithInvalidEndpointDuration() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
 
         var didFail = false
         do {
             _ = try Rhino.init(
-                    accessKey: accessKey,
-                    contextPath: contextPath,
-                    endpointDurationSec: 10.0)
+                accessKey: accessKey,
+                contextPath: contextPath,
+                endpointDurationSec: 10.0)
         } catch {
             didFail = true
         }
@@ -164,13 +197,16 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithWrongPlatform() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_linux", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_linux",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
 
         var didFail = false
         do {
             _ = try Rhino.init(
-                    accessKey: accessKey,
-                    contextPath: contextPath)
+                accessKey: accessKey,
+                contextPath: contextPath)
         } catch {
             didFail = true
         }
@@ -180,25 +216,37 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitWithNonAsciiModelName() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "iluminación_inteligente_ios", ofType: "rhn", inDirectory: "test_resources/context_files/es")!
-        let modelPath = bundle.path(forResource: "rhino_params_es", ofType: "pv", inDirectory: "test_resources/model_files")!
+        let contextPath = bundle.path(
+            forResource: "iluminación_inteligente_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/es")!
+        let modelPath = bundle.path(
+            forResource: "rhino_params_es",
+            ofType: "pv",
+            inDirectory: "test_resources/model_files")!
 
         let r = try Rhino.init(
-                accessKey: accessKey,
-                contextPath: contextPath,
-                modelPath: modelPath)
+            accessKey: accessKey,
+            contextPath: contextPath,
+            modelPath: modelPath)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
 
     func testProcWithinContext() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
         let r = try Rhino.init(
-                accessKey: accessKey,
-                contextPath: contextPath)
+            accessKey: accessKey,
+            contextPath: contextPath)
 
-        let fileURL: URL = bundle.url(forResource: "test_within_context", withExtension: "wav", subdirectory: "test_resources/audio_samples")!
+        let fileURL: URL = bundle.url(
+            forResource: "test_within_context",
+            withExtension: "wav",
+            subdirectory: "test_resources/audio_samples")!
         let inference = try processFile(rhino: r, testAudioURL: fileURL)
 
         XCTAssert(inference.isUnderstood)
@@ -217,12 +265,18 @@ class RhinoAppTestUITests: BaseTest {
 
     func testProcOutOfContext() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn", inDirectory: "test_resources/context_files/en")!
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
         let r = try Rhino.init(
-                accessKey: accessKey,
-                contextPath: contextPath)
+            accessKey: accessKey,
+            contextPath: contextPath)
 
-        let fileURL: URL = bundle.url(forResource: "test_out_of_context", withExtension: "wav", subdirectory: "test_resources/audio_samples")!
+        let fileURL: URL = bundle.url(
+            forResource: "test_out_of_context",
+            withExtension: "wav",
+            subdirectory: "test_resources/audio_samples")!
         let inference = try processFile(rhino: r, testAudioURL: fileURL)
         XCTAssert(!inference.isUnderstood)
 

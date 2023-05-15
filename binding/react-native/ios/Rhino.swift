@@ -14,7 +14,7 @@ import Rhino
 @objc(PvRhino)
 class PvRhino: NSObject {
 
-    private var rhinoPool:Dictionary<String, Rhino> = [:]
+    private var rhinoPool: [String: Rhino] = [:]
 
     @objc(create:modelPath:contextPath:sensitivity:endpointDurationSec:requireEndpoint:resolver:rejecter:)
     func create(
@@ -24,9 +24,9 @@ class PvRhino: NSObject {
         sensitivity: Float32,
         endpointDurationSec: Float32,
         requireEndpoint: Bool,
-        resolver resolve:RCTPromiseResolveBlock,
-        rejecter reject:RCTPromiseRejectBlock
-    ) -> Void {
+        resolver resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
         do {
             let rhino = try Rhino(
                 accessKey: accessKey,
@@ -57,15 +57,15 @@ class PvRhino: NSObject {
     }
 
     @objc(delete:)
-    func delete(handle:String) -> Void {
-        if let rhino = rhinoPool.removeValue(forKey: handle){
+    func delete(handle: String) {
+        if let rhino = rhinoPool.removeValue(forKey: handle) {
             rhino.delete()
         }
     }
 
     @objc(process:pcm:resolver:rejecter:)
-    func process(handle:String, pcm:[Int16],
-        resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) -> Void {
+    func process(handle: String, pcm: [Int16],
+                 resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         do {
             if let rhino = rhinoPool[handle] {
                 var param: [String: Any] = [:]
@@ -85,7 +85,8 @@ class PvRhino: NSObject {
 
                 resolve(param)
             } else {
-                let (code, message) = errorToCodeAndMessage(RhinoInvalidStateError("Invalid handle provided to Rhino 'process'"))
+                let (code, message) = errorToCodeAndMessage(
+                    RhinoInvalidStateError("Invalid handle provided to Rhino 'process'"))
                 reject(code, message, nil)
             }
         } catch let error as RhinoError {

@@ -33,21 +33,23 @@ class PerformanceTest: XCTestCase {
         let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
         let r = try Rhino.init(accessKey: accessKey, contextPath: contextPath)
 
-        let fileURL:URL = bundle.url(forResource: "test_within_context", withExtension: "wav")!
+        let fileURL: URL = bundle.url(forResource: "test_within_context", withExtension: "wav")!
 
         let data = try Data(contentsOf: fileURL)
         let frameLengthBytes = Int(Rhino.frameLength) * 2
-        
+
         var results: [Double] = []
         for _ in 0...numTestIterations {
-            var pcmBuffer = Array<Int16>(repeating: 0, count: Int(Rhino.frameLength))
+            var pcmBuffer = [Int16](repeating: 0, count: Int(Rhino.frameLength))
 
             var totalNSec = 0.0
             var index = 44
-            while(index + frameLengthBytes < data.count) {
-                _ = pcmBuffer.withUnsafeMutableBytes { data.copyBytes(to: $0, from: index..<(index + frameLengthBytes)) }
+            while index + frameLengthBytes < data.count {
+                _ = pcmBuffer.withUnsafeMutableBytes {
+                    data.copyBytes(to: $0, from: index..<(index + frameLengthBytes))
+                }
                 let before = CFAbsoluteTimeGetCurrent()
-                try r.process(pcm:pcmBuffer)
+                try r.process(pcm: pcmBuffer)
                 let after = CFAbsoluteTimeGetCurrent()
                 totalNSec += (after - before)
                 index += frameLengthBytes

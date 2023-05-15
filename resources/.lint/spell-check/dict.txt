@@ -109,6 +109,7 @@ shōmei
 signup
 soundfile
 spegnere
+SRCROOT
 stdbool
 stdint
 stdlib
@@ -128,6 +129,10 @@ wavefile
 wavspec
 wchars
 xcframework
+xcodeproj
+xcshareddata
+xcscheme
+xcschemes
 xcworkspace
 éclairage
 emptively
