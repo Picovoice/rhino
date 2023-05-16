@@ -74,7 +74,7 @@ android {
                 } else {
                     from("$projectDir/../../../../resources/contexts/android")
                 }
-                include('*.rhn')
+                include("${flavor.ext.contextName}_android.rhn")
                 into("$projectDir/src/main/assets/contexts")
                 rename { String fileName ->
                     fileName.replace("_android", "").replace(" ", "_")
