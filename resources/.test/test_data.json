@@ -48,7 +48,7 @@
         "language": "fa",
         "context_name": "simple_context_fa",
         "inference": {
-          "intent": "shopping",
+          "intent": "navigation",
           "slots": {
             "location": "آشپزخانه"
           }
