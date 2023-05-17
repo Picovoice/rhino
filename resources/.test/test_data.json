@@ -45,6 +45,16 @@
         }
       },
       {
+        "language": "fa",
+        "context_name": "simple_context_fa",
+        "inference": {
+          "intent": "navigation",
+          "slots": {
+            "location": "آشپزخانه"
+          }
+        }
+      },
+      {
         "language": "fr",
         "context_name": "éclairage_intelligent",
         "inference": {
@@ -182,6 +192,10 @@
         "language": "es",
         "context_name": "iluminación_inteligente"
       },
+      {
+        "language": "fa",
+        "context_name": "simple_context_fa"
+      },      
       {
         "language": "fr",
         "context_name": "éclairage_intelligent"
