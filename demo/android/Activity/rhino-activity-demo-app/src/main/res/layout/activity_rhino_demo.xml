@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.33"/>
+        app:layout_constraintGuide_percent="0.2" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/buttonGuideline"
@@ -64,37 +64,13 @@
         android:id="@+id/contextName"
         android:layout_width="0sp"
         android:layout_height="wrap_content"
-        android:text="@string/context_name"
-        android:textSize="14sp"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toTopOf="@id/topGuideline"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/cheatSheetButton"
-        app:layout_constraintStart_toEndOf="@+id/textGuideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0" />
-
-    <TextView
-        android:id="@+id/phraseLabel"
-        android:layout_width="0sp"
-        android:layout_height="wrap_content"
-        android:text="@string/phrase_label"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@+id/cheatSheetButton"
-        app:layout_constraintStart_toStartOf="@id/startGuideline"
-        app:layout_constraintEnd_toEndOf="@id/textGuideline"
-        app:layout_constraintHorizontal_bias="0" />
-
-    <TextView
-        android:id="@+id/phraseText"
-        android:layout_width="0sp"
-        android:layout_height="wrap_content"
-        android:text="@string/phrase_text"
-        android:textSize="14sp"
-        android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@+id/cheatSheetButton"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/textGuideline"
-        app:layout_constraintEnd_toEndOf="@id/endGuideline"
-        app:layout_constraintHorizontal_bias="0" />
+        app:layout_constraintTop_toTopOf="@id/topGuideline" />
 
     <ToggleButton
         android:id="@+id/startButton"
@@ -115,7 +91,6 @@
         android:id="@+id/intentView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:background="@color/colorPrimaryDark"
         android:textColor="@android:color/white"
@@ -123,8 +98,7 @@
         app:layout_constraintBottom_toTopOf="@id/startButton"
         app:layout_constraintEnd_toEndOf="@id/endGuideline"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@id/startGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/phraseText" />
+        app:layout_constraintStart_toStartOf="@id/startGuideline" />
 
     <Button
         android:id="@+id/cheatSheetButton"

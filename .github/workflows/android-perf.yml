@@ -44,7 +44,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
-        distribution: 'adopt'
+        distribution: 'temurin'
 
     - name: Copy test_resources
       run: ./copy_test_resources.sh
@@ -62,17 +62,17 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build app
-      run: ./gradlew assembleDebug
+      run: ./gradlew assembleEnDebug
 
     - name: Build androidTest
-      run: ./gradlew assembleAndroidTest
+      run: ./gradlew assembleEnDebugAndroidTest
 
     - name: Run tests on AppCenter
       run: appcenter test run espresso
         --token ${{secrets.APPCENTERAPITOKEN}}
         --app "Picovoice/Rhino-Android-Activity"
         --devices "Picovoice/${{ matrix.device }}"
-        --app-path rhino-activity-demo-app/build/outputs/apk/debug/rhino-activity-demo-app-debug.apk
+        --app-path rhino-activity-demo-app/build/outputs/apk/en/debug/rhino-activity-demo-app-en-debug.apk
         --test-series "rhino-android"
         --locale "en_US"
-        --build-dir rhino-activity-demo-app/build/outputs/apk/androidTest/debug
+        --build-dir rhino-activity-demo-app/build/outputs/apk/androidTest/en/debug

@@ -13,6 +13,7 @@
 package ai.picovoice.rhinodemo;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,14 +33,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.Map;
+import java.util.Objects;
 
 import ai.picovoice.rhino.*;
 
 
 public class MainActivity extends AppCompatActivity {
     private static final String ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+    private String contextName = "";
 
     private ToggleButton recordButton;
+    private TextView contextNameTextView;
     private Button cheatSheetButton;
     private TextView intentTextView;
     private TextView errorTextView;
@@ -48,12 +52,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRhino() {
         try {
-            rhinoManager = new RhinoManager.Builder()
+            RhinoManager.Builder builder = new RhinoManager.Builder()
                     .setAccessKey(ACCESS_KEY)
-                    .setContextPath("smart_lighting_android.rhn")
+                    .setContextPath("contexts/" + contextName + ".rhn")
                     .setSensitivity(0.25f)
-                    .setErrorCallback(rhinoManagerErrorCallback)
-                    .build(getApplicationContext(), rhinoManagerCallback);
+                    .setErrorCallback(rhinoManagerErrorCallback);
+
+            String model;
+            if (Objects.equals(BuildConfig.FLAVOR, "en")) {
+                model = "rhino_params.pv";
+            } else {
+                model = "rhino_params_" + BuildConfig.FLAVOR + ".pv";
+            }
+            builder.setModelPath("models/" + model);
+
+            rhinoManager = builder.build(getApplicationContext(), rhinoManagerCallback);
 
             Log.i("RhinoManager", rhinoManager.getContextInformation());
         } catch (RhinoInvalidArgumentException e) {
@@ -140,10 +153,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rhino_demo);
 
         recordButton = findViewById(R.id.startButton);
+        contextNameTextView = findViewById(R.id.contextName);
         cheatSheetButton = findViewById(R.id.cheatSheetButton);
         intentTextView = findViewById(R.id.intentView);
         errorTextView = findViewById(R.id.errorView);
         errorGuideline = findViewById(R.id.errorGuideLine);
+
+        contextName = getApplicationContext().getString(R.string.pvContextName);
+        contextNameTextView.setText(contextName);
 
         initRhino();
     }
