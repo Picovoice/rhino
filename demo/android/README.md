@@ -14,17 +14,8 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ## Running the Demo
 
-Copy your AccessKey into the `ACCESS_KEY` variable in `MainActivity.java` before building the demo.
-
-The default context for this demo is `Smart Lighting`. Simply press start, and the engine can recognize commands such as
-
-> Turn off the lights.
-
-or
-
-> Set the lights in the bedroom to blue.
-
-See in-app for the full context.
+Once the demo app has started, press the `start` button and utter a command to start inferring context. To see more details about
+the current context information, press the `Context Info` button on the top right corner in the app.
 
 ## Running the Instrumented Unit Tests
 
