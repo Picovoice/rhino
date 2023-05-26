@@ -10,7 +10,7 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 To run the application demo:
 
-1) From the (demo)[./] directory run:
+1) From the [demo](./) directory run:
 
 ```console
 pod install
