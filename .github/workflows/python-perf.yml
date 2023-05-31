@@ -101,7 +101,7 @@ jobs:
           performance_threshold_sec: 3.0
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Machine state before
       working-directory: resources/scripts
