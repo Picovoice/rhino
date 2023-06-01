@@ -7,20 +7,11 @@ const availableLanguages = testData.tests.within_context.map((x) => x.language);
 
 const commands = process.argv.slice(2, -1);
 const language = process.argv.slice(-1)[0];
-if (!language) {
-  console.error(
-    `Choose the language you would like to run the demo in with "yarn start [language]".\nAvailable languages are ${availableLanguages.join(
-      ', ',
-    )}`,
-  );
-  process.exit(1);
-}
 
 if (!availableLanguages.includes(language)) {
   console.error(
-    `'${language}' is not an available demo language.\nAvailable languages are ${availableLanguages.join(
-      ', ',
-    )}`,
+    `Choose the language you would like to run the demo in with "yarn android-run [language]" or "yarn ios-run [language]".
+Available languages are ${availableLanguages.join(', ')}`,
   );
   process.exit(1);
 }
