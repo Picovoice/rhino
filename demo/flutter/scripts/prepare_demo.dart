@@ -59,9 +59,9 @@ void main(List<String> arguments) async {
   var iOSContextsDirSrc =
       Directory(join(resourcePath, "contexts$suffix", "ios"));
 
-  var androdContextsDirDst = Directory(join(contextsPath, 'android'));
-  if (!androdContextsDirDst.existsSync()) {
-    androdContextsDirDst.createSync(recursive: true);
+  var androidContextsDirDst = Directory(join(contextsPath, 'android'));
+  if (!androidContextsDirDst.existsSync()) {
+    androidContextsDirDst.createSync(recursive: true);
   }
 
   var iOSContextsDirDst = Directory(join(contextsPath, 'ios'));
@@ -81,7 +81,7 @@ void main(List<String> arguments) async {
   File androidContextSrc =
       File(join(androidContextsDirSrc.path, "${contextName}_android.rhn"));
   androidContextSrc.copySync(
-      join(androdContextsDirDst.path, basename(androidContextSrc.path)));
+      join(androidContextsDirDst.path, basename(androidContextSrc.path)));
 
   File iOSContextSrc =
       File(join(iOSContextsDirSrc.path, "${contextName}_ios.rhn"));
