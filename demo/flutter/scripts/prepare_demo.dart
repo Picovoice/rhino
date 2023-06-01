@@ -42,37 +42,28 @@ void main(List<String> arguments) async {
   String contextName = testData["tests"]["within_context"]
       .firstWhere((x) => x["language"] == language)["context_name"];
 
-  var contextsDir = Directory(contextsPath);
-  if (contextsDir.existsSync()) {
-    contextsDir.deleteSync(recursive: true);
-  }
-  contextsDir.createSync();
-
-  var modelsDir = Directory(modelsPath);
-  if (modelsDir.existsSync()) {
-    modelsDir.deleteSync(recursive: true);
-  }
-  modelsDir.createSync();
-
   var androidContextsDirSrc =
       Directory(join(resourcePath, "contexts$suffix", "android"));
   var iOSContextsDirSrc =
       Directory(join(resourcePath, "contexts$suffix", "ios"));
 
   var androidContextsDirDst = Directory(join(contextsPath, 'android'));
-  if (!androidContextsDirDst.existsSync()) {
-    androidContextsDirDst.createSync(recursive: true);
+  if (androidContextsDirDst.existsSync()) {
+    androidContextsDirDst.deleteSync(recursive: true);
   }
+  androidContextsDirDst.createSync(recursive: true);
 
   var iOSContextsDirDst = Directory(join(contextsPath, 'ios'));
-  if (!iOSContextsDirDst.existsSync()) {
-    iOSContextsDirDst.createSync(recursive: true);
+  if (iOSContextsDirDst.existsSync()) {
+    iOSContextsDirDst.deleteSync(recursive: true);
   }
+  iOSContextsDirDst.createSync(recursive: true);
 
   var modelDir = Directory(modelsPath);
-  if (!modelDir.existsSync()) {
-    modelDir.createSync(recursive: true);
+  if (modelDir.existsSync()) {
+    modelDir.deleteSync(recursive: true);
   }
+  modelDir.createSync(recursive: true);
 
   var params = <String, String>{};
   params["language"] = language;
