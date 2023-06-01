@@ -18,11 +18,10 @@
     "eslint": "^8.13.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "node scripts/run_demo.js start",
+    "build": "node scripts/run_demo.js build",
     "eject": "react-scripts eject",
-    "lint": "eslint .",
-    "postinstall": "npx pvbase64 -i ../../lib/common/rhino_params.pv -o ./src/rhino_params.js && cp ../../resources/contexts/wasm/clock_wasm.rhn ./public"
+    "lint": "eslint ."
   },
   "eslintConfig": {
     "extends": [
