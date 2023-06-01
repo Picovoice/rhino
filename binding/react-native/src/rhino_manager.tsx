@@ -148,6 +148,19 @@ class RhinoManager {
       this._rhino = null;
     }
   }
+
+  /**
+   * Gets the source of the Rhino context in YAML format. Shows the list of intents,
+   * which expressions map to those intents, as well as slots and their possible values.
+   * @returns The context YAML
+   */
+  get contextInfo() {
+    if (this._rhino) {
+      return this._rhino.contextInfo;
+    } else {
+      return '';
+    }
+  }
 }
 
 export default RhinoManager;

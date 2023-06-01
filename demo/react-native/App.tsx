@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
-import { PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  Modal,
+  PermissionsAndroid,
+  Platform,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {
   RhinoManager,
   RhinoInference,
   RhinoErrors,
 } from '@picovoice/rhino-react-native';
+
+import { language, context } from './params.json';
 
 type Props = {};
 type State = {
@@ -15,6 +25,7 @@ type State = {
   isListening: boolean;
   isError: boolean;
   errorMessage: string;
+  showContextInfo: boolean;
 };
 
 export default class App extends Component<Props, State> {
@@ -31,11 +42,16 @@ export default class App extends Component<Props, State> {
       isListening: false,
       isError: false,
       errorMessage: '',
+      showContextInfo: false,
     };
   }
 
   async componentDidMount() {
-    let contextPath = `smart_lighting_${Platform.OS}.rhn`;
+    let contextPath = `contexts/${context}_${Platform.OS}.rhn`;
+    let modelPath: string | undefined;
+    if (language !== 'en') {
+      modelPath = `rhino_params_${language}.pv`;
+    }
 
     // load context
     try {
@@ -46,6 +62,7 @@ export default class App extends Component<Props, State> {
         (error) => {
           this.errorCallback(error.message);
         },
+        modelPath,
       );
     } catch (err) {
       let errorMessage;
@@ -159,33 +176,48 @@ export default class App extends Component<Props, State> {
     }
   }
 
+  showContextInfo() {
+    if (!this.state.isError) {
+      this.setState({ showContextInfo: true });
+    }
+  }
+
   render() {
     return (
       <View style={[styles.container]}>
         <View style={styles.statusBar}>
           <Text style={styles.statusBarText}>Rhino</Text>
+          <View style={styles.statusBarButtonContainer}>
+            <TouchableOpacity
+              style={{ backgroundColor: '#ffd105' }}
+              onPress={() => this.showContextInfo()}>
+              <Text style={styles.statusBarButtonStyle}>CONTEXT INFO</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <View
-          style={{
-            flex: 0.35,
-            justifyContent: 'center',
-            alignContent: 'center',
-          }}>
-          <TouchableOpacity
-            style={{
-              width: '50%',
-              height: '50%',
-              alignSelf: 'center',
-              justifyContent: 'center',
-              backgroundColor: this.state.isError ? '#cccccc' : '#377DFF',
-              borderRadius: 100,
-            }}
-            onPress={() => this._startProcessing()}
-            disabled={this.state.buttonDisabled || this.state.isError}>
-            <Text style={styles.buttonText}>{this.state.buttonText}</Text>
-          </TouchableOpacity>
-        </View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.showContextInfo}>
+          <View style={styles.modalView}>
+            <ScrollView style={{ flex: 0.95, marginBottom: 10 }}>
+              <Text>Temporary context info</Text>
+            </ScrollView>
+            <TouchableOpacity
+              style={{
+                alignSelf: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#377DFF',
+                padding: 3,
+                flex: 0.05,
+              }}
+              onPress={() => this.setState({ showContextInfo: false })}>
+              <Text style={{ color: 'white' }}>CLOSE</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+
         <View style={{ flex: 1, padding: 20 }}>
           <View
             style={{
@@ -209,6 +241,28 @@ export default class App extends Component<Props, State> {
             </Text>
           </View>
         )}
+
+        <View
+          style={{
+            flex: 0.35,
+            justifyContent: 'center',
+            alignContent: 'center',
+          }}>
+          <TouchableOpacity
+            style={{
+              width: '50%',
+              height: '50%',
+              alignSelf: 'center',
+              justifyContent: 'center',
+              backgroundColor: this.state.isError ? '#cccccc' : '#377DFF',
+              borderRadius: 100,
+            }}
+            onPress={() => this._startProcessing()}
+            disabled={this.state.buttonDisabled || this.state.isError}>
+            <Text style={styles.buttonText}>{this.state.buttonText}</Text>
+          </TouchableOpacity>
+        </View>
+
         <View
           style={{ flex: 0.08, justifyContent: 'flex-end', paddingBottom: 25 }}>
           <Text style={styles.instructions}>
@@ -234,16 +288,23 @@ const styles = StyleSheet.create({
   statusBar: {
     flex: 0.2,
     backgroundColor: '#377DFF',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   statusBarText: {
     fontSize: 18,
     color: 'white',
     fontWeight: 'bold',
     marginLeft: 15,
-    marginBottom: 10,
   },
-
+  statusBarButtonContainer: {
+    marginRight: 5,
+  },
+  statusBarButtonStyle: {
+    padding: 7.5,
+    fontWeight: '500',
+  },
   buttonStyle: {
     backgroundColor: '#377DFF',
     borderRadius: 100,
@@ -273,7 +334,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     borderRadius: 5,
     margin: 20,
-    padding: 20,
+    marginTop: 5,
+    marginBottom: 5,
+    padding: 10,
     textAlign: 'center',
+  },
+  modalView: {
+    margin: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
 });

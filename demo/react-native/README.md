@@ -18,75 +18,20 @@ Replace your `AccessKey` in [`App.tsx`](App.tsx) file:
 _accessKey: string ="${YOUR_ACCESS_KEY_HERE}" // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 ```
 
+Replace `${LANGUAGE}` with the language code of your choice (e.g. `de` -> German, `ko` -> Korean). To see a list of 
+available languages, run the `android-run` or `ios-run` command without a language code.
+
 ### Running On Android
 ```console
-yarn android-install    # sets up environment
-yarn android-run        # builds and deploys to Android
+yarn android-install          # sets up environment
+yarn android-run ${LANGUAGE}  # builds and deploys to Android
 ```
 
 ### Running On iOS
 
 ```console
-yarn ios-install        # sets up environment
-yarn ios-run            # builds and deploys to iOS
+yarn ios-install              # sets up environment
+yarn ios-run ${LANGUAGE}      # builds and deploys to iOS
 ```
 
-The default context for this demo is `Smart Lighting`. Simply press start, and the engine can recognize commands such as
-
-> Turn off the lights.
-
-or
-
-> Set the lights in the bedroom to blue.
-
-See below for the full context:
-
-```yaml
-context:
-  expressions:
-    changeColor:
-      - "[turn, make] (all, the) lights $color:color"
-      - "[change, set, switch] (all, the) lights to $color:color"
-      - "[turn, make] (the) $location:location (color, light, lights) $color:color"
-      - "[change, set, switch] (the) $location:location (color, light, lights) to $color:color"
-      - "[turn, make] (the) [color, light, lights] [at, in] (the) $location:location $color:color"
-      - "[change, set, switch] (the) [color, light, lights] [at, in] (the) $location:location to $color:color"
-      - "[turn, make] (the) [color, light, lights] $color:color [at, in] (the) $location:location"
-      - "[change, set, switch] (the) [color, light, lights] to $color:color [at, in] (the) $location:location"
-    changeLightState:
-      - "[switch, turn] $state:state (all, the) lights"
-      - "[switch, turn] (all, the) lights $state:state"
-      - "[switch, turn] $state:state (the) $location:location (light, lights)"
-      - "[switch, turn] (the) $location:location [light, lights] $state:state"
-      - "[switch, turn] $state:state (the) [light, lights] [at, in] (the) $location:location"
-      - "[switch, turn] (the) [light, lights] [in, at] the $location:location $state:state"
-    changeLightStateOff:
-      - "shut off (all, the) lights"
-      - "shut (all, the) lights off"
-      - "shut off (the) $location:location (light, lights)"
-      - "shut (the) $location:location (light, lights) off"
-      - "shut off (the) [light, lights] [at, in] (the) $location:location"
-      - "shut (the) [light, lights] off [at, in] (the) $location:location"
-      - "shut (the) [light, lights] [at, in] (the) $location:location off"
-  slots:
-    color:
-      - "blue"
-      - "green"
-      - "orange"
-      - "pink"
-      - "purple"
-      - "red"
-      - "white"
-      - "yellow"
-    state:
-      - "off"
-      - "on"
-    location:
-      - "bathroom"
-      - "bedroom"
-      - "closet"
-      - "hallway"
-      - "kitchen"
-      - "living room"
-      - "pantry"
-```
+Once the demo is running, you can press `CONTEXT INFO` button to view more information about the context.
