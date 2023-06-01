@@ -34,4 +34,6 @@ yarn ios-install              # sets up environment
 yarn ios-run ${LANGUAGE}      # builds and deploys to iOS
 ```
 
-Once the demo is running, you can press `CONTEXT INFO` button to view more information about the context.
+Once the demo app has started, press the start button and utter a command to start inferring context. 
+To see more details about the current context information, press the `Show Context` 
+button in the top right corner of the app.
