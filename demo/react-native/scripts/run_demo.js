@@ -3,9 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const testData = require('../../../resources/.test/test_data.json');
 
-const availableLanguages = testData["tests"]["within_context"].map(
-  (x) => x["language"]
-);
+const availableLanguages = testData.tests.within_context.map((x) => x.language);
 
 const commands = process.argv.slice(2, -1);
 const language = process.argv.slice(-1)[0];
@@ -65,7 +63,7 @@ fs.mkdirSync(path.join(iosBundleDir, 'models'), { recursive: true });
 fs.mkdirSync(path.join(iosBundleDir, 'contexts'), { recursive: true });
 
 let params = {
-  language: language
+  language: language,
 };
 
 if (language !== 'en') {
@@ -80,9 +78,9 @@ if (language !== 'en') {
   );
 }
 
-for (const testParam of testData["tests"]["within_context"]) {
-  if (testParam['language'] === language) {
-    params.context = testParam['context_name'];
+for (const testParam of testData.tests.within_context) {
+  if (testParam.language === language) {
+    params.context = testParam.context_name;
 
     fs.copyFileSync(
       path.join(contextDir, 'android', `${params.context}_android.rhn`),
