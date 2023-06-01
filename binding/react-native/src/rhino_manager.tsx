@@ -155,11 +155,31 @@ class RhinoManager {
    * @returns The context YAML
    */
   get contextInfo() {
-    if (this._rhino) {
-      return this._rhino.contextInfo;
-    } else {
-      return '';
-    }
+    return this._rhino?.contextInfo;
+  }
+
+  /**
+   * Gets the required number of audio samples per frame.
+   * @returns Required frame length.
+   */
+  get frameLength() {
+    return this._rhino?.frameLength;
+  }
+
+  /**
+   * Get the audio sample rate required by Rhino.
+   * @returns Required sample rate.
+   */
+  get sampleRate() {
+    return this._rhino?.sampleRate;
+  }
+
+  /**
+   * Gets the version number of the Rhino library.
+   * @returns Version of Rhino
+   */
+  get version() {
+    return this._rhino?.version;
   }
 }
 
