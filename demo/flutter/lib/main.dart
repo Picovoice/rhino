@@ -1,5 +1,5 @@
 //
-// Copyright 2021 Picovoice Inc.
+// Copyright 2021-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -11,13 +11,15 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rhino_flutter/rhino.dart';
 import 'package:rhino_flutter/rhino_manager.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -36,6 +38,7 @@ class _MyAppState extends State<MyApp> {
 
   bool isButtonDisabled = false;
   bool isProcessing = false;
+  String contextName = "";
   String rhinoText = "";
   RhinoManager? _rhinoManager;
 
@@ -51,6 +54,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initRhino() async {
+    final paramsString =
+        await DefaultAssetBundle.of(context).loadString('assets/params.json');
+    final params = json.decode(paramsString);
+
+    String language = params["language"];
+    contextName = params["context"];
+
     String platform = Platform.isAndroid
         ? "android"
         : Platform.isIOS
@@ -58,12 +68,13 @@ class _MyAppState extends State<MyApp> {
             : throw RhinoRuntimeException(
                 "This demo supports iOS and Android only.");
     String contextPath =
-        "assets/contexts/$platform/smart_lighting_$platform.rhn";
-
+        "assets/contexts/$platform/${contextName}_$platform.rhn";
+    String? modelPath =
+        language != "en" ? "assets/models/rhino_params_$language.pv" : null;
     try {
       _rhinoManager = await RhinoManager.create(
           accessKey, contextPath, inferenceCallback,
-          processErrorCallback: errorCallback);
+          modelPath: modelPath, processErrorCallback: errorCallback);
     } on RhinoInvalidArgumentException catch (ex) {
       errorCallback(RhinoInvalidArgumentException(
           "${ex.message}\nEnsure your accessKey '$accessKey' is a valid access key."));
@@ -95,6 +106,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void errorCallback(RhinoException error) {
+    print(errorMessage);
     setState(() {
       isError = true;
       errorMessage = error.message!;
@@ -142,26 +154,78 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  _showContextInfo(context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: SingleChildScrollView(
+                  child: RichText(
+                    textAlign: TextAlign.justify,
+                    text: TextSpan(
+                        text: _rhinoManager!.contextInfo,
+                        style: TextStyle(color: Colors.black)),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
   Color picoBlue = Color.fromRGBO(55, 125, 255, 1);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: const Text('Rhino Demo'),
-          backgroundColor: picoBlue,
-        ),
-        body: Column(
-          children: [
-            buildStartButton(context),
-            buildRhinoTextArea(context),
-            buildErrorMessage(context),
-            footer
-          ],
-        ),
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: const Text('Rhino Demo'),
+        backgroundColor: picoBlue,
+      ),
+      body: Column(
+        children: [
+          buildContextHeader(context),
+          buildRhinoTextArea(context),
+          buildErrorMessage(context),
+          buildStartButton(context),
+          footer
+        ],
       ),
     );
+  }
+
+  buildContextHeader(BuildContext context) {
+    final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+        primary: picoBlue, textStyle: TextStyle(color: Colors.white));
+
+    return Expanded(
+        flex: 1,
+        child: Row(
+          children: [
+            Expanded(
+                child: Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(left: 10, top: 10),
+                    child: Text("Context: $contextName"))),
+            Expanded(
+                child: Container(
+                    alignment: Alignment.centerRight,
+                    margin: EdgeInsets.only(right: 10, top: 10),
+                    child: ElevatedButton(
+                      style: buttonStyle,
+                      onPressed: (isButtonDisabled || isError)
+                          ? null
+                          : () {
+                              _showContextInfo(context);
+                            },
+                      child:
+                          Text("Show Context", style: TextStyle(fontSize: 15)),
+                    )))
+          ],
+        ));
   }
 
   buildStartButton(BuildContext context) {
@@ -171,7 +235,7 @@ class _MyAppState extends State<MyApp> {
         textStyle: TextStyle(color: Colors.white));
 
     return Expanded(
-      flex: 2,
+      flex: 4,
       child: Container(
           child: SizedBox(
               width: 130,
@@ -188,11 +252,11 @@ class _MyAppState extends State<MyApp> {
 
   buildRhinoTextArea(BuildContext context) {
     return Expanded(
-        flex: 4,
+        flex: 8,
         child: Container(
             alignment: Alignment.center,
             color: Color(0xff25187e),
-            margin: EdgeInsets.all(20),
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
             child: Text(
               rhinoText,
               style: TextStyle(color: Colors.white, fontSize: 20),
@@ -201,7 +265,7 @@ class _MyAppState extends State<MyApp> {
 
   buildErrorMessage(BuildContext context) {
     return Expanded(
-        flex: isError ? 2 : 0,
+        flex: isError ? 3 : 0,
         child: Container(
             alignment: Alignment.center,
             margin: EdgeInsets.only(left: 20, right: 20),

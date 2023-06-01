@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  rhino_flutter: ^2.2.0
+  rhino_flutter: ^2.2.1
 
 dev_dependencies:
   integration_test:
@@ -25,8 +25,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/contexts/android/smart_lighting_android.rhn
-    - assets/contexts/ios/smart_lighting_ios.rhn
+    - assets/
+    - assets/models/
+    - assets/contexts/android/
+    - assets/contexts/ios/
     - assets/test_resources/
     - assets/test_resources/audio_samples/
     - assets/test_resources/context_files/

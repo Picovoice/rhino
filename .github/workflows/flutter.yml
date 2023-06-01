@@ -49,8 +49,8 @@ jobs:
       with:
         flutter-version: ${{ matrix.flutter-version }}
 
-    - name: Copy assets
-      run: ./copy_assets.sh
+    - name: Prepare demo
+      run: dart scripts/prepare_demo.dart en
 
     - name: Install dependencies
       run: flutter pub get
@@ -65,10 +65,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Prepare demo
+      run: dart scripts/prepare_demo.dart en
+
     - name: Copy test_resources
-      run: |
-        ./copy_assets.sh
-        ./copy_test_resources.sh
+      run: ./copy_test_resources.sh
 
     - name: Inject AppID
       run: sed -i 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
@@ -93,8 +94,8 @@ jobs:
         flutter-version: ${{ matrix.flutter-version }}
         architecture: x64
 
-    - name: Copy assets
-      run: ./copy_assets.sh
+    - name: Prepare demo
+      run: dart scripts/prepare_demo.dart en
 
     - name: Update Cocoapods repo
       run: pod repo update
@@ -112,10 +113,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Prepare demo
+      run: dart scripts/prepare_demo.dart en
+
     - name: Copy test_resources
-      run: |
-        ./copy_assets.sh
-        ./copy_test_resources.sh
+      run: ./copy_test_resources.sh
 
     - name: Inject AppID
       run: sed -i '.bak' 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
