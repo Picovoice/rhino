@@ -50,7 +50,7 @@ export default class App extends Component<Props, State> {
     let contextPath = `contexts/${context}_${Platform.OS}.rhn`;
     let modelPath: string | undefined;
     if (language !== 'en') {
-      modelPath = `rhino_params_${language}.pv`;
+      modelPath = `models/rhino_params_${language}.pv`;
     }
 
     // load context
@@ -202,7 +202,7 @@ export default class App extends Component<Props, State> {
           visible={this.state.showContextInfo}>
           <View style={styles.modalView}>
             <ScrollView style={{ flex: 0.95, marginBottom: 10 }}>
-              <Text>Temporary context info</Text>
+              <Text>{this._rhinoManager?.contextInfo}</Text>
             </ScrollView>
             <TouchableOpacity
               style={{
