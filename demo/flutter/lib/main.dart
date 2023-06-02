@@ -222,7 +222,7 @@ class _MyAppState extends State<MyApp> {
                               _showContextInfo(context);
                             },
                       child:
-                          Text("Show Context", style: TextStyle(fontSize: 15)),
+                          Text("Context Info", style: TextStyle(fontSize: 15)),
                     )))
           ],
         ));

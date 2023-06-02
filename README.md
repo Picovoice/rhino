@@ -290,7 +290,7 @@ cd demo/flutter
 flutter run
 ```
 
-Once the demo app has started, press the start button and utter a command to start inferring context. To see more details about the current context information, press the `Show Context` button on the top right corner in the app.
+Once the demo app has started, press the start button and utter a command to start inferring context. To see more details about the current context information, press the `Context Info` button on the top right corner in the app.
 
 ### React Native Demos
 
