@@ -37,3 +37,6 @@
 
 ## [2.2.0] - 2023-04-12
 * Additional language support added (ar, hi, nl, pl, ru, sv, vn, zh)
+
+## [2.2.1] - 2023-06-01
+* Expose Rhino properties through RhinoManager class

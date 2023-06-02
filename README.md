@@ -275,21 +275,22 @@ To browse the demo source go to [demo/unity](./demo/unity).
 
 To run the Rhino demo on Android or iOS with Flutter, you must have the [Flutter SDK](https://flutter.dev/docs/get-started/install) installed on your system. Once installed, you can run `flutter doctor` to determine any other missing requirements for your relevant platform. Once your environment has been set up, launch a simulator or connect an Android/iOS device.
 
-Before launching the app, use the [copy_assets.sh](./demo/flutter/copy_assets.sh) script to copy the rhino demo context file into the demo project. (**NOTE**: on Windows, Git Bash or another bash shell is required, or you will have to manually copy the context into the project.).
-
-Run the following command from [demo/flutter](./demo/flutter) to build and deploy the demo to your device:
+Run the `prepare_demo` script with a language code to set up the demo in the language of your
+choice (e.g. `de` -> German, `ko` -> Korean). To see a list of available languages, run `prepare_demo` without a language code.
 
 ```console
+cd demo/flutter
+dart scripts/prepare_demo.dart ${LANGUAGE}
+```
+
+Run the following command to build and deploy the demo to your device:
+
+```console
+cd demo/flutter
 flutter run
 ```
 
-The demo uses a smart lighting context, which can understand commands such as:
-
-> Turn off the lights.
-
-or
-
-> Set the lights in the living room to purple.
+Once the demo app has started, press the start button and utter a command to start inferring context. To see more details about the current context information, press the `Context Info` button on the top right corner in the app.
 
 ### React Native Demos
 
@@ -322,33 +323,35 @@ or
 ### Android Demos
 
 Using Android Studio, open [demo/android/Activity](./demo/android/Activity) as an Android project and then run the
-application. After pressing the start button you can issue commands such as:
+application.
 
-> Turn off the lights.
+Once the demo app has started, press the `Start` button and speak a command from the context to start inference. To see more details about
+the current context information, press the `Show Context` button on the top right corner in the app.
 
-or:
-
-> Set the lights in the living room to purple.
-
-For more information about Android demo and the complete list of available expressions, go to [demo/android](./demo/android).
+For more information about Android demo, go to [demo/android](./demo/android).
 
 ### iOS Demos
 
-Copy your `AccessKey` into the `ACCESS_KEY` variable in `RhinoDemo/ContentView.swift` before building the demo. Then, run the following from this directory to install the Rhino-iOS CocoaPods:
-```ruby
+To run the application demo:
+
+1) From the [demo](./demo/ios) directory run:
+
+```console
 pod install
 ```
 
-Then, using [Xcode](https://developer.apple.com/xcode/), open the generated `RhinoDemo.xcworkspace` and run the application. After pressing
-the start button you can issue commands such as:
+2) Open `RhinoDemo.xcworkspace` in XCode.
 
-> Turn off the lights.
+3) Replace `let accessKey = "${YOUR_ACCESS_KEY_HERE}"` in the file [ContentView.swift](./demo/ios/RhinoDemo/ContentView.swift) with your `AccessKey`.
 
-or:
+4) Go to `Product > Scheme` and select the scheme for the language you would like to demo (e.g. `arDemo` -> Arabic Demo, `deDemo` -> German Demo)
 
-> Set the lights in the living room to purple.
+5) Run the demo with a simulator or connected iOS device.
 
-For more information about Android demo, and the complete list of available expressions, go to [demo/ios](./demo/ios).
+6) Once the demo app has started, press the `Start` button to infer audio within a context. To see more details about
+the current context information, press the `Context Info` button on the top right corner in the app.
+
+For more information about iOS demo, go to [demo/ios](./demo/ios).
 
 ### Web Demos
 

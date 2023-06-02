@@ -1,5 +1,5 @@
 //
-// Copyright 2021-2022 Picovoice Inc.
+// Copyright 2021-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -31,6 +31,19 @@ class RhinoManager {
   RemoveListener? _removeErrorListener;
 
   bool _awaitingStop = false;
+
+  /// Rhino version string
+  String? get version => _rhino?.version;
+
+  /// The number of audio samples per frame required by Rhino
+  int? get frameLength => _rhino?.frameLength;
+
+  /// The audio sample rate required by Rhino
+  int? get sampleRate => _rhino?.sampleRate;
+
+  /// Gets the source of the Rhino context in YAML format. Shows the list of intents,
+  /// which expressions map to those intents, as well as slots and their possible values.
+  String? get contextInfo => _rhino?.contextInfo;
 
   /// Static creator for initializing Rhino
   ///

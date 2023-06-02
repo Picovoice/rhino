@@ -99,7 +99,7 @@ packages:
       name: flutter_voice_processor
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.9"
+    version: "1.0.10"
   fuchsia_remote_debug_protocol:
     dependency: transitive
     description: flutter
@@ -214,7 +214,7 @@ packages:
       name: rhino_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0"
+    version: "2.2.1"
   sky_engine:
     dependency: transitive
     description: flutter
