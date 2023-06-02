@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useRhino } from "@picovoice/rhino-react";
 
-import rhinoModelParams from "./rhino_params";
+import rhinoModel from "./lib/rhinoModel";
+import rhinoContext from "./lib/rhinoContext"
 
 export default function VoiceWidget() {
   const [accessKey, setAccessKey] = useState("");
@@ -20,8 +21,8 @@ export default function VoiceWidget() {
   const rhnInit = async () => {
     await init(
       accessKey,
-      { publicPath: "clock_wasm.rhn" },
-      { base64: rhinoModelParams },
+      rhinoContext,
+      rhinoModel,
     );
   }
 
