@@ -297,9 +297,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     marginLeft: 15,
+    marginTop: 30,
   },
   statusBarButtonContainer: {
     marginRight: 5,
+    marginTop: 30,
   },
   statusBarButtonStyle: {
     padding: 7.5,
@@ -341,6 +343,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 10,
+    marginTop: 40,
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 10,
