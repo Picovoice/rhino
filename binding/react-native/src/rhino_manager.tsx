@@ -148,6 +148,39 @@ class RhinoManager {
       this._rhino = null;
     }
   }
+
+  /**
+   * Gets the source of the Rhino context in YAML format. Shows the list of intents,
+   * which expressions map to those intents, as well as slots and their possible values.
+   * @returns The context YAML
+   */
+  get contextInfo() {
+    return this._rhino?.contextInfo;
+  }
+
+  /**
+   * Gets the required number of audio samples per frame.
+   * @returns Required frame length.
+   */
+  get frameLength() {
+    return this._rhino?.frameLength;
+  }
+
+  /**
+   * Get the audio sample rate required by Rhino.
+   * @returns Required sample rate.
+   */
+  get sampleRate() {
+    return this._rhino?.sampleRate;
+  }
+
+  /**
+   * Gets the version number of the Rhino library.
+   * @returns Version of Rhino
+   */
+  get version() {
+    return this._rhino?.version;
+  }
 }
 
 export default RhinoManager;

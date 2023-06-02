@@ -58,6 +58,7 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-#resources
-smart_lighting_ios.rhn
-smart_lighting_android.rhn
+# Pv Files
+params.json
+*.pv
+*.rhn
