@@ -35,5 +35,5 @@ yarn ios-run ${LANGUAGE}      # builds and deploys to iOS
 ```
 
 Once the demo app has started, press the start button and utter a command to start inferring context. 
-To see more details about the current context information, press the `Show Context` 
+To see more details about the current context information, press the `Context Info` 
 button in the top right corner of the app.

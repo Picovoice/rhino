@@ -193,7 +193,7 @@ export default class App extends Component<Props, State> {
             <TouchableOpacity
               style={{ backgroundColor: '#ffd105' }}
               onPress={() => this.showContextInfo()}>
-              <Text style={styles.statusBarButtonStyle}>SHOW CONTEXT</Text>
+              <Text style={styles.statusBarButtonStyle}>Context Info</Text>
             </TouchableOpacity>
           </View>
         </View>
