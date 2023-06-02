@@ -8,8 +8,8 @@
     "start": "react-native start",
     "lint": "eslint .",
     "ios-link": "cd ios && pod install && cd ..",
-    "ios-install": "yarn && yarn copy && yarn ios-link",
-    "android-install": "yarn && yarn copy"
+    "ios-install": "yarn && yarn ios-link",
+    "android-install": "yarn"
   },
   "dependencies": {
     "@picovoice/react-native-voice-processor": "~1.1.0",
