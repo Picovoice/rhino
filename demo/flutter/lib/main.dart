@@ -54,12 +54,19 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initRhino() async {
-    final paramsString =
-        await DefaultAssetBundle.of(context).loadString('assets/params.json');
-    final params = json.decode(paramsString);
+    String language = "";
+    try {
+      final paramsString =
+          await DefaultAssetBundle.of(context).loadString('assets/params.json');
+      final params = json.decode(paramsString);
 
-    String language = params["language"];
-    contextName = params["context"];
+      language = params["language"];
+      contextName = params["context"];
+    } catch (_) {
+      errorCallback(RhinoException(
+          "Could not find `params.json`. Ensure 'prepare_demo.dart' script was run before lauching the demo."));
+      return;
+    }
 
     String platform = Platform.isAndroid
         ? "android"
