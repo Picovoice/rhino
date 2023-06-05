@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
       contextName = params["context"];
     } catch (_) {
       errorCallback(RhinoException(
-          "Could not find `params.json`. Ensure 'prepare_demo.dart' script was run before lauching the demo."));
+          "Could not find `params.json`. Ensure 'prepare_demo.dart' script was run before launching the demo."));
       return;
     }
 
