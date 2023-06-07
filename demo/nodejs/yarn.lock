@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@picovoice/pvrecorder-node/-/pvrecorder-node-1.1.2.tgz#e76c4ba9405035be5d350b7eb582aaa93caeaa21"
   integrity sha512-LWGwR6NGPA5QIBtI+7gcHSmMO/pHwKa8vcY4kxstKNTYCR6zbqgpUMli6pZWfv3RtVXiRZshZkLKfBzy1dGM9Q==
 
-"@picovoice/rhino-node@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-node/-/rhino-node-2.2.0.tgz#d3d0c11f968dbc8b643146b7cb01e421326c9c22"
-  integrity sha512-aN3yjOf2OgMgBtubWuBnZQac44bWAx7oHTjA2WTGrbF01Qce5DlnSmNXnnCAgWZkTK1AMptJcgHJ6WNPY5QE3w==
+"@picovoice/rhino-node@2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-node/-/rhino-node-2.2.1.tgz#83c420736d54314c7a842845096873be8c65fb0e"
+  integrity sha512-Alh3FrfWxzu4k2rrkls1YZGZVuKHfXiRtXJXh5IBDosvSgBFKYQ/eCclTw/reSr03Cl7BmZaBmISmGIoU1Hwqg==
 
 commander@^6.1.0:
   version "6.2.1"
