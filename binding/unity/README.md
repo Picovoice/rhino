@@ -23,7 +23,7 @@ Rhino is:
 
 ## Compatibility
 
-[Rhino unity package](./rhino-2.1.4.unitypackage) is for running Rhino on **Unity 2017.4+** on the following platforms:
+[Rhino unity package](./rhino-2.2.1.unitypackage) is for running Rhino on **Unity 2017.4+** on the following platforms:
 
 - Android 4.4+ (API 19+) (ARM only)
 - iOS 9.0+
@@ -31,11 +31,11 @@ Rhino is:
 - macOS (x86_64)
 - Linux (x86_64)
 
-For running Rhino on **macOS m1 (arm64)**, use the [Apple silicon](./rhino-2.1.4-Apple-silicon.unitypackage) version on **Unity 2021.2+**.
+For running Rhino on **macOS m1 (arm64)**, use the [Apple silicon](./rhino-2.2.1-Apple-silicon.unitypackage) version on **Unity 2021.2+**.
 
 ## Installation
 
-The easiest way to install the Rhino Unity SDK is to import the [Rhino Unity Package](./rhino-2.1.4.unitypackage) into your Unity project by either dropping it into the Unity editor or going to _Assets>Import Package>Custom Package..._
+The easiest way to install the Rhino Unity SDK is to import the [Rhino Unity Package](./rhino-2.2.1.unitypackage) into your Unity project by either dropping it into the Unity editor or going to _Assets>Import Package>Custom Package..._
 
 **NOTE:** On macOS, the Rhino library may get flagged as having come from an unverified source if you've downloaded the  `.unitypackage` directly from github. This should only come up when running your project in the Editor. To disable this warning, go to Security & Preferences and choose to allow pv_rhino.dylib to run.
 
@@ -49,7 +49,7 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 To build the package from source, you first have to clone the repo with submodules:
 ```console
 git clone --recurse-submodules git@github.com:Picovoice/rhino.git
-# or 
+# or
 git clone --recurse-submodules https://github.com/Picovoice/rhino.git
 ```
 
@@ -71,8 +71,8 @@ using Pv.Unity;
 
 string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
-try 
-{    
+try
+{
     RhinoManager _rhinoManager = RhinoManager.Create(
                                     accessKey,
                                     "/path/to/context/file.rhn",
@@ -83,7 +83,7 @@ catch (RhinoException ex)
     // handle rhino init error
 }
 ```
-The `inferenceCallback` parameter is a function that you want to execute when Rhino makes an inference. The function should accept `Inference` object 
+The `inferenceCallback` parameter is a function that you want to execute when Rhino makes an inference. The function should accept `Inference` object
 that represents the inference result.
 
 ```csharp
@@ -152,10 +152,10 @@ using Pv.Unity;
 string accessKey = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
 try
-{    
+{
     Rhino _rhino = Rhino.Create(accessKey, "path/to/context/file.rhn");
-} 
-catch (RhinoException ex) 
+}
+catch (RhinoException ex)
 {
     // handle rhino init error
 }
@@ -175,9 +175,9 @@ short[] GetNextAudioFrame()
     return audioFrame;
 }
 
-try 
+try
 {
-    bool isFinalized = _rhino.Process(GetNextAudioFrame());   
+    bool isFinalized = _rhino.Process(GetNextAudioFrame());
     if(isFinalized)
     {
         Inference inference = _rhino.GetInference();
@@ -189,14 +189,14 @@ try
         }
         else
         {
-            // .. code to handle unsupported commands              
-        }        
+            // .. code to handle unsupported commands
+        }
     }
 }
 catch (Exception ex)
 {
     Debug.LogError(ex.ToString());
-}  
+}
 ```
 
 For process to work correctly, the audio data must be in the audio format required by Picovoice.
