@@ -3,11 +3,10 @@
   "version": "2.2.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "node scripts/run_demo.js serve",
+    "build": "node scripts/run_demo.js build",
     "watch": "ng build --watch --configuration development",
-    "lint": "ng lint",
-    "postinstall": "npx pvbase64 -i ../../lib/common/rhino_params.pv -o ./src/lib/rhino_params.js && cp ../../resources/contexts/wasm/clock_wasm.rhn ./src/assets"
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {

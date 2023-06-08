@@ -5,7 +5,9 @@ import { RhinoInference } from '@picovoice/rhino-web';
 import { RhinoService } from '@picovoice/rhino-angular';
 
 // @ts-ignore
-import rhinoParams from '../lib/rhino_params';
+import rhinoModel from '../lib/rhinoModel';
+// @ts-ignore
+import rhinoContext from '../lib/rhinoContext';
 
 @Component({
   selector: 'app-voice-widget',
@@ -63,8 +65,8 @@ export class VoiceWidget implements OnDestroy {
       try {
         await this.rhinoService.init(
           accessKey,
-          { publicPath: 'assets/clock_wasm.rhn' },
-          { base64: rhinoParams }
+          rhinoContext,
+          rhinoModel,
         );
       }
       catch (error: any) {

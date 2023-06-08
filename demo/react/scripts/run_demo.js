@@ -24,6 +24,7 @@ const context = testData["tests"]["within_context"].find(
 )["context_name"];
 const contextFileName = `${context}_wasm.rhn`;
 
+const version = process.env.npm_package_version;
 const suffix = language === "en" ? "" : `_${language}`;
 const rootDir = path.join(__dirname, "..", "..", "..");
 
@@ -52,8 +53,8 @@ try {
 fs.writeFileSync(
   path.join(libDirectory, "rhinoContext.js"),
   `const rhinoContext = {
-  publicPath: "contexts/${contextFileName}",
-  forceWrite: true,
+  publicPath: "contexts/${contextFileName}",  
+  customWritePath: "${version}_${contextFileName}",
 };
 
 (function () {
@@ -83,7 +84,7 @@ fs.writeFileSync(
   path.join(libDirectory, "rhinoModel.js"),
   `const rhinoModel = {
   publicPath: "models/${modelName}",
-  forceWrite: true,
+  customWritePath: "${version}_${modelName}",
 };
 
 (function () {
