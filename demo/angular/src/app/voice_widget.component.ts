@@ -21,6 +21,10 @@ export class VoiceWidget implements OnDestroy {
   private isListeningSubscription: Subscription;
   private errorSubscription: Subscription;
 
+  contextName: string = rhinoContext.publicPath
+    .split("/")
+    .at(-1)
+    .replace("_wasm.rhn", "");
   contextInfo: string | null = null;
   inference: RhinoInference | null = null;
   isLoaded = false;
