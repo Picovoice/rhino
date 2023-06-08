@@ -12,7 +12,7 @@ const language = process.argv.slice(-1)[0];
 
 if (!availableLanguages.includes(language)) {
   console.error(
-    `Choose the language you would like to run the demo in with "yarn start [language]". \nAvailable languages are ${availableLanguages.join(
+    `Choose the language you would like to run the demo in with "yarn start [language]".\nAvailable languages are ${availableLanguages.join(
       ", "
     )}`
   );
@@ -24,6 +24,7 @@ const context = testData["tests"]["within_context"].find(
 )["context_name"];
 const contextFileName = `${context}_wasm.rhn`;
 
+
 const version = process.env.npm_package_version;
 const suffix = language === "en" ? "" : `_${language}`;
 const rootDir = path.join(__dirname, "..", "..", "..");
@@ -33,8 +34,8 @@ const contextDir = path.join(rootDir, "resources", `contexts${suffix}`, "wasm");
 const libDirectory = path.join(__dirname, "..", "src", "lib");
 let outputDirectory = path.join(__dirname, "..", "public", "contexts");
 if (fs.existsSync(outputDirectory)) {
-  fs.readdirSync(outputDirectory).forEach((k) => {
-    fs.unlinkSync(path.join(outputDirectory, k));
+  fs.readdirSync(outputDirectory).forEach((f) => {
+    fs.unlinkSync(path.join(outputDirectory, f));
   });
 } else {
   fs.mkdirSync(outputDirectory, { recursive: true });
@@ -57,10 +58,8 @@ fs.writeFileSync(
   customWritePath: "${version}_${contextFileName}",
 };
 
-(function () {
-  if (typeof module !== "undefined" && typeof module.exports !== "undefined")
-    module.exports = rhinoContext;
-})();`
+export default rhinoContext;
+`
 );
 
 const modelDir = path.join(rootDir, "lib", "common");
@@ -87,12 +86,10 @@ fs.writeFileSync(
   customWritePath: "${version}_${modelName}",
 };
 
-(function () {
-  if (typeof module !== "undefined" && typeof module.exports !== "undefined")
-    module.exports = rhinoModel;
-})();`
+export default rhinoModel;
+`
 );
 
-child_process.fork("react-scripts", commands, {
+child_process.fork("vite", commands, {
   execPath: "npx",
 });

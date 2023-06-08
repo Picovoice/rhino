@@ -357,75 +357,83 @@ For more information about iOS demo, go to [demo/ios](./demo/ios).
 
 #### Vanilla JavaScript and HTML
 
-From [demo/web](./demo/web) run the following in the terminal:
+From [demo/web](./demo/web) use `yarn` or `npm` to install the dependencies, and the `start` script with a language code
+to start a local web server hosting the demo in the language of your choice (e.g. `pl` -> Polish, `ko` -> Korean).
+To see a list of available languages, run `start` without a language code.
 
 ```console
 yarn
-yarn start
+yarn start ${LANGUAGE}
 ```
 
 (or)
 
 ```console
 npm install
-npm run start
+npm run start ${LANGUAGE}
 ```
 
 Open `http://localhost:5000` in your browser to try the demo.
 
 #### Angular Demos
 
-From [demo/angular](./demo/angular) run the following in the terminal:
+From [demo/angular](./demo/angular) use `yarn` or `npm` to install the dependencies, and the `start` script with a language code
+to start a local web server hosting the demo in the language of your choice (e.g. `pl` -> Polish, `ko` -> Korean).
+To see a list of available languages, run `start` without a language code.
 
 ```console
 yarn
-yarn start
+yarn start ${LANGUAGE}
 ```
 
 (or)
 
 ```console
 npm install
-npm run start
+npm run start ${LANGUAGE}
 ```
 
 Open `http://localhost:4200` in your browser to try the demo.
 
 #### React Demos
 
-From [demo/react](./demo/react) run the following in the terminal:
+From [demo/react](./demo/react) use `yarn` or `npm` to install the dependencies, and the `start` script with a language code
+to start a local web server hosting the demo in the language of your choice (e.g. `pl` -> Polish, `ko` -> Korean).
+To see a list of available languages, run `start` without a language code.
 
 ```console
 yarn
-yarn start
+yarn start ${LANGUAGE}
 ```
 
 (or)
 
 ```console
 npm install
-npm run start
+npm run start ${LANGUAGE}
 ```
 
 Open `http://localhost:3000` in your browser to try the demo.
 
 #### Vue Demos
 
-From [demo/vue](./demo/vue) run the following in the terminal:
+From [demo/vue](./demo/vue) use `yarn` or `npm` to install the dependencies, and the `start` script with a language code
+to start a local web server hosting the demo in the language of your choice (e.g. `pl` -> Polish, `ko` -> Korean).
+To see a list of available languages, run `start` without a language code.
 
 ```console
 yarn
-yarn serve
+yarn start ${LANGUAGE}
 ```
 
 (or)
 
 ```console
 npm install
-npm run serve
+npm run start ${LANGUAGE}
 ```
 
-Open `http://localhost:8080` in your browser to try the demo.
+The command-line output will provide you with a localhost link and port to open in your browser.
 
 ### Node.js Demos
 

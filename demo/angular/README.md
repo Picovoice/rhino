@@ -39,82 +39,27 @@ Rhino requires a valid Picovoice `AccessKey` at initialization. `AccessKey` acts
 You can get your `AccessKey` for free. Make sure to keep your `AccessKey` secret.
 Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get your `AccessKey`.
 
-## Install and run
+## Install and Run
 
-Use `yarn` or `npm` to install then start the demo application:
+Use `yarn` or `npm` to install the dependencies, and the `start` script with a language code
+to start a local web server hosting the demo in the language of your choice (e.g. `pl` -> Polish, `ko` -> Korean).
+To see a list of available languages, run `start` without a language code.
 
 ```console
 yarn
-yarn start
+yarn start ${LANGUAGE}
 ```
 
 (or)
 
 ```console
 npm install
-npm run start
+npm run start ${LANGUAGE}
 ```
 
 Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Try Rhino
+## Usage
 
-The Rhino service, used standalone, is a push-to-talk experience. With the demo application running in your browser (and microphone permissions granted), press the "Push to Talk" button, then try saying the following:
-
-> "Set a timer for one minute"
-
-The result should look similar to this:
-
-```json
-{
-  "isFinalized": true,
-  "isUnderstood": true,
-  "intent": "setAlarm",
-  "slots": {
-    "minutes": "1"
-  }
-}
-```
-
-Try a phrase that is out-of-context:
-
-> "What's my horoscope?"
-
-```json
-{
-  "isFinalized": true,
-  "isUnderstood": false,
-  "intent": null,
-  "slots": {}
-}
-```
-
-This command falls outside the domain of "Alarm Clock" and is therefore not understood.
-
-The Alarm Clock was trained to understand a particular set of expressions. These are built using a simple grammar and grouped together into a YAML file. This file is trained by [Picovoice Console](https://console.picovoice.ai/) to create a `.rhn` file for the WebAssembly (WASM) platform.
-
-```yaml
-context:
-  expressions:
-    setAlarm:
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:minutes [minute, minutes] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:minutes [minute, minutes]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:hours [hour, hours]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:minutes [minute, minutes] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:minutes [minute, minutes]"
-      - "set (a, an, the) [alarm, timer] for $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "$pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:minutes [minute, minutes] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "$pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:minutes [minute, minutes]"
-      - "$pv.TwoDigitInteger:hours [hour, hours] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "$pv.TwoDigitInteger:hours [hour, hours]"
-      - "$pv.TwoDigitInteger:minutes [minute, minutes] (and) $pv.TwoDigitInteger:seconds [second, seconds]"
-      - "$pv.TwoDigitInteger:minutes [minute, minutes]"
-      - "$pv.TwoDigitInteger:seconds [second, seconds]"
-    reset:
-      - "reset (the) (timer)"
-    pause:
-      - "[pause, stop] (the) (timer)"
-    resume:
-      - "resume (the) (timer)"
-```
+Enter your `ACCESS_KEY` and press `Init Rhino` to start the demo. Once `Rhino` has initialized, utter a command
+to start inferring context. See more information about the current context at the bottom of the screen.

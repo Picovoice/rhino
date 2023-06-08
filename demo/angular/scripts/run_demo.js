@@ -12,7 +12,7 @@ const language = process.argv.slice(-1)[0];
 
 if (!availableLanguages.includes(language)) {
   console.error(
-    `Choose the language you would like to run the demo in with "yarn start [language]". \nAvailable languages are ${availableLanguages.join(
+    `Choose the language you would like to run the demo in with "yarn start [language]".\nAvailable languages are ${availableLanguages.join(
       ", "
     )}`
   );
@@ -24,6 +24,7 @@ const context = testData["tests"]["within_context"].find(
 )["context_name"];
 const contextFileName = `${context}_wasm.rhn`;
 
+
 const version = process.env.npm_package_version;
 const suffix = language === "en" ? "" : `_${language}`;
 const rootDir = path.join(__dirname, "..", "..", "..");
@@ -31,10 +32,10 @@ const rootDir = path.join(__dirname, "..", "..", "..");
 const contextDir = path.join(rootDir, "resources", `contexts${suffix}`, "wasm");
 
 const libDirectory = path.join(__dirname, "..", "src", "lib");
-let outputDirectory = path.join(__dirname, "..", "public", "contexts");
+let outputDirectory = path.join(__dirname, "..", "src", "assets", "contexts");
 if (fs.existsSync(outputDirectory)) {
-  fs.readdirSync(outputDirectory).forEach((k) => {
-    fs.unlinkSync(path.join(outputDirectory, k));
+  fs.readdirSync(outputDirectory).forEach((f) => {
+    fs.unlinkSync(path.join(outputDirectory, f));
   });
 } else {
   fs.mkdirSync(outputDirectory, { recursive: true });
@@ -53,7 +54,7 @@ try {
 fs.writeFileSync(
   path.join(libDirectory, "rhinoContext.js"),
   `const rhinoContext = {
-  publicPath: "contexts/${contextFileName}",
+  publicPath: "assets/contexts/${contextFileName}",
   customWritePath: "${version}_${contextFileName}",
 };
 
@@ -65,7 +66,7 @@ fs.writeFileSync(
 
 const modelDir = path.join(rootDir, "lib", "common");
 
-outputDirectory = path.join(__dirname, "..", "public", "models");
+outputDirectory = path.join(__dirname, "..", "src", "assets", "models");
 if (fs.existsSync(outputDirectory)) {
   fs.readdirSync(outputDirectory).forEach((k) => {
     fs.unlinkSync(path.join(outputDirectory, k));
@@ -83,7 +84,7 @@ fs.copyFileSync(
 fs.writeFileSync(
   path.join(libDirectory, "rhinoModel.js"),
   `const rhinoModel = {
-  publicPath: "models/${modelName}",
+  publicPath: "assets/models/${modelName}",
   customWritePath: "${version}_${modelName}",
 };
 
@@ -93,6 +94,6 @@ fs.writeFileSync(
 })();`
 );
 
-child_process.fork("react-scripts", commands, {
+child_process.fork("ng", commands, {
   execPath: "npx",
 });

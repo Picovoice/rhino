@@ -15,6 +15,7 @@
       Init Rhino
     </button>
   </h3>
+
   <h3>Rhino Loaded: {{ isLoaded }}</h3>
   <h3>Listening: {{ isListening }}</h3>
   <h3>Error: {{ error !== null }}</h3>
@@ -25,6 +26,7 @@
   <h3>Inference:</h3>
   <pre *ngIf="inference !== null">{{ inference | json }}</pre>
   <hr />
+  <h3>Context Name: {{ contextName }}</h3>
   <h3>Context Info:</h3>
   <pre>{{ contextInfo }}</pre>
 </div>

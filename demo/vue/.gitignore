@@ -27,5 +27,6 @@ coverage
 *.sln
 *.sw?
 
-src/lib/*
-!src/lib/.gitkeep
+src/lib/*.js
+public/contexts
+public/models
