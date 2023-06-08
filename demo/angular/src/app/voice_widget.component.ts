@@ -23,7 +23,7 @@ export class VoiceWidget implements OnDestroy {
 
   contextName: string = rhinoContext.publicPath
     .split("/")
-    .at(-1)
+    .pop()
     .replace("_wasm.rhn", "");
   contextInfo: string | null = null;
   inference: RhinoInference | null = null;

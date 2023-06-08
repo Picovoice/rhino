@@ -38,6 +38,7 @@
     }}</pre>
     <hr />
     <div>
+      <h3>Context Name: {{ contextName }}</h3>
       <h3>Context Info:</h3>
       <pre>
       {{ state.contextInfo }}
@@ -50,15 +51,21 @@
 import { defineComponent, onBeforeUnmount, ref } from "vue";
 import { useRhino } from "@picovoice/rhino-vue";
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import rhinoParams from "@/lib/rhino_params.js";
+import rhinoContext from "../lib/rhinoContext";
+
+// @ts-ignore
+import rhinoModel from "../lib/rhinoModel";
 
 const VoiceWidget = defineComponent({
   name: "VoiceWidget",
   setup() {
     const { state, init, process, release } = useRhino();
 
+    const contextName = rhinoContext.publicPath
+      .split("/")
+      .pop()
+      .replace("_wasm.rhn", "");
     const accessKey = ref("");
 
     const updateAccessKey = (event: any) => {
@@ -66,9 +73,6 @@ const VoiceWidget = defineComponent({
     };
 
     const rhnInit = () => {
-      const rhinoContext = { publicPath: "clock_wasm.rhn" };
-      const rhinoModel = { base64: rhinoParams };
-
       init(accessKey.value, rhinoContext, rhinoModel);
     };
 
@@ -80,6 +84,7 @@ const VoiceWidget = defineComponent({
       state,
       accessKey,
       updateAccessKey,
+      contextName,
       rhnInit,
       rhnProcess: process,
       rhnRelease: release,

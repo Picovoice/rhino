@@ -61,5 +61,5 @@ Navigate to `http://localhost:4200/`. The app will automatically reload if you c
 
 ## Usage
 
-Enter your `ACCESS_KEY` and press `Start Rhino` to start the demo. Once `Rhino` has initialized, utter a command
+Enter your `ACCESS_KEY` and press `Init Rhino` to start the demo. Once `Rhino` has initialized, utter a command
 to start inferring context. See more information about the current context at the bottom of the screen.
