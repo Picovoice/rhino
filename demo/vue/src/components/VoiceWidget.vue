@@ -12,7 +12,7 @@
           :disabled="state.isLoaded"
         />
       </label>
-      <button class="start-button" v-on:click="rhnInit">Start Rhino</button>
+      <button class="start-button" v-on:click="rhnInit">Init Rhino</button>
     </h3>
     <h3>Rhino Loaded: {{ state.isLoaded }}</h3>
     <h3>Listening: {{ state.isListening }}</h3>
