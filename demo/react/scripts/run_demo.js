@@ -53,7 +53,7 @@ try {
 fs.writeFileSync(
   path.join(libDirectory, "rhinoContext.js"),
   `const rhinoContext = {
-  publicPath: "contexts/${contextFileName}",  
+  publicPath: "contexts/${contextFileName}",
   customWritePath: "${version}_${contextFileName}",
 };
 
