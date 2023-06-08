@@ -59,7 +59,7 @@ try {
 fs.writeFileSync(
   path.join(outputDirectory, "rhinoContext.js"),
   `const rhinoContext = {
-  publicPath: "contexts/${contextFileName}",  
+  publicPath: "contexts/${contextFileName}",
   customWritePath: "${version}_${contextFileName}",
 };
 
@@ -89,7 +89,7 @@ fs.copyFileSync(
 fs.writeFileSync(
   path.join(outputDirectory, "rhinoModel.js"),
   `const rhinoModel = {
-  publicPath: "models/${modelName}",  
+  publicPath: "models/${modelName}",
   customWritePath: "${version}_${modelName}",
 };
 
