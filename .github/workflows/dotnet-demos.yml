@@ -53,3 +53,7 @@ jobs:
 
     - name: Dotnet build filedemo
       run: dotnet build -c FileDemo.Release
+
+    - name: Run Dotnet filedemo
+      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --context_path ../../../resources/contexts/linux/coffee_maker_linux.rhn
+

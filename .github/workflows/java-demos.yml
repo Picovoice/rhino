@@ -35,3 +35,5 @@ jobs:
     - name: Build
       run: ./gradlew build
 
+    - name: Run filedemo
+      run: java -jar build/libs/rhino-file-demo.jar -a  ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/multiple_keywords.wav -c ../../resources/context/linux/coffee_maker_linux.rhn

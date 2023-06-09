@@ -41,7 +41,6 @@ static void *open_dl(const char *dl_path) {
     return dlopen(dl_path, RTLD_NOW);
 
 #endif
-
 }
 
 static void *load_symbol(void *handle, const char *symbol) {
@@ -55,7 +54,6 @@ static void *load_symbol(void *handle, const char *symbol) {
     return dlsym(handle, symbol);
 
 #endif
-
 }
 
 static void close_dl(void *handle) {
@@ -69,7 +67,6 @@ static void close_dl(void *handle) {
     dlclose(handle);
 
 #endif
-
 }
 
 static void print_dl_error(const char *message) {
@@ -83,7 +80,6 @@ static void print_dl_error(const char *message) {
     fprintf(stderr, "%s with '%s'.\n", message, dlerror());
 
 #endif
-
 }
 
 static struct option long_options[] = {
@@ -208,7 +204,7 @@ int picovoice_main(int argc, char *argv[]) {
             float,
             bool,
             pv_rhino_t **) =
-    load_symbol(rhino_library, "pv_rhino_init");
+            load_symbol(rhino_library, "pv_rhino_init");
     if (!pv_rhino_init_func) {
         print_dl_error("failed to load 'pv_rhino_init'");
         exit(1);
@@ -221,43 +217,42 @@ int picovoice_main(int argc, char *argv[]) {
     }
 
     pv_status_t (*pv_rhino_process_func)(pv_rhino_t *, const int16_t *, bool *) =
-    load_symbol(rhino_library, "pv_rhino_process");
+            load_symbol(rhino_library, "pv_rhino_process");
     if (!pv_rhino_process_func) {
         print_dl_error("failed to load 'pv_rhino_process'");
         exit(1);
     }
 
     pv_status_t (*pv_rhino_is_understood_func)(const pv_rhino_t *, bool *) =
-    load_symbol(rhino_library, "pv_rhino_is_understood");
+            load_symbol(rhino_library, "pv_rhino_is_understood");
     if (!pv_rhino_is_understood_func) {
         print_dl_error("failed to load 'pv_rhino_is_understood'");
         exit(1);
     }
 
-    pv_status_t
-    (*pv_rhino_get_intent_func)(const pv_rhino_t *, const char **, int32_t *, const char ***, const char ***) =
-    load_symbol(rhino_library, "pv_rhino_get_intent");
+    pv_status_t (*pv_rhino_get_intent_func)(const pv_rhino_t *, const char **, int32_t *, const char ***, const char ***) =
+            load_symbol(rhino_library, "pv_rhino_get_intent");
     if (!pv_rhino_get_intent_func) {
         print_dl_error("failed to load 'pv_rhino_get_intent'");
         exit(1);
     }
 
     pv_status_t (*pv_rhino_free_slots_and_values_func)(const pv_rhino_t *, const char **, const char **) =
-    load_symbol(rhino_library, "pv_rhino_free_slots_and_values");
+            load_symbol(rhino_library, "pv_rhino_free_slots_and_values");
     if (!pv_rhino_free_slots_and_values_func) {
         print_dl_error("failed to load 'pv_rhino_free_slots_and_values'");
         exit(1);
     }
 
     pv_status_t (*pv_rhino_reset_func)(pv_rhino_t *) =
-    load_symbol(rhino_library, "pv_rhino_reset");
+            load_symbol(rhino_library, "pv_rhino_reset");
     if (!pv_rhino_reset_func) {
         print_dl_error("failed to load 'pv_rhino_reset'");
         exit(1);
     }
 
     pv_status_t (*pv_rhino_context_info_func)(const pv_rhino_t *, const char **) =
-    load_symbol(rhino_library, "pv_rhino_context_info");
+            load_symbol(rhino_library, "pv_rhino_context_info");
     if (!pv_rhino_context_info_func) {
         print_dl_error("failed to load 'pv_rhino_context_info'");
         exit(1);
@@ -346,8 +341,7 @@ int picovoice_main(int argc, char *argv[]) {
             bool is_understood = false;
             status = pv_rhino_is_understood_func(rhino, &is_understood);
             if (status != PV_STATUS_SUCCESS) {
-                fprintf(stderr, "'pv_rhino_is_understood' failed with '%s'\n",
-                        pv_status_to_string_func(status));
+                fprintf(stderr, "'pv_rhino_is_understood' failed with '%s'\n", pv_status_to_string_func(status));
                 exit(1);
             }
 
@@ -364,8 +358,7 @@ int picovoice_main(int argc, char *argv[]) {
                         &slots,
                         &values);
                 if (status != PV_STATUS_SUCCESS) {
-                    fprintf(stderr, "'pv_rhino_get_intent' failed with '%s'\n",
-                            pv_status_to_string_func(status));
+                    fprintf(stderr, "'pv_rhino_get_intent' failed with '%s'\n", pv_status_to_string_func(status));
                     exit(1);
                 }
             }
@@ -388,16 +381,14 @@ int picovoice_main(int argc, char *argv[]) {
             if (is_understood) {
                 status = pv_rhino_free_slots_and_values_func(rhino, slots, values);
                 if (status != PV_STATUS_SUCCESS) {
-                    fprintf(stderr, "'pv_rhino_free_slots_and_values' failed with '%s'\n",
-                            pv_status_to_string_func(status));
+                    fprintf(stderr, "'pv_rhino_free_slots_and_values' failed with '%s'\n", pv_status_to_string_func(status));
                     exit(1);
                 }
             }
 
             status = pv_rhino_reset_func(rhino);
             if (status != PV_STATUS_SUCCESS) {
-                fprintf(stderr, "'pv_rhino_reset' failed with '%s'\n",
-                        pv_status_to_string_func(status));
+                fprintf(stderr, "'pv_rhino_reset' failed with '%s'\n", pv_status_to_string_func(status));
                 exit(1);
             }
         }
@@ -423,14 +414,14 @@ int main(int argc, char *argv[]) {
 #if defined(_WIN32) || defined(_WIN64)
 
 #define UTF8_COMPOSITION_FLAG (0)
-#define NULL_TERMINATED (-1)
+#define NULL_TERMINATED       (-1)
 
     LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
     if (wargv == NULL) {
         fprintf(stderr, "CommandLineToArgvW failed\n");
         exit(1);
     }
-    
+
     char *utf8_argv[argc];
 
     for (int i = 0; i < argc; ++i) {
