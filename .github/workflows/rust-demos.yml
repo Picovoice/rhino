@@ -53,4 +53,4 @@ jobs:
       run: cargo build --verbose
 
     - name: Test
-      run: cargo run --release -- --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --input_audio_path ../../../resources/audio_samples/test_within_context.wav --context_path ../../resources/contexts/linux/coffee_maker_linux.rhn
+      run: cargo run --release -- --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --input_audio_path ../../../resources/audio_samples/test_within_context.wav --context_path ../../../resources/contexts/linux/coffee_maker_linux.rhn
