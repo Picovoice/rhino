@@ -77,4 +77,4 @@ jobs:
       run: pip3 install -r requirements.txt
 
     - name: Test
-      run: python3 rhino_demo_file.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --wav_path ../../resources/audio_samples/test_within_context.wav -context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      run: python3 rhino_demo_file.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --wav_path ../../resources/audio_samples/test_within_context.wav --context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
