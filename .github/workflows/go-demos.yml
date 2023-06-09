@@ -54,7 +54,7 @@ jobs:
       run: ./rhino_file_demo -access_key ${{secrets.PV_VALID_ACCESS_KEY}} -input_audio_path ../../resources/audio_samples/test_within_context.wav -context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
 
   build-self-hosted:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.machine }}
 
     strategy:
       matrix:
