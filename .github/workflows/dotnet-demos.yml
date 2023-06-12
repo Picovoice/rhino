@@ -52,7 +52,7 @@ jobs:
       run: dotnet build -c FileDemo.Release
 
     - name: Run Dotnet filedemo
-      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --context_path ../../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
 
   build-self-hosted:
     runs-on: ${{ matrix.machine }}
@@ -89,4 +89,4 @@ jobs:
       run: dotnet build -c FileDemo.Release
 
     - name: Run Dotnet filedemo
-      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --context_path ../../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
