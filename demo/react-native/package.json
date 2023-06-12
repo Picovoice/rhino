@@ -3,13 +3,16 @@
   "version": "2.1.0",
   "private": true,
   "scripts": {
-    "android-run": "node scripts/run_demo.js run-android",
-    "ios-run": "node scripts/run_demo.js run-ios",
     "start": "react-native start",
+    "test": "jest",
     "lint": "eslint .",
+    "android-run": "node scripts/run_demo.js run-android",
+    "android-install": "yarn",
+    "android-bundle": "node scripts/run_demo.js bundle --dev false --platform android --entry-file index.js --bundle-output ./android/leopard-rn-demo-app/src/main/assets/app.jsbundle --assets-dest ./android/leopard-rn-demo-app/src/main/res/",
+    "ios-run": "node scripts/run_demo.js run-ios",
     "ios-link": "cd ios && pod install && cd ..",
     "ios-install": "yarn && yarn ios-link",
-    "android-install": "yarn"
+    "ios-bundle": "node scripts/run_demo.js bundle --dev false --platform ios --entry-file index.js --bundle-output ios/app.jsbundle"
   },
   "dependencies": {
     "@picovoice/react-native-voice-processor": "~1.1.0",

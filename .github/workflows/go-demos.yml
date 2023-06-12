@@ -21,40 +21,69 @@ defaults:
     working-directory: demo/go
 
 jobs:
-  build-micdemo:
-    runs-on: ubuntu-latest
+  build-github-hosted:
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
         go: [ '1.16', '1.17', '1.18' ]
+        include:
+        - os: ubuntu-latest
+          platform: linux
+        - os: windows-latest
+          platform: windows
+        - os: macos-latest
+          platform: mac
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup go
+    - name: Set up go
       uses: actions/setup-go@v4
       with:
         go-version: ${{ matrix.go }}
 
     - name: Build micdemo
-      run: go build
-      working-directory: demo/go/micdemo
+      run: go build micdemo/rhino_mic_demo.go
+      
+    - name: Build filedemo
+      run: go build filedemo/rhino_file_demo.go
 
-  build-filedemo:
-    runs-on: ubuntu-latest
+    - name: Test filedemo
+      run: ./rhino_file_demo -access_key ${{secrets.PV_VALID_ACCESS_KEY}} -input_audio_path ../../resources/audio_samples/test_within_context.wav -context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+
+  build-self-hosted:
+    runs-on: ${{ matrix.machine }}
 
     strategy:
       matrix:
-        go: [ '1.16', '1.17', '1.18' ]
+        machine: [rpi2, rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson, beaglebone]
+        include:
+        - machine: rpi2
+          platform: raspberry-pi
+        - machine: rpi3-32
+          platform: raspberry-pi
+        - machine: rpi3-64
+          platform: raspberry-pi
+        - machine: rpi4-32
+          platform: raspberry-pi
+        - machine: rpi4-64
+          platform: raspberry-pi
+        - machine: jetson
+          platform: jetson
+        - machine: beaglebone
+          platform: beaglebone
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup go
-      uses: actions/setup-go@v4
-      with:
-        go-version: ${{ matrix.go }}
-
+    - name: Build micdemo
+      run: go build micdemo/rhino_mic_demo.go
+      
     - name: Build filedemo
-      run: go build
-      working-directory: demo/go/filedemo
+      run: go build filedemo/rhino_file_demo.go
+
+    - name: Test filedemo
+      run: ./rhino_file_demo -access_key ${{secrets.PV_VALID_ACCESS_KEY}} -input_audio_path ../../resources/audio_samples/test_within_context.wav -context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+

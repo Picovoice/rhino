@@ -18,29 +18,86 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+defaults:
+  run:
+    working-directory: demo/rust
+
 jobs:
-  build-micdemo:
-    runs-on: ubuntu-latest
+  build-github-hosted:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+        - os: ubuntu-latest
+          platform: linux
+        - os: windows-latest
+          platform: windows
+        - os: macos-latest
+          platform: mac
 
     steps:
     - uses: actions/checkout@v3
 
     - name: Rust dependencies
-      run: sudo apt install libasound2-dev
+      if: matrix.os == 'ubuntu-latest'
+      run: sudo apt install libasound2-dev -y
+
+    - name: Install stable toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
 
     - name: Rust build micdemo
       run: cargo build --verbose
       working-directory: demo/rust/micdemo
 
-  build-filedemo:
-    runs-on: ubuntu-latest
+    - name: Rust build filedemo
+      run: cargo build --verbose
+      working-directory: demo/rust/filedemo
+
+    - name: Test
+      run: cargo run --release -- --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --input_audio_path ../../../resources/audio_samples/test_within_context.wav --context_path ../../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      working-directory: demo/rust/filedemo
+
+  build-self-hosted:
+    runs-on: ${{ matrix.machine }}
+
+    strategy:
+      matrix:
+        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson]
+        include:
+        - machine: rpi3-32
+          platform: raspberry-pi
+        - machine: rpi3-64
+          platform: raspberry-pi
+        - machine: rpi4-32
+          platform: raspberry-pi
+        - machine: rpi4-64
+          platform: raspberry-pi
+        - machine: jetson
+          platform: jetson
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Rust dependencies
-      run: sudo apt install libasound2-dev
+    - name: Install stable toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        override: true
+
+    - name: Rust build micdemo
+      run: cargo build --verbose
+      working-directory: demo/rust/micdemo
 
     - name: Rust build filedemo
       run: cargo build --verbose
+      working-directory: demo/rust/filedemo
+
+    - name: Test
+      run: cargo run --release -- --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --input_audio_path ../../../resources/audio_samples/test_within_context.wav --context_path ../../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
       working-directory: demo/rust/filedemo
