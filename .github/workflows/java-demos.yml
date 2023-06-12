@@ -20,8 +20,19 @@ defaults:
     working-directory: demo/java
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-github-hosted:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+        - os: ubuntu-latest
+          platform: linux
+        - os: windows-latest
+          platform: windows
+        - os: macos-latest
+          platform: mac
 
     steps:
     - uses: actions/checkout@v3
@@ -36,4 +47,35 @@ jobs:
       run: ./gradlew build
 
     - name: Run filedemo
-      run: java -jar build/libs/rhino-file-demo.jar -a  ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/linux/coffee_maker_linux.rhn
+      run: java -jar build/libs/rhino-file-demo.jar -a  ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+
+  build-self-hosted:
+    runs-on: ${{ matrix.machine }}
+
+    strategy:
+      matrix:
+        machine: [rpi2, rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson, beaglebone]
+        include:
+        - machine: rpi2
+          platform: raspberry-pi
+        - machine: rpi3-32
+          platform: raspberry-pi
+        - machine: rpi3-64
+          platform: raspberry-pi
+        - machine: rpi4-32
+          platform: raspberry-pi
+        - machine: rpi4-64
+          platform: raspberry-pi
+        - machine: jetson
+          platform: jetson
+        - machine: beaglebone
+          platform: beaglebone
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build
+      run: ./gradlew build
+
+    - name: Run filedemo
+      run: java -jar build/libs/rhino-file-demo.jar -a  ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn

@@ -20,8 +20,19 @@ defaults:
     working-directory: demo/dotnet/RhinoDemo
 
 jobs:
-  build-micdemo:
-    runs-on: ubuntu-latest
+  build-github-hosted:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+        - os: ubuntu-latest
+          platform: linux
+        - os: windows-latest
+          platform: windows
+        - os: macos-latest
+          platform: mac
 
     steps:
     - uses: actions/checkout@v3
@@ -36,24 +47,46 @@ jobs:
 
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
-
-  build-filedemo:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Setup .NET 6.0
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-
-    - name: Package restore
-      run: dotnet restore
-
+  
     - name: Dotnet build filedemo
       run: dotnet build -c FileDemo.Release
 
     - name: Run Dotnet filedemo
-      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --context_path ../../../resources/contexts/linux/coffee_maker_linux.rhn
+      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
 
+  build-self-hosted:
+    runs-on: ${{ matrix.machine }}
+
+    strategy:
+      matrix:
+        machine: [rpi2, rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson, beaglebone]
+        include:
+        - machine: rpi2
+          platform: raspberry-pi
+        - machine: rpi3-32
+          platform: raspberry-pi
+        - machine: rpi3-64
+          platform: raspberry-pi
+        - machine: rpi4-32
+          platform: raspberry-pi
+        - machine: rpi4-64
+          platform: raspberry-pi
+        - machine: jetson
+          platform: jetson
+        - machine: beaglebone
+          platform: beaglebone
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Package restore
+      run: dotnet restore
+
+    - name: Dotnet build micdemo
+      run: dotnet build -c MicDemo.Release
+  
+    - name: Dotnet build filedemo
+      run: dotnet build -c FileDemo.Release
+
+    - name: Run Dotnet filedemo
+      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn

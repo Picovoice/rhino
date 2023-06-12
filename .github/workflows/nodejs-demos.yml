@@ -60,8 +60,10 @@ jobs:
 
     strategy:
       matrix:
-        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson]
+        machine: [rpi2, rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson, beaglebone]
         include:
+        - machine: rpi2
+          platform: raspberry-pi
         - machine: rpi3-32
           platform: raspberry-pi
         - machine: rpi3-64
@@ -72,6 +74,8 @@ jobs:
           platform: raspberry-pi
         - machine: jetson
           platform: jetson
+        - machine: beaglebone
+          platform: beaglebone
 
     steps:
     - uses: actions/checkout@v3
