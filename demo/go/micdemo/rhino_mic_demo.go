@@ -18,7 +18,7 @@ import (
 	"os/signal"
 	"path/filepath"
 
-	pvrecorder "github.com/Picovoice/pvrecorder/sdk/go"
+	pvrecorder "github.com/Picovoice/pvrecorder/binding/go"
 	rhino "github.com/Picovoice/rhino/binding/go/v2"
 	"github.com/go-audio/wav"
 )
@@ -126,12 +126,8 @@ func main() {
 		defer outputWav.Close()
 	}
 
-	recorder := pvrecorder.PvRecorder{
-		DeviceIndex:    *audioDeviceIndex,
-		FrameLength:    rhino.FrameLength,
-		BufferSizeMSec: 1000,
-		LogOverflow:    0,
-	}
+	recorder := pvrecorder.NewPvRecorder(rhino.FrameLength)
+	recorder.DeviceIndex = *audioDeviceIndex
 
 	if err := recorder.Init(); err != nil {
 		log.Fatalf("Error: %s.\n", err.Error())
@@ -203,7 +199,7 @@ waitLoop:
 }
 
 func printAudioDevices() {
-	if devices, err := pvrecorder.GetAudioDevices(); err != nil {
+	if devices, err := pvrecorder.GetAvailableDevices(); err != nil {
 		log.Fatalf("Error: %s.\n", err.Error())
 	} else {
 		for i, device := range devices {

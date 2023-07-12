@@ -22,13 +22,11 @@ def main():
 
     parser.add_argument(
         '--access_key',
-        help='AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)',
-        required=True)
+        help='AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)')
 
     parser.add_argument(
         '--context_path',
-        help="Absolute path to context file.",
-        required=True)
+        help="Absolute path to context file.")
 
     parser.add_argument(
         '--library_path',
@@ -77,8 +75,12 @@ def main():
         require_endpoint = True
 
     if args.show_audio_devices:
-        for i, device in enumerate(PvRecorder.get_audio_devices()):
+        for i, device in enumerate(PvRecorder.get_available_devices()):
             print('Device %d: %s' % (i, device))
+        return
+
+    if not args.access_key or not args.context_path:
+        print('--access_key and --context_path are required.')
         return
 
     try:
@@ -114,8 +116,8 @@ def main():
     print('Context info: %s' % rhino.context_info)
 
     recorder = PvRecorder(
-        device_index=args.audio_device_index,
-        frame_length=rhino.frame_length)
+        frame_length=rhino.frame_length,
+        device_index=args.audio_device_index)
     recorder.start()
 
     print('Using device: %s' % recorder.selected_device)
