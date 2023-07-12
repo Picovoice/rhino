@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2020-2021 Picovoice Inc.
+    Copyright 2020-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -65,12 +65,8 @@ namespace RhinoDemo
             int audioDeviceIndex,
             string outputPath = null)
         {
-            Rhino rhino = null;
-            BinaryWriter outputFileWriter = null;
-            int totalSamplesWritten = 0;
-
             // init rhino speech-to-intent engine
-            rhino = Rhino.Create(
+            using Rhino rhino = Rhino.Create(
                 accessKey,
                 contextPath,
                 modelPath,
@@ -78,70 +74,73 @@ namespace RhinoDemo
                 endpointDurationSec,
                 requireEndpoint);
 
+            // create recorder
+            using PvRecorder recorder = PvRecorder.Create(rhino.FrameLength, audioDeviceIndex);
+            Console.WriteLine($"Using device: {recorder.SelectedDevice}");
+            Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
+            {
+                e.Cancel = true;
+                recorder.Stop();
+                Console.WriteLine("Stopping...");
+            };
+
             // open stream to output file
+            BinaryWriter outputFileWriter = null;
+            int totalSamplesWritten = 0;
             if (!string.IsNullOrWhiteSpace(outputPath))
             {
                 outputFileWriter = new BinaryWriter(new FileStream(outputPath, FileMode.OpenOrCreate, FileAccess.Write));
                 WriteWavHeader(outputFileWriter, 1, 16, 16000, 0);
             }
 
-            Console.CancelKeyPress += (s, o) =>
+            // create and start recording            
+            recorder.Start();
+            Console.WriteLine(rhino.ContextInfo);
+            Console.WriteLine("Listening...\n");
+
+            while (recorder.IsRecording)
             {
-                Console.WriteLine("Stopping...");
+                short[] frame = recorder.Read();
+                bool isFinalized = rhino.Process(frame);
+                if (isFinalized)
+                {
+                    Inference inference = rhino.GetInference();
+                    if (inference.IsUnderstood)
+                    {
+                        Console.WriteLine("{");
+                        Console.WriteLine($"  intent : '{inference.Intent}'");
+                        Console.WriteLine("  slots : {");
+                        foreach (KeyValuePair<string, string> slot in inference.Slots)
+                        {
+                            Console.WriteLine($"    {slot.Key} : '{slot.Value}'");
+                        }
+                        Console.WriteLine("  }");
+                        Console.WriteLine("}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Didn't understand the command.");
+                    }
+                }
 
                 if (outputFileWriter != null)
                 {
-                    // write size to header and clean up
-                    WriteWavHeader(outputFileWriter, 1, 16, 16000, totalSamplesWritten);
-                    outputFileWriter.Flush();
-                    outputFileWriter.Dispose();
+                    foreach (short sample in frame)
+                    {
+                        outputFileWriter.Write(sample);
+                    }
+                    totalSamplesWritten += frame.Length;
                 }
-                rhino?.Dispose();
-            };
+                Thread.Yield();
+            }
 
-            // create and start recording
-            using (PvRecorder recorder = PvRecorder.Create(audioDeviceIndex, rhino.FrameLength))
+            if (outputFileWriter != null)
             {
-                recorder.Start();
-                Console.WriteLine(rhino.ContextInfo);
-                Console.WriteLine($"\nUsing device: {recorder.SelectedDevice}");
-                Console.WriteLine("Listening...\n");
-
-                while (true)
-                {
-                    short[] pcm = recorder.Read();
-                    bool isFinalized = rhino.Process(pcm);
-                    if (isFinalized)
-                    {
-                        Inference inference = rhino.GetInference();
-                        if (inference.IsUnderstood)
-                        {
-                            Console.WriteLine("{");
-                            Console.WriteLine($"  intent : '{inference.Intent}'");
-                            Console.WriteLine("  slots : {");
-                            foreach (KeyValuePair<string, string> slot in inference.Slots)
-                            {
-                                Console.WriteLine($"    {slot.Key} : '{slot.Value}'");
-                            }
-                            Console.WriteLine("  }");
-                            Console.WriteLine("}");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Didn't understand the command.");
-                        }
-                    }
-
-                    if (outputFileWriter != null)
-                    {
-                        foreach (short sample in pcm)
-                        {
-                            outputFileWriter.Write(sample);
-                        }
-                        totalSamplesWritten += pcm.Length;
-                    }
-                    Thread.Yield();
-                }
+                // write size to header and clean up
+                WriteWavHeader(outputFileWriter, 1, 16, recorder.SampleRate, totalSamplesWritten);
+                outputFileWriter.Flush();
+                outputFileWriter.Dispose();
+                Console.Write($"Wrote audio to '{outputPath}'");
             }
         }
 
@@ -179,7 +178,7 @@ namespace RhinoDemo
         /// </summary>
         public static void ShowAudioDevices()
         {
-            string[] devices = PvRecorder.GetAudioDevices();
+            string[] devices = PvRecorder.GetAvailableDevices();
             for (int i = 0; i < devices.Length; i++)
             {
                 Console.WriteLine($"index: {i}, device name: {devices[i]}");
