@@ -90,7 +90,7 @@ namespace RhinoDemo
             if (!string.IsNullOrWhiteSpace(outputPath))
             {
                 outputFileWriter = new BinaryWriter(new FileStream(outputPath, FileMode.OpenOrCreate, FileAccess.Write));
-                WriteWavHeader(outputFileWriter, 1, 16, 16000, 0);
+                WriteWavHeader(outputFileWriter, 1, 16, recorder.SampleRate, 0);
             }
 
             // create and start recording            
