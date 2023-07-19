@@ -90,6 +90,8 @@ fs.writeFileSync(
   JSON.stringify(params),
 );
 
+const command = (process.platform === "win32") ? "npx.cmd" : "npx";
+
 child_process.fork('react-native', commands, {
-  execPath: 'npx',
+  execPath: command,
 });
