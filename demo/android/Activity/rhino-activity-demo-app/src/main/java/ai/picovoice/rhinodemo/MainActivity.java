@@ -194,7 +194,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             recordButton.setEnabled(false);
             recordButton.setText("...");
-            rhinoManager.process();
+            try {
+                rhinoManager.process();
+            } catch (RhinoException e) {
+                onRhinoError(e.getMessage());
+            }
         }
     }
 
@@ -205,7 +209,11 @@ public class MainActivity extends AppCompatActivity {
             intentTextView.setText("");
 
             if (hasRecordPermission()) {
-                rhinoManager.process();
+                try {
+                    rhinoManager.process();
+                } catch (RhinoException e) {
+                    onRhinoError(e.getMessage());
+                }
             } else {
                 requestRecordPermission();
             }
@@ -230,3 +238,4 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 }
+

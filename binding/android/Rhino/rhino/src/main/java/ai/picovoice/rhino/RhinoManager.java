@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2022 Picovoice Inc.
+    Copyright 2018-2023 Picovoice Inc.
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
     Unless required by applicable law or agreed to in writing, software distributed under the
@@ -22,6 +22,11 @@ import android.util.Log;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
+import ai.picovoice.android.voiceprocessor.VoiceProcessor;
+import ai.picovoice.android.voiceprocessor.VoiceProcessorErrorListener;
+import ai.picovoice.android.voiceprocessor.VoiceProcessorException;
+import ai.picovoice.android.voiceprocessor.VoiceProcessorFrameListener;
+
 /**
  * High-level Android binding for Rhino Speech-to-Intent engine. It handles recording audio from
  * microphone, processes it in real-time using Rhino, and notifies the client when an intent is
@@ -29,9 +34,12 @@ import java.util.concurrent.Executors;
  */
 public class RhinoManager {
     private final Rhino rhino;
-    private final RhinoManagerCallback callback;
-    private final RhinoManagerErrorCallback errorCallback;
-    private final Handler callbackHandler = new Handler(Looper.getMainLooper());
+    private final VoiceProcessor voiceProcessor;
+    private final VoiceProcessorFrameListener vpFrameListener;
+    private final VoiceProcessorErrorListener vpErrorListener;
+
+    private boolean isFinalized;
+    private boolean isListening;
 
     /**
      * Private constructor.
@@ -41,13 +49,57 @@ public class RhinoManager {
      * @param errorCallback A callback that reports errors encountered while processing audio.
      */
     private RhinoManager(
-            Rhino rhino,
-            RhinoManagerCallback callback,
-            RhinoManagerErrorCallback errorCallback) {
+            final Rhino rhino,
+            final RhinoManagerCallback callback,
+            final RhinoManagerErrorCallback errorCallback) {
 
         this.rhino = rhino;
-        this.callback = callback;
-        this.errorCallback = errorCallback;
+        this.voiceProcessor = VoiceProcessor.getInstance();
+        this.vpFrameListener = new VoiceProcessorFrameListener() {
+            @Override
+            public void onFrame(short[] frame) {
+                try {
+                    isFinalized = rhino.process(frame);
+                    if (isFinalized) {
+                        final RhinoInference inference = rhino.getInference();
+                        callback.invoke(inference);
+                        stop();
+                    }
+                } catch (RhinoException e) {
+                    if (errorCallback != null) {
+                        errorCallback.invoke(e);
+                    } else {
+                        Log.e("RhinoManager", e.toString());
+                    }
+                }
+            }
+        };
+        this.vpErrorListener = new VoiceProcessorErrorListener() {
+            @Override
+            public void onError(VoiceProcessorException error) {
+                if (errorCallback != null) {
+                    errorCallback.invoke(new RhinoException(error));
+                } else {
+                    Log.e("RhinoManager", error.toString());
+                }
+            }
+        };
+    }
+
+    /**
+     * Stops recording audio
+     */
+    private void stop() throws RhinoException {
+        voiceProcessor.removeErrorListener(vpErrorListener);
+        voiceProcessor.removeFrameListener(vpFrameListener);
+        if (voiceProcessor.getNumFrameListeners() == 0) {
+            try {
+                voiceProcessor.stop();
+            } catch (VoiceProcessorException e) {
+                throw new RhinoException(e);
+            }
+        }
+        isListening = false;
     }
 
     /**
@@ -55,79 +107,20 @@ public class RhinoManager {
      * command. Once the inference is finalized it will invoke the user provided callback and
      * terminates recording audio.
      */
-    public void process() {
-        Executors.newSingleThreadExecutor().submit(new Callable<Void>() {
-            @Override
-            public Void call() {
-                android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
-                final int minBufferSize = AudioRecord.getMinBufferSize(
-                        rhino.getSampleRate(),
-                        AudioFormat.CHANNEL_IN_MONO,
-                        AudioFormat.ENCODING_PCM_16BIT);
-                final int bufferSize = Math.max(rhino.getSampleRate() / 2, minBufferSize);
+    public void process() throws RhinoException {
+        if (isListening) {
+            return;
+        }
 
-                AudioRecord audioRecord = null;
+        this.voiceProcessor.addFrameListener(vpFrameListener);
+        this.voiceProcessor.addErrorListener(vpErrorListener);
 
-                short[] buffer = new short[rhino.getFrameLength()];
-
-                boolean isFinalized = false;
-                try {
-                    audioRecord = new AudioRecord(
-                            MediaRecorder.AudioSource.MIC,
-                            rhino.getSampleRate(),
-                            AudioFormat.CHANNEL_IN_MONO,
-                            AudioFormat.ENCODING_PCM_16BIT,
-                            bufferSize);
-                    audioRecord.startRecording();
-
-                    while (!isFinalized) {
-                        if (audioRecord.read(buffer, 0, buffer.length) == buffer.length) {
-                            isFinalized = rhino.process(buffer);
-                        }
-                    }
-                    audioRecord.stop();
-                } catch (final Exception e) {
-                    if (errorCallback != null) {
-                        callbackHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                errorCallback.invoke(new RhinoException(e));
-                            }
-                        });
-                    } else {
-                        Log.e("RhinoManager", e.toString());
-                    }
-                } finally {
-                    if (audioRecord != null) {
-                        audioRecord.release();
-                    }
-
-                    if (isFinalized) {
-                        try {
-                            final RhinoInference inference = rhino.getInference();
-                            callbackHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    callback.invoke(inference);
-                                }
-                            });
-                        } catch (final RhinoException e) {
-                            if (errorCallback != null) {
-                                callbackHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        errorCallback.invoke(new RhinoException(e));
-                                    }
-                                });
-                            } else {
-                                Log.e("RhinoManager", e.toString());
-                            }
-                        }
-                    }
-                }
-                return null;
-            }
-        });
+        try {
+            voiceProcessor.start(rhino.getFrameLength(), rhino.getSampleRate());
+        } catch (VoiceProcessorException e) {
+            throw new RhinoException(e);
+        }
+        isListening = true;
     }
 
     /**
@@ -211,7 +204,9 @@ public class RhinoManager {
          * @return A RhinoManager instance
          * @throws RhinoException if there is an error while initializing Rhino.
          */
-        public RhinoManager build(Context context, RhinoManagerCallback callback) throws RhinoException {
+        public RhinoManager build(
+                Context context,
+                RhinoManagerCallback callback) throws RhinoException {
             Rhino rhino = new Rhino.Builder()
                     .setAccessKey(accessKey)
                     .setModelPath(modelPath)
