@@ -87,7 +87,7 @@ public class RhinoManager {
     }
 
     /**
-     * Stops recording audio
+     * Stops recording audio.
      */
     private void stop() throws RhinoException {
         voiceProcessor.removeErrorListener(vpErrorListener);
