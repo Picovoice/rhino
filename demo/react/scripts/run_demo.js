@@ -93,6 +93,8 @@ fs.writeFileSync(
 })();`
 );
 
+const command = (process.platform === "win32") ? "npx.cmd" : "npx";
+
 child_process.fork("react-scripts", commands, {
-  execPath: "npx",
+  execPath: command,
 });
