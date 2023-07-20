@@ -91,14 +91,16 @@
         android:id="@+id/intentView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="24dp"
         android:background="@color/colorPrimaryDark"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/startButton"
+        app:layout_constraintBottom_toTopOf="@+id/errorView"
         app:layout_constraintEnd_toEndOf="@id/endGuideline"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@id/startGuideline" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@id/startGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/cheatSheetButton" />
 
     <Button
         android:id="@+id/cheatSheetButton"

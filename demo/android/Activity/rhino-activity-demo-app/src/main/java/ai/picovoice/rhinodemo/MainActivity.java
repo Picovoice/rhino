@@ -13,7 +13,6 @@
 package ai.picovoice.rhinodemo;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,19 +34,69 @@ import androidx.core.content.ContextCompat;
 import java.util.Map;
 import java.util.Objects;
 
-import ai.picovoice.rhino.*;
+import ai.picovoice.rhino.RhinoActivationException;
+import ai.picovoice.rhino.RhinoActivationLimitException;
+import ai.picovoice.rhino.RhinoActivationRefusedException;
+import ai.picovoice.rhino.RhinoActivationThrottledException;
+import ai.picovoice.rhino.RhinoException;
+import ai.picovoice.rhino.RhinoInference;
+import ai.picovoice.rhino.RhinoInvalidArgumentException;
+import ai.picovoice.rhino.RhinoManager;
+import ai.picovoice.rhino.RhinoManagerCallback;
+import ai.picovoice.rhino.RhinoManagerErrorCallback;
 
 
 public class MainActivity extends AppCompatActivity {
     private static final String ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+
     private String contextName = "";
 
     private ToggleButton recordButton;
-    private TextView contextNameTextView;
     private Button cheatSheetButton;
     private TextView intentTextView;
+    private final RhinoManagerCallback rhinoManagerCallback = new RhinoManagerCallback() {
+        @Override
+        public void invoke(final RhinoInference inference) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recordButton.setEnabled(true);
+                    recordButton.setText("START");
+                    recordButton.toggle();
+                    intentTextView.setText("\n    {\n");
+                    intentTextView.append(
+                            String.format("        \"isUnderstood\" : \"%b\",\n", inference.getIsUnderstood()));
+                    if (inference.getIsUnderstood()) {
+                        intentTextView.append(
+                                String.format("        \"intent\" : \"%s\",\n", inference.getIntent()));
+                        final Map<String, String> slots = inference.getSlots();
+                        if (slots.size() > 0) {
+                            intentTextView.append("        \"slots\" : {\n");
+                            for (String key : slots.keySet()) {
+                                intentTextView.append(
+                                        String.format("            \"%s\" : \"%s\",\n", key, slots.get(key)));
+                            }
+                            intentTextView.append("        }\n");
+                        }
+                    }
+                    intentTextView.append("    }\n");
+                }
+            });
+        }
+    };
     private TextView errorTextView;
     private Guideline errorGuideline;
+    private final RhinoManagerErrorCallback rhinoManagerErrorCallback = new RhinoManagerErrorCallback() {
+        @Override
+        public void invoke(final RhinoException error) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onRhinoError(error.getMessage());
+                }
+            });
+        }
+    };
     private RhinoManager rhinoManager;
 
     private void initRhino() {
@@ -88,49 +137,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private final RhinoManagerCallback rhinoManagerCallback = new RhinoManagerCallback() {
-        @Override
-        public void invoke(final RhinoInference inference) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    recordButton.setEnabled(true);
-                    recordButton.setText("START");
-                    recordButton.toggle();
-                    intentTextView.setText("\n    {\n");
-                    intentTextView.append(
-                            String.format("        \"isUnderstood\" : \"%b\",\n", inference.getIsUnderstood()));
-                    if (inference.getIsUnderstood()) {
-                        intentTextView.append(
-                                String.format("        \"intent\" : \"%s\",\n", inference.getIntent()));
-                        final Map<String, String> slots = inference.getSlots();
-                        if (slots.size() > 0) {
-                            intentTextView.append("        \"slots\" : {\n");
-                            for (String key : slots.keySet()) {
-                                intentTextView.append(
-                                        String.format("            \"%s\" : \"%s\",\n", key, slots.get(key)));
-                            }
-                            intentTextView.append("        }\n");
-                        }
-                    }
-                    intentTextView.append("    }\n");
-                }
-            });
-        }
-    };
-
-    private final RhinoManagerErrorCallback rhinoManagerErrorCallback = new RhinoManagerErrorCallback() {
-        @Override
-        public void invoke(final RhinoException error) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    onRhinoError(error.getMessage());
-                }
-            });
-        }
-    };
-
     private void onRhinoError(String errorMessage) {
         recordButton.setEnabled(false);
         recordButton.setBackground(ContextCompat.getDrawable(
@@ -153,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rhino_demo);
 
         recordButton = findViewById(R.id.startButton);
-        contextNameTextView = findViewById(R.id.contextName);
+        TextView contextNameTextView = findViewById(R.id.contextName);
         cheatSheetButton = findViewById(R.id.cheatSheetButton);
         intentTextView = findViewById(R.id.intentView);
         errorTextView = findViewById(R.id.errorView);
@@ -194,7 +200,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             recordButton.setEnabled(false);
             recordButton.setText("...");
-            rhinoManager.process();
+            try {
+                rhinoManager.process();
+            } catch (RhinoException e) {
+                onRhinoError(e.getMessage());
+            }
         }
     }
 
@@ -205,7 +215,11 @@ public class MainActivity extends AppCompatActivity {
             intentTextView.setText("");
 
             if (hasRecordPermission()) {
-                rhinoManager.process();
+                try {
+                    rhinoManager.process();
+                } catch (RhinoException e) {
+                    onRhinoError(e.getMessage());
+                }
             } else {
                 requestRecordPermission();
             }
@@ -230,3 +244,4 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 }
+
