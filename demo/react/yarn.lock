@@ -1545,10 +1545,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@picovoice/rhino-react@~2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-2.2.0.tgz#0e1b6a23ab4434919608ebc1e36eacfe3dfd301b"
-  integrity sha512-RPcCHqTvXg5Efam2PxUdIQ8Gsyu99hEmqyV4bQFw4plw4h4NssOxIC9+ChhhBpQiLDWMYB66dG0ICqgMtwvsQQ==
+"@picovoice/rhino-react@~2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-2.2.1.tgz#dc16aed3d238ba72419dfeab5e5e3e857f52a035"
+  integrity sha512-57FmphhDcP5/4WG/bZPXwG50x2YyvuS3jkGYOkaJA6o+IurdF7TpZ1SylSOPg99RWz4UUwdYDRDokFT5ATVVYQ==
   dependencies:
     "@picovoice/rhino-web" "=2.2.0"
 
@@ -1566,10 +1566,12 @@
   dependencies:
     commander "^9.2.0"
 
-"@picovoice/web-voice-processor@~4.0.6":
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.6.tgz#4769283b82f64d3625794f7290d47c6d477a3f41"
-  integrity sha512-Ykfy6hrWFpOklfeN7rSJb5CGim8wDu7J+l8imRYyQxWHWVV1Wu5S8FW69zkJmwiDG2Wx+M2+h0SCMS+hNM5qow==
+"@picovoice/web-voice-processor@~4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.8.tgz#95247a5393cac4d16490a53feb0f413c902ee5fa"
+  integrity sha512-/OSHn8YKniMo0jP5EwGimLOxvLQl/Yx4Hs+LydNmoSu4hfBrDdzhhfhB79118uDiK4aUUKx2A/RAD9TG0mQ/ng==
+  dependencies:
+    "@picovoice/web-utils" "=1.3.1"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.10"

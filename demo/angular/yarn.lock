@@ -1534,18 +1534,18 @@
     read-package-json-fast "^3.0.0"
     which "^3.0.0"
 
-"@picovoice/rhino-angular@~2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-2.2.0.tgz#c073e481c775cda4170ba23204c9949dea231951"
-  integrity sha512-LL7VhnV5uNPAdEaQPxQVRTabN38tIMiplnb26x254qKd+4Tkc+sj7w8DqyregOCCoFTWM0+Z21ktcg8ZxLNwwQ==
+"@picovoice/rhino-angular@~2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-2.2.1.tgz#067b24d16f4798febe4d55a2d3bc7bac62ab8b2f"
+  integrity sha512-XCj2Pu8egElhY7JlJO9K2DWJ7BdUP/e9DQxGXcCayj9AYWPdzXWHtesLcz42Wy7kl9lMyRHejvrxHEGfDPK5+Q==
   dependencies:
-    "@picovoice/rhino-web" "=2.2.0"
+    "@picovoice/rhino-web" "=2.2.1"
     tslib "^2.3.0"
 
-"@picovoice/rhino-web@=2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.2.0.tgz#fb221654e3c0977b8b1b417f42bf0eb510cf6750"
-  integrity sha512-2ckCNq9ayVQ6GKEZ0OFXy7NIdEIOiyXsGQPjDfHRDKhMf7EATnR4AgVIEXLwKCSg8WfFCZkXOw33E3V47QEUAA==
+"@picovoice/rhino-web@=2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.2.1.tgz#68ece011d99ecd638e8935147c8e443c294becf5"
+  integrity sha512-kwNNvuUt+6x/kfLplLeCV1J2RbTZEkKwe5WoyY6yZbtJB1Tb/+HcWlNaeSU1kLTegxZ6UL+ETT/gay4psDKLmQ==
   dependencies:
     "@picovoice/web-utils" "=1.3.1"
 
@@ -1556,10 +1556,12 @@
   dependencies:
     commander "^9.2.0"
 
-"@picovoice/web-voice-processor@~4.0.6":
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.6.tgz#4769283b82f64d3625794f7290d47c6d477a3f41"
-  integrity sha512-Ykfy6hrWFpOklfeN7rSJb5CGim8wDu7J+l8imRYyQxWHWVV1Wu5S8FW69zkJmwiDG2Wx+M2+h0SCMS+hNM5qow==
+"@picovoice/web-voice-processor@~4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-voice-processor/-/web-voice-processor-4.0.8.tgz#95247a5393cac4d16490a53feb0f413c902ee5fa"
+  integrity sha512-/OSHn8YKniMo0jP5EwGimLOxvLQl/Yx4Hs+LydNmoSu4hfBrDdzhhfhB79118uDiK4aUUKx2A/RAD9TG0mQ/ng==
+  dependencies:
+    "@picovoice/web-utils" "=1.3.1"
 
 "@schematics/angular@15.1.3":
   version "15.1.3"
