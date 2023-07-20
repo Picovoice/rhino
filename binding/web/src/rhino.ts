@@ -127,9 +127,6 @@ export class Rhino {
 
   private _wasmMemory: WebAssembly.Memory | undefined;
   private readonly _pvFree: pv_free_type;
-  private readonly _memoryBuffer: Int16Array;
-  private readonly _memoryBufferUint8: Uint8Array;
-  private readonly _memoryBufferView: DataView;
   private readonly _processMutex: Mutex;
 
   private readonly _contextAddress: number;
@@ -184,9 +181,6 @@ export class Rhino {
     this._slotsAddressAddressAddress = handleWasm.slotsAddressAddressAddress;
     this._valuesAddressAddressAddress = handleWasm.valuesAddressAddressAddress;
 
-    this._memoryBuffer = new Int16Array(handleWasm.memory.buffer);
-    this._memoryBufferUint8 = new Uint8Array(handleWasm.memory.buffer);
-    this._memoryBufferView = new DataView(handleWasm.memory.buffer);
     this._processMutex = new Mutex();
 
     this._inferenceCallback = inferenceCallback;
@@ -351,8 +345,9 @@ export class Rhino {
         if (this._wasmMemory === undefined) {
           throw new Error('Attempted to call Rhino process after release.');
         }
+        const memoryBuffer = new Int16Array(this._wasmMemory.buffer);
 
-        this._memoryBuffer.set(
+        memoryBuffer.set(
           pcm,
           this._inputBufferAddress / Int16Array.BYTES_PER_ELEMENT
         );
@@ -362,16 +357,20 @@ export class Rhino {
           this._inputBufferAddress,
           this._isFinalizedAddress
         );
+
+        let memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
+        const memoryBufferView = new DataView(this._wasmMemory.buffer);
+
         if (status !== PV_STATUS_SUCCESS) {
           throw new Error(
             `'pv_rhino_process' failed with status ${arrayBufferToStringAtIndex(
-              this._memoryBufferUint8,
+              memoryBufferUint8,
               await this._pvStatusToString(status)
             )}`
           );
         }
 
-        const isFinalized = this._memoryBufferView.getUint8(
+        const isFinalized = memoryBufferView.getUint8(
           this._isFinalizedAddress
         );
 
@@ -383,13 +382,13 @@ export class Rhino {
           if (status !== PV_STATUS_SUCCESS) {
             throw new Error(
               `'pv_rhino_is_understood' failed with status ${arrayBufferToStringAtIndex(
-                this._memoryBufferUint8,
+                memoryBufferUint8,
                 await this._pvStatusToString(status)
               )}`
             );
           }
 
-          const isUnderstood = this._memoryBufferView.getUint8(
+          const isUnderstood = memoryBufferView.getUint8(
             this._isUnderstoodAddress
           );
 
@@ -410,22 +409,22 @@ export class Rhino {
             if (status !== PV_STATUS_SUCCESS) {
               throw new Error(
                 `'pv_rhino_get_intent' failed with status ${arrayBufferToStringAtIndex(
-                  this._memoryBufferUint8,
+                  memoryBufferUint8,
                   await this._pvStatusToString(status)
                 )}`
               );
             }
 
-            const intentAddress = this._memoryBufferView.getInt32(
+            const intentAddress = memoryBufferView.getInt32(
               this._intentAddressAddress,
               true
             );
             intent = arrayBufferToStringAtIndex(
-              this._memoryBufferUint8,
+              memoryBufferUint8,
               intentAddress
             );
 
-            const numSlots = this._memoryBufferView.getInt32(
+            const numSlots = memoryBufferView.getInt32(
               this._numSlotsAddress,
               true
             );
@@ -445,12 +444,12 @@ export class Rhino {
               slots[slot] = value;
             }
 
-            const slotsAddressAddress = this._memoryBufferView.getInt32(
+            const slotsAddressAddress = memoryBufferView.getInt32(
               this._slotsAddressAddressAddress,
               true
             );
 
-            const valuesAddressAddress = this._memoryBufferView.getInt32(
+            const valuesAddressAddress = memoryBufferView.getInt32(
               this._valuesAddressAddressAddress,
               true
             );
@@ -461,9 +460,10 @@ export class Rhino {
               valuesAddressAddress
             );
             if (status !== PV_STATUS_SUCCESS) {
+              memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
               throw new Error(
                 `'pv_rhino_free_slots_values' failed with status ${arrayBufferToStringAtIndex(
-                  this._memoryBufferUint8,
+                  memoryBufferUint8,
                   await this._pvStatusToString(status)
                 )}`
               );
@@ -472,9 +472,10 @@ export class Rhino {
 
           status = await this._pvRhinoReset(this._objectAddress);
           if (status !== PV_STATUS_SUCCESS) {
+            memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
             throw new Error(
               `'pv_rhino_process' failed with status ${arrayBufferToStringAtIndex(
-                this._memoryBufferUint8,
+                memoryBufferUint8,
                 await this._pvStatusToString(status)
               )}`
             );
@@ -507,31 +508,37 @@ export class Rhino {
   }
 
   private _getSlot(index: number): string {
-    const slotsAddressAddress = this._memoryBufferView.getInt32(
+    const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
+    const memoryBufferView = new DataView(this._wasmMemory.buffer);
+
+    const slotsAddressAddress = memoryBufferView.getInt32(
       this._slotsAddressAddressAddress,
       true
     );
 
-    const slotAddress = this._memoryBufferView.getInt32(
+    const slotAddress = memoryBufferView.getInt32(
       slotsAddressAddress + index * Int32Array.BYTES_PER_ELEMENT,
       true
     );
 
-    return arrayBufferToStringAtIndex(this._memoryBufferUint8, slotAddress);
+    return arrayBufferToStringAtIndex(memoryBufferUint8, slotAddress);
   }
 
   private _getSlotValue(index: number): string {
-    const valuesAddressAddress = this._memoryBufferView.getInt32(
+    const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
+    const memoryBufferView = new DataView(this._wasmMemory.buffer);
+
+    const valuesAddressAddress = memoryBufferView.getInt32(
       this._valuesAddressAddressAddress,
       true
     );
 
-    const valueAddress = this._memoryBufferView.getInt32(
+    const valueAddress = memoryBufferView.getInt32(
       valuesAddressAddress + index * Int32Array.BYTES_PER_ELEMENT,
       true
     );
 
-    return arrayBufferToStringAtIndex(this._memoryBufferUint8, valueAddress);
+    return arrayBufferToStringAtIndex(memoryBufferUint8, valueAddress);
   }
 
   /**
@@ -540,9 +547,10 @@ export class Rhino {
   public async reset(): Promise<void> {
     const status = await this._pvRhinoReset(this._objectAddress);
     if (status !== PV_STATUS_SUCCESS) {
+      const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
       throw new Error(
         `'pv_rhino_process' failed with status ${arrayBufferToStringAtIndex(
-          this._memoryBufferUint8,
+          memoryBufferUint8,
           await this._pvStatusToString(status)
         )}`
       );
