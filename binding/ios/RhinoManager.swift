@@ -7,147 +7,181 @@
 //  specific language governing permissions and limitations under the License.
 //
 
-import ios_voice_processor
+import SwiftUI
 
-public enum RhinoManagerError: Error {
-    case recordingDenied
-    case objectDisposed
+import ios_voice_processor
+import Rhino
+
+struct SheetView: View {
+    @Binding var contextInfo: String
+
+    var body: some View {
+        ScrollView {
+            Text(self.contextInfo)
+                .padding()
+                .font(.system(size: 14))
+        }
+    }
 }
 
-/// High-level iOS binding for Rhino Speech-to-Intent engine. It handles recording
-/// audio from microphone, processes it in real-time using Rhino, and notifies the client
-/// when an intent is inferred from the spoken command.
-public class RhinoManager {
-    private var onInferenceCallback: ((Inference) -> Void)?
-    private var processErrorCallback: ((Error) -> Void)?
-    private var rhino: Rhino?
+struct ContentView: View {
 
-    private var started = false
-    private var stop = false
+    let language: String = ProcessInfo.processInfo.environment["LANGUAGE"]!
+    let context: String = ProcessInfo.processInfo.environment["CONTEXT"]!
 
-    public var contextInfo: String {
-        get {
-            return (self.rhino != nil) ? self.rhino!.contextInfo : ""
+    @State var rhinoManager: RhinoManager!
+    @State var buttonLabel = "START"
+    @State var result: String = ""
+    @State var errorMessage: String = ""
+    @State var contextInfo: String = ""
+    @State var showInfo: Bool = false
+
+    let ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}" // Obtained from Picovoice Console (https://console.picovoice.ai)
+
+    func initRhino() {
+        let contextPath = Bundle.main.url(
+            forResource: "\(context)_ios",
+            withExtension: "rhn",
+            subdirectory: "contexts")!.path
+
+        let modelPath = (language == "en") ? nil :
+            Bundle.main.url(
+                forResource: "rhino_params_\(language)",
+                withExtension: "pv",
+                subdirectory: "models")!.path
+
+        do {
+            self.rhinoManager = try RhinoManager(
+                accessKey: self.ACCESS_KEY,
+                contextPath: contextPath,
+                modelPath: modelPath,
+                onInferenceCallback: { x in
+                    DispatchQueue.main.async {
+                        result = "{\n"
+                        self.result += "    \"isUnderstood\" : \"" +
+                            x.isUnderstood.description + "\",\n"
+                        if x.isUnderstood {
+                            self.result += "    \"intent : \"" + x.intent + "\",\n"
+                            if !x.slots.isEmpty {
+                                result += "    \"slots\" : {\n"
+                                for (k, v) in x.slots {
+                                    self.result += "        \"" + k + "\" : \"" + v + "\",\n"
+                                }
+                                result += "    }\n"
+                            }
+                        }
+                        result += "}\n"
+
+                        self.buttonLabel = "START"
+                    }
+                },
+                processErrorCallback: { error in
+                    DispatchQueue.main.async {
+                        errorMessage = "\(error)"
+                    }
+                })
+            self.contextInfo = self.rhinoManager.contextInfo
+        } catch let error as RhinoInvalidArgumentError {
+            errorMessage =
+                "\(error.localizedDescription)\nEnsure your AccessKey '\(ACCESS_KEY)' is valid"
+        } catch is RhinoActivationError {
+            errorMessage = "ACCESS_KEY activation error"
+        } catch is RhinoActivationRefusedError {
+            errorMessage = "ACCESS_KEY activation refused"
+        } catch is RhinoActivationLimitError {
+            errorMessage = "ACCESS_KEY reached its limit"
+        } catch is RhinoActivationThrottledError {
+            errorMessage = "ACCESS_KEY is throttled"
+        } catch {
+            errorMessage = "\(error)"
         }
     }
 
-    /// Constructor.
-    ///
-    /// - Parameters:
-    ///   - accessKey: AccessKey obtained from Picovoice Console (https://console.picovoice.ai).
-    ///   - modelPath: Absolute path to file containing model parameters.
-    ///   - contextPath: Absolute path to file containing context parameters. A context represents the
-    ///   set of expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
-    ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity
-    ///   value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
-    ///   - endpointDurationSec: Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
-    ///   utterance that marks the end of spoken command. It should be a positive number
-    ///   within [0.5, 5]. A lower endpoint duration reduces delay and improves responsiveness. A
-    ///   higher endpoint duration assures Rhino doesn't return inference preemptively in case the user pauses
-    ///   before finishing the request.
-    ///   - requireEndpoint: If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
-    ///   If set to `false`, Rhino tries to detect silence, but if it cannot, it
-    ///   still will provide inference regardless. Set to `false` only if operating
-    ///   in an environment with overlapping speech
-    ///   (e.g. people talking in the background).
-    ///   - onInferenceCallback: It is invoked upon completion of intent inference.
-    ///   - processErrorCallback: Invoked if an error occurs while processing frames.
-    ///   If missing, error will be printed to console.
-    /// - Throws: RhinoManagerError
-    public init(
-        accessKey: String,
-        contextPath: String,
-        modelPath: String? = nil,
-        sensitivity: Float32 = 0.5,
-        endpointDurationSec: Float32 = 1.0,
-        requireEndpoint: Bool = true,
-        onInferenceCallback: ((Inference) -> Void)?,
-        processErrorCallback: ((Error) -> Void)? = nil) throws {
-        self.onInferenceCallback = onInferenceCallback
-        self.processErrorCallback = processErrorCallback
-        self.rhino = try Rhino(
-            accessKey: accessKey,
-            contextPath: contextPath,
-            modelPath: modelPath,
-            sensitivity: sensitivity,
-            requireEndpoint: requireEndpoint)
-    }
-
-    deinit {
-        self.delete()
-    }
-
-    /// Stops recording and releases Rhino resources
-    public func delete() {
-        if self.started {
-            self.stop = true
-        }
-
-        if self.rhino != nil {
-            self.rhino!.delete()
-            self.rhino = nil
-        }
-    }
-
-    /// Start recording audio from the microphone and infers the user's intent
-    /// from the spoken command. Once the inference is finalized it will invoke the user
-    /// provided callback and terminates recording audio.
-    ///
-    /// - Throws: AVAudioSession, AVAudioEngine errors. Additionally RhinoManagerError if
-    ///           microphone permission is not granted or Rhino has been disposed.
-    public func process() throws {
-        if self.started {
-            return
-        }
-
-        if rhino == nil {
-            throw RhinoManagerError.objectDisposed
-        }
-
-        // Only check if it's denied, permission will be automatically asked.
-        guard try VoiceProcessor.shared.hasPermissions() else {
-            throw RhinoManagerError.recordingDenied
-        }
-
-        let dispatchQueue = DispatchQueue(label: "RhinoManagerWatcher", qos: .background)
-        dispatchQueue.async {
-            while !self.stop {
-                usleep(10000)
-            }
-            VoiceProcessor.shared.stop()
-
-            self.started = false
-            self.stop = false
-        }
-
-        try VoiceProcessor.shared.start(
-            frameLength: Rhino.frameLength,
-            sampleRate: Rhino.sampleRate,
-            audioCallback: self.audioCallback
-        )
-
-        self.started = true
-    }
-
-    /// Callback to run after after voice processor processes frames.
-    private func audioCallback(pcm: [Int16]) {
-        guard self.rhino != nil else {
-            return
+    func startListening() {
+        self.result = ""
+        if self.rhinoManager == nil {
+            initRhino()
         }
 
         do {
-            let isFinalized: Bool = try self.rhino!.process(pcm: pcm)
-            if isFinalized {
-                let inference: Inference = try self.rhino!.getInference()
-                self.onInferenceCallback?(inference)
-                self.stop = true
+            if self.rhinoManager != nil {
+                try self.rhinoManager.process()
+                self.buttonLabel = "    ...    "
             }
         } catch {
-            if self.processErrorCallback != nil {
-                self.processErrorCallback!(error)
-            } else {
-                print("\(error)")
-            }
+            errorMessage = "\(error)"
         }
+    }
+
+    var body: some View {
+        NavigationView {
+            VStack {
+                Spacer()
+                Spacer()
+                Text("\(result)")
+                    .foregroundColor(Color.black)
+                    .padding()
+
+                Text(errorMessage)
+                    .padding()
+                    .background(Color.red)
+                    .foregroundColor(Color.white)
+                    .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width - 50)
+                    .font(.body)
+                    .opacity(errorMessage.isEmpty ? 0 : 1)
+                    .cornerRadius(.infinity)
+                Spacer()
+                Button {
+                    if self.buttonLabel == "START" {
+                        guard VoiceProcessor.hasRecordAudioPermission else {
+                            VoiceProcessor.requestRecordAudioPermission { isGranted in
+                                guard isGranted else {
+                                    DispatchQueue.main.async {
+                                        self.errorMessage = "Demo requires microphone permission"
+                                    }
+                                    return
+                                }
+
+                                DispatchQueue.main.async {
+                                    self.startListening()
+                                }
+                            }
+                            return
+                        }
+
+                        startListening()
+                    } else {
+                        self.buttonLabel = "START"
+                    }
+                } label: {
+                    Text("\(buttonLabel)")
+                        .padding()
+                        .background(errorMessage.isEmpty ? Color.blue: Color.gray)
+                        .foregroundColor(Color.white)
+                        .font(.largeTitle)
+
+                }.disabled(!errorMessage.isEmpty)
+            }
+            .padding()
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+            .background(Color.white)
+            .navigationBarItems(trailing: Button("Context Info") {
+                if self.rhinoManager == nil {
+                    initRhino()
+                }
+                if self.rhinoManager != nil {
+                    self.showInfo = true
+                }
+            })
+        }
+        .sheet(isPresented: self.$showInfo) {
+            SheetView(contextInfo: self.$contextInfo)
+        }
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
