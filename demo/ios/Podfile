@@ -1,6 +1,6 @@
 source 'https://cdn.cocoapods.org/'
 platform :ios, '11.0'
 
-target 'RhinoDemo' do    
-    pod 'Rhino-iOS', '~> 2.2.1'
+target 'RhinoDemo' do
+    pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/ios-vp-update/binding/ios/Rhino-iOS.podspec'
 end
