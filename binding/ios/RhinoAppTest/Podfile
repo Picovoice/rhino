@@ -2,13 +2,13 @@ source 'https://cdn.cocoapods.org/'
 platform :ios, '11.0'
 
 target 'RhinoAppTest' do
-  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/ios-vp-update/binding/ios/Rhino-iOS.podspec'
+  pod 'Rhino-iOS', '~> 2.2.2'
 end
 
 target 'RhinoAppTestUITests' do
-  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/ios-vp-update/binding/ios/Rhino-iOS.podspec'
+  pod 'Rhino-iOS', '~> 2.2.2'
 end
 
 target 'PerformanceTest' do
-  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/ios-vp-update/binding/ios/Rhino-iOS.podspec'
+  pod 'Rhino-iOS', '~> 2.2.2'
 end

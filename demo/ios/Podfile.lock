@@ -4,20 +4,17 @@ PODS:
     - ios-voice-processor (~> 1.1.0)
 
 DEPENDENCIES:
-  - Rhino-iOS (from `https://raw.githubusercontent.com/Picovoice/rhino/ios-vp-update/binding/ios/Rhino-iOS.podspec`)
+  - Rhino-iOS (~> 2.2.2)
 
 SPEC REPOS:
   trunk:
     - ios-voice-processor
-
-EXTERNAL SOURCES:
-  Rhino-iOS:
-    :podspec: https://raw.githubusercontent.com/Picovoice/rhino/ios-vp-update/binding/ios/Rhino-iOS.podspec
+    - Rhino-iOS
 
 SPEC CHECKSUMS:
   ios-voice-processor: 8e32d7f980a06d392d128ef1cd19cf6ddcaca3c1
   Rhino-iOS: 0fad86b28d35f67ccb6bd0a2efbbcc0d88b05124
 
-PODFILE CHECKSUM: 70cbdc428f2e92ed8d2c4d15b658e1a8e75e5cb8
+PODFILE CHECKSUM: 51a859aec88810117dab1a555c9742561c3aa12d
 
 COCOAPODS: 1.11.3
