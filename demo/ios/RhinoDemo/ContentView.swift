@@ -8,6 +8,8 @@
 //
 
 import SwiftUI
+
+import ios_voice_processor
 import Rhino
 
 struct SheetView: View {
@@ -72,6 +74,11 @@ struct ContentView: View {
 
                         self.buttonLabel = "START"
                     }
+                },
+                processErrorCallback: { error in
+                    DispatchQueue.main.async {
+                        errorMessage = "\(error)"
+                    }
                 })
             self.contextInfo = self.rhinoManager.contextInfo
         } catch let error as RhinoInvalidArgumentError {
@@ -85,6 +92,22 @@ struct ContentView: View {
             errorMessage = "ACCESS_KEY reached its limit"
         } catch is RhinoActivationThrottledError {
             errorMessage = "ACCESS_KEY is throttled"
+        } catch {
+            errorMessage = "\(error)"
+        }
+    }
+
+    func startListening() {
+        self.result = ""
+        if self.rhinoManager == nil {
+            initRhino()
+        }
+
+        do {
+            if self.rhinoManager != nil {
+                try self.rhinoManager.process()
+                self.buttonLabel = "    ...    "
+            }
         } catch {
             errorMessage = "\(error)"
         }
@@ -110,20 +133,23 @@ struct ContentView: View {
                 Spacer()
                 Button {
                     if self.buttonLabel == "START" {
-                        self.result = ""
-                        if self.rhinoManager == nil {
-                            initRhino()
-                        }
+                        guard VoiceProcessor.hasRecordAudioPermission else {
+                            VoiceProcessor.requestRecordAudioPermission { isGranted in
+                                guard isGranted else {
+                                    DispatchQueue.main.async {
+                                        self.errorMessage = "Demo requires microphone permission"
+                                    }
+                                    return
+                                }
 
-                        do {
-                            if self.rhinoManager != nil {
-                                try self.rhinoManager.process()
-                                self.buttonLabel = "    ...    "
+                                DispatchQueue.main.async {
+                                    self.startListening()
+                                }
                             }
-                        } catch {
-                            errorMessage = "\(error)"
+                            return
                         }
 
+                        startListening()
                     } else {
                         self.buttonLabel = "START"
                     }

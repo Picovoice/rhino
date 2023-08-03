@@ -9,21 +9,17 @@
 
 import ios_voice_processor
 
-public enum RhinoManagerError: Error {
-    case recordingDenied
-    case objectDisposed
-}
-
 /// High-level iOS binding for Rhino Speech-to-Intent engine. It handles recording
 /// audio from microphone, processes it in real-time using Rhino, and notifies the client
 /// when an intent is inferred from the spoken command.
 public class RhinoManager {
-    private var onInferenceCallback: ((Inference) -> Void)?
-    private var processErrorCallback: ((Error) -> Void)?
+
     private var rhino: Rhino?
 
-    private var started = false
-    private var stop = false
+    private var frameListener: VoiceProcessorFrameListener?
+    private var errorListener: VoiceProcessorErrorListener?
+
+    private var isListening = false
 
     public var contextInfo: String {
         get {
@@ -53,7 +49,7 @@ public class RhinoManager {
     ///   - onInferenceCallback: It is invoked upon completion of intent inference.
     ///   - processErrorCallback: Invoked if an error occurs while processing frames.
     ///   If missing, error will be printed to console.
-    /// - Throws: RhinoManagerError
+    /// - Throws: RhinoError
     public init(
         accessKey: String,
         contextPath: String,
@@ -63,8 +59,35 @@ public class RhinoManager {
         requireEndpoint: Bool = true,
         onInferenceCallback: ((Inference) -> Void)?,
         processErrorCallback: ((Error) -> Void)? = nil) throws {
-        self.onInferenceCallback = onInferenceCallback
-        self.processErrorCallback = processErrorCallback
+        self.errorListener = VoiceProcessorErrorListener({ error in
+            guard let callback = processErrorCallback else {
+                print("\(error.errorDescription)")
+                return
+            }
+            callback(RhinoError(error.errorDescription))
+        })
+
+        self.frameListener = VoiceProcessorFrameListener({ frame in
+            guard let rhino = self.rhino else {
+                return
+            }
+
+            do {
+                let isFinalized: Bool = try rhino.process(pcm: frame)
+                if isFinalized {
+                    let inference: Inference = try rhino.getInference()
+                    onInferenceCallback?(inference)
+                    try self.stop()
+                }
+            } catch {
+                guard let callback = processErrorCallback else {
+                    print("\(error)")
+                    return
+                }
+                callback(error)
+            }
+        })
+
         self.rhino = try Rhino(
             accessKey: accessKey,
             contextPath: contextPath,
@@ -74,13 +97,18 @@ public class RhinoManager {
     }
 
     deinit {
-        self.delete()
+        if self.rhino != nil {
+            self.rhino!.delete()
+            self.rhino = nil
+        }
     }
 
     /// Stops recording and releases Rhino resources
-    public func delete() {
-        if self.started {
-            self.stop = true
+    ///
+    /// - Throws: RhinoError if there was an error stopping RhinoManager
+    public func delete() throws {
+        if isListening {
+            try stop()
         }
 
         if self.rhino != nil {
@@ -93,61 +121,45 @@ public class RhinoManager {
     /// from the spoken command. Once the inference is finalized it will invoke the user
     /// provided callback and terminates recording audio.
     ///
-    /// - Throws: AVAudioSession, AVAudioEngine errors. Additionally RhinoManagerError if
-    ///           microphone permission is not granted or Rhino has been disposed.
+    /// - Throws: RhinoError if there was an error starting RhinoManager
     public func process() throws {
-        if self.started {
+        guard !isListening else {
             return
         }
 
         if rhino == nil {
-            throw RhinoManagerError.objectDisposed
+            throw RhinoInvalidStateError("Rhino has been deleted.")
         }
 
-        // Only check if it's denied, permission will be automatically asked.
-        guard try VoiceProcessor.shared.hasPermissions() else {
-            throw RhinoManagerError.recordingDenied
+        VoiceProcessor.instance.addErrorListener(errorListener!)
+        VoiceProcessor.instance.addFrameListener(frameListener!)
+
+        do {
+            try VoiceProcessor.instance.start(
+                    frameLength: Rhino.frameLength,
+                    sampleRate: Rhino.sampleRate
+            )
+        } catch {
+            throw RhinoError(error.localizedDescription)
         }
-
-        let dispatchQueue = DispatchQueue(label: "RhinoManagerWatcher", qos: .background)
-        dispatchQueue.async {
-            while !self.stop {
-                usleep(10000)
-            }
-            VoiceProcessor.shared.stop()
-
-            self.started = false
-            self.stop = false
-        }
-
-        try VoiceProcessor.shared.start(
-            frameLength: Rhino.frameLength,
-            sampleRate: Rhino.sampleRate,
-            audioCallback: self.audioCallback
-        )
-
-        self.started = true
+        isListening = true
     }
 
-    /// Callback to run after after voice processor processes frames.
-    private func audioCallback(pcm: [Int16]) {
-        guard self.rhino != nil else {
+    private func stop() throws {
+        guard isListening else {
             return
         }
 
-        do {
-            let isFinalized: Bool = try self.rhino!.process(pcm: pcm)
-            if isFinalized {
-                let inference: Inference = try self.rhino!.getInference()
-                self.onInferenceCallback?(inference)
-                self.stop = true
-            }
-        } catch {
-            if self.processErrorCallback != nil {
-                self.processErrorCallback!(error)
-            } else {
-                print("\(error)")
+        VoiceProcessor.instance.removeErrorListener(errorListener!)
+        VoiceProcessor.instance.removeFrameListener(frameListener!)
+
+        if VoiceProcessor.instance.numFrameListeners == 0 {
+            do {
+                try VoiceProcessor.instance.stop()
+            } catch {
+                throw RhinoError(error.localizedDescription)
             }
         }
+        isListening = false
     }
 }
