@@ -23,7 +23,7 @@ Rhino is:
 
 ## Compatibility
 
-[Rhino unity package](./rhino-2.2.1.unitypackage) is for running Rhino on **Unity 2017.4+** on the following platforms:
+[Rhino unity package](./rhino-2.2.2.unitypackage) is for running Rhino on **Unity 2017.4+** on the following platforms:
 
 - Android 4.4+ (API 19+) (ARM only)
 - iOS 9.0+
@@ -31,11 +31,11 @@ Rhino is:
 - macOS (x86_64)
 - Linux (x86_64)
 
-For running Rhino on **macOS m1 (arm64)**, use the [Apple silicon](./rhino-2.2.1-Apple-silicon.unitypackage) version on **Unity 2021.2+**.
+For running Rhino on **macOS m1 (arm64)**, use the [Apple silicon](./rhino-2.2.2-Apple-silicon.unitypackage) version on **Unity 2021.2+**.
 
 ## Installation
 
-The easiest way to install the Rhino Unity SDK is to import the [Rhino Unity Package](./rhino-2.2.1.unitypackage) into your Unity project by either dropping it into the Unity editor or going to _Assets>Import Package>Custom Package..._
+The easiest way to install the Rhino Unity SDK is to import the [Rhino Unity Package](./rhino-2.2.2.unitypackage) into your Unity project by either dropping it into the Unity editor or going to _Assets>Import Package>Custom Package..._
 
 **NOTE:** On macOS, the Rhino library may get flagged as having come from an unverified source if you've downloaded the  `.unitypackage` directly from github. This should only come up when running your project in the Editor. To disable this warning, go to Security & Preferences and choose to allow pv_rhino.dylib to run.
 
