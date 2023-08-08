@@ -138,7 +138,7 @@ class RhinoManager {
     _isListening = false;
   }
 
-  /// Starts audio recording and processing with the Rhino egine until a
+  /// Starts audio recording and processing with the Rhino engine until a
   /// inference result is sent via the `inferenceCallback`
   /// Throws a `RhinoException` if there was a problem starting audio recording.
   Future<void> process() async {
