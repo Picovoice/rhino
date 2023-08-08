@@ -20,6 +20,13 @@ cp ../../lib/windows/amd64/libpv_rhino.dll ./Assets/Rhino/Plugins/windows/amd64/
 echo "Copying Rhino common lib..."
 cp ../../lib/common/rhino_params.pv ./Assets/StreamingAssets/rhino_params.pv
 
+echo "Copying Voice Processor files..."
+if [ ! -d "./Assets/Rhino/VoiceProcessor" ]
+then
+    mkdir -p ./Assets/Rhino/VoiceProcessor
+fi
+cp -rp VoiceProcessor/Assets/UnityVoiceProcessor/*.cs ./Assets/Rhino/VoiceProcessor
+
 echo "Copying demo files..."
 if [ ! -d "./Assets/Rhino/Demo" ]
 then
