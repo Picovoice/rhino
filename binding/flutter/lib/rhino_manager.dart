@@ -23,14 +23,13 @@ typedef InferenceCallback = Function(RhinoInference inference);
 typedef ProcessErrorCallback = Function(RhinoException error);
 
 class RhinoManager {
-  final VoiceProcessor? _voiceProcessor;
+  VoiceProcessor? _voiceProcessor;
   Rhino? _rhino;
 
-  final InferenceCallback _inferenceCallback;
-  RemoveListener? _removeVoiceProcessorListener;
-  RemoveListener? _removeErrorListener;
+  late VoiceProcessorFrameListener _frameListener;
+  late VoiceProcessorErrorListener _errorListener;
 
-  bool _awaitingStop = false;
+  bool _isListening;
 
   /// Rhino version string
   String? get version => _rhino?.version;
@@ -91,88 +90,89 @@ class RhinoManager {
   }
 
   // private constructor
-  RhinoManager._(this._rhino, this._inferenceCallback,
+  RhinoManager._(this._rhino, InferenceCallback inferenceCallback,
       ProcessErrorCallback? processErrorCallback)
-      : _voiceProcessor = VoiceProcessor.getVoiceProcessor(
-            _rhino!.frameLength, _rhino.sampleRate) {
-    if (_voiceProcessor == null) {
-      throw RhinoRuntimeException("flutter_voice_processor not available.");
-    }
-    _removeVoiceProcessorListener =
-        _voiceProcessor!.addListener((buffer) async {
-      if (_awaitingStop) {
+      : _voiceProcessor = VoiceProcessor.instance,
+        _isListening = false {
+    _frameListener = (List<int> frame) async {
+      if (!_isListening) {
         return;
       }
 
-      // cast from dynamic to int array
-      List<int> rhinoFrame;
       try {
-        rhinoFrame = (buffer as List<dynamic>).cast<int>();
-      } on Error {
-        RhinoException castError = RhinoException(
-            "flutter_voice_processor sent an unexpected data type.");
-        processErrorCallback == null
-            ? print(castError.message)
-            : processErrorCallback(castError);
-        return;
-      }
-
-      // process frame with Rhino
-      try {
-        RhinoInference? rhinoResult = await _rhino?.process(rhinoFrame);
+        RhinoInference? rhinoResult = await _rhino?.process(frame);
         if ((rhinoResult != null) && (rhinoResult.isFinalized)) {
-          _awaitingStop = true;
-
-          _inferenceCallback(rhinoResult);
-          // stop audio processing
-          await _voiceProcessor?.stop();
+          inferenceCallback(rhinoResult);
+          await _stop();
         }
       } on RhinoException catch (error) {
         processErrorCallback == null
-            ? print(error.message)
+            ? print("RhinoException: ${error.message}")
             : processErrorCallback(error);
-      } finally {
-        _awaitingStop = false;
       }
-    });
-
-    _removeErrorListener = _voiceProcessor!.addErrorListener((errorMsg) {
-      RhinoException nativeError = RhinoException(errorMsg as String);
+    };
+    _errorListener = (VoiceProcessorException error) {
       processErrorCallback == null
-          ? print(nativeError.message)
-          : processErrorCallback(nativeError);
-    });
+          ? print("RhinoException: ${error.message}")
+          : processErrorCallback(RhinoException(error.message));
+    };
   }
 
-  /// Opens audio input stream and sends audio frames to Rhino until a inference
-  /// result is sent via inference callback
-  /// Throws a `RhinoException` if there was a problem starting the audio engine
+  Future<void> _stop() async {
+    if (!_isListening) {
+      return;
+    }
+
+    _voiceProcessor?.removeErrorListener(_errorListener);
+    _voiceProcessor?.removeFrameListener(_frameListener);
+
+    if (_voiceProcessor?.numFrameListeners == 0) {
+      try {
+        await _voiceProcessor?.stop();
+      } on PlatformException catch (e) {
+        throw RhinoRuntimeException(
+            "Failed to stop audio recording: ${e.message}");
+      }
+    }
+
+    _isListening = false;
+  }
+
+  /// Starts audio recording and processing with the Rhino egine until a
+  /// inference result is sent via the `inferenceCallback`
+  /// Throws a `RhinoException` if there was a problem starting audio recording.
   Future<void> process() async {
+    if (_isListening) {
+      return;
+    }
     if (_rhino == null || _voiceProcessor == null) {
       throw RhinoInvalidStateException(
           "Cannot start Rhino - resources have already been released");
     }
 
     if (await _voiceProcessor?.hasRecordAudioPermission() ?? false) {
+      _voiceProcessor?.addFrameListener(_frameListener);
+      _voiceProcessor?.addErrorListener(_errorListener);
       try {
-        await _voiceProcessor!.start();
-      } on PlatformException {
+        await _voiceProcessor?.start(_rhino!.frameLength, _rhino!.sampleRate);
+      } on PlatformException catch (e) {
         throw RhinoRuntimeException(
-            "Audio engine failed to start. Hardware may not be supported.");
+            "Failed to start audio recording: ${e.message}");
       }
     } else {
       throw RhinoRuntimeException(
           "User did not give permission to record audio.");
     }
+
+    _isListening = true;
   }
 
-  /// Releases Rhino and audio resources
+  /// Releases Rhino and audio resources.
+  /// Throws a `RhinoException` if there was a problem stopping audio recording.
   Future<void> delete() async {
-    if (_voiceProcessor?.isRecording ?? false) {
-      await _voiceProcessor!.stop();
-    }
-    _removeVoiceProcessorListener?.call();
-    _removeErrorListener?.call();
+    await _stop();
+    _voiceProcessor = null;
+
     _rhino?.delete();
     _rhino = null;
   }
