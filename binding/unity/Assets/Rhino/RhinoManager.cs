@@ -87,7 +87,8 @@ namespace Pv.Unity
                         _inferenceCallback.Invoke(inference);
 
                     VoiceProcessor.Instance.RemoveFrameListener(OnFrameCaptured);
-                    if (VoiceProcessor.Instance.NumFrameListeners == 0) {
+                    if (VoiceProcessor.Instance.NumFrameListeners == 0)
+                    {
                         VoiceProcessor.Instance.StopRecording();
                     }
                 }
@@ -137,7 +138,8 @@ namespace Pv.Unity
             if (_rhino != null)
             {
                 VoiceProcessor.Instance.RemoveFrameListener(OnFrameCaptured);
-                if (VoiceProcessor.Instance.NumFrameListeners == 0) {
+                if (VoiceProcessor.Instance.NumFrameListeners == 0)
+                {
                     VoiceProcessor.Instance.StopRecording();
                 }
 
