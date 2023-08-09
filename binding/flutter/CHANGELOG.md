@@ -41,5 +41,5 @@
 ## [2.2.1] - 2023-06-01
 * Expose Rhino properties through RhinoManager class
 
-## [2.2.2] - 2023-08-08
+## [2.2.2] - 2023-08-09
 * Update flutter-voice-processor
