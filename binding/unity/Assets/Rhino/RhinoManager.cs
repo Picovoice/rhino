@@ -19,7 +19,6 @@ namespace Pv.Unity
 
     public class RhinoManager
     {
-        private VoiceProcessor _voiceProcessor;
         private Rhino _rhino;
         private Action<Inference> _inferenceCallback;
         private Action<RhinoException> _processErrorCallback;
@@ -69,26 +68,29 @@ namespace Pv.Unity
             _inferenceCallback = inferenceCallback;
             _processErrorCallback = processErrorCallback;
 
-            _voiceProcessor = VoiceProcessor.Instance;
-            _voiceProcessor.OnFrameCaptured += OnFrameCaptured;
+            VoiceProcessor.Instance.AddFrameListener(OnFrameCaptured);
         }
 
         /// <summary>
         /// Action to catch audio frames as voice processor produces them
         /// </summary>
-        /// <param name="pcm">Frame of pcm audio</param>
-        private void OnFrameCaptured(short[] pcm)
+        /// <param name="frame">Frame of audio</param>
+        private void OnFrameCaptured(short[] frame)
         {
             try
             {
-                bool _isFinalized = _rhino.Process(pcm);
+                bool _isFinalized = _rhino.Process(frame);
                 if (_isFinalized)
                 {
                     Inference inference = _rhino.GetInference();
                     if (_inferenceCallback != null)
                         _inferenceCallback.Invoke(inference);
 
-                    _voiceProcessor.StopRecording();
+                    VoiceProcessor.Instance.RemoveFrameListener(OnFrameCaptured);
+                    if (VoiceProcessor.Instance.NumFrameListeners == 0)
+                    {
+                        VoiceProcessor.Instance.StopRecording();
+                    }
                 }
             }
             catch (RhinoException ex)
@@ -104,7 +106,7 @@ namespace Pv.Unity
         /// Checks to see whether RhinoManager is capturing audio or not
         /// </summary>
         /// <returns>whether RhinoManager  is capturing audio or not</returns>
-        public bool IsRecording => _voiceProcessor.IsRecording;
+        public bool IsRecording => VoiceProcessor.Instance.IsRecording;
 
         /// <summary>
         /// Checks to see whether there are any audio capture devices available
@@ -112,8 +114,8 @@ namespace Pv.Unity
         /// <returns>whether there are any audio capture devices available</returns>
         public bool IsAudioDeviceAvailable()
         {
-            _voiceProcessor.UpdateDevices();
-            return _voiceProcessor.CurrentDeviceIndex >= 0;
+            VoiceProcessor.Instance.UpdateDevices();
+            return VoiceProcessor.Instance.CurrentDeviceIndex >= 0;
         }
 
         /// <summary>
@@ -121,11 +123,11 @@ namespace Pv.Unity
         /// </summary>
         public void Process()
         {
-            if (_rhino == null || _voiceProcessor == null)
+            if (_rhino == null)
             {
                 throw new RhinoInvalidStateException("Cannot start RhinoManager - resources have already been released");
             }
-            _voiceProcessor.StartRecording(_rhino.SampleRate, _rhino.FrameLength);
+            VoiceProcessor.Instance.StartRecording(_rhino.FrameLength, _rhino.SampleRate);
         }
 
         /// <summary>
@@ -133,19 +135,14 @@ namespace Pv.Unity
         /// </summary>
         public void Delete()
         {
-            if (_voiceProcessor != null)
-            {
-                if (_voiceProcessor.IsRecording)
-                {
-                    _voiceProcessor.StopRecording();
-                }
-
-                _voiceProcessor.OnFrameCaptured -= OnFrameCaptured;
-                _voiceProcessor = null;
-            }
-
             if (_rhino != null)
             {
+                VoiceProcessor.Instance.RemoveFrameListener(OnFrameCaptured);
+                if (VoiceProcessor.Instance.NumFrameListeners == 0)
+                {
+                    VoiceProcessor.Instance.StopRecording();
+                }
+
                 _rhino.Dispose();
                 _rhino = null;
             }
