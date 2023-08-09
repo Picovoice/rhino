@@ -133,7 +133,8 @@ namespace Pv.Unity
         /// Free resources that were allocated to Rhino and the voice processor
         /// </summary>
         public void Delete()
-        {if (_rhino != null)
+        {
+            if (_rhino != null)
             {
                 VoiceProcessor.Instance.RemoveFrameListener(OnFrameCaptured);
                 if (VoiceProcessor.Instance.NumFrameListeners == 0) {
