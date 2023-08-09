@@ -86,7 +86,10 @@ namespace Pv.Unity
                     if (_inferenceCallback != null)
                         _inferenceCallback.Invoke(inference);
 
-                    VoiceProcessor.Instance.StopRecording();
+                    VoiceProcessor.Instance.RemoveFrameListener(OnFrameCaptured);
+                    if (VoiceProcessor.Instance.NumFrameListeners == 0) {
+                        VoiceProcessor.Instance.StopRecording();
+                    }
                 }
             }
             catch (RhinoException ex)
@@ -130,15 +133,13 @@ namespace Pv.Unity
         /// Free resources that were allocated to Rhino and the voice processor
         /// </summary>
         public void Delete()
-        {
-            VoiceProcessor.Instance.RemoveFrameListener(OnFrameCaptured);
-            if (VoiceProcessor.Instance.IsRecording)
+        {if (_rhino != null)
             {
-                VoiceProcessor.Instance.StopRecording();
-            }
+                VoiceProcessor.Instance.RemoveFrameListener(OnFrameCaptured);
+                if (VoiceProcessor.Instance.NumFrameListeners == 0) {
+                    VoiceProcessor.Instance.StopRecording();
+                }
 
-            if (_rhino != null)
-            {
                 _rhino.Dispose();
                 _rhino = null;
             }
