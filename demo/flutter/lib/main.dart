@@ -154,10 +154,7 @@ class _MyAppState extends State<MyApp> {
         rhinoText = "Listening...";
       });
     } on RhinoException catch (ex) {
-      print("Failed to start audio capture: ${ex.message}");
-      setState(() {
-        isButtonDisabled = false;
-      });
+      errorCallback(ex);
     }
   }
 
@@ -223,7 +220,7 @@ class _MyAppState extends State<MyApp> {
                     margin: EdgeInsets.only(right: 10, top: 10),
                     child: ElevatedButton(
                       style: buttonStyle,
-                      onPressed: (isButtonDisabled || isError)
+                      onPressed: (isProcessing || isButtonDisabled || isError)
                           ? null
                           : () {
                               _showContextInfo(context);
@@ -249,8 +246,9 @@ class _MyAppState extends State<MyApp> {
               height: 130,
               child: ElevatedButton(
                 style: buttonStyle,
-                onPressed:
-                    (isButtonDisabled || isError) ? null : _startProcessing,
+                onPressed: (isProcessing || isButtonDisabled || isError)
+                    ? null
+                    : _startProcessing,
                 child: Text(isProcessing ? "..." : "Start",
                     style: TextStyle(fontSize: 30)),
               ))),
