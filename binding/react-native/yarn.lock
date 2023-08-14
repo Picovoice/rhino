@@ -1415,10 +1415,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@picovoice/react-native-voice-processor@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/react-native-voice-processor/-/react-native-voice-processor-1.1.0.tgz#fe469f990c3b031411b585f28fc80fc0a9b9de41"
-  integrity sha512-TzIYL/34VbYhIcKH/LbivZwRpxUiKr4+XW5Gcp8vFdZKGP431SP4Lob2hLhSIu+E/yo1z4xwCELCznMpHyWNhg==
+"@picovoice/react-native-voice-processor@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/react-native-voice-processor/-/react-native-voice-processor-1.2.0.tgz#82a98b41d9236ababe330dae873062ee0e1b24c3"
+  integrity sha512-zolTEo3qsqeUwY7JRslV/yhiA+oBrkeogOTxjHIEJ//yEsr7YKlI1PcqTbU5/xjmUiukh62gmwTXhosnQYdasQ==
 
 "@react-native-community/cli-debugger-ui@^7.0.3":
   version "7.0.3"

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   Modal,
-  PermissionsAndroid,
   Platform,
   TouchableOpacity,
   ScrollView,
@@ -55,7 +54,6 @@ export default class App extends Component<Props, State> {
       modelPath = `models/rhino_params_${language}.pv`;
     }
 
-    // load context
     try {
       this._rhinoManager = await RhinoManager.create(
         this._accessKey,
@@ -130,51 +128,19 @@ export default class App extends Component<Props, State> {
       buttonDisabled: true,
     });
 
-    let recordAudioRequest;
-    if (Platform.OS === 'android') {
-      recordAudioRequest = this._requestRecordAudioPermission();
-    } else {
-      recordAudioRequest = new Promise(function (resolve, _) {
-        resolve(true);
-      });
-    }
-
-    recordAudioRequest.then((hasPermission) => {
-      if (!hasPermission) {
-        console.error('Required microphone permission was not granted.');
-        return;
-      }
-
-      this._rhinoManager.process().then((didStart) => {
-        if (didStart) {
-          this.setState({
-            buttonText: '...',
-            rhinoText: '',
-            buttonDisabled: false,
-            isListening: true,
-          });
-        }
-      });
-    });
-  }
-
-  async _requestRecordAudioPermission() {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        {
-          title: 'Microphone Permission',
-          message:
-            'Rhino needs access to your microphone to make intent inferences.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      return granted === PermissionsAndroid.RESULTS.GRANTED;
-    } catch (err) {
-      this.errorCallback(err.toString());
-      return false;
+      await this._rhinoManager?.process();
+      this.setState({
+        buttonText: '...',
+        rhinoText: '',
+        buttonDisabled: false,
+        isListening: true,
+      });
+    } catch (e: any) {
+      this.setState({
+        isError: true,
+        errorMessage: e.message,
+      });
     }
   }
 
