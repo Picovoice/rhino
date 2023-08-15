@@ -11,7 +11,7 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.68.7)
   - fmt (6.2.1)
   - glog (0.3.5)
-  - ios-voice-processor (1.0.3)
+  - ios-voice-processor (1.1.0)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -219,7 +219,8 @@ PODS:
   - React-jsinspector (0.68.7)
   - React-logger (0.68.7):
     - glog
-  - react-native-voice-processor (1.1.0):
+  - react-native-voice-processor (1.2.0):
+    - ios-voice-processor (~> 1.1.0)
     - React-Core
   - React-perflogger (0.68.7)
   - React-RCTActionSheet (0.68.7):
@@ -286,11 +287,11 @@ PODS:
     - React-jsi (= 0.68.7)
     - React-logger (= 0.68.7)
     - React-perflogger (= 0.68.7)
-  - Rhino-iOS (2.2.1):
-    - ios-voice-processor (~> 1.0.2)
-  - rhino-react-native (2.2.1):
+  - Rhino-iOS (2.2.2):
+    - ios-voice-processor (~> 1.1.0)
+  - rhino-react-native (2.2.2):
     - React
-    - Rhino-iOS (~> 2.2.0)
+    - Rhino-iOS (~> 2.2.2)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -411,7 +412,7 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 1fa200a9862d9369a53b6fddbbfcdc22bab24062
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 476ee3e89abb49e07f822b48323c51c57124b572
-  ios-voice-processor: 65b25a8db69ea25ffba0eeef37bae71a982f34cc
+  ios-voice-processor: 8e32d7f980a06d392d128ef1cd19cf6ddcaca3c1
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
   RCTRequired: 530916cd48c5f7cf1fc16966ad5ea01638ca4799
   RCTTypeSafety: 5fb4cb3080efd582e5563c3e9a0e459fc51396c5
@@ -425,7 +426,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 7c0bd030a84f2ec446fb104b7735af2f5ed11eea
   React-jsinspector: cab4d37ebde480f84c79ac89568abbf76b916c3e
   React-logger: b75b80500ea80457b2cf169427d66de986cdcb29
-  react-native-voice-processor: 3d396bfd42d11ee270bf292ce7cc935ea62d4cae
+  react-native-voice-processor: aefb0845641c7d67dd47e69606ba7ebb38aab5cd
   React-perflogger: 44436b315d757100a53dfb1ab6b77c58cb646d7d
   React-RCTActionSheet: 1888a229684762c40cc96c7ff4716f809655dc09
   React-RCTAnimation: f05da175751867521d14b02ab4d3994a7b96f131
@@ -438,8 +439,8 @@ SPEC CHECKSUMS:
   React-RCTVibration: 2a4bf853281d4981ab471509102300d3c9e6c693
   React-runtimeexecutor: 18932e685b4893be88d1efc18f5f8ca1c9cd39d8
   ReactCommon: 29bb6fad3242e30e9d049bc9d592736fa3da9e50
-  Rhino-iOS: c6671667cfda310b8367e7c3611f247cb256f10e
-  rhino-react-native: 98888f215b2107011c97bd5a9395aa930bb61bb7
+  Rhino-iOS: 0fad86b28d35f67ccb6bd0a2efbbcc0d88b05124
+  rhino-react-native: b097ae57f636a07f72cd80b5079557ee09721792
   Yoga: 0bc4b37c3b8a345336ff601e2cf7d9704bab7e93
 
 PODFILE CHECKSUM: 1bbfabf6f1c66bdf4ed7e43ff0bea37f3ae08498

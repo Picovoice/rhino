@@ -16,5 +16,5 @@ Pod::Spec.new do |s|
   s.source_files = "ios/*.{h,m,mm,swift}"
 
   s.dependency "React"
-  s.dependency 'Rhino-iOS', '~> 2.2.0'
+  s.dependency 'Rhino-iOS', '~> 2.2.2'
 end

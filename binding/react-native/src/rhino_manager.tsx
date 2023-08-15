@@ -11,9 +11,10 @@
 
 import {
   VoiceProcessor,
-  BufferEmitter,
+  VoiceProcessorError,
+  VoiceProcessorErrorListener,
+  VoiceProcessorFrameListener,
 } from '@picovoice/react-native-voice-processor';
-import { EventSubscription, NativeEventEmitter } from 'react-native';
 
 import Rhino, { RhinoInference } from './rhino';
 import * as RhinoErrors from './rhino_errors';
@@ -23,12 +24,11 @@ export type ProcessErrorCallback = (error: RhinoErrors.RhinoError) => void;
 
 class RhinoManager {
   private _voiceProcessor: VoiceProcessor;
+  private readonly _errorListener: VoiceProcessorErrorListener;
+  private readonly _frameListener: VoiceProcessorFrameListener;
   private _rhino: Rhino | null;
-  private readonly _inferenceCallback: InferenceCallback;
-  private readonly _processErrorCallback?: ProcessErrorCallback;
-  private _bufferListener?: EventSubscription;
-  private _bufferEmitter: NativeEventEmitter;
-  private _needsReset: boolean;
+
+  private _isListening: boolean = false;
 
   /**
    * Creates an instance of the Rhino Manager.
@@ -75,75 +75,108 @@ class RhinoManager {
     inferenceCallback: InferenceCallback,
     processErrorCallback?: ProcessErrorCallback
   ) {
-    this._inferenceCallback = inferenceCallback;
-    this._processErrorCallback = processErrorCallback;
     this._rhino = rhino;
-    this._voiceProcessor = VoiceProcessor.getVoiceProcessor(
-      rhino.frameLength,
-      rhino.sampleRate
-    );
-    this._bufferEmitter = new NativeEventEmitter(BufferEmitter);
-    this._needsReset = false;
-
-    if (typeof inferenceCallback !== 'function') {
-      throw new RhinoErrors.RhinoInvalidArgumentError(
-        "'inferenceCallback' must be a function type"
-      );
-    }
-
-    // function that's executed every time an audio buffer is received
-    const processBuffer = async (buffer: number[]) => {
+    this._voiceProcessor = VoiceProcessor.instance;
+    this._frameListener = async (frame: number[]) => {
+      if (this._rhino === null || !this._isListening) {
+        return;
+      }
       try {
-        if (this._rhino === null) return;
-
-        // don't process if we've already received a result
-        if (this._needsReset) return;
-
-        let inference = await this._rhino.process(buffer);
-
-        // throw out result if we've already received one
-        if (this._needsReset) return;
+        let inference = await this._rhino.process(frame);
 
         if (inference.isFinalized) {
-          // send out result and stop audio
-          this._inferenceCallback(inference);
-          await this._voiceProcessor.stop();
-          this._needsReset = false;
+          inferenceCallback(inference);
+          await this._stop();
         }
       } catch (e) {
-        if (
-          this._processErrorCallback !== undefined &&
-          this._processErrorCallback !== null &&
-          typeof this._processErrorCallback === 'function'
-        ) {
-          this._processErrorCallback(e as RhinoErrors.RhinoError);
+        if (processErrorCallback) {
+          processErrorCallback(e as RhinoErrors.RhinoError);
         } else {
           console.error(e);
         }
       }
     };
 
-    this._bufferListener = this._bufferEmitter.addListener(
-      BufferEmitter.BUFFER_EMITTER_KEY,
-      async (buffer: number[]) => {
-        await processBuffer(buffer);
+    this._errorListener = (error: VoiceProcessorError) => {
+      if (processErrorCallback) {
+        processErrorCallback(new RhinoErrors.RhinoError(error.message));
+      } else {
+        console.error(error);
       }
-    );
+    };
+
+    if (typeof inferenceCallback !== 'function') {
+      throw new RhinoErrors.RhinoInvalidArgumentError(
+        "'inferenceCallback' must be a function type"
+      );
+    }
   }
 
   /**
    * Opens audio input stream and sends audio frames to Rhino
    */
-  async process() {
-    return await this._voiceProcessor.start();
+  public async process(): Promise<void> {
+    if (this._isListening) {
+      return;
+    }
+
+    if (this._rhino === null) {
+      throw new RhinoErrors.RhinoInvalidStateError(
+        'Cannot start Rhino - resources have already been released'
+      );
+    }
+
+    if (await this._voiceProcessor.hasRecordAudioPermission()) {
+      this._voiceProcessor.addFrameListener(this._frameListener);
+      this._voiceProcessor.addErrorListener(this._errorListener);
+      try {
+        await this._voiceProcessor.start(
+          this._rhino.frameLength,
+          this._rhino.sampleRate
+        );
+      } catch (e: any) {
+        throw new RhinoErrors.RhinoRuntimeError(
+          `Failed to start audio recording: ${e.message}`
+        );
+      }
+    } else {
+      throw new RhinoErrors.RhinoRuntimeError(
+        'User did not give permission to record audio.'
+      );
+    }
+
+    this._isListening = true;
+  }
+
+  /**
+   * Closes audio stream
+   */
+  private async _stop(): Promise<void> {
+    if (!this._isListening) {
+      return;
+    }
+
+    this._voiceProcessor.removeErrorListener(this._errorListener);
+    this._voiceProcessor.removeFrameListener(this._frameListener);
+
+    if (this._voiceProcessor.numFrameListeners === 0) {
+      try {
+        await this._voiceProcessor.stop();
+      } catch (e: any) {
+        throw new RhinoErrors.RhinoRuntimeError(
+          `Failed to stop audio recording: ${e.message}`
+        );
+      }
+    }
+
+    this._isListening = false;
   }
 
   /**
    * Releases resources and listeners
    */
   delete() {
-    this._bufferListener?.remove();
-    if (this._rhino != null) {
+    if (this._rhino !== null) {
       this._rhino.delete();
       this._rhino = null;
     }
