@@ -73,10 +73,10 @@ jobs:
         --token ${{secrets.APPCENTERAPITOKEN}}
         --app "Picovoice/Rhino-Android-Activity"
         --devices "Picovoice/android-min-max"
-        --app-path rhino-activity-demo-app/build/outputs/apk/en/debug/rhino-activity-demo-app-en-debug.apk
+        --app-path rhino-test-app/build/outputs/apk/en/debug/rhino-test-app-en-debug.apk
         --test-series "rhino-android"
         --locale "en_US"
-        --build-dir rhino-activity-demo-app/build/outputs/apk/androidTest/en/debug
+        --build-dir rhino-test-app/build/outputs/apk/androidTest/en/debug
 
   build-integ:
     name: Run Android Integration Tests on AppCenter
@@ -122,14 +122,14 @@ jobs:
       run: ./gradlew assembleEnRelease
 
     - name: Build androidTest
-      run: ./gradlew assembleEnDebugAndroidTest -DtestBuildType=integ
+      run: ./gradlew assembleEnReleaseAndroidTest -DtestBuildType=integ
 
     - name: Run tests on AppCenter
       run: appcenter test run espresso
         --token ${{secrets.APPCENTERAPITOKEN}}
         --app "Picovoice/Rhino-Android-Activity"
         --devices "Picovoice/android-min-max"
-        --app-path rhino-activity-demo-app/build/outputs/apk/en/debug/rhino-activity-demo-app-en-debug.apk
+        --app-path rhino-test-app/build/outputs/apk/en/release/rhino-test-app-en-release.apk
         --test-series "rhino-android"
         --locale "en_US"
-        --build-dir rhino-activity-demo-app/build/outputs/apk/androidTest/en/debug
+        --build-dir rhino-test-app/build/outputs/apk/androidTest/en/release

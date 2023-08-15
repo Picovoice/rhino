@@ -84,7 +84,7 @@ jobs:
         --token ${{secrets.APPCENTERAPITOKEN}}
         --app "Picovoice/Rhino-Android-Activity"
         --devices "Picovoice/${{ matrix.device }}"
-        --app-path rhino-activity-demo-app/build/outputs/apk/en/debug/rhino-activity-demo-app-en-debug.apk
+        --app-path rhino-test-app/build/outputs/apk/en/debug/rhino-test-app-en-debug.apk
         --test-series "rhino-android"
         --locale "en_US"
-        --build-dir rhino-activity-demo-app/build/outputs/apk/androidTest/en/debug
+        --build-dir rhino-test-app/build/outputs/apk/androidTest/en/debug
