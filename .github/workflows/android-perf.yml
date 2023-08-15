@@ -6,16 +6,16 @@ on:
     branches: [ master ]
     paths:
       - '.github/workflows/android-perf.yml'
-      - 'demo/android/Activity/**/build.gradle'
+      - 'demo/binding/RhinoTestApp/**/build.gradle'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
       - '.github/workflows/android-perf.yml'
-      - 'demo/android/Activity/**/build.gradle'
+      - 'demo/binding/RhinoTestApp/**/build.gradle'
 
 defaults:
   run:
-    working-directory: demo/android/Activity
+    working-directory: demo/binding/RhinoTestApp
 
 jobs:
   build:
