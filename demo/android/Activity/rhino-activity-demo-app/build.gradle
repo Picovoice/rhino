@@ -2,20 +2,6 @@ import groovy.json.JsonSlurper
 
 apply plugin: 'com.android.application'
 
-Properties properties = new Properties()
-if (rootProject.file("local.properties").exists()) {
-    properties.load(rootProject.file("local.properties").newDataInputStream())
-    if (project.hasProperty("pvTestingAccessKey")) {
-        properties.put("pvTestingAccessKey", project.getProperty("pvTestingAccessKey"))
-    }
-    if (project.hasProperty("numTestIterations")) {
-        properties.put("numTestIterations", project.getProperty("numTestIterations"))
-    }
-    if (project.hasProperty("performanceThresholdSec")) {
-        properties.put("performanceThresholdSec", project.getProperty("performanceThresholdSec"))
-    }
-}
-
 android {
     compileSdkVersion defaultTargetSdkVersion
 
@@ -89,18 +75,6 @@ android {
             }
         }
     }
-    sourceSets {
-        androidTest {
-            java {
-                System.out.println()
-                if (properties.getProperty("performanceThresholdSec", "").length() == 0) {
-                    exclude "**/PerformanceTest.java"
-                } else {
-                    exclude "**/RhinoTest.java"
-                }
-            }
-        }
-    }
     lint {
         abortOnError false
     }
@@ -112,14 +86,6 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.code.gson:gson:2.10'
     implementation 'ai.picovoice:rhino-android:2.2.2'
-
-    // Espresso UI Testing
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
-    androidTestImplementation('com.microsoft.appcenter:espresso-test-extension:1.4')
 }
 
 afterEvaluate {

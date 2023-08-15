@@ -1,6 +1,6 @@
 LIB_DIR=../../../lib
 RESOURCE_DIR=../../../resources
-ASSET_DIR=./rhino-activity-demo-app/src/androidTest/assets/test_resources
+ASSET_DIR=./rhino-test-app/src/androidTest/assets/test_resources
 
 if [ ! -d "${ASSET_DIR}/audio_samples" ]
 then
