@@ -72,6 +72,9 @@ class WaitForTextAction implements ViewAction {
 public class IntegrationTest {
 
     @Rule
+    public ReportHelper reportHelper = Factory.getReportHelper();
+
+    @Rule
     public ActivityScenarioRule<MainActivity> activityScenarioRule =
             new ActivityScenarioRule<>(MainActivity.class);
 
@@ -83,6 +86,11 @@ public class IntegrationTest {
     @After
     public void intentsTeardown() {
         Intents.release();
+    }
+
+    @After
+    public void TearDown() {
+        reportHelper.label("Stopping App");
     }
 
     @Test
