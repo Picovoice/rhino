@@ -93,6 +93,7 @@ pvrecorder
 pvrhino
 pvrhinodemo
 reactnative
+Readables
 Realtek
 Renderless
 repr
@@ -116,6 +117,7 @@ stdlib
 struct
 sublist
 sumāto
+testapp
 testcase
 testcases
 tmpdir

@@ -1,4 +1,4 @@
-package ai.picovoice.rhinodemo;
+package ai.picovoice.rhino.testapp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
