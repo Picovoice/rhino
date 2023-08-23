@@ -64,61 +64,65 @@ namespace RhinoDemo
             bool requireEndpoint)
         {
             // init rhino speech-to-intent engine
-            using Rhino rhino = Rhino.Create(
+            using (Rhino rhino = Rhino.Create(
                 accessKey,
                 contextPath,
                 modelPath,
                 sensitivity,
                 endpointDurationSec,
-                requireEndpoint);
-
-            // open and validate wav file
-            using BinaryReader reader = new BinaryReader(File.Open(inputAudioPath, FileMode.Open));
-            ValidateWavFile(reader, rhino.SampleRate, 16, out short numChannels);
-
-            // read audio and send frames to rhino
-            short[] rhinoFrame = new short[rhino.FrameLength];
-            int frameIndex = 0;
-            while (reader.BaseStream.Position != reader.BaseStream.Length)
+                requireEndpoint))
             {
-                rhinoFrame[frameIndex++] = reader.ReadInt16();
 
-                if (frameIndex == rhinoFrame.Length)
+                // open and validate wav file
+                using (BinaryReader reader = new BinaryReader(File.Open(inputAudioPath, FileMode.Open)))
                 {
-                    bool isFinalized = rhino.Process(rhinoFrame);
-                    if (isFinalized)
+                    ValidateWavFile(reader, rhino.SampleRate, 16, out short numChannels);
+
+                    // read audio and send frames to rhino
+                    short[] rhinoFrame = new short[rhino.FrameLength];
+                    int frameIndex = 0;
+                    while (reader.BaseStream.Position != reader.BaseStream.Length)
                     {
-                        Inference inference = rhino.GetInference();
-                        if (inference.IsUnderstood)
+                        rhinoFrame[frameIndex++] = reader.ReadInt16();
+
+                        if (frameIndex == rhinoFrame.Length)
                         {
-                            Console.WriteLine("{");
-                            Console.WriteLine($"  intent : '{inference.Intent}'");
-                            Console.WriteLine("  slots : {");
-                            foreach (KeyValuePair<string, string> slot in inference.Slots)
+                            bool isFinalized = rhino.Process(rhinoFrame);
+                            if (isFinalized)
                             {
-                                Console.WriteLine($"    {slot.Key} : '{slot.Value}'");
+                                Inference inference = rhino.GetInference();
+                                if (inference.IsUnderstood)
+                                {
+                                    Console.WriteLine("{");
+                                    Console.WriteLine($"  intent : '{inference.Intent}'");
+                                    Console.WriteLine("  slots : {");
+                                    foreach (KeyValuePair<string, string> slot in inference.Slots)
+                                    {
+                                        Console.WriteLine($"    {slot.Key} : '{slot.Value}'");
+                                    }
+                                    Console.WriteLine("  }");
+                                    Console.WriteLine("}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Didn't understand the command.");
+                                }
+                                return;
                             }
-                            Console.WriteLine("  }");
-                            Console.WriteLine("}");
+
+                            frameIndex = 0;
                         }
-                        else
+
+                        // skip right channel
+                        if (numChannels == 2)
                         {
-                            Console.WriteLine("Didn't understand the command.");
+                            reader.ReadInt16();
                         }
-                        return;
                     }
-
-                    frameIndex = 0;
                 }
 
-                // skip right channel
-                if (numChannels == 2)
-                {
-                    reader.ReadInt16();
-                }
+                Console.WriteLine("Reached end of audio file before Rhino returned an inference.");
             }
-
-            Console.WriteLine("Reached end of audio file before Rhino returned an inference.");
         }
 
 
