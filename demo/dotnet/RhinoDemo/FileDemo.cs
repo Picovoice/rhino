@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2020-2021 Picovoice Inc.
+    Copyright 2020-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 using Pv;
@@ -120,7 +119,6 @@ namespace RhinoDemo
                         }
                     }
                 }
-
                 Console.WriteLine("Reached end of audio file before Rhino returned an inference.");
             }
         }
