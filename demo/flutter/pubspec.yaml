@@ -13,7 +13,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  rhino_flutter: ^2.2.2
+  rhino_flutter:
+    path: ../../binding/flutter
 
 dev_dependencies:
   integration_test:

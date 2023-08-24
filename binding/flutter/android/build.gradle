@@ -33,5 +33,5 @@ android {
 }
 
 dependencies {
-    implementation 'ai.picovoice:rhino-android:2.2.0'
+    implementation 'ai.picovoice:rhino-android:2.2.2'
 }

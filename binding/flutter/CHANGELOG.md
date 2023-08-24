@@ -43,3 +43,6 @@
 
 ## [2.2.2] - 2023-08-09
 * Update flutter-voice-processor
+
+## [2.2.3] - 2023-08-24
+* Update native packages
