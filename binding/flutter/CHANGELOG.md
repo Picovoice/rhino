@@ -21,7 +21,7 @@
 * Android/iOS lib patch
 
 ## [2.1.3] - 2022-06-16
-* Updated method for endpoint handling while inferring context.
+* Updated method for endpoint handling while inferring context
 
 ## [2.1.4] - 2022-06-30
 * Added additional language support (it, ja, ko, pt)
@@ -43,3 +43,6 @@
 
 ## [2.2.2] - 2023-08-09
 * Update flutter-voice-processor
+
+## [2.2.3] - 2023-08-24
+* Update native packages
