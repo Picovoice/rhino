@@ -66,81 +66,85 @@ namespace RhinoDemo
             string outputPath = null)
         {
             // init rhino speech-to-intent engine
-            using Rhino rhino = Rhino.Create(
+            using (Rhino rhino = Rhino.Create(
                 accessKey,
                 contextPath,
                 modelPath,
                 sensitivity,
                 endpointDurationSec,
-                requireEndpoint);
-
-            // create recorder
-            using PvRecorder recorder = PvRecorder.Create(rhino.FrameLength, audioDeviceIndex);
-            Console.WriteLine($"Using device: {recorder.SelectedDevice}");
-            Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
+                requireEndpoint))
             {
-                e.Cancel = true;
-                recorder.Stop();
-                Console.WriteLine("Stopping...");
-            };
 
-            // open stream to output file
-            BinaryWriter outputFileWriter = null;
-            int totalSamplesWritten = 0;
-            if (!string.IsNullOrWhiteSpace(outputPath))
-            {
-                outputFileWriter = new BinaryWriter(new FileStream(outputPath, FileMode.OpenOrCreate, FileAccess.Write));
-                WriteWavHeader(outputFileWriter, 1, 16, recorder.SampleRate, 0);
-            }
-
-            // create and start recording            
-            recorder.Start();
-            Console.WriteLine(rhino.ContextInfo);
-            Console.WriteLine("Listening...\n");
-
-            while (recorder.IsRecording)
-            {
-                short[] frame = recorder.Read();
-                bool isFinalized = rhino.Process(frame);
-                if (isFinalized)
+                // create recorder
+                using (PvRecorder recorder = PvRecorder.Create(rhino.FrameLength, audioDeviceIndex))
                 {
-                    Inference inference = rhino.GetInference();
-                    if (inference.IsUnderstood)
+                    Console.WriteLine($"Using device: {recorder.SelectedDevice}");
+                    Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
                     {
-                        Console.WriteLine("{");
-                        Console.WriteLine($"  intent : '{inference.Intent}'");
-                        Console.WriteLine("  slots : {");
-                        foreach (KeyValuePair<string, string> slot in inference.Slots)
+                        e.Cancel = true;
+                        recorder.Stop();
+                        Console.WriteLine("Stopping...");
+                    };
+
+                    // open stream to output file
+                    BinaryWriter outputFileWriter = null;
+                    int totalSamplesWritten = 0;
+                    if (!string.IsNullOrWhiteSpace(outputPath))
+                    {
+                        outputFileWriter = new BinaryWriter(new FileStream(outputPath, FileMode.OpenOrCreate, FileAccess.Write));
+                        WriteWavHeader(outputFileWriter, 1, 16, recorder.SampleRate, 0);
+                    }
+
+                    // create and start recording            
+                    recorder.Start();
+                    Console.WriteLine(rhino.ContextInfo);
+                    Console.WriteLine("Listening...\n");
+
+                    while (recorder.IsRecording)
+                    {
+                        short[] frame = recorder.Read();
+                        bool isFinalized = rhino.Process(frame);
+                        if (isFinalized)
                         {
-                            Console.WriteLine($"    {slot.Key} : '{slot.Value}'");
+                            Inference inference = rhino.GetInference();
+                            if (inference.IsUnderstood)
+                            {
+                                Console.WriteLine("{");
+                                Console.WriteLine($"  intent : '{inference.Intent}'");
+                                Console.WriteLine("  slots : {");
+                                foreach (KeyValuePair<string, string> slot in inference.Slots)
+                                {
+                                    Console.WriteLine($"    {slot.Key} : '{slot.Value}'");
+                                }
+                                Console.WriteLine("  }");
+                                Console.WriteLine("}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Didn't understand the command.");
+                            }
                         }
-                        Console.WriteLine("  }");
-                        Console.WriteLine("}");
+
+                        if (outputFileWriter != null)
+                        {
+                            foreach (short sample in frame)
+                            {
+                                outputFileWriter.Write(sample);
+                            }
+                            totalSamplesWritten += frame.Length;
+                        }
+                        Thread.Yield();
                     }
-                    else
+
+                    if (outputFileWriter != null)
                     {
-                        Console.WriteLine("Didn't understand the command.");
+                        // write size to header and clean up
+                        WriteWavHeader(outputFileWriter, 1, 16, recorder.SampleRate, totalSamplesWritten);
+                        outputFileWriter.Flush();
+                        outputFileWriter.Dispose();
+                        Console.Write($"Wrote audio to '{outputPath}'");
                     }
                 }
-
-                if (outputFileWriter != null)
-                {
-                    foreach (short sample in frame)
-                    {
-                        outputFileWriter.Write(sample);
-                    }
-                    totalSamplesWritten += frame.Length;
-                }
-                Thread.Yield();
-            }
-
-            if (outputFileWriter != null)
-            {
-                // write size to header and clean up
-                WriteWavHeader(outputFileWriter, 1, 16, recorder.SampleRate, totalSamplesWritten);
-                outputFileWriter.Flush();
-                outputFileWriter.Dispose();
-                Console.Write($"Wrote audio to '{outputPath}'");
             }
         }
 

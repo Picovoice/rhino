@@ -1,26 +1,31 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<ItemGroup>
-		<Content Include="$(MSBuildThisFileDirectory)libpv_rhino.dll">
-			<Link>libpv_rhino.dll</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<Visible>false</Visible>
-		</Content>
-		<Content Include="$(MSBuildThisFileDirectory)libpv_rhino.dylib">
-			<Link>libpv_rhino.dylib</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<Visible>false</Visible>
-		</Content>
-		<Content Include="$(MSBuildThisFileDirectory)libpv_rhino.so">
-			<Link>libpv_rhino.so</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<Visible>false</Visible>
-		</Content>
-	</ItemGroup>
-	<ItemGroup>		
-		<Content Include="$(MSBuildThisFileDirectory)lib/**">
-			<Link>lib/%(RecursiveDir)%(Filename)%(Extension)</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<Visible>false</Visible>
-		</Content>
-	</ItemGroup>
+    <ItemGroup>
+        <Content Include="$(MSBuildThisFileDirectory)../../lib/netstandard2.0/Rhino.dll">
+            <Link>Rhino.dll</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Visible>False</Visible>
+        </Content>
+        <Content Include="$(MSBuildThisFileDirectory)libpv_rhino.dll">
+            <Link>libpv_rhino.dll</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Visible>false</Visible>
+        </Content>
+        <Content Include="$(MSBuildThisFileDirectory)libpv_rhino.dylib">
+            <Link>libpv_rhino.dylib</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Visible>false</Visible>
+        </Content>
+        <Content Include="$(MSBuildThisFileDirectory)libpv_rhino.so">
+            <Link>libpv_rhino.so</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Visible>false</Visible>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="$(MSBuildThisFileDirectory)lib/**">
+            <Link>lib/%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Visible>false</Visible>
+        </Content>
+    </ItemGroup>
 </Project>
