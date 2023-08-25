@@ -1,25 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>net6.0</TargetFramework>
-		<Configurations>FileDemo.Debug;FileDemo.Release;MicDemo.Debug;MicDemo.Release</Configurations>
-	</PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <Configurations>FileDemo.Debug;FileDemo.Release;MicDemo.Debug;MicDemo.Release</Configurations>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)' == 'FileDemo.Debug' Or '$(Configuration)' == 'FileDemo.Release'">
-		<StartupObject>RhinoDemo.FileDemo</StartupObject>
-		<TargetName>RhinoFileDemo</TargetName>
-		<AssemblyName>RhinoFileDemo</AssemblyName>
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'FileDemo.Debug' Or '$(Configuration)' == 'FileDemo.Release'">
+        <StartupObject>RhinoDemo.FileDemo</StartupObject>
+        <TargetName>RhinoFileDemo</TargetName>
+        <AssemblyName>RhinoFileDemo</AssemblyName>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)' == 'MicDemo.Debug' Or '$(Configuration)' == 'MicDemo.Release'">
-		<StartupObject>RhinoDemo.MicDemo</StartupObject>
-		<TargetName>RhinoMicDemo</TargetName>
-		<AssemblyName>RhinoMicDemo</AssemblyName>
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'MicDemo.Debug' Or '$(Configuration)' == 'MicDemo.Release'">
+        <StartupObject>RhinoDemo.MicDemo</StartupObject>
+        <TargetName>RhinoMicDemo</TargetName>
+        <AssemblyName>RhinoMicDemo</AssemblyName>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="PvRecorder" Version="1.2.1" />
-		<PackageReference Include="Rhino" Version="2.2.2" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="PvRecorder" Version="1.2.2" />
+        <PackageReference Include="Rhino" Version="2.2.3" />
+    </ItemGroup>
 </Project>
