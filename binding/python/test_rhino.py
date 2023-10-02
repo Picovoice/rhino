@@ -14,7 +14,7 @@ import unittest
 
 from parameterized import parameterized
 
-from _rhino import Rhino
+from _rhino import Rhino, RhinoError
 from _util import *
 from test_util import *
 
@@ -74,6 +74,32 @@ class RhinoTestCase(unittest.TestCase):
             language=language,
             context_name=context_name,
             is_within_context=False)
+
+    def test_message_stack(self):
+        relative_path = '../..'
+
+        error = None
+        try:
+            r = Rhino(
+                access_key='invalid',
+                library_path=pv_library_path(relative_path),
+                model_path=get_model_path_by_language(relative_path, 'en'),
+                context_path=get_context_path_by_language(relative_path, 'smart_lighting', 'en'))
+        except RhinoError as e:
+            error = e.message_stack
+
+        self.assertIsNotNone(error)
+        self.assertGreater(len(error), 0)
+
+        try:
+            r = Rhino(
+                access_key='invalid',
+                library_path=pv_library_path(relative_path),
+                model_path=get_model_path_by_language(relative_path, 'en'),
+                context_path=get_context_path_by_language(relative_path, 'smart_lighting', 'en'))
+        except RhinoError as e:
+            self.assertEqual(len(error), len(e.message_stack))
+            self.assertListEqual(list(error), list(e.message_stack))
 
 
 if __name__ == '__main__':
