@@ -236,6 +236,38 @@ namespace Tests
             rhino.Dispose();
         }
 
+
+
+        [Test]
+        public void TestMessageStack()
+        {
+            Rhino r;
+            string[] messageList = new string[]{};
+
+            try {
+                r = Rhino.Create(
+                    "invalid",
+                    GetContextPath("en", "smart_lighting"));
+                r.Dispose();
+            } catch (RhinoException e) {
+                messageList = e.messageStack;
+            }
+
+            Assert.IsTrue(0 < messageList.Length);
+            Assert.IsTrue(messageList.Length < 8);
+
+            try {
+                r = Rhino.Create(
+                    "invalid",
+                    GetContextPath("en", "smart_lighting"));
+                r.Dispose();
+            } catch (RhinoException e) {
+                for (int i = 0; i < messageList.Length; i++) {
+                    Assert.AreEqual(messageList[i], e.messageStack[i]);
+                }
+            }
+        }
+
         [Test]
         public void WithinContext([ValueSource("WithinTestData")] WithinContextTest testCase)
         {
