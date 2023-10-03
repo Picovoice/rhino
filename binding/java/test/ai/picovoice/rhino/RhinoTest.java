@@ -95,7 +95,9 @@ public class RhinoTest {
 
     @AfterEach
     void tearDown() {
-        rhino.delete();
+        if (rhino != null) {
+            rhino.delete();
+        }
     }
 
     @Test
@@ -123,6 +125,33 @@ public class RhinoTest {
                 .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                 .build();
         assertTrue(rhino.getSampleRate() > 0);
+    }
+
+    @Test
+    void getErrorStack() {
+        String[] error = {};
+        try {
+            rhino = new Rhino.Builder()
+                    .setAccessKey("invalid")
+                    .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
+                    .build();
+        } catch (RhinoException e) {
+            error = e.getMessageStack();
+        }
+
+        assertTrue(0 < error.length);
+        assertTrue(error.length <= 8);
+
+        try {
+            rhino = new Rhino.Builder()
+                    .setAccessKey("invalid")
+                    .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
+                    .build();
+        } catch (RhinoException e) {
+            for (int i = 0; i < error.length; i++) {
+                assertEquals(e.getMessageStack()[i], error[i]);
+            }
+        }
     }
 
     void runTestCase(String audioFileName,

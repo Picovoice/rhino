@@ -30,6 +30,8 @@ public class Rhino {
     public static final String LIBRARY_PATH;
     public static final String MODEL_PATH;
 
+    private static String sdk = "java";
+
     static {
         LIBRARY_PATH = Utils.getPackagedLibraryPath();
         MODEL_PATH = Utils.getPackagedModelPath();
@@ -37,6 +39,10 @@ public class Rhino {
 
     private long handle;
     private boolean isFinalized;
+
+    public static void setSdk(String sdk) {
+        Rhino.sdk = sdk;
+    }
 
     /**
      * Constructor.
@@ -76,6 +82,8 @@ public class Rhino {
         } catch (Exception exception) {
             throw new RhinoException(exception);
         }
+        RhinoNative.setSdk(Rhino.sdk);
+
         handle = RhinoNative.init(
                 accessKey,
                 modelPath,
