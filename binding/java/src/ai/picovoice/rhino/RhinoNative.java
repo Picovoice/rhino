@@ -20,9 +20,9 @@ class RhinoNative {
 
     static native int getSampleRate();
 
-    static native String[] getErrorStack();
-
     static native void setSdk(String sdk);
+
+    static native String[] getErrorStack();
 
     static native long init(
             String accessKey,
