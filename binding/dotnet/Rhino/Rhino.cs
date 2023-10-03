@@ -131,15 +131,6 @@ namespace Pv
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_reset(IntPtr handle);
-        
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern void pv_get_error_stack(out IntPtr messageStack, out int messageStackDepth);
-
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern void pv_free_error_stack(IntPtr messageStack);
-        
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern void pv_set_sdk(string sdk);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_context_info(
@@ -151,6 +142,15 @@ namespace Pv
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern int pv_rhino_frame_length();
+        
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void pv_set_sdk(string sdk);
+        
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void pv_get_error_stack(out IntPtr messageStack, out int messageStackDepth);
+
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void pv_free_error_stack(IntPtr messageStack);
 
         private bool _isFinalized;
 
