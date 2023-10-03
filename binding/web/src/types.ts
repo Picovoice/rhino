@@ -10,6 +10,22 @@
 */
 
 import { PvModel } from '@picovoice/web-utils';
+import { RhinoError } from "./rhino_errors";
+
+export enum PvStatus {
+  SUCCESS = 10000,
+  OUT_OF_MEMORY,
+  IO_ERROR,
+  INVALID_ARGUMENT,
+  STOP_ITERATION,
+  KEY_ERROR,
+  INVALID_STATE,
+  RUNTIME_ERROR,
+  ACTIVATION_ERROR,
+  ACTIVATION_LIMIT_REACHED,
+  ACTIVATION_THROTTLED,
+  ACTIVATION_REFUSED,
+}
 
 export type RhinoContext = PvModel & {
   /** @defaultValue '0.5' */
@@ -24,7 +40,7 @@ export type RhinoOptions = {
   /** @defaultValue 'false' */
   requireEndpoint?: boolean;
   /** @defaultValue '(error) => {}' */
-  processErrorCallback?: (error: Error) => void;
+  processErrorCallback?: (error: RhinoError) => void;
 };
 
 export type RhinoInference = {
@@ -72,6 +88,7 @@ export type RhinoWorkerRequest =
 
 export type RhinoWorkerFailureResponse = {
   command: 'failed' | 'error';
+  status: PvStatus;
   message: string;
 };
 

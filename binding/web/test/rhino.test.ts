@@ -112,6 +112,34 @@ describe("Rhino Binding", function () {
   for (const instance of [Rhino, RhinoWorker]) {
     const instanceString = (instance === RhinoWorker) ? 'worker' : 'main';
 
+    it(`should return correct error message stack (${instanceString})`, async () => {
+      let firstError = "";
+      try {
+        const rhino = await instance.create(
+          "jbklasdfjbas",
+          { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
+          () => { },
+          { publicPath: '/test/rhino_params.pv', forceWrite: true }
+        );
+        expect(rhino).to.be.undefined;
+      } catch (e: any) {
+        firstError = e.message;
+        expect(firstError.length).to.be.lt(1024);
+      }
+
+      try {
+        const rhino = await instance.create(
+          "jbklasdfjbas",
+          { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
+          () => { },
+          { publicPath: '/test/rhino_params.pv', forceWrite: true }
+        );
+        expect(rhino).to.be.undefined;
+      } catch (e: any) {
+        expect(firstError.length).to.be.eq(e.message.length);
+      }
+    });
+
     it(`should be able to init with public path (${instanceString})`, () => {
       cy.wrap(null).then(async () => {
         await runInitTest(instance);

@@ -31,7 +31,11 @@ import {
   RhinoInference,
   RhinoModel,
   RhinoOptions,
+  PvStatus
 } from './types';
+
+import * as RhinoErrors from "./rhino_errors";
+import { pvStatusToException } from './rhino_errors';
 
 /**
  * WebAssembly function types
@@ -77,6 +81,8 @@ type pv_rhino_reset_type = (object: number) => Promise<number>;
 type pv_rhino_version_type = () => Promise<number>;
 type pv_sample_rate_type = () => Promise<number>;
 type pv_status_to_string_type = (status: number) => Promise<number>;
+type pv_set_sdk_type = (sdk: number) => Promise<void>;
+type pv_get_error_stack_type = (messageStack: number, messageStackDepth: number) => Promise<void>;
 
 /**
  * JavaScript/WebAssembly Binding for the Picovoice Rhino Speech-to-Intent engine.
@@ -112,9 +118,8 @@ type RhinoWasmOutput = {
   pvRhinoProcess: pv_rhino_process_type;
   pvRhinoReset: pv_rhino_reset_type;
   pvStatusToString: pv_status_to_string_type;
+  pvGetErrorStack: pv_get_error_stack_type;
 };
-
-const PV_STATUS_SUCCESS = 10000;
 
 export class Rhino {
   private readonly _pvRhinoDelete: pv_rhino_delete_type;
@@ -124,6 +129,7 @@ export class Rhino {
   private readonly _pvRhinoProcess: pv_rhino_process_type;
   private readonly _pvRhinoReset: pv_rhino_reset_type;
   private readonly _pvStatusToString: pv_status_to_string_type;
+  private readonly _pvGetErrorStack: pv_get_error_stack_type;
 
   private _wasmMemory: WebAssembly.Memory | undefined;
   private readonly _pvFree: pv_free_type;
@@ -138,6 +144,8 @@ export class Rhino {
   private readonly _objectAddress: number;
   private readonly _slotsAddressAddressAddress: number;
   private readonly _valuesAddressAddressAddress: number;
+  private readonly _messageStackAddressAddressAddress: number;
+  private readonly _messageStackDepthAddress: number;
 
   private static _frameLength: number;
   private static _sampleRate: number;
@@ -145,16 +153,17 @@ export class Rhino {
   private static _version: string;
   private static _wasm: string;
   private static _wasmSimd: string;
+  private static _sdk: string = "wasm";
 
   private readonly _inferenceCallback: InferenceCallback;
-  private readonly _processErrorCallback: (error: Error) => void;
+  private readonly _processErrorCallback: (error: RhinoErrors.RhinoError) => void;
 
   private static _rhinoMutex = new Mutex();
 
   private constructor(
     handleWasm: RhinoWasmOutput,
     inferenceCallback: InferenceCallback,
-    processErrorCallback: (error: Error) => void
+    processErrorCallback: (error: RhinoErrors.RhinoError) => void
   ) {
     Rhino._frameLength = handleWasm.frameLength;
     Rhino._sampleRate = handleWasm.sampleRate;
@@ -168,6 +177,7 @@ export class Rhino {
     this._pvRhinoProcess = handleWasm.pvRhinoProcess;
     this._pvRhinoReset = handleWasm.pvRhinoReset;
     this._pvStatusToString = handleWasm.pvStatusToString;
+    this._pvGetErrorStack = handleWasm.pvGetErrorStack;
 
     this._wasmMemory = handleWasm.memory;
     this._pvFree = handleWasm.pvFree;
@@ -233,6 +243,10 @@ export class Rhino {
     if (this._wasmSimd === undefined) {
       this._wasmSimd = wasmSimd;
     }
+  }
+
+  public static setSdk(sdk: string): void {
+    Rhino._sdk = sdk;
   }
 
   /**
@@ -301,7 +315,7 @@ export class Rhino {
     options: RhinoOptions = {}
   ): Promise<Rhino> {
     if (!isAccessKeyValid(accessKey)) {
-      throw new Error('Invalid AccessKey');
+      throw new RhinoErrors.RhinoInvalidArgumentError('Invalid AccessKey');
     }
 
     return new Promise<Rhino>((resolve, reject) => {
@@ -337,13 +351,13 @@ export class Rhino {
    */
   public async process(pcm: Int16Array): Promise<void> {
     if (!(pcm instanceof Int16Array)) {
-      throw new Error("The argument 'pcm' must be provided as an Int16Array");
+      throw new RhinoErrors.RhinoInvalidArgumentError("The argument 'pcm' must be provided as an Int16Array");
     }
 
     this._processMutex
       .runExclusive(async () => {
         if (this._wasmMemory === undefined) {
-          throw new Error('Attempted to call Rhino process after release.');
+          throw new RhinoErrors.RhinoInvalidStateError('Attempted to call Rhino process after release.');
         }
         const memoryBuffer = new Int16Array(this._wasmMemory.buffer);
 
@@ -361,13 +375,16 @@ export class Rhino {
         let memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
         const memoryBufferView = new DataView(this._wasmMemory.buffer);
 
-        if (status !== PV_STATUS_SUCCESS) {
-          throw new Error(
-            `'pv_rhino_process' failed with status ${arrayBufferToStringAtIndex(
-              memoryBufferUint8,
-              await this._pvStatusToString(status)
-            )}`
+        if (status !== PvStatus.SUCCESS) {
+          const messageStack = await Rhino.getMessageStack(
+            this._pvGetErrorStack,
+            this._messageStackAddressAddressAddress,
+            this._messageStackDepthAddress,
+            memoryBufferView,
+            memoryBufferUint8
           );
+    
+          throw pvStatusToException(status, "Processing failed", messageStack);
         }
 
         const isFinalized = memoryBufferView.getUint8(
@@ -379,13 +396,16 @@ export class Rhino {
             this._objectAddress,
             this._isUnderstoodAddress
           );
-          if (status !== PV_STATUS_SUCCESS) {
-            throw new Error(
-              `'pv_rhino_is_understood' failed with status ${arrayBufferToStringAtIndex(
-                memoryBufferUint8,
-                await this._pvStatusToString(status)
-              )}`
+          if (status !== PvStatus.SUCCESS) {
+            const messageStack = await Rhino.getMessageStack(
+              this._pvGetErrorStack,
+              this._messageStackAddressAddressAddress,
+              this._messageStackDepthAddress,
+              memoryBufferView,
+              memoryBufferUint8
             );
+      
+            throw pvStatusToException(status, "Failed to get inference", messageStack);
           }
 
           const isUnderstood = memoryBufferView.getUint8(
@@ -393,7 +413,7 @@ export class Rhino {
           );
 
           if (isUnderstood === -1) {
-            throw new Error('Rhino failed to process the command');
+            throw new RhinoErrors.RhinoInvalidStateError('Rhino failed to process the command');
           }
 
           let intent = null;
@@ -406,13 +426,16 @@ export class Rhino {
               this._slotsAddressAddressAddress,
               this._valuesAddressAddressAddress
             );
-            if (status !== PV_STATUS_SUCCESS) {
-              throw new Error(
-                `'pv_rhino_get_intent' failed with status ${arrayBufferToStringAtIndex(
-                  memoryBufferUint8,
-                  await this._pvStatusToString(status)
-                )}`
+            if (status !== PvStatus.SUCCESS) {
+              const messageStack = await Rhino.getMessageStack(
+                this._pvGetErrorStack,
+                this._messageStackAddressAddressAddress,
+                this._messageStackDepthAddress,
+                memoryBufferView,
+                memoryBufferUint8
               );
+        
+              throw pvStatusToException(status, "Failed to get intent", messageStack);
             }
 
             const intentAddress = memoryBufferView.getInt32(
@@ -429,17 +452,17 @@ export class Rhino {
               true
             );
             if (numSlots === -1) {
-              throw new Error('Rhino failed to get the number of slots');
+              throw new RhinoErrors.RhinoInvalidStateError('Rhino failed to get the number of slots');
             }
 
             for (let i = 0; i < numSlots; i++) {
               const slot = this._getSlot(i);
               if (!slot) {
-                throw new Error('Rhino failed to get the slot');
+                throw new RhinoErrors.RhinoInvalidStateError('Rhino failed to get the slot');
               }
               const value = this._getSlotValue(i);
               if (!value) {
-                throw new Error('Rhino failed to get the slot value');
+                throw new RhinoErrors.RhinoInvalidStateError('Rhino failed to get the slot value');
               }
               slots[slot] = value;
             }
@@ -459,26 +482,30 @@ export class Rhino {
               slotsAddressAddress,
               valuesAddressAddress
             );
-            if (status !== PV_STATUS_SUCCESS) {
-              memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
-              throw new Error(
-                `'pv_rhino_free_slots_values' failed with status ${arrayBufferToStringAtIndex(
-                  memoryBufferUint8,
-                  await this._pvStatusToString(status)
-                )}`
+            if (status !== PvStatus.SUCCESS) {
+              const messageStack = await Rhino.getMessageStack(
+                this._pvGetErrorStack,
+                this._messageStackAddressAddressAddress,
+                this._messageStackDepthAddress,
+                memoryBufferView,
+                memoryBufferUint8
               );
+        
+              throw pvStatusToException(status, "Failed to clean up resources", messageStack);
             }
           }
 
           status = await this._pvRhinoReset(this._objectAddress);
-          if (status !== PV_STATUS_SUCCESS) {
-            memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
-            throw new Error(
-              `'pv_rhino_process' failed with status ${arrayBufferToStringAtIndex(
-                memoryBufferUint8,
-                await this._pvStatusToString(status)
-              )}`
+          if (status !== PvStatus.SUCCESS) {
+            const messageStack = await Rhino.getMessageStack(
+              this._pvGetErrorStack,
+              this._messageStackAddressAddressAddress,
+              this._messageStackDepthAddress,
+              memoryBufferView,
+              memoryBufferUint8
             );
+      
+            throw pvStatusToException(status, "Failed to reset", messageStack);
           }
 
           return {
@@ -492,12 +519,12 @@ export class Rhino {
             isFinalized: false,
           };
         }
-        throw new Error('Rhino failed to process audio');
+        throw new RhinoErrors.RhinoRuntimeError('Rhino failed to process audio');
       })
       .then((result: RhinoInference) => {
         this._inferenceCallback(result);
       })
-      .catch((error: any) => {
+      .catch((error: RhinoErrors.RhinoError) => {
         if (this._processErrorCallback) {
           this._processErrorCallback(error);
         } else {
@@ -546,14 +573,18 @@ export class Rhino {
    */
   public async reset(): Promise<void> {
     const status = await this._pvRhinoReset(this._objectAddress);
-    if (status !== PV_STATUS_SUCCESS) {
+    if (status !== PvStatus.SUCCESS) {
+      const memoryBufferView = new DataView(this._wasmMemory.buffer);
       const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
-      throw new Error(
-        `'pv_rhino_process' failed with status ${arrayBufferToStringAtIndex(
-          memoryBufferUint8,
-          await this._pvStatusToString(status)
-        )}`
+      const messageStack = await Rhino.getMessageStack(
+        this._pvGetErrorStack,
+        this._messageStackAddressAddressAddress,
+        this._messageStackDepthAddress,
+        memoryBufferView,
+        memoryBufferUint8
       );
+
+      throw pvStatusToException(status, "Failed to reset", messageStack);
     }
   }
 
@@ -623,24 +654,26 @@ export class Rhino {
     const pv_status_to_string =
       exports.pv_status_to_string as pv_status_to_string_type;
     const pv_sample_rate = exports.pv_sample_rate as pv_sample_rate_type;
+    const pv_set_sdk = exports.pv_set_sdk as pv_set_sdk_type;
+    const pv_get_error_stack = exports.pv_get_error_stack as pv_get_error_stack_type;
 
     const { endpointDurationSec = 1.0, requireEndpoint = true } = initConfig;
     if (sensitivity && !(typeof sensitivity === 'number')) {
-      throw new Error(
+      throw new RhinoErrors.RhinoInvalidArgumentError(
         'Rhino sensitivity is not a number (in the range [0, 1])'
       );
     } else if (sensitivity && (sensitivity < 0 || sensitivity > 1)) {
-      throw new Error('Rhino sensitivity is outside of range [0, 1]');
+      throw new RhinoErrors.RhinoInvalidArgumentError('Rhino sensitivity is outside of range [0, 1]');
     }
     if (endpointDurationSec && !(typeof endpointDurationSec === 'number')) {
-      throw new Error(
+      throw new RhinoErrors.RhinoInvalidArgumentError(
         'Rhino endpointDurationSec is not a number (in the range [0.5, 5.0])'
       );
     } else if (
       endpointDurationSec &&
       (endpointDurationSec < 0.5 || endpointDurationSec > 5.0)
     ) {
-      throw new Error(
+      throw new RhinoErrors.RhinoInvalidArgumentError(
         'Rhino endpointDurationSec is outside of range [0.5, 5.0]'
       );
     }
@@ -651,7 +684,7 @@ export class Rhino {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (objectAddressAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
 
     // acquire and init memory for c_access_key
@@ -660,7 +693,7 @@ export class Rhino {
       (accessKey.length + 1) * Uint8Array.BYTES_PER_ELEMENT
     );
     if (accessKeyAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
     for (let i = 0; i < accessKey.length; i++) {
       memoryBufferUint8[accessKeyAddress + i] = accessKey.charCodeAt(i);
@@ -674,7 +707,7 @@ export class Rhino {
       (encodedModelPath.length + 1) * Uint8Array.BYTES_PER_ELEMENT
     );
     if (modelPathAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
     memoryBufferUint8.set(encodedModelPath, modelPathAddress);
     memoryBufferUint8[modelPathAddress + encodedModelPath.length] = 0;
@@ -686,10 +719,36 @@ export class Rhino {
       (encodedContextPath.length + 1) * Uint8Array.BYTES_PER_ELEMENT
     );
     if (contextPathAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
+    }
+
+    const sdkEncoded = new TextEncoder().encode(this._sdk);
+    const sdkAddress = await aligned_alloc(
+      Uint8Array.BYTES_PER_ELEMENT,
+      (sdkEncoded.length + 1) * Uint8Array.BYTES_PER_ELEMENT
+    );
+    if (!sdkAddress) {
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
     memoryBufferUint8.set(encodedContextPath, contextPathAddress);
     memoryBufferUint8[contextPathAddress + encodedContextPath.length] = 0;
+    await pv_set_sdk(sdkAddress);
+
+    const messageStackDepthAddress = await aligned_alloc(
+      Int32Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT
+    );
+    if (!messageStackDepthAddress) {
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
+    }
+
+    const messageStackAddressAddressAddress = await aligned_alloc(
+      Int32Array.BYTES_PER_ELEMENT,
+      Int32Array.BYTES_PER_ELEMENT
+    );
+    if (!messageStackAddressAddressAddress) {
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
+    }
 
     let status = await pv_rhino_init(
       accessKeyAddress,
@@ -705,17 +764,19 @@ export class Rhino {
     await pv_free(modelPathAddress);
     await pv_free(contextPathAddress);
 
-    if (status !== PV_STATUS_SUCCESS) {
-      const msg = `'pv_rhino_init' failed with status ${arrayBufferToStringAtIndex(
-        memoryBufferUint8,
-        await pv_status_to_string(status)
-      )}`;
-
-      throw new Error(
-        `${msg}\nDetails: ${pvError.getErrorString()}`
-      );
-    }
     const memoryBufferView = new DataView(memory.buffer);
+
+    if (status !== PvStatus.SUCCESS) {
+      const messageStack = await Rhino.getMessageStack(
+        pv_get_error_stack,
+        messageStackAddressAddressAddress,
+        messageStackDepthAddress,
+        memoryBufferView,
+        memoryBufferUint8
+      );
+
+      throw pvStatusToException(status, "Initialization failed", messageStack, pvError);
+    }
     const objectAddress = memoryBufferView.getInt32(objectAddressAddress, true);
     await pv_free(objectAddressAddress);
 
@@ -732,19 +793,22 @@ export class Rhino {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (contextInfoAddressAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
     status = await pv_rhino_context_info(
       objectAddress,
       contextInfoAddressAddress
     );
-    if (status !== PV_STATUS_SUCCESS) {
-      throw new Error(
-        `'pv_rhino_context_info' failed with status ${arrayBufferToStringAtIndex(
-          memoryBufferUint8,
-          await pv_status_to_string(status)
-        )}`
+    if (status !== PvStatus.SUCCESS) {
+      const messageStack = await Rhino.getMessageStack(
+        pv_get_error_stack,
+        messageStackAddressAddressAddress,
+        messageStackDepthAddress,
+        memoryBufferView,
+        memoryBufferUint8
       );
+
+      throw pvStatusToException(status, "Failed to get context info", messageStack, pvError);
     }
     const contextInfoAddress = memoryBufferView.getInt32(
       contextInfoAddressAddress,
@@ -761,7 +825,7 @@ export class Rhino {
       frameLength * Int16Array.BYTES_PER_ELEMENT
     );
     if (inputBufferAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
 
     const isFinalizedAddress = await aligned_alloc(
@@ -769,7 +833,7 @@ export class Rhino {
       Uint8Array.BYTES_PER_ELEMENT
     );
     if (isFinalizedAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
 
     const isUnderstoodAddress = await aligned_alloc(
@@ -777,7 +841,7 @@ export class Rhino {
       Uint8Array.BYTES_PER_ELEMENT
     );
     if (isUnderstoodAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
 
     const intentAddressAddress = await aligned_alloc(
@@ -785,7 +849,7 @@ export class Rhino {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (intentAddressAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
 
     const numSlotsAddress = await aligned_alloc(
@@ -793,7 +857,7 @@ export class Rhino {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (numSlotsAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
 
     const slotsAddressAddressAddress = await aligned_alloc(
@@ -801,7 +865,7 @@ export class Rhino {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (slotsAddressAddressAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
 
     const valuesAddressAddressAddress = await aligned_alloc(
@@ -809,7 +873,7 @@ export class Rhino {
       Int32Array.BYTES_PER_ELEMENT
     );
     if (valuesAddressAddressAddress === 0) {
-      throw new Error('malloc failed: Cannot allocate memory');
+      throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
 
     return {
@@ -830,6 +894,8 @@ export class Rhino {
       objectAddress: objectAddress,
       slotsAddressAddressAddress: slotsAddressAddressAddress,
       valuesAddressAddressAddress: valuesAddressAddressAddress,
+      messageStackAddressAddressAddress: messageStackAddressAddressAddress,
+      messageStackDepthAddress: messageStackDepthAddress,
 
       pvRhinoDelete: pv_rhino_delete,
       pvRhinoFreeSlotsAndValues: pv_rhino_free_slots_and_values,
@@ -839,5 +905,27 @@ export class Rhino {
       pvRhinoReset: pv_rhino_reset,
       pvStatusToString: pv_status_to_string,
     };
+  }
+
+  private static async getMessageStack(
+    pv_get_error_stack: pv_get_error_stack_type,
+    messageStackAddressAddressAddress: number,
+    messageStackDepthAddress: number,
+    memoryBufferView: DataView,
+    memoryBufferUint8: Uint8Array,
+  ): Promise<string[]> {
+    await pv_get_error_stack(messageStackAddressAddressAddress, messageStackDepthAddress);
+    const messageStackAddressAddress = memoryBufferView.getInt32(messageStackAddressAddressAddress, true);
+
+    const messageStackDepth = memoryBufferView.getInt32(messageStackDepthAddress, true);
+    const messageStack: string[] = [];
+    for (let i = 0; i < messageStackDepth; i++) {
+      const messageStackAddress = memoryBufferView.getInt32(
+        messageStackAddressAddress + (i * Int32Array.BYTES_PER_ELEMENT), true);
+      const message = arrayBufferToStringAtIndex(memoryBufferUint8, messageStackAddress);
+      messageStack.push(message);
+    }
+
+    return messageStack;
   }
 }
