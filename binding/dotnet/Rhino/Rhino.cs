@@ -131,6 +131,15 @@ namespace Pv
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_reset(IntPtr handle);
+        
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void pv_get_error_stack(out IntPtr messageStack, out int messageStackDepth);
+
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void pv_free_error_stack(IntPtr messageStack);
+        
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void pv_set_sdk(string sdk);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern RhinoStatus pv_rhino_context_info(
@@ -248,6 +257,8 @@ namespace Pv
             IntPtr modelPathPtr = Utils.GetPtrFromUtf8String(modelPath);
             IntPtr contextPathPtr = Utils.GetPtrFromUtf8String(contextPath);
 
+            pv_set_sdk(".net");
+
             RhinoStatus status = pv_rhino_init(
                 accessKeyPtr,
                 modelPathPtr,
@@ -263,14 +274,16 @@ namespace Pv
 
             if (status != RhinoStatus.SUCCESS)
             {
-                throw RhinoStatusToException(status);
+                string[] messageStack = GetMessageStack();
+                throw RhinoStatusToException(status, "Initialization failed", messageStack);
             }
 
             IntPtr contextInfoPtr;
             status = pv_rhino_context_info(_libraryPointer, out contextInfoPtr);
             if (status != RhinoStatus.SUCCESS)
             {
-                throw RhinoStatusToException(status, "Rhino init failed.");
+                string[] messageStack = GetMessageStack();
+                throw RhinoStatusToException(status, "Failed to get context info", messageStack);
             }
 
             ContextInfo = Utils.GetUtf8StringFromPtr(contextInfoPtr);
@@ -302,7 +315,8 @@ namespace Pv
             RhinoStatus status = pv_rhino_process(_libraryPointer, pcm, out _isFinalized);
             if (status != RhinoStatus.SUCCESS)
             {
-                throw RhinoStatusToException(status, "Rhino process failed.");
+                string[] messageStack = GetMessageStack();
+                throw RhinoStatusToException(status, "Processing failed", messageStack);
             }
 
             return _isFinalized;
@@ -330,7 +344,8 @@ namespace Pv
             RhinoStatus status = pv_rhino_is_understood(_libraryPointer, out isUnderstood);
             if (status != RhinoStatus.SUCCESS)
             {
-                throw RhinoStatusToException(status, "GetInference failed at pv_rhino_is_understood");
+                string[] messageStack = GetMessageStack();
+                throw RhinoStatusToException(status, "Failed to get inference", messageStack);
             }
 
             if (isUnderstood)
@@ -341,7 +356,8 @@ namespace Pv
                 status = pv_rhino_get_intent(_libraryPointer, out intentPtr, out numSlots, out slotKeysPtr, out slotValuesPtr);
                 if (status != RhinoStatus.SUCCESS)
                 {
-                    throw RhinoStatusToException(status, "GetInference failed at pv_rhino_get_intent");
+                    string[] messageStack = GetMessageStack();
+                    throw RhinoStatusToException(status, "Failed to get intent", messageStack);
                 }
 
                 intent = Utils.GetUtf8StringFromPtr(intentPtr);
@@ -359,7 +375,8 @@ namespace Pv
                 status = pv_rhino_free_slots_and_values(_libraryPointer, slotKeysPtr, slotValuesPtr);
                 if (status != RhinoStatus.SUCCESS)
                 {
-                    throw RhinoStatusToException(status, "GetInference failed at pv_rhino_free_slots_and_values");
+                    string[] messageStack = GetMessageStack();
+                    throw RhinoStatusToException(status, "Failed to clear resources", messageStack);
                 }
             }
             else
@@ -371,7 +388,8 @@ namespace Pv
             status = pv_rhino_reset(_libraryPointer);
             if (status != RhinoStatus.SUCCESS)
             {
-                throw RhinoStatusToException(status, "GetInference failed at pv_rhino_reset");
+                string[] messageStack = GetMessageStack();
+                throw RhinoStatusToException(status, "Failed to reset");
             }
 
             return new Inference(isUnderstood, intent, slots);
@@ -407,34 +425,38 @@ namespace Pv
         /// </summary>
         /// <param name="status">Picovoice library status code.</param>
         /// <returns>.NET exception</returns>
-        private static Exception RhinoStatusToException(RhinoStatus status, string message = "")
+        private static Exception RhinoStatusToException(
+            RhinoStatus status,
+            string message = "",
+            string[] messageStack = null)
         {
+            messageStack = messageStack ?? new string[]{};
             switch (status)
             {
                 case RhinoStatus.OUT_OF_MEMORY:
-                    return new RhinoMemoryException(message);
+                    return new RhinoMemoryException(message, messageStack);
                 case RhinoStatus.IO_ERROR:
-                    return new RhinoIOException(message);
+                    return new RhinoIOException(message, messageStack);
                 case RhinoStatus.INVALID_ARGUMENT:
-                    return new RhinoInvalidArgumentException(message);
+                    return new RhinoInvalidArgumentException(message, messageStack);
                 case RhinoStatus.STOP_ITERATION:
-                    return new RhinoStopIterationException(message);
+                    return new RhinoStopIterationException(message, messageStack);
                 case RhinoStatus.KEY_ERROR:
-                    return new RhinoKeyException(message);
+                    return new RhinoKeyException(message, messageStack);
                 case RhinoStatus.INVALID_STATE:
-                    return new RhinoInvalidStateException(message);
+                    return new RhinoInvalidStateException(message, messageStack);
                 case RhinoStatus.RUNTIME_ERROR:
-                    return new RhinoRuntimeException(message);
+                    return new RhinoRuntimeException(message, messageStack);
                 case RhinoStatus.ACTIVATION_ERROR:
-                    return new RhinoActivationException(message);
+                    return new RhinoActivationException(message, messageStack);
                 case RhinoStatus.ACTIVATION_LIMIT_REACHED:
-                    return new RhinoActivationLimitException(message);
+                    return new RhinoActivationLimitException(message, messageStack);
                 case RhinoStatus.ACTIVATION_THROTTLED:
-                    return new RhinoActivationThrottledException(message);
+                    return new RhinoActivationThrottledException(message, messageStack);
                 case RhinoStatus.ACTIVATION_REFUSED:
-                    return new RhinoActivationRefusedException(message);
+                    return new RhinoActivationRefusedException(message, messageStack);
                 default:
-                    return new RhinoException("Unmapped error code returned from Rhino.");
+                    return new RhinoException("Unmapped error code returned from Rhino.", messageStack);
             }
         }
 
@@ -456,6 +478,24 @@ namespace Pv
         ~Rhino()
         {
             Dispose();
+        }
+
+        private string[] GetMessageStack() {
+            int messageStackDepth;
+            IntPtr messageStackRef;
+
+            pv_get_error_stack(out messageStackRef, out messageStackDepth);
+
+            int elementSize = Marshal.SizeOf(typeof(IntPtr));
+            string[] messageStack = new string[messageStackDepth];
+
+            for (int i = 0; i < messageStackDepth; i++) {
+                messageStack[i] = Marshal.PtrToStringAnsi(Marshal.ReadIntPtr(messageStackRef, i * elementSize));
+            }
+
+            pv_free_error_stack(messageStackRef);
+
+            return messageStack;
         }
     }
 }
