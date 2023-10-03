@@ -78,6 +78,32 @@ function testRhinoDetection(
   }
 }
 
+describe("error message stack", () => {
+  test("message stack cleared after read", () => {
+    let error: string[] = [];
+    try {
+      new Rhino(
+        "invalid",
+        getContextPathsByLanguage('en', 'smart_lighting'));
+    } catch (e: any) {
+      error = e.messageStack;
+    }
+
+    expect(error.length).toBeGreaterThan(0);
+    expect(error.length).toBeLessThanOrEqual(8);
+
+    try {
+      new Rhino(
+        "invalid",
+        getContextPathsByLanguage('en', 'smart_lighting'));
+    } catch (e: any) {
+      for (let i = 0; i < error.length; i++) {
+        expect(error[i]).toEqual(e.messageStack[i]);
+      }
+    }
+  });
+});
+
 describe('intent detection', () => {
   it.each(WITHIN_CONTEXT_PARAMETERS)(
     'successful inference for %p with %p',
