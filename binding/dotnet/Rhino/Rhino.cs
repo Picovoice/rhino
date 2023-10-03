@@ -424,6 +424,8 @@ namespace Pv
         /// Coverts status codes to relevant .NET exceptions
         /// </summary>
         /// <param name="status">Picovoice library status code.</param>
+        /// <param name="message">Default error message.</param>
+        /// <param name="messageStack">Error stack returned from Picovoice library.</param>
         /// <returns>.NET exception</returns>
         private static Exception RhinoStatusToException(
             RhinoStatus status,
