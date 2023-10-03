@@ -20,7 +20,7 @@ import (
 	"math"
 	"os"
 	"path/filepath"
-	"reflect"
+	"reflect"	
 	"testing"
 )
 
@@ -230,5 +230,20 @@ func TestOutOfContext(t *testing.T) {
 				t.Fatalf("%v", delErr)
 			}
 		})
+	}
+}
+
+func TestMessageStack(t *testing.T) {
+	rhino = NewRhino("invalid access key", getTestContextPath("en", "smart_lighting"))
+
+	err := rhino.Init()
+	err2 := rhino.Init()
+
+	if len(err.Error()) > 1024 {
+		t.Fatalf("length of error is full: '%d'", len(err.Error()))
+	}
+
+	if len(err2.Error()) != len(err.Error()) {
+		t.Fatalf("length of 1st init '%d' does not match 2nd init '%d'", len(err.Error()), len(err2.Error()))
 	}
 }
