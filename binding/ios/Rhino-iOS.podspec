@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name = 'Rhino-iOS'
     s.module_name = 'Rhino'
-    s.version = '2.2.2'
+    s.version = '3.0.0'
     s.license = {:type => 'Apache 2.0'}
     s.summary = 'iOS SDK for Picovoice\'s Rhino Speech-to-Intent engine'
     s.description =
