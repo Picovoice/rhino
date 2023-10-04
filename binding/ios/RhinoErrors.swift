@@ -9,12 +9,23 @@
 
 public class RhinoError: LocalizedError {
     private let message: String
+    private let messageStack: [String]
 
-    public init (_ message: String) {
+    public init (_ message: String, _ messageStack: [String] = []) {
         self.message = message
+        self.messageStack = messageStack
     }
 
     public var errorDescription: String? {
+        if messageStack.count > 0 {
+            var i = 0
+            let messageString = messageStack.reduce(message) { partial, current in
+                let reduced = partial + "\n  [\(i)] \(current)"
+                i += 1
+                return reduced
+            }
+            return messageString
+        }
         return message
     }
 

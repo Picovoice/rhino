@@ -282,4 +282,28 @@ class RhinoAppTestUITests: BaseTest {
 
         r.delete()
     }
+    
+    func testMessageStack() throws {
+        let bundle = Bundle(for: type(of: self))
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
+
+        var first_error: String = ""
+        do {
+            let p = try Rhino.init(accessKey: "invalid", contextPath: contextPath)
+            XCTAssertNil(p)
+        } catch {
+            first_error = "\(error.localizedDescription)"
+            XCTAssert(first_error.count < 1024)
+        }
+        
+        do {
+            let p = try Rhino.init(accessKey: "invalid", contextPath: contextPath)
+            XCTAssertNil(p)
+        } catch {
+            XCTAssert("\(error.localizedDescription)".count == first_error.count)
+        }
+    }
 }
