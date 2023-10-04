@@ -34,6 +34,7 @@ public class Rhino {
 
     private static String DEFAULT_MODEL_PATH;
     private static boolean isExtracted;
+    private static String _sdk = "android";
 
     static {
         System.loadLibrary("pv_rhino");
@@ -41,6 +42,10 @@ public class Rhino {
 
     private long handle;
     private boolean isFinalized;
+
+    public static void setSdk(String sdk) {
+        Rhino._sdk = sdk;
+    }
 
     /**
      * Constructor.
@@ -72,6 +77,8 @@ public class Rhino {
                   float sensitivity,
                   float endpointDurationSec,
                   boolean requireEndpoint) throws RhinoException {
+        RhinoNative.setSdk(Rhino._sdk);
+
         handle = RhinoNative.init(
                 accessKey,
                 modelPath,

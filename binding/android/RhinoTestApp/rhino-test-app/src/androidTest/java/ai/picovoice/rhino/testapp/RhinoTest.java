@@ -259,6 +259,35 @@ public class RhinoTest {
             assertTrue(r.getContextInformation() != null && !r.getContextInformation().equals(""));
             r.delete();
         }
+
+        @Test
+        public void getErrorStack() {
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+
+            String[] error = {};
+            try {
+                Rhino r = new Rhino.Builder()
+                        .setAccessKey(accessKey)
+                        .setContextPath(contextPath.getAbsolutePath())
+                        .build(appContext);
+            } catch (PorcupineException e) {
+                error = e.getMessageStack();
+            }
+
+            assertTrue(0 < error.length);
+            assertTrue(error.length <= 8);
+
+            try {
+                Rhino r = new Rhino.Builder()
+                        .setAccessKey(accessKey)
+                        .setContextPath(contextPath.getAbsolutePath())
+                        .build(appContext);
+            } catch (PorcupineException e) {
+                for (int i = 0; i < error.length; i++) {
+                    assertEquals(e.getMessageStack()[i], error[i]);
+                }
+            }
+        }
     }
 
     @RunWith(Parameterized.class)
