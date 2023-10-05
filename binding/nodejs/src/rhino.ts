@@ -236,6 +236,31 @@ export default class Rhino {
     return this.isFinalized;
   }
 
+  /** 
+   * Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
+   * stream of audio
+   */
+  reset(): void {
+    if (
+      this._handle === 0 ||
+      this._handle === null ||
+      this._handle === undefined
+    ) {
+      throw new RhinoInvalidStateError('Rhino is not initialized');
+    }
+
+    let status: number | null = null;
+    try {
+      status = this._pvRhino.reset(this._handle);
+    } catch (err: any) {
+      pvStatusToException(<PvStatus>err.code, err);
+    }
+
+    if (status && status !== PvStatus.SUCCESS) {
+      pvStatusToException(<PvStatus>status, 'Rhino failed to process the frame', this._pvRhino.get_error_stack());
+    }
+  }
+
   /**
    * Gets inference results from Rhino. If the phrase was understood, it includes the specific intent name
    * that was inferred, and (if applicable) slot keys and specific slot values.
