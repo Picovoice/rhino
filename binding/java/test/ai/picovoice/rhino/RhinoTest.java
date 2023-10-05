@@ -134,46 +134,12 @@ public class RhinoTest {
                 .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                 .build();
 
-        int frameLen = rhino.getFrameLength();
         String audioFilePath = RhinoTestUtils.getAudioFilePath("test_within_context.wav");
-        File testAudioPath = new File(audioFilePath);
-
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(testAudioPath);
-
-        int byteDepth = audioInputStream.getFormat().getFrameSize();
-        byte[] pcm = new byte[frameLen * byteDepth];
-        short[] rhinoFrame = new short[frameLen];
-
-        int i = 0;
-        int numBytesRead = 0;
-        boolean isFinalized = false;
-        while ((numBytesRead = audioInputStream.read(pcm)) != -1) {
-            if (numBytesRead / byteDepth == frameLen) {
-
-                ByteBuffer.wrap(pcm).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(rhinoFrame);
-                isFinalized = rhino.process(rhinoFrame);
-                if (isFinalized) {
-                    break;
-                }
-            }
-            if (i == 20) {
-                break;
-            }
-            i++;
-        }
+        boolean isFinalized = processFileHelper(audioFilePath, 15);
         assertFalse(isFinalized);
 
-        audioInputStream = AudioSystem.getAudioInputStream(testAudioPath);
-        while ((numBytesRead = audioInputStream.read(pcm)) != -1) {
-            if (numBytesRead / byteDepth == frameLen) {
-
-                ByteBuffer.wrap(pcm).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(rhinoFrame);
-                isFinalized = rhino.process(rhinoFrame);
-                if (isFinalized) {
-                    break;
-                }
-            }
-        }
+        rhino.reset();
+        boolean isFinalized = processFileHelper(audioFilePath, -1);
         assertTrue(isFinalized);
 
         RhinoInference inference = rhino.getInference();
@@ -207,11 +173,9 @@ public class RhinoTest {
         }
     }
 
-    void runTestCase(String audioFileName,
-                     boolean isWithinContext,
-                     String expectedIntent,
-                     Map<String, String> expectedSlots)
-                     throws IOException, UnsupportedAudioFileException, RhinoException {
+    boolean processFileHelper(String audioFileName, int maxProcessCount) {
+        int processed = 0;
+
         int frameLen = rhino.getFrameLength();
         String audioFilePath = RhinoTestUtils.getAudioFilePath(audioFileName);
         File testAudioPath = new File(audioFilePath);
@@ -233,8 +197,22 @@ public class RhinoTest {
                 if (isFinalized) {
                     break;
                 }
+                if (maxProcessCount != -1 && processed >= maxProcessCount) {
+                    break;
+                }
+                processed++;
             }
         }
+
+        return isFinalized;
+    }
+
+    void runTestCase(String audioFileName,
+                     boolean isWithinContext,
+                     String expectedIntent,
+                     Map<String, String> expectedSlots)
+                     throws IOException, UnsupportedAudioFileException, RhinoException {
+        boolean isFinalized = processFileHelper(audioFileName, -1);
         assertTrue(isFinalized);
 
         RhinoInference inference = rhino.getInference();
