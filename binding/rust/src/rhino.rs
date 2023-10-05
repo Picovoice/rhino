@@ -238,6 +238,10 @@ impl Rhino {
         self.inner.process(pcm)
     }
 
+    pub fn reset(&self) -> Result<(), RhinoError> {
+        self.inner.reset()
+    }
+
     pub fn get_inference(&self) -> Result<RhinoInference, RhinoError> {
         self.inner.get_inference()
     }
