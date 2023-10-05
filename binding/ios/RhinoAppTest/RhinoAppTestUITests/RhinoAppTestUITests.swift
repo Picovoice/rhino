@@ -289,16 +289,20 @@ class RhinoAppTestUITests: BaseTest {
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
+        let fileURL: URL = bundle.url(
+            forResource: "test_within_context",
+            withExtension: "wav",
+            subdirectory: "test_resources/audio_samples")!
 
         let r = try Rhino.init(accessKey: accessKey, contextPath: contextPath)
-        do {
-            let inference = try processFile(rhino: r, testAudioURL: fileURL, maxProcessCount: 15)
-            XCTAssert(inference == nil)
-        } catch { }
+        var isFinalized = processFileHelper(rhino, fileURL, 15)
+        XCTAssert(!isFinalized)
 
-        try r.reset()
-        let inference = try processFile(rhino: r, testAudioURL: fileURL)
-        XCTAssert(inferece.isUnderstood)
+        isFinalized = processFileHelper(rhino, fileURL)
+        XCTAssert(isFinalized)
+
+        let inference = try rhino.getInference()
+        XCTAssert(inference.isUnderstood)
 
         r.delete()
     }

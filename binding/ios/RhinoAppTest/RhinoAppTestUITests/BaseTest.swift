@@ -25,7 +25,7 @@ class BaseTest: XCTestCase {
         super.tearDown()
     }
 
-    func processFile(rhino: Rhino, testAudioURL: URL, maxProcessCount: Int32? = nil) throws -> Inference {
+    func processFileHelper(rhino: Rhino, testAudioURL: URL, maxProcessCount: Int32 = -1) throws -> Bool {
         var processed = 0
 
         let data = try Data(contentsOf: testAudioURL)
@@ -44,14 +44,18 @@ class BaseTest: XCTestCase {
 
             index += frameLengthBytes
 
-            if maxProcessCount != nil && processed == maxProcessCount {
+            if maxProcessCount != -1 && processed >= maxProcessCount {
                 break
             }
             processed++
         }
-        if maxProcessCount != nil {
-            XCTAssert(isFinalized)
-        }
+
+        return isFinalized
+    }
+
+    func processFile(rhino: Rhino, testAudioURL: URL) throws -> Inference {
+        let isFinalized = processFileHelper(rhino, testAudioURL)
+        XCTAssert(isFinalized)
 
         return try rhino.getInference()
     }
