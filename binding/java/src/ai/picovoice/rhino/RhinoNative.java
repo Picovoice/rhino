@@ -34,6 +34,8 @@ class RhinoNative {
 
     static native boolean process(long object, short[] pcm) throws RhinoException;
 
+    static native void reset(long object) throws RhinoException;
+
     static native RhinoInference getInference(long object) throws RhinoException;
 
     static native String getContextInfo(long object) throws RhinoException;

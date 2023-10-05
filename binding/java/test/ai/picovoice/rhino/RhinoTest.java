@@ -118,13 +118,66 @@ public class RhinoTest {
         assertTrue(rhino.getFrameLength() > 0);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getSampleRate() throws RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                 .build();
         assertTrue(rhino.getSampleRate() > 0);
+    }
+
+    @Test
+    void reset() throws RhinoException {
+        rhino = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
+                .build();
+
+        int frameLen = rhino.getFrameLength();
+        String audioFilePath = RhinoTestUtils.getAudioFilePath("test_within_context.wav");
+        File testAudioPath = new File(audioFilePath);
+
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(testAudioPath);
+
+        int byteDepth = audioInputStream.getFormat().getFrameSize();
+        byte[] pcm = new byte[frameLen * byteDepth];
+        short[] rhinoFrame = new short[frameLen];
+
+        int i = 0;
+        int numBytesRead = 0;
+        boolean isFinalized = false;
+        while ((numBytesRead = audioInputStream.read(pcm)) != -1) {
+            if (numBytesRead / byteDepth == frameLen) {
+
+                ByteBuffer.wrap(pcm).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(rhinoFrame);
+                isFinalized = rhino.process(rhinoFrame);
+                if (isFinalized) {
+                    break;
+                }
+            }
+            if (i == 20) {
+                break;
+            }
+            i++;
+        }
+        assertFalse(isFinalized);
+
+        audioInputStream = AudioSystem.getAudioInputStream(testAudioPath);
+        while ((numBytesRead = audioInputStream.read(pcm)) != -1) {
+            if (numBytesRead / byteDepth == frameLen) {
+
+                ByteBuffer.wrap(pcm).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(rhinoFrame);
+                isFinalized = rhino.process(rhinoFrame);
+                if (isFinalized) {
+                    break;
+                }
+            }
+        }
+        assertTrue(isFinalized);
+
+        RhinoInference inference = rhino.getInference();
+        assertEquals(inference.getIsUnderstood(), true);
     }
 
     @Test
