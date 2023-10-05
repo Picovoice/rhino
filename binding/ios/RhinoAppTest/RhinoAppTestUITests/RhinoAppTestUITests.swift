@@ -298,6 +298,7 @@ class RhinoAppTestUITests: BaseTest {
         var isFinalized = processFileHelper(rhino, fileURL, 15)
         XCTAssert(!isFinalized)
 
+        r.reset()
         isFinalized = processFileHelper(rhino, fileURL)
         XCTAssert(isFinalized)
 
