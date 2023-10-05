@@ -307,6 +307,17 @@ class Rhino(object):
 
         return is_finalized.value
 
+    def reset(self) -> None:
+        """
+        Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
+        stream of audio.
+        """
+        status = self._reset_func(self._handle)
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+                message='Processing failed',
+                message_stack=self._get_error_stack())
+
     def get_inference(self) -> Inference:
         """
          Gets inference results from Rhino. If the spoken command was understood, it includes the specific intent name
