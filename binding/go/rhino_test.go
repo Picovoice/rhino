@@ -127,15 +127,7 @@ func loadTestData() ([]WithinContextTestData, []OutOfContextTestData) {
 	return withinContextTestParameters, outOfContextTestParameters
 }
 
-func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
-	err := rhino.Init()
-	if err != nil {
-		t.Fatalf("%v", err)
-	}
-	fmt.Printf("Rhino Version: %s\n", Version)
-	fmt.Printf("Frame Length: %d\n", FrameLength)
-	fmt.Printf("Sample Rate: %d\n", SampleRate)
-
+func processFileHelper(t *testing.T, rhino *Rhino, audioFileName string, maxProcessCount int) bool {
 	testAudioPath, _ := filepath.Abs(filepath.Join("../../resources/audio_samples", audioFileName))
 	data, err := ioutil.ReadFile(testAudioPath)
 	if err != nil {
@@ -147,6 +139,8 @@ func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinConte
 	frameLenBytes := FrameLength * 2
 	frameCount := int(math.Floor(float64(len(data)) / float64(frameLenBytes)))
 	sampleBuffer := make([]int16, FrameLength)
+
+	processed := 0
 	for i := 0; i < frameCount; i++ {
 		start := i * frameLenBytes
 
@@ -163,7 +157,26 @@ func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinConte
 		if isFinalized {
 			break
 		}
+
+		if maxProcessCount != -1 && processed >= maxProcessCount {
+			break
+		}
+		processed++
 	}
+
+	return isFinalized	
+}
+
+func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
+	err := rhino.Init()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+	fmt.Printf("Rhino Version: %s\n", Version)
+	fmt.Printf("Frame Length: %d\n", FrameLength)
+	fmt.Printf("Sample Rate: %d\n", SampleRate)
+
+	isFinalized := processFileHelper(t, rhino, audioFileName, -1)
 
 	if !isFinalized {
 		t.Fatalf("Rhino reached end of file without finalizing.")
@@ -234,69 +247,19 @@ func TestOutOfContext(t *testing.T) {
 }
 
 func TestReset(t *testing.T) {
-	rhino = NewRhino("invalid access key", getTestContextPath("en", "coffee_maker"))
+	rhino = NewRhino(testAccessKey, getTestContextPath("en", "coffee_maker"))
 	err := rhino.Init()
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
 
-	testAudioPath, _ := filepath.Abs(filepath.Join("../../resources/audio_samples/test_within_context.wav"))
-	data, err := ioutil.ReadFile(testAudioPath)
-	if err != nil {
-		t.Fatalf("Could not read test file: %v", err)
-	}
-	data = data[44:] // skip header
-
-	index := 0
-	isFinalized := false
-	frameLenBytes := FrameLength * 2
-	frameCount := int(math.Floor(float64(len(data)) / float64(frameLenBytes)))
-	sampleBuffer := make([]int16, FrameLength)
-	for i := 0; i < frameCount/2; i++ {
-		start := i * frameLenBytes
-
-		for j := 0; j < FrameLength; j++ {
-			dataOffset := start + (j * 2)
-			sampleBuffer[j] = int16(binary.LittleEndian.Uint16(data[dataOffset : dataOffset+2]))
-		}
-
-		isFinalized, err = rhino.Process(sampleBuffer)
-		if err != nil {
-			t.Fatalf("Could not read test file: %v", err)
-		}
-
-		if isFinalized {
-			break
-		}
-
-		if index == 15 {
-			break
-		}
-		index += 1
-	}
-
+	testAudioFileName := "test_within_context.wav"
+	isFinalized := processFileHelper(t, &rhino, testAudioFileName, 15)
 	if isFinalized {
 		t.Fatalf("Rhino should not be finalized.")
 	}
 
-	for i := 0; i < frameCount; i++ {
-		start := i * frameLenBytes
-
-		for j := 0; j < FrameLength; j++ {
-			dataOffset := start + (j * 2)
-			sampleBuffer[j] = int16(binary.LittleEndian.Uint16(data[dataOffset : dataOffset+2]))
-		}
-
-		isFinalized, err = rhino.Process(sampleBuffer)
-		if err != nil {
-			t.Fatalf("Could not read test file: %v", err)
-		}
-
-		if isFinalized {
-			break
-		}
-	}
-
+	isFinalized = processFileHelper(t, &rhino, testAudioFileName, -1)
 	if !isFinalized {
 		t.Fatalf("Rhino reached end of file without finalizing.")
 	}
