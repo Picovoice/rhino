@@ -201,6 +201,70 @@ namespace RhinoTest
         }
 
         [TestMethod]
+        public void TestReset()
+        {
+            using (Rhino rhino = InitDefaultRhino())
+            {
+                int frameLen = rhino.FrameLength;
+                string testAudioPath = Path.Combine(ROOT_DIR, "resources/audio_samples/test_within_context.wav");
+                List<short> data = GetPcmFromFile(testAudioPath, rhino.SampleRate);
+
+                bool isFinalized = false;
+                int framecount = (int)Math.Floor((float)(data.Count / frameLen));
+                var results = new List<int>();
+                for (int i = 0; i < framecount; i++)
+                {
+                    int start = i * rhino.FrameLength;
+                    int count = rhino.FrameLength;
+                    List<short> frame = data.GetRange(start, count);
+                    isFinalized = rhino.Process(frame.ToArray());
+                    if (isFinalized)
+                    {
+                        break;
+                    }
+                }
+                Assert.IsTrue(isFinalized, "Failed to finalize.");
+
+                Inference inference = rhino.GetInference();
+                Assert.IsTrue(inference.within_context, "Failed to get inference.");
+            }
+        }
+        
+        [TestMethod]
+        public void TestMessageStack()
+        {
+            Rhino r;
+            string[] messageList = {};
+
+            try {
+                r = Rhino.Create(
+                    "invalid",
+                    GetContextPath("en", "smart_lighting"),
+                    GetModelPath("en"));
+                Assert.IsNull(r);
+                r.Dispose();
+            } catch (RhinoException e) {
+                messageList = e.messageStack;
+            }
+
+            Assert.IsTrue(0 < messageList.Length);
+            Assert.IsTrue(messageList.Length < 8);
+
+            try {
+                r = Rhino.Create(
+                    "invalid",
+                    GetContextPath("en", "smart_lighting"),
+                    GetModelPath("en"));
+                Assert.IsNull(r);
+                r.Dispose();
+            } catch (RhinoException e) {
+                for (int i = 0; i < messageList.Length; i++) {
+                    Assert.AreEqual(messageList[i], e.messageStack[i]);
+                }
+            }
+        }
+
+        [TestMethod]
         [DynamicData(nameof(WithinContextTestData))]
         public void TestWithinContext(
             string language,
@@ -243,41 +307,6 @@ namespace RhinoTest
                 );
             }
         }
-        
-        [TestMethod]
-        public void TestMessageStack()
-        {
-            Rhino r;
-            string[] messageList = {};
-
-            try {
-                r = Rhino.Create(
-                    "invalid",
-                    GetContextPath("en", "smart_lighting"),
-                    GetModelPath("en"));
-                Assert.IsNull(r);
-                r.Dispose();
-            } catch (RhinoException e) {
-                messageList = e.messageStack;
-            }
-
-            Assert.IsTrue(0 < messageList.Length);
-            Assert.IsTrue(messageList.Length < 8);
-
-            try {
-                r = Rhino.Create(
-                    "invalid",
-                    GetContextPath("en", "smart_lighting"),
-                    GetModelPath("en"));
-                Assert.IsNull(r);
-                r.Dispose();
-            } catch (RhinoException e) {
-                for (int i = 0; i < messageList.Length; i++) {
-                    Assert.AreEqual(messageList[i], e.messageStack[i]);
-                }
-            }
-        }
-
 
         private List<short> GetPcmFromFile(string audioFilePath, int expectedSampleRate)
         {

@@ -323,6 +323,20 @@ namespace Pv
         }
 
         /// <summary>
+        ///  Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new 
+        ///  stream of audio.
+        /// </summary>
+        public void Reset()
+        {
+            RhinoStatus status = pv_rhino_reset(_libraryPointer);
+            if (status != RhinoStatus.SUCCESS)
+            {
+                string[] messageStack = GetMessageStack();
+                throw RhinoStatusToException(status, "Reset failed", messageStack);
+            }
+        }
+
+        /// <summary>
         /// Gets inference results from Rhino. If the spoken command was understood, it includes the specific intent name
         /// that was inferred, and (if applicable) slot keys and specific slot values. Should only be called after the
         /// process function returns true, otherwise Rhino has not yet reached an inference conclusion.
