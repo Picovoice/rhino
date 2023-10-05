@@ -105,7 +105,9 @@ public class BaseTest {
         os.close();
     }
 
-    RhinoInference processTestAudio(Rhino r, File testAudio) throws Exception {
+    boolean processFileHelper(Rhino r, File testAudio, int maxProcessCount) throws Exception {
+        int processed = 0;
+
         FileInputStream audioInputStream = new FileInputStream(testAudio);
 
         byte[] rawData = new byte[r.getFrameLength() * 2];
@@ -123,8 +125,18 @@ public class BaseTest {
                 if (isFinalized) {
                     break;
                 }
+                if (maxProcessCount != -1 && processed >= maxProcessCount) {
+                    break;
+                }
+                processed++;
             }
         }
+
+        return isFinalized;
+    }
+
+    RhinoInference processTestAudio(Rhino r, File testAudio) throws Exception {
+        boolean isFinalized = processFileHelper(r, testAudio, -1);
         assertTrue(isFinalized);
 
         return r.getInference();
