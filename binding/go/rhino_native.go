@@ -259,9 +259,9 @@ type nativeRhinoType struct {
 	pv_sample_rate_ptr                 unsafe.Pointer
 	slotKeysPtr                        unsafe.Pointer
 	slotValuePtr                       unsafe.Pointer
-	pv_set_sdk_ptr                	   unsafe.Pointer
-	pv_get_error_stack_ptr        	   unsafe.Pointer
-	pv_free_error_stack_ptr       	   unsafe.Pointer
+	pv_set_sdk_ptr                     unsafe.Pointer
+	pv_get_error_stack_ptr             unsafe.Pointer
+	pv_free_error_stack_ptr            unsafe.Pointer
 }
 
 func (nr *nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
@@ -428,4 +428,3 @@ func (nr *nativeRhinoType) nativeGetErrorStack() (messageStack []string) {
 
 	return messageStack
 }
-

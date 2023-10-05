@@ -308,6 +308,26 @@ func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 	return isFinalized, nil
 }
 
+// Reset Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
+// stream of audio.
+func (rhino *Rhino) Reset() error {
+	if rhino.handle == nil {
+		return &RhinoError{
+			StatusCode: INVALID_STATE,
+			Message: 	"Rhino has not been initialized or has been deleted"}
+	}
+
+	status := nativeRhino.reset(rhino);
+	if PvStatus(status) != SUCCESS {
+		return &RhinoError{
+			StatusCode: 	PvStatus(status),
+			Message: 		"Rhino reset failed",
+			MessageStack: 	nativeRhino.nativeGetErrorStack()}
+	}
+
+	return nil
+}
+
 // Gets inference results from Rhino. If the spoken command was understood, it includes the specific intent name
 // that was inferred, and (if applicable) slot keys and specific slot values. Should only be called after the
 // process function returns true, otherwise Rhino has not yet reached an inference conclusion.

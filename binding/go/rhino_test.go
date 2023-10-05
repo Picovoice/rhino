@@ -233,6 +233,84 @@ func TestOutOfContext(t *testing.T) {
 	}
 }
 
+func TestReset(t *testing.T) {
+	rhino = NewRhino("invalid access key", getTestContextPath("en", "coffee_maker"))
+	err := rhino.Init()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+
+	testAudioPath, _ := filepath.Abs(filepath.Join("../../resources/audio_samples/test_within_context.wav"))
+	data, err := ioutil.ReadFile(testAudioPath)
+	if err != nil {
+		t.Fatalf("Could not read test file: %v", err)
+	}
+	data = data[44:] // skip header
+
+	index := 0
+	isFinalized := false
+	frameLenBytes := FrameLength * 2
+	frameCount := int(math.Floor(float64(len(data)) / float64(frameLenBytes)))
+	sampleBuffer := make([]int16, FrameLength)
+	for i := 0; i < frameCount/2; i++ {
+		start := i * frameLenBytes
+
+		for j := 0; j < FrameLength; j++ {
+			dataOffset := start + (j * 2)
+			sampleBuffer[j] = int16(binary.LittleEndian.Uint16(data[dataOffset : dataOffset+2]))
+		}
+
+		isFinalized, err = rhino.Process(sampleBuffer)
+		if err != nil {
+			t.Fatalf("Could not read test file: %v", err)
+		}
+
+		if isFinalized {
+			break
+		}
+
+		if index == 15 {
+			break
+		}
+		index += 1
+	}
+
+	if isFinalized {
+		t.Fatalf("Rhino should not be finalized.")
+	}
+
+	for i := 0; i < frameCount; i++ {
+		start := i * frameLenBytes
+
+		for j := 0; j < FrameLength; j++ {
+			dataOffset := start + (j * 2)
+			sampleBuffer[j] = int16(binary.LittleEndian.Uint16(data[dataOffset : dataOffset+2]))
+		}
+
+		isFinalized, err = rhino.Process(sampleBuffer)
+		if err != nil {
+			t.Fatalf("Could not read test file: %v", err)
+		}
+
+		if isFinalized {
+			break
+		}
+	}
+
+	if !isFinalized {
+		t.Fatalf("Rhino reached end of file without finalizing.")
+	}
+
+	inference, err := rhino.GetInference()
+	if err != nil {
+		t.Fatalf("Rhino failed to get inference: \n%v", err)
+	}
+
+	if !inference.IsUnderstood {
+		t.Fatalf("Rhino failed to understand")
+	}
+}
+
 func TestMessageStack(t *testing.T) {
 	rhino = NewRhino("invalid access key", getTestContextPath("en", "smart_lighting"))
 
