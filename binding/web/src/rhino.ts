@@ -55,6 +55,7 @@ type pv_rhino_process_type = (
   pcm: number,
   isFinalized: number
 ) => Promise<number>;
+type pv_rhino_reset_type = (object: number) => Promise<number>;
 type pv_rhino_context_info_type = (
   object: number,
   contextInfo: number
@@ -77,7 +78,6 @@ type pv_rhino_is_understood_type = (
   object: number,
   isUnderstood: number
 ) => Promise<number>;
-type pv_rhino_reset_type = (object: number) => Promise<number>;
 type pv_rhino_version_type = () => Promise<number>;
 type pv_sample_rate_type = () => Promise<number>;
 type pv_status_to_string_type = (status: number) => Promise<number>;
