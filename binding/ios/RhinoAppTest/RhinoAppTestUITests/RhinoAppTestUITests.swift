@@ -282,6 +282,26 @@ class RhinoAppTestUITests: BaseTest {
 
         r.delete()
     }
+
+    func testReset() throws {
+        let bundle = Bundle(for: type(of: self))
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
+
+        let r = try Rhino.init(accessKey: accessKey, contextPath: contextPath)
+        do {
+            let inference = try processFile(rhino: r, testAudioURL: fileURL, maxProcessCount: 15)
+            XCTAssert(inference == nil)
+        } catch { }
+
+        try r.reset()
+        let inference = try processFile(rhino: r, testAudioURL: fileURL)
+        XCTAssert(inferece.isUnderstood)
+
+        r.delete()
+    }
     
     func testMessageStack() throws {
         let bundle = Bundle(for: type(of: self))
@@ -292,16 +312,16 @@ class RhinoAppTestUITests: BaseTest {
 
         var first_error: String = ""
         do {
-            let p = try Rhino.init(accessKey: "invalid", contextPath: contextPath)
-            XCTAssertNil(p)
+            let r = try Rhino.init(accessKey: "invalid", contextPath: contextPath)
+            XCTAssertNil(r)
         } catch {
             first_error = "\(error.localizedDescription)"
             XCTAssert(first_error.count < 1024)
         }
         
         do {
-            let p = try Rhino.init(accessKey: "invalid", contextPath: contextPath)
-            XCTAssertNil(p)
+            let r = try Rhino.init(accessKey: "invalid", contextPath: contextPath)
+            XCTAssertNil(r)
         } catch {
             XCTAssert("\(error.localizedDescription)".count == first_error.count)
         }

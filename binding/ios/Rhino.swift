@@ -172,6 +172,22 @@ public class Rhino {
         return self.isFinalized
     }
 
+    /// Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
+    /// stream of audio.
+    ///
+    /// - Throws: RhinoError
+    public func reset() throws {
+        if handle == nil {
+            throw RhinoInvalidStateError("Rhino must be initialized before reset is called")
+        }
+
+        let status = pv_rhino_reset(self.handle)
+        if status != PV_STATUS_SUCCESS {
+            let messageStack = getMessageStack()
+            throw pvStatusToRhinoError(status, "Rhino reset failed", messageStack)
+        }
+    }
+
     /// Get inference result from Rhino
     /// - Returns:An inference object
     /// - Throws: RhinoError
