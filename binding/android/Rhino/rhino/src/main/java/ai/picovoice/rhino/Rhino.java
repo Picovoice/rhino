@@ -129,6 +129,20 @@ public class Rhino {
     }
 
     /**
+     * Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
+     * stream of audio.
+     * 
+     * @throws RhinoException if reset fails.
+     */
+    public boolean reset() throws RhinoException {
+        if (handle == 0) {
+            throw new RhinoInvalidStateException("Attempted to call Rhino reset after delete.");
+        }
+        
+        RhinoNative.reset(handle);
+    }
+
+    /**
      * Gets inference result from Rhino. If the spoken command was understood, it includes the
      * specific intent name that was inferred, and (if applicable) slot keys and specific slot
      * values. Should only be called after the process function returns true, otherwise Rhino has

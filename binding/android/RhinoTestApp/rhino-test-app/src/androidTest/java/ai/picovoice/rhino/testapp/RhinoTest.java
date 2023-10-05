@@ -261,13 +261,67 @@ public class RhinoTest {
         }
 
         @Test
+        void reset() throws RhinoException {
+            Rhino r = new Rhino.Builder()
+                    .setAccessKey(accessKey)
+                    .setContextPath(contextPath.getAbsolutePath())
+                    .build(appContext);
+
+            FileInputStream audioInputStream = new FileInputStream(testAudio);
+
+            byte[] rawData = new byte[r.getFrameLength() * 2];
+            short[] pcm = new short[r.getFrameLength()];
+            ByteBuffer pcmBuff = ByteBuffer.wrap(rawData).order(ByteOrder.LITTLE_ENDIAN);
+
+            audioInputStream.skip(44);
+
+            int i = 0;
+            boolean isFinalized = false;
+            while (audioInputStream.available() > 0) {
+                int numRead = audioInputStream.read(pcmBuff.array());
+                if (numRead == r.getFrameLength() * 2) {
+                    pcmBuff.asShortBuffer().get(pcm);
+                    isFinalized = r.process(pcm);
+                    if (isFinalized) {
+                        break;
+                    }
+                }
+                if (i == 15) {
+                    break;
+                }
+                i++;
+            }
+            assertFalse(isFinalized);
+
+            r.reset();
+            audioInputStream = new FileInputStream(testAudio);
+            audioInputStream.skip(44);
+            while (audioInputStream.available() > 0) {
+                int numRead = audioInputStream.read(pcmBuff.array());
+                if (numRead == r.getFrameLength() * 2) {
+                    pcmBuff.asShortBuffer().get(pcm);
+                    isFinalized = r.process(pcm);
+                    if (isFinalized) {
+                        break;
+                    }
+                }
+            }
+            assertTrue(isFinalized);
+
+            RhinoInference inference = r.getInference();
+            assertEquals(inference.getIsUnderstood(), true);
+            r.delete();
+        }
+
+        @Test
         public void getErrorStack() {
             File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+            File testAudio = new File(testResourcesPath, "audio_samples/test_within_context.wav");
 
             String[] error = {};
             try {
                 Rhino r = new Rhino.Builder()
-                        .setAccessKey(accessKey)
+                        .setAccessKey("invalid")
                         .setContextPath(contextPath.getAbsolutePath())
                         .build(appContext);
             } catch (PorcupineException e) {
@@ -279,7 +333,7 @@ public class RhinoTest {
 
             try {
                 Rhino r = new Rhino.Builder()
-                        .setAccessKey(accessKey)
+                        .setAccessKey("invalid")
                         .setContextPath(contextPath.getAbsolutePath())
                         .build(appContext);
             } catch (PorcupineException e) {
