@@ -129,14 +129,9 @@ namespace RhinoTest
 
         private static Rhino InitDefaultRhino() => Rhino.Create(_accessKey, Path.Combine(ROOT_DIR, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
 
+        private bool ProcessFileHelper(Rhino rhino, string audioFileName, int maxProcessCount = -1) {
+            int processed = 0;
 
-        private void RunTestCase(
-            Rhino rhino,
-            string audioFileName,
-            bool isWithinContext,
-            string expectedIntent = null,
-            Dictionary<string, string> expectedSlots = null)
-        {
             int frameLen = rhino.FrameLength;
             string testAudioPath = Path.Combine(ROOT_DIR, "resources/audio_samples", audioFileName);
             List<short> data = GetPcmFromFile(testAudioPath, rhino.SampleRate);
@@ -154,7 +149,23 @@ namespace RhinoTest
                 {
                     break;
                 }
+                if (maxProcessCount != -1 && processed >= maxProcessCount) {
+                    break;
+                }
+                processed++;
             }
+
+            return isFinalized;
+        }
+
+        private void RunTestCase(
+            Rhino rhino,
+            string audioFileName,
+            bool isWithinContext,
+            string expectedIntent = null,
+            Dictionary<string, string> expectedSlots = null)
+        {
+            bool isFinalized = ProcessFileHelper(rhino, audioFileName);
             Assert.IsTrue(isFinalized, "Failed to finalize.");
 
             Inference inference = rhino.GetInference();
@@ -205,28 +216,16 @@ namespace RhinoTest
         {
             using (Rhino rhino = InitDefaultRhino())
             {
-                int frameLen = rhino.FrameLength;
-                string testAudioPath = Path.Combine(ROOT_DIR, "resources/audio_samples/test_within_context.wav");
-                List<short> data = GetPcmFromFile(testAudioPath, rhino.SampleRate);
+                string fileName = "test_within_context.wav";
+                bool isFinalized = ProcessFileHelper(rhino, fileName, 15);
+                Assert.IsFalse(isFinalized, "Finalized should be false");
 
-                bool isFinalized = false;
-                int framecount = (int)Math.Floor((float)(data.Count / frameLen));
-                var results = new List<int>();
-                for (int i = 0; i < framecount; i++)
-                {
-                    int start = i * rhino.FrameLength;
-                    int count = rhino.FrameLength;
-                    List<short> frame = data.GetRange(start, count);
-                    isFinalized = rhino.Process(frame.ToArray());
-                    if (isFinalized)
-                    {
-                        break;
-                    }
-                }
+                rhino.Reset();
+                isFinalized = ProcessFileHelper(rhino, fileName);
                 Assert.IsTrue(isFinalized, "Failed to finalize.");
 
                 Inference inference = rhino.GetInference();
-                Assert.IsTrue(inference.within_context, "Failed to get inference.");
+                Assert.IsTrue(inference.IsUnderstood, "Failed to understand inference.");
             }
         }
         
