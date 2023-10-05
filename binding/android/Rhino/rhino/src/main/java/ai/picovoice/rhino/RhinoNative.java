@@ -21,8 +21,6 @@ class RhinoNative {
     static native String getVersion();
 
     static native void setSdk(String sdk);
-
-    static native String[] getErrorStack();
     
     static native long init(
             String accessKey,
