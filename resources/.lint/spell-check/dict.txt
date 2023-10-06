@@ -37,6 +37,8 @@ downsampled
 downsampling
 drwav
 dylib
+éclairage
+emptively
 emptively
 endpointing
 exopackage
@@ -132,9 +134,7 @@ wavspec
 wchars
 xcframework
 xcodeproj
-xcshareddata
 xcscheme
 xcschemes
+xcshareddata
 xcworkspace
-éclairage
-emptively
