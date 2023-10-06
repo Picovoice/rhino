@@ -53,6 +53,30 @@ typedef enum {
  */
 PV_API const char *pv_status_to_string(pv_status_t status);
 
+/**
+ * If a function returns a failure (any pv_status_t other than PV_STATUS_SUCCESS), this function can be called
+ * to get a series of error messages related to the failure. This function can only be called only once per
+ * failure status on another function. The memory for `message_stack` must be freed using `pv_free_error_stack`.
+ *
+ * Regardless of the return status of this function, if `message_stack` is not `NULL`, then `message_stack`
+ * contains valid memory. However, a failure status on this function indicates that future error messages
+ * may not be reported.
+ *
+ * @param[out] message_stack Array of messages relating to the failure. Messages are NULL terminated strings.
+ *                           The array and messages must be freed using `pv_free_error_stack`.
+ * @param[out] message_stack_depth The number of messages in the `message_stack` array.
+ */
+PV_API pv_status_t pv_get_error_stack(
+        char ***message_stack,
+        int32_t *message_stack_depth);
+
+/**
+ * This function frees the memory used by error messages allocated by `pv_get_error_stack`.
+ *
+ * @param message_stack Array of messages relating to the failure, allocated from `pv_get_error_stack`.
+ */
+PV_API void pv_free_error_stack(char **message_stack);
+
 #ifdef __cplusplus
 }
 

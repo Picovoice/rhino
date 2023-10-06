@@ -22,7 +22,10 @@ import {
   RhinoWorkerProcessResponse,
   RhinoWorkerReleaseResponse,
   RhinoWorkerResetResponse,
+  PvStatus,
 } from './types';
+
+import { pvStatusToException } from './rhino_errors';
 
 export class RhinoWorker {
   private readonly _worker: Worker;
@@ -162,7 +165,7 @@ export class RhinoWorker {
                     break;
                   case 'failed':
                   case 'error':
-                    const error = new Error(ev.data.message);
+                    const error = pvStatusToException(ev.data.status, ev.data.message);
                     if (processErrorCallback) {
                       processErrorCallback(error);
                     } else {
@@ -173,7 +176,7 @@ export class RhinoWorker {
                   default:
                     // @ts-ignore
                     processErrorCallback(
-                      new Error(`Unrecognized command: ${event.data.command}`)
+                      pvStatusToException(PvStatus.RUNTIME_ERROR, `Unrecognized command: ${event.data.command}`)
                     );
                 }
               };
@@ -189,11 +192,12 @@ export class RhinoWorker {
               break;
             case 'failed':
             case 'error':
-              reject(event.data.message);
+              const error = pvStatusToException(event.data.status, event.data.message);
+              reject(error);
               break;
             default:
               // @ts-ignore
-              reject(`Unrecognized command: ${event.data.command}`);
+              reject(pvStatusToException(PvStatus.RUNTIME_ERROR, `Unrecognized command: ${event.data.command}`));
           }
         };
       }
@@ -261,11 +265,12 @@ export class RhinoWorker {
             break;
           case 'failed':
           case 'error':
-            reject(event.data.message);
+            const error = pvStatusToException(event.data.status, event.data.message);
+            reject(error);
             break;
           default:
             // @ts-ignore
-            reject(`Unrecognized command: ${event.data.command}`);
+            reject(pvStatusToException(PvStatus.RUNTIME_ERROR, `Unrecognized command: ${event.data.command}`));
         }
       };
     });

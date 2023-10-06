@@ -13,7 +13,8 @@
 /// <reference lib="webworker" />
 
 import { Rhino } from './rhino';
-import { RhinoWorkerRequest, RhinoInference } from './types';
+import { RhinoError } from './rhino_errors';
+import { RhinoWorkerRequest, RhinoInference, PvStatus } from './types';
 
 function inferenceCallback(inference: RhinoInference): void {
   self.postMessage({
@@ -22,9 +23,10 @@ function inferenceCallback(inference: RhinoInference): void {
   });
 }
 
-function processErrorCallback(error: Error): void {
+function processErrorCallback(error: RhinoError): void {
   self.postMessage({
     command: 'error',
+    status: error.status,
     message: error.message,
   });
 }
@@ -41,6 +43,7 @@ self.onmessage = async function (
       if (rhino !== null) {
         self.postMessage({
           command: 'error',
+          status: PvStatus.INVALID_STATE,
           message: 'Rhino already initialized',
         });
         return;
@@ -66,6 +69,7 @@ self.onmessage = async function (
       } catch (e: any) {
         self.postMessage({
           command: 'error',
+          status: PvStatus.RUNTIME_ERROR,
           message: e.message,
         });
       }
@@ -74,6 +78,7 @@ self.onmessage = async function (
       if (rhino === null) {
         self.postMessage({
           command: 'error',
+          status: PvStatus.INVALID_STATE,
           message: 'Rhino not initialized',
         });
         return;
@@ -84,6 +89,7 @@ self.onmessage = async function (
       if (rhino === null) {
         self.postMessage({
           command: 'error',
+          status: PvStatus.INVALID_STATE,
           message: 'Rhino not initialized',
         });
         return;
@@ -106,6 +112,7 @@ self.onmessage = async function (
     default:
       self.postMessage({
         command: 'failed',
+        status: PvStatus.RUNTIME_ERROR,
         // @ts-ignore
         message: `Unrecognized command: ${event.data.command}`,
       });
