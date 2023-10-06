@@ -158,7 +158,6 @@ PV_API const char *pv_rhino_version(void);
 PV_API int32_t pv_rhino_frame_length(void);
 
 #ifdef __cplusplus
-
 }
 
 #endif
