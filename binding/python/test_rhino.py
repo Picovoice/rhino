@@ -37,7 +37,7 @@ class RhinoTestCase(unittest.TestCase):
             is_finalized = rhino.process(frame)
             if is_finalized:
                 break
-            if max_process_count != -1 && processed >= max_process_count:
+            if max_process_count != -1 and processed >= max_process_count:
                 break
             processed += 1
 
