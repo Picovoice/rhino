@@ -15,7 +15,6 @@ import unittest
 from parameterized import parameterized
 
 from _rhino import Rhino, RhinoError
-from _util import *
 from test_util import *
 
 within_context_parameters, out_of_context_parameters = load_test_data()
@@ -86,15 +85,16 @@ class RhinoTestCase(unittest.TestCase):
             context_name=context_name,
             is_within_context=False)
 
-    def test_reset(self)
+    def test_reset(self):
+        relative_path = '../..'
+
         rhino = Rhino(
             access_key=sys.argv[1],
             library_path=pv_library_path(relative_path),
             model_path=get_model_path_by_language(relative_path, 'en'),
             context_path=get_context_path_by_language(relative_path, 'coffee_maker', 'en')
         )
-        relative_path = '../..'
-        audio_file = get_audio_file_by_language(relative_path, 'en', true)
+        audio_file = get_audio_file_by_language(relative_path, 'en', True)
 
         is_finalized = self._process_file_helper(rhino, audio_file, 15)
         self.assertFalse(is_finalized)
@@ -111,7 +111,7 @@ class RhinoTestCase(unittest.TestCase):
 
         error = None
         try:
-            r = Rhino(
+            _ = Rhino(
                 access_key='invalid',
                 library_path=pv_library_path(relative_path),
                 model_path=get_model_path_by_language(relative_path, 'en'),
@@ -123,7 +123,7 @@ class RhinoTestCase(unittest.TestCase):
         self.assertGreater(len(error), 0)
 
         try:
-            r = Rhino(
+            _ = Rhino(
                 access_key='invalid',
                 library_path=pv_library_path(relative_path),
                 model_path=get_model_path_by_language(relative_path, 'en'),

@@ -347,8 +347,8 @@ class Rhino(object):
                 byref(slot_values))
             if status is not self.PicovoiceStatuses.SUCCESS:
                 raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
-                message='Failed to get intent',
-                message_stack=self._get_error_stack())
+                    message='Failed to get intent',
+                    message_stack=self._get_error_stack())
 
             intent = intent.value.decode('utf-8')
 
@@ -359,8 +359,8 @@ class Rhino(object):
             status = self._free_slots_and_values_func(self._handle, slot_keys, slot_values)
             if status is not self.PicovoiceStatuses.SUCCESS:
                 raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
-                message='Failed to clear resources',
-                message_stack=self._get_error_stack())
+                    message='Failed to clear resources',
+                    message_stack=self._get_error_stack())
         else:
             intent = None
             slots = dict()
