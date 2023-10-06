@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2022 Picovoice Inc.
+    Copyright 2018-2023 Picovoice Inc.
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
     Unless required by applicable law or agreed to in writing, software distributed under the
@@ -129,12 +129,12 @@ public class Rhino {
     }
 
     /**
-     * Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
-     * stream of audio.
+     * Resets the internal state of Rhino. It should be called before the engine can be
+     * used to infer intent from a new stream of audio.
      * 
      * @throws RhinoException if reset fails.
      */
-    public boolean reset() throws RhinoException {
+    public void reset() throws RhinoException {
         if (handle == 0) {
             throw new RhinoInvalidStateException("Attempted to call Rhino reset after delete.");
         }

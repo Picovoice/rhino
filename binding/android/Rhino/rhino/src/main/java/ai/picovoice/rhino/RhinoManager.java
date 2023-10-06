@@ -11,16 +11,7 @@
 package ai.picovoice.rhino;
 
 import android.content.Context;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Process;
 import android.util.Log;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
 
 import ai.picovoice.android.voiceprocessor.VoiceProcessor;
 import ai.picovoice.android.voiceprocessor.VoiceProcessorErrorListener;
