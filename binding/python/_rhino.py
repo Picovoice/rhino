@@ -24,13 +24,11 @@ class RhinoError(Exception):
 
     def __str__(self):
         message = self._message
-        if len(self._message_stack) == 0:
-            return '%s.' % message
-        else:
+        if len(self._message_stack) > 0:
             message += ':'
             for i in range(len(self._message_stack)):
                 message += '\n  [%d] %s' % (i, self._message_stack[i])
-            return message
+        return message
 
     @property
     def message(self) -> str:
