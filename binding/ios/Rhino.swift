@@ -120,7 +120,7 @@ public class Rhino {
             requireEndpoint,
             &self.handle)
         if status != PV_STATUS_SUCCESS {
-            let messageStack = getMessageStack()
+            let messageStack = try getMessageStack()
             throw pvStatusToRhinoError(status, "Rhino init failed", messageStack)
         }
 
@@ -128,7 +128,7 @@ public class Rhino {
         var cContextInfo: UnsafePointer<Int8>?
         status = pv_rhino_context_info(self.handle, &cContextInfo)
         if status != PV_STATUS_SUCCESS {
-            let messageStack = getMessageStack()
+            let messageStack = try getMessageStack()
             throw pvStatusToRhinoError(status, "Failed to get Rhino context info", messageStack)
         }
 
@@ -165,7 +165,7 @@ public class Rhino {
 
         let status = pv_rhino_process(self.handle, pcm, &self.isFinalized)
         if status != PV_STATUS_SUCCESS {
-            let messageStack = getMessageStack()
+            let messageStack = try getMessageStack()
             throw pvStatusToRhinoError(status, "Rhino process failed", messageStack)
         }
 
@@ -183,7 +183,7 @@ public class Rhino {
 
         let status = pv_rhino_reset(self.handle)
         if status != PV_STATUS_SUCCESS {
-            let messageStack = getMessageStack()
+            let messageStack = try getMessageStack()
             throw pvStatusToRhinoError(status, "Rhino reset failed", messageStack)
         }
     }
@@ -208,7 +208,7 @@ public class Rhino {
 
         var status = pv_rhino_is_understood(self.handle, &isUnderstood)
         if status != PV_STATUS_SUCCESS {
-            let messageStack = getMessageStack()
+            let messageStack = try getMessageStack()
             throw pvStatusToRhinoError(status, "Rhino failed to get isUnderstood", messageStack)
         }
 
@@ -219,8 +219,8 @@ public class Rhino {
             var cSlotValues: UnsafeMutablePointer<UnsafePointer<Int8>?>?
             status = pv_rhino_get_intent(self.handle, &cIntent, &numSlots, &cSlotKeys, &cSlotValues)
             if status != PV_STATUS_SUCCESS {
-                let messageStack = getMessageStack()
-                throw pvStatusToRhinoError(status, "Rhino failed to get Intent", messageStack)
+                let messageStack = try getMessageStack()
+                throw pvStatusToRhinoError(status, "Rhino failed to get intent", messageStack)
             }
 
             if isUnderstood {
@@ -233,7 +233,7 @@ public class Rhino {
 
                 status = pv_rhino_free_slots_and_values(self.handle, cSlotKeys, cSlotValues)
                 if status != PV_STATUS_SUCCESS {
-                    let messageStack = getMessageStack()
+                    let messageStack = try getMessageStack()
                     throw pvStatusToRhinoError(status, "Rhino failed to free slots and values", messageStack)
                 }
             }
@@ -241,7 +241,7 @@ public class Rhino {
 
         status = pv_rhino_reset(self.handle)
         if status != PV_STATUS_SUCCESS {
-            let messageStack = getMessageStack()
+            let messageStack = try getMessageStack()
             throw pvStatusToRhinoError(status, "Rhino failed to reset", messageStack)
         }
 
@@ -266,7 +266,10 @@ public class Rhino {
                 "packaged asset, ensure you have added it to your xcode project.")
     }
 
-    private func pvStatusToRhinoError(_ status: pv_status_t, _ message: String, _ messageStack: [String]? = []) -> RhinoError {
+    private func pvStatusToRhinoError(
+        _ status: pv_status_t,
+        _ message: String,
+        _ messageStack: [String] = []) -> RhinoError {
         switch status {
         case PV_STATUS_OUT_OF_MEMORY:
             return RhinoMemoryError(message, messageStack)
@@ -296,18 +299,20 @@ public class Rhino {
         }
     }
 
-    private func getMessageStack() -> [String] {
-        var messageStackRef: UnsafeMutablePointer<UnsafePointer<CChar>?>?
+    private func getMessageStack() throws -> [String] {
+        var messageStackRef: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?
         var messageStackDepth: Int32 = 0
-
-        let object = UnsafeRawPointer(self.handle)
-        pv_get_error_stack(object, &messageStackRef, &messageStackDepth)
-        
-        var messageStack: [String] = []
-        while let s = messageStackRef?.pointee {
-            messageStack.append(String(cString: s))
-            messageStackRef = messageStackRef?.advanced(by: 1)
+        let status = pv_get_error_stack(&messageStackRef, &messageStackDepth)
+        if status != PV_STATUS_SUCCESS {
+            throw pvStatusToPorcupineError(status, "Unable to get Rhino error state")
         }
+
+        var messageStack: [String] = []
+        for i in 0..<messageStackDepth {
+            messageStack.append(String(cString: messageStackRef!.advanced(by: Int(i)).pointee!))
+        }
+
+        pv_free_error_stack(messageStackRef)
 
         return messageStack
     }

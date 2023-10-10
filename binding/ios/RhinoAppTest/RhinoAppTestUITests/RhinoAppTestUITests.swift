@@ -307,7 +307,7 @@ class RhinoAppTestUITests: BaseTest {
 
         r.delete()
     }
-    
+
     func testMessageStack() throws {
         let bundle = Bundle(for: type(of: self))
         let contextPath = bundle.path(
@@ -323,7 +323,7 @@ class RhinoAppTestUITests: BaseTest {
             first_error = "\(error.localizedDescription)"
             XCTAssert(first_error.count < 1024)
         }
-        
+
         do {
             let r = try Rhino.init(accessKey: "invalid", contextPath: contextPath)
             XCTAssertNil(r)

@@ -5,6 +5,7 @@ disabled_rules:
   - implicit_getter
   - cyclomatic_complexity
   - function_parameter_count
+  - type_body_length
 excluded:
   - ${PWD}/**/Pods
   - ${PWD}/**/node_modules
