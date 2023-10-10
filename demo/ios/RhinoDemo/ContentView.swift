@@ -82,8 +82,7 @@ struct ContentView: View {
                 })
             self.contextInfo = self.rhinoManager.contextInfo
         } catch let error as RhinoInvalidArgumentError {
-            errorMessage =
-                "\(error.localizedDescription)\nEnsure your AccessKey '\(ACCESS_KEY)' is valid"
+            errorMessage = "\(error.localizedDescription)"
         } catch is RhinoActivationError {
             errorMessage = "ACCESS_KEY activation error"
         } catch is RhinoActivationRefusedError {
