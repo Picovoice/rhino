@@ -304,7 +304,7 @@ public class Rhino {
         var messageStackDepth: Int32 = 0
         let status = pv_get_error_stack(&messageStackRef, &messageStackDepth)
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToPorcupineError(status, "Unable to get Rhino error state")
+            throw pvStatusToRhinoError(status, "Unable to get Rhino error state")
         }
 
         var messageStack: [String] = []
