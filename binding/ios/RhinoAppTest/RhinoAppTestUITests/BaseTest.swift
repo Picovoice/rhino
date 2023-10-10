@@ -21,10 +21,6 @@ class BaseTest: XCTestCase {
         continueAfterFailure = false
     }
 
-    override func tearDown() {
-        super.tearDown()
-    }
-
     func processFileHelper(
         _ rhino: Rhino,
         _ testAudioURL: URL,
