@@ -507,7 +507,7 @@ namespace Pv
             IntPtr messageStackRef;
 
             RhinoStatus status = pv_get_error_stack(out messageStackRef, out messageStackDepth);
-            if (status != PorcupineStatus.SUCCESS)
+            if (status != RhinoStatus.SUCCESS)
             {
                 throw RhinoStatusToException(status, "Unable to get Rhino error state");
             }
