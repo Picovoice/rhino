@@ -1,5 +1,5 @@
 /*
-    Copyright 2022 Picovoice Inc.
+    Copyright 2022-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -261,7 +261,9 @@ public class RhinoTest {
         }
 
         @Test
-        void reset() throws RhinoException {
+        public void testReset() throws Exception {
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+
             Rhino r = new Rhino.Builder()
                     .setAccessKey(accessKey)
                     .setContextPath(contextPath.getAbsolutePath())
@@ -272,26 +274,25 @@ public class RhinoTest {
             assertFalse(isFinalized);
 
             r.reset();
-            boolean isFinalized = processFileHelper(r, testAudio);
+            isFinalized = processFileHelper(r, testAudio, -1);
             assertTrue(isFinalized);
 
             RhinoInference inference = r.getInference();
-            assertEquals(inference.getIsUnderstood(), true);
+            assertTrue(inference.getIsUnderstood());
             r.delete();
         }
 
         @Test
-        public void getErrorStack() {
+        public void testErrorStack() {
             File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
-            File testAudio = new File(testResourcesPath, "audio_samples/test_within_context.wav");
 
             String[] error = {};
             try {
-                Rhino r = new Rhino.Builder()
+                new Rhino.Builder()
                         .setAccessKey("invalid")
                         .setContextPath(contextPath.getAbsolutePath())
                         .build(appContext);
-            } catch (PorcupineException e) {
+            } catch (RhinoException e) {
                 error = e.getMessageStack();
             }
 
@@ -299,11 +300,11 @@ public class RhinoTest {
             assertTrue(error.length <= 8);
 
             try {
-                Rhino r = new Rhino.Builder()
+                new Rhino.Builder()
                         .setAccessKey("invalid")
                         .setContextPath(contextPath.getAbsolutePath())
                         .build(appContext);
-            } catch (PorcupineException e) {
+            } catch (RhinoException e) {
                 for (int i = 0; i < error.length; i++) {
                     assertEquals(e.getMessageStack()[i], error[i]);
                 }
