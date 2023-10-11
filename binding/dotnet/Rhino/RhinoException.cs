@@ -20,13 +20,13 @@ namespace Pv
         public RhinoException() { }
 
         public RhinoException(string message) : base(message) { }
-        
+
         public RhinoException(string message, string[] messageStack) : base(ModifyMessages(message, messageStack))
         {
             this._messageStack = messageStack;
         }
 
-        public string[] messageStack 
+        public string[] MessageStack
         {
             get => _messageStack;
         }
@@ -34,13 +34,13 @@ namespace Pv
         private static string ModifyMessages(string message, string[] messageStack)
         {
             string messageString = message;
-            if (messageStack.Length > 0) {
+            if (messageStack.Length > 0)
+            {
                 messageString += ":";
-                for(int i = 0; i < messageStack.Length; i++) {
+                for (int i = 0; i < messageStack.Length; i++)
+                {
                     messageString += $"\n  [{i}] {messageStack[i]}";
                 }
-            } else {
-                messageString += ".";
             }
             return messageString;
         }

@@ -129,7 +129,8 @@ namespace RhinoTest
 
         private static Rhino InitDefaultRhino() => Rhino.Create(_accessKey, Path.Combine(ROOT_DIR, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
 
-        private bool ProcessFileHelper(Rhino rhino, string audioFileName, int maxProcessCount = -1) {
+        private bool ProcessFileHelper(Rhino rhino, string audioFileName, int maxProcessCount = -1)
+        {
             int processed = 0;
 
             int frameLen = rhino.FrameLength;
@@ -149,7 +150,8 @@ namespace RhinoTest
                 {
                     break;
                 }
-                if (maxProcessCount != -1 && processed >= maxProcessCount) {
+                if (maxProcessCount != -1 && processed >= maxProcessCount)
+                {
                     break;
                 }
                 processed++;
@@ -228,37 +230,44 @@ namespace RhinoTest
                 Assert.IsTrue(inference.IsUnderstood, "Failed to understand inference.");
             }
         }
-        
+
         [TestMethod]
         public void TestMessageStack()
         {
             Rhino r;
-            string[] messageList = {};
+            string[] messageList = { };
 
-            try {
+            try
+            {
                 r = Rhino.Create(
                     "invalid",
                     GetContextPath("en", "smart_lighting"),
                     GetModelPath("en"));
                 Assert.IsNull(r);
                 r.Dispose();
-            } catch (RhinoException e) {
-                messageList = e.messageStack;
+            }
+            catch (RhinoException e)
+            {
+                messageList = e.MessageStack;
             }
 
             Assert.IsTrue(0 < messageList.Length);
             Assert.IsTrue(messageList.Length < 8);
 
-            try {
+            try
+            {
                 r = Rhino.Create(
                     "invalid",
                     GetContextPath("en", "smart_lighting"),
                     GetModelPath("en"));
                 Assert.IsNull(r);
                 r.Dispose();
-            } catch (RhinoException e) {
-                for (int i = 0; i < messageList.Length; i++) {
-                    Assert.AreEqual(messageList[i], e.messageStack[i]);
+            }
+            catch (RhinoException e)
+            {
+                for (int i = 0; i < messageList.Length; i++)
+                {
+                    Assert.AreEqual(messageList[i], e.MessageStack[i]);
                 }
             }
         }

@@ -142,15 +142,16 @@ namespace Pv
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern int pv_rhino_frame_length();
-        
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern void pv_set_sdk(string sdk);
-        
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern void pv_get_error_stack(out IntPtr messageStack, out int messageStackDepth);
 
-        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void pv_set_sdk(string sdk);
+
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
+        private static extern RhinoStatus pv_get_error_stack(out IntPtr messageStack, out int messageStackDepth);
+
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern void pv_free_error_stack(IntPtr messageStack);
+
 
         private bool _isFinalized;
 
@@ -257,7 +258,7 @@ namespace Pv
             IntPtr modelPathPtr = Utils.GetPtrFromUtf8String(modelPath);
             IntPtr contextPathPtr = Utils.GetPtrFromUtf8String(contextPath);
 
-            pv_set_sdk(".net");
+            pv_set_sdk("dotnet");
 
             RhinoStatus status = pv_rhino_init(
                 accessKeyPtr,
@@ -323,7 +324,7 @@ namespace Pv
         }
 
         /// <summary>
-        ///  Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new 
+        ///  Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
         ///  stream of audio.
         /// </summary>
         public void Reset()
@@ -446,7 +447,11 @@ namespace Pv
             string message = "",
             string[] messageStack = null)
         {
-            messageStack = messageStack ?? new string[]{};
+            if (messageStack == null)
+            {
+                messageStack = new string[] { };
+            }
+
             switch (status)
             {
                 case RhinoStatus.OUT_OF_MEMORY:
@@ -496,16 +501,22 @@ namespace Pv
             Dispose();
         }
 
-        private string[] GetMessageStack() {
+        private string[] GetMessageStack()
+        {
             int messageStackDepth;
             IntPtr messageStackRef;
 
-            pv_get_error_stack(out messageStackRef, out messageStackDepth);
+            RhinoStatus status = pv_get_error_stack(out messageStackRef, out messageStackDepth);
+            if (status != PorcupineStatus.SUCCESS)
+            {
+                throw RhinoStatusToException(status, "Unable to get Rhino error state");
+            }
 
             int elementSize = Marshal.SizeOf(typeof(IntPtr));
             string[] messageStack = new string[messageStackDepth];
 
-            for (int i = 0; i < messageStackDepth; i++) {
+            for (int i = 0; i < messageStackDepth; i++)
+            {
                 messageStack[i] = Marshal.PtrToStringAnsi(Marshal.ReadIntPtr(messageStackRef, i * elementSize));
             }
 
