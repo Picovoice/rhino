@@ -119,11 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
             Log.i("RhinoManager", rhinoManager.getContextInformation());
         } catch (RhinoInvalidArgumentException e) {
-            onRhinoError(
-                    String.format(
-                            "%s\nMake sure your AccessKey '%s' is a valid access key.",
-                            e.getMessage(),
-                            ACCESS_KEY));
+            onRhinoError(e.getMessage());
         } catch (RhinoActivationException e) {
             onRhinoError("AccessKey activation error");
         } catch (RhinoActivationLimitException e) {
