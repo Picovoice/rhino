@@ -270,7 +270,7 @@ public class RhinoTest {
                     .build(appContext);
 
             File testAudio = new File(testResourcesPath, "audio_samples/test_within_context.wav");
-            boolean isFinalized = processFileHelper(r, testAudio, -1);
+            boolean isFinalized = processFileHelper(r, testAudio, 15);
             assertFalse(isFinalized);
 
             r.reset();
