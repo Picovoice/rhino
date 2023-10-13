@@ -317,7 +317,7 @@ func (rhino *Rhino) Reset() error {
 			Message: 	"Rhino has not been initialized or has been deleted"}
 	}
 
-	status := nativeRhino.reset(rhino);
+	status := nativeRhino.nativeReset(rhino);
 	if PvStatus(status) != SUCCESS {
 		return &RhinoError{
 			StatusCode: 	PvStatus(status),
