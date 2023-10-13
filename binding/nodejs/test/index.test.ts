@@ -114,12 +114,12 @@ describe("Reset", () => {
 })
 
 describe("error message stack", () => {
-  test("message stack cleared after read", () => {
+  test("message stack cleared after read", () => {    
     let error: string[] = [];
     try {
       new Rhino(
         "invalid",
-        getContextPathsByLanguage('en', 'smart_lighting'));
+        getContextPathsByLanguage('en', 'coffee_maker'));
     } catch (e: any) {
       error = e.messageStack;
     }
@@ -130,7 +130,7 @@ describe("error message stack", () => {
     try {
       new Rhino(
         "invalid",
-        getContextPathsByLanguage('en', 'smart_lighting'));
+        getContextPathsByLanguage('en', 'coffee_maker'));
     } catch (e: any) {
       for (let i = 0; i < error.length; i++) {
         expect(error[i]).toEqual(e.messageStack[i]);

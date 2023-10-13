@@ -132,6 +132,7 @@ export default class Rhino {
     }
 
     const pvRhino = require(libraryPath); // eslint-disable-line
+    this._pvRhino = pvRhino;
 
     let rhinoHandleAndStatus: RhinoHandleAndStatus | null = null;
     try {
@@ -155,7 +156,6 @@ export default class Rhino {
     }
 
     this._handle = rhinoHandleAndStatus!.handle;
-    this._pvRhino = pvRhino;
     this._frameLength = pvRhino.frame_length();
     this._sampleRate = pvRhino.sample_rate();
     this._version = pvRhino.version();
