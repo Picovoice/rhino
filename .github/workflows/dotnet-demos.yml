@@ -45,9 +45,18 @@ jobs:
     - name: Package restore
       run: dotnet restore
 
+    # *********** REMOVE AFTER RELEASE **********************
+    - name: Pack binding for local ref
+      run: dotnet pack -c Release
+      working-directory: binding/dotnet
+
+    - name: Add binding to demo
+      run: dotnet add package -s ../../../binding/dotnet/Rhino/bin/Release Rhino
+    # ******************************************************
+
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
-  
+
     - name: Dotnet build filedemo
       run: dotnet build -c FileDemo.Release
 
@@ -82,9 +91,18 @@ jobs:
     - name: Package restore
       run: dotnet restore
 
+    # *********** REMOVE AFTER RELEASE **********************
+    - name: Pack binding for local ref
+      run: dotnet pack -c Release
+      working-directory: binding/dotnet
+
+    - name: Add binding to demo
+      run: dotnet add package -s ../../../binding/dotnet/Rhino/bin/Release Rhino
+    # ******************************************************
+
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
-  
+
     - name: Dotnet build filedemo
       run: dotnet build -c FileDemo.Release
 

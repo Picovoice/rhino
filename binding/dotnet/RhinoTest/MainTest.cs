@@ -129,14 +129,10 @@ namespace RhinoTest
 
         private static Rhino InitDefaultRhino() => Rhino.Create(_accessKey, Path.Combine(ROOT_DIR, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
 
-
-        private void RunTestCase(
-            Rhino rhino,
-            string audioFileName,
-            bool isWithinContext,
-            string expectedIntent = null,
-            Dictionary<string, string> expectedSlots = null)
+        private bool ProcessFileHelper(Rhino rhino, string audioFileName, int maxProcessCount = -1)
         {
+            int processed = 0;
+
             int frameLen = rhino.FrameLength;
             string testAudioPath = Path.Combine(ROOT_DIR, "resources/audio_samples", audioFileName);
             List<short> data = GetPcmFromFile(testAudioPath, rhino.SampleRate);
@@ -154,7 +150,24 @@ namespace RhinoTest
                 {
                     break;
                 }
+                if (maxProcessCount != -1 && processed >= maxProcessCount)
+                {
+                    break;
+                }
+                processed++;
             }
+
+            return isFinalized;
+        }
+
+        private void RunTestCase(
+            Rhino rhino,
+            string audioFileName,
+            bool isWithinContext,
+            string expectedIntent = null,
+            Dictionary<string, string> expectedSlots = null)
+        {
+            bool isFinalized = ProcessFileHelper(rhino, audioFileName);
             Assert.IsTrue(isFinalized, "Failed to finalize.");
 
             Inference inference = rhino.GetInference();
@@ -197,6 +210,65 @@ namespace RhinoTest
             using (Rhino rhino = InitDefaultRhino())
             {
                 Assert.IsFalse(string.IsNullOrWhiteSpace(rhino?.ContextInfo), "Rhino did not return any context information.");
+            }
+        }
+
+        [TestMethod]
+        public void TestReset()
+        {
+            using (Rhino rhino = InitDefaultRhino())
+            {
+                string fileName = "test_within_context.wav";
+                bool isFinalized = ProcessFileHelper(rhino, fileName, 15);
+                Assert.IsFalse(isFinalized, "Finalized should be false");
+
+                rhino.Reset();
+                isFinalized = ProcessFileHelper(rhino, fileName);
+                Assert.IsTrue(isFinalized, "Failed to finalize.");
+
+                Inference inference = rhino.GetInference();
+                Assert.IsTrue(inference.IsUnderstood, "Failed to understand inference.");
+            }
+        }
+
+        [TestMethod]
+        public void TestMessageStack()
+        {
+            Rhino r;
+            string[] messageList = { };
+
+            try
+            {
+                r = Rhino.Create(
+                    "invalid",
+                    GetContextPath("en", "smart_lighting"),
+                    GetModelPath("en"));
+                Assert.IsNull(r);
+                r.Dispose();
+            }
+            catch (RhinoException e)
+            {
+                messageList = e.MessageStack;
+            }
+
+            Assert.IsTrue(0 < messageList.Length);
+            Assert.IsTrue(messageList.Length < 8);
+
+            try
+            {
+                r = Rhino.Create(
+                    "invalid",
+                    GetContextPath("en", "smart_lighting"),
+                    GetModelPath("en"));
+                Assert.IsNull(r);
+                r.Dispose();
+            }
+            catch (RhinoException e)
+            {
+                for (int i = 0; i < messageList.Length; i++)
+                {
+                    Assert.AreEqual(messageList[i], e.MessageStack[i]);
+                }
             }
         }
 
