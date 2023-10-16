@@ -106,6 +106,7 @@ rhinomicdemo
 rhinotestapp
 rodio
 rosado
+Rustonomicon
 RTLD
 seumateu
 shōmei

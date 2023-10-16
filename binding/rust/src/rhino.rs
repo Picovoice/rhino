@@ -27,7 +27,11 @@ use libloading::os::unix::Symbol as RawSymbol;
 use libloading::os::windows::Symbol as RawSymbol;
 
 #[repr(C)]
-struct CRhino {}
+struct CRhino {
+    // Fields suggested by the Rustonomicon: https://doc.rust-lang.org/nomicon/ffi.html#representing-opaque-structs
+    _data: [u8; 0],
+    _marker: core::marker::PhantomData<(*mut u8, core::marker::PhantomPinned)>,
+}
 
 #[repr(C)]
 #[derive(PartialEq, Clone, Debug)]
@@ -87,6 +91,7 @@ type PvGetErrorStackFn =
 type PvFreeErrorStackFn = unsafe extern "C" fn(message_stack: *mut *mut c_char);
 type PvSetSdkFn = unsafe extern "C" fn(sdk: *const c_char);
 
+
 #[derive(PartialEq, Clone, Debug)]
 pub enum RhinoErrorStatus {
     LibraryError(PvStatus),
@@ -129,16 +134,13 @@ impl std::fmt::Display for RhinoError {
         let mut message_string = String::new();
         message_string.push_str(&format!("{} with status '{:?}'", self.message, self.status));
 
-        if self.message_stack.len() == 0 {
-            message_string.push_str(".");
-            write!(f, "{}", message_string)
-        } else {
-            message_string.push_str(":");
+        if !self.message_stack.is_empty() {
+            message_string.push(':');
             for x in 0..self.message_stack.len() {
                 message_string.push_str(&format!("  [{}] {}\n", x, self.message_stack[x]))
-            }
-            write!(f, "{}", message_string)
+            };
         }
+        write!(f, "{}", message_string)
     }
 }
 
