@@ -259,7 +259,11 @@ func TestReset(t *testing.T) {
 		t.Fatalf("Rhino should not be finalized.")
 	}
 
-	rhino.Reset()
+	err := rhino.Reset()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+
 	isFinalized = processFileHelper(t, &rhino, testAudioFileName, -1)
 	if !isFinalized {
 		t.Fatalf("Rhino reached end of file without finalizing.")
