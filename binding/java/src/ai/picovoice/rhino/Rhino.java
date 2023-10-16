@@ -139,7 +139,7 @@ public class Rhino {
      * 
      * @throws RhinoException if reset fails.
      */
-    public boolean reset() throws RhinoException {
+    public void reset() throws RhinoException {
         if (handle == 0) {
             throw new RhinoInvalidStateException("Attempted to call Rhino reset after delete.");
         }
