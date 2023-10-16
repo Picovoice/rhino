@@ -135,8 +135,6 @@ export default class Rhino {
 
     let rhinoHandleAndStatus: RhinoHandleAndStatus | null = null;
     try {
-      pvRhino.set_sdk("node");
-
       rhinoHandleAndStatus = pvRhino.init(
         accessKey,
         modelPath,
@@ -151,7 +149,7 @@ export default class Rhino {
 
     const status = rhinoHandleAndStatus!.status;
     if (status !== PvStatus.SUCCESS) {
-      pvStatusToException(status, 'Rhino failed to initialize', pvRhino.get_error_stack());
+      pvStatusToException(status, 'Rhino failed to initialize');
     }
 
     this._handle = rhinoHandleAndStatus!.handle;
@@ -229,7 +227,7 @@ export default class Rhino {
 
     const status = finalizedAndStatus!.status;
     if (status !== PvStatus.SUCCESS) {
-      pvStatusToException(status, 'Rhino failed to process the frame', this._pvRhino.get_error_stack());
+      pvStatusToException(status, 'Rhino failed to process the frame');
     }
 
     this.isFinalized = finalizedAndStatus!.is_finalized === 1;
@@ -285,7 +283,7 @@ export default class Rhino {
 
     const status = inferenceAndStatus!.status;
     if (status !== PvStatus.SUCCESS) {
-      pvStatusToException(status, `Rhino failed to get inference: ${status}`, this._pvRhino.get_error_stack());
+      pvStatusToException(status, `Rhino failed to get inference: ${status}`);
     }
 
     const inference: RhinoInference = {
@@ -323,8 +321,7 @@ export default class Rhino {
     if (status !== PvStatus.SUCCESS) {
       pvStatusToException(
         status,
-        `Rhino failed to get context info: ${status}`,
-        this._pvRhino.get_error_stack()
+        `Rhino failed to get context info: ${status}`
       );
     }
 

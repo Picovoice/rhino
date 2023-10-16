@@ -12,38 +12,7 @@
 
 import PvStatus from './pv_status_t';
 
-export class RhinoError extends Error {
-  private readonly _message: string;
-  private readonly _messageStack: string[];
-
-  constructor(message: string, messageStack: string[] = []) {
-    super(RhinoError.errorToString(message, messageStack));
-    this._message = message;
-    this._messageStack = messageStack;
-  }
-
-  get message(): string {
-    return this._message;
-  }
-
-  get messageStack(): string[] {
-    return this._messageStack;
-  }
-
-  private static errorToString(
-    initial: string,
-    messageStack: string[]
-  ): string {
-    let msg = initial;
-
-    if (messageStack.length > 0) {
-      msg += `: ${messageStack.reduce((acc, value, index) =>
-        acc + '\n  [' + index + '] ' + value, '')}`;
-    }
-
-    return msg;
-  }
-}
+export class RhinoError extends Error {}
 
 export class RhinoOutOfMemoryError extends RhinoError {}
 export class RhinoIoError extends RhinoError {}
@@ -59,32 +28,31 @@ export class RhinoActivationRefused extends RhinoError {}
 
 export function pvStatusToException(
   pvStatus: PvStatus,
-  errorMessage: string,
-  messageStack: string[] = []
+  errorMessage: string
 ): void {
   switch (pvStatus) {
     case PvStatus.OUT_OF_MEMORY:
-      throw new RhinoOutOfMemoryError(errorMessage, messageStack);
+      throw new RhinoOutOfMemoryError(errorMessage);
     case PvStatus.IO_ERROR:
-      throw new RhinoIoError(errorMessage, messageStack);
+      throw new RhinoIoError(errorMessage);
     case PvStatus.INVALID_ARGUMENT:
-      throw new RhinoInvalidArgumentError(errorMessage, messageStack);
+      throw new RhinoInvalidArgumentError(errorMessage);
     case PvStatus.STOP_ITERATION:
-      throw new RhinoStopIterationError(errorMessage, messageStack);
+      throw new RhinoStopIterationError(errorMessage);
     case PvStatus.KEY_ERROR:
-      throw new RhinoKeyError(errorMessage, messageStack);
+      throw new RhinoKeyError(errorMessage);
     case PvStatus.INVALID_STATE:
-      throw new RhinoInvalidStateError(errorMessage, messageStack);
+      throw new RhinoInvalidStateError(errorMessage);
     case PvStatus.RUNTIME_ERROR:
-      throw new RhinoRuntimeError(errorMessage, messageStack);
+      throw new RhinoRuntimeError(errorMessage);
     case PvStatus.ACTIVATION_ERROR:
-      throw new RhinoActivationError(errorMessage, messageStack);
+      throw new RhinoActivationError(errorMessage);
     case PvStatus.ACTIVATION_LIMIT_REACHED:
-      throw new RhinoActivationLimitReached(errorMessage, messageStack);
+      throw new RhinoActivationLimitReached(errorMessage);
     case PvStatus.ACTIVATION_THROTTLED:
-      throw new RhinoActivationThrottled(errorMessage, messageStack);
+      throw new RhinoActivationThrottled(errorMessage);
     case PvStatus.ACTIVATION_REFUSED:
-      throw new RhinoActivationRefused(errorMessage, messageStack);
+      throw new RhinoActivationRefused(errorMessage);
     default:
       // eslint-disable-next-line no-console
       console.warn(`Unmapped error code: ${pvStatus}`);
