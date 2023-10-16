@@ -9,7 +9,6 @@ interest, in real-time. For example, given a spoken command:
 
 Rhino infers that the user would like to order a drink and emits the following inference result:
 
-
 ```json
 {
   "isUnderstood": "true",
