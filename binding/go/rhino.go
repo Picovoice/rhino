@@ -247,10 +247,18 @@ func (rhino *Rhino) Init() error {
 
 	status := nativeRhino.nativeInit(rhino)
 	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return &RhinoError{
+				StatusCode:   errorStatus,
+				Message:      "Unable to get Rhino error state",
+			}
+		}
+
 		return &RhinoError{
 			StatusCode:		PvStatus(status),
 			Message:		"Rhino init failed",
-			MessageStack: 	nativeRhino.nativeGetErrorStack()}
+			MessageStack: 	messageStack}
 	}
 
 	FrameLength = nativeRhino.nativeFrameLength()
@@ -259,10 +267,18 @@ func (rhino *Rhino) Init() error {
 
 	status, rhino.ContextInfo = nativeRhino.nativeContextInfo(rhino)
 	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return &RhinoError{
+				StatusCode:   errorStatus,
+				Message:      "Unable to get Rhino error state",
+			}
+		}
+
 		return &RhinoError{
 			StatusCode: 	PvStatus(status),
 			Message: 		"Could not get context from rhino instance",
-			MessageStack: 	nativeRhino.nativeGetErrorStack()}
+			MessageStack: 	messageStack}
 	}
 
 	return nil
@@ -298,10 +314,18 @@ func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 
 	status, isFinalized := nativeRhino.nativeProcess(rhino, pcm)
 	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return false, &RhinoError{
+				StatusCode:   errorStatus,
+				Message:      "Unable to get Rhino error state",
+			}
+		}
+
 		return false, &RhinoError{
 			StatusCode: 	PvStatus(status),
 			Message: 		"Rhino process failed",
-			MessageStack: 	nativeRhino.nativeGetErrorStack()}
+			MessageStack: 	messageStack}
 	}
 
 	rhino.isFinalized = isFinalized
@@ -319,10 +343,18 @@ func (rhino *Rhino) Reset() error {
 
 	status := nativeRhino.nativeReset(rhino);
 	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return &RhinoError{
+				StatusCode:   errorStatus,
+				Message:      "Unable to get Rhino error state",
+			}
+		}
+
 		return &RhinoError{
 			StatusCode: 	PvStatus(status),
 			Message: 		"Rhino reset failed",
-			MessageStack: 	nativeRhino.nativeGetErrorStack()}
+			MessageStack: 	messageStack}
 	}
 
 	return nil
@@ -342,11 +374,19 @@ func (rhino *Rhino) GetInference() (inference RhinoInference, err error) {
 
 	status, isUnderstood := nativeRhino.nativeIsUnderstood(rhino)
 	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return RhinoInference{}, &RhinoError{
+				StatusCode:   errorStatus,
+				Message:      "Unable to get Rhino error state",
+			}
+		}
+
 		return RhinoInference{},
 			&RhinoError{
 				StatusCode: 	PvStatus(status),
 				Message: 		"Rhino GetInference failed at IsUnderstood",
-				MessageStack: 	nativeRhino.nativeGetErrorStack()}
+				MessageStack: 	messageStack}
 	}
 
 	var intent string
@@ -354,31 +394,55 @@ func (rhino *Rhino) GetInference() (inference RhinoInference, err error) {
 	if isUnderstood {
 		status, intent, slots = nativeRhino.nativeGetIntent(rhino)
 		if PvStatus(status) != SUCCESS {
+			errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+			if errorStatus != SUCCESS {
+				return RhinoInference{}, &RhinoError{
+					StatusCode:   errorStatus,
+					Message:      "Unable to get Rhino error state",
+				}
+			}
+
 			return RhinoInference{},
 				&RhinoError{
 					StatusCode: 	PvStatus(status),
 					Message: 		"GetInference failed at GetIntent",
-					MessageStack: 	nativeRhino.nativeGetErrorStack()}
+					MessageStack: 	messageStack}
 		}
 
 		status = nativeRhino.nativeFreeSlotsAndValues(rhino)
 		if PvStatus(status) != SUCCESS {
+			errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+			if errorStatus != SUCCESS {
+				return RhinoInference{}, &RhinoError{
+					StatusCode:   errorStatus,
+					Message:      "Unable to get Rhino error state",
+				}
+			}
+
 			return RhinoInference{},
 				&RhinoError{
 					StatusCode: 	PvStatus(status),
 					Message: 		"GetInference failed at FreeSlotsAndValues",
-					MessageStack: 	nativeRhino.nativeGetErrorStack()}
+					MessageStack: 	messageStack}
 
 		}
 	}
 
 	status = nativeRhino.nativeReset(rhino)
 	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return RhinoInference{}, &RhinoError{
+				StatusCode:   errorStatus,
+				Message:      "Unable to get Rhino error state",
+			}
+		}
+
 		return RhinoInference{},
 			&RhinoError{
 				StatusCode: 	PvStatus(status),
 				Message: 		"GetInference failed at Reset",
-				MessageStack: 	nativeRhino.nativeGetErrorStack()}
+				MessageStack: 	messageStack}
 	}
 
 	return RhinoInference{
