@@ -247,7 +247,7 @@ describe("Rhino Binding", function () {
       let firstError = "";
       try {
         const rhino = await instance.create(
-          "jbklasdfjbas",
+          "invalidAccessKey",
           { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
           () => { },
           { publicPath: '/test/rhino_params.pv', forceWrite: true }
@@ -260,7 +260,7 @@ describe("Rhino Binding", function () {
 
       try {
         const rhino = await instance.create(
-          "jbklasdfjbas",
+          "invalidAccessKey",
           { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
           () => { },
           { publicPath: '/test/rhino_params.pv', forceWrite: true }
