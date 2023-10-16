@@ -35,6 +35,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class RhinoTest {
 
@@ -128,7 +129,7 @@ public class RhinoTest {
     }
 
     @Test
-    void reset() throws RhinoException {
+    void reset() throws Exception {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
@@ -139,7 +140,7 @@ public class RhinoTest {
         assertFalse(isFinalized);
 
         rhino.reset();
-        boolean isFinalized = processFileHelper(audioFilePath, -1);
+        isFinalized = processFileHelper(audioFilePath, -1);
         assertTrue(isFinalized);
 
         RhinoInference inference = rhino.getInference();
@@ -173,7 +174,9 @@ public class RhinoTest {
         }
     }
 
-    boolean processFileHelper(String audioFileName, int maxProcessCount) {
+    boolean processFileHelper(String audioFileName,
+                              int maxProcessCount)
+                              throws IOException, UnsupportedAudioFileException, RhinoException {
         int processed = 0;
 
         int frameLen = rhino.getFrameLength();

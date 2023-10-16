@@ -136,7 +136,7 @@ public class Rhino {
     /**
      * Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
      * stream of audio.
-     * 
+     *
      * @throws RhinoException if reset fails.
      */
     public void reset() throws RhinoException {
