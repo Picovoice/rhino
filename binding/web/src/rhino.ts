@@ -82,7 +82,9 @@ type pv_rhino_version_type = () => Promise<number>;
 type pv_sample_rate_type = () => Promise<number>;
 type pv_status_to_string_type = (status: number) => Promise<number>;
 type pv_set_sdk_type = (sdk: number) => Promise<void>;
-type pv_get_error_stack_type = (messageStack: number, messageStackDepth: number) => Promise<void>;
+type pv_get_error_stack_type = (messageStack: number, messageStackDepth: number) => Promise<number>;
+type pv_free_error_stack_type = (messageStack: number) => Promise<void>;
+
 
 /**
  * JavaScript/WebAssembly Binding for the Picovoice Rhino Speech-to-Intent engine.
@@ -119,6 +121,7 @@ type RhinoWasmOutput = {
   pvRhinoReset: pv_rhino_reset_type;
   pvStatusToString: pv_status_to_string_type;
   pvGetErrorStack: pv_get_error_stack_type;
+  pvFreeErrorStack: pv_free_error_stack_type;
 };
 
 export class Rhino {
@@ -130,6 +133,7 @@ export class Rhino {
   private readonly _pvRhinoReset: pv_rhino_reset_type;
   private readonly _pvStatusToString: pv_status_to_string_type;
   private readonly _pvGetErrorStack: pv_get_error_stack_type;
+  private readonly _pvFreeErrorStack: pv_free_error_stack_type;
 
   private _wasmMemory: WebAssembly.Memory | undefined;
   private readonly _pvFree: pv_free_type;
@@ -178,6 +182,7 @@ export class Rhino {
     this._pvRhinoReset = handleWasm.pvRhinoReset;
     this._pvStatusToString = handleWasm.pvStatusToString;
     this._pvGetErrorStack = handleWasm.pvGetErrorStack;
+    this._pvFreeErrorStack = handleWasm.pvFreeErrorStack;
 
     this._wasmMemory = handleWasm.memory;
     this._pvFree = handleWasm.pvFree;
@@ -378,6 +383,7 @@ export class Rhino {
         if (status !== PvStatus.SUCCESS) {
           const messageStack = await Rhino.getMessageStack(
             this._pvGetErrorStack,
+            this._pvFreeErrorStack,
             this._messageStackAddressAddressAddress,
             this._messageStackDepthAddress,
             memoryBufferView,
@@ -399,6 +405,7 @@ export class Rhino {
           if (status !== PvStatus.SUCCESS) {
             const messageStack = await Rhino.getMessageStack(
               this._pvGetErrorStack,
+              this._pvFreeErrorStack,
               this._messageStackAddressAddressAddress,
               this._messageStackDepthAddress,
               memoryBufferView,
@@ -429,6 +436,7 @@ export class Rhino {
             if (status !== PvStatus.SUCCESS) {
               const messageStack = await Rhino.getMessageStack(
                 this._pvGetErrorStack,
+                this._pvFreeErrorStack,
                 this._messageStackAddressAddressAddress,
                 this._messageStackDepthAddress,
                 memoryBufferView,
@@ -485,6 +493,7 @@ export class Rhino {
             if (status !== PvStatus.SUCCESS) {
               const messageStack = await Rhino.getMessageStack(
                 this._pvGetErrorStack,
+                this._pvFreeErrorStack,
                 this._messageStackAddressAddressAddress,
                 this._messageStackDepthAddress,
                 memoryBufferView,
@@ -499,6 +508,7 @@ export class Rhino {
           if (status !== PvStatus.SUCCESS) {
             const messageStack = await Rhino.getMessageStack(
               this._pvGetErrorStack,
+              this._pvFreeErrorStack,
               this._messageStackAddressAddressAddress,
               this._messageStackDepthAddress,
               memoryBufferView,
@@ -578,6 +588,7 @@ export class Rhino {
       const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
       const messageStack = await Rhino.getMessageStack(
         this._pvGetErrorStack,
+        this._pvFreeErrorStack,
         this._messageStackAddressAddressAddress,
         this._messageStackDepthAddress,
         memoryBufferView,
@@ -656,6 +667,7 @@ export class Rhino {
     const pv_sample_rate = exports.pv_sample_rate as pv_sample_rate_type;
     const pv_set_sdk = exports.pv_set_sdk as pv_set_sdk_type;
     const pv_get_error_stack = exports.pv_get_error_stack as pv_get_error_stack_type;
+    const pv_free_error_stack = exports.pv_free_error_stack as pv_free_error_stack_type;
 
     const { endpointDurationSec = 1.0, requireEndpoint = true } = initConfig;
     if (sensitivity && !(typeof sensitivity === 'number')) {
@@ -769,6 +781,7 @@ export class Rhino {
     if (status !== PvStatus.SUCCESS) {
       const messageStack = await Rhino.getMessageStack(
         pv_get_error_stack,
+        pv_free_error_stack,
         messageStackAddressAddressAddress,
         messageStackDepthAddress,
         memoryBufferView,
@@ -802,6 +815,7 @@ export class Rhino {
     if (status !== PvStatus.SUCCESS) {
       const messageStack = await Rhino.getMessageStack(
         pv_get_error_stack,
+        pv_free_error_stack,
         messageStackAddressAddressAddress,
         messageStackDepthAddress,
         memoryBufferView,
@@ -904,17 +918,24 @@ export class Rhino {
       pvRhinoProcess: pv_rhino_process,
       pvRhinoReset: pv_rhino_reset,
       pvStatusToString: pv_status_to_string,
+      pvGetErrorStack: pv_get_error_stack,
+      pvFreeErrorStack: pv_free_error_stack,
     };
   }
 
   private static async getMessageStack(
     pv_get_error_stack: pv_get_error_stack_type,
+    pv_free_error_stack: pv_free_error_stack_type,
     messageStackAddressAddressAddress: number,
     messageStackDepthAddress: number,
     memoryBufferView: DataView,
     memoryBufferUint8: Uint8Array,
   ): Promise<string[]> {
-    await pv_get_error_stack(messageStackAddressAddressAddress, messageStackDepthAddress);
+    const status = await pv_get_error_stack(messageStackAddressAddressAddress, messageStackDepthAddress);
+    if (status != PvStatus.SUCCESS) {
+      throw pvStatusToException(status, "Unable to get Rhino error state");
+    }
+
     const messageStackAddressAddress = memoryBufferView.getInt32(messageStackAddressAddressAddress, true);
 
     const messageStackDepth = memoryBufferView.getInt32(messageStackDepthAddress, true);
@@ -925,6 +946,8 @@ export class Rhino {
       const message = arrayBufferToStringAtIndex(memoryBufferUint8, messageStackAddress);
       messageStack.push(message);
     }
+
+    pv_free_error_stack(messageStackAddressAddress);
 
     return messageStack;
   }
