@@ -154,7 +154,7 @@ mod tests {
         assert_eq!(is_finalized, true, "Failed to get is_finalized.");
 
         let inference = rhino.get_inference();
-        assert_eq!(inferece.is_understood, true, "Failed to get is_understood.")
+        assert_eq!(inference.is_understood, true, "Failed to get is_understood.")
     }
 
     #[test]
