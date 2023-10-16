@@ -1,5 +1,5 @@
 /*
-    Copyright 2022 Picovoice Inc.
+    Copyright 2022-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -258,6 +258,57 @@ public class RhinoTest {
 
             assertTrue(r.getContextInformation() != null && !r.getContextInformation().equals(""));
             r.delete();
+        }
+
+        @Test
+        public void testReset() throws Exception {
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+
+            Rhino r = new Rhino.Builder()
+                    .setAccessKey(accessKey)
+                    .setContextPath(contextPath.getAbsolutePath())
+                    .build(appContext);
+
+            File testAudio = new File(testResourcesPath, "audio_samples/test_within_context.wav");
+            boolean isFinalized = processFileHelper(r, testAudio, 15);
+            assertFalse(isFinalized);
+
+            r.reset();
+            isFinalized = processFileHelper(r, testAudio, -1);
+            assertTrue(isFinalized);
+
+            RhinoInference inference = r.getInference();
+            assertTrue(inference.getIsUnderstood());
+            r.delete();
+        }
+
+        @Test
+        public void testErrorStack() {
+            File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+
+            String[] error = {};
+            try {
+                new Rhino.Builder()
+                        .setAccessKey("invalid")
+                        .setContextPath(contextPath.getAbsolutePath())
+                        .build(appContext);
+            } catch (RhinoException e) {
+                error = e.getMessageStack();
+            }
+
+            assertTrue(0 < error.length);
+            assertTrue(error.length <= 8);
+
+            try {
+                new Rhino.Builder()
+                        .setAccessKey("invalid")
+                        .setContextPath(contextPath.getAbsolutePath())
+                        .build(appContext);
+            } catch (RhinoException e) {
+                for (int i = 0; i < error.length; i++) {
+                    assertEquals(e.getMessageStack()[i], error[i]);
+                }
+            }
         }
     }
 
