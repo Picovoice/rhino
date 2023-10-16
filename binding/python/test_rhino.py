@@ -14,14 +14,33 @@ import unittest
 
 from parameterized import parameterized
 
-from _rhino import Rhino
-from _util import *
+from _rhino import Rhino, RhinoError
 from test_util import *
 
 within_context_parameters, out_of_context_parameters = load_test_data()
 
 
 class RhinoTestCase(unittest.TestCase):
+
+    @staticmethod
+    def _process_file_helper(rhino: Rhino, audio_file: str, max_process_count: int = -1) -> bool:
+        processed = 0
+
+        audio = read_wav_file(
+            audio_file,
+            rhino.sample_rate)
+
+        is_finalized = False
+        for i in range(len(audio) // rhino.frame_length):
+            frame = audio[i * rhino.frame_length:(i + 1) * rhino.frame_length]
+            is_finalized = rhino.process(frame)
+            if is_finalized:
+                break
+            if max_process_count != -1 and processed >= max_process_count:
+                break
+            processed += 1
+
+        return is_finalized
 
     def run_rhino(self, language, context_name, is_within_context, intent=None, slots=None):
         relative_path = '../..'
@@ -34,16 +53,7 @@ class RhinoTestCase(unittest.TestCase):
         )
 
         audio_file = get_audio_file_by_language(relative_path, language, is_within_context)
-        audio = read_wav_file(
-            audio_file,
-            rhino.sample_rate)
-
-        is_finalized = False
-        for i in range(len(audio) // rhino.frame_length):
-            frame = audio[i * rhino.frame_length:(i + 1) * rhino.frame_length]
-            is_finalized = rhino.process(frame)
-            if is_finalized:
-                break
+        is_finalized = self._process_file_helper(rhino, audio_file)
 
         self.assertTrue(is_finalized, "Failed to finalize.")
 
@@ -74,6 +84,53 @@ class RhinoTestCase(unittest.TestCase):
             language=language,
             context_name=context_name,
             is_within_context=False)
+
+    def test_reset(self):
+        relative_path = '../..'
+
+        rhino = Rhino(
+            access_key=sys.argv[1],
+            library_path=pv_library_path(relative_path),
+            model_path=get_model_path_by_language(relative_path, 'en'),
+            context_path=get_context_path_by_language(relative_path, 'coffee_maker', 'en')
+        )
+        audio_file = get_audio_file_by_language(relative_path, 'en', True)
+
+        is_finalized = self._process_file_helper(rhino, audio_file, 15)
+        self.assertFalse(is_finalized)
+
+        rhino.reset()
+        is_finalized = self._process_file_helper(rhino, audio_file)
+        self.assertTrue(is_finalized)
+
+        inference = rhino.get_inference()
+        self.assertTrue(inference.is_understood)
+
+    def test_message_stack(self):
+        relative_path = '../..'
+
+        error = None
+        try:
+            _ = Rhino(
+                access_key='invalid',
+                library_path=pv_library_path(relative_path),
+                model_path=get_model_path_by_language(relative_path, 'en'),
+                context_path=get_context_path_by_language(relative_path, 'smart_lighting', 'en'))
+        except RhinoError as e:
+            error = e.message_stack
+
+        self.assertIsNotNone(error)
+        self.assertGreater(len(error), 0)
+
+        try:
+            _ = Rhino(
+                access_key='invalid',
+                library_path=pv_library_path(relative_path),
+                model_path=get_model_path_by_language(relative_path, 'en'),
+                context_path=get_context_path_by_language(relative_path, 'smart_lighting', 'en'))
+        except RhinoError as e:
+            self.assertEqual(len(error), len(e.message_stack))
+            self.assertListEqual(list(error), list(e.message_stack))
 
 
 if __name__ == '__main__':
