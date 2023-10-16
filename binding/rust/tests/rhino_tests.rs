@@ -21,6 +21,7 @@ mod tests {
 
     use rhino::util::pv_platform;
     use rhino::RhinoBuilder;
+    use rhino::Rhino;
 
     fn append_lang(path: &str, language: &str) -> String {
         if language == "en" {
@@ -76,10 +77,10 @@ mod tests {
         assert_eq!(
             rhino.sample_rate(),
             source.sample_rate(),
-            "`{language}` sample_rate failed for context `{context}`"
+            "sample_rate failed for audio_file `{audio_file}`"
         );
 
-        let processed = 0;
+        let mut processed = 0;
 
         let mut is_finalized = false;
         for frame in &source.chunks(rhino.frame_length() as usize) {
@@ -89,10 +90,10 @@ mod tests {
                 if is_finalized {
                     break;
                 }
-                if (max_process_count != -1 && processed >= max_process_count) {
+                if max_process_count != -1 && processed >= max_process_count {
                     break;
                 }
-                processed++;
+                processed += 1;
             }
         }
 
@@ -115,7 +116,7 @@ mod tests {
             .init()
             .expect("Unable to create Rhino");
 
-        let is_finalized = process_file_helper(rhino, audio_file_name, -1);
+        let is_finalized = process_file_helper(&rhino, audio_file_name, -1);
         assert_eq!(
             is_finalized, true,
             "`{language}` is_finalized failed for context `{context}`"
@@ -140,20 +141,20 @@ mod tests {
         }
     }
 
-    #[Test]
+    #[test]
     fn test_reset() {
         let access_key = env::var("PV_ACCESS_KEY")
             .expect("Pass the AccessKey in using the PV_ACCESS_KEY env variable");
 
-        let rhino = RhinoBuilder::new(access_key, context_path_by_language("coffee_maker", "en")).init();
-        let is_finalized = process_file_helper(rhino, "test_within_context.wav", 15);
+        let rhino = RhinoBuilder::new(access_key, context_path_by_language("coffee_maker", "en")).init().unwrap();
+        let mut is_finalized = process_file_helper(&rhino, "test_within_context.wav", 15);
         assert_eq!(is_finalized, false, "Rhino process should have been finalized.");
 
-        rhino.reset();
-        is_finalized = process_file_helper(rhino, "test_within_context.wav", -1);
+        let _ = rhino.reset();
+        is_finalized = process_file_helper(&rhino, "test_within_context.wav", -1);
         assert_eq!(is_finalized, true, "Failed to get is_finalized.");
 
-        let inference = rhino.get_inference();
+        let inference = rhino.get_inference().unwrap();
         assert_eq!(inference.is_understood, true, "Failed to get is_understood.")
     }
 
