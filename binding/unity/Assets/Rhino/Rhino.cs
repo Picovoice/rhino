@@ -109,7 +109,7 @@ namespace Pv.Unity
         private static extern void pv_set_sdk(string sdk);
 
         [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern void pv_get_error_stack(out IntPtr messageStack, out int messageStackDepth);
+        private static extern RhinoStatus pv_get_error_stack(out IntPtr messageStack, out int messageStackDepth);
 
         [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern void pv_free_error_stack(IntPtr messageStack);
@@ -465,7 +465,11 @@ namespace Pv.Unity
             int messageStackDepth;
             IntPtr messageStackRef;
 
-            pv_get_error_stack(out messageStackRef, out messageStackDepth);
+            RhinoStatus status = pv_get_error_stack(out messageStackRef, out messageStackDepth);
+            if (status != RhinoStatus.SUCCESS)
+            {
+                throw RhinoStatusToException(status, "Unable to get Rhino error state");
+            }
 
             int elementSize = Marshal.SizeOf(typeof(IntPtr));
             string[] messageStack = new string[messageStackDepth];
