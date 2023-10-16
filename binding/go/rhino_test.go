@@ -259,7 +259,7 @@ func TestReset(t *testing.T) {
 		t.Fatalf("Rhino should not be finalized.")
 	}
 
-	err := rhino.Reset()
+	err = rhino.Reset()
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
