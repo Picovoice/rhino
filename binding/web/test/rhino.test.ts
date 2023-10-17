@@ -4,6 +4,7 @@ import testData from "./test_data.json";
 // @ts-ignore
 import rhinoParams from "./rhino_params";
 import { PvModel } from '@picovoice/web-utils';
+import { RhinoError } from "../dist/types/rhino_errors";
 
 const ACCESS_KEY: string = Cypress.env("ACCESS_KEY");
 
@@ -84,7 +85,7 @@ const runProcTest = async (
       },
       model,
       {
-        processErrorCallback: (error: string) => {
+        processErrorCallback: (error: RhinoError) => {
           reject(error);
         }
       }
@@ -111,34 +112,6 @@ const runProcTest = async (
 describe("Rhino Binding", function () {
   for (const instance of [Rhino, RhinoWorker]) {
     const instanceString = (instance === RhinoWorker) ? 'worker' : 'main';
-
-    it(`should return correct error message stack (${instanceString})`, async () => {
-      let firstError = "";
-      try {
-        const rhino = await instance.create(
-          "access key",
-          { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
-          () => { },
-          { publicPath: '/test/rhino_params.pv', forceWrite: true }
-        );
-        expect(rhino).to.be.undefined;
-      } catch (e: any) {
-        firstError = e.message;
-        expect(firstError.length).to.be.lt(1024);
-      }
-
-      try {
-        const rhino = await instance.create(
-          "access key",
-          { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
-          () => { },
-          { publicPath: '/test/rhino_params.pv', forceWrite: true }
-        );
-        expect(rhino).to.be.undefined;
-      } catch (e: any) {
-        expect(firstError.length).to.be.eq(e.message.length);
-      }
-    });
 
     it(`should be able to init with public path (${instanceString})`, () => {
       cy.wrap(null).then(async () => {
@@ -242,5 +215,60 @@ describe("Rhino Binding", function () {
         }
       });
     }
+
+    it(`should be able to reset (${instanceString})`, async () => {
+      cy.getFramesFromFile(`audio_samples/test_within_context.wav`).then(async pcm => {
+        let numFinalized = 0;
+
+        const rhino = await instance.create(
+          ACCESS_KEY,
+          { publicPath: `/test/contexts/coffee_maker_wasm.rhn`, forceWrite: true },
+          async rhinoInference => {
+            if (rhinoInference.isFinalized) {
+              numFinalized++;
+            }
+          },
+          { publicPath: `/test/rhino_params.pv`, forceWrite: true }
+        );
+
+        for (let i = 0; i < (pcm.length / 2 - rhino.frameLength + 1); i += rhino.frameLength) {
+          await rhino.process(pcm.slice(i, i + rhino.frameLength));
+        }
+
+        for (let i = 0; i < (pcm.length - rhino.frameLength + 1); i += rhino.frameLength) {
+          await rhino.process(pcm.slice(i, i + rhino.frameLength));
+        }
+
+        expect(numFinalized).to.be.eq(1);
+      });
+    });
+
+    it(`should return correct error message stack (${instanceString})`, async () => {
+      let firstError = "";
+      try {
+        const rhino = await instance.create(
+          "invalidAccessKey",
+          { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
+          () => { },
+          { publicPath: '/test/rhino_params.pv', forceWrite: true }
+        );
+        expect(rhino).to.be.undefined;
+      } catch (e: any) {
+        firstError = e.message;
+        expect(firstError.length).to.be.lt(1024);
+      }
+
+      try {
+        const rhino = await instance.create(
+          "invalidAccessKey",
+          { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
+          () => { },
+          { publicPath: '/test/rhino_params.pv', forceWrite: true }
+        );
+        expect(rhino).to.be.undefined;
+      } catch (e: any) {
+        expect(firstError.length).to.be.eq(e.message.length);
+      }
+    });
   }
 });
