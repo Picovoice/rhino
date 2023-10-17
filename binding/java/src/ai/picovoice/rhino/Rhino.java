@@ -30,6 +30,8 @@ public class Rhino {
     public static final String LIBRARY_PATH;
     public static final String MODEL_PATH;
 
+    private static String sdk = "java";
+
     static {
         LIBRARY_PATH = Utils.getPackagedLibraryPath();
         MODEL_PATH = Utils.getPackagedModelPath();
@@ -37,6 +39,10 @@ public class Rhino {
 
     private long handle;
     private boolean isFinalized;
+
+    public static void setSdk(String sdk) {
+        Rhino.sdk = sdk;
+    }
 
     /**
      * Constructor.
@@ -76,6 +82,8 @@ public class Rhino {
         } catch (Exception exception) {
             throw new RhinoException(exception);
         }
+        RhinoNative.setSdk(Rhino.sdk);
+
         handle = RhinoNative.init(
                 accessKey,
                 modelPath,
@@ -123,6 +131,20 @@ public class Rhino {
 
         isFinalized = RhinoNative.process(handle, pcm);
         return isFinalized;
+    }
+
+    /**
+     * Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
+     * stream of audio.
+     *
+     * @throws RhinoException if reset fails.
+     */
+    public void reset() throws RhinoException {
+        if (handle == 0) {
+            throw new RhinoInvalidStateException("Attempted to call Rhino reset after delete.");
+        }
+        
+        RhinoNative.reset(handle);
     }
 
     /**
