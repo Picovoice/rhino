@@ -68,11 +68,11 @@ func (e *RhinoError) Error() string {
 
 	if len(e.MessageStack) > 0 {
 		message.WriteString(":")
+		for i, value := range e.MessageStack {
+			message.WriteString(fmt.Sprintf("\n  [%d] %s", i, value))
+		}
 	}
 
-	for i, value := range e.MessageStack {
-		message.WriteString(fmt.Sprintf("\n  [%d] %s", i, value))
-	}
 	return message.String()
 }
 
@@ -256,9 +256,9 @@ func (rhino *Rhino) Init() error {
 		}
 
 		return &RhinoError{
-			StatusCode:		PvStatus(status),
-			Message:		"Rhino init failed",
-			MessageStack: 	messageStack}
+			StatusCode:     PvStatus(status),
+			Message:        "Rhino init failed",
+			MessageStack:   messageStack}
 	}
 
 	FrameLength = nativeRhino.nativeFrameLength()

@@ -20,7 +20,7 @@ import (
 	"math"
 	"os"
 	"path/filepath"
-	"reflect"	
+	"reflect"
 	"testing"
 )
 
@@ -164,7 +164,7 @@ func processFileHelper(t *testing.T, rhino *Rhino, audioFileName string, maxProc
 		processed++
 	}
 
-	return isFinalized	
+	return isFinalized
 }
 
 func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
