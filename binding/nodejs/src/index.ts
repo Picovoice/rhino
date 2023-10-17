@@ -12,5 +12,6 @@
 
 import Rhino, { RhinoInference } from './rhino';
 import { getInt16Frames, checkWaveFile } from './wave_util';
+import * as RhinoErrors from "./errors";
 
-export { Rhino, RhinoInference, getInt16Frames, checkWaveFile };
+export { Rhino, RhinoInference, getInt16Frames, checkWaveFile, RhinoErrors };
