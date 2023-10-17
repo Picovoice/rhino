@@ -25,8 +25,8 @@ import (
 )
 
 var (
-	testAccessKey string
-	rhino         Rhino
+	testAccessKey               string
+	rhino                       Rhino
 	withinContextTestParameters []WithinContextTestData
 	outOfContextTestParameters  []OutOfContextTestData
 )
@@ -87,16 +87,16 @@ func loadTestData() ([]WithinContextTestData, []OutOfContextTestData) {
 	var testData struct {
 		Tests struct {
 			WithinContext []struct {
-				Language string `json:"language"`
-				ContextName  string `json:"context_name"`
-				Inference struct {
-					Intent string `json:"intent"`
-					Slots map[string]string `json:"slots"`
+				Language    string `json:"language"`
+				ContextName string `json:"context_name"`
+				Inference   struct {
+					Intent string            `json:"intent"`
+					Slots  map[string]string `json:"slots"`
 				} `json:"inference"`
 			} `json:"within_context"`
 			OutOfContext []struct {
-				Language string `json:"language"`
-				ContextName  string `json:"context_name"`
+				Language    string `json:"language"`
+				ContextName string `json:"context_name"`
 			} `json:"out_of_context"`
 		} `json:"tests"`
 	}
@@ -107,9 +107,9 @@ func loadTestData() ([]WithinContextTestData, []OutOfContextTestData) {
 
 	for _, x := range testData.Tests.WithinContext {
 		withinContextTestData := WithinContextTestData{
-			language:      	x.Language,
-			context:       	x.ContextName,
-			expectedIntent:	x.Inference.Intent,
+			language:       x.Language,
+			context:        x.ContextName,
+			expectedIntent: x.Inference.Intent,
 			expectedSlots:  x.Inference.Slots,
 		}
 
@@ -118,8 +118,8 @@ func loadTestData() ([]WithinContextTestData, []OutOfContextTestData) {
 
 	for _, x := range testData.Tests.OutOfContext {
 		outOfContextTestData := OutOfContextTestData{
-			language:      	x.Language,
-			context:       	x.ContextName,
+			language: x.Language,
+			context:  x.ContextName,
 		}
 
 		outOfContextTestParameters = append(outOfContextTestParameters, outOfContextTestData)
