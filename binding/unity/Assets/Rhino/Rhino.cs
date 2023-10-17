@@ -411,7 +411,7 @@ namespace Pv.Unity
             string message = "",
             string[] messageStack = null)
         {
-            messageStack = messageStack ?? new string[]{};
+            messageStack = messageStack ?? new string[] { };
             switch (status)
             {
                 case RhinoStatus.OUT_OF_MEMORY:
@@ -461,7 +461,8 @@ namespace Pv.Unity
             Dispose();
         }
 
-        private string[] GetMessageStack() {
+        private string[] GetMessageStack()
+        {
             int messageStackDepth;
             IntPtr messageStackRef;
 
@@ -474,7 +475,8 @@ namespace Pv.Unity
             int elementSize = Marshal.SizeOf(typeof(IntPtr));
             string[] messageStack = new string[messageStackDepth];
 
-            for (int i = 0; i < messageStackDepth; i++) {
+            for (int i = 0; i < messageStackDepth; i++)
+            {
                 messageStack[i] = Marshal.PtrToStringAnsi(Marshal.ReadIntPtr(messageStackRef, i * elementSize));
             }
 
