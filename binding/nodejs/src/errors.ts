@@ -46,16 +46,16 @@ export class RhinoError extends Error {
 }
 
 export class RhinoOutOfMemoryError extends RhinoError {}
-export class RhinoIoError extends RhinoError {}
+export class RhinoIOError extends RhinoError {}
 export class RhinoInvalidArgumentError extends RhinoError {}
 export class RhinoStopIterationError extends RhinoError {}
 export class RhinoKeyError extends RhinoError {}
 export class RhinoInvalidStateError extends RhinoError {}
 export class RhinoRuntimeError extends RhinoError {}
 export class RhinoActivationError extends RhinoError {}
-export class RhinoActivationLimitReached extends RhinoError {}
-export class RhinoActivationThrottled extends RhinoError {}
-export class RhinoActivationRefused extends RhinoError {}
+export class RhinoActivationLimitReachedError extends RhinoError {}
+export class RhinoActivationThrottledError extends RhinoError {}
+export class RhinoActivationRefusedError extends RhinoError {}
 
 export function pvStatusToException(
   pvStatus: PvStatus,
@@ -66,7 +66,7 @@ export function pvStatusToException(
     case PvStatus.OUT_OF_MEMORY:
       throw new RhinoOutOfMemoryError(errorMessage, messageStack);
     case PvStatus.IO_ERROR:
-      throw new RhinoIoError(errorMessage, messageStack);
+      throw new RhinoIOError(errorMessage, messageStack);
     case PvStatus.INVALID_ARGUMENT:
       throw new RhinoInvalidArgumentError(errorMessage, messageStack);
     case PvStatus.STOP_ITERATION:
@@ -80,11 +80,11 @@ export function pvStatusToException(
     case PvStatus.ACTIVATION_ERROR:
       throw new RhinoActivationError(errorMessage, messageStack);
     case PvStatus.ACTIVATION_LIMIT_REACHED:
-      throw new RhinoActivationLimitReached(errorMessage, messageStack);
+      throw new RhinoActivationLimitReachedError(errorMessage, messageStack);
     case PvStatus.ACTIVATION_THROTTLED:
-      throw new RhinoActivationThrottled(errorMessage, messageStack);
+      throw new RhinoActivationThrottledError(errorMessage, messageStack);
     case PvStatus.ACTIVATION_REFUSED:
-      throw new RhinoActivationRefused(errorMessage, messageStack);
+      throw new RhinoActivationRefusedError(errorMessage, messageStack);
     default:
       // eslint-disable-next-line no-console
       console.warn(`Unmapped error code: ${pvStatus}`);
