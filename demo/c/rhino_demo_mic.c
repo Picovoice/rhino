@@ -126,6 +126,12 @@ void show_audio_devices(void) {
     pv_recorder_free_device_list(count, devices);
 }
 
+void print_error_message(char **message_stack, int32_t message_stack_depth) {
+    for (int32_t i = 0; i < message_stack_depth; i++) {
+        fprintf(stderr, "  [%d] %s\n", i, message_stack[i]);
+    }
+}
+
 int picovoice_main(int argc, char *argv[]) {
     signal(SIGINT, interrupt_handler);
 
@@ -270,6 +276,22 @@ int picovoice_main(int argc, char *argv[]) {
         exit(1);
     }
 
+    pv_status_t (*pv_get_error_stack_func)(char ***, int32_t *) = load_symbol(rhino_library, "pv_get_error_stack");
+    if (!pv_get_error_stack_func) {
+        print_dl_error("failed to load 'pv_get_error_stack_func'");
+        exit(1);
+    }
+
+    void (*pv_free_error_stack_func)(char **) = load_symbol(rhino_library, "pv_free_error_stack");
+    if (!pv_free_error_stack_func) {
+        print_dl_error("failed to load 'pv_free_error_stack_func'");
+        exit(1);
+    }
+
+    char **message_stack = NULL;
+    int32_t message_stack_depth = 0;
+    pv_status_t error_status = PV_STATUS_RUNTIME_ERROR;
+
     pv_rhino_t *rhino = NULL;
     pv_status_t status = pv_rhino_init_func(
             access_key,
@@ -280,7 +302,20 @@ int picovoice_main(int argc, char *argv[]) {
             require_endpoint,
             &rhino);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "'pv_rhino_init' failed with '%s'\n", pv_status_to_string_func(status));
+        fprintf(stderr, "'pv_rhino_init' failed with '%s'", pv_status_to_string_func(status));
+        error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+
+        if (error_status != PV_STATUS_SUCCESS) {
+            fprintf(stderr, ".\nUnable to get Rhino error state with '%s'\n", pv_status_to_string_func(error_status));
+            exit(1);
+        }
+
+        if (message_stack_depth > 0) {
+            fprintf(stderr, ":\n");
+            print_error_message(message_stack, message_stack_depth);
+        } 
+
+        pv_free_error_stack_func(message_stack);
         exit(1);
     }
 
@@ -297,7 +332,20 @@ int picovoice_main(int argc, char *argv[]) {
     const char *context_info = NULL;
     status = pv_rhino_context_info_func(rhino, &context_info);
     if (status != PV_STATUS_SUCCESS) {
-        fprintf(stderr, "'pv_rhino_context_info' failed with '%s'\n", pv_status_to_string_func(status));
+        fprintf(stderr, "'pv_rhino_context_info' failed with '%s'", pv_status_to_string_func(status));
+        error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+
+        if (error_status != PV_STATUS_SUCCESS) {
+            fprintf(stderr, ".\nUnable to get Rhino error state with '%s'\n", pv_status_to_string_func(error_status));
+            exit(1);
+        }
+
+        if (message_stack_depth > 0) {
+            fprintf(stderr, ":\n");
+            print_error_message(message_stack, message_stack_depth);
+        } 
+
+        pv_free_error_stack_func(message_stack);
         exit(1);
     }
     fprintf(stdout, "%s\n\n", context_info);
@@ -333,7 +381,20 @@ int picovoice_main(int argc, char *argv[]) {
                 &is_finalized);
 
         if (status != PV_STATUS_SUCCESS) {
-            fprintf(stderr, "'pv_rhino_process' failed with '%s'\n", pv_status_to_string_func(status));
+            fprintf(stderr, "'pv_rhino_process' failed with '%s'", pv_status_to_string_func(status));
+            error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+
+            if (error_status != PV_STATUS_SUCCESS) {
+                fprintf(stderr, ".\nUnable to get Rhino error state with '%s'\n", pv_status_to_string_func(error_status));
+                exit(1);
+            }
+
+            if (message_stack_depth > 0) {
+                fprintf(stderr, ":\n");
+                print_error_message(message_stack, message_stack_depth);
+            } 
+
+            pv_free_error_stack_func(message_stack);
             exit(1);
         }
 
@@ -341,7 +402,20 @@ int picovoice_main(int argc, char *argv[]) {
             bool is_understood = false;
             status = pv_rhino_is_understood_func(rhino, &is_understood);
             if (status != PV_STATUS_SUCCESS) {
-                fprintf(stderr, "'pv_rhino_is_understood' failed with '%s'\n", pv_status_to_string_func(status));
+                fprintf(stderr, "'pv_rhino_is_understood' failed with '%s'", pv_status_to_string_func(status));
+                error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+
+                if (error_status != PV_STATUS_SUCCESS) {
+                    fprintf(stderr, ".\nUnable to get Rhino error state with '%s'\n", pv_status_to_string_func(error_status));
+                    exit(1);
+                }
+
+                if (message_stack_depth > 0) {
+                    fprintf(stderr, ":\n");
+                    print_error_message(message_stack, message_stack_depth);
+                } 
+
+                pv_free_error_stack_func(message_stack);
                 exit(1);
             }
 
@@ -358,7 +432,20 @@ int picovoice_main(int argc, char *argv[]) {
                         &slots,
                         &values);
                 if (status != PV_STATUS_SUCCESS) {
-                    fprintf(stderr, "'pv_rhino_get_intent' failed with '%s'\n", pv_status_to_string_func(status));
+                    fprintf(stderr, "'pv_rhino_get_intent' failed with '%s'", pv_status_to_string_func(status));
+                    error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+
+                    if (error_status != PV_STATUS_SUCCESS) {
+                        fprintf(stderr, ".\nUnable to get Rhino error state with '%s'\n", pv_status_to_string_func(error_status));
+                        exit(1);
+                    }
+
+                    if (message_stack_depth > 0) {
+                        fprintf(stderr, ":\n");
+                        print_error_message(message_stack, message_stack_depth);
+                    } 
+
+                    pv_free_error_stack_func(message_stack);
                     exit(1);
                 }
             }
@@ -381,14 +468,40 @@ int picovoice_main(int argc, char *argv[]) {
             if (is_understood) {
                 status = pv_rhino_free_slots_and_values_func(rhino, slots, values);
                 if (status != PV_STATUS_SUCCESS) {
-                    fprintf(stderr, "'pv_rhino_free_slots_and_values' failed with '%s'\n", pv_status_to_string_func(status));
+                    fprintf(stderr, "'pv_rhino_free_slots_and_values' failed with '%s'", pv_status_to_string_func(status));
+                    error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+
+                    if (error_status != PV_STATUS_SUCCESS) {
+                        fprintf(stderr, ".\nUnable to get Rhino error state with '%s'\n", pv_status_to_string_func(error_status));
+                        exit(1);
+                    }
+
+                    if (message_stack_depth > 0) {
+                        fprintf(stderr, ":\n");
+                        print_error_message(message_stack, message_stack_depth);
+                    } 
+
+                    pv_free_error_stack_func(message_stack);
                     exit(1);
                 }
             }
 
             status = pv_rhino_reset_func(rhino);
             if (status != PV_STATUS_SUCCESS) {
-                fprintf(stderr, "'pv_rhino_reset' failed with '%s'\n", pv_status_to_string_func(status));
+                fprintf(stderr, "'pv_rhino_reset' failed with '%s'", pv_status_to_string_func(status));
+                error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+
+                if (error_status != PV_STATUS_SUCCESS) {
+                    fprintf(stderr, ".\nUnable to get Rhino error state with '%s'\n", pv_status_to_string_func(error_status));
+                    exit(1);
+                }
+
+                if (message_stack_depth > 0) {
+                    fprintf(stderr, ":\n");
+                    print_error_message(message_stack, message_stack_depth);
+                } 
+
+                pv_free_error_stack_func(message_stack);
                 exit(1);
             }
         }
