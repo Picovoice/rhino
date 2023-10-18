@@ -25,8 +25,8 @@ import (
 )
 
 var (
-	testAccessKey string
-	rhino         Rhino
+	testAccessKey               string
+	rhino                       Rhino
 	withinContextTestParameters []WithinContextTestData
 	outOfContextTestParameters  []OutOfContextTestData
 )
@@ -87,16 +87,16 @@ func loadTestData() ([]WithinContextTestData, []OutOfContextTestData) {
 	var testData struct {
 		Tests struct {
 			WithinContext []struct {
-				Language string `json:"language"`
-				ContextName  string `json:"context_name"`
-				Inference struct {
-					Intent string `json:"intent"`
-					Slots map[string]string `json:"slots"`
+				Language    string `json:"language"`
+				ContextName string `json:"context_name"`
+				Inference   struct {
+					Intent string            `json:"intent"`
+					Slots  map[string]string `json:"slots"`
 				} `json:"inference"`
 			} `json:"within_context"`
 			OutOfContext []struct {
-				Language string `json:"language"`
-				ContextName  string `json:"context_name"`
+				Language    string `json:"language"`
+				ContextName string `json:"context_name"`
 			} `json:"out_of_context"`
 		} `json:"tests"`
 	}
@@ -107,9 +107,9 @@ func loadTestData() ([]WithinContextTestData, []OutOfContextTestData) {
 
 	for _, x := range testData.Tests.WithinContext {
 		withinContextTestData := WithinContextTestData{
-			language:      	x.Language,
-			context:       	x.ContextName,
-			expectedIntent:	x.Inference.Intent,
+			language:       x.Language,
+			context:        x.ContextName,
+			expectedIntent: x.Inference.Intent,
 			expectedSlots:  x.Inference.Slots,
 		}
 
@@ -118,8 +118,8 @@ func loadTestData() ([]WithinContextTestData, []OutOfContextTestData) {
 
 	for _, x := range testData.Tests.OutOfContext {
 		outOfContextTestData := OutOfContextTestData{
-			language:      	x.Language,
-			context:       	x.ContextName,
+			language: x.Language,
+			context:  x.ContextName,
 		}
 
 		outOfContextTestParameters = append(outOfContextTestParameters, outOfContextTestData)
@@ -127,15 +127,7 @@ func loadTestData() ([]WithinContextTestData, []OutOfContextTestData) {
 	return withinContextTestParameters, outOfContextTestParameters
 }
 
-func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
-	err := rhino.Init()
-	if err != nil {
-		t.Fatalf("%v", err)
-	}
-	fmt.Printf("Rhino Version: %s\n", Version)
-	fmt.Printf("Frame Length: %d\n", FrameLength)
-	fmt.Printf("Sample Rate: %d\n", SampleRate)
-
+func processFileHelper(t *testing.T, rhino *Rhino, audioFileName string, maxProcessCount int) bool {
 	testAudioPath, _ := filepath.Abs(filepath.Join("../../resources/audio_samples", audioFileName))
 	data, err := ioutil.ReadFile(testAudioPath)
 	if err != nil {
@@ -147,6 +139,8 @@ func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinConte
 	frameLenBytes := FrameLength * 2
 	frameCount := int(math.Floor(float64(len(data)) / float64(frameLenBytes)))
 	sampleBuffer := make([]int16, FrameLength)
+
+	processed := 0
 	for i := 0; i < frameCount; i++ {
 		start := i * frameLenBytes
 
@@ -163,7 +157,26 @@ func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinConte
 		if isFinalized {
 			break
 		}
+
+		if maxProcessCount != -1 && processed >= maxProcessCount {
+			break
+		}
+		processed++
 	}
+
+	return isFinalized
+}
+
+func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
+	err := rhino.Init()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+	fmt.Printf("Rhino Version: %s\n", Version)
+	fmt.Printf("Frame Length: %d\n", FrameLength)
+	fmt.Printf("Sample Rate: %d\n", SampleRate)
+
+	isFinalized := processFileHelper(t, rhino, audioFileName, -1)
 
 	if !isFinalized {
 		t.Fatalf("Rhino reached end of file without finalizing.")
@@ -230,5 +243,53 @@ func TestOutOfContext(t *testing.T) {
 				t.Fatalf("%v", delErr)
 			}
 		})
+	}
+}
+
+func TestReset(t *testing.T) {
+	rhino = NewRhino(testAccessKey, getTestContextPath("en", "coffee_maker"))
+	err := rhino.Init()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+
+	testAudioFileName := "test_within_context.wav"
+	isFinalized := processFileHelper(t, &rhino, testAudioFileName, 15)
+	if isFinalized {
+		t.Fatalf("Rhino should not be finalized.")
+	}
+
+	err = rhino.Reset()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+
+	isFinalized = processFileHelper(t, &rhino, testAudioFileName, -1)
+	if !isFinalized {
+		t.Fatalf("Rhino reached end of file without finalizing.")
+	}
+
+	inference, err := rhino.GetInference()
+	if err != nil {
+		t.Fatalf("Rhino failed to get inference: \n%v", err)
+	}
+
+	if !inference.IsUnderstood {
+		t.Fatalf("Rhino failed to understand")
+	}
+}
+
+func TestMessageStack(t *testing.T) {
+	rhino = NewRhino("invalid access key", getTestContextPath("en", "smart_lighting"))
+
+	err := rhino.Init()
+	err2 := rhino.Init()
+
+	if len(err.Error()) > 1024 {
+		t.Fatalf("length of error is full: '%d'", len(err.Error()))
+	}
+
+	if len(err2.Error()) != len(err.Error()) {
+		t.Fatalf("length of 1st init '%d' does not match 2nd init '%d'", len(err.Error()), len(err2.Error()))
 	}
 }

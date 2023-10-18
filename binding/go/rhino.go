@@ -1,4 +1,4 @@
-// Copyright 2021-2022 Picovoice Inc.
+// Copyright 2021-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is
 // located in the "LICENSE" file accompanying this source.
@@ -57,12 +57,23 @@ const (
 )
 
 type RhinoError struct {
-	StatusCode PvStatus
-	Message    string
+	StatusCode   PvStatus
+	Message      string
+	MessageStack []string
 }
 
 func (e *RhinoError) Error() string {
-	return fmt.Sprintf("%s: %s", pvStatusToString(e.StatusCode), e.Message)
+	var message strings.Builder
+	message.WriteString(fmt.Sprintf("%s: %s", pvStatusToString(e.StatusCode), e.Message))
+
+	if len(e.MessageStack) > 0 {
+		message.WriteString(":")
+		for i, value := range e.MessageStack {
+			message.WriteString(fmt.Sprintf("\n  [%d] %s", i, value))
+		}
+	}
+
+	return message.String()
 }
 
 func pvStatusToString(status PvStatus) string {
@@ -186,8 +197,8 @@ var (
 func (rhino *Rhino) Init() error {
 	if rhino.AccessKey == "" {
 		return &RhinoError{
-			INVALID_ARGUMENT,
-			"No AccessKey provided to Rhino"}
+			StatusCode: INVALID_ARGUMENT,
+			Message:    "No AccessKey provided to Rhino"}
 	}
 
 	if rhino.LibraryPath == "" {
@@ -196,8 +207,8 @@ func (rhino *Rhino) Init() error {
 
 	if _, err := os.Stat(rhino.LibraryPath); os.IsNotExist(err) {
 		return &RhinoError{
-			INVALID_ARGUMENT,
-			fmt.Sprintf("Specified library file could not be found at %s", rhino.LibraryPath)}
+			StatusCode: INVALID_ARGUMENT,
+			Message:    fmt.Sprintf("Specified library file could not be found at %s", rhino.LibraryPath)}
 	}
 
 	if rhino.ModelPath == "" {
@@ -206,39 +217,48 @@ func (rhino *Rhino) Init() error {
 
 	if _, err := os.Stat(rhino.ModelPath); os.IsNotExist(err) {
 		return &RhinoError{
-			INVALID_ARGUMENT,
-			fmt.Sprintf("Specified model file could not be found at %s", rhino.ModelPath)}
+			StatusCode: INVALID_ARGUMENT,
+			Message:    fmt.Sprintf("Specified model file could not be found at %s", rhino.ModelPath)}
 	}
 
 	if rhino.ContextPath == "" {
 		return &RhinoError{
-			INVALID_ARGUMENT,
-			"No valid context was provided"}
+			StatusCode: INVALID_ARGUMENT,
+			Message:    "No valid context was provided"}
 	}
 
 	if _, err := os.Stat(rhino.ContextPath); os.IsNotExist(err) {
 		return &RhinoError{
-			INVALID_ARGUMENT,
-			fmt.Sprintf("Context file could not be found at %s", rhino.ContextPath)}
+			StatusCode: INVALID_ARGUMENT,
+			Message:    fmt.Sprintf("Context file could not be found at %s", rhino.ContextPath)}
 	}
 
 	if rhino.Sensitivity < 0 || rhino.Sensitivity > 1 {
 		return &RhinoError{
-			INVALID_ARGUMENT,
-			fmt.Sprintf("Sensitivity value of %f is invalid. Must be between [0, 1]", rhino.Sensitivity)}
+			StatusCode: INVALID_ARGUMENT,
+			Message:    fmt.Sprintf("Sensitivity value of %f is invalid. Must be between [0, 1]", rhino.Sensitivity)}
 	}
 
 	if rhino.EndpointDurationSec < 0.5 || rhino.EndpointDurationSec > 5.0 {
 		return &RhinoError{
-			INVALID_ARGUMENT,
-			fmt.Sprintf("EndpointDurationSec value of %f is invalid. Must be between [0.5, 5.0]", rhino.EndpointDurationSec)}
+			StatusCode: INVALID_ARGUMENT,
+			Message:    fmt.Sprintf("EndpointDurationSec value of %f is invalid. Must be between [0.5, 5.0]", rhino.EndpointDurationSec)}
 	}
 
 	status := nativeRhino.nativeInit(rhino)
 	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return &RhinoError{
+				StatusCode: errorStatus,
+				Message:    "Unable to get Rhino error state",
+			}
+		}
+
 		return &RhinoError{
-			PvStatus(status),
-			"Rhino init failed"}
+			StatusCode:   PvStatus(status),
+			Message:      "Rhino init failed",
+			MessageStack: messageStack}
 	}
 
 	FrameLength = nativeRhino.nativeFrameLength()
@@ -247,9 +267,18 @@ func (rhino *Rhino) Init() error {
 
 	status, rhino.ContextInfo = nativeRhino.nativeContextInfo(rhino)
 	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return &RhinoError{
+				StatusCode: errorStatus,
+				Message:    "Unable to get Rhino error state",
+			}
+		}
+
 		return &RhinoError{
-			PvStatus(status),
-			"Could not get context from rhino instance"}
+			StatusCode:   PvStatus(status),
+			Message:      "Could not get context from rhino instance",
+			MessageStack: messageStack}
 	}
 
 	return nil
@@ -259,8 +288,8 @@ func (rhino *Rhino) Init() error {
 func (rhino *Rhino) Delete() error {
 	if rhino.handle == nil {
 		return &RhinoError{
-			INVALID_STATE,
-			"Rhino has not been initialized or has already been deleted"}
+			StatusCode: INVALID_STATE,
+			Message:    "Rhino has not been initialized or has already been deleted"}
 	}
 
 	nativeRhino.nativeDelete(rhino)
@@ -273,25 +302,62 @@ func (rhino *Rhino) Process(pcm []int16) (isFinalized bool, err error) {
 
 	if rhino.handle == nil {
 		return false, &RhinoError{
-			INVALID_STATE,
-			"Rhino has not been initialized or has been deleted"}
+			StatusCode: INVALID_STATE,
+			Message:    "Rhino has not been initialized or has been deleted"}
 	}
 
 	if len(pcm) != FrameLength {
 		return false, &RhinoError{
-			INVALID_ARGUMENT,
-			fmt.Sprintf("Input data frame size (%d) does not match required size of %d", len(pcm), FrameLength)}
+			StatusCode: INVALID_ARGUMENT,
+			Message:    fmt.Sprintf("Input data frame size (%d) does not match required size of %d", len(pcm), FrameLength)}
 	}
 
 	status, isFinalized := nativeRhino.nativeProcess(rhino, pcm)
 	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return false, &RhinoError{
+				StatusCode: errorStatus,
+				Message:    "Unable to get Rhino error state",
+			}
+		}
+
 		return false, &RhinoError{
-			PvStatus(status),
-			"Rhino process failed"}
+			StatusCode:   PvStatus(status),
+			Message:      "Rhino process failed",
+			MessageStack: messageStack}
 	}
 
 	rhino.isFinalized = isFinalized
 	return isFinalized, nil
+}
+
+// Reset Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
+// stream of audio.
+func (rhino *Rhino) Reset() error {
+	if rhino.handle == nil {
+		return &RhinoError{
+			StatusCode: INVALID_STATE,
+			Message:    "Rhino has not been initialized or has been deleted"}
+	}
+
+	status := nativeRhino.nativeReset(rhino)
+	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return &RhinoError{
+				StatusCode: errorStatus,
+				Message:    "Unable to get Rhino error state",
+			}
+		}
+
+		return &RhinoError{
+			StatusCode:   PvStatus(status),
+			Message:      "Rhino reset failed",
+			MessageStack: messageStack}
+	}
+
+	return nil
 }
 
 // Gets inference results from Rhino. If the spoken command was understood, it includes the specific intent name
@@ -302,16 +368,25 @@ func (rhino *Rhino) GetInference() (inference RhinoInference, err error) {
 	if !rhino.isFinalized {
 		return RhinoInference{},
 			&RhinoError{
-				INVALID_STATE,
-				"GetInference called before rhino had finalized. Call GetInference only after Process has returned true"}
+				StatusCode: INVALID_STATE,
+				Message:    "GetInference called before rhino had finalized. Call GetInference only after Process has returned true"}
 	}
 
 	status, isUnderstood := nativeRhino.nativeIsUnderstood(rhino)
 	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return RhinoInference{}, &RhinoError{
+				StatusCode: errorStatus,
+				Message:    "Unable to get Rhino error state",
+			}
+		}
+
 		return RhinoInference{},
 			&RhinoError{
-				PvStatus(status),
-				"Rhino GetInference failed at IsUnderstood"}
+				StatusCode:   PvStatus(status),
+				Message:      "Rhino GetInference failed at IsUnderstood",
+				MessageStack: messageStack}
 	}
 
 	var intent string
@@ -319,28 +394,55 @@ func (rhino *Rhino) GetInference() (inference RhinoInference, err error) {
 	if isUnderstood {
 		status, intent, slots = nativeRhino.nativeGetIntent(rhino)
 		if PvStatus(status) != SUCCESS {
+			errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+			if errorStatus != SUCCESS {
+				return RhinoInference{}, &RhinoError{
+					StatusCode: errorStatus,
+					Message:    "Unable to get Rhino error state",
+				}
+			}
+
 			return RhinoInference{},
 				&RhinoError{
-					PvStatus(status),
-					"GetInference failed at GetIntent"}
+					StatusCode:   PvStatus(status),
+					Message:      "GetInference failed at GetIntent",
+					MessageStack: messageStack}
 		}
 
 		status = nativeRhino.nativeFreeSlotsAndValues(rhino)
 		if PvStatus(status) != SUCCESS {
+			errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+			if errorStatus != SUCCESS {
+				return RhinoInference{}, &RhinoError{
+					StatusCode: errorStatus,
+					Message:    "Unable to get Rhino error state",
+				}
+			}
+
 			return RhinoInference{},
 				&RhinoError{
-					PvStatus(status),
-					"GetInference failed at FreeSlotsAndValues"}
+					StatusCode:   PvStatus(status),
+					Message:      "GetInference failed at FreeSlotsAndValues",
+					MessageStack: messageStack}
 
 		}
 	}
 
 	status = nativeRhino.nativeReset(rhino)
 	if PvStatus(status) != SUCCESS {
+		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
+		if errorStatus != SUCCESS {
+			return RhinoInference{}, &RhinoError{
+				StatusCode: errorStatus,
+				Message:    "Unable to get Rhino error state",
+			}
+		}
+
 		return RhinoInference{},
 			&RhinoError{
-				PvStatus(status),
-				"GetInference failed at Reset"}
+				StatusCode:   PvStatus(status),
+				Message:      "GetInference failed at Reset",
+				MessageStack: messageStack}
 	}
 
 	return RhinoInference{
