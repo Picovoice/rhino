@@ -65,7 +65,7 @@ public class RhinoDemo : MonoBehaviour
         }
         catch (RhinoInvalidArgumentException ex)
         {
-            SetError($"{ex.Message}\nMake sure your access key '{ACCESS_KEY}' is a valid access key.");
+            SetError(ex.Message);
         }
         catch (RhinoActivationException)
         {
