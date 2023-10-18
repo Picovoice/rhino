@@ -10,4 +10,4 @@ ctrlc = "3.2.2"
 hound = "3.4.0"
 itertools = "0.10.3"
 pv_recorder = "=1.2.1"
-pv_rhino = "=2.2.1"
+pv_rhino = { path = "../../../binding/rust" }
