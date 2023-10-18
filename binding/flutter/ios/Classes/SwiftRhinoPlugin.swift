@@ -1,5 +1,5 @@
 //
-// Copyright 2021 Picovoice Inc.
+// Copyright 2021-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -16,6 +16,7 @@ import Rhino
 enum Method: String {
     case CREATE
     case PROCESS
+    case RESET
     case DELETE
 }
 
@@ -27,6 +28,8 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
 
         let methodChannel = FlutterMethodChannel(name: "rhino", binaryMessenger: registrar.messenger())
         registrar.addMethodCallDelegate(instance, channel: methodChannel)
+
+        Rhino.setSdk(sdk: "flutter")
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -102,6 +105,24 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                     }
                 } else {
                     result(errorToFlutterError(RhinoInvalidArgumentError("missing required arguments 'frame'")))
+                }
+            } catch let error as RhinoError {
+                result(errorToFlutterError(error))
+            } catch {
+                result(errorToFlutterError(RhinoError(error.localizedDescription)))
+            }
+        case .RESET:
+            do {
+                if let handle = args["handle"] as? String {
+                    if let rhino = rhinoPool[handle] {
+                        try rhino.reset()
+                        result(nil)
+                    } else {
+                        result(errorToFlutterError(
+                                RhinoInvalidStateError("Invalid handle provided to Rhino 'reset'")))
+                    }
+                } else {
+                    result(errorToFlutterError(RhinoInvalidArgumentError("missing required arguments 'handle'")))
                 }
             } catch let error as RhinoError {
                 result(errorToFlutterError(error))

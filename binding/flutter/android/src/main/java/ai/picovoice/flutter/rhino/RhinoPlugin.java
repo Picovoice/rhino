@@ -31,6 +31,7 @@ public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
     private enum Method {
         CREATE,
         PROCESS,
+        RESET,
         DELETE
     }
 
@@ -43,6 +44,8 @@ public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
         flutterContext = flutterPluginBinding.getApplicationContext();
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "rhino");
         channel.setMethodCallHandler(this);
+
+        Rhino.setSdk("flutter");
     }
 
     @Override
@@ -140,6 +143,28 @@ public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
                     }
 
                     result.success(param);
+                } catch (RhinoException e) {
+                    result.error(
+                            e.getClass().getSimpleName(),
+                            e.getMessage(),
+                            null);
+                }
+                break;
+            case RESET:
+                try {
+                    String handle = call.argument("handle");
+                    if (!rhinoPool.containsKey(handle)) {
+                        result.error(
+                                RhinoInvalidStateException.class.getSimpleName(),
+                                "Invalid rhino handle provided to native module",
+                                null);
+                        return;
+                    }
+
+                    Rhino rhino = rhinoPool.get(handle);
+                    rhino.reset();
+
+                    result.success(null);
                 } catch (RhinoException e) {
                     result.error(
                             e.getClass().getSimpleName(),

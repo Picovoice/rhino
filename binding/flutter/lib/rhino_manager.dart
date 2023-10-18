@@ -145,6 +145,7 @@ class RhinoManager {
     if (_isListening) {
       return;
     }
+
     if (_rhino == null || _voiceProcessor == null) {
       throw RhinoInvalidStateException(
           "Cannot start Rhino - resources have already been released");
