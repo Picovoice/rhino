@@ -192,7 +192,7 @@ namespace Tests
             return ExtractResource(filepath);
         }
 
-        private bool processFileHelper(
+        private bool ProcessFileHelper(
             Rhino rhino,
             string audioFileName,
             int maxProcessCount = -1)
@@ -232,7 +232,7 @@ namespace Tests
             string expectedIntent = null,
             Dictionary<string, string> expectedSlots = null)
         {
-            bool isFinalized = processFileHelper(rhino, audioFileName);
+            bool isFinalized = ProcessFileHelper(rhino, audioFileName);
             Assert.IsTrue(isFinalized, "Failed to finalize.");
 
             Inference inference = rhino.GetInference();
@@ -298,11 +298,11 @@ namespace Tests
             Rhino r = Rhino.Create(ACCESS_KEY, GetContextPath("en", "coffee_maker"));
 
             string audioFileName = "test_within_context.wav";
-            bool isFinalized = processFileHelper(r, audioFileName, 15);
+            bool isFinalized = ProcessFileHelper(r, audioFileName, 15);
             Assert.IsFalse(isFinalized);
 
             r.Reset();
-            isFinalized = processFileHelper(r, audioFileName);
+            isFinalized = ProcessFileHelper(r, audioFileName);
             Assert.IsTrue(isFinalized);
 
             Inference inference = r.GetInference();
