@@ -192,11 +192,10 @@ namespace Tests
             return ExtractResource(filepath);
         }
 
-        private void RunTestCase(
+        private bool processFileHelper(
+            Rhino rhino,
             string audioFileName,
-            bool isWithinContext,
-            string expectedIntent = null,
-            Dictionary<string, string> expectedSlots = null)
+            int maxProcessCount = -1)
         {
             int frameLen = rhino.FrameLength;
             string testAudioPath = ExtractResource(Path.Combine(Application.streamingAssetsPath, "test/audio_samples", audioFileName));
@@ -205,6 +204,8 @@ namespace Tests
             bool isFinalized = false;
             int framecount = (int)Math.Floor((float)(data.Count / frameLen));
             var results = new List<int>();
+
+            int processed = 0;
             for (int i = 0; i < framecount; i++)
             {
                 int start = i * rhino.FrameLength;
@@ -215,7 +216,22 @@ namespace Tests
                 {
                     break;
                 }
+                processed++;
+                if (maxProcessCount != -1 && processed >= maxProcessCount) {
+                    break;
+                }
             }
+
+            return isFinalized;
+        }
+
+        private void RunTestCase(
+            string audioFileName,
+            bool isWithinContext,
+            string expectedIntent = null,
+            Dictionary<string, string> expectedSlots = null)
+        {
+            bool isFinalized = processFileHelper(rhino, audioFileName);
             Assert.IsTrue(isFinalized, "Failed to finalize.");
 
             Inference inference = rhino.GetInference();
@@ -273,6 +289,25 @@ namespace Tests
                     Assert.AreEqual(messageList[i], e.messageStack[i]);
                 }
             }
+        }
+
+        [Test]
+        public void TestReset()
+        {
+            Rhino r = Rhino.Create(ACCESS_KEY, GetContextPath("en", "coffee_maker"));
+
+            string audioFileName = "test_within_context.wav";
+            bool isFinalized = processFileHelper(r, audioFileName, 15);
+            Assert.IsFalse(isFinalized);
+
+            r.Reset();
+            isFinalized = processFileHelper(r, audioFileName);
+            Assert.IsTrue(isFinalized);
+
+            Inference inference = r.GetInference();
+            Assert.AreEqual(inference.IsUnderstood, true);
+
+            r.Dispose();
         }
 
         [Test]
