@@ -217,7 +217,8 @@ namespace Tests
                     break;
                 }
                 processed++;
-                if (maxProcessCount != -1 && processed >= maxProcessCount) {
+                if (maxProcessCount != -1 && processed >= maxProcessCount)
+                {
                     break;
                 }
             }
