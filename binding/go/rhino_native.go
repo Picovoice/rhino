@@ -199,13 +199,13 @@ int32_t pv_rhino_sample_rate_wrapper(void *f) {
 
 typedef void (*pv_set_sdk_func)(const char *);
 
-void pv_set_sdk_wrapper(void *f, const char *sdk) {
+static void pv_set_sdk_wrapper(void *f, const char *sdk) {
 	return ((pv_set_sdk_func) f)(sdk);
 }
 
 typedef int32_t (*pv_get_error_stack_func)(char ***, int32_t *);
 
-int32_t pv_get_error_stack_wrapper(
+static int32_t pv_get_error_stack_wrapper(
 	void *f,
 	char ***message_stack,
 	int32_t *message_stack_depth) {
@@ -214,7 +214,7 @@ int32_t pv_get_error_stack_wrapper(
 
 typedef void (*pv_free_error_stack_func)(char **);
 
-void pv_free_error_stack_wrapper(
+static void pv_free_error_stack_wrapper(
 	void *f,
 	char **message_stack) {
 	return ((pv_free_error_stack_func) f)(message_stack);
