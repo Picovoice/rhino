@@ -157,7 +157,7 @@ export class Rhino {
   private static _version: string;
   private static _wasm: string;
   private static _wasmSimd: string;
-  private static _sdk: string = "wasm";
+  private static _sdk: string = "web";
 
   private readonly _inferenceCallback: InferenceCallback;
   private readonly _processErrorCallback: (error: RhinoErrors.RhinoError) => void;
