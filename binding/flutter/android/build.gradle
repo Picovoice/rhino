@@ -1,10 +1,13 @@
 group 'ai.picovoice.flutter.rhino'
-version '2.2.3'
+version '3.0.0'
 
 buildscript {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'https://s01.oss.sonatype.org/content/repositories/aipicovoice-1267/'
+        }
     }
 
     dependencies {
@@ -16,6 +19,9 @@ rootProject.allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'https://s01.oss.sonatype.org/content/repositories/aipicovoice-1267/'
+        }
     }
 }
 
@@ -33,5 +39,5 @@ android {
 }
 
 dependencies {
-    implementation 'ai.picovoice:rhino-android:2.2.2'
+    implementation 'ai.picovoice:rhino-android:3.0.0'
 }
