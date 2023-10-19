@@ -67,7 +67,7 @@ export default class App extends Component<Props, State> {
     } catch (err) {
       let errorMessage;
       if (err instanceof RhinoErrors.RhinoInvalidArgumentError) {
-        errorMessage = `${err.message}\nPlease make sure your accessKey '${this._accessKey}'' is a valid access key.`;
+        errorMessage = err.message;
       } else if (err instanceof RhinoErrors.RhinoActivationError) {
         errorMessage = 'AccessKey activation error';
       } else if (err instanceof RhinoErrors.RhinoActivationLimitError) {
