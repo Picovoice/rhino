@@ -68,7 +68,7 @@ class PvRhino: NSObject {
         do {
             if let rhino = rhinoPool[handle] {
                 try rhino.reset()
-                resolve()
+                resolve(nil)
             } else {
                 let (code, message) = errorToCodeAndMessage(
                     RhinoInvalidStateError("Invalid handle provided to Rhino 'process'"))

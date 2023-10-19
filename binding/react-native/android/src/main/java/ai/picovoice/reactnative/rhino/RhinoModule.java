@@ -100,7 +100,7 @@ public class RhinoModule extends ReactContextBaseJavaModule {
 
             Rhino rhino = rhinoPool.get(handle);
             rhino.reset();
-            promise.resolve();
+            promise.resolve(null);
         } catch (RhinoException e) {
             promise.reject(e.getClass().getSimpleName(), e.getMessage());
         }
