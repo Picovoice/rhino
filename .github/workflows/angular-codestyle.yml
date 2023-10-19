@@ -34,6 +34,10 @@ jobs:
       run: yarn && yarn copywasm && yarn build
       working-directory: binding/web
 
+    - name: Build Local Angular SDK
+      run: yarn && yarn build
+      working-directory: binding/angular
+
     - name: Run Binding Linter
       run: yarn && yarn lint
       working-directory: binding/angular

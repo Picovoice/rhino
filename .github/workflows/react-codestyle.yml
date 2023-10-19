@@ -38,6 +38,10 @@ jobs:
       run: yarn && yarn copywasm && yarn build
       working-directory: binding/web
 
+    - name: Build Local React SDK
+      run: yarn && yarn build
+      working-directory: binding/react
+
     - name: Run Binding Linter
       run: yarn && yarn lint
       working-directory: binding/react
