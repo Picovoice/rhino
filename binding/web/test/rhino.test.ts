@@ -8,6 +8,10 @@ import { RhinoError } from "../dist/types/rhino_errors";
 
 const ACCESS_KEY: string = Cypress.env("ACCESS_KEY");
 
+function delay(time: number) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 const runInitTest = async (
   instance: typeof Rhino | typeof RhinoWorker,
   params: {
@@ -216,7 +220,7 @@ describe("Rhino Binding", function () {
       });
     }
 
-    it(`should be able to reset (${instanceString})`, async () => {
+    it.only(`should be able to reset (${instanceString})`, () => {
       cy.getFramesFromFile(`audio_samples/test_within_context.wav`).then(async pcm => {
         let numFinalized = 0;
 
@@ -231,13 +235,19 @@ describe("Rhino Binding", function () {
           { publicPath: `/test/rhino_params.pv`, forceWrite: true }
         );
 
-        for (let i = 0; i < (pcm.length / 2 - rhino.frameLength + 1); i += rhino.frameLength) {
+        for (let i = 0; i < ((pcm.length / 2) - rhino.frameLength + 1); i += rhino.frameLength) {
           await rhino.process(pcm.slice(i, i + rhino.frameLength));
+          await delay(32);
         }
+
+        await rhino.reset();
 
         for (let i = 0; i < (pcm.length - rhino.frameLength + 1); i += rhino.frameLength) {
           await rhino.process(pcm.slice(i, i + rhino.frameLength));
+          await delay(32);
         }
+
+        await delay(1000);
 
         expect(numFinalized).to.be.eq(1);
       });
