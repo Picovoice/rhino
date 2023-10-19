@@ -22,11 +22,11 @@ RCT_EXTERN_METHOD(create: (NSString *)accessKey
                   resolver: (RCTPromiseResolveBlock)resolve
                   rejecter: (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(delete: (NSString *)handle
+RCT_EXTERN_METHOD(delete: (NSString *)handle)
+
+RCT_EXTERN_METHOD(reset: (NSString *)handle
                   resolver: (RCTPromiseResolveBlock)resolve
                   rejecter: (RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(reset: (NSString *)handle)
 
 RCT_EXTERN_METHOD(process: (NSString *)handle
                   pcm:(NSArray<NSNumber>)pcm
