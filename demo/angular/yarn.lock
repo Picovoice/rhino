@@ -1534,18 +1534,14 @@
     read-package-json-fast "^3.0.0"
     which "^3.0.0"
 
-"@picovoice/rhino-angular@~2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-2.2.1.tgz#067b24d16f4798febe4d55a2d3bc7bac62ab8b2f"
-  integrity sha512-XCj2Pu8egElhY7JlJO9K2DWJ7BdUP/e9DQxGXcCayj9AYWPdzXWHtesLcz42Wy7kl9lMyRHejvrxHEGfDPK5+Q==
+"@picovoice/rhino-angular@../../binding/angular/dist/rhino-angular":
+  version "3.0.0"
   dependencies:
-    "@picovoice/rhino-web" "=2.2.1"
+    "@picovoice/rhino-web" "file:../../../../../.cache/yarn/v6/npm-@picovoice-rhino-angular-3.0.0-2e47461b-913f-4f44-b38f-13afc7a68eda-1697758280091/web"
     tslib "^2.3.0"
 
-"@picovoice/rhino-web@=2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.2.1.tgz#68ece011d99ecd638e8935147c8e443c294becf5"
-  integrity sha512-kwNNvuUt+6x/kfLplLeCV1J2RbTZEkKwe5WoyY6yZbtJB1Tb/+HcWlNaeSU1kLTegxZ6UL+ETT/gay4psDKLmQ==
+"@picovoice/rhino-web@file:../../binding/web":
+  version "3.0.0"
   dependencies:
     "@picovoice/web-utils" "=1.3.1"
 
