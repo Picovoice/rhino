@@ -220,7 +220,7 @@ describe("Rhino Binding", function () {
       });
     }
 
-    it.only(`should be able to reset (${instanceString})`, () => {
+    it(`should be able to reset (${instanceString})`, () => {
       cy.getFramesFromFile(`audio_samples/test_within_context.wav`).then(async pcm => {
         let numFinalized = 0;
 
