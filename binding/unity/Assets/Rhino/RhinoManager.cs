@@ -131,19 +131,6 @@ namespace Pv.Unity
         }
 
         /// <summary>
-        /// Resets the internal state of Picovoice. It should be called before processing a new stream of audio 
-        /// or when process was stopped while processing a stream of audio.
-        /// </summary>
-        public void Reset()
-        {
-            if (_rhino == null)
-            {
-                throw new RhinoInvalidStateException("Cannot reset RhinoManager - resources have already been released");
-            }
-            _rhino.Reset();
-        }
-
-        /// <summary>
         /// Free resources that were allocated to Rhino and the voice processor
         /// </summary>
         public void Delete()
