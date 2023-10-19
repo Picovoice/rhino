@@ -376,6 +376,20 @@ namespace Pv.Unity
         }
 
         /// <summary>
+        /// Resets the internal state of Rhino. It should be called before processing a new stream of audio 
+        /// or when process was stopped while processing a stream of audio.
+        /// </summary>
+        public void Reset()
+        {
+            RhinoStatus status = pv_rhino_reset(_libraryPointer);
+            if (status != RhinoStatus.SUCCESS)
+            {
+                string[] messageStack = GetMessageStack();
+                throw RhinoStatusToException(status, "Rhino reset failed", messageStack);
+            }
+        }
+
+        /// <summary>
         /// Gets the current context information.
         /// </summary>
         /// <returns>Context information</returns>
