@@ -1,5 +1,5 @@
 //
-// Copyright 2020-2022 Picovoice Inc.
+// Copyright 2020-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -60,6 +60,26 @@ class PvRhino: NSObject {
     func delete(handle: String) {
         if let rhino = rhinoPool.removeValue(forKey: handle) {
             rhino.delete()
+        }
+    }
+
+    @objc(reset:resolver:rejecter:)
+    func reset(handle: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+        do {
+            if let rhino = rhinoPool[handle] {
+                try rhino.reset()
+                resolve(nil)
+            } else {
+                let (code, message) = errorToCodeAndMessage(
+                    RhinoInvalidStateError("Invalid handle provided to Rhino 'process'"))
+                reject(code, message, nil)
+            }
+        } catch let error as RhinoError {
+            let (code, message) = errorToCodeAndMessage(error)
+            reject(code, message, nil)
+        } catch {
+            let (code, message) = errorToCodeAndMessage(RhinoError(error.localizedDescription))
+            reject(code, message, nil)
         }
     }
 

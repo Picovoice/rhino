@@ -32,30 +32,30 @@ export class RhinoInference {
   }
 
   /**
-   * whether Rhino has made an inference
+   * Whether Rhino has made an inference
    */
-  get isFinalized() {
+  public get isFinalized(): boolean {
     return this._isFinalized;
   }
 
   /**
-   * if isFinalized, whether Rhino understood what it heard based on the context
+   * If `isFinalized`, whether Rhino understood what it heard based on the context.
    */
-  get isUnderstood() {
+  public get isUnderstood(): boolean | undefined {
     return this._isUnderstood;
   }
 
   /**
-   * if isUnderstood, name of intent that was inferred
+   * If `isUnderstood`, name of intent that was inferred.
    */
-  get intent() {
+  public get intent(): string | undefined {
     return this._intent;
   }
 
   /**
-   * if isUnderstood, dictionary of slot keys and values that were inferred
+   * If `isUnderstood`, dictionary of slot keys and values that were inferred.
    */
-  get slots() {
+  public get slots(): { [key: string]: string } | undefined {
     return this._slots;
   }
 }
@@ -143,7 +143,7 @@ class Rhino {
    *  - intent: if isUnderstood, name of intent that were inferred
    *  - slots: if isUnderstood, dictionary of slot keys and values that were inferred
    */
-  async process(frame: number[]): Promise<RhinoInference> {
+  public async process(frame: number[]): Promise<RhinoInference> {
     if (frame === undefined || frame === null) {
       throw new RhinoErrors.RhinoInvalidArgumentError(
         `Frame array provided to process() is undefined or null`
@@ -172,9 +172,17 @@ class Rhino {
   }
 
   /**
-   * Frees memory that was allocated for Rhino
+   * Resets the internal state of Rhino. It should be called before the engine
+   * can be used to infer intent from a new stream of audio.
    */
-  async delete() {
+  public async reset(): Promise<void> {
+    return RCTRhino.reset(this._handle);
+  }
+
+  /**
+   * Frees memory that was allocated for Rhino.
+   */
+  public async delete(): Promise<void> {
     return RCTRhino.delete(this._handle);
   }
 
@@ -183,7 +191,7 @@ class Rhino {
    * which expressions map to those intents, as well as slots and their possible values.
    * @returns The context YAML
    */
-  get contextInfo() {
+  public get contextInfo(): string {
     return this._contextInfo;
   }
 
@@ -191,7 +199,7 @@ class Rhino {
    * Gets the required number of audio samples per frame.
    * @returns Required frame length.
    */
-  get frameLength() {
+  public get frameLength(): number {
     return this._frameLength;
   }
 
@@ -199,7 +207,7 @@ class Rhino {
    * Get the audio sample rate required by Rhino.
    * @returns Required sample rate.
    */
-  get sampleRate() {
+  public get sampleRate(): number {
     return this._sampleRate;
   }
 
@@ -207,7 +215,7 @@ class Rhino {
    * Gets the version number of the Rhino library.
    * @returns Version of Rhino
    */
-  get version() {
+  public get version(): string {
     return this._version;
   }
 
@@ -216,7 +224,10 @@ class Rhino {
    * @param code Code name of native Error.
    * @param message Detailed message of the error.
    */
-  private static codeToError(code: string, message: string) {
+  private static codeToError(
+    code: string,
+    message: string
+  ): RhinoErrors.RhinoError {
     switch (code) {
       case 'RhinoException':
         return new RhinoErrors.RhinoError(message);

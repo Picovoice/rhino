@@ -13,6 +13,8 @@ if linkage != nil
 end
 
 target 'RhinoTestApp' do
+  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/v3.0/binding/ios/Rhino-iOS.podspec'
+
   config = use_native_modules!
 
   # Flags change depending on the env values.

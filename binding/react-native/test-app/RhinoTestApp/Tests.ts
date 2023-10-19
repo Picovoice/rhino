@@ -176,6 +176,42 @@ async function outOfContextTest(testcases: any): Promise<Result[]> {
   return results;
 }
 
+async function resetTest(): Promise<Result> {
+  const audioFilePath = getPath('audio_samples/test_out_of_context.wav');
+  const contextPath = getPath(
+    `context_files/en/smart_lighting_${platform}.rhn`,
+  );
+  const modelPath = getPath('model_files/rhino_params.pv');
+
+  const result: Result = {testName: 'Reset test', success: false};
+  let rhino = null;
+  try {
+    rhino = await Rhino.create(accessKey, contextPath, modelPath);
+
+    const pcm = await getPcmFromFile(audioFilePath, rhino.sampleRate);
+    const frameLength = rhino.frameLength;
+    let isFinalized = false;
+    for (let i = 0; i < pcm.length - frameLength; i += frameLength) {
+      if (i === Math.floor((pcm.length - frameLength) / 2)) {
+        await rhino.reset();
+      }
+
+      const inference = await rhino.process(pcm.slice(i, i + frameLength));
+      isFinalized = inference.isFinalized;
+      if (isFinalized === true) {
+        break;
+      }
+    }
+    result.success = isFinalized === false;
+
+    await rhino.delete();
+  } catch (error) {
+    result.success = false;
+    result.errorString = `${error}`;
+  }
+  return result;
+}
+
 export async function runRhinoTests(): Promise<Result[]> {
   const withinContextResults = await withinContextTest(
     testData.tests.within_context,
@@ -183,5 +219,6 @@ export async function runRhinoTests(): Promise<Result[]> {
   const outOfContextResults = await outOfContextTest(
     testData.tests.out_of_context,
   );
-  return [...withinContextResults, ...outOfContextResults];
+  const resetResult = await resetTest();
+  return [...withinContextResults, ...outOfContextResults, resetResult];
 }

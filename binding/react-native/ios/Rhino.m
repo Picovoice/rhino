@@ -1,5 +1,5 @@
 //
-// Copyright 2020 Picovoice Inc.
+// Copyright 2020-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -23,6 +23,10 @@ RCT_EXTERN_METHOD(create: (NSString *)accessKey
                   rejecter: (RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(delete: (NSString *)handle)
+
+RCT_EXTERN_METHOD(reset: (NSString *)handle
+                  resolver: (RCTPromiseResolveBlock)resolve
+                  rejecter: (RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(process: (NSString *)handle
                   pcm:(NSArray<NSNumber>)pcm
