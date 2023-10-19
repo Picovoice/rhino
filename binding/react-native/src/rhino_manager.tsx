@@ -58,7 +58,7 @@ class RhinoManager {
     sensitivity: number = 0.5,
     endpointDurationSec: number = 1.0,
     requireEndpoint: boolean = true
-  ) {
+  ): Promise<RhinoManager> {
     let rhino = await Rhino.create(
       accessKey,
       contextPath,
@@ -113,7 +113,7 @@ class RhinoManager {
   }
 
   /**
-   * Opens audio input stream and sends audio frames to Rhino
+   * Opens audio input stream and sends audio frames to Rhino.
    */
   public async process(): Promise<void> {
     if (this._isListening) {
@@ -149,7 +149,7 @@ class RhinoManager {
   }
 
   /**
-   * Closes audio stream
+   * Closes audio stream.
    */
   private async _stop(): Promise<void> {
     if (!this._isListening) {
@@ -173,11 +173,11 @@ class RhinoManager {
   }
 
   /**
-   * Releases resources and listeners
+   * Releases resources and listeners.
    */
-  delete() {
+  public async delete(): Promise<void> {
     if (this._rhino !== null) {
-      this._rhino.delete();
+      await this._rhino.delete();
       this._rhino = null;
     }
   }
@@ -187,7 +187,7 @@ class RhinoManager {
    * which expressions map to those intents, as well as slots and their possible values.
    * @returns The context YAML
    */
-  get contextInfo() {
+  public get contextInfo(): string | undefined {
     return this._rhino?.contextInfo;
   }
 
@@ -195,7 +195,7 @@ class RhinoManager {
    * Gets the required number of audio samples per frame.
    * @returns Required frame length.
    */
-  get frameLength() {
+  public get frameLength(): number | undefined {
     return this._rhino?.frameLength;
   }
 
@@ -203,7 +203,7 @@ class RhinoManager {
    * Get the audio sample rate required by Rhino.
    * @returns Required sample rate.
    */
-  get sampleRate() {
+  public get sampleRate(): number | undefined {
     return this._rhino?.sampleRate;
   }
 
@@ -211,7 +211,7 @@ class RhinoManager {
    * Gets the version number of the Rhino library.
    * @returns Version of Rhino
    */
-  get version() {
+  public get version(): string | undefined {
     return this._rhino?.version;
   }
 }

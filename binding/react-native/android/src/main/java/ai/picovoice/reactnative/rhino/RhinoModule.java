@@ -89,6 +89,24 @@ public class RhinoModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void reset(String handle, Promise promise) {
+        try {
+            if (!rhinoPool.containsKey(handle)) {
+                promise.reject(
+                        RhinoInvalidStateException.class.getSimpleName(),
+                        "Invalid Rhino handle provided to native module.");
+                return;
+            }
+
+            Rhino rhino = rhinoPool.get(handle);
+            rhino.reset();
+            promise.resolve();
+        } catch (RhinoException e) {
+            promise.reject(e.getClass().getSimpleName(), e.getMessage());
+        }
+    }
+
+    @ReactMethod
     public void process(String handle, ReadableArray pcmArray, Promise promise) {
         try {
             if (!rhinoPool.containsKey(handle)) {
