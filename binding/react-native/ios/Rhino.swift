@@ -16,6 +16,11 @@ class PvRhino: NSObject {
 
     private var rhinoPool: [String: Rhino] = [:]
 
+    override init() {
+        super.init()
+        Rhino.setSdk(sdk: "react-native")
+    }
+
     @objc(create:modelPath:contextPath:sensitivity:endpointDurationSec:requireEndpoint:resolver:rejecter:)
     func create(
         accessKey: String,

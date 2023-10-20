@@ -38,6 +38,8 @@ public class RhinoModule extends ReactContextBaseJavaModule {
     public RhinoModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
+
+        Rhino.setSdk("react-native");
     }
 
     @Override
