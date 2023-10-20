@@ -36,6 +36,7 @@ export class RhinoWorker {
 
   private static _wasm: string;
   private static _wasmSimd: string;
+  private static _sdk: string = "web";
 
   private constructor(
     worker: Worker,
@@ -104,6 +105,10 @@ export class RhinoWorker {
     if (this._wasmSimd === undefined) {
       this._wasmSimd = wasmSimd;
     }
+  }
+
+  public static setSdk(sdk: string): void {
+    RhinoWorker._sdk = sdk;
   }
 
   /**
@@ -223,6 +228,7 @@ export class RhinoWorker {
       options: rest,
       wasm: this._wasm,
       wasmSimd: this._wasmSimd,
+      sdk: this._sdk,
     });
 
     return returnPromise;

@@ -63,6 +63,7 @@ export type RhinoWorkerInitRequest = {
   sensitivity: number;
   wasm: string;
   wasmSimd: string;
+  sdk: string;
   modelPath: string;
   options: RhinoOptions;
 };

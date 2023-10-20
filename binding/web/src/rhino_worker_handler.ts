@@ -51,6 +51,7 @@ self.onmessage = async function (
       try {
         Rhino.setWasm(event.data.wasm);
         Rhino.setWasmSimd(event.data.wasmSimd);
+        Rhino.setSdk(event.data.sdk);
         rhino = await Rhino._init(
           event.data.accessKey,
           event.data.contextPath,
