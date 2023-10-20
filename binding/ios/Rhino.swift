@@ -111,6 +111,8 @@ public class Rhino {
                 "Endpoint duration value '\(endpointDurationSec)' is not a floating-point value between [0.5, 5.0]")
         }
 
+        pv_set_sdk(Rhino.sdk)
+
         var status = pv_rhino_init(
             accessKey,
             modelPathArg,
