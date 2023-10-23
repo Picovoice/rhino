@@ -1231,10 +1231,8 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@picovoice/rhino-web@=2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.2.0.tgz#fb221654e3c0977b8b1b417f42bf0eb510cf6750"
-  integrity sha512-2ckCNq9ayVQ6GKEZ0OFXy7NIdEIOiyXsGQPjDfHRDKhMf7EATnR4AgVIEXLwKCSg8WfFCZkXOw33E3V47QEUAA==
+"@picovoice/rhino-web@file:../web":
+  version "3.0.0"
   dependencies:
     "@picovoice/web-utils" "=1.3.1"
 

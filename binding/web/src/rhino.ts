@@ -733,6 +733,8 @@ export class Rhino {
     if (contextPathAddress === 0) {
       throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
+    memoryBufferUint8.set(encodedContextPath, contextPathAddress);
+    memoryBufferUint8[contextPathAddress + encodedContextPath.length] = 0;
 
     const sdkEncoded = new TextEncoder().encode(this._sdk);
     const sdkAddress = await aligned_alloc(
@@ -742,8 +744,8 @@ export class Rhino {
     if (!sdkAddress) {
       throw new RhinoErrors.RhinoOutOfMemoryError('malloc failed: Cannot allocate memory');
     }
-    memoryBufferUint8.set(encodedContextPath, contextPathAddress);
-    memoryBufferUint8[contextPathAddress + encodedContextPath.length] = 0;
+    memoryBufferUint8.set(sdkEncoded, sdkAddress);
+    memoryBufferUint8[sdkAddress + sdkEncoded.length] = 0;
     await pv_set_sdk(sdkAddress);
 
     const messageStackDepthAddress = await aligned_alloc(
