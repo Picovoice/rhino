@@ -27,7 +27,8 @@ function processErrorCallback(error: RhinoError): void {
   self.postMessage({
     command: 'error',
     status: error.status,
-    message: error.message,
+    shortMessage: error.shortMessage,
+    messageStack: error.messageStack
   });
 }
 
