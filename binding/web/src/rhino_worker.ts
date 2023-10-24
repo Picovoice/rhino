@@ -170,7 +170,7 @@ export class RhinoWorker {
                     break;
                   case 'failed':
                   case 'error':
-                    const error = pvStatusToException(ev.data.status, ev.data.message);
+                    const error = pvStatusToException(ev.data.status, ev.data.shortMessage, ev.data.messageStack);
                     if (processErrorCallback) {
                       processErrorCallback(error);
                     } else {
@@ -197,7 +197,7 @@ export class RhinoWorker {
               break;
             case 'failed':
             case 'error':
-              const error = pvStatusToException(event.data.status, event.data.message);
+              const error = pvStatusToException(event.data.status, event.data.shortMessage, event.data.messageStack);
               reject(error);
               break;
             default:
@@ -271,7 +271,7 @@ export class RhinoWorker {
             break;
           case 'failed':
           case 'error':
-            const error = pvStatusToException(event.data.status, event.data.message);
+            const error = pvStatusToException(event.data.status, event.data.shortMessage, event.data.messageStack);
             reject(error);
             break;
           default:

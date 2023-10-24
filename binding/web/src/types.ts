@@ -90,7 +90,8 @@ export type RhinoWorkerRequest =
 export type RhinoWorkerFailureResponse = {
   command: 'failed' | 'error';
   status: PvStatus;
-  message: string;
+  shortMessage: string;
+  messageStack: string[];
 };
 
 export type RhinoWorkerInitResponse =

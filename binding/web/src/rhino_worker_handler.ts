@@ -27,7 +27,8 @@ function processErrorCallback(error: RhinoError): void {
   self.postMessage({
     command: 'error',
     status: error.status,
-    message: error.message,
+    shortMessage: error.shortMessage,
+    messageStack: error.messageStack
   });
 }
 
@@ -44,7 +45,7 @@ self.onmessage = async function (
         self.postMessage({
           command: 'error',
           status: PvStatus.INVALID_STATE,
-          message: 'Rhino already initialized',
+          shortMessage: 'Rhino already initialized',
         });
         return;
       }
@@ -71,7 +72,8 @@ self.onmessage = async function (
         self.postMessage({
           command: 'error',
           status: PvStatus.RUNTIME_ERROR,
-          message: e.message,
+          shortMessage: e.shortMessage,
+          messageStack: e.messageStack
         });
       }
       break;
@@ -80,7 +82,7 @@ self.onmessage = async function (
         self.postMessage({
           command: 'error',
           status: PvStatus.INVALID_STATE,
-          message: 'Rhino not initialized',
+          shortMessage: 'Rhino not initialized',
         });
         return;
       }
@@ -91,7 +93,7 @@ self.onmessage = async function (
         self.postMessage({
           command: 'error',
           status: PvStatus.INVALID_STATE,
-          message: 'Rhino not initialized',
+          shortMessage: 'Rhino not initialized',
         });
         return;
       }
@@ -115,7 +117,7 @@ self.onmessage = async function (
         command: 'failed',
         status: PvStatus.RUNTIME_ERROR,
         // @ts-ignore
-        message: `Unrecognized command: ${event.data.command}`,
+        shortMessage: `Unrecognized command: ${event.data.command}`,
       });
   }
 };
