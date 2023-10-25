@@ -289,6 +289,9 @@ PODS:
     - React-perflogger (= 0.68.7)
   - Rhino-iOS (3.0.0):
     - ios-voice-processor (~> 1.1.0)
+  - rhino-react-native (3.0.0):
+    - React
+    - Rhino-iOS (~> 3.0.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -325,13 +328,14 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - Rhino-iOS (from `https://raw.githubusercontent.com/Picovoice/rhino/v3.0/binding/ios/Rhino-iOS.podspec`)
+  - "rhino-react-native (from `../node_modules/@picovoice/rhino-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
     - fmt
     - ios-voice-processor
+    - Rhino-iOS
 
 EXTERNAL SOURCES:
   boost:
@@ -396,8 +400,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
-  Rhino-iOS:
-    :podspec: https://raw.githubusercontent.com/Picovoice/rhino/v3.0/binding/ios/Rhino-iOS.podspec
+  rhino-react-native:
+    :path: "../node_modules/@picovoice/rhino-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -436,8 +440,9 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 18932e685b4893be88d1efc18f5f8ca1c9cd39d8
   ReactCommon: 29bb6fad3242e30e9d049bc9d592736fa3da9e50
   Rhino-iOS: b92978104bfad32da25b9eeaa4f0628b86ffcee9
+  rhino-react-native: 3954bad7e47e21256a0874999cbb0d2acf599186
   Yoga: 0bc4b37c3b8a345336ff601e2cf7d9704bab7e93
 
-PODFILE CHECKSUM: c1daa169c1fb4907ea44df41d3529923a7a4dbdf
+PODFILE CHECKSUM: 1bbfabf6f1c66bdf4ed7e43ff0bea37f3ae08498
 
 COCOAPODS: 1.11.3
