@@ -20,12 +20,12 @@ DEPENDENCIES:
   - flutter_voice_processor (from `.symlinks/plugins/flutter_voice_processor/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
-  - Rhino-iOS (from `https://raw.githubusercontent.com/Picovoice/rhino/v3.0/binding/ios/Rhino-iOS.podspec`)
   - rhino_flutter (from `.symlinks/plugins/rhino_flutter/ios`)
 
 SPEC REPOS:
   trunk:
     - ios-voice-processor
+    - Rhino-iOS
 
 EXTERNAL SOURCES:
   Flutter:
@@ -36,8 +36,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/integration_test/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/ios"
-  Rhino-iOS:
-    :podspec: https://raw.githubusercontent.com/Picovoice/rhino/v3.0/binding/ios/Rhino-iOS.podspec
   rhino_flutter:
     :path: ".symlinks/plugins/rhino_flutter/ios"
 
@@ -50,6 +48,6 @@ SPEC CHECKSUMS:
   Rhino-iOS: b92978104bfad32da25b9eeaa4f0628b86ffcee9
   rhino_flutter: 78d56c9fa0355e4ee94fa59cb3a0d210b5d1e3f9
 
-PODFILE CHECKSUM: d649e1aef953c2b76883198c9a60c0dfd0334b0a
+PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d
 
 COCOAPODS: 1.11.3
