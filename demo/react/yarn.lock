@@ -1545,13 +1545,17 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@picovoice/rhino-react@../../binding/react":
+"@picovoice/rhino-react@~3.0.0":
   version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-3.0.0.tgz#7deeec441e086efd1496a9a82a0853b423f18a6a"
+  integrity sha512-zPZh6o2YjOS/rlvgUoqbElEGy3Rxr2S5lXCP7gybqZMfQ74xT2BEG51hXg4Bnkp5F++HN8Z9M1CYVckRCsV28Q==
   dependencies:
-    "@picovoice/rhino-web" "file:../../../../../.cache/yarn/v6/npm-@picovoice-rhino-react-3.0.0-39bfe464-7ec1-4fbf-8d9e-0167d1dfe41b-1697758420673/node_modules/@picovoice/web"
+    "@picovoice/rhino-web" "=3.0.0"
 
-"@picovoice/rhino-web@file:../../binding/web":
+"@picovoice/rhino-web@=3.0.0":
   version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-3.0.0.tgz#d3cf3a4d4062726e2f7be5926122e8833e8857a7"
+  integrity sha512-P0sA19lpuh1szkzXgfRxR1bhldoLqkfQP0Ok9uViZYYfX6jcknEziYhNIiAqGdVOexuPbXupAmNsTAru7FfuqQ==
   dependencies:
     "@picovoice/web-utils" "=1.3.1"
 
