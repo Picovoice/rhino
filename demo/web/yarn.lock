@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@picovoice/rhino-web@~2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.2.1.tgz#68ece011d99ecd638e8935147c8e443c294becf5"
-  integrity sha512-kwNNvuUt+6x/kfLplLeCV1J2RbTZEkKwe5WoyY6yZbtJB1Tb/+HcWlNaeSU1kLTegxZ6UL+ETT/gay4psDKLmQ==
+"@picovoice/rhino-web@~3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-3.0.0.tgz#d3cf3a4d4062726e2f7be5926122e8833e8857a7"
+  integrity sha512-P0sA19lpuh1szkzXgfRxR1bhldoLqkfQP0Ok9uViZYYfX6jcknEziYhNIiAqGdVOexuPbXupAmNsTAru7FfuqQ==
   dependencies:
     "@picovoice/web-utils" "=1.3.1"
 
