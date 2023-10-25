@@ -45,14 +45,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        
-    - name: Pre-build binding dependencies
-      run: npm install yarn
-      working-directory: binding/nodejs
-
-    - name: Build Node.js SDK
-      run: yarn && yarn build
-      working-directory: binding/nodejs
 
     - name: Pre-build dependencies
       run: npm install yarn
@@ -90,10 +82,6 @@ jobs:
 
     - name: Pre-build dependencies
       run: npm install --global yarn
-
-    - name: Build Node.js SDK
-      run: yarn && yarn build
-      working-directory: binding/nodejs
 
     - name: Install dependencies
       run: yarn install
