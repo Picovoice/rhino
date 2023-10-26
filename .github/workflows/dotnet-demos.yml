@@ -47,7 +47,7 @@ jobs:
 
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
-  
+
     - name: Dotnet build filedemo
       run: dotnet build -c FileDemo.Release
 
@@ -84,7 +84,7 @@ jobs:
 
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
-  
+
     - name: Dotnet build filedemo
       run: dotnet build -c FileDemo.Release
 

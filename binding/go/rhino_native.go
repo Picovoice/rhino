@@ -1,4 +1,4 @@
-// Copyright 2021-2022 Picovoice Inc.
+// Copyright 2021-2023 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is
 // located in the "LICENSE" file accompanying this source.
@@ -196,6 +196,29 @@ typedef int32_t (*pv_rhino_sample_rate_func)();
 int32_t pv_rhino_sample_rate_wrapper(void *f) {
      return ((pv_rhino_sample_rate_func) f)();
 }
+
+typedef void (*pv_set_sdk_func)(const char *);
+
+static void pv_set_sdk_wrapper(void *f, const char *sdk) {
+	return ((pv_set_sdk_func) f)(sdk);
+}
+
+typedef int32_t (*pv_get_error_stack_func)(char ***, int32_t *);
+
+static int32_t pv_get_error_stack_wrapper(
+	void *f,
+	char ***message_stack,
+	int32_t *message_stack_depth) {
+	return ((pv_get_error_stack_func) f)(message_stack, message_stack_depth);
+}
+
+typedef void (*pv_free_error_stack_func)(char **);
+
+static void pv_free_error_stack_wrapper(
+	void *f,
+	char **message_stack) {
+	return ((pv_free_error_stack_func) f)(message_stack);
+}
 */
 import "C"
 
@@ -218,6 +241,7 @@ type nativeRhinoInterface interface {
 	nativeSampleRate()
 	nativeFrameLength()
 	nativeVersion()
+	nativeGetErrorStack()
 }
 
 type nativeRhinoType struct {
@@ -235,6 +259,9 @@ type nativeRhinoType struct {
 	pv_sample_rate_ptr                 unsafe.Pointer
 	slotKeysPtr                        unsafe.Pointer
 	slotValuePtr                       unsafe.Pointer
+	pv_set_sdk_ptr                     unsafe.Pointer
+	pv_get_error_stack_ptr             unsafe.Pointer
+	pv_free_error_stack_ptr            unsafe.Pointer
 }
 
 func (nr *nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
@@ -261,6 +288,13 @@ func (nr *nativeRhinoType) nativeInit(rhino *Rhino) (status PvStatus) {
 	nr.pv_rhino_version_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_version"))
 	nr.pv_rhino_frame_length_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_rhino_frame_length"))
 	nr.pv_sample_rate_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_sample_rate"))
+	nr.pv_set_sdk_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_set_sdk"))
+	nr.pv_get_error_stack_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_get_error_stack"))
+	nr.pv_free_error_stack_ptr = C.load_symbol(nr.libraryHandle, C.CString("pv_free_error_stack"))
+
+	C.pv_set_sdk_wrapper(
+		nr.pv_set_sdk_ptr,
+		C.CString("go"))
 
 	var ret = C.pv_rhino_init_wrapper(
 		nr.pv_rhino_init_ptr,
@@ -371,4 +405,31 @@ func (nr *nativeRhinoType) nativeFrameLength() (frameLength int) {
 
 func (nr *nativeRhinoType) nativeSampleRate() (sampleRate int) {
 	return int(C.pv_rhino_sample_rate_wrapper(nr.pv_sample_rate_ptr))
+}
+
+func (nr *nativeRhinoType) nativeGetErrorStack() (status PvStatus, messageStack []string) {
+	var messageStackDepthRef C.int32_t
+	var messageStackRef **C.char
+
+	var ret = C.pv_get_error_stack_wrapper(nr.pv_get_error_stack_ptr,
+		&messageStackRef,
+		&messageStackDepthRef)
+
+	if PvStatus(ret) != SUCCESS {
+		return PvStatus(ret), []string{}
+	}
+
+	defer C.pv_free_error_stack_wrapper(
+		nr.pv_free_error_stack_ptr,
+		messageStackRef)
+
+	messageStackDepth := int(messageStackDepthRef)
+	messageStackSlice := (*[1 << 28]*C.char)(unsafe.Pointer(messageStackRef))[:messageStackDepth:messageStackDepth]
+
+	messageStack = make([]string, messageStackDepth)
+	for i := 0; i < messageStackDepth; i++ {
+		messageStack[i] = C.GoString(messageStackSlice[i])
+	}
+
+	return PvStatus(ret), messageStack
 }

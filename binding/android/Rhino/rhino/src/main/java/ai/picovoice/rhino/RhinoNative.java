@@ -1,5 +1,5 @@
 /*
-    Copyright 2022 Picovoice Inc.
+    Copyright 2022-2023 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -20,6 +20,8 @@ class RhinoNative {
 
     static native String getVersion();
 
+    static native void setSdk(String sdk);
+    
     static native long init(
             String accessKey,
             String modelPath,
@@ -31,6 +33,8 @@ class RhinoNative {
     static native void delete(long object);
 
     static native boolean process(long object, short[] pcm) throws RhinoException;
+
+    static native void reset(long object) throws RhinoException;
 
     static native RhinoInference getInference(long object) throws RhinoException;
 

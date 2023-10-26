@@ -13,7 +13,8 @@
 /// <reference lib="webworker" />
 
 import { Rhino } from './rhino';
-import { RhinoWorkerRequest, RhinoInference } from './types';
+import { RhinoError } from './rhino_errors';
+import { RhinoWorkerRequest, RhinoInference, PvStatus } from './types';
 
 function inferenceCallback(inference: RhinoInference): void {
   self.postMessage({
@@ -22,10 +23,12 @@ function inferenceCallback(inference: RhinoInference): void {
   });
 }
 
-function processErrorCallback(error: Error): void {
+function processErrorCallback(error: RhinoError): void {
   self.postMessage({
     command: 'error',
-    message: error.message,
+    status: error.status,
+    shortMessage: error.shortMessage,
+    messageStack: error.messageStack
   });
 }
 
@@ -41,13 +44,15 @@ self.onmessage = async function (
       if (rhino !== null) {
         self.postMessage({
           command: 'error',
-          message: 'Rhino already initialized',
+          status: PvStatus.INVALID_STATE,
+          shortMessage: 'Rhino already initialized',
         });
         return;
       }
       try {
         Rhino.setWasm(event.data.wasm);
         Rhino.setWasmSimd(event.data.wasmSimd);
+        Rhino.setSdk(event.data.sdk);
         rhino = await Rhino._init(
           event.data.accessKey,
           event.data.contextPath,
@@ -66,7 +71,9 @@ self.onmessage = async function (
       } catch (e: any) {
         self.postMessage({
           command: 'error',
-          message: e.message,
+          status: PvStatus.RUNTIME_ERROR,
+          shortMessage: e.shortMessage,
+          messageStack: e.messageStack
         });
       }
       break;
@@ -74,7 +81,8 @@ self.onmessage = async function (
       if (rhino === null) {
         self.postMessage({
           command: 'error',
-          message: 'Rhino not initialized',
+          status: PvStatus.INVALID_STATE,
+          shortMessage: 'Rhino not initialized',
         });
         return;
       }
@@ -84,7 +92,8 @@ self.onmessage = async function (
       if (rhino === null) {
         self.postMessage({
           command: 'error',
-          message: 'Rhino not initialized',
+          status: PvStatus.INVALID_STATE,
+          shortMessage: 'Rhino not initialized',
         });
         return;
       }
@@ -106,8 +115,9 @@ self.onmessage = async function (
     default:
       self.postMessage({
         command: 'failed',
+        status: PvStatus.RUNTIME_ERROR,
         // @ts-ignore
-        message: `Unrecognized command: ${event.data.command}`,
+        shortMessage: `Unrecognized command: ${event.data.command}`,
       });
   }
 };

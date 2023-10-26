@@ -142,6 +142,11 @@ class Rhino {
   ///
   /// returns RhinoInference object.
   Future<RhinoInference> process(List<int>? frame) async {
+    if (_handle == null) {
+      throw RhinoInvalidStateException(
+          "Unable to process with Rhino - resources have already been released");
+    }
+
     try {
       Map<String, dynamic> inference = Map<String, dynamic>.from(await _channel
           .invokeMethod('process', {'handle': _handle, 'frame': frame}));
@@ -161,6 +166,22 @@ class Rhino {
       throw rhinoStatusToException(error.code, error.message);
     } on Exception catch (error) {
       throw RhinoException(error.toString());
+    }
+  }
+
+  /// Resets the internal state of the engine. It should be called before the
+  /// engine can be used to infer intent from a new stream of audio.
+  ///
+  /// Throws a `RhinoException` if reset fails
+  Future<void> reset() async {
+    if (_handle == null) {
+      throw RhinoInvalidStateException(
+          "Unable to reset Rhino - resources have already been released");
+    }
+    try {
+      await _channel.invokeMethod('reset', {'handle': _handle});
+    } on PlatformException catch (error) {
+      throw rhinoStatusToException(error.code, error.message);
     }
   }
 

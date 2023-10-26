@@ -1,5 +1,5 @@
 //
-//  Copyright 2022 Picovoice Inc.
+//  Copyright 2022-2023 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -21,11 +21,12 @@ class BaseTest: XCTestCase {
         continueAfterFailure = false
     }
 
-    override func tearDown() {
-        super.tearDown()
-    }
+    func processFileHelper(
+        _ rhino: Rhino,
+        _ testAudioURL: URL,
+        _ maxProcessCount: Int32 = -1) throws -> Bool {
+        var processed = 0
 
-    func processFile(rhino: Rhino, testAudioURL: URL) throws -> Inference {
         let data = try Data(contentsOf: testAudioURL)
         let frameLengthBytes = Int(Rhino.frameLength) * 2
         var pcmBuffer = [Int16](repeating: 0, count: Int(Rhino.frameLength))
@@ -41,7 +42,18 @@ class BaseTest: XCTestCase {
             }
 
             index += frameLengthBytes
+
+            if maxProcessCount != -1 && processed >= maxProcessCount {
+                break
+            }
+            processed += 1
         }
+
+        return isFinalized
+    }
+
+    func processFile(rhino: Rhino, testAudioURL: URL) throws -> Inference {
+        let isFinalized = try processFileHelper(rhino, testAudioURL)
         XCTAssert(isFinalized)
 
         return try rhino.getInference()

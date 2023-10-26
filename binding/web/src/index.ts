@@ -21,6 +21,8 @@ import {
 import rhinoWasm from '../lib/pv_rhino.wasm';
 import rhinoWasmSimd from '../lib/pv_rhino_simd.wasm';
 
+import * as RhinoErrors from './rhino_errors';
+
 Rhino.setWasm(rhinoWasm);
 Rhino.setWasmSimd(rhinoWasmSimd);
 RhinoWorker.setWasm(rhinoWasm);
@@ -43,4 +45,5 @@ export {
   RhinoWorkerReleaseResponse,
   RhinoWorkerRequest,
   RhinoWorkerResponse,
+  RhinoErrors
 };

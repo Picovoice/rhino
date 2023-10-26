@@ -17,7 +17,7 @@ import (
 	"os"
 	"path/filepath"
 
-	rhino "github.com/Picovoice/rhino/binding/go/v2"
+	rhino "github.com/Picovoice/rhino/binding/go/v3"
 	"github.com/go-audio/audio"
 	"github.com/go-audio/wav"
 )

@@ -46,8 +46,13 @@ public class Rhino {
     public static let sampleRate = UInt32(pv_sample_rate())
     public static let version = String(cString: pv_rhino_version())
     public var contextInfo: String = ""
+    private static var sdk = "ios"
 
     private var isFinalized: Bool = false
+
+    public static func setSdk(sdk: String) {
+        self.sdk = sdk
+    }
 
     /// Constructor.
     ///
@@ -106,6 +111,8 @@ public class Rhino {
                 "Endpoint duration value '\(endpointDurationSec)' is not a floating-point value between [0.5, 5.0]")
         }
 
+        pv_set_sdk(Rhino.sdk)
+
         var status = pv_rhino_init(
             accessKey,
             modelPathArg,
@@ -115,14 +122,16 @@ public class Rhino {
             requireEndpoint,
             &self.handle)
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToRhinoError(status, "Rhino init failed")
+            let messageStack = try getMessageStack()
+            throw pvStatusToRhinoError(status, "Rhino init failed", messageStack)
         }
 
         // get context info from lib and set in binding
         var cContextInfo: UnsafePointer<Int8>?
         status = pv_rhino_context_info(self.handle, &cContextInfo)
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToRhinoError(status, "Failed to get Rhino context info")
+            let messageStack = try getMessageStack()
+            throw pvStatusToRhinoError(status, "Failed to get Rhino context info", messageStack)
         }
 
         self.contextInfo = String(cString: cContextInfo!)
@@ -158,10 +167,27 @@ public class Rhino {
 
         let status = pv_rhino_process(self.handle, pcm, &self.isFinalized)
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToRhinoError(status, "Rhino process failed")
+            let messageStack = try getMessageStack()
+            throw pvStatusToRhinoError(status, "Rhino process failed", messageStack)
         }
 
         return self.isFinalized
+    }
+
+    /// Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
+    /// stream of audio.
+    ///
+    /// - Throws: RhinoError
+    public func reset() throws {
+        if handle == nil {
+            throw RhinoInvalidStateError("Rhino must be initialized before reset is called")
+        }
+
+        let status = pv_rhino_reset(self.handle)
+        if status != PV_STATUS_SUCCESS {
+            let messageStack = try getMessageStack()
+            throw pvStatusToRhinoError(status, "Rhino reset failed", messageStack)
+        }
     }
 
     /// Get inference result from Rhino
@@ -184,7 +210,8 @@ public class Rhino {
 
         var status = pv_rhino_is_understood(self.handle, &isUnderstood)
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToRhinoError(status, "Rhino failed to get isUnderstood")
+            let messageStack = try getMessageStack()
+            throw pvStatusToRhinoError(status, "Rhino failed to get isUnderstood", messageStack)
         }
 
         if isUnderstood {
@@ -194,7 +221,8 @@ public class Rhino {
             var cSlotValues: UnsafeMutablePointer<UnsafePointer<Int8>?>?
             status = pv_rhino_get_intent(self.handle, &cIntent, &numSlots, &cSlotKeys, &cSlotValues)
             if status != PV_STATUS_SUCCESS {
-                throw pvStatusToRhinoError(status, "Rhino failed to get Intent")
+                let messageStack = try getMessageStack()
+                throw pvStatusToRhinoError(status, "Rhino failed to get intent", messageStack)
             }
 
             if isUnderstood {
@@ -207,14 +235,16 @@ public class Rhino {
 
                 status = pv_rhino_free_slots_and_values(self.handle, cSlotKeys, cSlotValues)
                 if status != PV_STATUS_SUCCESS {
-                    throw pvStatusToRhinoError(status, "Rhino failed to free slots and values")
+                    let messageStack = try getMessageStack()
+                    throw pvStatusToRhinoError(status, "Rhino failed to free slots and values", messageStack)
                 }
             }
         }
 
         status = pv_rhino_reset(self.handle)
         if status != PV_STATUS_SUCCESS {
-            throw pvStatusToRhinoError(status, "Rhino failed to reset")
+            let messageStack = try getMessageStack()
+            throw pvStatusToRhinoError(status, "Rhino failed to reset", messageStack)
         }
 
         return Inference(isUnderstood: isUnderstood, intent: intent, slots: slots)
@@ -238,33 +268,54 @@ public class Rhino {
                 "packaged asset, ensure you have added it to your xcode project.")
     }
 
-    private func pvStatusToRhinoError(_ status: pv_status_t, _ message: String) -> RhinoError {
+    private func pvStatusToRhinoError(
+        _ status: pv_status_t,
+        _ message: String,
+        _ messageStack: [String] = []) -> RhinoError {
         switch status {
         case PV_STATUS_OUT_OF_MEMORY:
-            return RhinoMemoryError(message)
+            return RhinoMemoryError(message, messageStack)
         case PV_STATUS_IO_ERROR:
-            return RhinoIOError(message)
+            return RhinoIOError(message, messageStack)
         case PV_STATUS_INVALID_ARGUMENT:
-            return RhinoInvalidArgumentError(message)
+            return RhinoInvalidArgumentError(message, messageStack)
         case PV_STATUS_STOP_ITERATION:
-            return RhinoStopIterationError(message)
+            return RhinoStopIterationError(message, messageStack)
         case PV_STATUS_KEY_ERROR:
-            return RhinoKeyError(message)
+            return RhinoKeyError(message, messageStack)
         case PV_STATUS_INVALID_STATE:
-            return RhinoInvalidStateError(message)
+            return RhinoInvalidStateError(message, messageStack)
         case PV_STATUS_RUNTIME_ERROR:
-            return RhinoRuntimeError(message)
+            return RhinoRuntimeError(message, messageStack)
         case PV_STATUS_ACTIVATION_ERROR:
-            return RhinoActivationError(message)
+            return RhinoActivationError(message, messageStack)
         case PV_STATUS_ACTIVATION_LIMIT_REACHED:
-            return RhinoActivationLimitError(message)
+            return RhinoActivationLimitError(message, messageStack)
         case PV_STATUS_ACTIVATION_THROTTLED:
-            return RhinoActivationThrottledError(message)
+            return RhinoActivationThrottledError(message, messageStack)
         case PV_STATUS_ACTIVATION_REFUSED:
-            return RhinoActivationRefusedError(message)
+            return RhinoActivationRefusedError(message, messageStack)
         default:
             let pvStatusString = String(cString: pv_status_to_string(status))
-            return RhinoError("\(pvStatusString): \(message)")
+            return RhinoError("\(pvStatusString): \(message)", messageStack)
         }
+    }
+
+    private func getMessageStack() throws -> [String] {
+        var messageStackRef: UnsafeMutablePointer<UnsafeMutablePointer<Int8>?>?
+        var messageStackDepth: Int32 = 0
+        let status = pv_get_error_stack(&messageStackRef, &messageStackDepth)
+        if status != PV_STATUS_SUCCESS {
+            throw pvStatusToRhinoError(status, "Unable to get Rhino error state")
+        }
+
+        var messageStack: [String] = []
+        for i in 0..<messageStackDepth {
+            messageStack.append(String(cString: messageStackRef!.advanced(by: Int(i)).pointee!))
+        }
+
+        pv_free_error_stack(messageStackRef)
+
+        return messageStack
     }
 }

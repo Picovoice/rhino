@@ -22,7 +22,10 @@ import {
   RhinoWorkerProcessResponse,
   RhinoWorkerReleaseResponse,
   RhinoWorkerResetResponse,
+  PvStatus,
 } from './types';
+
+import { pvStatusToException } from './rhino_errors';
 
 export class RhinoWorker {
   private readonly _worker: Worker;
@@ -33,6 +36,7 @@ export class RhinoWorker {
 
   private static _wasm: string;
   private static _wasmSimd: string;
+  private static _sdk: string = "web";
 
   private constructor(
     worker: Worker,
@@ -103,6 +107,10 @@ export class RhinoWorker {
     }
   }
 
+  public static setSdk(sdk: string): void {
+    RhinoWorker._sdk = sdk;
+  }
+
   /**
    * Creates a worker instance of the Rhino Speech-to-Intent engine.
    * The model size is large, hence it will try to use the existing one if it exists,
@@ -162,7 +170,7 @@ export class RhinoWorker {
                     break;
                   case 'failed':
                   case 'error':
-                    const error = new Error(ev.data.message);
+                    const error = pvStatusToException(ev.data.status, ev.data.shortMessage, ev.data.messageStack);
                     if (processErrorCallback) {
                       processErrorCallback(error);
                     } else {
@@ -173,7 +181,7 @@ export class RhinoWorker {
                   default:
                     // @ts-ignore
                     processErrorCallback(
-                      new Error(`Unrecognized command: ${event.data.command}`)
+                      pvStatusToException(PvStatus.RUNTIME_ERROR, `Unrecognized command: ${event.data.command}`)
                     );
                 }
               };
@@ -189,11 +197,12 @@ export class RhinoWorker {
               break;
             case 'failed':
             case 'error':
-              reject(event.data.message);
+              const error = pvStatusToException(event.data.status, event.data.shortMessage, event.data.messageStack);
+              reject(error);
               break;
             default:
               // @ts-ignore
-              reject(`Unrecognized command: ${event.data.command}`);
+              reject(pvStatusToException(PvStatus.RUNTIME_ERROR, `Unrecognized command: ${event.data.command}`));
           }
         };
       }
@@ -219,6 +228,7 @@ export class RhinoWorker {
       options: rest,
       wasm: this._wasm,
       wasmSimd: this._wasmSimd,
+      sdk: this._sdk,
     });
 
     return returnPromise;
@@ -261,11 +271,12 @@ export class RhinoWorker {
             break;
           case 'failed':
           case 'error':
-            reject(event.data.message);
+            const error = pvStatusToException(event.data.status, event.data.shortMessage, event.data.messageStack);
+            reject(error);
             break;
           default:
             // @ts-ignore
-            reject(`Unrecognized command: ${event.data.command}`);
+            reject(pvStatusToException(PvStatus.RUNTIME_ERROR, `Unrecognized command: ${event.data.command}`));
         }
       };
     });

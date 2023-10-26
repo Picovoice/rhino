@@ -111,6 +111,7 @@ export function useRhino(): RhinoVue {
 
     try {
       if (!rhinoRef.value) {
+        RhinoWorker.setSdk('vue');
         rhinoRef.value = await RhinoWorker.create(
           accessKey,
           context,

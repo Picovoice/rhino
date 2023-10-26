@@ -37,6 +37,47 @@ void main() {
       testData = json.decode(testDataJson);
     });
 
+    testWidgets('Test reset', (tester) async {
+      String language = testData['tests']['within_context'][0]['language'];
+      String contextName =
+          testData['tests']['within_context'][0]['context_name'];
+
+      String contextPath =
+          "assets/test_resources/context_files/${contextName}_$platform.rhn";
+      String modelPath =
+          "assets/test_resources/model_files/rhino_params${language != "en" ? "_$language" : ""}.pv";
+
+      Rhino rhino;
+      try {
+        rhino =
+            await Rhino.create(accessKey, contextPath, modelPath: modelPath);
+      } on RhinoException catch (ex) {
+        expect(ex, equals(null),
+            reason: "Failed to initialize Rhino for $language: $ex");
+        return;
+      }
+
+      String audioPath =
+          "assets/test_resources/audio_samples/test_within_context${language != "en" ? "_$language" : ""}.wav";
+      List<int> pcm = await loadAudioFile(audioPath);
+
+      RhinoInference? inference;
+      final int frameLength = rhino.frameLength;
+      for (int i = 0; i < (pcm.length - frameLength); i += frameLength) {
+        if (i == (pcm.length - frameLength) ~/ 2) {
+          await rhino.reset();
+        }
+        inference = await rhino.process(pcm.sublist(i, i + frameLength));
+        if (inference.isFinalized) {
+          break;
+        }
+      }
+
+      rhino.delete();
+      expect(inference?.isFinalized, equals(true),
+          reason: "Rhino should not have finalized after reset");
+    });
+
     testWidgets('Test within_context all languages', (tester) async {
       for (int t = 0; t < testData['tests']['within_context'].length; t++) {
         String language = testData['tests']['within_context'][t]['language'];

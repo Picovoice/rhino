@@ -16,7 +16,27 @@ from typing import Sequence
 
 
 class RhinoError(Exception):
-    pass
+    def __init__(self, message: str = '', message_stack: Sequence[str] = None):
+        super().__init__(message)
+
+        self._message = message
+        self._message_stack = list() if message_stack is None else message_stack
+
+    def __str__(self):
+        message = self._message
+        if len(self._message_stack) > 0:
+            message += ':'
+            for i in range(len(self._message_stack)):
+                message += '\n  [%d] %s' % (i, self._message_stack[i])
+        return message
+
+    @property
+    def message(self) -> str:
+        return self._message
+
+    @property
+    def message_stack(self) -> Sequence[str]:
+        return self._message_stack
 
 
 class RhinoMemoryError(RhinoError):
@@ -164,6 +184,22 @@ class Rhino(object):
         if not 0.5 <= endpoint_duration_sec <= 5.:
             raise ValueError("Endpoint duration should be within [0.5, 5]")
 
+        set_sdk_func = library.pv_set_sdk
+        set_sdk_func.argtypes = [c_char_p]
+        set_sdk_func.restype = None
+
+        set_sdk_func('python'.encode('utf-8'))
+
+        self._get_error_stack_func = library.pv_get_error_stack
+        self._get_error_stack_func.argtypes = [POINTER(POINTER(c_char_p)), POINTER(c_int)]
+        self._get_error_stack_func.restype = self.PicovoiceStatuses
+
+        self._free_error_stack_func = library.pv_free_error_stack
+        self._free_error_stack_func.argtypes = [POINTER(c_char_p)]
+        self._free_error_stack_func.restype = None
+
+        set_sdk_func('python'.encode('utf-8'))
+
         init_func = library.pv_rhino_init
         init_func.argtypes = [
             c_char_p,
@@ -186,7 +222,9 @@ class Rhino(object):
             require_endpoint,
             byref(self._handle))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+                message='Initialization failed',
+                message_stack=self._get_error_stack())
 
         self._delete_func = library.pv_rhino_delete
         self._delete_func.argtypes = [POINTER(self.CRhino)]
@@ -224,7 +262,9 @@ class Rhino(object):
         context_info = c_char_p()
         status = context_info_func(self._handle, byref(context_info))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+                message='Failed to get context info',
+                message_stack=self._get_error_stack())
 
         self._context_info = context_info.value.decode('utf-8')
 
@@ -259,9 +299,22 @@ class Rhino(object):
         is_finalized = c_bool()
         status = self._process_func(self._handle, (c_short * len(pcm))(*pcm), byref(is_finalized))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+                message='Processing failed',
+                message_stack=self._get_error_stack())
 
         return is_finalized.value
+
+    def reset(self) -> None:
+        """
+        Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
+        stream of audio.
+        """
+        status = self._reset_func(self._handle)
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+                message='Processing failed',
+                message_stack=self._get_error_stack())
 
     def get_inference(self) -> Inference:
         """
@@ -274,7 +327,9 @@ class Rhino(object):
         is_understood = c_bool()
         status = self._is_understood_func(self._handle, byref(is_understood))
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+                message='Failed to get inference',
+                message_stack=self._get_error_stack())
         is_understood = is_understood.value
 
         if is_understood:
@@ -289,7 +344,9 @@ class Rhino(object):
                 byref(slot_keys),
                 byref(slot_values))
             if status is not self.PicovoiceStatuses.SUCCESS:
-                raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+                raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+                    message='Failed to get intent',
+                    message_stack=self._get_error_stack())
 
             intent = intent.value.decode('utf-8')
 
@@ -299,14 +356,18 @@ class Rhino(object):
 
             status = self._free_slots_and_values_func(self._handle, slot_keys, slot_values)
             if status is not self.PicovoiceStatuses.SUCCESS:
-                raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+                raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+                    message='Failed to clear resources',
+                    message_stack=self._get_error_stack())
         else:
             intent = None
             slots = dict()
 
         status = self._reset_func(self._handle)
         if status is not self.PicovoiceStatuses.SUCCESS:
-            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status]()
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+                message='Reset failed',
+                message_stack=self._get_error_stack())
 
         return Inference(is_understood=is_understood, intent=intent, slots=slots)
 
@@ -333,6 +394,21 @@ class Rhino(object):
         """Audio sample rate accepted by Picovoice."""
 
         return self._sample_rate
+
+    def _get_error_stack(self) -> Sequence[str]:
+        message_stack_ref = POINTER(c_char_p)()
+        message_stack_depth = c_int()
+        status = self._get_error_stack_func(byref(message_stack_ref), byref(message_stack_depth))
+        if status is not self.PicovoiceStatuses.SUCCESS:
+            raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](message='Unable to get Rhino error state')
+
+        message_stack = list()
+        for i in range(message_stack_depth.value):
+            message_stack.append(message_stack_ref[i].decode('utf-8'))
+
+        self._free_error_stack_func(message_stack_ref)
+
+        return message_stack
 
 
 __all__ = [

@@ -33,6 +33,37 @@ const ACCESS_KEY =
     .filter(x => x.startsWith('--access_key='))[0]
     ?.split('--access_key=')[1] ?? '';
 
+function processFileHelper(rhino: Rhino, audioFile: string, maxProcessCount: number = -1) {
+  let processed = 0;
+
+  const waveBuffer = fs.readFileSync(audioFile);
+  const waveAudioFile = new WaveFile(waveBuffer);
+
+  if (!checkWaveFile(waveAudioFile, rhino.sampleRate)) {
+    fail(
+      'Audio file did not meet requirements. Wave file must be 16KHz, 16-bit, linear PCM (mono).'
+    );
+  }
+
+  const frames = getInt16Frames(waveAudioFile, rhino.frameLength);
+
+  let isFinalized = false;
+  for (let i = 0; i < frames.length; i++) {
+    const frame = frames[i];
+    isFinalized = rhino.process(frame);
+
+    if (isFinalized) {
+      break;
+    }
+    if (maxProcessCount !== -1 && processed >= maxProcessCount) {
+      break;
+    }
+    processed++;
+  }
+
+  return isFinalized;
+}
+
 function testRhinoDetection(
   language: string,
   context: string,
@@ -52,31 +83,61 @@ function testRhinoDetection(
   );
 
   const waveFilePath = getAudioFileByLanguage(language, isWithinContext);
-  const waveBuffer = fs.readFileSync(waveFilePath);
-  const waveAudioFile = new WaveFile(waveBuffer);
-
-  if (!checkWaveFile(waveAudioFile, engineInstance.sampleRate)) {
-    fail(
-      'Audio file did not meet requirements. Wave file must be 16KHz, 16-bit, linear PCM (mono).'
-    );
-  }
-
-  const frames = getInt16Frames(waveAudioFile, engineInstance.frameLength);
-
-  let isFinalized = false;
-  for (let i = 0; i < frames.length; i++) {
-    const frame = frames[i];
-    isFinalized = engineInstance.process(frame);
-
-    if (isFinalized) {
-      if (groundTruth !== null) {
-        expect(engineInstance.getInference()).toEqual(groundTruth);
-      } else {
-        expect(engineInstance.getInference().isUnderstood).toBe(false);
-      }
+  const isFinalized = processFileHelper(engineInstance, waveFilePath);
+  if (isFinalized) {
+    if (groundTruth !== null) {
+      expect(engineInstance.getInference()).toEqual(groundTruth);
+    } else {
+      expect(engineInstance.getInference().isUnderstood).toBe(false);
     }
   }
 }
+
+describe("Reset", () => {
+  test("Rhino reset works successfully", () => {
+    const contextPath = getContextPathsByLanguage("en", "coffee_maker");
+    const waveFilePath = getAudioFileByLanguage("en", true);
+  
+    const rhino = new Rhino(
+      ACCESS_KEY,
+      contextPath
+    );
+
+    let isFinalized = processFileHelper(rhino, waveFilePath, 15);
+    expect(isFinalized).toBe(false);
+
+    rhino.reset();
+    isFinalized = processFileHelper(rhino, waveFilePath);
+    expect(isFinalized).toBe(true);
+    expect(rhino.getInference().isUnderstood).toBe(true);
+  })
+})
+
+describe("error message stack", () => {
+  test("message stack cleared after read", () => {    
+    let error: string[] = [];
+    try {
+      new Rhino(
+        "invalid",
+        getContextPathsByLanguage('en', 'coffee_maker'));
+    } catch (e: any) {
+      error = e.messageStack;
+    }
+
+    expect(error.length).toBeGreaterThan(0);
+    expect(error.length).toBeLessThanOrEqual(8);
+
+    try {
+      new Rhino(
+        "invalid",
+        getContextPathsByLanguage('en', 'coffee_maker'));
+    } catch (e: any) {
+      for (let i = 0; i < error.length; i++) {
+        expect(error[i]).toEqual(e.messageStack[i]);
+      }
+    }
+  });
+});
 
 describe('intent detection', () => {
   it.each(WITHIN_CONTEXT_PARAMETERS)(

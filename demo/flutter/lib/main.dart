@@ -82,9 +82,6 @@ class _MyAppState extends State<MyApp> {
       _rhinoManager = await RhinoManager.create(
           accessKey, contextPath, inferenceCallback,
           modelPath: modelPath, processErrorCallback: errorCallback);
-    } on RhinoInvalidArgumentException catch (ex) {
-      errorCallback(RhinoInvalidArgumentException(
-          "${ex.message}\nEnsure your accessKey '$accessKey' is a valid access key."));
     } on RhinoActivationException {
       errorCallback(RhinoActivationException("AccessKey activation error."));
     } on RhinoActivationLimitException {

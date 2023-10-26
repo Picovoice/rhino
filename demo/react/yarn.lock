@@ -1545,17 +1545,17 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@picovoice/rhino-react@~2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-2.2.1.tgz#dc16aed3d238ba72419dfeab5e5e3e857f52a035"
-  integrity sha512-57FmphhDcP5/4WG/bZPXwG50x2YyvuS3jkGYOkaJA6o+IurdF7TpZ1SylSOPg99RWz4UUwdYDRDokFT5ATVVYQ==
+"@picovoice/rhino-react@~3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-3.0.0.tgz#7deeec441e086efd1496a9a82a0853b423f18a6a"
+  integrity sha512-zPZh6o2YjOS/rlvgUoqbElEGy3Rxr2S5lXCP7gybqZMfQ74xT2BEG51hXg4Bnkp5F++HN8Z9M1CYVckRCsV28Q==
   dependencies:
-    "@picovoice/rhino-web" "=2.2.0"
+    "@picovoice/rhino-web" "=3.0.0"
 
-"@picovoice/rhino-web@=2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-2.2.0.tgz#fb221654e3c0977b8b1b417f42bf0eb510cf6750"
-  integrity sha512-2ckCNq9ayVQ6GKEZ0OFXy7NIdEIOiyXsGQPjDfHRDKhMf7EATnR4AgVIEXLwKCSg8WfFCZkXOw33E3V47QEUAA==
+"@picovoice/rhino-web@=3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-3.0.0.tgz#d3cf3a4d4062726e2f7be5926122e8833e8857a7"
+  integrity sha512-P0sA19lpuh1szkzXgfRxR1bhldoLqkfQP0Ok9uViZYYfX6jcknEziYhNIiAqGdVOexuPbXupAmNsTAru7FfuqQ==
   dependencies:
     "@picovoice/web-utils" "=1.3.1"
 
@@ -1943,10 +1943,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.11.tgz#b3b790f09cb1696cffcec605de025b088fa4225f"
   integrity sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==
 
-"@types/node@^14.14.41":
-  version "14.18.42"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.42.tgz#fa39b2dc8e0eba61bdf51c66502f84e23b66e114"
-  integrity sha512-xefu+RBie4xWlK8hwAzGh3npDz/4VhF6icY/shU+zv/1fNn+ZVG7T7CRwe9LId9sAYRPxI+59QBPuKL3WpyGRg==
+"@types/node@^18.11.9":
+  version "18.18.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.18.6.tgz#26da694f75cdb057750f49d099da5e3f3824cb3e"
+  integrity sha512-wf3Vz+jCmOQ2HV1YUJuCWdL64adYxumkrxtc+H1VUQlnQI04+5HtH+qZCOE21lBE7gIrt+CwX2Wv8Acrw5Ak6w==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"

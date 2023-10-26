@@ -1,5 +1,5 @@
 //
-//  Copyright 2022 Picovoice Inc.
+//  Copyright 2022-2023 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -281,5 +281,54 @@ class RhinoAppTestUITests: BaseTest {
         XCTAssert(!inference.isUnderstood)
 
         r.delete()
+    }
+
+    func testReset() throws {
+        let bundle = Bundle(for: type(of: self))
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
+        let fileURL: URL = bundle.url(
+            forResource: "test_within_context",
+            withExtension: "wav",
+            subdirectory: "test_resources/audio_samples")!
+
+        let r = try Rhino.init(accessKey: accessKey, contextPath: contextPath)
+        var isFinalized = try processFileHelper(r, fileURL, 15)
+        XCTAssert(!isFinalized)
+
+        try r.reset()
+        isFinalized = try processFileHelper(r, fileURL)
+        XCTAssert(isFinalized)
+
+        let inference = try r.getInference()
+        XCTAssert(inference.isUnderstood)
+
+        r.delete()
+    }
+
+    func testMessageStack() throws {
+        let bundle = Bundle(for: type(of: self))
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
+
+        var first_error: String = ""
+        do {
+            let r = try Rhino.init(accessKey: "invalid", contextPath: contextPath)
+            XCTAssertNil(r)
+        } catch {
+            first_error = "\(error.localizedDescription)"
+            XCTAssert(first_error.count < 1024)
+        }
+
+        do {
+            let r = try Rhino.init(accessKey: "invalid", contextPath: contextPath)
+            XCTAssertNil(r)
+        } catch {
+            XCTAssert("\(error.localizedDescription)".count == first_error.count)
+        }
     }
 }

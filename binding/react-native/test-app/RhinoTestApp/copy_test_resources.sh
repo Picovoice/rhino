@@ -13,7 +13,7 @@ mkdir -p ${IOS_ASSETS_DIR}/audio_samples
 cp ${RESOURCE_DIR}/audio_samples/*.wav ${ANDROID_ASSETS_DIR}/audio_samples
 cp ${RESOURCE_DIR}/audio_samples/*.wav ${IOS_ASSETS_DIR}/audio_samples
 
-echo "Copying test keyword files..."
+echo "Copying test context files..."
 mkdir -p ${ANDROID_ASSETS_DIR}/context_files
 mkdir -p ${IOS_ASSETS_DIR}/context_files
 

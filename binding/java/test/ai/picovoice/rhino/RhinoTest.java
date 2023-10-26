@@ -35,6 +35,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class RhinoTest {
 
@@ -95,7 +96,9 @@ public class RhinoTest {
 
     @AfterEach
     void tearDown() {
-        rhino.delete();
+        if (rhino != null) {
+            rhino.delete();
+        }
     }
 
     @Test
@@ -116,7 +119,7 @@ public class RhinoTest {
         assertTrue(rhino.getFrameLength() > 0);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getSampleRate() throws RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
@@ -125,11 +128,57 @@ public class RhinoTest {
         assertTrue(rhino.getSampleRate() > 0);
     }
 
-    void runTestCase(String audioFileName,
-                     boolean isWithinContext,
-                     String expectedIntent,
-                     Map<String, String> expectedSlots)
-                     throws IOException, UnsupportedAudioFileException, RhinoException {
+    @Test
+    void reset() throws Exception {
+        rhino = new Rhino.Builder()
+                .setAccessKey(accessKey)
+                .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
+                .build();
+
+        String audioFilePath = RhinoTestUtils.getAudioFilePath("test_within_context.wav");
+        boolean isFinalized = processFileHelper(audioFilePath, 15);
+        assertFalse(isFinalized);
+
+        rhino.reset();
+        isFinalized = processFileHelper(audioFilePath, -1);
+        assertTrue(isFinalized);
+
+        RhinoInference inference = rhino.getInference();
+        assertEquals(inference.getIsUnderstood(), true);
+    }
+
+    @Test
+    void getErrorStack() {
+        String[] error = {};
+        try {
+            rhino = new Rhino.Builder()
+                    .setAccessKey("invalid")
+                    .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
+                    .build();
+        } catch (RhinoException e) {
+            error = e.getMessageStack();
+        }
+
+        assertTrue(0 < error.length);
+        assertTrue(error.length <= 8);
+
+        try {
+            rhino = new Rhino.Builder()
+                    .setAccessKey("invalid")
+                    .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
+                    .build();
+        } catch (RhinoException e) {
+            for (int i = 0; i < error.length; i++) {
+                assertEquals(e.getMessageStack()[i], error[i]);
+            }
+        }
+    }
+
+    boolean processFileHelper(String audioFileName,
+                              int maxProcessCount)
+                              throws IOException, UnsupportedAudioFileException, RhinoException {
+        int processed = 0;
+
         int frameLen = rhino.getFrameLength();
         String audioFilePath = RhinoTestUtils.getAudioFilePath(audioFileName);
         File testAudioPath = new File(audioFilePath);
@@ -151,8 +200,22 @@ public class RhinoTest {
                 if (isFinalized) {
                     break;
                 }
+                if (maxProcessCount != -1 && processed >= maxProcessCount) {
+                    break;
+                }
+                processed++;
             }
         }
+
+        return isFinalized;
+    }
+
+    void runTestCase(String audioFileName,
+                     boolean isWithinContext,
+                     String expectedIntent,
+                     Map<String, String> expectedSlots)
+                     throws IOException, UnsupportedAudioFileException, RhinoException {
+        boolean isFinalized = processFileHelper(audioFileName, -1);
         assertTrue(isFinalized);
 
         RhinoInference inference = rhino.getInference();

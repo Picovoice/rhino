@@ -38,6 +38,8 @@ public class RhinoModule extends ReactContextBaseJavaModule {
     public RhinoModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
+
+        Rhino.setSdk("react-native");
     }
 
     @Override
@@ -85,6 +87,24 @@ public class RhinoModule extends ReactContextBaseJavaModule {
         if (rhinoPool.containsKey(handle)) {
             rhinoPool.get(handle).delete();
             rhinoPool.remove(handle);
+        }
+    }
+
+    @ReactMethod
+    public void reset(String handle, Promise promise) {
+        try {
+            if (!rhinoPool.containsKey(handle)) {
+                promise.reject(
+                        RhinoInvalidStateException.class.getSimpleName(),
+                        "Invalid Rhino handle provided to native module.");
+                return;
+            }
+
+            Rhino rhino = rhinoPool.get(handle);
+            rhino.reset();
+            promise.resolve(null);
+        } catch (RhinoException e) {
+            promise.reject(e.getClass().getSimpleName(), e.getMessage());
         }
     }
 

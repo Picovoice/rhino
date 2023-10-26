@@ -132,9 +132,12 @@ export default class Rhino {
     }
 
     const pvRhino = require(libraryPath); // eslint-disable-line
+    this._pvRhino = pvRhino;
 
     let rhinoHandleAndStatus: RhinoHandleAndStatus | null = null;
     try {
+      pvRhino.set_sdk("nodejs");
+
       rhinoHandleAndStatus = pvRhino.init(
         accessKey,
         modelPath,
@@ -149,11 +152,10 @@ export default class Rhino {
 
     const status = rhinoHandleAndStatus!.status;
     if (status !== PvStatus.SUCCESS) {
-      pvStatusToException(status, 'Rhino failed to initialize');
+      this.handlePvStatus(status, "Rhino failed to initialize");
     }
 
     this._handle = rhinoHandleAndStatus!.handle;
-    this._pvRhino = pvRhino;
     this._frameLength = pvRhino.frame_length();
     this._sampleRate = pvRhino.sample_rate();
     this._version = pvRhino.version();
@@ -227,11 +229,36 @@ export default class Rhino {
 
     const status = finalizedAndStatus!.status;
     if (status !== PvStatus.SUCCESS) {
-      pvStatusToException(status, 'Rhino failed to process the frame');
+      this.handlePvStatus(status, "Rhino failed to process the frame");
     }
 
     this.isFinalized = finalizedAndStatus!.is_finalized === 1;
     return this.isFinalized;
+  }
+
+  /** 
+   * Resets the internal state of Rhino. It should be called before the engine can be used to infer intent from a new
+   * stream of audio
+   */
+  reset(): void {
+    if (
+      this._handle === 0 ||
+      this._handle === null ||
+      this._handle === undefined
+    ) {
+      throw new RhinoInvalidStateError('Rhino is not initialized');
+    }
+
+    let status: number | null = null;
+    try {
+      status = this._pvRhino.reset(this._handle);
+    } catch (err: any) {
+      pvStatusToException(<PvStatus>err.code, err);
+    }
+
+    if (status && status !== PvStatus.SUCCESS) {
+      this.handlePvStatus(status, "Rhino failed to reset");
+    }
   }
 
   /**
@@ -283,7 +310,7 @@ export default class Rhino {
 
     const status = inferenceAndStatus!.status;
     if (status !== PvStatus.SUCCESS) {
-      pvStatusToException(status, `Rhino failed to get inference: ${status}`);
+      this.handlePvStatus(status, "Rhino failed to get inference");
     }
 
     const inference: RhinoInference = {
@@ -319,10 +346,7 @@ export default class Rhino {
 
     const status = contextAndStatus!.status;
     if (status !== PvStatus.SUCCESS) {
-      pvStatusToException(
-        status,
-        `Rhino failed to get context info: ${status}`
-      );
+      this.handlePvStatus(status, "Rhino failed to get context info");
     }
 
     return contextAndStatus!.context_info;
@@ -341,6 +365,15 @@ export default class Rhino {
     } else {
       // eslint-disable-next-line no-console
       console.warn('Rhino is not initialized; nothing to destroy');
+    }
+  }
+
+  private handlePvStatus(status: PvStatus, message: string): void {
+    const errorObject = this._pvRhino.get_error_stack();
+    if (errorObject.status === PvStatus.SUCCESS) {
+      pvStatusToException(status, message, errorObject.message_stack);
+    } else {
+      pvStatusToException(status, "Unable to get Rhino error state");
     }
   }
 }

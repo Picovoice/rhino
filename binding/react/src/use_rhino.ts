@@ -75,6 +75,7 @@ export function useRhino(): {
 
       try {
         if (!rhinoRef.current) {
+          RhinoWorker.setSdk('react');
           rhinoRef.current = await RhinoWorker.create(
             accessKey,
             context,

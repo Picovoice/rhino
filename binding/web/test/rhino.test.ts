@@ -4,8 +4,13 @@ import testData from "./test_data.json";
 // @ts-ignore
 import rhinoParams from "./rhino_params";
 import { PvModel } from '@picovoice/web-utils';
+import { RhinoError } from "../dist/types/rhino_errors";
 
 const ACCESS_KEY: string = Cypress.env("ACCESS_KEY");
+
+function delay(time: number) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
 
 const runInitTest = async (
   instance: typeof Rhino | typeof RhinoWorker,
@@ -84,7 +89,7 @@ const runProcTest = async (
       },
       model,
       {
-        processErrorCallback: (error: string) => {
+        processErrorCallback: (error: RhinoError) => {
           reject(error);
         }
       }
@@ -214,5 +219,68 @@ describe("Rhino Binding", function () {
         }
       });
     }
+
+    it(`should be able to reset (${instanceString})`, () => {
+      cy.getFramesFromFile(`audio_samples/test_within_context.wav`).then(async pcm => {
+        let numFinalized = 0;
+
+        const rhino = await instance.create(
+          ACCESS_KEY,
+          { publicPath: `/test/contexts/coffee_maker_wasm.rhn`, forceWrite: true },
+          async rhinoInference => {
+            if (rhinoInference.isFinalized) {
+              numFinalized++;
+            }
+          },
+          { publicPath: `/test/rhino_params.pv`, forceWrite: true }
+        );
+
+        for (let i = 0; i < ((pcm.length / 2) - rhino.frameLength + 1); i += rhino.frameLength) {
+          await rhino.process(pcm.slice(i, i + rhino.frameLength));
+          await delay(32);
+        }
+
+        await rhino.reset();
+
+        for (let i = 0; i < (pcm.length - rhino.frameLength + 1); i += rhino.frameLength) {
+          await rhino.process(pcm.slice(i, i + rhino.frameLength));
+          await delay(32);
+        }
+
+        await delay(1000);
+
+        expect(numFinalized).to.be.eq(1);
+      });
+    });
+
+    it(`should return correct error message stack (${instanceString})`, async () => {
+      let messageStack = [];
+      try {
+        const rhino = await instance.create(
+          "invalidAccessKey",
+          { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
+          () => { },
+          { publicPath: '/test/rhino_params.pv', forceWrite: true }
+        );
+        expect(rhino).to.be.undefined;
+      } catch (e: any) {
+        messageStack = e.messageStack;
+      }
+
+      expect(messageStack.length).to.be.gt(0);
+      expect(messageStack.length).to.be.lte(8);
+
+      try {
+        const rhino = await instance.create(
+          "invalidAccessKey",
+          { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
+          () => { },
+          { publicPath: '/test/rhino_params.pv', forceWrite: true }
+        );
+        expect(rhino).to.be.undefined;
+      } catch (e: any) {
+        expect(messageStack.length).to.be.eq(e.messageStack.length);
+      }
+    });
   }
 });

@@ -49,6 +49,7 @@ export class RhinoService implements OnDestroy {
 
     try {
       if (!this.rhino) {
+        RhinoWorker.setSdk('angular');
         this.rhino = await RhinoWorker.create(
           accessKey,
           context,
