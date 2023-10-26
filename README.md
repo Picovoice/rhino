@@ -1706,6 +1706,16 @@ pv_rhino_delete(rhino);
 
 ## Releases
 
+### v3.0.0 - October 26th, 2023
+
+- Improvements to error reporting
+- Upgrades to authorization and authentication system
+- Added reset() function to API
+- Various bug fixes and improvements
+- Node min support bumped to 16
+- Unity editor min support bumped to 2021
+- Patches to .NET support
+
 ### v2.2.0 - April 12th, 2023
 
 - Added language support for Arabic, Dutch, Hindi, Mandarin, Polish, Russian, Swedish and Vietnamese
@@ -1722,47 +1732,47 @@ pv_rhino_delete(rhino);
 
 ### v2.0.0 - November 25th, 2021
 
-- Improved accuracy.
-- Added Rust SDK.
-- macOS arm64 support.
-- Added NodeJS support for Windows, NVIDIA Jetson Nano, and BeagleBone.
-- Added .NET support for NVIDIA Jetson Nano and BeagleBone.
-- Runtime optimization.
+- Improved accuracy
+- Added Rust SDK
+- macOS arm64 support
+- Added NodeJS support for Windows, NVIDIA Jetson Nano, and BeagleBone
+- Added .NET support for NVIDIA Jetson Nano and BeagleBone
+- Runtime optimization
 
 ### v1.6.0 December 2nd, 2020
 
-- Added support for React Native.
-- Added support for Java.
-- Added support for .NET.
-- Added support for NodeJS.
+- Added support for React Native
+- Added support for Java
+- Added support for .NET
+- Added support for NodeJS
 
 ### v1.5.0 June 4th, 2020
 
-- Accuracy improvements.
+- Accuracy improvements
 
 ### v1.4.0 April 13th, 2020
 
-- Accuracy improvements.
+- Accuracy improvements
 - Builtin slots
 
 ### v1.3.0 February 13th, 2020
 
-- Accuracy improvements.
-- Runtime optimizations.
+- Accuracy improvements
+- Runtime optimizations
 - Added support for Raspberry Pi 4
-- Added support for JavaScript.
-- Added support for iOS.
-- Updated documentation.
+- Added support for JavaScript
+- Added support for iOS
+- Updated documentation
 
 ### v1.2.0 April 26, 2019
 
-- Accuracy improvements.
-- Runtime optimizations.
+- Accuracy improvements
+- Runtime optimizations
 
 ### v1.1.0 December 23rd, 2018
 
-- Accuracy improvements.
-- Open-sourced Raspberry Pi build.
+- Accuracy improvements
+- Open-sourced Raspberry Pi build
 
 ### v1.0.0 November 2nd, 2018
 
