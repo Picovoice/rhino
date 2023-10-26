@@ -1710,7 +1710,7 @@ pv_rhino_delete(rhino);
 
 - Improvements to error reporting
 - Upgrades to authorization and authentication system
-- Added reset() function to API
+- Added `reset()` function to API
 - Various bug fixes and improvements
 - Node min support bumped to 16
 - Unity editor min support bumped to 2021
@@ -1739,23 +1739,23 @@ pv_rhino_delete(rhino);
 - Added .NET support for NVIDIA Jetson Nano and BeagleBone
 - Runtime optimization
 
-### v1.6.0 December 2nd, 2020
+### v1.6.0 - December 2nd, 2020
 
 - Added support for React Native
 - Added support for Java
 - Added support for .NET
 - Added support for NodeJS
 
-### v1.5.0 June 4th, 2020
+### v1.5.0 - June 4th, 2020
 
 - Accuracy improvements
 
-### v1.4.0 April 13th, 2020
+### v1.4.0 - April 13th, 2020
 
 - Accuracy improvements
 - Builtin slots
 
-### v1.3.0 February 13th, 2020
+### v1.3.0 - February 13th, 2020
 
 - Accuracy improvements
 - Runtime optimizations
@@ -1764,17 +1764,17 @@ pv_rhino_delete(rhino);
 - Added support for iOS
 - Updated documentation
 
-### v1.2.0 April 26, 2019
+### v1.2.0 - April 26, 2019
 
 - Accuracy improvements
 - Runtime optimizations
 
-### v1.1.0 December 23rd, 2018
+### v1.1.0 - December 23rd, 2018
 
 - Accuracy improvements
 - Open-sourced Raspberry Pi build
 
-### v1.0.0 November 2nd, 2018
+### v1.0.0 - November 2nd, 2018
 
 - Initial Release
 
