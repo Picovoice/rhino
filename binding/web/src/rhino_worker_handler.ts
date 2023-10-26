@@ -68,13 +68,21 @@ self.onmessage = async function (
           sampleRate: rhino.sampleRate,
           contextInfo: rhino.contextInfo,
         });
-      } catch (e: any) {
-        self.postMessage({
-          command: 'error',
-          status: PvStatus.RUNTIME_ERROR,
-          shortMessage: e.shortMessage,
-          messageStack: e.messageStack
-        });
+      } catch (e: any) {        
+        if (e instanceof RhinoError) {
+          self.postMessage({
+            command: 'error',
+            status: e.status,
+            shortMessage: e.shortMessage,
+            messageStack: e.messageStack
+          });
+        } else {
+          self.postMessage({
+            command: 'error',
+            status: PvStatus.RUNTIME_ERROR,
+            shortMessage: e.message
+          });
+        }
       }
       break;
     case 'process':
