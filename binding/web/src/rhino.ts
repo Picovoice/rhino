@@ -112,6 +112,8 @@ type RhinoWasmOutput = {
   objectAddress: number;
   slotsAddressAddressAddress: number;
   valuesAddressAddressAddress: number;
+  messageStackAddressAddressAddress: number;
+  messageStackDepthAddress: number;
 
   pvRhinoDelete: pv_rhino_delete_type;
   pvRhinoFreeSlotsAndValues: pv_rhino_free_slots_and_values_type;
@@ -195,6 +197,8 @@ export class Rhino {
     this._objectAddress = handleWasm.objectAddress;
     this._slotsAddressAddressAddress = handleWasm.slotsAddressAddressAddress;
     this._valuesAddressAddressAddress = handleWasm.valuesAddressAddressAddress;
+    this._messageStackAddressAddressAddress = handleWasm.messageStackAddressAddressAddress;
+    this._messageStackDepthAddress = handleWasm.messageStackDepthAddress;
 
     this._processMutex = new Mutex();
 
@@ -377,7 +381,7 @@ export class Rhino {
           this._isFinalizedAddress
         );
 
-        let memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
+        const memoryBufferUint8 = new Uint8Array(this._wasmMemory.buffer);
         const memoryBufferView = new DataView(this._wasmMemory.buffer);
 
         if (status !== PvStatus.SUCCESS) {
@@ -389,7 +393,7 @@ export class Rhino {
             memoryBufferView,
             memoryBufferUint8
           );
-    
+
           throw pvStatusToException(status, "Processing failed", messageStack);
         }
 
@@ -411,7 +415,7 @@ export class Rhino {
               memoryBufferView,
               memoryBufferUint8
             );
-      
+
             throw pvStatusToException(status, "Failed to get inference", messageStack);
           }
 
@@ -442,7 +446,7 @@ export class Rhino {
                 memoryBufferView,
                 memoryBufferUint8
               );
-        
+
               throw pvStatusToException(status, "Failed to get intent", messageStack);
             }
 
@@ -499,7 +503,7 @@ export class Rhino {
                 memoryBufferView,
                 memoryBufferUint8
               );
-        
+
               throw pvStatusToException(status, "Failed to clean up resources", messageStack);
             }
           }
@@ -514,7 +518,7 @@ export class Rhino {
               memoryBufferView,
               memoryBufferUint8
             );
-      
+
             throw pvStatusToException(status, "Failed to reset", messageStack);
           }
 
@@ -934,7 +938,7 @@ export class Rhino {
     memoryBufferUint8: Uint8Array,
   ): Promise<string[]> {
     const status = await pv_get_error_stack(messageStackAddressAddressAddress, messageStackDepthAddress);
-    if (status != PvStatus.SUCCESS) {
+    if (status !== PvStatus.SUCCESS) {
       throw pvStatusToException(status, "Unable to get Rhino error state");
     }
 
@@ -949,7 +953,7 @@ export class Rhino {
       messageStack.push(message);
     }
 
-    pv_free_error_stack(messageStackAddressAddress);
+    await pv_free_error_stack(messageStackAddressAddress);
 
     return messageStack;
   }
