@@ -293,3 +293,28 @@ func TestMessageStack(t *testing.T) {
 		t.Fatalf("length of 1st init '%d' does not match 2nd init '%d'", len(err.Error()), len(err2.Error()))
 	}
 }
+
+func TestProcessMessageStack(t *testing.T) {
+	rhino := NewRhino(testAccessKey, getTestContextPath("en", "smart_lighting"))
+
+	err := rhino.Init()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+
+	address := rhino.handle
+	rhino.handle = nil
+
+	testPcm := make([]int16, FrameLength)
+
+	_, err = rhino.Process(testPcm)
+	rhino.handle = address
+	if err == nil {
+		t.Fatalf("Expected rhino process to fail")
+	}
+
+	delErr := rhino.Delete()
+	if delErr != nil {
+		t.Fatalf("%v", delErr)
+	}
+}

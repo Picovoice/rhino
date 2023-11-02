@@ -132,6 +132,28 @@ class RhinoTestCase(unittest.TestCase):
             self.assertEqual(len(error), len(e.message_stack))
             self.assertListEqual(list(error), list(e.message_stack))
 
+    def test_process_message_stack(self):
+        relative_path = '../..'
+
+        r = Rhino(
+            access_key=sys.argv[1],
+            library_path=pv_library_path(relative_path),
+            model_path=get_model_path_by_language(relative_path, 'en'),
+            context_path=get_context_path_by_language(relative_path, 'smart_lighting', 'en'))
+        test_pcm = [0] * r.frame_length
+
+        address = r._handle
+        r._handle = None
+
+        try:
+            res = r.process(test_pcm)
+            self.assertTrue(res)
+        except RhinoError as e:
+            self.assertGreater(len(e.message_stack), 0)
+            self.assertLess(len(e.message_stack), 8)
+
+        r._handle = address
+
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
