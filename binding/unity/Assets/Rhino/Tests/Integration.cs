@@ -300,7 +300,7 @@ namespace Tests
                     ACCESS_KEY,
                     GetContextPath("en", "smart_lighting"));
 
-            short[] testPcm = new short[p.FrameLength];
+            short[] testPcm = new short[r.FrameLength];
 
             var obj = typeof(Rhino).GetField("_libraryPointer", BindingFlags.NonPublic | BindingFlags.Instance);
             IntPtr address = (IntPtr)obj.GetValue(r);
@@ -311,7 +311,7 @@ namespace Tests
                 bool res = r.Process(testPcm);
                 Assert.IsTrue(res);
             }
-            catch (RhinoExpection e)
+            catch (RhinoException e)
             {
                 Assert.IsTrue(0 < e.MessageStack.Length);
                 Assert.IsTrue(e.MessageStack.Length < 8);

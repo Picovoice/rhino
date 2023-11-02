@@ -136,10 +136,11 @@ class RhinoTestCase(unittest.TestCase):
         relative_path = '../..'
 
         r = Rhino(
-                access_key=sys.argv[1],
-                library_path=pv_library_path(relative_path),
-                model_path=get_model_path_by_language(relative_path, 'en'),
-                context_path=get_context_path_by_language(relative_path, 'smart_lighting', 'en'))
+            access_key=sys.argv[1],
+            library_path=pv_library_path(relative_path),
+            model_path=get_model_path_by_language(relative_path, 'en'),
+            context_path=get_context_path_by_language(relative_path, 'smart_lighting', 'en'))
+        test_pcm = [0] * r.frame_length
 
         address = r._handle
         r._handle = None

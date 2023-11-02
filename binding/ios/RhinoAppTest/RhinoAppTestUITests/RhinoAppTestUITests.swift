@@ -340,7 +340,7 @@ class RhinoAppTestUITests: BaseTest {
             inDirectory: "test_resources/context_files/en")!
 
         let r = try Rhino.init(accessKey: accessKey, contextPath: contextPath)
-        p.delete()
+        r.delete()
 
         var testPcm: [Int16] = []
         testPcm.reserveCapacity(Int(Rhino.frameLength))

@@ -621,10 +621,9 @@ impl Drop for RhinoInner {
 #[cfg(test)]
 mod tests {
     use std::env;
-    use std::path::PathBuf;
 
-    use crate::util::{pv_library_path, pv_model_path};
-    use crate::rhino::{RhinoBuilder, RhinoInner};
+    use crate::util::{pv_library_path, pv_model_path, pv_platform};
+    use crate::rhino::{RhinoInner};
 
     #[test]
     fn test_process_error_stack() {
@@ -644,7 +643,7 @@ mod tests {
             &access_key.as_str(),
             pv_library_path(),
             pv_model_path(),
-            context_path,
+            context_path.into(),
             0.5,
             1.0,
             false

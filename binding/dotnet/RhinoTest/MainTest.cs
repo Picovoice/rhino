@@ -271,7 +271,7 @@ namespace RhinoTest
                 }
             }
         }
-        
+
         [TestMethod]
         public void TestProcessMessageStack()
         {
@@ -279,18 +279,18 @@ namespace RhinoTest
                     _accessKey,
                     GetContextPath("en", "smart_lighting"),
                     GetModelPath("en"));
-            short[] testPcm = new short[p.FrameLength];
+            short[] testPcm = new short[r.FrameLength];
 
             var obj = typeof(Rhino).GetField("_libraryPointer", BindingFlags.NonPublic | BindingFlags.Instance);
-            IntPtr address = (IntPtr)obj.GetValue(p);
-            obj.SetValue(p, IntPtr.Zero);
+            IntPtr address = (IntPtr)obj.GetValue(r);
+            obj.SetValue(r, IntPtr.Zero);
 
             try
             {
                 bool res = r.Process(testPcm);
                 Assert.IsTrue(res);
             }
-            catch (RhinoExpcetion e)
+            catch (RhinoException e)
             {
                 Assert.IsTrue(0 < e.MessageStack.Length);
                 Assert.IsTrue(e.MessageStack.Length < 8);
