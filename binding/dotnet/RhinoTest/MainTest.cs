@@ -271,6 +271,34 @@ namespace RhinoTest
                 }
             }
         }
+        
+        [TestMethod]
+        public void TestProcessMessageStack()
+        {
+            Rhino r = Rhino.Create(
+                    _accessKey,
+                    GetContextPath("en", "smart_lighting"),
+                    GetModelPath("en"));
+            short[] testPcm = new short[p.FrameLength];
+
+            var obj = typeof(Rhino).GetField("_libraryPointer", BindingFlags.NonPublic | BindingFlags.Instance);
+            IntPtr address = (IntPtr)obj.GetValue(p);
+            obj.SetValue(p, IntPtr.Zero);
+
+            try
+            {
+                bool res = r.Process(testPcm);
+                Assert.IsTrue(res);
+            }
+            catch (RhinoExpcetion e)
+            {
+                Assert.IsTrue(0 < e.MessageStack.Length);
+                Assert.IsTrue(e.MessageStack.Length < 8);
+            }
+
+            obj.SetValue(r, address);
+            r.Dispose();
+        }
 
         [TestMethod]
         [DynamicData(nameof(WithinContextTestData))]

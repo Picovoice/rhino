@@ -331,4 +331,25 @@ class RhinoAppTestUITests: BaseTest {
             XCTAssert("\(error.localizedDescription)".count == first_error.count)
         }
     }
+
+    func testProcessMessageStack() throws {
+        let bundle = Bundle(for: type(of: self))
+        let contextPath = bundle.path(
+            forResource: "coffee_maker_ios",
+            ofType: "rhn",
+            inDirectory: "test_resources/context_files/en")!
+
+        let r = try Rhino.init(accessKey: accessKey, contextPath: contextPath)
+        p.delete()
+
+        var testPcm: [Int16] = []
+        testPcm.reserveCapacity(Int(Rhino.frameLength))
+
+        do {
+            let res = try r.process(pcm: testPcm)
+            XCTAssert(res != true)
+        } catch {
+            XCTAssert("\(error.localizedDescription)".count > 0)
+        }
+    }
 }

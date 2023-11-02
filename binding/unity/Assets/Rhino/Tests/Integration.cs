@@ -270,7 +270,7 @@ namespace Tests
             }
             catch (RhinoException e)
             {
-                messageList = e.messageStack;
+                messageList = e.MessageStack;
             }
 
             Assert.IsTrue(0 < messageList.Length);
@@ -287,9 +287,38 @@ namespace Tests
             {
                 for (int i = 0; i < messageList.Length; i++)
                 {
-                    Assert.AreEqual(messageList[i], e.messageStack[i]);
+                    Assert.AreEqual(messageList[i], e.MessageStack[i]);
                 }
             }
+        }
+
+
+        [Test]
+        public void TestProcessMessageStack()
+        {
+            Rhino r = Rhino.Create(
+                    ACCESS_KEY,
+                    GetContextPath("en", "smart_lighting"));
+
+            short[] testPcm = new short[p.FrameLength];
+
+            var obj = typeof(Rhino).GetField("_libraryPointer", BindingFlags.NonPublic | BindingFlags.Instance);
+            IntPtr address = (IntPtr)obj.GetValue(r);
+            obj.SetValue(r, IntPtr.Zero);
+
+            try
+            {
+                bool res = r.Process(testPcm);
+                Assert.IsTrue(res);
+            }
+            catch (RhinoExpection e)
+            {
+                Assert.IsTrue(0 < e.MessageStack.Length);
+                Assert.IsTrue(e.MessageStack.Length < 8);
+            }
+
+            obj.SetValue(r, address);
+            r.Dispose();
         }
 
         [Test]
