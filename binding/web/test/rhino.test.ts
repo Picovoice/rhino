@@ -114,6 +114,45 @@ const runProcTest = async (
 };
 
 describe("Rhino Binding", function () {
+  it(`should return process error message stack`, async () => {
+    let error: RhinoError | null = null;
+
+    const runProcess = () => new Promise<void>(async resolve => {
+      const rhino = await Rhino.create(
+        ACCESS_KEY,
+        { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
+        () => { },
+        { publicPath: '/test/rhino_params.pv', forceWrite: true },
+        {
+          processErrorCallback: (e: RhinoError) => {
+            error = e;
+            resolve();
+          }
+        }
+      );
+      const testPcm = new Int16Array(rhino.frameLength);
+      // @ts-ignore
+      const objectAddress = rhino._objectAddress;
+
+      // @ts-ignore
+      rhino._objectAddress = 0;
+      await rhino.process(testPcm);
+
+      await delay(1000);
+
+      // @ts-ignore
+      rhino._objectAddress = objectAddress;
+      await rhino.release();
+    });
+
+    await runProcess();
+    expect(error).to.not.be.null;
+    if (error) {
+      expect((error as RhinoError).messageStack.length).to.be.gt(0);
+      expect((error as RhinoError).messageStack.length).to.be.lte(8);
+    }
+  });
+
   for (const instance of [Rhino, RhinoWorker]) {
     const instanceString = (instance === RhinoWorker) ? 'worker' : 'main';
 
