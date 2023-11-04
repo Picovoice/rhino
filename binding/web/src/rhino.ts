@@ -608,6 +608,8 @@ export class Rhino {
    */
   public async release(): Promise<void> {
     await this._pvRhinoDelete(this._objectAddress);
+    await this._pvFree(this._messageStackAddressAddressAddress);
+    await this._pvFree(this._messageStackDepthAddress);
     await this._pvFree(this._contextAddress);
     await this._pvFree(this._inputBufferAddress);
     await this._pvFree(this._intentAddressAddress);
