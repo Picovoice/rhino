@@ -1634,18 +1634,18 @@
     read-package-json-fast "^3.0.0"
     which "^3.0.0"
 
-"@picovoice/rhino-angular@~3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-3.0.2.tgz#ca7a76b1baba0ba29d6c4ed35c46e14c259c4f1f"
-  integrity sha512-uD2NU6yzFNW/bnrnUYpywvfIfhZR/35ApvAtjVN3It97w5Uk/WENeC2jA0P1mJJkPEZOHOLzZ2AOiLDMebnCCA==
+"@picovoice/rhino-angular@~3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-3.0.3.tgz#f15724a0e0c986e291ccd22b69342f92b8d0d236"
+  integrity sha512-Jjo9gs9Xz3oAu8wBIiJJ3DK4L9lBXlprF3aOp2p2TbO7Sq+VNkNZvnsDuRINbJcZHIHfhTnJQULpLpPwyN2YnQ==
   dependencies:
-    "@picovoice/rhino-web" "=3.0.2"
+    "@picovoice/rhino-web" "=3.0.3"
     tslib "^2.3.0"
 
-"@picovoice/rhino-web@=3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-3.0.2.tgz#961c794d271cfde6e9cd1b272200d6ed54ba9ab1"
-  integrity sha512-OTtguG5BDycimOYz8u9Wr/emwEDCYGPm39H3PlGaR5iA5jyavUnOVaWQ3JI0QMGhn0mdY1uxfoMw9uifvnSaDg==
+"@picovoice/rhino-web@=3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-3.0.3.tgz#e0a3f21e31b3689660654d1e08b83ca2e08b6c4a"
+  integrity sha512-OB4/BFX8GtwHXUJuNucAX5nxkQnNUbIYiqO1nDt7GYWVOvXvgLp/H7xYi4EuqckgNjYKSp+9RQVcnhnfix355w==
   dependencies:
     "@picovoice/web-utils" "=1.3.1"
 
