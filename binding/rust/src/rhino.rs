@@ -87,7 +87,7 @@ type PvRhinoVersionFn = unsafe extern "C" fn() -> *mut c_char;
 type PvRhinoFrameLengthFn = unsafe extern "C" fn() -> i32;
 type PvSampleRateFn = unsafe extern "C" fn() -> i32;
 type PvGetErrorStackFn =
-    unsafe extern "C" fn(message_stack: *mut *mut *mut c_char, message_stack_depth: *mut i32);
+    unsafe extern "C" fn(message_stack: *mut *mut *mut c_char, message_stack_depth: *mut i32)-> PvStatus;
 type PvFreeErrorStackFn = unsafe extern "C" fn(message_stack: *mut *mut c_char);
 type PvSetSdkFn = unsafe extern "C" fn(sdk: *const c_char);
 
@@ -295,10 +295,17 @@ fn check_fn_call_status(
             let mut message_stack_ptr_ptr = addr_of_mut!(message_stack_ptr);
 
             let mut message_stack_depth: i32 = 0;
-            (vtable.pv_get_error_stack)(
+            let err_status = (vtable.pv_get_error_stack)(
                 addr_of_mut!(message_stack_ptr_ptr),
                 addr_of_mut!(message_stack_depth),
             );
+
+            if err_status != PvStatus::SUCCESS {
+                return Err(RhinoError::new(
+                    RhinoErrorStatus::LibraryError(err_status),
+                    "Unable to get Rhino error state",
+                ));
+            };
 
             let mut message_stack = Vec::new();
             for i in 0..message_stack_depth as usize {

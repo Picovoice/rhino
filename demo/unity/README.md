@@ -22,7 +22,7 @@ Replace the `AccessKey` in [`RhinoDemo.cs`](RhinoDemo.cs) with the `AccessKey` o
 private const string ACCESS_KEY = "${YOUR_ACCESS_KEY_HERE}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 ```
 
-The easiest way to run the demo is to simply import the [Rhino Unity package](../../binding/unity/rhino-2.1.4.unitypackage) into your project, open the RhinoDemo scene and hit play. To run on other platforms or in the player, go to _File > Build Settings_, choose your platform and hit the `Build and Run` button.
+The easiest way to run the demo is to simply import the [Rhino Unity package](../../binding/unity/rhino-3.0.0.unitypackage) into your project, open the RhinoDemo scene and hit play. To run on other platforms or in the player, go to _File > Build Settings_, choose your platform and hit the `Build and Run` button.
 
 Once the demo launches, press the `Start Listening` button, and you can say anything in the smart lighting context:
 
