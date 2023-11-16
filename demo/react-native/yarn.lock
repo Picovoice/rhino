@@ -870,10 +870,10 @@
   resolved "https://registry.yarnpkg.com/@picovoice/react-native-voice-processor/-/react-native-voice-processor-1.2.0.tgz#82a98b41d9236ababe330dae873062ee0e1b24c3"
   integrity sha512-zolTEo3qsqeUwY7JRslV/yhiA+oBrkeogOTxjHIEJ//yEsr7YKlI1PcqTbU5/xjmUiukh62gmwTXhosnQYdasQ==
 
-"@picovoice/rhino-react-native@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react-native/-/rhino-react-native-3.0.0.tgz#0f73d3f493cc4e3e73138bfd946c9cacb9859339"
-  integrity sha512-2oSsn8/8hLo4ke2vHg9gF7e4CNDKorgdbh+gVudfiq7eiiZhgt7KL+vj0/a4V5N2maozAHMPvrog6ecAOddgiw==
+"@picovoice/rhino-react-native@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react-native/-/rhino-react-native-3.0.1.tgz#7945213afa752ec3ddba79c7b1afb6125d22141f"
+  integrity sha512-6uKDRbub3deEJLoV5v7m2q3Lm95aDn62XlTCGf38ItAAs+zTx9QjRUxB6OUSJQ0tj6NUhMHjveQa0dg/d1s9qA==
 
 "@react-native-community/cli-debugger-ui@^7.0.3":
   version "7.0.3"
