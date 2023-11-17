@@ -9,11 +9,11 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - Rhino-iOS (3.0.0):
+  - Rhino-iOS (3.0.1):
     - ios-voice-processor (~> 1.1.0)
-  - rhino_flutter (3.0.0):
+  - rhino_flutter (3.0.1):
     - Flutter
-    - Rhino-iOS (~> 3.0.0)
+    - Rhino-iOS (~> 3.0.1)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -45,9 +45,9 @@ SPEC CHECKSUMS:
   integration_test: a1e7d09bd98eca2fc37aefd79d4f41ad37bdbbe5
   ios-voice-processor: 8e32d7f980a06d392d128ef1cd19cf6ddcaca3c1
   path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
-  Rhino-iOS: b92978104bfad32da25b9eeaa4f0628b86ffcee9
-  rhino_flutter: 78d56c9fa0355e4ee94fa59cb3a0d210b5d1e3f9
+  Rhino-iOS: 4eeb02b38696907b28dd6f5dfa3a8f25355554ca
+  rhino_flutter: 41e530d58b8ed6f307f73f9f2e91c311b323f97f
 
-PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
 
 COCOAPODS: 1.11.3
