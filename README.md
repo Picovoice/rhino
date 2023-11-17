@@ -267,7 +267,7 @@ For more information about Go demos go to [demo/go](./demo/go).
 
 ### Unity Demos
 
-To run the Rhino Unity demo, import the [Rhino Unity package](./binding/unity/rhino-3.0.0.unitypackage) into your project, open the RhinoDemo scene and hit play. To run on other platforms or in the player, go to _File > Build Settings_, choose your platform and hit the `Build and Run` button.
+To run the Rhino Unity demo, import the [Rhino Unity package](./binding/unity/rhino-3.0.1.unitypackage) into your project, open the RhinoDemo scene and hit play. To run on other platforms or in the player, go to _File > Build Settings_, choose your platform and hit the `Build and Run` button.
 /
 To browse the demo source go to [demo/unity](./demo/unity).
 
