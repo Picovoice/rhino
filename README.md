@@ -766,7 +766,7 @@ rhino.Delete()
 
 ### Unity
 
-Import the [Rhino Unity Package](./binding/unity/rhino-3.0.0.unitypackage) into your Unity project.
+Import the [Rhino Unity Package](./binding/unity/rhino-3.0.1.unitypackage) into your Unity project.
 
 The SDK provides two APIs:
 
