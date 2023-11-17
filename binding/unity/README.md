@@ -23,17 +23,17 @@ Rhino is:
 
 ## Compatibility
 
-[Rhino unity package](./rhino-3.0.0.unitypackage) is for running Rhino on **Unity 2017.4+** on the following platforms:
+[Rhino unity package](./rhino-3.0.1.unitypackage) is for running Rhino on **Unity 2021.3+** on the following platforms:
 
 - Android 5.0+ (API 21+) (ARM only)
 - iOS 13.0+
 - Windows (x86_64)
-- macOS (x86_64)
+- macOS (x86_64, arm64)
 - Linux (x86_64)
 
 ## Installation
 
-The easiest way to install the Rhino Unity SDK is to import the [Rhino Unity Package](./rhino-3.0.0.unitypackage) into your Unity project by either dropping it into the Unity editor or going to _Assets>Import Package>Custom Package..._
+The easiest way to install the Rhino Unity SDK is to import the [Rhino Unity Package](./rhino-3.0.1.unitypackage) into your Unity project by either dropping it into the Unity editor or going to _Assets>Import Package>Custom Package..._
 
 **NOTE:** On macOS, the Rhino library may get flagged as having come from an unverified source if you've downloaded the  `.unitypackage` directly from github. This should only come up when running your project in the Editor. To disable this warning, go to Security & Preferences and choose to allow pv_rhino.dylib to run.
 
@@ -58,7 +58,6 @@ You then have to run the `copy.sh` file to copy the package resources from vario
 The module provides you with two levels of API to choose from depending on your needs.
 
 #### High-Level API
-/
 [RhinoManager](./Assets/Rhino/RhinoManager.cs) provides a high-level API that takes care of audio recording. This class is the quickest way to get started.
 
 >**NOTE:** If running on iOS, you must fill in the Microphone Usage Description under Project Settings>Other Settings in order to enable audio recording.
