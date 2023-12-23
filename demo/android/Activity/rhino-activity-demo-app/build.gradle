@@ -3,7 +3,7 @@ import groovy.json.JsonSlurper
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion defaultTargetSdkVersion
+    compileSdk defaultTargetSdkVersion
 
     defaultConfig {
         applicationId "ai.picovoice.rhinodemo"
@@ -73,6 +73,7 @@ android {
     lint {
         abortOnError false
     }
+    namespace 'ai.picovoice.rhinodemo'
 }
 
 dependencies {

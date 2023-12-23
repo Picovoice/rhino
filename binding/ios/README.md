@@ -23,7 +23,9 @@ Rhino is:
 
 ## Installation
 
-The Rhino iOS binding is available via [CocoaPods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`: 
+<!-- markdown-link-check-disable -->
+The Rhino iOS binding is available via [CocoaPods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`:
+<!-- markdown-link-check-enable -->
 
 ```ruby
 pod 'Rhino-iOS'
@@ -59,7 +61,7 @@ let accessKey = "${ACCESS_KEY}" // Obtained from Picovoice Console (https://cons
 do {
     let rhinoManager = try RhinoManager(
         accessKey: accessKey,
-        contextPath: "/path/to/context/file.rhn", 
+        contextPath: "/path/to/context/file.rhn",
         onInferenceCallback: inferenceCallback)
 } catch { }
 ```
@@ -77,11 +79,11 @@ let inferenceCallback: ((Inference) -> Void) = { inference in
 }
 ```
 
-You can override the default Rhino model file and/or the inference sensitivity. 
+You can override the default Rhino model file and/or the inference sensitivity.
 
-Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating-point number within [0, 1]. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate. 
+Sensitivity is the parameter that enables trading miss rate for the false alarm rate. It is a floating-point number within [0, 1]. A higher sensitivity reduces the miss rate at the cost of increased false alarm rate.
 
-The model file contains the parameters for the speech-to-intent engine. To change the language that Rhino understands, you'll pass in a different model file. 
+The model file contains the parameters for the speech-to-intent engine. To change the language that Rhino understands, you'll pass in a different model file.
 
 These optional parameters can be set like so:
 ```swift
@@ -89,7 +91,7 @@ let accessKey = "${ACCESS_KEY}" // Obtained from Picovoice Console (https://cons
 do {
     let rhinoManager = try RhinoManager(
         accessKey: accessKey,
-        contextPath: "/path/to/context/file.rhn", 
+        contextPath: "/path/to/context/file.rhn",
         modelPath: "/path/to/model/file.pv",
         sensitivity: 0.35,
         onInferenceCallback: inferenceCallback)
@@ -97,7 +99,7 @@ do {
 ```
 
 Once you have instantiated a RhinoManager, you can start audio capture and intent inference using the `.process()` function.
-Audio capture stops and rhino resets once an inference result is returned via the inference callback. 
+Audio capture stops and rhino resets once an inference result is returned via the inference callback.
 
 ```swift
 do {
