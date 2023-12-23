@@ -1170,7 +1170,9 @@ handle.delete()
 
 ### iOS
 
+<!-- markdown-link-check-disable -->
 The Rhino iOS binding is available via [CocoaPods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`:
+<!-- markdown-link-check-enable -->
 
 ```ruby
 pod 'Rhino-iOS'
