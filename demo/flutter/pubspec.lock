@@ -211,10 +211,10 @@ packages:
   rhino_flutter:
     dependency: "direct main"
     description:
-      path: "../../binding/flutter"
-      relative: true
-    source: path
-    version: "3.0.1"
+      name: rhino_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.2"
   sky_engine:
     dependency: transitive
     description: flutter
