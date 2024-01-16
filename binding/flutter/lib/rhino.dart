@@ -1,5 +1,5 @@
 //
-// Copyright 2021-2022 Picovoice Inc.
+// Copyright 2021-2024 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -15,6 +15,17 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rhino_flutter/rhino_error.dart';
+
+enum _NativeFunctions {
+  // ignore:constant_identifier_names
+  CREATE,
+  // ignore:constant_identifier_names
+  PROCESS,
+  // ignore:constant_identifier_names
+  RESET,
+  // ignore:constant_identifier_names
+  DELETE
+}
 
 class RhinoInference {
   final bool _isFinalized;
@@ -113,7 +124,7 @@ class Rhino {
 
     try {
       Map<String, dynamic> result =
-          Map<String, dynamic>.from(await _channel.invokeMethod('create', {
+          Map<String, dynamic>.from(await _channel.invokeMethod(_NativeFunctions.CREATE.name, {
         'accessKey': accessKey,
         'contextPath': contextPath,
         'modelPath': modelPath,
@@ -149,7 +160,7 @@ class Rhino {
 
     try {
       Map<String, dynamic> inference = Map<String, dynamic>.from(await _channel
-          .invokeMethod('process', {'handle': _handle, 'frame': frame}));
+          .invokeMethod(_NativeFunctions.PROCESS.name, {'handle': _handle, 'frame': frame}));
 
       if (inference['isFinalized'] == null) {
         throw RhinoInvalidStateException(
@@ -179,7 +190,7 @@ class Rhino {
           "Unable to reset Rhino - resources have already been released");
     }
     try {
-      await _channel.invokeMethod('reset', {'handle': _handle});
+      await _channel.invokeMethod(_NativeFunctions.RESET.name, {'handle': _handle});
     } on PlatformException catch (error) {
       throw rhinoStatusToException(error.code, error.message);
     }
@@ -188,7 +199,7 @@ class Rhino {
   /// Frees memory that was allocated for Rhino
   Future<void> delete() async {
     if (_handle != null) {
-      await _channel.invokeMethod('delete', {'handle': _handle});
+      await _channel.invokeMethod(_NativeFunctions.DELETE.name, {'handle': _handle});
       _handle = null;
     }
   }
