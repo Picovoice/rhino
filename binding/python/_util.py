@@ -76,7 +76,7 @@ def _pv_platform():
 
 PV_SYSTEM, PV_MACHINE = _pv_platform()
 
-_RASPBERRY_PI_MACHINES = {
+RASPBERRY_PI_MACHINES = {
     "arm11",
     "cortex-a7",
     "cortex-a53",
