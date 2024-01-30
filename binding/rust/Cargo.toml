@@ -1,6 +1,6 @@
 [package]
 name = "pv_rhino"
-version = "3.0.1"
+version = "3.0.2"
 edition = "2018"
 description = "The Rust bindings for Picovoice's Rhino library"
 license = "Apache-2.0"

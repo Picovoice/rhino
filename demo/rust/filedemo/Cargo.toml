@@ -1,6 +1,6 @@
 [package]
 name = "pv_rhino_filedemo"
-version = "0.1.0"
+version = "3.0.2"
 edition = "2018"
 
 [dependencies]
@@ -8,4 +8,4 @@ chrono = "0.4.23"
 clap = "3.2.3"
 hound = "3.4.0"
 itertools = "0.10.3"
-pv_rhino = "=3.0.1"
+pv_rhino = "=3.0.2"

@@ -68,7 +68,7 @@ jobs:
 
     strategy:
       matrix:
-        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, jetson]
+        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, jetson]
         include:
         - machine: rpi3-32
           platform: raspberry-pi
@@ -77,6 +77,8 @@ jobs:
         - machine: rpi4-32
           platform: raspberry-pi
         - machine: rpi4-64
+          platform: raspberry-pi
+        - machine: rpi5-64
           platform: raspberry-pi
         - machine: jetson
           platform: jetson
