@@ -48,6 +48,8 @@ def _pv_linux_machine(machine):
         return 'cortex-a57' + arch_info
     elif '0xd08' == cpu_part:
         return 'cortex-a72' + arch_info
+    elif "0xd0b" == cpu_part:
+        return "cortex-a76" + arch_info
     elif '0xc08' == cpu_part:
         return 'beaglebone'
     elif machine == 'armv7l':
@@ -74,7 +76,15 @@ def _pv_platform():
 
 PV_SYSTEM, PV_MACHINE = _pv_platform()
 
-RASPBERRY_PI_MACHINES = {'arm11', 'cortex-a7', 'cortex-a53', 'cortex-a72', 'cortex-a53-aarch64', 'cortex-a72-aarch64'}
+RASPBERRY_PI_MACHINES = {
+    "arm11",
+    "cortex-a7",
+    "cortex-a53",
+    "cortex-a72",
+    "cortex-a76",
+    "cortex-a53-aarch64",
+    "cortex-a72-aarch64",
+    "cortex-a76-aarch64"}
 JETSON_MACHINES = {'cortex-a57-aarch64'}
 
 
