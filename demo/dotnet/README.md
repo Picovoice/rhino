@@ -44,6 +44,7 @@ Rhino is:
   - 2
   - 3 (32 and 64 bit)
   - 4 (32 and 64 bit)
+  - 5 (32 and 64 bit)
 - NVIDIA Jetson Nano
 - BeagleBone
 

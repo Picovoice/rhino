@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>net6.0;netcoreapp3.0;netstandard2.0</TargetFrameworks>
-        <Version>3.0.1</Version>
+        <Version>3.0.2</Version>
         <Authors>Picovoice</Authors>
         <Company />
         <Product>Rhino Speech-to-Intent Engine</Product>
@@ -12,7 +12,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>nlu, intent, inference, speech recognition, voice commands, offline, private, voice, ai, voice assistant</PackageTags>
         <PackageReleaseNotes>See https://github.com/Picovoice/rhino/ </PackageReleaseNotes>
-        <Copyright>Picovoice 2020-2022</Copyright>
+        <Copyright>Picovoice 2020-2024</Copyright>
         <Description>
             Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of interest, in real-time.
 
