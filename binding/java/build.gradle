@@ -7,7 +7,7 @@ plugins {
 
 ext {
     PUBLISH_GROUP_ID = 'ai.picovoice'
-    PUBLISH_VERSION = '3.0.1'
+    PUBLISH_VERSION = '3.0.2'
     PUBLISH_ARTIFACT_ID = 'rhino-java'
 }
 
@@ -58,7 +58,9 @@ task copyRPiLib(type: Copy) {
             'cortex-a53/libpv_rhino_jni.so',
             'cortex-a53-aarch64/libpv_rhino_jni.so',
             'cortex-a72/libpv_rhino_jni.so',
-            'cortex-a72-aarch64/libpv_rhino_jni.so')
+            'cortex-a72-aarch64/libpv_rhino_jni.so',
+            'cortex-a76/libpv_rhino_jni.so',
+            'cortex-a76-aarch64/libpv_rhino_jni.so')
     into("${outputDir}/rhino/lib/java/raspberry-pi/")
 }
 task copyJetsonLib(type: Copy) {

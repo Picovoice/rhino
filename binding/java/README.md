@@ -29,7 +29,7 @@ Rhino is:
 - Linux (x86_64)
 - macOS (x86_64, arm64)
 - Windows (x86_64)
-- Raspberry Pi 2, Raspberry Pi 3 (32 and 64 bit), Raspberry Pi 4 (32 and 64 bit)
+- Raspberry Pi 2, Raspberry Pi 3 (32 and 64 bit), Raspberry Pi 4 (32 and 64 bit), Raspberry Pi 5 (32 and 64 bit)
 - Jetson Nano
 - BeagleBone
 
@@ -112,16 +112,16 @@ short[] getNextAudioFrame(){
 }
 
 while(true) {
-    boolean isFinalized = handle.process(getNextAudioFrame());   
+    boolean isFinalized = handle.process(getNextAudioFrame());
     if(isFinalized){
         RhinoInference inference = handle.getInference();
         if(inference.getIsUnderstood()){
             String intent = inference.getIntent();
             Map<string, string> slots = inference.getSlots();
-            // .. code to take action based on inferred intent and slot values              
+            // .. code to take action based on inferred intent and slot values
         } else {
             // .. code to handle unsupported commands
-        }        
+        }
     }
 }
 ```
@@ -138,5 +138,5 @@ In order to run inference on non-English contexts you need to use the correspond
 
 ## Demos
 
-The [Rhino Java demo](../../demo/java) is a Java command-line application that allows for 
+The [Rhino Java demo](../../demo/java) is a Java command-line application that allows for
 processing real-time audio (i.e. microphone) and files using Rhino.
