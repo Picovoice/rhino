@@ -69,6 +69,8 @@ jobs:
           platform: raspberry-pi
         - machine: rpi4-32
           platform: raspberry-pi
+        - machine: rpi4-64
+          platform: raspberry-pi
         - machine: rpi5-64
           platform: raspberry-pi
         - machine: jetson
