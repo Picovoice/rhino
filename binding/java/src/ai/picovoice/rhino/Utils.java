@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2023 Picovoice Inc.
+    Copyright 2018-2024 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -133,6 +133,7 @@ class Utils {
                     case "0xc07":
                     case "0xd03":
                     case "0xd08":
+                    case "0xd0b":
                         return "raspberry-pi";
                     case "0xd07":
                         return "jetson";
@@ -182,6 +183,8 @@ class Utils {
                     return "cortex-a57" + archInfo;
                 case "0xd08":
                     return "cortex-a72" + archInfo;
+                case "0xd0b":
+                    return "cortex-a76" + archInfo;
                 case "0xc08":
                     return "";
                 default:
