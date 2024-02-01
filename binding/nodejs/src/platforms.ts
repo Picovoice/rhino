@@ -1,5 +1,5 @@
 //
-// Copyright 2020-2023 Picovoice Inc.
+// Copyright 2020-2024 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -36,6 +36,7 @@ const ARM_CPU_CORTEX_A7 = 'cortex-a7';
 const ARM_CPU_CORTEX_A53 = 'cortex-a53';
 const ARM_CPU_CORTEX_A57 = 'cortex-a57';
 const ARM_CPU_CORTEX_A72 = 'cortex-a72';
+const ARM_CPU_CORTEX_A76 = 'cortex-a76';
 
 const SUPPORTED_NODEJS_SYSTEMS = new Set([
   SYSTEM_LINUX,
@@ -78,6 +79,14 @@ SYSTEM_TO_LIBRARY_PATH.set(
   `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A72}${ARM_CPU_64}/pv_rhino.node`
 );
 SYSTEM_TO_LIBRARY_PATH.set(
+  `${SYSTEM_LINUX}/${ARM_CPU_CORTEX_A76}`,
+  `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A76}/pv_rhino.node`
+);
+SYSTEM_TO_LIBRARY_PATH.set(
+  `${SYSTEM_LINUX}/${ARM_CPU_CORTEX_A76}${ARM_CPU_64}`,
+  `${PLATFORM_RASPBERRY_PI}/${ARM_CPU_CORTEX_A76}${ARM_CPU_64}/pv_rhino.node`
+);
+SYSTEM_TO_LIBRARY_PATH.set(
   `${SYSTEM_LINUX}/${ARM_CPU_CORTEX_A57}${ARM_CPU_64}`,
   `${PLATFORM_JETSON}/${ARM_CPU_CORTEX_A57}${ARM_CPU_64}/pv_rhino.node`
 );
@@ -111,6 +120,7 @@ function getLinuxPlatform(): string {
     case '0xc07':
     case '0xd03':
     case '0xd08':
+    case '0xd0b':
       return PLATFORM_RASPBERRY_PI;
     case '0xd07':
       return PLATFORM_JETSON;
@@ -137,6 +147,8 @@ function getLinuxMachine(arch: string): string {
       return ARM_CPU_CORTEX_A57 + archInfo;
     case '0xd08':
       return ARM_CPU_CORTEX_A72 + archInfo;
+    case '0xd0b':
+      return ARM_CPU_CORTEX_A76 + archInfo;
     case '0xc08':
       return PLATFORM_BEAGLEBONE;
     default:
