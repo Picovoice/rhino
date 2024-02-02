@@ -42,7 +42,11 @@ Rhino is:
 - Linux (x86_64)
 - macOS (x86_64, arm64)
 - Windows (x86_64)
-- Raspberry Pi 2, Raspberry Pi 3 (32 and 64 bit), Raspberry Pi 4 (32 and 64 bit)
+- Raspberry Pi:
+  - 2
+  - 3 (32 and 64 bit)
+  - 4 (32 and 64 bit)
+  - 5 (32 and 64 bit)
 - Jetson Nano
 - BeagleBone
 
@@ -70,8 +74,8 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ### File Demo
 
-The file demo uses Rhino to get an inference result from an audio file. This demo is mainly useful for quantitative performance 
-benchmarking against a corpus of audio data. Note that only the relevant spoken command should be present in the file 
+The file demo uses Rhino to get an inference result from an audio file. This demo is mainly useful for quantitative performance
+benchmarking against a corpus of audio data. Note that only the relevant spoken command should be present in the file
 and no other speech. There also needs to be at least one second of silence at the end of the file.
 
 ```console
@@ -99,10 +103,10 @@ It provides information about various audio input devices on the box. On a Windo
 Available input devices:
 
     Device 0: Microphone Array (Realtek(R) Au
-    Device 1: Microphone Headset USB	
-``` 
+    Device 1: Microphone Headset USB
+```
 
-You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the Headset 
+You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the Headset
 microphone in the above example, you can invoke the demo application as below:
 
 ```console
