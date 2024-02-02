@@ -5,7 +5,7 @@ This Go module contains demos for processing real-time audio (i.e. microphone) a
 ## Requirements
 
 - go 1.16+
-- **Windows**: The demo requires `cgo`, which means that you need to install a gcc compiler like [Mingw](http://mingw-w64.org) to build it properly. 
+- **Windows**: The demo requires `cgo`, which means that you need to install a gcc compiler like [Mingw](http://mingw-w64.org) to build it properly.
 
 ## Compatibility
 
@@ -17,6 +17,7 @@ This Go module contains demos for processing real-time audio (i.e. microphone) a
   - 2
   - 3 (32 and 64 bit)
   - 4 (32 and 64 bit)
+  - 5 (32 and 64 bit)
 - NVIDIA Jetson Nano
 - BeagleBone
 
@@ -36,18 +37,18 @@ cd rhino/demo/go
 
 ### File Demo
 
-The file demo uses Rhino to get an inference result from an audio file. This demo is mainly useful for quantitative performance 
-benchmarking against a corpus of audio data. Note that only the relevant spoken command should be present in the file 
+The file demo uses Rhino to get an inference result from an audio file. This demo is mainly useful for quantitative performance
+benchmarking against a corpus of audio data. Note that only the relevant spoken command should be present in the file
 and no other speech. There also needs to be at least one second of silence at the end of the file.
 
 ```console
-go run filedemo/rhino_file_demo.go \ 
+go run filedemo/rhino_file_demo.go \
 -input_audio_path "path/to/input.wav" \
 -access_key "${ACCESS_KEY}" \
 -context_path "/path/to/context/file.rhn"
 ```
 
-The sensitivity of the engine can be tuned using the `sensitivity` input argument. You can also override the default Rhino model (.pv), which is required when using a non-English context. 
+The sensitivity of the engine can be tuned using the `sensitivity` input argument. You can also override the default Rhino model (.pv), which is required when using a non-English context.
 
 ```console
 go run filedemo/rhino_file_demo.go \
@@ -81,7 +82,7 @@ It provides information about various audio input devices on the box. Here is an
 ```console
 Index: 0, device name: USB Audio Device
 Index: 1, device name: MacBook Air Microphone
-``` 
+```
 
 You can use the device index to specify which microphone to use for the demo. For instance, if you want to use the USB Audio Device
 in the above example, you can invoke the demo application as below:
