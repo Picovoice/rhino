@@ -6,14 +6,15 @@ publish_to: 'none'
 version: 1.0.0
 
 environment:
-  sdk: ">=2.14.0 <3.0.0"
+  sdk: ">=2.15.0 <4.0.0"
   flutter: ">=2.8.1"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  rhino_flutter: ^3.0.2
+  rhino_flutter:
+    path: ../../binding/flutter
 
 dev_dependencies:
   integration_test:
