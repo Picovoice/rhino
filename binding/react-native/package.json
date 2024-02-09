@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-react-native",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Picovoice Rhino React Native binding",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/Picovoice/rhino/#readme",
   "devDependencies": {
-    "@picovoice/react-native-voice-processor": "^1.2.0",
+    "@picovoice/react-native-voice-processor": "^1.2.2",
     "@react-native-community/eslint-config": "^3.2.0",
     "@types/jest": "^26.0.0",
     "@types/react": "^16.9.19",
@@ -58,7 +58,7 @@
     "typescript": "^4.9.3"
   },
   "peerDependencies": {
-    "@picovoice/react-native-voice-processor": ">= 1.2.0",
+    "@picovoice/react-native-voice-processor": ">= 1.2.2",
     "react": ">= 17.0",
     "react-native": ">= 0.63"
   },
