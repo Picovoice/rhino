@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'rhino_flutter'
-  s.version          = '3.0.1'
+  s.version          = '3.0.3'
   s.summary          = 'A Flutter package plugin for Picovoice\'s Rhino Speech-to-Intent engine'
   s.description      = <<-DESC
   A Flutter package plugin for Picovoice\'s Rhino Speech-to-Intent engine
