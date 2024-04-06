@@ -1,29 +1,26 @@
 # Rhino
 
-[![GitHub release](https://img.shields.io/github/release/Picovoice/rhino.svg)](https://github.com/Picovoice/rhino/releases)
+[![GitHub release](https://img.shields.io/github/release/Picovoice/Rhino.svg)](https://github.com/Picovoice/Rhino/releases)
 [![GitHub](https://img.shields.io/github/license/Picovoice/rhino)](https://github.com/Picovoice/rhino/)
-[![GitHub language count](https://img.shields.io/github/languages/count/Picovoice/rhino)](https://github.com/Picovoice/rhino/)
 
-[![PyPI](https://img.shields.io/pypi/v/pvrhino)](https://pypi.org/project/pvrhino/)
-[![Nuget](https://img.shields.io/nuget/v/rhino)](https://www.nuget.org/packages/Rhino/)
-[![Go Reference](https://pkg.go.dev/badge/github.com/Picovoice/rhino/binding/go/v2.svg)](https://pkg.go.dev/github.com/Picovoice/rhino/binding/go/v2)
-[![Pub Version](https://img.shields.io/pub/v/rhino_flutter)](https://pub.dev/packages/rhino_flutter)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-react-native?label=npm%20%5Breact-native%5D)](https://www.npmjs.com/package/@picovoice/rhino-react-native)
-[![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-android?label=maven%20central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-android/)
+[![Crates.io](https://img.shields.io/crates/v/pv_rhino)](https://crates.io/crates/pv_rhino)<!-- markdown-link-check-disable-line -->
+[![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-android?label=maven-central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-android/)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-java?label=maven%20central%20%5Bjava%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-java/)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-angular?label=npm%20%5Bangular%5D)](https://www.npmjs.com/package/@picovoice/rhino-angular)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-vue)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-react)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
-<!-- markdown-link-check-disable -->
-[![Crates.io](https://img.shields.io/crates/v/pv_rhino)](https://crates.io/crates/pv_rhino)
-<!-- markdown-link-check-enable -->
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-react)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-react-native?label=npm%20%5Breact-native%5D)](https://www.npmjs.com/package/@picovoice/rhino-react-native)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-vue)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web?label=npm%20%5Bweb%5D)](https://www.npmjs.com/package/@picovoice/rhino-web)
+[![Nuget](https://img.shields.io/nuget/v/rhino)](https://www.nuget.org/packages/Rhino/)
+[![npm](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://cocoapods.org/pods/Rhino-iOS)
+[![Pub Version](https://img.shields.io/pub/v/rhino_flutter)](https://pub.dev/packages/rhino_flutter)
+[![PyPI](https://img.shields.io/pypi/v/pvrhino)](https://pypi.org/project/pvrhino/)
+[![Go Reference](https://pkg.go.dev/badge/github.com/Picovoice/rhino/binding/go.svg)](https://pkg.go.dev/github.com/Picovoice/rhino/binding/go)
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
-<!-- markdown-link-check-disable -->
-[![Twitter URL](https://img.shields.io/twitter/url?label=%40AiPicovoice&style=social&url=https%3A%2F%2Ftwitter.com%2FAiPicovoice)](https://twitter.com/AiPicovoice)
-<!-- markdown-link-check-enable -->
+[![Twitter URL](https://img.shields.io/twitter/url?label=%40AiPicovoice&style=social&url=https%3A%2F%2Ftwitter.com%2FAiPicovoice)](https://twitter.com/AiPicovoice)<!-- markdown-link-check-disable-line -->
 [![YouTube Channel Views](https://img.shields.io/youtube/channel/views/UCAdi9sTCXLosG1XeqDwLx7w?label=YouTube&style=social)](https://www.youtube.com/channel/UCAdi9sTCXLosG1XeqDwLx7w)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of
