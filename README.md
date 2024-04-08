@@ -13,7 +13,7 @@
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-vue)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-web?label=npm%20%5Bweb%5D)](https://www.npmjs.com/package/@picovoice/rhino-web)
 [![Nuget](https://img.shields.io/nuget/v/rhino)](https://www.nuget.org/packages/Rhino/)
-[![npm](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://cocoapods.org/pods/Rhino-iOS)
+[![CocoaPods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://cocoapods.org/pods/Rhino-iOS)
 [![Pub Version](https://img.shields.io/pub/v/rhino_flutter)](https://pub.dev/packages/rhino_flutter)
 [![PyPI](https://img.shields.io/pypi/v/pvrhino)](https://pypi.org/project/pvrhino/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/Picovoice/rhino/binding/go.svg)](https://pkg.go.dev/github.com/Picovoice/rhino/binding/go)
