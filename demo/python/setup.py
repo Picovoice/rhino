@@ -52,6 +52,6 @@ setuptools.setup(
             'rhino_demo_mic=pvrhinodemo.rhino_demo_mic:main',
         ],
     ),
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     keywords="Speech-to-Intent, voice commands, voice control, speech recognition, natural language understanding"
 )
