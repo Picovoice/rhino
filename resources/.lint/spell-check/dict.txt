@@ -6,7 +6,6 @@ armeabi
 armv
 armv7l
 bagno
-beaglebone
 behaviour
 beleuchtung
 calcsize
@@ -56,7 +55,6 @@ inteligente
 IntelliJ
 interactable
 Itertools
-Jetson
 jomyeong
 jomyeong
 LDFLAGS
