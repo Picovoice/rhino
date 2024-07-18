@@ -377,8 +377,6 @@ namespace RhinoTest
                 case "0xd03":
                 case "0xd08":
                 case "0xd0b": return "raspberry-pi";
-                case "0xd07": return "jetson";
-                case "0xc08": return "beaglebone";
                 default:
                     throw new PlatformNotSupportedException($"This device (CPU part = {cpuPart}) is not supported by Picovoice.");
             }

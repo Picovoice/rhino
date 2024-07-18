@@ -11,8 +11,6 @@ on:
       - 'lib/common/**'
       - 'lib/node/**'
       - 'resources/audio_samples/**'
-      - 'resources/contexts*/beaglebone/**'
-      - 'resources/contexts*/jetson/**'
       - 'resources/contexts*/linux/**'
       - 'resources/contexts*/mac/**'
       - 'resources/contexts*/raspberry-pi/**'
@@ -27,8 +25,6 @@ on:
       - 'lib/common/**'
       - 'lib/node/**'
       - 'resources/audio_samples/**'
-      - 'resources/contexts*/beaglebone/**'
-      - 'resources/contexts*/jetson/**'
       - 'resources/contexts*/linux/**'
       - 'resources/contexts*/mac/**'
       - 'resources/contexts*/raspberry-pi/**'
@@ -67,7 +63,7 @@ jobs:
 
     strategy:
       matrix:
-        machine: [rpi2, rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, jetson, beaglebone]
+        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64]
 
     steps:
     - uses: actions/checkout@v3
