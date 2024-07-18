@@ -15,7 +15,7 @@ shutil.copy(os.path.join(os.path.dirname(__file__), '_rhino.py'), os.path.join(p
 shutil.copy(os.path.join(os.path.dirname(__file__), '_factory.py'), os.path.join(package_folder, '_factory.py'))
 shutil.copy(os.path.join(os.path.dirname(__file__), '_util.py'), os.path.join(package_folder, '_util.py'))
 
-platforms = ('beaglebone', 'jetson', 'linux', 'mac', 'raspberry-pi', 'windows')
+platforms = ('linux', 'mac', 'raspberry-pi', 'windows')
 
 os.mkdir(os.path.join(package_folder, 'lib'))
 for platform in ('common',) + platforms:
@@ -30,8 +30,6 @@ include pvrhino/_rhino.py
 include pvrhino/_factory.py
 include pvrhino/_util.py
 include pvrhino/lib/common/rhino_params.pv
-include pvrhino/lib/beaglebone/libpv_rhino.so
-recursive-include pvrhino/lib/jetson *
 include pvrhino/lib/linux/x86_64/libpv_rhino.so
 include pvrhino/lib/mac/x86_64/libpv_rhino.dylib
 include pvrhino/lib/mac/arm64/libpv_rhino.dylib

@@ -21,10 +21,10 @@
             Rhino is:
             - using deep neural networks trained in real-world environments.
             - compact and computationally-efficient, making it perfect for IoT.
-            - cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (all variants),
-            Beagle Bone, Android, iOS, Linux (x86_64), Mac (x86_64), Windows (x86_64), and
-            web browsers are supported. Furthermore, Support for various ARM Cortex-A
-            microprocessors and ARM Cortex-M microcontrollers is available for enterprise customers.
+            - cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (Zero, 3, 4, 5),
+            Android, iOS, Linux (x86_64), Mac (x86_64), Windows (x86_64), and web browsers are supported.
+            Furthermore, Support for various ARM Cortex-A microprocessors and ARM Cortex-M microcontrollers
+            is available for enterprise customers.
             - self-service. Developers and UX designers can train custom models using Picovoice Console.
         </Description>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -91,24 +91,6 @@
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\raspberry-pi\%(RecursiveDir)%(Filename)%(Extension)</Link>
-            <Visible>false</Visible>
-        </Content>
-        <Content Include="..\..\..\lib\jetson\cortex-a57-aarch64\libpv_rhino.so">
-            <PackagePath>
-                build/netcoreapp3.0/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
-                build/net6.0/lib/jetson/cortex-a57-aarch64/libpv_rhino.so;
-            </PackagePath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>lib\jetson\cortex-a57-aarch64\libpv_rhino.so</Link>
-            <Visible>false</Visible>
-        </Content>
-        <Content Include="..\..\..\lib\beaglebone\libpv_rhino.so">
-            <PackagePath>
-                build/netcoreapp3.0/lib/beaglebone/libpv_rhino.so;
-                build/net6.0/lib/beaglebone/libpv_rhino.so;
-            </PackagePath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>lib\beaglebone\libpv_rhino.so</Link>
             <Visible>false</Visible>
         </Content>
     </ItemGroup>

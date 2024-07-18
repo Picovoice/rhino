@@ -37,14 +37,6 @@
             <Link>resources\contexts\raspberry-pi\%(Filename)%(Extension)</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="..\..\..\resources\contexts\beaglebone\*">
-            <Link>resources\contexts\beaglebone\%(Filename)%(Extension)</Link>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-        <Content Include="..\..\..\resources\contexts\jetson\*">
-            <Link>resources\contexts\jetson\%(Filename)%(Extension)</Link>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
     </ItemGroup>
     <ItemGroup>
         <Content Include="..\..\..\lib\windows\amd64\libpv_rhino.dll">
