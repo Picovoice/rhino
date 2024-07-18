@@ -32,7 +32,7 @@ cmake -S demo/c/. -B demo/c/build -G "MinGW Makefiles" && cmake --build demo/c/b
 
 Running the executable without any commandline arguments prints the usage info to the console.
 
-#### Linux, macOS, Raspberry Pi, BeagleBone, Jetson
+#### Linux, macOS, Raspberry Pi
 
 ```console
 ./demo/c/build/rhino_demo_mic
@@ -52,7 +52,7 @@ Usage : .\\demo\\c\\build\\rhino_demo_mic.exe -a ACCESS_KEY -l LIBRARY_PATH -m M
 
 The following commands shows the available audio input devices to the console.
 
-#### Linux, macOS, Raspberry Pi, BeagleBone, Jetson
+#### Linux, macOS, Raspberry Pi
 
 ```console
 ./demo/c/build/rhino_demo_mic --show_audio_devices
@@ -93,20 +93,6 @@ Replace `${PROCESSOR}` with one of the Raspberry Pi processors defined [here](..
 -c resources/contexts/raspberry-pi/smart_lighting_raspberry-pi.rhn -d ${AUDIO_DEVICE_INDEX} -a ${ACCESS_KEY}
 ```
 
-#### BeagleBone
-
-```console
-./demo/c/build/rhino_demo_mic -l lib/beaglebone/libpv_rhino.so -m lib/common/rhino_params.pv \
--c resources/contexts/beaglebone/smart_lighting_beaglebone.rhn -d ${AUDIO_DEVICE_INDEX} -a ${ACCESS_KEY}
-```
-
-#### Jetson
-
-```console
-./demo/c/build/rhino_demo_mic -l lib/jetson/cortex-a57-aarch64/libpv_rhino.so -m lib/common/rhino_params.pv \
--c resources/contexts/jetson/smart_lighting_jetson.rhn -d ${AUDIO_DEVICE_INDEX} -a ${ACCESS_KEY}
-```
-
 #### Windows
 
 ```console
@@ -143,7 +129,7 @@ cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_d
 
 Running the executable without any commandline arguments prints the usage info to the console.
 
-#### Linux, macOS, Raspberry Pi, BeagleBone, Jetson
+#### Linux, macOS, Raspberry Pi
 
 ```console
 ./demo/c/build/rhino_demo_file 
@@ -187,20 +173,6 @@ Replace `${PROCESSOR}` with one of the Raspberry Pi processors defined [here](..
 ```console
 ./demo/c/build/rhino_demo_file -l lib/raspberry-pi/${PROCESSOR}/libpv_rhino.so -m lib/common/rhino_params.pv \
 -c resources/contexts/raspberry-pi/coffee_maker_raspberry-pi.rhn -w resources/audio_samples/test_within_context.wav -a ${ACCESS_KEY} 
-```
-
-#### BeagleBone
-
-```console
-./demo/c/build/rhino_demo_file -l lib/beaglebone/libpv_rhino.so -m lib/common/rhino_params.pv \
--c resources/contexts/beaglebone/coffee_maker_beaglebone.rhn -w resources/audio_samples/test_within_context.wav -a ${ACCESS_KEY}
-```
-
-#### Jetson
-
-```console
-./demo/c/build/rhino_demo_file -l lib/jetson/cortex-a57-aarch64/libpv_rhino.so -m lib/common/rhino_params.pv \
--c resources/contexts/jetson/coffee_maker_jetson.rhn -w resources/audio_samples/test_within_context.wav -a ${ACCESS_KEY} 
 ```
 
 #### Windows
