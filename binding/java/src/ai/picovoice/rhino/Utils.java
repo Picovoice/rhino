@@ -130,7 +130,6 @@ class Utils {
             if (arch.equals("arm") || arch.equals("aarch64")) {
                 String cpuPart = getCpuPart();
                 switch (cpuPart) {
-                    case "0xc07":
                     case "0xd03":
                     case "0xd08":
                     case "0xd0b":
@@ -171,8 +170,6 @@ class Utils {
             String archInfo = (arch.equals("aarch64")) ? "-aarch64" : "";
 
             switch (cpuPart) {
-                case "0xc07":
-                    return "cortex-a7" + archInfo;
                 case "0xd03":
                     return "cortex-a53" + archInfo;
                 case "0xd08":
