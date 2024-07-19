@@ -54,8 +54,7 @@ task copyWindowsLib(type: Copy) {
 }
 task copyRPiLib(type: Copy) {
     from('../../lib/java/raspberry-pi/')
-    include('cortex-a7/libpv_rhino_jni.so',
-            'cortex-a53/libpv_rhino_jni.so',
+    include('cortex-a53/libpv_rhino_jni.so',
             'cortex-a53-aarch64/libpv_rhino_jni.so',
             'cortex-a72/libpv_rhino_jni.so',
             'cortex-a72-aarch64/libpv_rhino_jni.so',
