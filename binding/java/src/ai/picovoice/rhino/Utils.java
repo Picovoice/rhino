@@ -176,8 +176,6 @@ class Utils {
                     return "cortex-a72" + archInfo;
                 case "0xd0b":
                     return "cortex-a76" + archInfo;
-                case "0xc08":
-                    return "";
                 default:
                     throw new RuntimeException(
                             String.format("Environment (%s) with CPU Part (%s) is not supported by Porcupine.",
