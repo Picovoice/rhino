@@ -1,6 +1,6 @@
 {
   "name": "@picovoice/rhino-node-demo",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Picovoice Rhino NodeJS file-based and microphone demos",
   "scripts": {
     "file": "node file.js",
