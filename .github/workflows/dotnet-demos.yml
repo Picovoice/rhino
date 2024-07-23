@@ -25,13 +25,13 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         include:
         - os: ubuntu-latest
           platform: linux
         - os: windows-latest
           platform: windows
-        - os: macos-13
+        - os: macos-latest
           platform: mac
 
     steps:
