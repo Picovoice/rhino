@@ -53,9 +53,7 @@ jobs:
 
       # ************** REMOVE AFTER RELEASE ********************
     - name: Build Rust SDK
-      run: |
-        ./copy.sh
-        cargo build
+      run: ./copy.sh
       working-directory: binding/rust
       # ********************************************************
 
@@ -100,9 +98,7 @@ jobs:
 
       # ************** REMOVE AFTER RELEASE ********************
     - name: Build Rust SDK
-      run: |
-        ./copy.sh
-        cargo build
+      run: ./copy.sh
       working-directory: binding/rust
       # ********************************************************
 
