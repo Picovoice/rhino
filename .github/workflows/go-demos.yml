@@ -52,7 +52,7 @@ jobs:
 
       # ************** REMOVE AFTER RELEASE ********************
     - name: Get Go SDK from branch
-      run: go get github.com/Picovoice/rhino/binding/go/v3/@684cd17c04a799bae929284447bf3087220f4ece
+      run: go get github.com/Picovoice/rhino/binding/go/v3/@f2d0f832413ec4000425e23871743890085d3650
       # ********************************************************
 
     - name: Build micdemo
@@ -87,7 +87,7 @@ jobs:
 
       # ************** REMOVE AFTER RELEASE ********************
     - name: Get Go SDK from branch
-      run: go get github.com/Picovoice/rhino/binding/go/v3/@684cd17c04a799bae929284447bf3087220f4ece
+      run: go get github.com/Picovoice/rhino/binding/go/v3/@f2d0f832413ec4000425e23871743890085d3650
       # ********************************************************
 
     - name: Build micdemo
