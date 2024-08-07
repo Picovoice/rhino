@@ -219,8 +219,6 @@ static void pv_free_error_stack_wrapper(
 	return ((pv_free_error_stack_func) f)(message_stack);
 }
 */
-package main
-
 import "fmt"
 
 import "C"
