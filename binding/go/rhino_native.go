@@ -10,7 +10,9 @@
 //
 
 package rhino
+package main
 
+import "fmt"
 /*
 #cgo linux LDFLAGS: -ldl
 #cgo darwin LDFLAGS: -ldl
@@ -431,5 +433,6 @@ func (nr *nativeRhinoType) nativeGetErrorStack() (status PvStatus, messageStack 
 		messageStack[i] = C.GoString(messageStackSlice[i])
 	}
 
+    fmt.Println("!ERRORS!: ", PvStatus(ret), messageStack)
 	return PvStatus(ret), messageStack
 }
