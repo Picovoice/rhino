@@ -289,9 +289,6 @@ func TestMessageStack(t *testing.T) {
 		t.Fatalf("length of error is full: '%d'", len(err.Error()))
 	}
 
-	t.Logf("err: %v", err)
-	t.Logf("err2: %v", err2)
-
 	if len(err2.Error()) != len(err.Error()) {
 		t.Fatalf("length of 1st init '%d' does not match 2nd init '%d'", len(err.Error()), len(err2.Error()))
 	}
