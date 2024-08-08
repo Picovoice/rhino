@@ -249,7 +249,7 @@ func (rhino *Rhino) Init() error {
 	if PvStatus(status) != SUCCESS {
 		errorStatus, messageStack := nativeRhino.nativeGetErrorStack()
 		if errorStatus != SUCCESS {
-		    fmt.Sprintf("ERROR_STATUS (%d) | MESSAGE_STACK: %s", errorStatus, messageStack)}
+		    fmt.Sprintf("ERROR_STATUS (%d) | MESSAGE_STACK: %s", errorStatus, messageStack)
 			return &RhinoError{
 				StatusCode: errorStatus,
 				Message:    "Unable to get Rhino error state",
