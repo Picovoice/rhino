@@ -42,6 +42,17 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
+      # ************** REMOVE AFTER RELEASE ********************
+    - name: Pack .NET SDK
+      run: |
+        dotnet build
+        dotnet pack -c Release
+      working-directory: binding/dotnet
+
+    - name: Add local NuGet package file
+      run: dotnet add package -s ../../../binding/dotnet/Rhino/bin/Release Rhino
+      # ********************************************************
+
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
 
@@ -71,6 +82,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+      # ************** REMOVE AFTER RELEASE ********************
+    - name: Pack .NET SDK
+      run: |
+        dotnet build
+        dotnet pack -c Release
+      working-directory: binding/dotnet
+
+    - name: Add local NuGet package file
+      run: dotnet add package -s ../../../binding/dotnet/Rhino/bin/Release Rhino
+      # ********************************************************
 
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
