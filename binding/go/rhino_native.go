@@ -219,8 +219,6 @@ static void pv_free_error_stack_wrapper(
 	return ((pv_free_error_stack_func) f)(message_stack);
 }
 */
-import "fmt"
-
 import "C"
 
 import (
@@ -432,6 +430,5 @@ func (nr *nativeRhinoType) nativeGetErrorStack() (status PvStatus, messageStack 
 		messageStack[i] = C.GoString(messageStackSlice[i])
 	}
 
-    fmt.Println("!ERRORS!: ", PvStatus(ret), messageStack)
 	return PvStatus(ret), messageStack
 }
