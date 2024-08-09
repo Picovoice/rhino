@@ -43,7 +43,7 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Package restore
-      run: dotnet restore
+      run: dotnet restore --ignore-failed-sources
 
       # ************** REMOVE AFTER RELEASE ********************
     - name: Pack .NET SDK
