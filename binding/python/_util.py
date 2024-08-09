@@ -40,18 +40,12 @@ def _pv_linux_machine(machine):
 
     if '0xb76' == cpu_part:
         return 'arm11'
-    elif '0xc07' == cpu_part:
-        return 'cortex-a7'
     elif '0xd03' == cpu_part:
         return 'cortex-a53' + arch_info
-    elif '0xd07' == cpu_part:
-        return 'cortex-a57' + arch_info
     elif '0xd08' == cpu_part:
         return 'cortex-a72' + arch_info
     elif "0xd0b" == cpu_part:
         return "cortex-a76" + arch_info
-    elif '0xc08' == cpu_part:
-        return 'beaglebone'
     elif machine == 'armv7l':
         log.warning(
             'WARNING: Please be advised that this device (CPU part = %s) is not officially supported by Picovoice. '
@@ -78,14 +72,12 @@ PV_SYSTEM, PV_MACHINE = _pv_platform()
 
 RASPBERRY_PI_MACHINES = {
     "arm11",
-    "cortex-a7",
     "cortex-a53",
     "cortex-a72",
     "cortex-a76",
     "cortex-a53-aarch64",
     "cortex-a72-aarch64",
     "cortex-a76-aarch64"}
-JETSON_MACHINES = {'cortex-a57-aarch64'}
 
 
 def pv_library_path(relative_path):
@@ -97,18 +89,11 @@ def pv_library_path(relative_path):
     elif PV_SYSTEM == 'Linux':
         if PV_MACHINE == 'x86_64':
             return os.path.join(os.path.dirname(__file__), relative_path, 'lib/linux/x86_64/libpv_rhino.so')
-        elif PV_MACHINE in JETSON_MACHINES:
-            return os.path.join(
-                os.path.dirname(__file__),
-                relative_path,
-                'lib/jetson/%s/libpv_rhino.so' % PV_MACHINE)
         elif PV_MACHINE in RASPBERRY_PI_MACHINES:
             return os.path.join(
                 os.path.dirname(__file__),
                 relative_path,
                 'lib/raspberry-pi/%s/libpv_rhino.so' % PV_MACHINE)
-        elif PV_MACHINE == 'beaglebone':
-            return os.path.join(os.path.dirname(__file__), relative_path, 'lib/beaglebone/libpv_rhino.so')
     elif PV_SYSTEM == 'Windows':
         return os.path.join(os.path.dirname(__file__), relative_path, 'lib/windows/amd64/libpv_rhino.dll')
 

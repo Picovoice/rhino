@@ -14,10 +14,4 @@ cp ../../lib/windows/amd64/libpv_rhino.dll ./embedded/lib/windows/amd64/libpv_rh
 echo "Copying RPi libs..."
 cp -rp ../../lib/raspberry-pi/* ./embedded/lib/raspberry-pi
 
-echo "Copying Jetson lib..."
-cp ../../lib/jetson/cortex-a57-aarch64/libpv_rhino.so ./embedded/lib/jetson/cortex-a57-aarch64/libpv_rhino.so
-
-echo "Copying BeagleBone lib..."
-cp ../../lib/beaglebone/libpv_rhino.so ./embedded/lib/beaglebone/libpv_rhino.so
-
 echo "Copy complete!"

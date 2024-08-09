@@ -50,6 +50,11 @@ jobs:
       with:
         go-version: ${{ matrix.go }}
 
+      # ************** REMOVE AFTER RELEASE ********************
+    - name: Get Go SDK from branch
+      run: go get github.com/Picovoice/rhino/binding/go/v3/@f2d0f832413ec4000425e23871743890085d3650
+      # ********************************************************
+
     - name: Build micdemo
       run: go build micdemo/rhino_mic_demo.go
 
@@ -64,10 +69,8 @@ jobs:
 
     strategy:
       matrix:
-        machine: [rpi2, rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, jetson, beaglebone]
+        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64]
         include:
-        - machine: rpi2
-          platform: raspberry-pi
         - machine: rpi3-32
           platform: raspberry-pi
         - machine: rpi3-64
@@ -78,13 +81,14 @@ jobs:
           platform: raspberry-pi
         - machine: rpi5-64
           platform: raspberry-pi
-        - machine: jetson
-          platform: jetson
-        - machine: beaglebone
-          platform: beaglebone
 
     steps:
     - uses: actions/checkout@v3
+
+      # ************** REMOVE AFTER RELEASE ********************
+    - name: Get Go SDK from branch
+      run: go get github.com/Picovoice/rhino/binding/go/v3/@f2d0f832413ec4000425e23871743890085d3650
+      # ********************************************************
 
     - name: Build micdemo
       run: go build micdemo/rhino_mic_demo.go

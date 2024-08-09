@@ -63,12 +63,8 @@ def pv_context_platform():
     elif PV_SYSTEM == 'Linux':
         if PV_MACHINE == 'x86_64':
             return 'linux'
-        elif PV_MACHINE in JETSON_MACHINES:
-            return 'jetson'
         elif PV_MACHINE in RASPBERRY_PI_MACHINES:
             return 'raspberry-pi'
-        elif PV_MACHINE == 'beaglebone':
-            return 'beaglebone'
     elif PV_SYSTEM == 'Windows':
         return 'windows'
 
