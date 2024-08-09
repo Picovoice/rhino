@@ -42,19 +42,18 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-      # ************** UNCOMMENT AFTER RELEASE *****************
-#    - name: Package restore
-#      run: dotnet restore
-      # ********************************************************
-
       # ************** REMOVE AFTER RELEASE ********************
     - name: Pack .NET SDK
       run: dotnet pack -c Release
       working-directory: binding/dotnet
 
     - name: Add local NuGet package file
-      run: dotnet add package -s https://api.nuget.org/ -s ../../../binding/dotnet/Rhino/bin/Release Rhino
+      continue-on-error: true
+      run: dotnet add package -s ../../../binding/dotnet/Rhino/bin/Release Rhino
       # ********************************************************
+
+    - name: Package restore
+      run: dotnet restore
 
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
@@ -86,17 +85,18 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Package restore
-      run: dotnet restore
-
       # ************** REMOVE AFTER RELEASE ********************
     - name: Pack .NET SDK
       run: dotnet pack -c Release
       working-directory: binding/dotnet
 
     - name: Add local NuGet package file
+      continue-on-error: true
       run: dotnet add package -s ../../../binding/dotnet/Rhino/bin/Release Rhino
       # ********************************************************
+
+    - name: Package restore
+      run: dotnet restore
 
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
