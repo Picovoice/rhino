@@ -39,7 +39,7 @@ jobs:
     - name: Add local NuGet package file
       continue-on-error: true
       run: dotnet add package -s ../../../binding/dotnet/Rhino/bin/Release Rhino
-      working-directory: binding/dotnet/RhinoDemo
+      working-directory: demo/dotnet/RhinoDemo
       # ********************************************************
 
     - name: Run Demo Codestyle
