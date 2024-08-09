@@ -42,17 +42,19 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
+      # ************** UNCOMMENT AFTER RELEASE *****************
+#    - name: Package restore
+#      run: dotnet restore
+      # ********************************************************
+
       # ************** REMOVE AFTER RELEASE ********************
     - name: Pack .NET SDK
       run: dotnet pack -c Release
       working-directory: binding/dotnet
 
     - name: Add local NuGet package file
-      run: dotnet add package -s ../../../binding/dotnet/Rhino/bin/Release Rhino
+      run: dotnet add package -s https://api.nuget.org/ -s ../../../binding/dotnet/Rhino/bin/Release Rhino
       # ********************************************************
-
-    - name: Package restore
-      run: dotnet restore -s ../../../binding/dotnet/Rhino/bin/Release Rhino -s https://api.nuget.org/
 
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
