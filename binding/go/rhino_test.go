@@ -283,6 +283,7 @@ func TestMessageStack(t *testing.T) {
 	rhino = NewRhino("invalid access key", getTestContextPath("en", "smart_lighting"))
 
 	err := rhino.Init()
+	err2 := rhino.Init()
 
 	t.Logf("[err]: '%v'", err)
 	t.Logf("[err2]: '%v'", err2)
@@ -290,8 +291,6 @@ func TestMessageStack(t *testing.T) {
 	if len(err.Error()) > 1024 {
 		t.Fatalf("length of error is full: '%d'", len(err.Error()))
 	}
-
-	err2 := rhino.Init()
 	if len(err2.Error()) != len(err.Error()) {
 		t.Fatalf("length of 1st init '%d' does not match 2nd init '%d'", len(err.Error()), len(err2.Error()))
 	}
