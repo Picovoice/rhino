@@ -284,6 +284,9 @@ func TestMessageStack(t *testing.T) {
 
 	err := rhino.Init()
 
+	t.Logf("[err]: '%v'", err)
+	t.Logf("[err2]: '%v'", err2)
+	
 	if len(err.Error()) > 1024 {
 		t.Fatalf("length of error is full: '%d'", len(err.Error()))
 	}
