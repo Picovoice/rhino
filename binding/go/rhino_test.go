@@ -22,6 +22,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"testing"
+	"time"
 )
 
 var (
@@ -283,6 +284,7 @@ func TestMessageStack(t *testing.T) {
 	rhino = NewRhino("invalid access key", getTestContextPath("en", "smart_lighting"))
 
 	err := rhino.Init()
+	time.Sleep(1 * time.Second)
 	err2 := rhino.Init()
 
 	t.Logf("[err]: '%v'", err)
