@@ -68,8 +68,14 @@ func (e *RhinoError) Error() string {
 
 	if len(e.MessageStack) > 0 {
 		message.WriteString(":")
-		for i, value := range e.MessageStack {
-			message.WriteString(fmt.Sprintf("\n  [%d] %s", i, value))
+		if len(e.MessageStack) > 0 {
+			message.WriteString(fmt.Sprintf("\n  [0] %s", e.MessageStack[0]))
+		}
+		if len(e.MessageStack) > 1 {
+			message.WriteString(fmt.Sprintf("\n  [1] %s", e.MessageStack[1]))
+		}
+		if len(e.MessageStack) > 2 {
+			message.WriteString(fmt.Sprintf("\n  [2] %s", e.MessageStack[2]))
 		}
 	}
 
