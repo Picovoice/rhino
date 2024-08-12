@@ -55,6 +55,7 @@ jobs:
 
     - name: Set up Mingw
       uses: egor-tensin/setup-mingw@v2
+      if: ${{ (matrix.os == 'windows-latest') && (matrix.go != 'stable') && (matrix.go < 1.20) }}
       with:
         version: 11.2.0
 
@@ -77,7 +78,7 @@ jobs:
 
     - name: Test
       continue-on-error: true
-      run: GOEXPERIMENT=nocoverageredesign go test -v -access_key ${{secrets.PV_VALID_ACCESS_KEY}}
+      run: go test -v -access_key ${{secrets.PV_VALID_ACCESS_KEY}}
 
   # build-self-hosted:
   #   runs-on: ${{ matrix.machine }}
