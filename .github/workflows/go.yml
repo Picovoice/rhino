@@ -74,7 +74,7 @@ jobs:
       run: go install
 
     - name: Build
-      run: go build
+      run: $env:GOEXPERIMENT = "noallocheaders"; go build
 
     - name: Test
       continue-on-error: true
