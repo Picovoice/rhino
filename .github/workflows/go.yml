@@ -48,7 +48,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        go: [ '1.22.1', '1.22.2', '1.22.3', '1.22.4', '1.22.5', '1.22.6', 'stable' ]
+        go: [ '1.20.1', '1.20.2', '1.20.3', '1.20.4', '1.20.5', 'stable' ]
 
     steps:
     - uses: actions/checkout@v3
@@ -57,6 +57,9 @@ jobs:
       uses: egor-tensin/setup-mingw@v2
       with:
         version: 11.2.0
+
+    - name: See Mingw version
+      run: gcc --version
 
     - name: Setup go
       uses: actions/setup-go@v4
@@ -76,26 +79,24 @@ jobs:
       continue-on-error: true
       run: GOEXPERIMENT=nocoverageredesign go test -v -access_key ${{secrets.PV_VALID_ACCESS_KEY}}
 
-#  build-self-hosted:
-#    runs-on: ${{ matrix.machine }}
-#
-#    strategy:
-#      matrix:
-#        machine: [pv-windows]
-#        go: [ 'stable' ]
-#
-#    steps:
-#    - uses: actions/checkout@v3
-#
-#    - name: Pre-build dependencies
-#      run: ./copy.sh
-#
-#    - name: Install dependencies
-#      run: go install
-#
-#    - name: Build
-#      run: go build
-#
-#    - name: Test
-#      continue-on-error: true
-#      run: go test -v -access_key ${{secrets.PV_VALID_ACCESS_KEY}}
+  # build-self-hosted:
+  #   runs-on: ${{ matrix.machine }}
+
+  #   strategy:
+  #     matrix:
+  #       machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64]
+
+  #   steps:
+  #   - uses: actions/checkout@v3
+
+  #   - name: Pre-build dependencies
+  #     run: ./copy.sh
+
+  #   - name: Install dependencies
+  #     run: go install
+
+  #   - name: Build
+  #     run: go build
+
+  #   - name: Test
+  #     run: go test -v -access_key ${{secrets.PV_VALID_ACCESS_KEY}}
