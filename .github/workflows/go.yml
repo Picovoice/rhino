@@ -78,7 +78,7 @@ jobs:
 
     - name: Test
       continue-on-error: true
-      run: go test -p 1 -v -access_key ${{secrets.PV_VALID_ACCESS_KEY}}
+      run: go test -v -access_key ${{secrets.PV_VALID_ACCESS_KEY}}
 
   # build-self-hosted:
   #   runs-on: ${{ matrix.machine }}
