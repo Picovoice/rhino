@@ -19,6 +19,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 )
 
 var (
@@ -277,10 +278,14 @@ func loadTestData() ([]WithinContextTestData, []OutOfContextTestData) {
 // }
 
 func TestMessageStack(t *testing.T) {
+    time.Sleep(1 * time.Second)
 	rhino = NewRhino("invalid access key", getTestContextPath("en", "smart_lighting"))
 
+    time.Sleep(1 * time.Second)
 	err := rhino.Init()
+    time.Sleep(1 * time.Second)
 	err2 := rhino.Init()
+    time.Sleep(1 * time.Second)
 
 	t.Logf("[err]: '%v'", err)
 	t.Logf("[err2]: '%v'", err2)
