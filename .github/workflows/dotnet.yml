@@ -67,6 +67,31 @@ jobs:
           - dotnet-version: 6.0.x
             binding-framework: net6.0
             test-framework: net6.0
+          - os: macos-13
+            dotnet-version: 2.1.x
+            binding-framework: netstandard2.0
+            test-framework: netcoreapp2.1
+          - os: macos-13
+            dotnet-version: 3.0.x
+            binding-framework: netcoreapp3.0
+            test-framework: netcoreapp3.0
+          - os: macos-13
+            dotnet-version: 3.1.x
+            binding-framework: netcoreapp3.0
+            test-framework: netcoreapp3.1
+          - os: macos-13
+            dotnet-version: 5.0.x
+            binding-framework: netcoreapp3.0
+            test-framework: net5.0
+        exclude:
+          - os: macos-latest
+            dotnet-version: 2.1.x
+          - os: macos-latest
+            dotnet-version: 3.0.x
+          - os: macos-latest
+            dotnet-version: 3.1.x
+          - os: macos-latest
+            dotnet-version: 5.0.x
 
     steps:
     - uses: actions/checkout@v3
