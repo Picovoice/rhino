@@ -10,6 +10,7 @@
 //
 
 package rhino
+
 /*
 #cgo linux LDFLAGS: -ldl
 #cgo darwin LDFLAGS: -ldl

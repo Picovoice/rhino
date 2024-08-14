@@ -11,13 +11,16 @@
 package rhino
 
 import (
+	"encoding/binary"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"os"
 	"path/filepath"
+	"reflect"
 	"testing"
 )
 
@@ -124,157 +127,157 @@ func loadTestData() ([]WithinContextTestData, []OutOfContextTestData) {
 	return withinContextTestParameters, outOfContextTestParameters
 }
 
-// func processFileHelper(t *testing.T, rhino *Rhino, audioFileName string, maxProcessCount int) bool {
-// 	testAudioPath, _ := filepath.Abs(filepath.Join("../../resources/audio_samples", audioFileName))
-// 	data, err := ioutil.ReadFile(testAudioPath)
-// 	if err != nil {
-// 		t.Fatalf("Could not read test file: %v", err)
-// 	}
-// 	data = data[44:] // skip header
+func processFileHelper(t *testing.T, rhino *Rhino, audioFileName string, maxProcessCount int) bool {
+	testAudioPath, _ := filepath.Abs(filepath.Join("../../resources/audio_samples", audioFileName))
+	data, err := ioutil.ReadFile(testAudioPath)
+	if err != nil {
+		t.Fatalf("Could not read test file: %v", err)
+	}
+	data = data[44:] // skip header
 
-// 	isFinalized := false
-// 	frameLenBytes := FrameLength * 2
-// 	frameCount := int(math.Floor(float64(len(data)) / float64(frameLenBytes)))
-// 	sampleBuffer := make([]int16, FrameLength)
+	isFinalized := false
+	frameLenBytes := FrameLength * 2
+	frameCount := int(math.Floor(float64(len(data)) / float64(frameLenBytes)))
+	sampleBuffer := make([]int16, FrameLength)
 
-// 	processed := 0
-// 	for i := 0; i < frameCount; i++ {
-// 		start := i * frameLenBytes
+	processed := 0
+	for i := 0; i < frameCount; i++ {
+		start := i * frameLenBytes
 
-// 		for j := 0; j < FrameLength; j++ {
-// 			dataOffset := start + (j * 2)
-// 			sampleBuffer[j] = int16(binary.LittleEndian.Uint16(data[dataOffset : dataOffset+2]))
-// 		}
+		for j := 0; j < FrameLength; j++ {
+			dataOffset := start + (j * 2)
+			sampleBuffer[j] = int16(binary.LittleEndian.Uint16(data[dataOffset : dataOffset+2]))
+		}
 
-// 		isFinalized, err = rhino.Process(sampleBuffer)
-// 		if err != nil {
-// 			t.Fatalf("Could not read test file: %v", err)
-// 		}
+		isFinalized, err = rhino.Process(sampleBuffer)
+		if err != nil {
+			t.Fatalf("Could not read test file: %v", err)
+		}
 
-// 		if isFinalized {
-// 			break
-// 		}
+		if isFinalized {
+			break
+		}
 
-// 		if maxProcessCount != -1 && processed >= maxProcessCount {
-// 			break
-// 		}
-// 		processed++
-// 	}
+		if maxProcessCount != -1 && processed >= maxProcessCount {
+			break
+		}
+		processed++
+	}
 
-// 	return isFinalized
-// }
+	return isFinalized
+}
 
-// func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
-// 	err := rhino.Init()
-// 	if err != nil {
-// 		t.Fatalf("%v", err)
-// 	}
-// 	fmt.Printf("Rhino Version: %s\n", Version)
-// 	fmt.Printf("Frame Length: %d\n", FrameLength)
-// 	fmt.Printf("Sample Rate: %d\n", SampleRate)
+func runTestCase(t *testing.T, rhino *Rhino, audioFileName string, isWithinContext bool, expectedIntent string, expectedSlots map[string]string) {
+	err := rhino.Init()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+	fmt.Printf("Rhino Version: %s\n", Version)
+	fmt.Printf("Frame Length: %d\n", FrameLength)
+	fmt.Printf("Sample Rate: %d\n", SampleRate)
 
-// 	isFinalized := processFileHelper(t, rhino, audioFileName, -1)
+	isFinalized := processFileHelper(t, rhino, audioFileName, -1)
 
-// 	if !isFinalized {
-// 		t.Fatalf("Rhino reached end of file without finalizing.")
-// 	}
+	if !isFinalized {
+		t.Fatalf("Rhino reached end of file without finalizing.")
+	}
 
-// 	inference, err := rhino.GetInference()
-// 	if err != nil {
-// 		t.Fatalf("Rhino failed to get inference: \n%v", err)
-// 	}
+	inference, err := rhino.GetInference()
+	if err != nil {
+		t.Fatalf("Rhino failed to get inference: \n%v", err)
+	}
 
-// 	if isWithinContext {
-// 		if !inference.IsUnderstood {
-// 			t.Fatalf("Didn't understand.")
-// 		}
+	if isWithinContext {
+		if !inference.IsUnderstood {
+			t.Fatalf("Didn't understand.")
+		}
 
-// 		if inference.Intent != expectedIntent {
-// 			t.Fatalf("Incorrect intent '%s'", inference.Intent)
-// 		}
+		if inference.Intent != expectedIntent {
+			t.Fatalf("Incorrect intent '%s'", inference.Intent)
+		}
 
-// 		if !reflect.DeepEqual(inference.Slots, expectedSlots) {
-// 			t.Fatalf("Incorrect slots '%v'", inference.Slots)
-// 		}
-// 	} else {
-// 		if inference.IsUnderstood {
-// 			t.Fatalf("Rhino understood a command outside of its context. %v", inference)
-// 		}
-// 	}
-// }
+		if !reflect.DeepEqual(inference.Slots, expectedSlots) {
+			t.Fatalf("Incorrect slots '%v'", inference.Slots)
+		}
+	} else {
+		if inference.IsUnderstood {
+			t.Fatalf("Rhino understood a command outside of its context. %v", inference)
+		}
+	}
+}
 
-// func TestWithinContext(t *testing.T) {
-// 	for _, tt := range withinContextTestParameters {
-// 		t.Run(tt.language+" within context", func(t *testing.T) {
-// 			rhino = NewRhino(testAccessKey, getTestContextPath(tt.language, tt.context))
-// 			rhino.ModelPath = getTestModelPath(tt.language)
-// 			runTestCase(
-// 				t,
-// 				&rhino,
-// 				fmt.Sprintf("%s.wav", appendLanguage("test_within_context", tt.language)),
-// 				true,
-// 				tt.expectedIntent,
-// 				tt.expectedSlots)
-// 			delErr := rhino.Delete()
-// 			if delErr != nil {
-// 				t.Fatalf("%v", delErr)
-// 			}
-// 		})
-// 	}
-// }
+func TestWithinContext(t *testing.T) {
+	for _, tt := range withinContextTestParameters {
+		t.Run(tt.language+" within context", func(t *testing.T) {
+			rhino = NewRhino(testAccessKey, getTestContextPath(tt.language, tt.context))
+			rhino.ModelPath = getTestModelPath(tt.language)
+			runTestCase(
+				t,
+				&rhino,
+				fmt.Sprintf("%s.wav", appendLanguage("test_within_context", tt.language)),
+				true,
+				tt.expectedIntent,
+				tt.expectedSlots)
+			delErr := rhino.Delete()
+			if delErr != nil {
+				t.Fatalf("%v", delErr)
+			}
+		})
+	}
+}
 
-// func TestOutOfContext(t *testing.T) {
-// 	for _, tt := range outOfContextTestParameters {
-// 		t.Run(tt.language+" out of context", func(t *testing.T) {
-// 			rhino = NewRhino(testAccessKey, getTestContextPath(tt.language, tt.context))
-// 			rhino.ModelPath = getTestModelPath(tt.language)
-// 			runTestCase(
-// 				t,
-// 				&rhino,
-// 				fmt.Sprintf("%s.wav", appendLanguage("test_out_of_context", tt.language)),
-// 				false,
-// 				"",
-// 				nil)
-// 			delErr := rhino.Delete()
-// 			if delErr != nil {
-// 				t.Fatalf("%v", delErr)
-// 			}
-// 		})
-// 	}
-// }
+func TestOutOfContext(t *testing.T) {
+	for _, tt := range outOfContextTestParameters {
+		t.Run(tt.language+" out of context", func(t *testing.T) {
+			rhino = NewRhino(testAccessKey, getTestContextPath(tt.language, tt.context))
+			rhino.ModelPath = getTestModelPath(tt.language)
+			runTestCase(
+				t,
+				&rhino,
+				fmt.Sprintf("%s.wav", appendLanguage("test_out_of_context", tt.language)),
+				false,
+				"",
+				nil)
+			delErr := rhino.Delete()
+			if delErr != nil {
+				t.Fatalf("%v", delErr)
+			}
+		})
+	}
+}
 
-// func TestReset(t *testing.T) {
-// 	rhino = NewRhino(testAccessKey, getTestContextPath("en", "coffee_maker"))
-// 	err := rhino.Init()
-// 	if err != nil {
-// 		t.Fatalf("%v", err)
-// 	}
+func TestReset(t *testing.T) {
+	rhino = NewRhino(testAccessKey, getTestContextPath("en", "coffee_maker"))
+	err := rhino.Init()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
 
-// 	testAudioFileName := "test_within_context.wav"
-// 	isFinalized := processFileHelper(t, &rhino, testAudioFileName, 15)
-// 	if isFinalized {
-// 		t.Fatalf("Rhino should not be finalized.")
-// 	}
+	testAudioFileName := "test_within_context.wav"
+	isFinalized := processFileHelper(t, &rhino, testAudioFileName, 15)
+	if isFinalized {
+		t.Fatalf("Rhino should not be finalized.")
+	}
 
-// 	err = rhino.Reset()
-// 	if err != nil {
-// 		t.Fatalf("%v", err)
-// 	}
+	err = rhino.Reset()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
 
-// 	isFinalized = processFileHelper(t, &rhino, testAudioFileName, -1)
-// 	if !isFinalized {
-// 		t.Fatalf("Rhino reached end of file without finalizing.")
-// 	}
+	isFinalized = processFileHelper(t, &rhino, testAudioFileName, -1)
+	if !isFinalized {
+		t.Fatalf("Rhino reached end of file without finalizing.")
+	}
 
-// 	inference, err := rhino.GetInference()
-// 	if err != nil {
-// 		t.Fatalf("Rhino failed to get inference: \n%v", err)
-// 	}
+	inference, err := rhino.GetInference()
+	if err != nil {
+		t.Fatalf("Rhino failed to get inference: \n%v", err)
+	}
 
-// 	if !inference.IsUnderstood {
-// 		t.Fatalf("Rhino failed to understand")
-// 	}
-// }
+	if !inference.IsUnderstood {
+		t.Fatalf("Rhino failed to understand")
+	}
+}
 
 func TestMessageStack(t *testing.T) {
 	rhino = NewRhino("invalid access key", getTestContextPath("en", "smart_lighting"))
@@ -282,38 +285,36 @@ func TestMessageStack(t *testing.T) {
 	err := rhino.Init()
 	err2 := rhino.Init()
 
-	t.Logf("[err]: '%v'", err)
-	t.Logf("[err2]: '%v'", err2)
-	
 	if len(err.Error()) > 1024 {
 		t.Fatalf("length of error is full: '%d'", len(err.Error()))
 	}
+
 	if len(err2.Error()) != len(err.Error()) {
 		t.Fatalf("length of 1st init '%d' does not match 2nd init '%d'", len(err.Error()), len(err2.Error()))
 	}
 }
 
-// func TestProcessMessageStack(t *testing.T) {
-// 	rhino := NewRhino(testAccessKey, getTestContextPath("en", "smart_lighting"))
+func TestProcessMessageStack(t *testing.T) {
+	rhino := NewRhino(testAccessKey, getTestContextPath("en", "smart_lighting"))
 
-// 	err := rhino.Init()
-// 	if err != nil {
-// 		t.Fatalf("%v", err)
-// 	}
+	err := rhino.Init()
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
 
-// 	address := rhino.handle
-// 	rhino.handle = nil
+	address := rhino.handle
+	rhino.handle = nil
 
-// 	testPcm := make([]int16, FrameLength)
+	testPcm := make([]int16, FrameLength)
 
-// 	_, err = rhino.Process(testPcm)
-// 	rhino.handle = address
-// 	if err == nil {
-// 		t.Fatalf("Expected rhino process to fail")
-// 	}
+	_, err = rhino.Process(testPcm)
+	rhino.handle = address
+	if err == nil {
+		t.Fatalf("Expected rhino process to fail")
+	}
 
-// 	delErr := rhino.Delete()
-// 	if delErr != nil {
-// 		t.Fatalf("%v", delErr)
-// 	}
-// }
+	delErr := rhino.Delete()
+	if delErr != nil {
+		t.Fatalf("%v", delErr)
+	}
+}
