@@ -7,7 +7,7 @@ plugins {
 
 ext {
     PUBLISH_GROUP_ID = 'ai.picovoice'
-    PUBLISH_VERSION = '3.0.2'
+    PUBLISH_VERSION = '3.0.3'
     PUBLISH_ARTIFACT_ID = 'rhino-java'
 }
 
@@ -54,8 +54,7 @@ task copyWindowsLib(type: Copy) {
 }
 task copyRPiLib(type: Copy) {
     from('../../lib/java/raspberry-pi/')
-    include('cortex-a7/libpv_rhino_jni.so',
-            'cortex-a53/libpv_rhino_jni.so',
+    include('cortex-a53/libpv_rhino_jni.so',
             'cortex-a53-aarch64/libpv_rhino_jni.so',
             'cortex-a72/libpv_rhino_jni.so',
             'cortex-a72-aarch64/libpv_rhino_jni.so',
@@ -63,21 +62,13 @@ task copyRPiLib(type: Copy) {
             'cortex-a76-aarch64/libpv_rhino_jni.so')
     into("${outputDir}/rhino/lib/java/raspberry-pi/")
 }
-task copyJetsonLib(type: Copy) {
-    from('../../lib/java/jetson/cortex-a57-aarch64/libpv_rhino_jni.so') into "${outputDir}/rhino/lib/java/jetson/cortex-a57-aarch64/"
-}
-task copyBeagleboneLib(type: Copy) {
-    from('../../lib/java/beaglebone/libpv_rhino_jni.so') into "${outputDir}/rhino/lib/java/beaglebone/"
-}
 
 task copyTasks(type: GradleBuild) {
     tasks = ['copyDefaultModel',
              'copyLinuxLib',
              'copyMacLib',
              'copyWindowsLib',
-             'copyRPiLib',
-             'copyJetsonLib',
-             'copyBeagleboneLib']
+             'copyRPiLib']
 }
 
 jar {

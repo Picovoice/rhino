@@ -6,7 +6,6 @@ armeabi
 armv
 armv7l
 bagno
-beaglebone
 behaviour
 beleuchtung
 calcsize
