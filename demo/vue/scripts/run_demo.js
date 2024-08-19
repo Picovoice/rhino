@@ -92,6 +92,7 @@ export default rhinoModel;
 
 const command = (process.platform === "win32") ? "npx.cmd" : "npx";
 
-child_process.fork("vite", commands, {
+child_process.spawn("vite", commands, {
   execPath: command,
+  shell: true
 });
