@@ -92,7 +92,7 @@ fs.writeFileSync(
 
 const command = process.platform === 'win32' ? 'npx.cmd' : 'npx';
 
-child_process.execSync('react-native', commands, {
+child_process.execSync(`${command} react-native ${args}`, {
   shell: true,
   stdio: 'inherit'
 });
