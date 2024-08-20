@@ -7,7 +7,7 @@ const availableLanguages = testData["tests"]["within_context"].map(
   (x) => x["language"]
 );
 
-const commands = process.argv.slice(2, -1);
+const args = process.argv.slice(2, -1);
 const language = process.argv.slice(-1)[0];
 
 if (!availableLanguages.includes(language)) {
@@ -95,6 +95,7 @@ fs.writeFileSync(
 
 const command = (process.platform === "win32") ? "npx.cmd" : "npx";
 
-child_process.fork("react-scripts", commands, {
-  execPath: command,
+child_process.execSync(`${command} react-scripts ${args.join(" ")}`, {
+  shell: true,
+  stdio: 'inherit'
 });

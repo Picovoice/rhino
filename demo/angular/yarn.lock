@@ -1634,10 +1634,10 @@
     read-package-json-fast "^3.0.0"
     which "^3.0.0"
 
-"@picovoice/rhino-angular@~3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-3.0.3.tgz#f15724a0e0c986e291ccd22b69342f92b8d0d236"
-  integrity sha512-Jjo9gs9Xz3oAu8wBIiJJ3DK4L9lBXlprF3aOp2p2TbO7Sq+VNkNZvnsDuRINbJcZHIHfhTnJQULpLpPwyN2YnQ==
+"@picovoice/rhino-angular@~3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-angular/-/rhino-angular-3.0.4.tgz#d900fa9ea10be3ea444c4c4bbc1abc01dbe98e4b"
+  integrity sha512-fAlYod9YzuQ1meYWsXcwQtbx7XgdZFyDL5OSbm5V9a51RqbvgIsJD8WsYgpz6d0EU/mGlM48ox44mjabdRACpg==
   dependencies:
     "@picovoice/rhino-web" "=3.0.3"
     tslib "^2.3.0"
