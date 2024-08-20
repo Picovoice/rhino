@@ -1,7 +1,7 @@
 {
   "name": "@picovoice/rhino-angular",
   "description": "Angular service for Rhino Web SDK",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "peerDependencies": {
     "@angular/common": ">=13.0.0",
     "@angular/core": ">=13.0.0",
