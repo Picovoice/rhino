@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;netcoreapp3.0;netstandard2.0</TargetFrameworks>
-        <Version>3.0.3</Version>
+        <TargetFrameworks>net8.0;net6.0;netcoreapp3.0;netstandard2.0</TargetFrameworks>
+        <Version>3.0.4</Version>
         <Authors>Picovoice</Authors>
         <Company />
         <Product>Rhino Speech-to-Intent Engine</Product>
@@ -43,6 +43,7 @@
             <PackagePath>
                 build/netcoreapp3.0/Rhino.targets;
                 build/net6.0/Rhino.targets;
+                build/net8.0/Rhino.targets;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
@@ -55,6 +56,7 @@
                 build/netstandard2.0/libpv_rhino.dll;
                 build/netcoreapp3.0/lib/windows/amd64/libpv_rhino.dll;
                 build/net6.0/lib/windows/amd64/libpv_rhino.dll;
+                build/net8.0/lib/windows/amd64/libpv_rhino.dll;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\windows\amd64\libpv_rhino.dll</Link>
@@ -65,6 +67,7 @@
                 build/netstandard2.0/libpv_rhino.so;
                 build/netcoreapp3.0/lib/linux/x86_64/libpv_rhino.so;
                 build/net6.0/lib/linux/x86_64/libpv_rhino.so;
+                build/net8.0/lib/linux/x86_64/libpv_rhino.so;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\linux\x86_64\libpv_rhino.so</Link>
@@ -75,6 +78,7 @@
                 build/netstandard2.0/libpv_rhino.dylib;
                 build/netcoreapp3.0/lib/mac/x86_64/libpv_rhino.dylib;
                 build/net6.0/lib/mac/x86_64/libpv_rhino.dylib;
+                build/net8.0/lib/mac/x86_64/libpv_rhino.dylib;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\mac\x86_64\libpv_rhino.dylib</Link>
@@ -88,6 +92,7 @@
             <PackagePath>
                 build/netcoreapp3.0/lib/raspberry-pi;
                 build/net6.0/lib/raspberry-pi;
+                build/net8.0/lib/raspberry-pi;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\raspberry-pi\%(RecursiveDir)%(Filename)%(Extension)</Link>
@@ -100,6 +105,7 @@
         <Content Include="..\..\..\lib\mac\arm64\libpv_rhino.dylib">
             <PackagePath>
                 build/net6.0/lib/mac/arm64/libpv_rhino.dylib;
+                build/net8.0/lib/mac/arm64/libpv_rhino.dylib;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\mac\arm64\libpv_rhino.dylib</Link>
@@ -114,6 +120,7 @@
                 build/netstandard2.0/lib/common/rhino_params.pv;
                 build/netcoreapp3.0/lib/common/rhino_params.pv;
                 build/net6.0/lib/common/rhino_params.pv;
+                build/net8.0/lib/common/rhino_params.pv;
             </PackagePath>
             <Link>lib\common\rhino_params.pv</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

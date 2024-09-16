@@ -50,7 +50,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, macos-13, windows-latest]
-        dotnet-version: [2.1.x, 3.0.x, 3.1.x, 5.0.x, 6.0.x]
+        dotnet-version: [2.1.x, 3.0.x, 3.1.x, 5.0.x, 6.0.x, 8.0.x]
         include:
           - dotnet-version: 2.1.x
             binding-framework: netstandard2.0
@@ -67,6 +67,9 @@ jobs:
           - dotnet-version: 6.0.x
             binding-framework: net6.0
             test-framework: net6.0
+          - dotnet-version: 8.0.x
+            binding-framework: net8.0
+            test-framework: net8.0
         exclude:
           - os: macos-latest
             dotnet-version: 2.1.x
@@ -76,13 +79,15 @@ jobs:
             dotnet-version: 3.1.x
           - os: macos-latest
             dotnet-version: 5.0.x
-          - os: macos-13
+          - os: macos-latest
             dotnet-version: 6.0.x
+          - os: macos-13
+            dotnet-version: 8.0.x
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup .NET 6.0
+    - name: Setup .NET 8.0
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
@@ -106,7 +111,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Build binding
-      run: dotnet build Rhino/Rhino.csproj --framework net6.0
+      run: dotnet build Rhino/Rhino.csproj --framework net8.0
 
     - name: Test
-      run: dotnet test --framework net6.0 -v n
+      run: dotnet test --framework net8.0 -v n
