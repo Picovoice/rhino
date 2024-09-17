@@ -33,8 +33,7 @@
       "**/*.meta",
       "../../../binding/unity/Packages/**/*",
       "../../../binding/unity/ProjectSettings/**/*",
-
-
+      
       "**/*.csproj",
       "**/*.targets",
 
@@ -69,6 +68,8 @@
       "**/binding/react-native/test-app/**/*.xml",
       "**/binding/react-native/test-app/**/*.mm",
 
+      "**/*.sum",
+      
       "**/Cargo.toml"
     ]
   }
