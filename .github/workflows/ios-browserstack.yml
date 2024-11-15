@@ -1,18 +1,18 @@
-name: iOS AppCenter Tests
+name: iOS BrowserStack Tests
 
 on:
   workflow_dispatch:
   push:
     branches: [ master ]
     paths:
-      - '.github/workflows/ios-appcenter.yml'
+      - '.github/workflows/ios-browserstack.yml'
       - 'binding/ios/RhinoAppTest/**'
       - 'resources/.test/**'
       - 'resources/audio_samples/**'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
-      - '.github/workflows/ios-appcenter.yml'
+      - '.github/workflows/ios-browserstack.yml'
       - 'binding/ios/RhinoAppTest/**'
       - 'resources/.test/**'
       - 'resources/audio_samples/**'
@@ -23,23 +23,22 @@ defaults:
 
 jobs:
   build:
-    name: Run iOS Tests on AppCenter
+    name: Run iOS Tests on BrowserStack
     runs-on: macos-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Node.js LTS
-        uses: actions/setup-node@v3
+      - name: Installing Python
+        uses: actions/setup-python@v5
         with:
-          node-version: lts/*
+          python-version: '3.10'
+      - run:
+          pip3 install requests
 
       - name: Install Cocoapods
         run: gem install cocoapods
-
-      - name: Install AppCenter CLI
-        run: npm install -g appcenter-cli
 
       - name: Make build dir
         run: mkdir ddp
@@ -55,7 +54,7 @@ jobs:
       - name: Run Cocoapods
         run: pod install
 
-      - name: Inject AppID
+      - name: Inject AccessKey
         run: sed -i '.bak' 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
           RhinoAppTestUITests/BaseTest.swift
 
@@ -68,11 +67,23 @@ jobs:
           -derivedDataPath ddp
           CODE_SIGNING_ALLOWED=NO
 
-      - name: Run Tests on AppCenter
-        run: appcenter test run xcuitest
-          --token ${{secrets.APPCENTERAPITOKEN}}
-          --app "Picovoice/Rhino-iOS"
-          --devices "Picovoice/ios-min-max"
-          --test-series "rhino-ios"
-          --locale "en_US"
-          --build-dir ddp/Build/Products/Debug-iphoneos
+      - name: Generating ipa
+        run: cd ddp/Build/Products/Debug-iphoneos/ &&
+          mkdir Payload &&
+          cp -r RhinoAppTest.app Payload &&
+          zip --symlinks -r RhinoAppTest.ipa Payload &&
+          rm -r Payload
+
+      - name: Zipping Tests
+        run: cd ddp/Build/Products/Debug-iphoneos/ &&
+          zip --symlinks -r RhinoAppTestUITests.zip RhinoAppTestUITests-Runner.app
+
+      - name: Run tests on BrowserStack
+        run: python3 ../../../script/automation/browserstack.py
+          --type xcuitest
+          --username "${{secrets.BROWSERSTACK_USERNAME}}"
+          --access_key "${{secrets.BROWSERSTACK_ACCESS_KEY}}"
+          --project_name "Rhino-iOS"
+          --devices "ios-min-max"
+          --app_path "ddp/Build/Products/Debug-iphoneos/RhinoAppTest.ipa"
+          --test_path "ddp/Build/Products/Debug-iphoneos/RhinoAppTestUITests.zip"
