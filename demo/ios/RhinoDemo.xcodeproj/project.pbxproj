@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,7 +16,8 @@
 		BB193E982370C4F500556136 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB193E972370C4F500556136 /* Assets.xcassets */; };
 		BB193E9B2370C4F500556136 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9A2370C4F500556136 /* Preview Assets.xcassets */; };
 		BB193E9E2370C4F500556136 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB193E9C2370C4F500556136 /* LaunchScreen.storyboard */; };
-		FB63B28C2141FEF4A95C51A6 /* libPods-RhinoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */; };
+		E1290E572CE7E021001D55B6 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = E1290E562CE7E021001D55B6 /* Rhino */; };
+		E1290E5A2CE7E02A001D55B6 /* ios_voice_processor in Frameworks */ = {isa = PBXBuildFile; productRef = E1290E592CE7E02A001D55B6 /* ios_voice_processor */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,10 +37,6 @@
 		1E6041B22A0C30CB00A10522 /* models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = models; sourceTree = "<group>"; };
 		1E6041B32A0C30CB00A10522 /* pre-build.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "pre-build.sh"; sourceTree = "<group>"; };
 		1E6041B42A0C30CB00A10522 /* contexts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = contexts; sourceTree = "<group>"; };
-		2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoDemoUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.release.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.release.xcconfig"; sourceTree = "<group>"; };
-		8F4E55F466C02D38156A6586 /* Pods-RhinoDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		BB193E8E2370C4EC00556136 /* RhinoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB193E912370C4EC00556136 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB193E932370C4EC00556136 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -48,8 +45,6 @@
 		BB193E9A2370C4F500556136 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BB193E9D2370C4F500556136 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB193E9F2370C4F500556136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D3368C9D35E7379BF386625E /* Pods-RhinoDemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemoUITests.release.xcconfig"; path = "Target Support Files/Pods-RhinoDemoUITests/Pods-RhinoDemoUITests.release.xcconfig"; sourceTree = "<group>"; };
-		F5652D86CACC859DFD1FAF1F /* Pods-RhinoDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoDemo.debug.xcconfig"; path = "Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +52,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB63B28C2141FEF4A95C51A6 /* libPods-RhinoDemo.a in Frameworks */,
+				E1290E5A2CE7E02A001D55B6 /* ios_voice_processor in Frameworks */,
+				E1290E572CE7E021001D55B6 /* Rhino in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,8 +68,6 @@
 				1E6041B32A0C30CB00A10522 /* pre-build.sh */,
 				BB193E902370C4EC00556136 /* RhinoDemo */,
 				BB193E8F2370C4EC00556136 /* Products */,
-				BB53349B2372152D003B6FD1 /* Frameworks */,
-				E1CC14E37D7D2680AFB498A7 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,26 +101,6 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		BB53349B2372152D003B6FD1 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				2E1C489D45822B1E0986B8BA /* libPods-RhinoDemo.a */,
-				6810700ACEE574A1FE44D1F2 /* libPods-RhinoDemoUITests.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		E1CC14E37D7D2680AFB498A7 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				F5652D86CACC859DFD1FAF1F /* Pods-RhinoDemo.debug.xcconfig */,
-				81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */,
-				8F4E55F466C02D38156A6586 /* Pods-RhinoDemoUITests.debug.xcconfig */,
-				D3368C9D35E7379BF386625E /* Pods-RhinoDemoUITests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -134,13 +108,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BB193EA22370C4F500556136 /* Build configuration list for PBXNativeTarget "RhinoDemo" */;
 			buildPhases = (
-				7371647E97F976B23BAD1CCC /* [CP] Check Pods Manifest.lock */,
 				BB193E8A2370C4EC00556136 /* Sources */,
 				BB193E8B2370C4EC00556136 /* Frameworks */,
 				BB193E8C2370C4EC00556136 /* Resources */,
 				02A4163225CDBD6D00082745 /* Embed Frameworks */,
-				57906AA1820E12CA3417C0D7 /* [CP] Embed Pods Frameworks */,
-				6F7654B2BF786DE74E735337 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -175,6 +146,10 @@
 				Base,
 			);
 			mainGroup = BB193E852370C4EC00556136;
+			packageReferences = (
+				E1290E552CE7E021001D55B6 /* XCLocalSwiftPackageReference "rhino" */,
+				E1290E582CE7E02A001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */,
+			);
 			productRefGroup = BB193E8F2370C4EC00556136 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -199,65 +174,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		57906AA1820E12CA3417C0D7 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6F7654B2BF786DE74E735337 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RhinoDemo/Pods-RhinoDemo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7371647E97F976B23BAD1CCC /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-RhinoDemo-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BB193E8A2370C4EC00556136 /* Sources */ = {
@@ -406,7 +322,6 @@
 		};
 		BB193EA32370C4F500556136 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F5652D86CACC859DFD1FAF1F /* Pods-RhinoDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -427,7 +342,6 @@
 		};
 		BB193EA42370C4F500556136 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 81BD06519BC33C36C2D77C7D /* Pods-RhinoDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -468,6 +382,36 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		E1290E552CE7E021001D55B6 /* XCLocalSwiftPackageReference "rhino" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../rhino;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E1290E582CE7E02A001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Picovoice/ios-voice-processor";
+			requirement = {
+				kind = exactVersion;
+				version = 1.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E1290E562CE7E021001D55B6 /* Rhino */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Rhino;
+		};
+		E1290E592CE7E02A001D55B6 /* ios_voice_processor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1290E582CE7E02A001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */;
+			productName = ios_voice_processor;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BB193E862370C4EC00556136 /* Project object */;
 }
