@@ -83,5 +83,5 @@ jobs:
         --access_key "${{secrets.BROWSERSTACK_ACCESS_KEY}}"
         --project_name "Rhino-Android-Performance"
         --devices "${{ matrix.device }}"
-        --app_path "rhino-test-app/build/outputs/apk/debug/rhino-test-app-debug.apk"
-        --test_path "rhino-test-app/build/outputs/apk/androidTest/debug/rhino-test-app-debug-androidTest.apk"
+        --app_path "rhino-test-app/build/outputs/apk/en/debug/rhino-test-app-en-debug.apk"
+        --test_path "rhino-test-app/build/outputs/apk/androidTest/en/debug/rhino-test-app-en-debug-androidTest.apk"
