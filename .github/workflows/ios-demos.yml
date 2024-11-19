@@ -29,17 +29,11 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: Install Cocoapods
-        run: gem install cocoapods
-
       - name: Install AppCenter CLI
         run: npm install -g appcenter-cli
 
       - name: Make build dir
         run: mkdir ddp
-
-      - name: Run Cocoapods
-        run: pod install
 
       - name: Build English
         run: xcrun xcodebuild build
