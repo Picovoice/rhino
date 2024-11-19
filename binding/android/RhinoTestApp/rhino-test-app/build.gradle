@@ -153,7 +153,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    androidTestImplementation('com.microsoft.appcenter:espresso-test-extension:1.4')
     androidTestImplementation('androidx.test.espresso:espresso-intents:3.5.1')
 }
 

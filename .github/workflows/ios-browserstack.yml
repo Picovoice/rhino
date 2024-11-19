@@ -37,16 +37,17 @@ jobs:
       - run:
           pip3 install requests
 
+      - name: Install Cocoapods
+        run: gem install cocoapods
+
       - name: Make build dir
         run: mkdir ddp
 
-      - name: Install resource script dependency
-        run: |
-          brew update
-          brew install convmv
-
       - name: Copy test_resources
         run: ./copy_test_resources.sh
+
+      - name: Run Cocoapods
+        run: pod install
 
       - name: Inject AccessKey
         run: sed -i '.bak' 's:{TESTING_ACCESS_KEY_HERE}:${{secrets.PV_VALID_ACCESS_KEY}}:'
