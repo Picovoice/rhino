@@ -9,7 +9,7 @@ STATUS_URI = 'https://api-cloud.browserstack.com/app-automate/{}/v2/builds/{}'
 
 devices_dict = {
     'android-min-max': [
-        'Samsung Galaxy S8-7.0',
+        # 'Samsung Galaxy S8-7.0', Slow and causes BrowserStack timeout of 2 hours.
         'Samsung Galaxy M52-11.0',
         'Google Pixel 9-15.0'
     ],
