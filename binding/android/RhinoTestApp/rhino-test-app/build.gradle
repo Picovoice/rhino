@@ -30,7 +30,7 @@ if (rootProject.file("local.properties").exists()) {
 }
 
 android {
-    compileSdkVersion defaultTargetSdkVersion
+    compileSdk defaultTargetSdkVersion
 
     defaultConfig {
         applicationId "ai.picovoice.rhino.testapp"
@@ -138,6 +138,7 @@ android {
     lint {
         abortOnError false
     }
+    namespace 'ai.picovoice.rhino.testapp'
 }
 
 dependencies {
