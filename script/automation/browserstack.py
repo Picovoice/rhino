@@ -17,8 +17,8 @@ devices_dict = {
         'Google Pixel 6 Pro-15.0'
     ],
     'ios-min-max': [
-        'iPhone SE 2020-13',
-        'iPhone 14 Pro-16',
+        'iPhone SE 2022-15',
+        'iPhone 14 Plus-16',
         'iPhone 14-18'
     ],
     'ios-perf': [
