@@ -24,3 +24,4 @@
 
 -dontwarn com.google.errorprone.annotations.CheckReturnValue
 -dontwarn com.google.errorprone.annotations.MustBeClosed
+-dontwarn javax.lang.model.element.Modifier
