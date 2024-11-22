@@ -172,5 +172,8 @@ afterEvaluate {
             tasks."merge${flavor.name.capitalize()}ReleaseAssets".dependsOn "${flavor.name}ContextName"
             tasks."merge${flavor.name.capitalize()}DebugAssets".dependsOn "${flavor.name}CopyAudio"
             tasks."merge${flavor.name.capitalize()}ReleaseAssets".dependsOn "${flavor.name}CopyAudio"
+            tasks."generate${flavor.name.capitalize()}ReleaseLintVitalReportModel".dependsOn "${flavor.name}CopyParams"
+            tasks."generate${flavor.name.capitalize()}ReleaseLintVitalReportModel".dependsOn "${flavor.name}CopyContext"
+            tasks."generate${flavor.name.capitalize()}ReleaseLintVitalReportModel".dependsOn "${flavor.name}CopyAudio"
     }
 }
