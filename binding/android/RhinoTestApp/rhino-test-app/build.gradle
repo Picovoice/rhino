@@ -123,10 +123,14 @@ android {
         androidTest {
             java {
                 if (System.getProperty("testBuildType", "debug") == "perf") {
-                    exclude "**/RhinoTest.java"
+                    exclude "**/StandardTests.java"
+                    exclude "**/LanguageOutOfContextTests.java"
+                    exclude "**/LanguageWithinContextTests.java"
                     exclude "**/IntegrationTest.java"
                 } else if (System.getProperty("testBuildType", "debug") == "integ") {
-                    exclude "**/RhinoTest.java"
+                    exclude "**/StandardTests.java"
+                    exclude "**/LanguageOutOfContextTests.java"
+                    exclude "**/LanguageWithinContextTests.java"
                     exclude "**/PerformanceTest.java"
                 } else {
                     exclude "**/IntegrationTest.java"

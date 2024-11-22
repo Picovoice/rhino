@@ -26,6 +26,7 @@ devices_dict = {
     ]
 }
 
+
 def main(args: argparse.Namespace) -> None:
     app_files = {
         'file': open(args.app_path, 'rb')
@@ -63,7 +64,8 @@ def main(args: argparse.Namespace) -> None:
         'app': app_response_json['app_url'],
         'testSuite': test_response_json['test_suite_url'],
         'project': args.project_name,
-        'devices': devices_dict[args.devices]
+        'devices': devices_dict[args.devices],
+        'deviceLogs': true
     }
 
     while True:
@@ -75,8 +77,8 @@ def main(args: argparse.Namespace) -> None:
         )
         if (build_response is not None and 'message' in build_response.json() and '[BROWSERSTACK_ALL_PARALLELS_IN_USE]'
                 in build_response.json()['message']):
-                print('Parallel threads limit reached. Waiting...', flush=True)
-                time.sleep(60)
+            print('Parallel threads limit reached. Waiting...', flush=True)
+            time.sleep(60)
         else:
             break
 
@@ -94,7 +96,9 @@ def main(args: argparse.Namespace) -> None:
         print('Build Unsuccessful')
         exit(1)
 
-    print('View build results at https://app-automate.browserstack.com/dashboard/v2/builds/{}'.format(build_response_json['build_id']))
+    print(
+        'View build results at https://app-automate.browserstack.com/dashboard/v2/builds/{}'
+        .format(build_response_json['build_id']))
 
     while True:
         time.sleep(60)
@@ -115,6 +119,7 @@ def main(args: argparse.Namespace) -> None:
     print('Status:', status)
     if status != 'passed':
         exit(1)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
