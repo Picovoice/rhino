@@ -43,7 +43,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		18FAB8FC8D086FF2500A0A6A /* Pods-RhinoAppTestUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTestUITests.debug.xcconfig"; path = "Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoAppTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E1A57D127CEC84000A05F37 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E1A57D527CEC84000A05F37 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -59,16 +58,17 @@
 		1E5B7AD82800AC8F00F8BDDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1E5B7AD92800ADCD00F8BDDB /* coffee_maker_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_ios.rhn; path = ../../../../resources/contexts/ios/coffee_maker_ios.rhn; sourceTree = "<group>"; };
 		1E5B7ADB2800ADD800F8BDDB /* test_within_context.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = test_within_context.wav; path = ../../../../resources/audio_samples/test_within_context.wav; sourceTree = "<group>"; };
-		2B1742C8ACAFE68554B2DFD4 /* Pods-RhinoAppTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTest.release.xcconfig"; path = "Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest.release.xcconfig"; sourceTree = "<group>"; };
+		2531CB2545CE07CA2D9EEF02 /* Pods-RhinoAppTestUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTestUITests.debug.xcconfig"; path = "Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		294C62EF15A326500BCC3DA5 /* Pods-RhinoAppTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTest.debug.xcconfig"; path = "Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest.debug.xcconfig"; sourceTree = "<group>"; };
+		3BF8058B5843026A2D8F16DE /* Pods-RhinoAppTestUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTestUITests.release.xcconfig"; path = "Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests.release.xcconfig"; sourceTree = "<group>"; };
+		4EA4D8381C4AEB0E8E83ECD5 /* Pods-PerformanceTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.debug.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.debug.xcconfig"; sourceTree = "<group>"; };
 		5AA66651E907F4A1B2E5D84A /* libPods-RhinoAppTestUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoAppTestUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C8B41DCF24254E027C2B30C /* libPods-RhinoAppTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RhinoAppTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5D3D0649948C17F6FF2875C0 /* Pods-RhinoAppTestUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTestUITests.release.xcconfig"; path = "Target Support Files/Pods-RhinoAppTestUITests/Pods-RhinoAppTestUITests.release.xcconfig"; sourceTree = "<group>"; };
-		900FCBC5CECD2C71CA548677 /* Pods-RhinoAppTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTest.debug.xcconfig"; path = "Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest.debug.xcconfig"; sourceTree = "<group>"; };
+		802E178A8F623E2D063F5669 /* Pods-PerformanceTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.release.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.release.xcconfig"; sourceTree = "<group>"; };
 		A52A723849AED2DCDE7E4FF2 /* BaseTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTest.swift; sourceTree = "<group>"; };
 		A52A7ACF80691513299515C9 /* RhinoLanguageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RhinoLanguageTests.swift; sourceTree = "<group>"; };
+		BC7411F9CDE2C60219C5AA1F /* Pods-RhinoAppTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RhinoAppTest.release.xcconfig"; path = "Target Support Files/Pods-RhinoAppTest/Pods-RhinoAppTest.release.xcconfig"; sourceTree = "<group>"; };
 		C71D40F5297A12EC00489C75 /* test_resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test_resources; sourceTree = "<group>"; };
-		F10FFBFDE9AD2034FA8C0429 /* Pods-PerformanceTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.debug.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.debug.xcconfig"; sourceTree = "<group>"; };
-		F679D59C9F02B60A47B90200 /* Pods-PerformanceTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PerformanceTest.release.xcconfig"; path = "Target Support Files/Pods-PerformanceTest/Pods-PerformanceTest.release.xcconfig"; sourceTree = "<group>"; };
 		F7F2642FE16C549581638C57 /* libPods-PerformanceTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PerformanceTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -107,8 +107,8 @@
 				1E1A57D027CEC84000A05F37 /* RhinoAppTest */,
 				1E1A57F127CEC84000A05F37 /* RhinoAppTestUITests */,
 				1E1A57CF27CEC84000A05F37 /* Products */,
-				286CC2DF6F709F2C33610374 /* Pods */,
 				DAAB5662628E2FB49E4EDDC1 /* Frameworks */,
+				B085AB16554F34C9EF0CA542 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -158,16 +158,17 @@
 			path = PerformanceTest;
 			sourceTree = "<group>";
 		};
-		286CC2DF6F709F2C33610374 /* Pods */ = {
+		B085AB16554F34C9EF0CA542 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				900FCBC5CECD2C71CA548677 /* Pods-RhinoAppTest.debug.xcconfig */,
-				2B1742C8ACAFE68554B2DFD4 /* Pods-RhinoAppTest.release.xcconfig */,
-				18FAB8FC8D086FF2500A0A6A /* Pods-RhinoAppTestUITests.debug.xcconfig */,
-				5D3D0649948C17F6FF2875C0 /* Pods-RhinoAppTestUITests.release.xcconfig */,
-				F10FFBFDE9AD2034FA8C0429 /* Pods-PerformanceTest.debug.xcconfig */,
-				F679D59C9F02B60A47B90200 /* Pods-PerformanceTest.release.xcconfig */,
+				4EA4D8381C4AEB0E8E83ECD5 /* Pods-PerformanceTest.debug.xcconfig */,
+				802E178A8F623E2D063F5669 /* Pods-PerformanceTest.release.xcconfig */,
+				294C62EF15A326500BCC3DA5 /* Pods-RhinoAppTest.debug.xcconfig */,
+				BC7411F9CDE2C60219C5AA1F /* Pods-RhinoAppTest.release.xcconfig */,
+				2531CB2545CE07CA2D9EEF02 /* Pods-RhinoAppTestUITests.debug.xcconfig */,
+				3BF8058B5843026A2D8F16DE /* Pods-RhinoAppTestUITests.release.xcconfig */,
 			);
+			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -671,7 +672,7 @@
 		};
 		1E1A57F927CEC84000A05F37 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 900FCBC5CECD2C71CA548677 /* Pods-RhinoAppTest.debug.xcconfig */;
+			baseConfigurationReference = 294C62EF15A326500BCC3DA5 /* Pods-RhinoAppTest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -701,7 +702,7 @@
 		};
 		1E1A57FA27CEC84000A05F37 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B1742C8ACAFE68554B2DFD4 /* Pods-RhinoAppTest.release.xcconfig */;
+			baseConfigurationReference = BC7411F9CDE2C60219C5AA1F /* Pods-RhinoAppTest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -731,7 +732,7 @@
 		};
 		1E1A57FF27CEC84000A05F37 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18FAB8FC8D086FF2500A0A6A /* Pods-RhinoAppTestUITests.debug.xcconfig */;
+			baseConfigurationReference = 2531CB2545CE07CA2D9EEF02 /* Pods-RhinoAppTestUITests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -754,7 +755,7 @@
 		};
 		1E1A580027CEC84000A05F37 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5D3D0649948C17F6FF2875C0 /* Pods-RhinoAppTestUITests.release.xcconfig */;
+			baseConfigurationReference = 3BF8058B5843026A2D8F16DE /* Pods-RhinoAppTestUITests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -777,7 +778,7 @@
 		};
 		1E5B7AD32800ABDE00F8BDDB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F10FFBFDE9AD2034FA8C0429 /* Pods-PerformanceTest.debug.xcconfig */;
+			baseConfigurationReference = 4EA4D8381C4AEB0E8E83ECD5 /* Pods-PerformanceTest.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -800,7 +801,7 @@
 		};
 		1E5B7AD42800ABDE00F8BDDB /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F679D59C9F02B60A47B90200 /* Pods-PerformanceTest.release.xcconfig */;
+			baseConfigurationReference = 802E178A8F623E2D063F5669 /* Pods-PerformanceTest.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

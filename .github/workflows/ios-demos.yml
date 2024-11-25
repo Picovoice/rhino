@@ -32,9 +32,6 @@ jobs:
       - name: Install Cocoapods
         run: gem install cocoapods
 
-      - name: Install AppCenter CLI
-        run: npm install -g appcenter-cli
-
       - name: Make build dir
         run: mkdir ddp
 

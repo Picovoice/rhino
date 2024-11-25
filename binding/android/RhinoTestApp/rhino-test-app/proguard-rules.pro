@@ -21,3 +21,7 @@
 #-renamesourcefileattribute SourceFile
 -keep class com.google.** { *; }
 -keep class com.microsoft.** { *; }
+
+-dontwarn com.google.errorprone.annotations.CheckReturnValue
+-dontwarn com.google.errorprone.annotations.MustBeClosed
+-dontwarn javax.lang.model.element.Modifier

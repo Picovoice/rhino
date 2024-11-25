@@ -1,7 +1,6 @@
 aarch
 Alexa
 androidx
-Appcenter
 armeabi
 armv
 armv7l
@@ -22,7 +21,6 @@ Colour
 commandline
 Compat
 constraintlayout
-convmv
 cozinha
 crhino
 cstring
@@ -137,4 +135,5 @@ xcodeproj
 xcscheme
 xcschemes
 xcshareddata
+xcuitest
 xcworkspace

@@ -30,7 +30,7 @@ if (rootProject.file("local.properties").exists()) {
 }
 
 android {
-    compileSdkVersion defaultTargetSdkVersion
+    compileSdk defaultTargetSdkVersion
 
     defaultConfig {
         applicationId "ai.picovoice.rhino.testapp"
@@ -123,10 +123,14 @@ android {
         androidTest {
             java {
                 if (System.getProperty("testBuildType", "debug") == "perf") {
-                    exclude "**/RhinoTest.java"
+                    exclude "**/StandardTests.java"
+                    exclude "**/LanguageOutOfContextTests.java"
+                    exclude "**/LanguageWithinContextTests.java"
                     exclude "**/IntegrationTest.java"
                 } else if (System.getProperty("testBuildType", "debug") == "integ") {
-                    exclude "**/RhinoTest.java"
+                    exclude "**/StandardTests.java"
+                    exclude "**/LanguageOutOfContextTests.java"
+                    exclude "**/LanguageWithinContextTests.java"
                     exclude "**/PerformanceTest.java"
                 } else {
                     exclude "**/IntegrationTest.java"
@@ -138,6 +142,7 @@ android {
     lint {
         abortOnError false
     }
+    namespace 'ai.picovoice.rhino.testapp'
 }
 
 dependencies {
@@ -145,6 +150,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.code.gson:gson:2.10'
+    implementation 'com.google.errorprone:error_prone_annotations:2.36.0'
     implementation 'ai.picovoice:rhino-android:3.0.1'
 
     // Espresso UI Testing
@@ -153,7 +159,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    androidTestImplementation('com.microsoft.appcenter:espresso-test-extension:1.4')
     androidTestImplementation('androidx.test.espresso:espresso-intents:3.5.1')
 }
 
@@ -168,5 +173,11 @@ afterEvaluate {
             tasks."merge${flavor.name.capitalize()}ReleaseAssets".dependsOn "${flavor.name}ContextName"
             tasks."merge${flavor.name.capitalize()}DebugAssets".dependsOn "${flavor.name}CopyAudio"
             tasks."merge${flavor.name.capitalize()}ReleaseAssets".dependsOn "${flavor.name}CopyAudio"
+            tasks."generate${flavor.name.capitalize()}ReleaseLintVitalReportModel".dependsOn "${flavor.name}CopyParams"
+            tasks."generate${flavor.name.capitalize()}ReleaseLintVitalReportModel".dependsOn "${flavor.name}CopyContext"
+            tasks."generate${flavor.name.capitalize()}ReleaseLintVitalReportModel".dependsOn "${flavor.name}CopyAudio"
+            tasks."lintVitalAnalyze${flavor.name.capitalize()}Release".dependsOn "${flavor.name}CopyParams"
+            tasks."lintVitalAnalyze${flavor.name.capitalize()}Release".dependsOn "${flavor.name}CopyContext"
+            tasks."lintVitalAnalyze${flavor.name.capitalize()}Release".dependsOn "${flavor.name}CopyAudio"
     }
 }
