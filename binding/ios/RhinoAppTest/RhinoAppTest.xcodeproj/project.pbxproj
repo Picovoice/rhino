@@ -103,7 +103,6 @@
 				1E5B7ABB2800ABC600F8BDDB /* PerformanceTest */,
 				1E1A57D027CEC84000A05F37 /* RhinoAppTest */,
 				1E1A57F127CEC84000A05F37 /* RhinoAppTestUITests */,
-				E1C944F72CE7E226006F758D /* Frameworks */,
 				1E1A57CF27CEC84000A05F37 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -152,13 +151,6 @@
 				1E5B7ADB2800ADD800F8BDDB /* test_within_context.wav */,
 			);
 			path = PerformanceTest;
-			sourceTree = "<group>";
-		};
-		E1C944F72CE7E226006F758D /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -250,7 +242,7 @@
 			mainGroup = 1E1A57C527CEC84000A05F37;
 			packageReferences = (
 				E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */,
-				E1C945042CE7E53F006F758D /* XCLocalSwiftPackageReference "../../../../rhino" */,
+				E1B2D77E2CF6918E00A28024 /* XCLocalSwiftPackageReference "../../../../rhino" */,
 			);
 			productRefGroup = 1E1A57CF27CEC84000A05F37 /* Products */;
 			projectDirPath = "";
@@ -661,6 +653,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		E1B2D77E2CF6918E00A28024 /* XCLocalSwiftPackageReference "../../../../rhino" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../../rhino;
+		};
 		E1C945042CE7E53F006F758D /* XCLocalSwiftPackageReference "../../../../rhino" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../../../rhino;
