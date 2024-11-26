@@ -117,7 +117,6 @@
 				AFB06342641BF6B8015EF43B /* Pods-RhinoTestApp-RhinoTestAppTests.debug.xcconfig */,
 				AC598F0A300529CEB976A282 /* Pods-RhinoTestApp-RhinoTestAppTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -444,7 +443,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = RhinoTestAppTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -469,7 +468,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 65723695GD;
 				INFOPLIST_FILE = RhinoTestAppTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -496,6 +495,7 @@
 				DEVELOPMENT_TEAM = 65723695GD;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = RhinoTestApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -523,6 +523,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 65723695GD;
 				INFOPLIST_FILE = RhinoTestApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
