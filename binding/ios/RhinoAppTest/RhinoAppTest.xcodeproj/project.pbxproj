@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -242,7 +242,7 @@
 			mainGroup = 1E1A57C527CEC84000A05F37;
 			packageReferences = (
 				E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */,
-				E1B2D77E2CF6918E00A28024 /* XCLocalSwiftPackageReference "../../../../rhino" */,
+				E15A37802CF7CA7900A96F85 /* XCRemoteSwiftPackageReference "rhino" */,
 			);
 			productRefGroup = 1E1A57CF27CEC84000A05F37 /* Products */;
 			projectDirPath = "";
@@ -653,10 +653,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		E1B2D77E2CF6918E00A28024 /* XCLocalSwiftPackageReference "../../../../rhino" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../../../rhino;
-		};
 		E1C945042CE7E53F006F758D /* XCLocalSwiftPackageReference "../../../../rhino" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../../../rhino;
@@ -670,6 +666,14 @@
 			requirement = {
 				kind = exactVersion;
 				version = 1.2.0;
+			};
+		};
+		E15A37802CF7CA7900A96F85 /* XCRemoteSwiftPackageReference "rhino" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Picovoice/rhino";
+			requirement = {
+				kind = exactVersion;
+				version = 3.0.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
