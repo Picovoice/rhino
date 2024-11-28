@@ -23,7 +23,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0212DAFC254CDFE9001A11F3 /* module.private.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.private.modulemap; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRhino.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRhino.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5891CC2AC0600A0062D /* Rhino.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Rhino.m; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* Rhino.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Rhino.h; sourceTree = "<group>"; };
@@ -48,21 +47,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0212DC7E254D5A08001A11F3 /* pv_rhino */ = {
-			isa = PBXGroup;
-			children = (
-				0212DAFC254CDFE9001A11F3 /* module.private.modulemap */,
-			);
-			path = pv_rhino;
-			sourceTree = "<group>";
-		};
-		0212E0622550E33F001A11F3 /* resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = resources;
-			sourceTree = "<group>";
-		};
 		02C03F26255B122800D91214 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -81,8 +65,6 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				0212E0622550E33F001A11F3 /* resources */,
-				0212DC7E254D5A08001A11F3 /* pv_rhino */,
 				F4FF95D6245B92E800C19C63 /* Rhino.swift */,
 				B3E7B5891CC2AC0600A0062D /* Rhino.m */,
 				F4FF95D5245B92E700C19C63 /* Rhino.h */,

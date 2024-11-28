@@ -24,8 +24,14 @@ Rhino is:
 ## Installation
 
 <!-- markdown-link-check-disable -->
-The Rhino iOS binding is available via [CocoaPods](https://cocoapods.org/pods/Rhino-iOS). To import it into your iOS project, add the following line to your Podfile and run `pod install`:
+The Rhino iOS binding is available via [Swift Package Manager](https://www.swift.org/documentation/package-manager/) or [CocoaPods](https://cocoapods.org/pods/Rhino-iOS).
 <!-- markdown-link-check-enable -->
+
+To import the package using SPM, open up your project's Package Dependencies in XCode and add:
+```
+https://github.com/Picovoice/rhino.git
+```
+To import it into your iOS project using CocoaPods, add the following line to your Podfile:
 
 ```ruby
 pod 'Rhino-iOS'
@@ -182,7 +188,7 @@ In order to run inference on non-English contexts you need to use the correspond
 
 ## Running Unit Tests
 
-Copy your `AccessKey` into the `accessKey` variable in [`RhinoAppTestUITests.swift`](RhinoAppTest/RhinoAppTestUITests/RhinoAppTestUITests.swift). Open `RhinoAppTest.xcworkspace` with XCode and run the tests with `Product > Test`.
+Copy your `AccessKey` into the `accessKey` variable in [`RhinoAppTestUITests.swift`](RhinoAppTest/RhinoAppTestUITests/RhinoAppTestUITests.swift). Open [`RhinoAppTest.xcodeproj`](RhinoAppTest/RhinoAppTest.xcodeproj) with XCode and run the tests with `Product > Test`.
 
 ## Demo App
 

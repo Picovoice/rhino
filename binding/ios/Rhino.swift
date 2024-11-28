@@ -1,11 +1,13 @@
 //
-//  Copyright 2021-2023 Picovoice Inc.
+//  Copyright 2021-2024 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
 //  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 //  specific language governing permissions and limitations under the License.
 //
+
+import Foundation
 
 import PvRhino
 
@@ -24,6 +26,12 @@ public struct Inference {
 /// Low-level iOS binding for Rhino wake word engine. Provides a Swift interface to the Rhino library.
 public class Rhino {
 
+#if SWIFT_PACKAGE
+
+    static let resourceBundle = Bundle.module
+
+#else
+
     static let resourceBundle: Bundle = {
         let myBundle = Bundle(for: Rhino.self)
 
@@ -40,6 +48,8 @@ public class Rhino {
 
         return resourceBundle
     }()
+
+#endif
 
     private var handle: OpaquePointer?
     public static let frameLength = UInt32(pv_rhino_frame_length())
