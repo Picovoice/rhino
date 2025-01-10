@@ -160,6 +160,8 @@ class Utils {
         } else if (ENVIRONMENT_NAME.equals("windows")) {
             if (isX86_64) {
                 return "amd64";
+            } else if (isArm) {
+                return "arm64";
             }
         } else if (ENVIRONMENT_NAME.equals("linux")) {
             if (isX86_64) {
@@ -211,7 +213,9 @@ class Utils {
     public static String getPackagedLibraryPath() {
         switch (ENVIRONMENT_NAME) {
             case "windows":
-                return RESOURCE_DIRECTORY.resolve("lib/java/windows/amd64/pv_rhino_jni.dll").toString();
+                return RESOURCE_DIRECTORY.resolve("lib/java/windows")
+                                         .resolve(ARCHITECTURE)
+                                         .resolve("pv_rhino_jni.dll").toString();
             case "mac":
                 return RESOURCE_DIRECTORY.resolve("lib/java/mac")
                                          .resolve(ARCHITECTURE)

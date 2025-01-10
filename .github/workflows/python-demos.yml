@@ -57,7 +57,7 @@ jobs:
 
     strategy:
       matrix:
-        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64]
+        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, pv-windows-arm64]
         include:
         - machine: rpi3-32
           platform: raspberry-pi
@@ -69,12 +69,22 @@ jobs:
           platform: raspberry-pi
         - machine: rpi5-64
           platform: raspberry-pi
+        - machine: pv-windows-arm64
+          platform: windows
 
     steps:
     - uses: actions/checkout@v3
 
     - name: Install dependencies
       run: pip3 install -r requirements.txt
+
+    # ************ REMOVE AFTER RELEASE ***************
+    - name: build local binding
+      run: |
+        python3 -m pip install setuptools wheel
+        python3 -m setup sdist bdist_wheel
+      working-directory: binding/python
+    # ************ REMOVE AFTER RELEASE ***************
 
     - name: Test
       run: python3 rhino_demo_file.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --wav_path ../../resources/audio_samples/test_within_context.wav --context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn

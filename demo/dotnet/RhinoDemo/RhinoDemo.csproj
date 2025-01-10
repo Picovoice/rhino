@@ -20,6 +20,6 @@
 
     <ItemGroup>
         <PackageReference Include="PvRecorder" Version="1.2.6" />
-        <PackageReference Include="Rhino" Version="3.0.4" />
+        <ProjectReference Include="..\..\..\binding\dotnet\Rhino\Rhino.csproj" />
     </ItemGroup>
 </Project>

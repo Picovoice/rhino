@@ -35,7 +35,7 @@ To learn more about Rhino, see the [product](https://picovoice.ai/products/rhino
 
 These demos run Rhino on **NodeJS 16+** on the following platforms:
 
-- Windows (x86_64)
+- Windows (x86_64, arm64)
 - Linux (x86_64)
 - macOS (x86_64, arm64)
 - Raspberry Pi (3, 4, 5)

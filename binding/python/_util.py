@@ -95,7 +95,10 @@ def pv_library_path(relative_path):
                 relative_path,
                 'lib/raspberry-pi/%s/libpv_rhino.so' % PV_MACHINE)
     elif PV_SYSTEM == 'Windows':
-        return os.path.join(os.path.dirname(__file__), relative_path, 'lib/windows/amd64/libpv_rhino.dll')
+        if platform.machine().lower() == 'amd64':
+            return os.path.join(os.path.dirname(__file__), relative_path, 'lib/windows/amd64/libpv_rhino.dll')
+        elif platform.machine().lower() == 'arm64':
+            return os.path.join(os.path.dirname(__file__), relative_path, 'lib/windows/arm64/libpv_rhino.dll')
 
     raise NotImplementedError("Unsupported platform ('%s', '%s').", PV_SYSTEM, PV_MACHINE)
 
