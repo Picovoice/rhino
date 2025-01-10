@@ -53,7 +53,7 @@ task copyWindowsLib(type: Copy) {
     from('../../lib/java/windows/')
     include('amd64/pv_rhino_jni.dll',
             'arm64/pv_rhino_jni.dll')
-    into "${outputDir}/rhino/lib/java/windows/amd64/"
+    into "${outputDir}/rhino/lib/java/windows/"
 }
 task copyRPiLib(type: Copy) {
     from('../../lib/java/raspberry-pi/')

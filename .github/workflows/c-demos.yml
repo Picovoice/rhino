@@ -143,11 +143,10 @@ jobs:
         - machine: rpi5-64
           platform: raspberry-pi
           arch: cortex-a76-aarch64
-        include:
-          - machine: pv-windows-arm64
-            platform: windows
-            arch: arm64
-            make_file: "MinGW Makefiles"
+        - machine: pv-windows-arm64
+          platform: windows
+          arch: arm64
+          make_file: "MinGW Makefiles"
 
     steps:
     - uses: actions/checkout@v3
