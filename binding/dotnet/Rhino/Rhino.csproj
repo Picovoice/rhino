@@ -62,27 +62,6 @@
             <Link>lib\windows\amd64\libpv_rhino.dll</Link>
             <Visible>false</Visible>
         </Content>
-        <Content Include="..\..\..\lib\windows\arm64\libpv_rhino.dll">
-            <PackagePath>
-                build/netcoreapp3.0/lib/windows/arm64/libpv_rhino.dll;
-                build/net6.0/lib/windows/arm64/libpv_rhino.dll;
-                build/net8.0/lib/windows/arm64/libpv_rhino.dll;
-            </PackagePath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>lib\windows\arm64\libpv_rhino.dll</Link>
-            <Visible>false</Visible>
-        </Content>
-        <Content Include="..\..\..\lib\linux\x86_64\libpv_rhino.so">
-            <PackagePath>
-                build/netstandard2.0/libpv_rhino.so;
-                build/netcoreapp3.0/lib/linux/x86_64/libpv_rhino.so;
-                build/net6.0/lib/linux/x86_64/libpv_rhino.so;
-                build/net8.0/lib/linux/x86_64/libpv_rhino.so;
-            </PackagePath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>lib\linux\x86_64\libpv_rhino.so</Link>
-            <Visible>false</Visible>
-        </Content>
         <Content Include="..\..\..\lib\mac\x86_64\libpv_rhino.dylib">
             <PackagePath>
                 build/netstandard2.0/libpv_rhino.dylib;
@@ -96,20 +75,6 @@
         </Content>
     </ItemGroup>
 
-    <!--.NET Core 3.0+ Libs-->
-    <ItemGroup>
-        <Content Include="..\..\..\lib\raspberry-pi\**\*" Exclude="..\..\..\lib\raspberry-pi\arm11\*">
-            <PackagePath>
-                build/netcoreapp3.0/lib/raspberry-pi;
-                build/net6.0/lib/raspberry-pi;
-                build/net8.0/lib/raspberry-pi;
-            </PackagePath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>lib\raspberry-pi\%(RecursiveDir)%(Filename)%(Extension)</Link>
-            <Visible>false</Visible>
-        </Content>
-    </ItemGroup>
-
     <!--.NET 6.0+ libs-->
     <ItemGroup>
         <Content Include="..\..\..\lib\mac\arm64\libpv_rhino.dylib">
@@ -119,6 +84,34 @@
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\mac\arm64\libpv_rhino.dylib</Link>
+            <Visible>false</Visible>
+        </Content>
+        <Content Include="..\..\..\lib\windows\arm64\libpv_rhino.dll">
+            <PackagePath>
+                build/net6.0/lib/windows/arm64/libpv_rhino.dll;
+                build/net8.0/lib/windows/arm64/libpv_rhino.dll;
+            </PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>lib\windows\arm64\libpv_rhino.dll</Link>
+            <Visible>false</Visible>
+        </Content>
+        <Content Include="..\..\..\lib\linux\x86_64\libpv_rhino.so">
+            <PackagePath>
+                build/net6.0/lib/linux/x86_64/libpv_rhino.so;
+                build/net8.0/lib/linux/x86_64/libpv_rhino.so;
+            </PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>lib\linux\x86_64\libpv_rhino.so</Link>
+            <Visible>false</Visible>
+        </Content>
+        <Content Include="..\..\..\lib\raspberry-pi\**\*" Exclude="..\..\..\lib\raspberry-pi\arm11\*">
+            <PackagePath>
+                build/netcoreapp3.0/lib/raspberry-pi;
+                build/net6.0/lib/raspberry-pi;
+                build/net8.0/lib/raspberry-pi;
+            </PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>lib\raspberry-pi\%(RecursiveDir)%(Filename)%(Extension)</Link>
             <Visible>false</Visible>
         </Content>
     </ItemGroup>

@@ -71,6 +71,14 @@ jobs:
             binding-framework: net8.0
             test-framework: net8.0
         exclude:
+          - os: ubuntu-latest
+            dotnet-version: 2.1.x
+          - os: ubuntu-latest
+            dotnet-version: 3.0.x
+          - os: ubuntu-latest
+            dotnet-version: 3.1.x
+          - os: ubuntu-latest
+            dotnet-version: 5.0.x
           - os: macos-latest
             dotnet-version: 2.1.x
           - os: macos-latest
@@ -87,10 +95,16 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup .NET 8.0
+    - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
+
+    - name: Set up .NET (8)
+      if: ${{ matrix.os == 'ubuntu-latest' && matrix.dotnet-version == '6.0.x' }}
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
 
     - name: Build binding
       run: dotnet build Rhino/Rhino.csproj --framework ${{ matrix.binding-framework }}
