@@ -36,7 +36,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Picovoice/rhino",
     packages=["pvrhinodemo"],
-    install_requires=["pvrhino==3.0.4", "pvrecorder==1.2.2"],
+    install_requires=["pvrhino==3.0.4", "pvrecorder==1.2.4"],
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",

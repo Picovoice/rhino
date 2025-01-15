@@ -46,14 +46,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    # ************ REMOVE AFTER RELEASE ***************
-    - name: build local binding
-      run: |
-        yarn install
-        yarn build
-      working-directory: binding/nodejs
-    # ************ REMOVE AFTER RELEASE ***************
-
     - name: Install dependencies
       run: yarn install
 
@@ -82,14 +74,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
-    # ************ REMOVE AFTER RELEASE ***************
-    - name: build local binding
-      run: |
-        yarn install
-        yarn build
-      working-directory: binding/nodejs
-    # ************ REMOVE AFTER RELEASE ***************
 
     - name: Install dependencies
       run: yarn install
