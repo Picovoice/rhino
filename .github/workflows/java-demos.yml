@@ -66,6 +66,8 @@ jobs:
           platform: raspberry-pi
         - machine: rpi5-64
           platform: raspberry-pi
+        - machine: pv-windows-arm64
+          platform: windows
 
     steps:
     - uses: actions/checkout@v3
