@@ -59,7 +59,7 @@ jobs:
 
     strategy:
       matrix:
-        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64]
+        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, pv-windows-arm64]
         include:
         - machine: rpi3-32
           platform: raspberry-pi
@@ -71,6 +71,8 @@ jobs:
           platform: raspberry-pi
         - machine: rpi5-64
           platform: raspberry-pi
+        - machine: pv-windows-arm64
+          platform: windows
 
     steps:
     - uses: actions/checkout@v3

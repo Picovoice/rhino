@@ -51,7 +51,7 @@ Rhino is:
   - Raspberry Pi
   - Android and iOS
   - Chrome, Safari, Firefox, and Edge
-  - Linux (x86_64), macOS (x86_64, arm64), and Windows (x86_64)
+  - Linux (x86_64), macOS (x86_64, arm64), and Windows (x86_64, arm64)
 - self-service. Developers can train custom contexts using [Picovoice Console](https://console.picovoice.ai/).
 
 ## Table of Contents

@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>net8.0;net6.0;netcoreapp3.0;netstandard2.0</TargetFrameworks>
-        <Version>3.0.4</Version>
+        <Version>3.0.5</Version>
         <Authors>Picovoice</Authors>
         <Company />
         <Product>Rhino Speech-to-Intent Engine</Product>
@@ -22,7 +22,7 @@
             - using deep neural networks trained in real-world environments.
             - compact and computationally-efficient, making it perfect for IoT.
             - cross-platform. It is implemented in fixed-point ANSI C. Raspberry Pi (Zero, 3, 4, 5),
-            Android, iOS, Linux (x86_64), Mac (x86_64), Windows (x86_64), and web browsers are supported.
+            Android, iOS, Linux (x86_64), Mac (x86_64), Windows (x86_64, arm64), and web browsers are supported.
             Furthermore, Support for various ARM Cortex-A microprocessors and ARM Cortex-M microcontrollers
             is available for enterprise customers.
             - self-service. Developers and UX designers can train custom models using Picovoice Console.
@@ -62,17 +62,6 @@
             <Link>lib\windows\amd64\libpv_rhino.dll</Link>
             <Visible>false</Visible>
         </Content>
-        <Content Include="..\..\..\lib\linux\x86_64\libpv_rhino.so">
-            <PackagePath>
-                build/netstandard2.0/libpv_rhino.so;
-                build/netcoreapp3.0/lib/linux/x86_64/libpv_rhino.so;
-                build/net6.0/lib/linux/x86_64/libpv_rhino.so;
-                build/net8.0/lib/linux/x86_64/libpv_rhino.so;
-            </PackagePath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>lib\linux\x86_64\libpv_rhino.so</Link>
-            <Visible>false</Visible>
-        </Content>
         <Content Include="..\..\..\lib\mac\x86_64\libpv_rhino.dylib">
             <PackagePath>
                 build/netstandard2.0/libpv_rhino.dylib;
@@ -86,20 +75,6 @@
         </Content>
     </ItemGroup>
 
-    <!--.NET Core 3.0+ Libs-->
-    <ItemGroup>
-        <Content Include="..\..\..\lib\raspberry-pi\**\*" Exclude="..\..\..\lib\raspberry-pi\arm11\*">
-            <PackagePath>
-                build/netcoreapp3.0/lib/raspberry-pi;
-                build/net6.0/lib/raspberry-pi;
-                build/net8.0/lib/raspberry-pi;
-            </PackagePath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>lib\raspberry-pi\%(RecursiveDir)%(Filename)%(Extension)</Link>
-            <Visible>false</Visible>
-        </Content>
-    </ItemGroup>
-
     <!--.NET 6.0+ libs-->
     <ItemGroup>
         <Content Include="..\..\..\lib\mac\arm64\libpv_rhino.dylib">
@@ -109,6 +84,34 @@
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\mac\arm64\libpv_rhino.dylib</Link>
+            <Visible>false</Visible>
+        </Content>
+        <Content Include="..\..\..\lib\windows\arm64\libpv_rhino.dll">
+            <PackagePath>
+                build/net6.0/lib/windows/arm64/libpv_rhino.dll;
+                build/net8.0/lib/windows/arm64/libpv_rhino.dll;
+            </PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>lib\windows\arm64\libpv_rhino.dll</Link>
+            <Visible>false</Visible>
+        </Content>
+        <Content Include="..\..\..\lib\linux\x86_64\libpv_rhino.so">
+            <PackagePath>
+                build/net6.0/lib/linux/x86_64/libpv_rhino.so;
+                build/net8.0/lib/linux/x86_64/libpv_rhino.so;
+            </PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>lib\linux\x86_64\libpv_rhino.so</Link>
+            <Visible>false</Visible>
+        </Content>
+        <Content Include="..\..\..\lib\raspberry-pi\**\*" Exclude="..\..\..\lib\raspberry-pi\arm11\*">
+            <PackagePath>
+                build/netcoreapp3.0/lib/raspberry-pi;
+                build/net6.0/lib/raspberry-pi;
+                build/net8.0/lib/raspberry-pi;
+            </PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>lib\raspberry-pi\%(RecursiveDir)%(Filename)%(Extension)</Link>
             <Visible>false</Visible>
         </Content>
     </ItemGroup>

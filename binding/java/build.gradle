@@ -7,7 +7,7 @@ plugins {
 
 ext {
     PUBLISH_GROUP_ID = 'ai.picovoice'
-    PUBLISH_VERSION = '3.0.3'
+    PUBLISH_VERSION = '3.0.4'
     PUBLISH_ARTIFACT_ID = 'rhino-java'
 }
 
@@ -50,7 +50,10 @@ task copyMacLib(type: Copy) {
     into "${outputDir}/rhino/lib/java/mac/"
 }
 task copyWindowsLib(type: Copy) {
-    from('../../lib/java/windows/amd64/pv_rhino_jni.dll') into "${outputDir}/rhino/lib/java/windows/amd64/"
+    from('../../lib/java/windows/')
+    include('amd64/pv_rhino_jni.dll',
+            'arm64/pv_rhino_jni.dll')
+    into "${outputDir}/rhino/lib/java/windows/"
 }
 task copyRPiLib(type: Copy) {
     from('../../lib/java/raspberry-pi/')
