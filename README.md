@@ -16,7 +16,6 @@
 [![CocoaPods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://cocoapods.org/pods/Rhino-iOS)
 [![Pub Version](https://img.shields.io/pub/v/rhino_flutter)](https://pub.dev/packages/rhino_flutter)
 [![PyPI](https://img.shields.io/pypi/v/pvrhino)](https://pypi.org/project/pvrhino/)
-[![Go Reference](https://pkg.go.dev/badge/github.com/Picovoice/rhino/binding/go.svg)](https://pkg.go.dev/github.com/Picovoice/rhino/binding/go)
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
@@ -67,7 +66,6 @@ Rhino is:
     - [Python](#python-demos)
     - [.NET](#net-demos)
     - [Java](#java-demos)
-    - [Go](#go-demos)
     - [Unity](#unity-demos)
     - [Flutter](#flutter-demos)
     - [React Native](#react-native-demos)
@@ -85,7 +83,6 @@ Rhino is:
     - [Python](#python)
     - [.NET](#net)
     - [Java](#java)
-    - [Go](#go)
     - [Unity](#unity)
     - [Flutter](#flutter)
     - [React Native](#react-native)
@@ -248,19 +245,6 @@ java -jar rhino-mic-demo.jar -a ${ACCESS_KEY} -c ${CONTEXT_FILE_PATH}
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
 For more information about Java demos go to [demo/java](./demo/java).
-
-### Go Demos
-
-The demo requires `cgo`, which on Windows may mean that you need to install a gcc compiler like [Mingw](http://mingw-w64.org) to build it properly.
-
-From [demo/go](./demo/go) run the following command from the terminal to build and run the mic demo:
-```console
-go run micdemo/rhino_mic_demo.go -access_key ${ACCESS_KEY} -context_path ${CONTEXT_FILE_PATH}
-```
-
-Replace `${ACCESS_KEY}` with your Picovoice AccessKey and `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one from the Rhino GitHub repository.
-
-For more information about Go demos go to [demo/go](./demo/go).
 
 ### Unity Demos
 
@@ -708,57 +692,6 @@ Once you are done with Rhino, ensure you release its resources explicitly:
 
 ```java
 handle.delete();
-```
-
-### Go
-
-To install the Rhino Go module to your project, use the command:
-```console
-go get github.com/Picovoice/rhino/binding/go
-```
-
-To create an instance of the engine with default parameters, pass an `AccessKey` and a path to a Rhino context file (.rhn) to the `NewRhino` function and then make a call to `.Init()`.
-
-```go
-import . "github.com/Picovoice/rhino/binding/go/v2"
-
-const accessKey string = "${ACCESS_KEY}" // obtained from Picovoice Console (https://console.picovoice.ai/)
-
-rhino := NewRhino(accessKey, "/path/to/context/file.rhn")
-err := rhino.Init()
-if err != nil {
-    // handle error
-}
-```
-
-Once initialized, you can start passing in frames of audio for processing. The engine accepts 16-bit linearly-encoded PCM and operates on
-single-channel audio. The sample rate that is required by the engine is given by `SampleRate` and number of samples-per-frame is given by `FrameLength`.
-
-To feed audio into Rhino, use the `Process` function in your capture loop. You must have called `Init()` before calling `Process`.
-```go
-func getNextFrameAudio() []int16 {
-    // get audio frame
-}
-
-for {
-    isFinalized, err := rhino.Process(getNextFrameAudio())
-    if isFinalized {
-        inference, err := rhino.GetInference()
-        if inference.IsUnderstood {
-            intent := inference.Intent
-            slots := inference.Slots
-            // add code to take action based on inferred intent and slot values
-        } else {
-            // add code to handle unsupported commands
-        }
-    }
-}
-```
-
-When finished with the engine, resources have to be released explicitly.
-
-```go
-rhino.Delete()
 ```
 
 ### Unity
