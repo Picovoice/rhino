@@ -9,7 +9,6 @@
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-react)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-react-native?label=npm%20%5Breact-native%5D)](https://www.npmjs.com/package/@picovoice/rhino-react-native)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-vue)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-web?label=npm%20%5Bweb%5D)](https://www.npmjs.com/package/@picovoice/rhino-web)
 [![Nuget](https://img.shields.io/nuget/v/rhino)](https://www.nuget.org/packages/Rhino/)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://cocoapods.org/pods/Rhino-iOS)
@@ -75,7 +74,6 @@ Rhino is:
     - [Web](#web-demos)
       - [Vanilla JavaScript and HTML](#vanilla-javascript-and-html)
       - [React](#react-demos)
-      - [Vue](#vue-demos)
     - [Node.js](#nodejs-demos)
     - [Rust](#rust-demos)
     - [C](#c-demos)
@@ -93,7 +91,6 @@ Rhino is:
       - [Vanilla JavaScript and HTML (CDN Script Tag)](#vanilla-javascript-and-html-cdn-script-tag)
       - [Vanilla JavaScript and HTML (ES Modules)](#vanilla-javascript-and-html-es-modules)
       - [React](#react)
-      - [Vue](#vue)
     - [Node.js](#nodejs)
     - [Rust](#rust)
     - [C](#c)
@@ -388,26 +385,6 @@ npm run start ${LANGUAGE}
 ```
 
 Open `http://localhost:3000` in your browser to try the demo.
-
-#### Vue Demos
-
-From [demo/vue](./demo/vue) use `yarn` or `npm` to install the dependencies, and the `start` script with a language code
-to start a local web server hosting the demo in the language of your choice (e.g. `pl` -> Polish, `ko` -> Korean).
-To see a list of available languages, run `start` without a language code.
-
-```console
-yarn
-yarn start ${LANGUAGE}
-```
-
-(or)
-
-```console
-npm install
-npm run start ${LANGUAGE}
-```
-
-The command-line output will provide you with a localhost link and port to open in your browser.
 
 ### Node.js Demos
 
@@ -1395,74 +1372,6 @@ return (
     <p>{JSON.stringify(inference)}</p>
   </div>
 )
-```
-
-#### Vue
-
-```console
-yarn add @picovoice/rhino-vue @picovoice/web-voice-processor
-```
-
-(or)
-
-```console
-npm install @picovoice/rhino-vue @picovoice/web-voice-processor
-```
-
-```vue
-<script lang='ts'>
-import { useRhino } from '@picovoice/rhino-vue';
-
-import rhinoParams from "${PATH_TO_RHINO_PARAMS_BASE64}";
-import rhinoContext from "${PATH_TO_RHINO_CONTEXT_BASE64}";
-
-export default {
-  data() {
-    const {
-      state,
-      init,
-      process,
-      release
-    } = useRhino();
-
-    init(
-      ${ACCESS_KEY},
-      { base64: rhinoContext },
-      { base64: rhinoParams },
-    );
-
-    return {
-      state,
-      process,
-      release
-    }
-  },
-  watch: {
-    "state.inference": function(inference) {
-      if (inference !== null) {
-        console.log(inference)
-      }
-    },
-    "state.contextInfo": function(contextInfo) {
-      if (contextInfo !== null) {
-        console.log(contextInfo)
-      }
-    },
-    "state.isLoaded": function(isLoaded) {
-      console.log(isLoaded)
-    },
-    "state.isListening": function(isListening) {
-      console.log(isListening)
-    },
-    "state.error": function(error) {
-      console.error(error)
-    },
-  },
-  onBeforeDestroy() {
-    this.release();
-  },
-};
-</script>
 ```
 
 ### Node.js

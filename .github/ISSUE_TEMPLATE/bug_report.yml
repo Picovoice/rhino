@@ -35,7 +35,6 @@ body:
         - React
         - Rust
         - Unity
-        - Vue
         - Web
     validations:
       required: true
