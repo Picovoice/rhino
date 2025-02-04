@@ -6,11 +6,9 @@
 [![Crates.io](https://img.shields.io/crates/v/pv_rhino)](https://crates.io/crates/pv_rhino)<!-- markdown-link-check-disable-line -->
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-android?label=maven-central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-android/)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-java?label=maven%20central%20%5Bjava%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-java/)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-angular?label=npm%20%5Bangular%5D)](https://www.npmjs.com/package/@picovoice/rhino-angular)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-react)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-react-native?label=npm%20%5Breact-native%5D)](https://www.npmjs.com/package/@picovoice/rhino-react-native)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-vue?label=npm%20%5Bvue%5D)](https://www.npmjs.com/package/@picovoice/rhino-vue)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-web?label=npm%20%5Bweb%5D)](https://www.npmjs.com/package/@picovoice/rhino-web)
 [![Nuget](https://img.shields.io/nuget/v/rhino)](https://www.nuget.org/packages/Rhino/)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://cocoapods.org/pods/Rhino-iOS)
@@ -73,9 +71,7 @@ Rhino is:
     - [iOS](#ios-demos)
     - [Web](#web-demos)
       - [Vanilla JavaScript and HTML](#vanilla-javascript-and-html)
-      - [Angular](#angular-demos)
       - [React](#react-demos)
-      - [Vue](#vue-demos)
     - [Node.js](#nodejs-demos)
     - [Rust](#rust-demos)
     - [C](#c-demos)
@@ -91,9 +87,7 @@ Rhino is:
     - [Web](#web)
       - [Vanilla JavaScript and HTML (CDN Script Tag)](#vanilla-javascript-and-html-cdn-script-tag)
       - [Vanilla JavaScript and HTML (ES Modules)](#vanilla-javascript-and-html-es-modules)
-      - [Angular](#angular)
       - [React](#react)
-      - [Vue](#vue)
     - [Node.js](#nodejs)
     - [Rust](#rust)
     - [C](#c)
@@ -356,26 +350,6 @@ npm run start ${LANGUAGE}
 
 Open `http://localhost:5000` in your browser to try the demo.
 
-#### Angular Demos
-
-From [demo/angular](./demo/angular) use `yarn` or `npm` to install the dependencies, and the `start` script with a language code
-to start a local web server hosting the demo in the language of your choice (e.g. `pl` -> Polish, `ko` -> Korean).
-To see a list of available languages, run `start` without a language code.
-
-```console
-yarn
-yarn start ${LANGUAGE}
-```
-
-(or)
-
-```console
-npm install
-npm run start ${LANGUAGE}
-```
-
-Open `http://localhost:4200` in your browser to try the demo.
-
 #### React Demos
 
 From [demo/react](./demo/react) use `yarn` or `npm` to install the dependencies, and the `start` script with a language code
@@ -395,26 +369,6 @@ npm run start ${LANGUAGE}
 ```
 
 Open `http://localhost:3000` in your browser to try the demo.
-
-#### Vue Demos
-
-From [demo/vue](./demo/vue) use `yarn` or `npm` to install the dependencies, and the `start` script with a language code
-to start a local web server hosting the demo in the language of your choice (e.g. `pl` -> Polish, `ko` -> Korean).
-To see a list of available languages, run `start` without a language code.
-
-```console
-yarn
-yarn start ${LANGUAGE}
-```
-
-(or)
-
-```console
-npm install
-npm run start ${LANGUAGE}
-```
-
-The command-line output will provide you with a localhost link and port to open in your browser.
 
 ### Node.js Demos
 
@@ -1302,69 +1256,6 @@ if (done) {
 }
 ```
 
-#### Angular
-
-```console
-yarn add @picovoice/rhino-angular @picovoice/web-voice-processor
-```
-
-(or)
-
-```console
-npm install @picovoice/rhino-angular @picovoice/web-voice-processor
-```
-
-```typescript
-import { Subscription } from "rxjs";
-import { RhinoService } from "@picovoice/rhino-angular";
-import rhinoParams from "${PATH_TO_RHINO_PARAMS_BASE64}";
-import rhinoContext from "${PATH_TO_RHINO_CONTEXT_BASE64}";
-
-constructor(private rhinoService: RhinoService) {
-  this.contextInfoDetection = rhinoService.contextInfo$.subscribe(
-    contextInfo => {
-      console.log(contextInfo);
-    });
-  this.inferenceDetection = rhinoService.inference$.subscribe(
-    inference => {
-      console.log(inference);
-    });
-  this.isLoadedDetection = porcupineService.isLoaded$.subscribe(
-    isLoaded => {
-      console.log(isLoaded);
-    });
-  this.isListeningDetection = porcupineService.isListening$.subscribe(
-    isListening => {
-      console.log(isListening);
-    });
-  this.errorDetection = porcupineService.error$.subscribe(
-    error => {
-      console.error(error);
-    });
-}
-
-async ngOnInit() {
-  await this.rhinoService.init(
-    ${ACCESS_KEY},
-    { base64: rhinoContext },
-    { base64: rhinoParams },
-  )
-}
-
-async process() {
-  await this.rhinoService.process();
-}
-
-ngOnDestroy() {
-  this.contextInfoDetection.unsubscribe();
-  this.inferenceDetection.unsubscribe();
-  this.isLoadedDetection.unsubscribe();
-  this.isListeningDetection.unsubscribe();
-  this.errorDetection.unsubscribe();
-  this.rhinoService.release();
-}
-```
-
 #### React
 
 ```console
@@ -1414,74 +1305,6 @@ return (
     <p>{JSON.stringify(inference)}</p>
   </div>
 )
-```
-
-#### Vue
-
-```console
-yarn add @picovoice/rhino-vue @picovoice/web-voice-processor
-```
-
-(or)
-
-```console
-npm install @picovoice/rhino-vue @picovoice/web-voice-processor
-```
-
-```vue
-<script lang='ts'>
-import { useRhino } from '@picovoice/rhino-vue';
-
-import rhinoParams from "${PATH_TO_RHINO_PARAMS_BASE64}";
-import rhinoContext from "${PATH_TO_RHINO_CONTEXT_BASE64}";
-
-export default {
-  data() {
-    const {
-      state,
-      init,
-      process,
-      release
-    } = useRhino();
-
-    init(
-      ${ACCESS_KEY},
-      { base64: rhinoContext },
-      { base64: rhinoParams },
-    );
-
-    return {
-      state,
-      process,
-      release
-    }
-  },
-  watch: {
-    "state.inference": function(inference) {
-      if (inference !== null) {
-        console.log(inference)
-      }
-    },
-    "state.contextInfo": function(contextInfo) {
-      if (contextInfo !== null) {
-        console.log(contextInfo)
-      }
-    },
-    "state.isLoaded": function(isLoaded) {
-      console.log(isLoaded)
-    },
-    "state.isListening": function(isListening) {
-      console.log(isListening)
-    },
-    "state.error": function(error) {
-      console.error(error)
-    },
-  },
-  onBeforeDestroy() {
-    this.release();
-  },
-};
-</script>
 ```
 
 ### Node.js
