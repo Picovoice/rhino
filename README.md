@@ -46,7 +46,7 @@ Rhino is:
 - using deep neural networks trained in real-world environments.
 - compact and computationally-efficient. It is perfect for IoT.
 - cross-platform:
-  - Arm Cortex-M, STM32, Arduino, and i.MX RT
+  - Arm Cortex-M, STM32, and Arduino
   - Raspberry Pi
   - Android and iOS
   - Chrome, Safari, Firefox, and Edge
