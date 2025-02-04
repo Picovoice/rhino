@@ -38,7 +38,7 @@ This binding is for running Rhino on **NodeJS 12+** on the following platforms:
 
 ### Web Browsers
 
-This binding is for Node.js and **does not work in a browser**. Looking to run Rhino in-browser? There are npm packages available for [Web](https://www.npmjs.com/package/@picovoice/rhino-web), and dedicated packages for [React](https://www.npmjs.com/package/@picovoice/rhino-react), and [Vue](https://www.npmjs.com/package/@picovoice/rhino-vue).
+This binding is for Node.js and **does not work in a browser**. Looking to run Rhino in-browser? There are npm packages available for [Web](https://www.npmjs.com/package/@picovoice/rhino-web), and dedicated package for [React](https://www.npmjs.com/package/@picovoice/rhino-react).
 
 ## AccessKey
 
