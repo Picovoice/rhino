@@ -26,6 +26,9 @@ with open(os.path.join(os.path.dirname(__file__), 'MANIFEST.in'), 'w') as f:
 with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
     long_description = f.read()
 
+with open(os.path.join(os.path.dirname(__file__), "requirements.txt"), "r") as f:
+    dependencies = f.read().strip().splitlines()
+
 setuptools.setup(
     name="pvrhinodemo",
     version="3.0.4",
@@ -36,7 +39,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Picovoice/rhino",
     packages=["pvrhinodemo"],
-    install_requires=["pvrhino==3.0.4", "pvrecorder==1.2.4"],
+    install_requires=dependencies,
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
