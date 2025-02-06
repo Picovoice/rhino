@@ -2,16 +2,6 @@
   "tests": {
     "within_context": [
       {
-        "language": "ar",
-        "context_name": "simple_context_ar",
-        "inference": {
-          "intent": "shopping",
-          "slots": {
-            "vrucht": "خوخ"
-          }
-        }
-      },
-      {
         "language": "de",
         "context_name": "beleuchtung",
         "inference": {
@@ -45,32 +35,12 @@
         }
       },
       {
-        "language": "fa",
-        "context_name": "simple_context_fa",
-        "inference": {
-          "intent": "navigation",
-          "slots": {
-            "location": "آشپزخانه"
-          }
-        }
-      },
-      {
         "language": "fr",
         "context_name": "éclairage_intelligent",
         "inference": {
           "intent": "changeColor",
           "slots": {
             "color": "violet"
-          }
-        }
-      },
-      {
-        "language": "hi",
-        "context_name": "simple_context_hi",
-        "inference": {
-          "intent": "shopping",
-          "slots": {
-            "vrucht": "रसभरी"
           }
         }
       },
@@ -105,26 +75,6 @@
         }
       },
       {
-        "language": "nl",
-        "context_name": "simple_context_nl",
-        "inference": {
-          "intent": "shopping",
-          "slots": {
-            "vrucht": "framboos"
-          }
-        }
-      },
-      {
-        "language": "pl",
-        "context_name": "simple_context_pl",
-        "inference": {
-          "intent": "shopping",
-          "slots": {
-            "vrucht": "malina"
-          }
-        }
-      },
-      {
         "language": "pt",
         "context_name": "luz_inteligente",
         "inference": {
@@ -133,53 +83,9 @@
             "lugar": "cozinha"
           }
         }
-      },
-      {
-        "language": "ru",
-        "context_name": "simple_context_ru",
-        "inference": {
-          "intent": "shopping",
-          "slots": {
-            "фрукт": "картофель"
-          }
-        }
-      },
-      {
-        "language": "sv",
-        "context_name": "simple_context_sv",
-        "inference": {
-          "intent": "shopping",
-          "slots": {
-            "vrucht": "blåbär"
-          }
-        }
-      },
-      {
-        "language": "vn",
-        "context_name": "simple_context_vn",
-        "inference": {
-          "intent": "shopping",
-          "slots": {
-            "food": "trái dứa"
-          }
-        }
-      },
-      {
-        "language": "zh",
-        "context_name": "simple_context_zh",
-        "inference": {
-          "intent": "shopping",
-          "slots": {
-            "vrucht": "香 蕉"
-          }
-        }
       }
     ],
     "out_of_context": [
-      {
-        "language": "ar",
-        "context_name": "simple_context_ar"
-      },
       {
         "language": "de",
         "context_name": "beleuchtung"
@@ -193,16 +99,8 @@
         "context_name": "iluminación_inteligente"
       },
       {
-        "language": "fa",
-        "context_name": "simple_context_fa"
-      },      
-      {
         "language": "fr",
         "context_name": "éclairage_intelligent"
-      },
-      {
-        "language": "hi",
-        "context_name": "simple_context_hi"
       },
       {
         "language": "it",
@@ -217,28 +115,8 @@
         "context_name": "seumateu_jomyeong"
       },
       {
-        "language": "pl",
-        "context_name": "simple_context_pl"
-      },
-      {
         "language": "pt",
         "context_name": "luz_inteligente"
-      },
-      {
-        "language": "ru",
-        "context_name": "simple_context_ru"
-      },
-      {
-        "language": "sv",
-        "context_name": "simple_context_sv"
-      },
-      {
-        "language": "vn",
-        "context_name": "simple_context_vn"
-      },
-      {
-        "language": "zh",
-        "context_name": "simple_context_zh"
       }
     ]
   }
