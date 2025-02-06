@@ -111,7 +111,7 @@ Rhino is the right choice if the domain of voice interactions is specific (limit
 
 ## Language Support
 
-- Arabic, Dutch, English, Farsi, French, German, Hindi, Italian, Japanese, Korean, Mandarin, Polish, Portuguese, Russian, Spanish, Swedish, and Vietnamese.
+- English, French, German, Italian, Japanese, Korean, Portuguese, and Spanish.
 - Support for [additional languages is available for commercial customers](https://picovoice.ai/consulting/) on a case-by-case basis.
 
 ## Performance
@@ -319,7 +319,7 @@ pod install
 
 3) Replace `let accessKey = "${YOUR_ACCESS_KEY_HERE}"` in the file [ContentView.swift](./demo/ios/RhinoDemo/ContentView.swift) with your `AccessKey`.
 
-4) Go to `Product > Scheme` and select the scheme for the language you would like to demo (e.g. `arDemo` -> Arabic Demo, `deDemo` -> German Demo)
+4) Go to `Product > Scheme` and select the scheme for the language you would like to demo (e.g. `esDemo` -> Spanish Demo, `deDemo` -> German Demo)
 
 5) Run the demo with a simulator or connected iOS device.
 
