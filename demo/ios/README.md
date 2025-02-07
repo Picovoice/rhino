@@ -14,7 +14,7 @@ To run the application demo:
 
 2. Replace `${YOUR_ACCESS_KEY_HERE}` in the file [ContentView.swift](./RhinoDemo/ContentView.swift) with your `AccessKey`.
 
-3. Go to `Product > Scheme` and select the scheme for the language you would like to demo (e.g. `arDemo` -> Arabic Demo, `deDemo` -> German Demo)
+3. Go to `Product > Scheme` and select the scheme for the language you would like to demo (e.g. `esDemo` -> Spanish Demo, `deDemo` -> German Demo)
 
 4. Run the demo with a simulator or connected iOS device.
 
