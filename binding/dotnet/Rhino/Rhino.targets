@@ -1,7 +1,14 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <ItemGroup>
         <Content Include="$(MSBuildThisFileDirectory)lib/**">
             <Link>lib/%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <PackagePath>content/picovoice/%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Visible>false</Visible>
+        </Content>
+        <Content Include="$(MSBuildThisFileDirectory)/../common/rhino_params.pv">
+            <Link>lib/common/rhino_params.pv</Link>
+            <PackagePath>content/picovoice/common/rhino_params.pv</PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Visible>false</Visible>
         </Content>

@@ -36,15 +36,15 @@
     <ItemGroup>
         <Content Include="Rhino.netstandard2.0.targets">
             <PackagePath>
-                build/netstandard2.0/Rhino.targets;
+                buildTransitive/netstandard2.0/Rhino.targets;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Rhino.targets">
             <PackagePath>
-                build/netcoreapp3.0/Rhino.targets;
-                build/net6.0/Rhino.targets;
-                build/net8.0/Rhino.targets;
+                buildTransitive/netcoreapp3.0/Rhino.targets;
+                buildTransitive/net6.0/Rhino.targets;
+                buildTransitive/net8.0/Rhino.targets;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
@@ -54,10 +54,10 @@
     <ItemGroup>
         <Content Include="..\..\..\lib\windows\amd64\libpv_rhino.dll">
             <PackagePath>
-                build/netstandard2.0/libpv_rhino.dll;
-                build/netcoreapp3.0/lib/windows/amd64/libpv_rhino.dll;
-                build/net6.0/lib/windows/amd64/libpv_rhino.dll;
-                build/net8.0/lib/windows/amd64/libpv_rhino.dll;
+                buildTransitive/netstandard2.0/libpv_rhino.dll;
+                buildTransitive/netcoreapp3.0/lib/windows/amd64/libpv_rhino.dll;
+                buildTransitive/net6.0/lib/windows/amd64/libpv_rhino.dll;
+                buildTransitive/net8.0/lib/windows/amd64/libpv_rhino.dll;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\windows\amd64\libpv_rhino.dll</Link>
@@ -65,10 +65,10 @@
         </Content>
         <Content Include="..\..\..\lib\mac\x86_64\libpv_rhino.dylib">
             <PackagePath>
-                build/netstandard2.0/libpv_rhino.dylib;
-                build/netcoreapp3.0/lib/mac/x86_64/libpv_rhino.dylib;
-                build/net6.0/lib/mac/x86_64/libpv_rhino.dylib;
-                build/net8.0/lib/mac/x86_64/libpv_rhino.dylib;
+                buildTransitive/netstandard2.0/libpv_rhino.dylib;
+                buildTransitive/netcoreapp3.0/lib/mac/x86_64/libpv_rhino.dylib;
+                buildTransitive/net6.0/lib/mac/x86_64/libpv_rhino.dylib;
+                buildTransitive/net8.0/lib/mac/x86_64/libpv_rhino.dylib;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\mac\x86_64\libpv_rhino.dylib</Link>
@@ -80,8 +80,8 @@
     <ItemGroup>
         <Content Include="..\..\..\lib\mac\arm64\libpv_rhino.dylib">
             <PackagePath>
-                build/net6.0/lib/mac/arm64/libpv_rhino.dylib;
-                build/net8.0/lib/mac/arm64/libpv_rhino.dylib;
+                buildTransitive/net6.0/lib/mac/arm64/libpv_rhino.dylib;
+                buildTransitive/net8.0/lib/mac/arm64/libpv_rhino.dylib;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\mac\arm64\libpv_rhino.dylib</Link>
@@ -89,8 +89,8 @@
         </Content>
         <Content Include="..\..\..\lib\windows\arm64\libpv_rhino.dll">
             <PackagePath>
-                build/net6.0/lib/windows/arm64/libpv_rhino.dll;
-                build/net8.0/lib/windows/arm64/libpv_rhino.dll;
+                buildTransitive/net6.0/lib/windows/arm64/libpv_rhino.dll;
+                buildTransitive/net8.0/lib/windows/arm64/libpv_rhino.dll;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\windows\arm64\libpv_rhino.dll</Link>
@@ -98,8 +98,8 @@
         </Content>
         <Content Include="..\..\..\lib\linux\x86_64\libpv_rhino.so">
             <PackagePath>
-                build/net6.0/lib/linux/x86_64/libpv_rhino.so;
-                build/net8.0/lib/linux/x86_64/libpv_rhino.so;
+                buildTransitive/net6.0/lib/linux/x86_64/libpv_rhino.so;
+                buildTransitive/net8.0/lib/linux/x86_64/libpv_rhino.so;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\linux\x86_64\libpv_rhino.so</Link>
@@ -107,9 +107,9 @@
         </Content>
         <Content Include="..\..\..\lib\raspberry-pi\**\*" Exclude="..\..\..\lib\raspberry-pi\arm11\*">
             <PackagePath>
-                build/netcoreapp3.0/lib/raspberry-pi;
-                build/net6.0/lib/raspberry-pi;
-                build/net8.0/lib/raspberry-pi;
+                buildTransitive/netcoreapp3.0/lib/raspberry-pi;
+                buildTransitive/net6.0/lib/raspberry-pi;
+                buildTransitive/net8.0/lib/raspberry-pi;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\raspberry-pi\%(RecursiveDir)%(Filename)%(Extension)</Link>
@@ -121,10 +121,7 @@
     <ItemGroup>
         <Content Include="..\..\..\lib\common\rhino_params.pv">
             <PackagePath>
-                build/netstandard2.0/lib/common/rhino_params.pv;
-                build/netcoreapp3.0/lib/common/rhino_params.pv;
-                build/net6.0/lib/common/rhino_params.pv;
-                build/net8.0/lib/common/rhino_params.pv;
+                buildTransitive/common/rhino_params.pv;
             </PackagePath>
             <Link>lib\common\rhino_params.pv</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
