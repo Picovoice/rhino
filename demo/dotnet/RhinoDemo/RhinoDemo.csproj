@@ -20,6 +20,6 @@
 
     <ItemGroup>
         <PackageReference Include="PvRecorder" Version="1.2.9" />
-        <PackageReference Include="Rhino" Version="3.0.5" />
+        <PackageReference Include="Rhino" Version="3.0.6" />
     </ItemGroup>
 </Project>
