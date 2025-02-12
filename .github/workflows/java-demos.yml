@@ -56,7 +56,7 @@ jobs:
         gradle-version: ${{ matrix.gradle-version }}
 
     - name: Build
-      run: ./gradlew build
+      run: gradle build
 
     - name: Run filedemo
       run: java -jar build/libs/rhino-file-demo.jar -a  ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
