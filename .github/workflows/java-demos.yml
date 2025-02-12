@@ -26,6 +26,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        java-version: [11, 17, 21]
         include:
         - os: ubuntu-latest
           platform: linux
@@ -33,8 +34,6 @@ jobs:
           platform: windows
         - os: macos-latest
           platform: mac
-        java-version: [11, 17, 21]
-        include:
         - java-version: 11
           gradle-version: 6.5
         - java-version: 17
