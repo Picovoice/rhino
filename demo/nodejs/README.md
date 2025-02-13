@@ -33,7 +33,7 @@ To learn more about Rhino, see the [product](https://picovoice.ai/products/rhino
 
 ## Compatibility
 
-These demos run Rhino on **NodeJS 16+** on the following platforms:
+These demos run Rhino on **NodeJS 18+** on the following platforms:
 
 - Windows (x86_64, arm64)
 - Linux (x86_64)
