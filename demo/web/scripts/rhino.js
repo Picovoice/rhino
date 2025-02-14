@@ -7,8 +7,8 @@ function writeMessage(message, bold = false) {
 
   if (bold) {
     let b = document.createElement("b");
-    b.appendChild(text)
-    text = b
+    b.appendChild(text);
+    text = b;
   }
 
   p.appendChild(text);
@@ -30,17 +30,19 @@ async function startRhino(accessKey) {
   try {
     writeMessage("Rhino is loading. Please wait...");
     rhino = await RhinoWeb.RhinoWorker.create(
-        accessKey,
-        rhinoContext,
-        rhinoInferenceCallback,
-        rhinoModel,
+      accessKey,
+      rhinoContext,
+      rhinoInferenceCallback,
+      rhinoModel,
     );
 
     writeMessage("Rhino worker ready!");
     document.getElementById("push-to-talk").disabled = false;
     document.getElementById("rhn-context-yaml").innerText = rhino.contextInfo;
 
-    writeMessage("Press the 'Push to Talk' button to talk. Then say something from the context info below.");
+    writeMessage(
+      "Press the 'Push to Talk' button to talk. Then say something from the context info below.",
+    );
   } catch (error) {
     writeMessage(error);
   }
