@@ -26,6 +26,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        java-version: [11, 17, 21]
         include:
         - os: ubuntu-latest
           platform: linux
@@ -33,18 +34,29 @@ jobs:
           platform: windows
         - os: macos-latest
           platform: mac
+        - java-version: 11
+          gradle-version: 6.5
+        - java-version: 17
+          gradle-version: 7.3
+        - java-version: 21
+          gradle-version: 8.5
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up JDK 11
+    - name: Set up JDK ${{ matrix.java-version }}
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: ${{ matrix.java-version }}
         distribution: 'temurin'
 
+    - name: Use Gradle ${{ matrix.gradle-version }}
+      uses: gradle/actions/setup-gradle@v3
+      with:
+        gradle-version: ${{ matrix.gradle-version }}
+
     - name: Build
-      run: ./gradlew build
+      run: gradle build
 
     - name: Run filedemo
       run: java -jar build/libs/rhino-file-demo.jar -a  ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
