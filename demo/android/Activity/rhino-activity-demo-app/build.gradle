@@ -3,6 +3,7 @@ import groovy.json.JsonSlurper
 apply plugin: 'com.android.application'
 
 android {
+    def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION
     compileSdk defaultTargetSdkVersion
 
     defaultConfig {
@@ -18,6 +19,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildFeatures {
+        buildConfig true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     def testDataFile = file('../../../../resources/.test/test_data.json')
     def parsedJson = new JsonSlurper().parseText(testDataFile.text)
@@ -28,9 +36,12 @@ android {
 
     flavorDimensions "language"
     productFlavors {
-        en {
-            getIsDefault().set(true)
+        if (agpVersion.tokenize('.')[0].toInteger() >= 7) {
+            en {
+                getIsDefault().set(true)
+            }
         }
+
 
         languages.each { languageInfo ->
             "${languageInfo.get(0)}" {
@@ -50,7 +61,7 @@ android {
                 } else {
                     include("rhino_params.pv")
                 }
-                into("$projectDir/src/main/assets/models")
+                into("$projectDir/src/${flavor.name}/assets/models")
             }
             task("${flavor.name}CopyContext", type: Copy) {
                 description = "Copy ${flavor.name} resources"
@@ -60,7 +71,7 @@ android {
                     from("$projectDir/../../../../resources/contexts/android")
                 }
                 include("${flavor.ext.contextName}_android.rhn")
-                into("$projectDir/src/main/assets/contexts")
+                into("$projectDir/src/${flavor.name}/assets/contexts")
                 rename { String fileName ->
                     fileName.replace("_android", "").replace(" ", "_")
                 }
@@ -70,10 +81,12 @@ android {
             }
         }
     }
-    lint {
+    lintOptions {
         abortOnError false
     }
-    namespace 'ai.picovoice.rhinodemo'
+    if (agpVersion.tokenize('.')[0].toInteger() >= 7) {
+        namespace 'ai.picovoice.rhinodemo'
+    }
 }
 
 dependencies {
