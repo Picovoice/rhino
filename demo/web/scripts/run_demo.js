@@ -4,15 +4,15 @@ const path = require("path");
 const testData = require("../../../resources/.test/test_data.json");
 
 availableLanguages = testData["tests"]["within_context"].map(
-  (x) => x["language"]
+  (x) => x["language"],
 );
 
 const language = process.argv.slice(2)[0];
 if (!language) {
   console.error(
     `Choose the language you would like to run the demo in with "yarn start [language]". \nAvailable languages are ${availableLanguages.join(
-      ", "
-    )}`
+      ", ",
+    )}`,
   );
   process.exit(1);
 }
@@ -20,14 +20,14 @@ if (!language) {
 if (!availableLanguages.includes(language)) {
   console.error(
     `'${language}' is not an available demo language.\nAvailable languages are ${availableLanguages.join(
-      ", "
-    )}`
+      ", ",
+    )}`,
   );
   process.exit(1);
 }
 
 const context = testData["tests"]["within_context"].find(
-  (x) => x["language"] === language
+  (x) => x["language"] === language,
 )["context_name"];
 const contextFileName = `${context}_wasm.rhn`;
 
@@ -49,7 +49,7 @@ if (fs.existsSync(outputDirectory)) {
 try {
   fs.copyFileSync(
     path.join(contextDir, contextFileName),
-    path.join(outputDirectory, contextFileName)
+    path.join(outputDirectory, contextFileName),
   );
 } catch (error) {
   console.error(error);
@@ -66,7 +66,7 @@ fs.writeFileSync(
 (function () {
   if (typeof module !== "undefined" && typeof module.exports !== "undefined")
     module.exports = rhinoContext;
-})();`
+})();`,
 );
 
 const modelDir = path.join(rootDir, "lib", "common");
@@ -83,7 +83,7 @@ if (fs.existsSync(outputDirectory)) {
 const modelName = `rhino_params${suffix}.pv`;
 fs.copyFileSync(
   path.join(modelDir, modelName),
-  path.join(outputDirectory, modelName)
+  path.join(outputDirectory, modelName),
 );
 
 fs.writeFileSync(
@@ -96,12 +96,12 @@ fs.writeFileSync(
 (function () {
   if (typeof module !== "undefined" && typeof module.exports !== "undefined")
     module.exports = rhinoModel;
-})();`
+})();`,
 );
 
-const command = (process.platform === "win32") ? "npx.cmd" : "npx";
+const command = process.platform === "win32" ? "npx.cmd" : "npx";
 
 child_process.execSync(`${command} http-server -a localhost -p 5000`, {
   shell: true,
-  stdio: 'inherit'
+  stdio: "inherit",
 });
