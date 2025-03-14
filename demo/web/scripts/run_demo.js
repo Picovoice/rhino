@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const testData = require("../../../resources/.test/test_data.json");
 
-availableLanguages = testData["tests"]["within_context"].map(
+const availableLanguages = testData["tests"]["within_context"].map(
   (x) => x["language"],
 );
 
