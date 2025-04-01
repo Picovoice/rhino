@@ -242,6 +242,8 @@ For more information about Java demos go to [demo/java](./demo/java).
 
 ### Unity Demos
 
+> Unity SDKs will no longer be maintained after **December 15, 2025**. If you plan to use the Rhino Speech-to-Intent Unity SDK for commercial purposes, please [contact us](https://picovoice.ai/contact/).
+
 To run the Rhino Unity demo, import the [Rhino Unity package](./binding/unity/rhino-3.0.1.unitypackage) into your project, open the RhinoDemo scene and hit play. To run on other platforms or in the player, go to _File > Build Settings_, choose your platform and hit the `Build and Run` button.
 /
 To browse the demo source go to [demo/unity](./demo/unity).
@@ -389,6 +391,8 @@ Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoic
 For more information about Node.js demos go to [demo/nodejs](./demo/nodejs).
 
 ### Rust Demos
+
+> Rust SDKs will no longer be maintained after **July 15, 2025**. If you plan to use the Rhino Speech-to-Intent Rust SDK for commercial purposes, please [contact us](https://picovoice.ai/contact/).
 
 This demo opens an audio stream from a microphone and performs inference on spoken commands.
 From [demo/rust/micdemo](./demo/rust/micdemo) run the following:
@@ -649,6 +653,8 @@ handle.delete();
 ```
 
 ### Unity
+
+> Unity SDKs will no longer be maintained after **December 15, 2025**. If you plan to use the Rhino Speech-to-Intent Unity SDK for commercial purposes, please [contact us](https://picovoice.ai/contact/).
 
 Import the [Rhino Unity Package](./binding/unity/rhino-3.0.1.unitypackage) into your Unity project.
 
@@ -1347,6 +1353,8 @@ handle.release();
 ```
 
 ### Rust
+
+> Rust SDKs will no longer be maintained after **July 15, 2025**. If you plan to use the Rhino Speech-to-Intent Rust SDK for commercial purposes, please [contact us](https://picovoice.ai/contact/).
 
 First you will need [Rust and Cargo](https://rustup.rs/) installed on your system.
 
