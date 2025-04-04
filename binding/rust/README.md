@@ -1,5 +1,7 @@
 # Rhino Speech-to-Intent Engine
 
+> Rust SDKs will no longer be maintained after **July 15, 2025**. If you plan to use the Rhino Speech-to-Intent Rust SDK for commercial purposes, please [contact us](https://picovoice.ai/contact/).
+
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
 
 Rhino is Picovoice's Speech-to-Intent engine. It directly infers intent from spoken commands within a given context of

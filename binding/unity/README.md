@@ -1,5 +1,7 @@
 # Rhino Binding for Unity
 
+> Unity SDKs will no longer be maintained after **December 15, 2025**. If you plan to use the Rhino Speech-to-Intent Unity SDK for commercial purposes, please [contact us](https://picovoice.ai/contact/).
+
 ## Rhino Speech-to-Intent Engine
 
 Made in Vancouver, Canada by [Picovoice](https://picovoice.ai)
