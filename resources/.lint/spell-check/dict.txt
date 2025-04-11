@@ -109,6 +109,7 @@ RTLD
 seumateu
 shōmei
 signup
+soloader
 soundfile
 spegnere
 SRCROOT
