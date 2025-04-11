@@ -36,7 +36,7 @@ Hit CTRL-C to stop the server
 
 ### Try Rhino
 
-Wait until Rhino and the WebVoiceProcessor have initialized. You will see the contents of the sample context at the 
+Wait until Rhino and the WebVoiceProcessor have initialized. You will see the contents of the sample context at the
 bottom of the page. Press the "Push to Talk" button to start a voice interaction.
 
 Try a phrase that is in the context. E.g:
