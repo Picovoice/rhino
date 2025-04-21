@@ -5,6 +5,7 @@
 You need a C99-compatible compiler to build these demos.
 
 ## Requirements
+
 - The demo requires [CMake](https://cmake.org/) version 3.13 or higher.
 - **For Windows Only**: [MinGW](https://www.mingw-w64.org/) is required to build the demo.
 
@@ -17,14 +18,20 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 ## Build Linux/MacOS
 
 ```console
-cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_demo_mic
+cmake -S demo/c/. -B demo/c/build -DPV_RECORDER_PLATFORM={PV_RECORDER_PLATFORM}
+cmake --build demo/c/build --target rhino_demo_mic
 ```
+
+The {PV_RECORDER_PLATFORM} variable will set the compilation flags for the given platform. Exclude this variable to get a list of possible values.
 
 ## Build Windows
 
 ```console
-cmake -S demo/c/. -B demo/c/build -G "MinGW Makefiles" && cmake --build demo/c/build --target rhino_demo_mic
+cmake -S demo/c/. -B demo/c/build -DPV_RECORDER_PLATFORM={PV_RECORDER_PLATFORM} -G "MinGW Makefiles"
+cmake --build demo/c/build --target rhino_demo_mic
 ```
+
+The {PV_RECORDER_PLATFORM} variable will set the compilation flags for the given platform. Exclude this variable to get a list of possible values.
 
 ## Run
 
@@ -120,8 +127,11 @@ If understood correctly, the following prints to the console:
 ## Build
 
 ```console
-cmake -S demo/c/. -B demo/c/build && cmake --build demo/c/build --target rhino_demo_file
+cmake -S demo/c/. -B demo/c/build -DPV_RECORDER_PLATFORM={PV_RECORDER_PLATFORM}
+cmake --build demo/c/build --target rhino_demo_file
 ```
+
+The {PV_RECORDER_PLATFORM} variable will set the compilation flags for the given platform. Exclude this variable to get a list of possible values.
 
 ## Run
 
