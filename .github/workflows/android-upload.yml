@@ -60,4 +60,4 @@ jobs:
       run: ./gradlew bundleRelease
 
     - name: Upload to Google Play
-      run: fastlane supply --json_key ./service-account.json --package_name ai.picovoice.rhinodemo --aab rhino-activity-demo-app/build/outputs/bundle/release/rhino-activity-demo-app-release.aab --track internal --skip_upload_metadata --skip_upload_images --skip_upload_screenshots --release_status draft
+      run: fastlane supply --json_key ./service-account.json --package_name ai.picovoice.rhinodemo --aab rhino-activity-demo-app/build/outputs/bundle/enRelease/rhino-activity-demo-app-en-release.aab --track internal --skip_upload_metadata --skip_upload_images --skip_upload_screenshots --release_status draft
