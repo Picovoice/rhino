@@ -42,7 +42,7 @@ jobs:
       run: |
         VC=`fastlane run google_play_track_version_codes \
           json_key:"./service-account.json" \
-          package_name:"ai.picovoice.rhinodemo" \
+          package_name:"ai.picovoice.rhinodemo.en" \
           track:"internal" \
         | grep -oP '(?<=Result: \[)\d+(?=\])' \
         | awk '{print $1+1}'`
@@ -60,4 +60,4 @@ jobs:
       run: ./gradlew bundleRelease
 
     - name: Upload to Google Play
-      run: fastlane supply --json_key ./service-account.json --package_name ai.picovoice.rhinodemo --aab rhino-activity-demo-app/build/outputs/bundle/enRelease/rhino-activity-demo-app-en-release.aab --track internal --skip_upload_metadata --skip_upload_images --skip_upload_screenshots --release_status draft
+      run: fastlane supply --json_key ./service-account.json --package_name ai.picovoice.rhinodemo.en --aab rhino-activity-demo-app/build/outputs/bundle/enRelease/rhino-activity-demo-app-en-release.aab --track internal --skip_upload_metadata --skip_upload_images --skip_upload_screenshots --release_status draft
