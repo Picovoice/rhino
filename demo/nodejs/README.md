@@ -145,7 +145,7 @@ The file-based demo allows you to scan a compatible wave file with Rhino. Note: 
 
 To run the file-based demo, we need to provide a Speech-to-Intent context along with a path to a compatible WAV file.
 
-We can use a couple of test WAV files that are bundled in the [Rhino GitHub repository](https://github.com/Picovoice/rhino/blob/master/resources/audio_samples/). These are intended to be used with the sample "Coffee Maker" context, also available in the [Rhino GitHub repository](https://github.com/Picovoice/rhino/blob/master/resources/contexts/) (note that context files are platform-dependent; choose the appropriate one for the platform you are using; this demo uses the "mac" version)
+We can use a couple of test WAV files that are bundled in the [Rhino repository](../../resources/audio_samples/). These are intended to be used with the sample "Coffee Maker" context, also available in the [Rhino repository](../../resources/contexts/) (note that context files are platform-dependent; choose the appropriate one for the platform you are using; this demo uses the "mac" version)
 
 Run the file demo, and the successful inference with the intent "orderDrink" along with the specific details are returned:
 
