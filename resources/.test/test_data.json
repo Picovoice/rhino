@@ -83,6 +83,16 @@
             "lugar": "cozinha"
           }
         }
+      },
+      {
+        "language": "zh",
+        "context_name": "simple_context_zh",
+        "inference": {
+          "intent": "shopping",
+          "slots": {
+            "vrucht": "香 蕉"
+          }
+        }
       }
     ],
     "out_of_context": [
@@ -117,6 +127,10 @@
       {
         "language": "pt",
         "context_name": "luz_inteligente"
+      },
+      {
+        "language": "zh",
+        "context_name": "simple_context_zh"
       }
     ]
   }

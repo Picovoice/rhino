@@ -111,7 +111,7 @@ Rhino is the right choice if the domain of voice interactions is specific (limit
 
 ## Language Support
 
-- English, French, German, Italian, Japanese, Korean, Portuguese, and Spanish.
+- English, French, German, Italian, Japanese, Korean, Mandarin, Portuguese, and Spanish.
 - Support for [additional languages is available for commercial customers](https://picovoice.ai/consulting/) on a case-by-case basis.
 
 ## Performance
