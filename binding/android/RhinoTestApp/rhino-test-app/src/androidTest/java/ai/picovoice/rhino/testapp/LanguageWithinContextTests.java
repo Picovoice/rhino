@@ -70,9 +70,9 @@ public class LanguageWithinContextTests extends BaseTest {
             String contextName = testData.get("context_name").getAsString();
             JsonObject inferenceJson = testData.getAsJsonObject("inference");
 
-            String modelFile = String.format("model_files/rhino_params_%s.pv", language);
-            String contextFile = String.format("context_files/%s/%s_android.rhn", language, contextName);
-            String audioFile = String.format("audio_samples/test_within_context_%s.wav", language);
+            String modelFile = String.format("rhino_params_%s.pv", language);
+            String contextFile = String.format("%s/%s_android.rhn", language, contextName);
+            String audioFile = String.format("test_within_context_%s.wav", language);
 
             String intent = inferenceJson.get("intent").getAsString();
             HashMap<String, String> slots = new HashMap<String, String>();
@@ -81,8 +81,8 @@ public class LanguageWithinContextTests extends BaseTest {
             }
 
             if (Objects.equals(language, "en")) {
-                modelFile = "model_files/rhino_params.pv";
-                audioFile = "audio_samples/test_within_context.wav";
+                modelFile = "rhino_params.pv";
+                audioFile = "test_within_context.wav";
             }
 
             parameters.add(new Object[] {
@@ -101,8 +101,8 @@ public class LanguageWithinContextTests extends BaseTest {
     @Test
     public void testWithinContext() throws Exception {
 
-        String modelPath = new File(testResourcesPath, modelFile).getAbsolutePath();
-        String contextPath = new File(testResourcesPath, contextFile).getAbsolutePath();
+        String modelPath = getModelFilepath(modelFile);
+        String contextPath = getContextFilepath(contextFile);
 
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
@@ -110,7 +110,7 @@ public class LanguageWithinContextTests extends BaseTest {
                 .setContextPath(contextPath)
                 .build(appContext);
 
-        File testAudio = new File(testResourcesPath, testAudioFile);
+        File testAudio = new File(getAudioFilepath(testAudioFile));
 
         RhinoInference inference = processTestAudio(r, testAudio);
         assertEquals(expectedIsUnderstood, inference.getIsUnderstood());

@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.io.IOException;
 
 import ai.picovoice.rhino.Rhino;
 import ai.picovoice.rhino.RhinoException;
@@ -31,8 +32,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 public class StandardTests extends BaseTest {
 
     @Test
-    public void testInitSuccessSimple() throws RhinoException {
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+    public void testInitSuccessSimple() throws RhinoException, IOException {
+        File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
@@ -47,9 +48,9 @@ public class StandardTests extends BaseTest {
     }
 
     @Test
-    public void testInitSuccessWithCustomModelPath() throws RhinoException {
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
-        File modelPath = new File(testResourcesPath, "model_files/rhino_params.pv");
+    public void testInitSuccessWithCustomModelPath() throws RhinoException, IOException {
+        File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
+        File modelPath = new File(getModelFilepath("rhino_params.pv"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
@@ -61,8 +62,8 @@ public class StandardTests extends BaseTest {
     }
 
     @Test
-    public void testInitSuccessWithCustomSensitivity() throws RhinoException {
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+    public void testInitSuccessWithCustomSensitivity() throws RhinoException, IOException {
+        File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
@@ -74,8 +75,8 @@ public class StandardTests extends BaseTest {
     }
 
     @Test
-    public void testInitSuccessWithCustomEndpointDurationSec() throws RhinoException {
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+    public void testInitSuccessWithCustomEndpointDurationSec() throws RhinoException, IOException {
+        File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
@@ -87,8 +88,8 @@ public class StandardTests extends BaseTest {
     }
 
     @Test
-    public void testInitSuccessWithRequireEndpointFalse() throws RhinoException {
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+    public void testInitSuccessWithRequireEndpointFalse() throws RhinoException, IOException {
+        File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
@@ -100,10 +101,10 @@ public class StandardTests extends BaseTest {
     }
 
     @Test
-    public void testInitFailWithMismatchedLanguage() {
+    public void testInitFailWithMismatchedLanguage() throws IOException {
         boolean didFail = false;
-        File contextPath = new File(testResourcesPath, "context_files/de/beleuchtung_android.rhn");
-        File modelPath = new File(testResourcesPath, "model_files/rhino_params.pv");
+        File contextPath = new File(getContextFilepath("de/beleuchtung_android.rhn"));
+        File modelPath = new File(getModelFilepath("rhino_params.pv"));
         try {
             new Rhino.Builder()
                     .setAccessKey(accessKey)
@@ -118,9 +119,9 @@ public class StandardTests extends BaseTest {
     }
 
     @Test
-    public void testInitFailWithNoAccessKey() {
+    public void testInitFailWithNoAccessKey() throws IOException {
         boolean didFail = false;
-        File contextPath = new File(testResourcesPath, "context_files/fr/éclairage_intelligent_android.rhn");
+        File contextPath = new File(getContextFilepath("fr/éclairage_intelligent_android.rhn"));
         try {
             new Rhino.Builder()
                     .setContextPath(contextPath.getAbsolutePath())
@@ -163,9 +164,9 @@ public class StandardTests extends BaseTest {
     }
 
     @Test
-    public void testInitFailWithInvalidModelPath() {
+    public void testInitFailWithInvalidModelPath() throws IOException {
         boolean didFail = false;
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+        File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         File modelPath = new File(testResourcesPath, "bad_path/bad_path.pv");
         try {
             new Rhino.Builder()
@@ -181,9 +182,9 @@ public class StandardTests extends BaseTest {
     }
 
     @Test
-    public void testInitFailWithInvalidSensitivity() {
+    public void testInitFailWithInvalidSensitivity() throws IOException {
         boolean didFail = false;
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+        File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         try {
             new Rhino.Builder()
                     .setAccessKey(accessKey)
@@ -198,9 +199,9 @@ public class StandardTests extends BaseTest {
     }
 
     @Test
-    public void testInitFailWithInvalidEndpointDurationSec() {
+    public void testInitFailWithInvalidEndpointDurationSec() throws IOException {
         boolean didFail = false;
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+        File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         try {
             new Rhino.Builder()
                     .setAccessKey(accessKey)
@@ -215,9 +216,9 @@ public class StandardTests extends BaseTest {
     }
 
     @Test
-    public void testInitFailWithWrongPlatform() {
+    public void testInitFailWithWrongPlatform() throws IOException {
         boolean didFail = false;
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_linux.rhn");
+        File contextPath = new File(getContextFilepath("en/coffee_maker_linux.rhn"));
         try {
             new Rhino.Builder()
                     .setAccessKey(accessKey)
@@ -232,9 +233,9 @@ public class StandardTests extends BaseTest {
 
 
     @Test
-    public void testInitWithNonAsciiModelName() throws RhinoException {
-        File contextPath = new File(testResourcesPath, "context_files/es/iluminación_inteligente_android.rhn");
-        File modelPath = new File(testResourcesPath, "model_files/rhino_params_es.pv");
+    public void testInitWithNonAsciiModelName() throws RhinoException, IOException {
+        File contextPath = new File(getContextFilepath("es/iluminación_inteligente_android.rhn"));
+        File modelPath = new File(getModelFilepath("rhino_params_es.pv"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
@@ -247,14 +248,14 @@ public class StandardTests extends BaseTest {
 
     @Test
     public void testReset() throws Exception {
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+        File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
 
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
                 .build(appContext);
 
-        File testAudio = new File(testResourcesPath, "audio_samples/test_within_context.wav");
+        File testAudio = new File(getAudioFilepath("test_within_context.wav"));
         boolean isFinalized = processFileHelper(r, testAudio, 15);
         assertFalse(isFinalized);
 
@@ -268,8 +269,8 @@ public class StandardTests extends BaseTest {
     }
 
     @Test
-    public void testErrorStack() {
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+    public void testErrorStack() throws IOException {
+        File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
 
         String[] error = {};
         try {

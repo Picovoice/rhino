@@ -57,13 +57,13 @@ public class LanguageOutOfContextTests extends BaseTest {
             String language = testData.get("language").getAsString();
             String contextName = testData.get("context_name").getAsString();
 
-            String modelFile = String.format("model_files/rhino_params_%s.pv", language);
-            String contextFile = String.format("context_files/%s/%s_android.rhn", language, contextName);
-            String audioFile = String.format("audio_samples/test_out_of_context_%s.wav", language);
+            String modelFile = String.format("rhino_params_%s.pv", language);
+            String contextFile = String.format("%s/%s_android.rhn", language, contextName);
+            String audioFile = String.format("test_out_of_context_%s.wav", language);
 
             if (Objects.equals(language, "en")) {
-                modelFile = "model_files/rhino_params.pv";
-                audioFile = "audio_samples/test_out_of_context.wav";
+                modelFile = "rhino_params.pv";
+                audioFile = "test_out_of_context.wav";
             }
 
             parameters.add(new Object[] {
@@ -79,8 +79,8 @@ public class LanguageOutOfContextTests extends BaseTest {
     @Test
     public void testOutOfContext() throws Exception {
 
-        String modelPath = new File(testResourcesPath, modelFile).getAbsolutePath();
-        String contextPath = new File(testResourcesPath, contextFile).getAbsolutePath();
+        String modelPath = getModelFilepath(modelFile);
+        String contextPath = getContextFilepath(contextFile);
 
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
@@ -88,7 +88,7 @@ public class LanguageOutOfContextTests extends BaseTest {
                 .setContextPath(contextPath)
                 .build(appContext);
 
-        File testAudio = new File(testResourcesPath, testAudioFile);
+        File testAudio = new File(getAudioFilepath(testAudioFile));
 
         RhinoInference inference = processTestAudio(r, testAudio);
         assertFalse(inference.getIsUnderstood());
