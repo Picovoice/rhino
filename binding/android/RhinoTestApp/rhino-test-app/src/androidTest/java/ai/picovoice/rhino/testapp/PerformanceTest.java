@@ -32,13 +32,13 @@ public class PerformanceTest extends BaseTest {
         }
         double performanceThresholdSec = Double.parseDouble(thresholdString);
 
-        File contextPath = new File(testResourcesPath, "context_files/en/coffee_maker_android.rhn");
+        File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setContextPath(contextPath.getAbsolutePath())
                 .build(appContext);
 
-        File testAudio = new File(testResourcesPath, "audio_samples/test_within_context.wav");
+        File testAudio = new File(getAudioFilepath("test_within_context.wav"));
 
         long totalNSec = 0;
         for (int i = 0; i < numTestIterations; i++) {
