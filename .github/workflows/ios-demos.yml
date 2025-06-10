@@ -18,7 +18,7 @@ jobs:
     runs-on: macos-latest
     defaults:
       run:
-        working-directory: demo/ios
+        working-directory: demo/ios/RhinoDemo
 
     steps:
       - name: Checkout
