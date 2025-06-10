@@ -319,7 +319,7 @@ pod install
 
 2) Open `RhinoDemo.xcworkspace` in XCode.
 
-3) Replace `let accessKey = "${YOUR_ACCESS_KEY_HERE}"` in the file [ContentView.swift](./demo/ios/RhinoDemo/ContentView.swift) with your `AccessKey`.
+3) Replace `let accessKey = "${YOUR_ACCESS_KEY_HERE}"` in the file [ContentView.swift](./demo/ios/RhinoDemo/RhinoDemo/ContentView.swift) with your `AccessKey`.
 
 4) Go to `Product > Scheme` and select the scheme for the language you would like to demo (e.g. `esDemo` -> Spanish Demo, `deDemo` -> German Demo)
 
