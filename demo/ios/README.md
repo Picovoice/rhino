@@ -10,9 +10,9 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 To run the application demo:
 
-1. Open [`RhinoDemo.xcodeproj`](./RhinoDemo.xcodeproj) in XCode.
+1. Open [`RhinoDemo.xcodeproj`](./RhinoDemo/RhinoDemo.xcodeproj) in XCode.
 
-2. Replace `${YOUR_ACCESS_KEY_HERE}` in the file [ContentView.swift](./RhinoDemo/ContentView.swift) with your `AccessKey`.
+2. Replace `${YOUR_ACCESS_KEY_HERE}` in the file [ContentView.swift](./RhinoDemo/RhinoDemo/ContentView.swift) with your `AccessKey`.
 
 3. Go to `Product > Scheme` and select the scheme for the language you would like to demo (e.g. `esDemo` -> Spanish Demo, `deDemo` -> German Demo)
 
