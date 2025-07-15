@@ -7,11 +7,13 @@ on:
     paths:
       - '.github/workflows/android-perf.yml'
       - 'binding/android/RhinoTestApp/**/build.gradle'
+      - 'binding/android/RhinoTestApp/**'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
       - '.github/workflows/android-perf.yml'
       - 'binding/android/RhinoTestApp/**/build.gradle'
+      - 'binding/android/RhinoTestApp/**'
 
 defaults:
   run:
