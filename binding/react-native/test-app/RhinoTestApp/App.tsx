@@ -1,5 +1,5 @@
 //
-// Copyright 2023 Picovoice Inc.
+// Copyright 2023-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -11,6 +11,7 @@
 
 import React, {useState} from 'react';
 import {
+  SafeAreaView,
   Button,
   ScrollView,
   StatusBar,
@@ -40,23 +41,14 @@ function printResults(results: Result[]) {
   });
 }
 
-function App(): React.JSX.Element {
+function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    flex: 1,
   };
-
-  /*
-   * To keep the template simple and small we're adding padding to prevent view
-   * from rendering under the System UI.
-   * For bigger apps the recommendation is to use `react-native-safe-area-context`:
-   * https://github.com/AppAndFlow/react-native-safe-area-context
-   *
-   * You can read more about it here:
-   * https://github.com/react-native-community/discussions-and-proposals/discussions/827
-   */
-  const safePadding = '5%';
+  const margined = {
+    marginTop: StatusBar.currentHeight,
+  }
 
   const [running, setRunning] = useState(false);
   const [results, setResults] = useState<Result[]>([]);
@@ -69,19 +61,23 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <View style={backgroundStyle}>
+    <SafeAreaView style={backgroundStyle}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
+        style={{...backgroundStyle, ...margined}}>
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Button title="Run Tests" testID="runTests" onPress={runTests} />
+          <Button
+            title="Run Tests"
+            testID="runTests"
+            onPress={() => runTests()}
+          />
           {printResults(results)}
           {running ? (
             <Text testID="testStatus">Tests running, please wait...</Text>
@@ -90,7 +86,7 @@ function App(): React.JSX.Element {
           )}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
