@@ -40,6 +40,8 @@
       "**/AndroidManifest.xml",
       "**/activity_main.xml",
 
+      "**/build.gradle.kts",
+
       "**/*.xcconfig",
       "**/*.podspec",
       "**/Podfile",
