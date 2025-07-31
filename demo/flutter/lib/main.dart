@@ -1,5 +1,5 @@
 //
-// Copyright 2021-2023 Picovoice Inc.
+// Copyright 2021-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -23,11 +23,13 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   final String accessKey =
       '{YOUR_ACCESS_KEY_HERE}'; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
 
@@ -160,16 +162,14 @@ class _MyAppState extends State<MyApp> {
         context: context,
         builder: (BuildContext context) {
           return Dialog(
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: SingleChildScrollView(
-                  child: RichText(
-                    textAlign: TextAlign.justify,
-                    text: TextSpan(
-                        text: _rhinoManager!.contextInfo,
-                        style: TextStyle(color: Colors.black)),
-                  ),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: SingleChildScrollView(
+                child: RichText(
+                  textAlign: TextAlign.justify,
+                  text: TextSpan(
+                      text: _rhinoManager!.contextInfo,
+                      style: TextStyle(color: Colors.black)),
                 ),
               ),
             ),
@@ -236,20 +236,18 @@ class _MyAppState extends State<MyApp> {
         textStyle: TextStyle(color: Colors.white));
 
     return Expanded(
-      flex: 4,
-      child: Container(
-          child: SizedBox(
-              width: 130,
-              height: 130,
-              child: ElevatedButton(
-                style: buttonStyle,
-                onPressed: (isProcessing || isButtonDisabled || isError)
-                    ? null
-                    : _startProcessing,
-                child: Text(isProcessing ? "..." : "Start",
-                    style: TextStyle(fontSize: 30)),
-              ))),
-    );
+        flex: 4,
+        child: SizedBox(
+            width: 130,
+            height: 130,
+            child: ElevatedButton(
+              style: buttonStyle,
+              onPressed: (isProcessing || isButtonDisabled || isError)
+                  ? null
+                  : _startProcessing,
+              child: Text(isProcessing ? "..." : "Start",
+                  style: TextStyle(fontSize: 30)),
+            )));
   }
 
   buildRhinoTextArea(BuildContext context) {

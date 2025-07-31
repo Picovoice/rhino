@@ -132,6 +132,7 @@ wargv
 wavefile
 wavspec
 wchars
+xcassets
 xcframework
 xcodeproj
 xcscheme
