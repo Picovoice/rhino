@@ -70,8 +70,6 @@
       "**/binding/react-native/test-app/**/*.xml",
       "**/binding/react-native/test-app/**/*.mm",
 
-      "**/*.sum",
-      
-      "**/Cargo.toml"
+      "**/*.sum"
     ]
   }
