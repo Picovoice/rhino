@@ -3,7 +3,6 @@
 [![GitHub release](https://img.shields.io/github/release/Picovoice/Rhino.svg)](https://github.com/Picovoice/Rhino/releases)
 [![GitHub](https://img.shields.io/github/license/Picovoice/rhino)](https://github.com/Picovoice/rhino/)
 
-[![Crates.io](https://img.shields.io/crates/v/pv_rhino)](https://crates.io/crates/pv_rhino)<!-- markdown-link-check-disable-line -->
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-android?label=maven-central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-android/)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-java?label=maven%20central%20%5Bjava%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-java/)
 [![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
@@ -73,7 +72,6 @@ Rhino is:
       - [Vanilla JavaScript and HTML](#vanilla-javascript-and-html)
       - [React](#react-demos)
     - [Node.js](#nodejs-demos)
-    - [Rust](#rust-demos)
     - [C](#c-demos)
   - [SDKs](#sdks)
     - [Python](#python)
@@ -89,7 +87,6 @@ Rhino is:
       - [Vanilla JavaScript and HTML (ES Modules)](#vanilla-javascript-and-html-es-modules)
       - [React](#react)
     - [Node.js](#nodejs)
-    - [Rust](#rust)
     - [C](#c)
   - [Releases](#releases)
   - [FAQ](#faq)
@@ -389,21 +386,6 @@ rhn-mic-demo --access_key ${ACCESS_KEY} --context_path ${CONTEXT_FILE_PATH}
 Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
 
 For more information about Node.js demos go to [demo/nodejs](./demo/nodejs).
-
-### Rust Demos
-
-> Rust SDKs will no longer be maintained after **July 15, 2025**. If you plan to use the Rhino Speech-to-Intent Rust SDK for commercial purposes, please [contact us](https://picovoice.ai/contact/).
-
-This demo opens an audio stream from a microphone and performs inference on spoken commands.
-From [demo/rust/micdemo](./demo/rust/micdemo) run the following:
-
-```console
-cargo run --release -- --access_key ${ACCESS_KEY} --context_path ${CONTEXT_FILE_PATH}
-```
-
-Replace `${CONTEXT_FILE_PATH}` with either a context file created using Picovoice Console or one within the repository.
-
-For more information about Rust demos go to [demo/rust](./demo/rust).
 
 ### C Demos
 
@@ -1350,51 +1332,6 @@ When done, be sure to release resources acquired by WebAssembly using `release()
 
 ```javascript
 handle.release();
-```
-
-### Rust
-
-> Rust SDKs will no longer be maintained after **July 15, 2025**. If you plan to use the Rhino Speech-to-Intent Rust SDK for commercial purposes, please [contact us](https://picovoice.ai/contact/).
-
-First you will need [Rust and Cargo](https://rustup.rs/) installed on your system.
-
-To add the rhino library into your app, add `pv_rhino` to your apps `Cargo.toml` manifest:
-```toml
-[dependencies]
-pv_rhino = "*"
-```
-
-To create an instance of the engine you first create a `RhinoBuilder` instance with the configuration parameters for the speech to intent engine and then make a call to `.init()`:
-
-```rust
-use rhino::RhinoBuilder;
-
-let access_key = "${ACCESS_KEY}"; // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
-
-let rhino: Rhino = RhinoBuilder::new(access_key, "/path/to/context/file.rhn").init().expect("Unable to create Rhino");
-```
-
-To feed audio into Rhino, use the `process` function in your capture loop:
-```rust
-fn next_audio_frame() -> Vec<i16> {
-    // get audio frame
-}
-
-loop {
-    if let Ok(is_finalized) = rhino.process(&next_audio_frame()) {
-        if is_finalized {
-            if let Ok(inference) = rhino.get_inference() {
-                if inference.is_understood {
-                    let intent = inference.intent.unwrap();
-                    let slots = inference.slots;
-                    // add code to take action based on inferred intent and slot values
-                } else {
-                    // add code to handle unsupported commands
-                }
-            }
-        }
-    }
-}
 ```
 
 ### C
