@@ -63,3 +63,6 @@
 
 ## [3.0.4] - 2024-11-29
 * Update native packages
+
+## [3.0.5] - 2025-10-01
+* Update android package
