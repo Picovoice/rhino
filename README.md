@@ -5,10 +5,10 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-android?label=maven-central%20%5Bandroid%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-android/)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.picovoice/rhino-java?label=maven%20central%20%5Bjava%5D)](https://repo1.maven.org/maven2/ai/picovoice/rhino-java/)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-react)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-react-native?label=npm%20%5Breact-native%5D)](https://www.npmjs.com/package/@picovoice/rhino-react-native)
-[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web?label=npm%20%5Bweb%5D)](https://www.npmjs.com/package/@picovoice/rhino-web)
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-node?label=npm%20%5Bnode%5D)](https://www.npmjs.com/package/@picovoice/rhino-node)<!-- markdown-link-check-disable-line -->
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-react?label=npm%20%5Breact%5D)](https://www.npmjs.com/package/@picovoice/rhino-react)<!-- markdown-link-check-disable-line -->
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-react-native?label=npm%20%5Breact-native%5D)](https://www.npmjs.com/package/@picovoice/rhino-react-native)<!-- markdown-link-check-disable-line -->
+[![npm](https://img.shields.io/npm/v/@picovoice/rhino-web?label=npm%20%5Bweb%5D)](https://www.npmjs.com/package/@picovoice/rhino-web)<!-- markdown-link-check-disable-line -->
 [![Nuget](https://img.shields.io/nuget/v/rhino)](https://www.nuget.org/packages/Rhino/)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Rhino-iOS)](https://cocoapods.org/pods/Rhino-iOS)
 [![Pub Version](https://img.shields.io/pub/v/rhino_flutter)](https://pub.dev/packages/rhino_flutter)
@@ -867,8 +867,8 @@ this._rhino.delete();
 
 ### React Native
 
-Install [@picovoice/react-native-voice-processor](https://www.npmjs.com/package/@picovoice/react-native-voice-processor) and
-[@picovoice/rhino-react-native](https://www.npmjs.com/package/@picovoice/rhino-react-native). The SDK provides two APIs:
+Install [@picovoice/react-native-voice-processor](https://www.npmjs.com/package/@picovoice/react-native-voice-processor)<!-- markdown-link-check-disable-line --> and
+[@picovoice/rhino-react-native](https://www.npmjs.com/package/@picovoice/rhino-react-native)<!-- markdown-link-check-disable-line -->. The SDK provides two APIs:
 
 #### High-Level API
 

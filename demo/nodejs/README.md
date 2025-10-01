@@ -42,7 +42,7 @@ These demos run Rhino on **NodeJS 18+** on the following platforms:
 
 ### Web Browsers
 
-These demos and the bindings upon which they are built are for NodeJS and **do not work in a browser**. Looking to run Rhino in-browser? There are npm packages available for [Web](https://www.npmjs.com/package/@picovoice/rhino-web) and dedicated package for [React](https://www.npmjs.com/package/@picovoice/rhino-react).
+These demos and the bindings upon which they are built are for NodeJS and **do not work in a browser**. Looking to run Rhino in-browser? There are npm packages available for [Web](https://www.npmjs.com/package/@picovoice/rhino-web)<!-- markdown-link-check-disable-line --> and dedicated package for [React](https://www.npmjs.com/package/@picovoice/rhino-react)<!-- markdown-link-check-disable-line -->.
 
 ## AccessKey
 
