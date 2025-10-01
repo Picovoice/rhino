@@ -1,6 +1,6 @@
 # rhino-web-demo
 
-This is a basic demo to show how to use Rhino for web browsers, using the IIFE version of the library (i.e. an HTML script tag). It instantiates a Rhino worker engine and uses it with the [@picovoice/web-voice-processor](https://www.npmjs.com/package/@picovoice/web-voice-processor) to access (and automatically downsample) microphone audio.
+This is a basic demo to show how to use Rhino for web browsers, using the IIFE version of the library (i.e. an HTML script tag). It instantiates a Rhino worker engine and uses it with the [@picovoice/web-voice-processor](https://www.npmjs.com/package/@picovoice/web-voice-processor)<!-- markdown-link-check-disable-line --> to access (and automatically downsample) microphone audio.
 
 ## AccessKey
 
