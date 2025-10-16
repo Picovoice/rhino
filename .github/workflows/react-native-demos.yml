@@ -17,7 +17,7 @@ on:
 
 defaults:
   run:
-    working-directory: demo/react-native
+    working-directory: demo/react-native/RhinoDemo
 
 jobs:
   build-android:
@@ -25,7 +25,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x]
+        node-version: [20.x, 22.x, 24.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -34,6 +34,22 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+
+# ************** REMOVE AFTER RELEASE ********************
+    - name: Install React Native Binding Dependencies
+      run: yarn install
+      working-directory: binding/react-native
+
+    - name: Build Local tarball
+      run: yarn pkg
+      working-directory: binding/react-native
+
+    - name: Remove old package
+      run: yarn remove @picovoice/rhino-react-native
+
+    - name: Add new local package
+      run: yarn add ../../../binding/react-native/pkg/picovoice-rhino-react-native-3.0.5.tgz
+# ************** REMOVE AFTER RELEASE ********************
 
     - name: Install dependencies
       run: yarn android-install
@@ -43,14 +59,14 @@ jobs:
 
     - name: Build
       run: ./gradlew assembleDebug
-      working-directory: demo/react-native/android
+      working-directory: demo/react-native/RhinoDemo/android
 
   build-ios:
     runs-on: macos-latest
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x]
+        node-version: [20.x, 22.x, 24.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -59,6 +75,22 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+
+# ************** REMOVE AFTER RELEASE ********************
+    - name: Install React Native Binding Dependencies
+      run: yarn install
+      working-directory: binding/react-native
+
+    - name: Build Local tarball
+      run: yarn pkg
+      working-directory: binding/react-native
+
+    - name: Remove old package
+      run: yarn remove @picovoice/rhino-react-native
+
+    - name: Add new local package
+      run: yarn add ../../../binding/react-native/pkg/picovoice-rhino-react-native-3.0.5.tgz
+# ************** REMOVE AFTER RELEASE ********************
 
     - name: Install dependencies
       run: yarn ios-install
@@ -74,4 +106,4 @@ jobs:
         -scheme RhinoDemo
         -derivedDataPath ddp
         CODE_SIGNING_ALLOWED=NO
-      working-directory: demo/react-native/ios
+      working-directory: demo/react-native/RhinoDemo/ios
