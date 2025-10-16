@@ -1379,7 +1379,7 @@
 
 "@picovoice/rhino-react-native@../../../binding/react-native/pkg/picovoice-rhino-react-native-3.0.5.tgz":
   version "3.0.5"
-  resolved "../../../binding/react-native/pkg/picovoice-rhino-react-native-3.0.5.tgz#d6dce74403eeea2309fa8dd97b4dde8078ef9e0c"
+  resolved "../../../binding/react-native/pkg/picovoice-rhino-react-native-3.0.5.tgz#1e983c92e2da5b61298b6115188a8ee4841784db"
 
 "@react-native-community/cli-clean@20.0.0":
   version "20.0.0"
