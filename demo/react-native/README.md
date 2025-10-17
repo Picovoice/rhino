@@ -12,7 +12,7 @@ Signup or Login to [Picovoice Console](https://console.picovoice.ai/) to get you
 
 ## Usage
 
-Replace your `AccessKey` in [`App.tsx`](App.tsx) file:
+Replace your `AccessKey` in [`App.tsx`](./RhinoDemo/App.tsx) file:
 
 ```typescript
 _accessKey: string ="${YOUR_ACCESS_KEY_HERE}" // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
