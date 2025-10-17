@@ -14,8 +14,7 @@ dependencies:
     sdk: flutter
 
   path: ^1.9.0
-  rhino_flutter: #^3.0.6
-    path: ../../binding/flutter
+  rhino_flutter: ^3.0.6
 
 dev_dependencies:
   integration_test:
