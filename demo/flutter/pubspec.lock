@@ -246,10 +246,10 @@ packages:
     dependency: "direct main"
     description:
       name: rhino_flutter
-      sha256: "67bb27982f4c816711126c41916723e9b71f27e41c06ec52097795a772e69c3d"
+      sha256: "0bfe80a2748acfa47625d5c6ca51dfc5d1dda0eb2b09475d7da263f4864e368a"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.5"
+    version: "3.0.6"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -344,5 +344,5 @@ packages:
     source: hosted
     version: "1.1.0"
 sdks:
-  dart: ">=3.8.0-0 <4.0.0"
-  flutter: ">=3.24.0"
+  dart: ">=3.9.0 <4.0.0"
+  flutter: ">=3.35.0 <4.0.0"

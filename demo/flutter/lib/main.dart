@@ -58,42 +58,54 @@ class MyAppState extends State<MyApp> {
   Future<void> initRhino() async {
     String language = "";
     try {
-      final paramsString =
-          await DefaultAssetBundle.of(context).loadString('assets/params.json');
+      final paramsString = await DefaultAssetBundle.of(
+        context,
+      ).loadString('assets/params.json');
       final params = json.decode(paramsString);
 
       language = params["language"];
       contextName = params["context"];
     } catch (_) {
-      errorCallback(RhinoException(
-          "Could not find `params.json`. Ensure 'prepare_demo.dart' script was run before launching the demo."));
+      errorCallback(
+        RhinoException(
+          "Could not find `params.json`. Ensure 'prepare_demo.dart' script was run before launching the demo.",
+        ),
+      );
       return;
     }
 
     String platform = Platform.isAndroid
         ? "android"
         : Platform.isIOS
-            ? "ios"
-            : throw RhinoRuntimeException(
-                "This demo supports iOS and Android only.");
+        ? "ios"
+        : throw RhinoRuntimeException(
+            "This demo supports iOS and Android only.",
+          );
     String contextPath =
         "assets/contexts/$platform/${contextName}_$platform.rhn";
-    String? modelPath =
-        language != "en" ? "assets/models/rhino_params_$language.pv" : null;
+    String? modelPath = language != "en"
+        ? "assets/models/rhino_params_$language.pv"
+        : null;
     try {
       _rhinoManager = await RhinoManager.create(
-          accessKey, contextPath, inferenceCallback,
-          modelPath: modelPath, processErrorCallback: errorCallback);
+        accessKey,
+        contextPath,
+        inferenceCallback,
+        modelPath: modelPath,
+        processErrorCallback: errorCallback,
+      );
     } on RhinoActivationException {
       errorCallback(RhinoActivationException("AccessKey activation error."));
     } on RhinoActivationLimitException {
       errorCallback(
-          RhinoActivationLimitException("AccessKey reached its device limit."));
+        RhinoActivationLimitException("AccessKey reached its device limit."),
+      );
     } on RhinoActivationRefusedException {
       errorCallback(RhinoActivationRefusedException("AccessKey refused."));
     } on RhinoActivationThrottledException {
       errorCallback(
-          RhinoActivationThrottledException("AccessKey has been throttled."));
+        RhinoActivationThrottledException("AccessKey has been throttled."),
+      );
     } on RhinoException catch (ex) {
       errorCallback(ex);
     } finally {
@@ -159,22 +171,24 @@ class MyAppState extends State<MyApp> {
 
   _showContextInfo(context) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: SingleChildScrollView(
-                child: RichText(
-                  textAlign: TextAlign.justify,
-                  text: TextSpan(
-                      text: _rhinoManager!.contextInfo,
-                      style: TextStyle(color: Colors.black)),
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: SingleChildScrollView(
+              child: RichText(
+                textAlign: TextAlign.justify,
+                text: TextSpan(
+                  text: _rhinoManager!.contextInfo,
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   Color picoBlue = Color.fromRGBO(55, 125, 255, 1);
@@ -192,7 +206,7 @@ class MyAppState extends State<MyApp> {
           buildRhinoTextArea(context),
           buildErrorMessage(context),
           buildStartButton(context),
-          footer
+          footer,
         ],
       ),
     );
@@ -200,95 +214,114 @@ class MyAppState extends State<MyApp> {
 
   buildContextHeader(BuildContext context) {
     final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
-        backgroundColor: picoBlue, textStyle: TextStyle(color: Colors.white));
+      backgroundColor: picoBlue,
+      textStyle: TextStyle(color: Colors.white),
+    );
 
     return Expanded(
-        flex: 1,
-        child: Row(
-          children: [
-            Expanded(
-                child: Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(left: 10, top: 10),
-                    child: Text("Context: $contextName"))),
-            Expanded(
-                child: Container(
-                    alignment: Alignment.centerRight,
-                    margin: EdgeInsets.only(right: 10, top: 10),
-                    child: ElevatedButton(
-                      style: buttonStyle,
-                      onPressed: (isProcessing || isButtonDisabled || isError)
-                          ? null
-                          : () {
-                              _showContextInfo(context);
-                            },
-                      child:
-                          Text("Context Info", style: TextStyle(fontSize: 15)),
-                    )))
-          ],
-        ));
+      flex: 1,
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(left: 10, top: 10),
+              child: Text("Context: $contextName"),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              alignment: Alignment.centerRight,
+              margin: EdgeInsets.only(right: 10, top: 10),
+              child: ElevatedButton(
+                style: buttonStyle,
+                onPressed: (isProcessing || isButtonDisabled || isError)
+                    ? null
+                    : () {
+                        _showContextInfo(context);
+                      },
+                child: Text("Context Info", style: TextStyle(fontSize: 15)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   buildStartButton(BuildContext context) {
     final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
-        backgroundColor: picoBlue,
-        shape: CircleBorder(),
-        textStyle: TextStyle(color: Colors.white));
+      backgroundColor: picoBlue,
+      shape: CircleBorder(),
+      textStyle: TextStyle(color: Colors.white),
+    );
 
     return Expanded(
-        flex: 4,
-        child: SizedBox(
-            width: 130,
-            height: 130,
-            child: ElevatedButton(
-              style: buttonStyle,
-              onPressed: (isProcessing || isButtonDisabled || isError)
-                  ? null
-                  : _startProcessing,
-              child: Text(isProcessing ? "..." : "Start",
-                  style: TextStyle(fontSize: 30)),
-            )));
+      flex: 4,
+      child: SizedBox(
+        width: 130,
+        height: 130,
+        child: ElevatedButton(
+          style: buttonStyle,
+          onPressed: (isProcessing || isButtonDisabled || isError)
+              ? null
+              : _startProcessing,
+          child: Text(
+            isProcessing ? "..." : "Start",
+            style: TextStyle(fontSize: 30),
+          ),
+        ),
+      ),
+    );
   }
 
   buildRhinoTextArea(BuildContext context) {
     return Expanded(
-        flex: 8,
-        child: Container(
-            alignment: Alignment.center,
-            color: Color(0xff25187e),
-            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-            child: Text(
-              rhinoText,
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            )));
+      flex: 8,
+      child: Container(
+        alignment: Alignment.center,
+        color: Color(0xff25187e),
+        margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+        child: Text(
+          rhinoText,
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      ),
+    );
   }
 
   buildErrorMessage(BuildContext context) {
     return Expanded(
-        flex: isError ? 3 : 0,
-        child: Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(left: 20, right: 20),
-            padding: EdgeInsets.all(5),
-            decoration: !isError
-                ? null
-                : BoxDecoration(
-                    color: Colors.red, borderRadius: BorderRadius.circular(5)),
-            child: !isError
-                ? null
-                : Text(
-                    errorMessage,
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  )));
+      flex: isError ? 3 : 0,
+      child: Container(
+        alignment: Alignment.center,
+        margin: EdgeInsets.only(left: 20, right: 20),
+        padding: EdgeInsets.all(5),
+        decoration: !isError
+            ? null
+            : BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(5),
+              ),
+        child: !isError
+            ? null
+            : Text(
+                errorMessage,
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+      ),
+    );
   }
 
   Widget footer = Expanded(
-      flex: 1,
-      child: Container(
-          alignment: Alignment.bottomCenter,
-          padding: EdgeInsets.only(bottom: 20),
-          child: const Text(
-            "Made in Vancouver, Canada by Picovoice",
-            style: TextStyle(color: Color(0xff666666)),
-          )));
+    flex: 1,
+    child: Container(
+      alignment: Alignment.bottomCenter,
+      padding: EdgeInsets.only(bottom: 20),
+      child: const Text(
+        "Made in Vancouver, Canada by Picovoice",
+        style: TextStyle(color: Color(0xff666666)),
+      ),
+    ),
+  );
 }
