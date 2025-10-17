@@ -66,3 +66,6 @@
 
 ## [3.0.5] - 2025-10-01
 * Update android package
+
+## [3.0.6] - 2025-10-17
+* Replaced JCenter with Maven Central in Gradle repository sources
