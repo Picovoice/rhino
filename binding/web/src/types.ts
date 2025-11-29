@@ -1,5 +1,5 @@
 /*
-  Copyright 2022-2023 Picovoice Inc.
+  Copyright 2022-2025 Picovoice Inc.
 
   You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
   file accompanying this source.
@@ -35,6 +35,8 @@ export type RhinoContext = PvModel & {
 export type RhinoModel = PvModel;
 
 export type RhinoOptions = {
+  /** @defaultValue 'best' */
+  device?: string;
   /** @defaultValue '1.0' */
   endpointDurationSec?: number;
   /** @defaultValue 'false' */
@@ -61,10 +63,13 @@ export type RhinoWorkerInitRequest = {
   accessKey: string;
   contextPath: string;
   sensitivity: number;
-  wasm: string;
-  wasmSimd: string;
-  sdk: string;
   modelPath: string;
+  device: string;
+  wasmSimd: string;
+  wasmSimdLib: string;
+  wasmPThread: string;
+  wasmPThreadLib: string;
+  sdk: string;
   options: RhinoOptions;
 };
 

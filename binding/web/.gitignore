@@ -1,6 +1,6 @@
 node_modules
 dist
-lib/pv_rhino*.wasm
+src/lib/*
 src/rhino_64.ts
 contexts/*.rhn
 test/contexts/*.rhn
