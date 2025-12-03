@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2023 Picovoice Inc.
+# Copyright 2018-2025 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -14,7 +14,7 @@ import unittest
 
 from parameterized import parameterized
 
-from _rhino import Rhino, RhinoError
+from _rhino import Rhino, RhinoError, list_hardware_devices
 from test_util import *
 
 within_context_parameters, out_of_context_parameters = load_test_data()
@@ -49,6 +49,7 @@ class RhinoTestCase(unittest.TestCase):
             access_key=sys.argv[1],
             library_path=pv_library_path(relative_path),
             model_path=get_model_path_by_language(relative_path, language),
+            device=sys.argv[2],
             context_path=get_context_path_by_language(relative_path, context_name, language)
         )
 
@@ -92,6 +93,7 @@ class RhinoTestCase(unittest.TestCase):
             access_key=sys.argv[1],
             library_path=pv_library_path(relative_path),
             model_path=get_model_path_by_language(relative_path, 'en'),
+            device=sys.argv[2],
             context_path=get_context_path_by_language(relative_path, 'coffee_maker', 'en')
         )
         audio_file = get_audio_file_by_language(relative_path, 'en', True)
@@ -106,6 +108,15 @@ class RhinoTestCase(unittest.TestCase):
         inference = rhino.get_inference()
         self.assertTrue(inference.is_understood)
 
+    def test_available_devices(self) -> None:
+        relative_path = '../..'
+
+        res = list_hardware_devices(library_path=pv_library_path(relative_path))
+        self.assertGreater(len(res), 0)
+        for x in res:
+            self.assertIsInstance(x, str)
+            self.assertGreater(len(x), 0)
+
     def test_message_stack(self):
         relative_path = '../..'
 
@@ -115,6 +126,7 @@ class RhinoTestCase(unittest.TestCase):
                 access_key='invalid',
                 library_path=pv_library_path(relative_path),
                 model_path=get_model_path_by_language(relative_path, 'en'),
+                device=sys.argv[2],
                 context_path=get_context_path_by_language(relative_path, 'smart_lighting', 'en'))
         except RhinoError as e:
             error = e.message_stack
@@ -127,6 +139,7 @@ class RhinoTestCase(unittest.TestCase):
                 access_key='invalid',
                 library_path=pv_library_path(relative_path),
                 model_path=get_model_path_by_language(relative_path, 'en'),
+                device=sys.argv[2],
                 context_path=get_context_path_by_language(relative_path, 'smart_lighting', 'en'))
         except RhinoError as e:
             self.assertEqual(len(error), len(e.message_stack))
@@ -139,6 +152,7 @@ class RhinoTestCase(unittest.TestCase):
             access_key=sys.argv[1],
             library_path=pv_library_path(relative_path),
             model_path=get_model_path_by_language(relative_path, 'en'),
+            device=sys.argv[2],
             context_path=get_context_path_by_language(relative_path, 'smart_lighting', 'en'))
         test_pcm = [0] * r.frame_length
 
@@ -156,8 +170,8 @@ class RhinoTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print("usage: test_rhino.py ${ACCESS_KEY}")
+    if len(sys.argv) != 3:
+        print("usage: test_rhino.py ${ACCESS_KEY} ${DEVICE}")
         exit(1)
 
     unittest.main(argv=sys.argv[:1])
