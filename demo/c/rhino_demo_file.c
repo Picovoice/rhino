@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2023 Picovoice Inc.
+    Copyright 2018-2025 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -90,19 +90,23 @@ static struct option long_options[] = {
         {"access_key",                required_argument, NULL, 'a'},
         {"library_path",              required_argument, NULL, 'l'},
         {"model_path",                required_argument, NULL, 'm'},
+        {"device",                    required_argument, NULL, 'y'},
         {"context_path",              required_argument, NULL, 'c'},
         {"wav_path",                  required_argument, NULL, 'w'},
         {"sensitivity",               required_argument, NULL, 't'},
         {"endpoint_duration_sec",     required_argument, NULL, 'u'},
         {"require_endpoint",          required_argument, NULL, 'e'},
-        {"performance_threshold_sec", optional_argument, NULL, 'p'}
+        {"performance_threshold_sec", optional_argument, NULL, 'p'},
+        {"show_inference_devices",    no_argument,       NULL, 'i'},
 };
 
 void print_usage(const char *program_name) {
     fprintf(
             stderr,
-            "Usage : %s -a ACCESS_KEY -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -w WAV_PATH [-t SENSITIVITY] "
-            "[-u, --endpoint_duration_sec] [-e, --require_endpoint (true,false)]\n",
+            "Usage : %s -a ACCESS_KEY -l LIBRARY_PATH -m MODEL_PATH -c CONTEXT_PATH -w WAV_PATH "
+            "[-y DEVICE] [-t SENSITIVITY] [-u, --endpoint_duration_sec] [-e, --require_endpoint (true,false)]\n"
+            "        %s [-i, --show_inference_devices] -l LIBRARY_PATH\n",
+            program_name,
             program_name);
 }
 
@@ -112,19 +116,98 @@ void print_error_message(char **message_stack, int32_t message_stack_depth) {
     }
 }
 
+void print_inference_devices(const char *library_path) {
+    void *dl_handle = open_dl(library_path);
+    if (!dl_handle) {
+        fprintf(stderr, "Failed to open library at '%s'.\n", library_path);
+        exit(EXIT_FAILURE);
+    }
+
+    const char *(*pv_status_to_string_func)(pv_status_t) = load_symbol(dl_handle, "pv_status_to_string");
+    if (!pv_status_to_string_func) {
+        print_dl_error("Failed to load 'pv_status_to_string'");
+        exit(EXIT_FAILURE);
+    }
+
+    pv_status_t (*pv_rhino_list_hardware_devices_func)(char ***, int32_t *) =
+    load_symbol(dl_handle, "pv_rhino_list_hardware_devices");
+    if (!pv_rhino_list_hardware_devices_func) {
+        print_dl_error("failed to load `pv_rhino_list_hardware_devices`");
+        exit(EXIT_FAILURE);
+    }
+
+    pv_status_t (*pv_rhino_free_hardware_devices_func)(char **, int32_t) =
+        load_symbol(dl_handle, "pv_rhino_free_hardware_devices");
+    if (!pv_rhino_free_hardware_devices_func) {
+        print_dl_error("failed to load `pv_rhino_free_hardware_devices`");
+        exit(EXIT_FAILURE);
+    }
+
+    pv_status_t (*pv_get_error_stack_func)(char ***, int32_t *) =
+        load_symbol(dl_handle, "pv_get_error_stack");
+    if (!pv_get_error_stack_func) {
+        print_dl_error("failed to load 'pv_get_error_stack_func'");
+        exit(EXIT_FAILURE);
+    }
+
+    void (*pv_free_error_stack_func)(char **) =
+        load_symbol(dl_handle, "pv_free_error_stack");
+    if (!pv_free_error_stack_func) {
+        print_dl_error("failed to load 'pv_free_error_stack_func'");
+        exit(EXIT_FAILURE);
+    }
+
+    char **message_stack = NULL;
+    int32_t message_stack_depth = 0;
+    pv_status_t error_status = PV_STATUS_RUNTIME_ERROR;
+
+    char **hardware_devices = NULL;
+    int32_t num_hardware_devices = 0;
+    pv_status_t status = pv_rhino_list_hardware_devices_func(&hardware_devices, &num_hardware_devices);
+    if (status != PV_STATUS_SUCCESS) {
+        fprintf(
+                stderr,
+                "Failed to list hardware devices with `%s`.\n",
+                pv_status_to_string_func(status));
+        error_status = pv_get_error_stack_func(&message_stack, &message_stack_depth);
+        if (error_status != PV_STATUS_SUCCESS) {
+            fprintf(
+                    stderr,
+                    ".\nUnable to get Rhino error state with '%s'.\n",
+                    pv_status_to_string_func(error_status));
+            exit(EXIT_FAILURE);
+        }
+
+        if (message_stack_depth > 0) {
+            fprintf(stderr, ":\n");
+            print_error_message(message_stack, message_stack_depth);
+            pv_free_error_stack_func(message_stack);
+        }
+        exit(EXIT_FAILURE);
+    }
+
+    for (int32_t i = 0; i < num_hardware_devices; i++) {
+        fprintf(stdout, "%s\n", hardware_devices[i]);
+    }
+    pv_rhino_free_hardware_devices_func(hardware_devices, num_hardware_devices);
+    close_dl(dl_handle);
+}
+
 int picovoice_main(int argc, char *argv[]) {
     const char *access_key = NULL;
     const char *library_path = NULL;
     const char *model_path = NULL;
+    const char *device = "best";
     const char *context_path = NULL;
     const char *wav_path = NULL;
     float sensitivity = 0.5f;
     float endpoint_duration_sec = 1.f;
     bool require_endpoint = true;
     double performance_threshold_sec = 0;
+    bool show_inference_devices = false;
 
     int c;
-    while ((c = getopt_long(argc, argv, "a:l:m:c:w:t:u:e:p:", long_options, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "a:l:m:y:c:w:t:u:e:p:i", long_options, NULL)) != -1) {
         switch (c) {
             case 'a':
                 access_key = optarg;
@@ -134,6 +217,9 @@ int picovoice_main(int argc, char *argv[]) {
                 break;
             case 'm':
                 model_path = optarg;
+                break;
+            case 'y':
+                device = optarg;
                 break;
             case 'c':
                 context_path = optarg;
@@ -153,9 +239,23 @@ int picovoice_main(int argc, char *argv[]) {
             case 'p':
                 performance_threshold_sec = strtod(optarg, NULL);
                 break;
+            case 'i':
+                show_inference_devices = true;
+                break;
             default:
                 exit(1);
         }
+    }
+
+    if (show_inference_devices) {
+        if (!library_path) {
+            fprintf(stderr, "`library_path` is required to view available inference devices.\n");
+            print_usage(argv[0]);
+            exit(1);
+        }
+
+        print_inference_devices(library_path);
+        return 0;
     }
 
     if (!access_key || !library_path || !model_path || !context_path || !wav_path) {
@@ -182,6 +282,7 @@ int picovoice_main(int argc, char *argv[]) {
     }
 
     pv_status_t (*pv_rhino_init_func)(
+            const char *,
             const char *,
             const char *,
             const char *,
@@ -303,6 +404,7 @@ int picovoice_main(int argc, char *argv[]) {
     pv_status_t status = pv_rhino_init_func(
             access_key,
             model_path,
+            device,
             context_path,
             sensitivity,
             endpoint_duration_sec,
