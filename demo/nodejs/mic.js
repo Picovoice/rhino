@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 //
-// Copyright 2020-2023 Picovoice Inc.
+// Copyright 2020-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -32,6 +32,9 @@ program
   )
   .option("-m, --model_file_path <string>", "absolute path to rhino model")
   .option(
+    "-y, --device <string>",
+    "Device to run inference on (`best`, `cpu:{num_threads}`, `gpu:{gpu_index}`). Default: selects best device for `pvrhino`")
+  .option(
     "-s, --sensitivity <number>",
     "sensitivity value between 0 and 1",
     parseFloat,
@@ -41,9 +44,6 @@ program
     "index of audio device to use to record audio",
     Number,
     -1
-  ).option(
-    "-d, --show_audio_devices",
-    "show the list of available devices"
   ).option(
     "-d, --endpoint_duration_sec <bool>",
     "Endpoint duration in seconds. " +
@@ -58,7 +58,13 @@ program
     "-e, --requires_endpoint <bool>",
     "If set to `false`, Rhino does not require an endpoint (chunk of silence) before finishing inference.",
     "true"
-  );
+  ).option(
+    "-sd, --show_audio_devices",
+    "show the list of available devices"
+  ).option(
+    "-sy, --show_inference_devices",
+    "Print the list of devices available to run Rhino inference.",
+    false);
 
 if (process.argv.length < 3) {
   program.help();
@@ -72,20 +78,32 @@ async function micDemo() {
   let contextPath = program["context_path"];
   let libraryFilePath = program["library_file_path"];
   let modelFilePath = program["model_file_path"];
+  let device = program["device"];
   let sensitivity = program["sensitivity"];
   let audioDeviceIndex = program["audio_device_index"];
-  let showAudioDevices = program["show_audio_devices"];
   let endpointDurationSec = program["endpoint_duration_sec"];
   let requiresEndpoint = program["requires_endpoint"].toLowerCase() !== 'false';
+  let showAudioDevices = program["show_audio_devices"];
+  let showInferenceDevices = program["show_inference_devices"];
 
-  let showAudioDevicesDefined = showAudioDevices !== undefined;
+  if (showInferenceDevices) {
+    console.log(Rhino.listAvailableDevices().join('\n'));
+    process.exit();
+  }
 
-  if (showAudioDevicesDefined) {
+  if (showAudioDevices) {
     const devices = PvRecorder.getAvailableDevices();
     for (let i = 0; i < devices.length; i++) {
         console.log(`index: ${i}, device name: ${devices[i]}`);
     }
     process.exit();
+  }
+
+  if (accessKey === undefined) {
+    console.error(
+      "`--access_key` is a required argument"
+    );
+    return;
   }
 
   if (isNaN(sensitivity) || sensitivity < 0 || sensitivity > 1) {
@@ -113,11 +131,14 @@ async function micDemo() {
   let handle = new Rhino(
     accessKey,
     contextPath,
-    sensitivity,
-    endpointDurationSec,
-    requiresEndpoint,
-    modelFilePath,
-    libraryFilePath
+    {
+      modelPath: modelFilePath,
+      device: device,
+      sensitivity: sensitivity,
+      endpointDurationSec: endpointDurationSec,
+      requiresEndpoint: requiresEndpoint,
+      libraryPath: libraryFilePath
+    }
   );
 
   const frameLength = handle.frameLength;
