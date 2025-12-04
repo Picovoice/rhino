@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 //
-// Copyright 2020 Picovoice Inc.
+// Copyright 2020-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -23,15 +23,15 @@ const {
 const { RhinoInvalidArgumentError } = require("@picovoice/rhino-node/dist/errors");
 
 program
-  .requiredOption(
+  .option(
     "-a, --access_key <string>",
     "AccessKey obtain from the Picovoice Console (https://console.picovoice.ai/)"
   )
-  .requiredOption(
+  .option(
     "-i, --input_audio_file_path <string>",
     "input audio wave file in 16-bit 16KHz linear PCM format (mono)"
   )
-  .requiredOption(
+  .option(
     "-c, --context_path <string>",
     `absolute path to rhino context (.rhn extension)`
   )
@@ -40,6 +40,9 @@ program
     "absolute path to rhino dynamic library"
   )
   .option("-m, --model_file_path <string>", "absolute path to rhino model")
+  .option(
+    "-y, --device <string>",
+    "Device to run inference on (`best`, `cpu:{num_threads}`, `gpu:{gpu_index}`). Default: selects best device for `pvrhino`")
   .option(
     "-s, --sensitivity <number>",
     "sensitivity value between 0 and 1",
@@ -59,7 +62,10 @@ program
     "-e, --requires_endpoint <bool>",
     "If set to `false`, Rhino does not require an endpoint (chunk of silence) before finishing inference.",
     "true"
-);
+  ).option(
+    "-sy, --show_inference_devices",
+    "Print the list of devices available to run Rhino inference.",
+    false);
 
 if (process.argv.length < 3) {
   program.help();
@@ -67,14 +73,28 @@ if (process.argv.length < 3) {
 program.parse(process.argv);
 
 function fileDemo() {
+  let accessKey = program["access_key"]
   let audioPath = program["input_audio_file_path"];
-  let access_key = program["access_key"]
   let contextPath = program["context_path"];
   let libraryFilePath = program["library_file_path"];
   let modelFilePath = program["model_file_path"];
+  let device = program["device"];
   let sensitivity = program["sensitivity"];
   let endpointDurationSec = program["endpoint_duration_sec"];
   let requiresEndpoint = program["requires_endpoint"].toLowerCase() !== 'false';
+
+  let showInferenceDevices = program["show_inference_devices"];
+  if (showInferenceDevices) {
+    console.log(Rhino.listAvailableDevices().join('\n'));
+    process.exit();
+  }
+
+  if (accessKey === undefined || audioPath === undefined) {
+    console.error(
+      "`--access_key` and `--input_audio_file_path` are required arguments"
+    );
+    return;
+  }
 
   if (isNaN(sensitivity) || sensitivity < 0 || sensitivity > 1) {
     console.error("--sensitivity must be a number in the range [0,1]");
@@ -93,13 +113,16 @@ function fileDemo() {
   }
 
   let engineInstance = new Rhino(
-    access_key,
+    accessKey,
     contextPath,
-    sensitivity,
-    endpointDurationSec,
-    requiresEndpoint,
-    modelFilePath,
-    libraryFilePath
+    {
+      modelPath: modelFilePath,
+      device: device,
+      sensitivity: sensitivity,
+      endpointDurationSec: endpointDurationSec,
+      requiresEndpoint: requiresEndpoint,
+      libraryPath: libraryFilePath
+    }
   );
 
   console.log("Context info:");

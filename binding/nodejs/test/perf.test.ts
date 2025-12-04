@@ -18,11 +18,16 @@ import { performance } from 'perf_hooks';
 import { getInt16Frames } from '../src';
 import { WaveFile } from 'wavefile';
 import { getPlatform } from '../src/platforms';
+import { getModelPathByLanguage } from './test_utils';
 
 const ACCESS_KEY =
   process.argv
     .filter(x => x.startsWith('--access_key='))[0]
     ?.split('--access_key=')[1] ?? '';
+const DEVICE =
+  process.argv
+    .filter(x => x.startsWith('--device='))[0]
+    .split('--device=')[1] ?? 'best';
 const NUM_TEST_ITERATIONS = Number(
   process.argv
     .filter(x => x.startsWith('--num_test_iterations='))[0]
@@ -42,7 +47,11 @@ const WAV_PATH_COFFEE_MAKER_IN_CONTEXT =
 
 describe('performance', () => {
   test('process', () => {
-    const rhinoEngine = new Rhino(ACCESS_KEY, contextPathCoffeeMaker);
+    const rhinoEngine = new Rhino(
+      ACCESS_KEY,
+      contextPathCoffeeMaker,
+      { device: DEVICE }
+    );
 
     const waveFilePath = path.join(__dirname, WAV_PATH_COFFEE_MAKER_IN_CONTEXT);
     const waveBuffer = fs.readFileSync(waveFilePath);
