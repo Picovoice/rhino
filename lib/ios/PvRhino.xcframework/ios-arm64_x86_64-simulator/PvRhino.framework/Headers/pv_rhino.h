@@ -167,7 +167,7 @@ PV_API int32_t pv_rhino_frame_length(void);
  * Gets a list of hardware devices that can be specified when calling `pv_rhino_init`
  *
  * @param[out] hardware_devices Array of available hardware devices. Devices are NULL terminated strings.
- *                              The array must be freed using `pv_eagle_free_hardware_devices`.
+ *                              The array must be freed using `pv_rhino_free_hardware_devices`.
  * @param[out] num_hardware_devices The number of devices in the `hardware_devices` array.
  * @return Status code. Returns `PV_STATUS_OUT_OF_MEMORY`, `PV_STATUS_INVALID_ARGUMENT`, `PV_STATUS_INVALID_STATE`,
  * `PV_STATUS_RUNTIME_ERROR`, `PV_STATUS_ACTIVATION_ERROR`, `PV_STATUS_ACTIVATION_LIMIT_REACHED`,
