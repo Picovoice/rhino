@@ -1,5 +1,5 @@
 //
-// Copyright 2020-2023 Picovoice Inc.
+// Copyright 2020-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -32,6 +32,9 @@ const ACCESS_KEY =
   process.argv
     .filter(x => x.startsWith('--access_key='))[0]
     ?.split('--access_key=')[1] ?? '';
+const DEVICE = process.argv
+  .filter(x => x.startsWith('--device='))[0]
+  .split('--device=')[1] ?? 'best';
 
 function processFileHelper(rhino: Rhino, audioFile: string, maxProcessCount: number = -1) {
   let processed = 0;
@@ -76,10 +79,10 @@ function testRhinoDetection(
   const engineInstance = new Rhino(
     ACCESS_KEY,
     contextPath,
-    0.5,
-    1.0,
-    true,
-    modelPath
+    {
+      modelPath: modelPath,
+      device: DEVICE,
+    }
   );
 
   const waveFilePath = getAudioFileByLanguage(language, isWithinContext);
@@ -100,7 +103,8 @@ describe("Reset", () => {
   
     const rhino = new Rhino(
       ACCESS_KEY,
-      contextPath
+      contextPath,
+      { device: DEVICE }
     );
 
     let isFinalized = processFileHelper(rhino, waveFilePath, 15);
@@ -130,7 +134,8 @@ describe("error message stack", () => {
     try {
       new Rhino(
         "invalid",
-        getContextPathsByLanguage('en', 'coffee_maker'));
+        getContextPathsByLanguage('en', 'coffee_maker'),
+        { device: DEVICE });
     } catch (e: any) {
       for (let i = 0; i < error.length; i++) {
         expect(error[i]).toEqual(e.messageStack[i]);
@@ -171,7 +176,10 @@ describe('basic parameter validation', () => {
       new Rhino(
         ACCESS_KEY,
         getContextPathsByLanguage('en', 'coffee_maker'),
-        2.99
+        {
+          device: DEVICE,
+          sensitivity: 2.99
+        }
       );
     }).toThrow(RangeError);
   });
@@ -181,8 +189,11 @@ describe('basic parameter validation', () => {
       new Rhino(
         ACCESS_KEY,
         getContextPathsByLanguage('en', 'coffee_maker'),
-        // @ts-expect-error
-        'invalid_sensitivity'
+        {
+          device: DEVICE,
+          // @ts-expect-error
+          sensitivity: 'invalid_sensitivity'
+        }
       );
     }).toThrow(RangeError);
   });
@@ -192,7 +203,8 @@ describe('frame validation', () => {
   test('accepts non Int16Array if array is valid', () => {
     const rhinoEngine = new Rhino(
       ACCESS_KEY,
-      getContextPathsByLanguage('en', 'coffee_maker')
+      getContextPathsByLanguage('en', 'coffee_maker'),
+      { device: DEVICE }
     );
     const emptyArray = Array.apply(null, Array(rhinoEngine.frameLength)).map(
       (x, i) => i
@@ -205,7 +217,8 @@ describe('frame validation', () => {
   test('mismatched frameLength throws error', () => {
     const rhinoEngine = new Rhino(
       ACCESS_KEY,
-      getContextPathsByLanguage('en', 'coffee_maker')
+      getContextPathsByLanguage('en', 'coffee_maker'),
+      { device: DEVICE }
     );
     expect(() => {
       // @ts-expect-error
@@ -217,7 +230,8 @@ describe('frame validation', () => {
   test('null/undefined frames throws error', () => {
     const rhinoEngine = new Rhino(
       ACCESS_KEY,
-      getContextPathsByLanguage('en', 'coffee_maker')
+      getContextPathsByLanguage('en', 'coffee_maker'),
+      { device: DEVICE }
     );
     expect(() => {
       // @ts-expect-error
@@ -233,7 +247,8 @@ describe('frame validation', () => {
   test('passing floating point frame values throws RhinoInvalidArgumentError', () => {
     const rhinoEngine = new Rhino(
       ACCESS_KEY,
-      getContextPathsByLanguage('en', 'coffee_maker')
+      getContextPathsByLanguage('en', 'coffee_maker'),
+      { device: DEVICE }
     );
     const floatFrames = Array.from({ length: rhinoEngine.frameLength }).map(
       () => 3.1415
@@ -250,7 +265,8 @@ describe('getContextInfo', () => {
   test('coffee maker expressions and slots are returned', () => {
     const rhinoEngine = new Rhino(
       ACCESS_KEY,
-      getContextPathsByLanguage('en', 'coffee_maker')
+      getContextPathsByLanguage('en', 'coffee_maker'),
+      { device: DEVICE }
     );
 
     const contextInfo = rhinoEngine.getContextInfo();
@@ -264,5 +280,13 @@ describe('getContextInfo', () => {
     );
 
     rhinoEngine.release();
+  });
+});
+
+describe('defaults', () => {
+  test('Invalid device', () => {
+    expect(() => {
+      new Rhino(ACCESS_KEY, getContextPathsByLanguage('en', 'coffee_maker'), { device: "cloud:9" });
+    }).toThrow(RhinoInvalidArgumentError);
   });
 });

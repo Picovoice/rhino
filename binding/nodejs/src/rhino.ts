@@ -1,5 +1,5 @@
 //
-// Copyright 2020-2023 Picovoice Inc.
+// Copyright 2020-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -19,6 +19,10 @@ import {
   RhinoInvalidStateError,
   pvStatusToException,
 } from './errors';
+import {
+  RhinoInputOptions,
+  RhinoOptions,
+} from './types';
 import { getSystemLibraryPath } from './platforms';
 
 const MODEL_PATH_DEFAULT = '../lib/common/rhino_params.pv';
@@ -29,15 +33,28 @@ export type RhinoInference = {
   slots?: Record<string, string>;
 };
 
-type RhinoHandleAndStatus = { handle: any; status: PvStatus };
-type FinalizedAndStatus = { is_finalized: number; status: PvStatus };
+type RhinoHandleAndStatus = {
+  handle: any;
+  status: PvStatus
+};
+type FinalizedAndStatus = {
+  is_finalized: number;
+  status: PvStatus
+};
 type InferenceAndStatus = {
   is_understood: number;
   intent?: string;
   slots?: Record<string, string>;
   status: PvStatus;
 };
-type ContextAndStatus = { context_info: string; status: PvStatus };
+type ContextAndStatus = {
+  context_info: string;
+  status: PvStatus
+};
+type RhinoHardwareDevicesResult = {
+  hardware_devices: string[];
+  status: PvStatus;
+};
 
 /**
  * Wraps the Rhino engine and context.
@@ -59,25 +76,27 @@ export default class Rhino {
    * Creates an instance of Rhino with a specific context.
    * @param {string} accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
    * @param {string} contextPath the path to the Rhino context file (.rhn extension)
-   * @param {number} sensitivity [0.5] the sensitivity in the range [0,1]
-   * @param {number} endpointDurationSec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
+   * @param {number} options.sensitivity [0.5] the sensitivity in the range [0,1]
+   * @param {number} options.endpointDurationSec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
    * utterance that marks the end of spoken command. It should be a positive number within [0.5, 5]. A lower endpoint
    * duration reduces delay and improves responsiveness. A higher endpoint duration assures Rhino doesn't return inference
    * preemptively in case the user pauses before finishing the request.
-   * @param {boolean} requireEndpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
+   * @param {boolean} options.requireEndpoint If set to `true`, Rhino requires an endpoint (a chunk of silence) after the spoken command.
    * If set to `false`, Rhino tries to detect silence, but if it cannot, it still will provide inference regardless. Set
    * to `false` only if operating in an environment with overlapping speech (e.g. people talking in the background).
-   * @param {string} manualModelPath the path to the Rhino model (.pv extension)
-   * @param {string} manualLibraryPath the path to the Rhino dynamic library (platform-dependent extension)
+   * @param {string} options.device String representation of the device (e.g., CPU or GPU) to use for inference.
+   * If set to `best`, the most suitable device is selected automatically. If set to `gpu`, the engine uses the
+   * first available GPU device. To select a specific GPU device, set this argument to `gpu:${GPU_INDEX}`, where
+   * `${GPU_INDEX}` is the index of the target GPU. If set to `cpu`, the engine will run on the CPU with the
+   * default number of threads. To specify the number of threads, set this argument to `cpu:${NUM_THREADS}`,
+   * where `${NUM_THREADS}` is the desired number of threads.
+   * @param {string} options.modelPath the path to the Rhino model (.pv extension)
+   * @param {string} options.libraryPath the path to the Rhino dynamic library (platform-dependent extension)
    */
   constructor(
     accessKey: string,
     contextPath: string,
-    sensitivity: number = 0.5,
-    endpointDurationSec: number = 1.0,
-    requireEndpoint: boolean = true,
-    manualModelPath?: string,
-    manualLibraryPath?: string
+    options: RhinoOptions = {}
   ) {
     if (
       accessKey === null ||
@@ -87,15 +106,14 @@ export default class Rhino {
       throw new RhinoInvalidArgumentError(`No AccessKey provided to Rhino`);
     }
 
-    let modelPath = manualModelPath;
-    if (modelPath === undefined || modelPath === null) {
-      modelPath = path.resolve(__dirname, MODEL_PATH_DEFAULT);
-    }
-
-    let libraryPath = manualLibraryPath;
-    if (libraryPath === undefined || modelPath === null) {
-      libraryPath = getSystemLibraryPath();
-    }
+    const {
+      modelPath = path.resolve(__dirname, MODEL_PATH_DEFAULT),
+      device = "best",
+      sensitivity = 0.5,
+      endpointDurationSec = 1.0,
+      requireEndpoint = true,
+      libraryPath = getSystemLibraryPath(),
+    } = options;
 
     if (!fs.existsSync(libraryPath)) {
       throw new RhinoInvalidArgumentError(
@@ -131,6 +149,14 @@ export default class Rhino {
       );
     }
 
+    if (
+      device === null ||
+      device === undefined ||
+      device.length === 0
+    ) {
+      throw new RhinoInvalidArgumentError(`No device provided to Rhino`);
+    }
+
     const pvRhino = require(libraryPath); // eslint-disable-line
     this._pvRhino = pvRhino;
 
@@ -141,6 +167,7 @@ export default class Rhino {
       rhinoHandleAndStatus = pvRhino.init(
         accessKey,
         modelPath,
+        device,
         contextPath,
         sensitivity,
         endpointDurationSec,
@@ -366,6 +393,39 @@ export default class Rhino {
       // eslint-disable-next-line no-console
       console.warn('Rhino is not initialized; nothing to destroy');
     }
+  }
+
+  /**
+   * Lists all available devices that Rhino can use for inference. Each entry in the list can be the `device` argument
+   * of the constructor.
+   *
+   * @returns List of all available devices that Rhino can use for inference.
+   */
+  static listAvailableDevices(options: RhinoInputOptions = {}): string[] {
+    const {
+      libraryPath = getSystemLibraryPath(),
+    } = options;
+
+    const pvRhino = require(libraryPath); // eslint-disable-line
+
+    let rhinoHardwareDevicesResult: RhinoHardwareDevicesResult | null = null;
+    try {
+      rhinoHardwareDevicesResult = pvRhino.list_hardware_devices();
+    } catch (err: any) {
+      pvStatusToException(<PvStatus>err.code, err);
+    }
+
+    const status = rhinoHardwareDevicesResult!.status;
+    if (status !== PvStatus.SUCCESS) {
+      const errorObject = pvRhino.get_error_stack();
+      if (errorObject.status === PvStatus.SUCCESS) {
+        pvStatusToException(status, 'Rhino failed to get available devices', errorObject.message_stack);
+      } else {
+        pvStatusToException(status, 'Unable to get Rhino error state');
+      }
+    }
+
+    return rhinoHardwareDevicesResult!.hardware_devices;
   }
 
   private handlePvStatus(status: PvStatus, message: string): void {
