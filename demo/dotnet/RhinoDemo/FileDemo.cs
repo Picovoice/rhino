@@ -276,7 +276,7 @@ namespace RhinoDemo
                 return;
             }
 
-            if (showAvailableDevices)
+            if (showInferenceDevices)
             {
                 Console.WriteLine(string.Join(Environment.NewLine, Rhino.GetAvailableDevices()));
                 return;

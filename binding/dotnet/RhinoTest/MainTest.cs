@@ -129,7 +129,7 @@ namespace RhinoTest
         }
 
 
-        private static Rhino InitDefaultRhino() => Rhino.Create(_accessKey, Path.Combine(ROOT_DIR, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"));
+        private static Rhino InitDefaultRhino() => Rhino.Create(_accessKey, Path.Combine(ROOT_DIR, $"resources/contexts/{_env}/coffee_maker_{_env}.rhn"), device: _device);
 
         private bool ProcessFileHelper(Rhino rhino, string audioFileName, int maxProcessCount = -1)
         {
@@ -256,7 +256,7 @@ namespace RhinoTest
                     "invalid",
                     GetContextPath("en", "smart_lighting"),
                     GetModelPath("en"),
-                    device: device);
+                    device: _device);
                 Assert.IsNull(r);
                 r.Dispose();
             }
@@ -274,7 +274,7 @@ namespace RhinoTest
                     "invalid",
                     GetContextPath("en", "smart_lighting"),
                     GetModelPath("en"),
-                    device: device);
+                    device: _device);
                 Assert.IsNull(r);
                 r.Dispose();
             }
@@ -294,7 +294,7 @@ namespace RhinoTest
                     _accessKey,
                     GetContextPath("en", "smart_lighting"),
                     GetModelPath("en"),
-                    device: device);
+                    device: _device);
             short[] testPcm = new short[r.FrameLength];
 
             var obj = typeof(Rhino).GetField("_libraryPointer", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -329,7 +329,7 @@ namespace RhinoTest
                 _accessKey,
                 GetContextPath(language, contextName),
                 GetModelPath(language),
-                device: device
+                device: _device
             ))
             {
                 RunTestCase(
@@ -350,7 +350,7 @@ namespace RhinoTest
                 _accessKey,
                 GetContextPath(language, contextName),
                 GetModelPath(language),
-                device: device
+                device: _device
             ))
             {
                 Dictionary<string, string> expectedSlots = new Dictionary<string, string>();

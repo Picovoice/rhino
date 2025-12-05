@@ -436,7 +436,7 @@ namespace Pv
             if (status != RhinoStatus.SUCCESS)
             {
                 string[] messageStack = GetMessageStack();
-                throw RhinoStatusToException(status, "Failed to reset");
+                throw RhinoStatusToException(status, "Failed to reset", messageStack);
             }
 
             return new Inference(isUnderstood, intent, slots);
@@ -480,10 +480,9 @@ namespace Pv
                 out numDevices);
             if (status != RhinoStatus.SUCCESS)
             {
-                throw PvStatusToException(
+                throw RhinoStatusToException(
                     status,
-                    "Get available devices failed",
-                    GetMessageStack());
+                    "Get available devices failed");
             }
 
             string[] devices = new string[numDevices];
