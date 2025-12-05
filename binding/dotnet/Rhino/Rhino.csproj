@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net6.0;netcoreapp3.0;netstandard2.0</TargetFrameworks>
-        <Version>3.0.6</Version>
+        <TargetFrameworks>net8.0;net6.0;netstandard2.0</TargetFrameworks>
+        <Version>4.0.0</Version>
         <Authors>Picovoice</Authors>
         <Company />
         <Product>Rhino Speech-to-Intent Engine</Product>
@@ -42,7 +42,6 @@
         </Content>
         <Content Include="Rhino.targets">
             <PackagePath>
-                buildTransitive/netcoreapp3.0/Rhino.targets;
                 buildTransitive/net6.0/Rhino.targets;
                 buildTransitive/net8.0/Rhino.targets;
             </PackagePath>
@@ -55,9 +54,18 @@
         <Content Include="..\..\..\lib\windows\amd64\libpv_rhino.dll">
             <PackagePath>
                 buildTransitive/netstandard2.0/libpv_rhino.dll;
-                buildTransitive/netcoreapp3.0/lib/windows/amd64/libpv_rhino.dll;
                 buildTransitive/net6.0/lib/windows/amd64/libpv_rhino.dll;
                 buildTransitive/net8.0/lib/windows/amd64/libpv_rhino.dll;
+            </PackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>lib\windows\amd64\libpv_rhino.dll</Link>
+            <Visible>false</Visible>
+        </Content>
+        <Content Include="..\..\..\lib\windows\amd64\pv_ypu_impl_cuda.dll">
+            <PackagePath>
+                buildTransitive/netstandard2.0/pv_ypu_impl_cuda.dll;
+                buildTransitive/net6.0/lib/windows/amd64/pv_ypu_impl_cuda.dll;
+                buildTransitive/net8.0/lib/windows/amd64/pv_ypu_impl_cuda.dll;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\windows\amd64\libpv_rhino.dll</Link>
@@ -66,7 +74,6 @@
         <Content Include="..\..\..\lib\mac\x86_64\libpv_rhino.dylib">
             <PackagePath>
                 buildTransitive/netstandard2.0/libpv_rhino.dylib;
-                buildTransitive/netcoreapp3.0/lib/mac/x86_64/libpv_rhino.dylib;
                 buildTransitive/net6.0/lib/mac/x86_64/libpv_rhino.dylib;
                 buildTransitive/net8.0/lib/mac/x86_64/libpv_rhino.dylib;
             </PackagePath>
@@ -107,7 +114,6 @@
         </Content>
         <Content Include="..\..\..\lib\raspberry-pi\**\*" Exclude="..\..\..\lib\raspberry-pi\arm11\*">
             <PackagePath>
-                buildTransitive/netcoreapp3.0/lib/raspberry-pi;
                 buildTransitive/net6.0/lib/raspberry-pi;
                 buildTransitive/net8.0/lib/raspberry-pi;
             </PackagePath>

@@ -1,5 +1,5 @@
 /*
-    Copyright 2020-2024 Picovoice Inc.
+    Copyright 2020-2025 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -37,11 +37,13 @@ namespace RhinoTest
                                                     (_arch == Architecture.Arm || _arch == Architecture.Arm64) ? PvLinuxEnv() : "";
 
         private static string _accessKey;
+        private static string _device;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext _)
         {
             _accessKey = Environment.GetEnvironmentVariable("ACCESS_KEY");
+            _device = Environment.GetEnvironmentVariable("DEVICE");
         }
 
         private static JObject LoadJsonTestData()
@@ -214,6 +216,17 @@ namespace RhinoTest
         }
 
         [TestMethod]
+        public void TestGetAvailableDevices()
+        {
+            string[] devices = Rhino.GetAvailableDevices();
+            Assert.IsTrue(devices.Length > 0);
+            foreach (string device in devices)
+            {
+                Assert.IsFalse(string.IsNullOrEmpty(device));
+            }
+        }
+
+        [TestMethod]
         public void TestReset()
         {
             using (Rhino rhino = InitDefaultRhino())
@@ -242,7 +255,8 @@ namespace RhinoTest
                 r = Rhino.Create(
                     "invalid",
                     GetContextPath("en", "smart_lighting"),
-                    GetModelPath("en"));
+                    GetModelPath("en"),
+                    device: device);
                 Assert.IsNull(r);
                 r.Dispose();
             }
@@ -259,7 +273,8 @@ namespace RhinoTest
                 r = Rhino.Create(
                     "invalid",
                     GetContextPath("en", "smart_lighting"),
-                    GetModelPath("en"));
+                    GetModelPath("en"),
+                    device: device);
                 Assert.IsNull(r);
                 r.Dispose();
             }
@@ -278,7 +293,8 @@ namespace RhinoTest
             Rhino r = Rhino.Create(
                     _accessKey,
                     GetContextPath("en", "smart_lighting"),
-                    GetModelPath("en"));
+                    GetModelPath("en"),
+                    device: device);
             short[] testPcm = new short[r.FrameLength];
 
             var obj = typeof(Rhino).GetField("_libraryPointer", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -312,7 +328,8 @@ namespace RhinoTest
             using (Rhino rhino = Rhino.Create(
                 _accessKey,
                 GetContextPath(language, contextName),
-                GetModelPath(language)
+                GetModelPath(language),
+                device: device
             ))
             {
                 RunTestCase(
@@ -332,7 +349,8 @@ namespace RhinoTest
             using (Rhino rhino = Rhino.Create(
                 _accessKey,
                 GetContextPath(language, contextName),
-                GetModelPath(language)
+                GetModelPath(language),
+                device: device
             ))
             {
                 Dictionary<string, string> expectedSlots = new Dictionary<string, string>();

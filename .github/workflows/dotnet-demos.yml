@@ -25,6 +25,7 @@ jobs:
 
     strategy:
       matrix:
+        device: [cpu, cpu:1]
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
         - os: ubuntu-latest
@@ -45,6 +46,15 @@ jobs:
     - name: Package restore
       run: dotnet restore
 
+    # *********** REMOVE AFTER RELEASE **********************
+    - name: Pack binding for local ref
+      run: dotnet pack -c Release
+      working-directory: binding/dotnet
+
+    - name: Add binding to demo
+      run: dotnet add package -s ../../../binding/dotnet/Rhino/bin/Release Rhino
+    # ******************************************************
+
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
 
@@ -52,13 +62,14 @@ jobs:
       run: dotnet build -c FileDemo.Release
 
     - name: Run Dotnet filedemo
-      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --context_path ../../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --device ${{ matrix.device }} --context_path ../../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
 
   build-self-hosted:
     runs-on: ${{ matrix.machine }}
 
     strategy:
       matrix:
+        device: [best]
         machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, pv-windows-arm64]
         include:
         - machine: rpi3-32
@@ -80,6 +91,15 @@ jobs:
     - name: Package restore
       run: dotnet restore
 
+    # *********** REMOVE AFTER RELEASE **********************
+    - name: Pack binding for local ref
+      run: dotnet pack -c Release
+      working-directory: binding/dotnet
+
+    - name: Add binding to demo
+      run: dotnet add package -s ../../../binding/dotnet/Rhino/bin/Release Rhino
+    # ******************************************************
+
     - name: Dotnet build micdemo
       run: dotnet build -c MicDemo.Release
 
@@ -87,4 +107,4 @@ jobs:
       run: dotnet build -c FileDemo.Release
 
     - name: Run Dotnet filedemo
-      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --context_path ../../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      run: dotnet run -c FileDemo.Release -- --input_audio_path ../../../resources/audio_samples/test_within_context.wav --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --device ${{ matrix.device }} --context_path ../../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
