@@ -11,6 +11,8 @@
       }
     ],
     "ignorePaths": [
+      "**/lib/wasm/**/*.js",
+
       "../../../demo/c/dr_libs/**/*",
       "../../../demo/c/pvrecorder/**/*",
 
