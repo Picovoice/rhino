@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2023 Picovoice Inc.
+# Copyright 2018-2025 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -64,6 +64,11 @@ def main():
         help='Absolute path to the file containing model parameters. Default: using the library provided by `pvrhino`')
 
     parser.add_argument(
+        '--device',
+        help='Device to run inference on (`best`, `cpu:{num_threads}`, `gpu:{gpu_index}`). '
+             'Default: automatically selects best device for `pvrhino`')
+
+    parser.add_argument(
         '--sensitivity',
         help="Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in "
              "fewer misses at the cost of (potentially) increasing the erroneous inference rate.",
@@ -88,6 +93,11 @@ def main():
         default='True',
         choices=['True', 'False'])
 
+    parser.add_argument(
+        '--show_inference_devices',
+        action='store_true',
+        help='Show the list of available devices for Rhino inference and exit')
+
     args = parser.parse_args()
 
     if args.require_endpoint.lower() == 'false':
@@ -95,11 +105,16 @@ def main():
     else:
         require_endpoint = True
 
+    if args.show_inference_devices:
+        print('\n'.join(pvrhino.available_devices(library_path=args.library_path)))
+        return
+
     try:
         rhino = pvrhino.create(
             access_key=args.access_key,
             library_path=args.library_path,
             model_path=args.model_path,
+            device=args.device,
             context_path=args.context_path,
             sensitivity=args.sensitivity,
             endpoint_duration_sec=args.endpoint_duration_sec,

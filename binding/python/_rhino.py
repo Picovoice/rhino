@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2023 Picovoice Inc.
+# Copyright 2018-2025 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -8,6 +8,7 @@
 # an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 #
+
 import os
 from collections import namedtuple
 from ctypes import *
@@ -139,6 +140,7 @@ class Rhino(object):
             access_key: str,
             library_path: str,
             model_path: str,
+            device: str,
             context_path: str,
             sensitivity: float = 0.5,
             endpoint_duration_sec: float = 1.,
@@ -150,6 +152,12 @@ class Rhino(object):
         :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
         :param library_path: Absolute path to Rhino's dynamic library.
         :param model_path: Absolute path to file containing model parameters.
+        :param device: String representation of the device (e.g., CPU or GPU) to use. If set to `best`, the most
+        suitable device is selected automatically. If set to `gpu`, the engine uses the first available GPU device.
+        To select a specific GPU device, set this argument to `gpu:${GPU_INDEX}`, where `${GPU_INDEX}` is the index
+        of the target GPU. If set to`cpu`, the engine will run on the CPU with the default number of threads. To
+        specify the number of threads, set this argument to `cpu:${NUM_THREADS}`, where `${NUM_THREADS}` is the
+        desired number of threads.
         :param context_path: Absolute path to file containing context parameters. A context represents the set of
         expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
         :param sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value
@@ -174,6 +182,9 @@ class Rhino(object):
 
         if not os.path.exists(model_path):
             raise IOError("Couldn't find model file at '%s'." % model_path)
+
+        if not isinstance(device, str) or len(device) == 0:
+            raise ValueError("`device` should be a non-empty string.")
 
         if not os.path.exists(context_path):
             raise IOError("Couldn't find context file at '%s'." % context_path)
@@ -205,6 +216,7 @@ class Rhino(object):
             c_char_p,
             c_char_p,
             c_char_p,
+            c_char_p,
             c_float,
             c_float,
             c_bool,
@@ -216,6 +228,7 @@ class Rhino(object):
         status = init_func(
             access_key.encode('utf-8'),
             model_path.encode('utf-8'),
+            device.encode('utf-8'),
             context_path.encode('utf-8'),
             sensitivity,
             endpoint_duration_sec,
@@ -411,6 +424,34 @@ class Rhino(object):
         return message_stack
 
 
+def list_hardware_devices(library_path: str) -> Sequence[str]:
+    dll_dir_obj = None
+    if hasattr(os, "add_dll_directory"):
+        dll_dir_obj = os.add_dll_directory(os.path.dirname(library_path))
+
+    library = cdll.LoadLibrary(library_path)
+
+    if dll_dir_obj is not None:
+        dll_dir_obj.close()
+
+    list_hardware_devices_func = library.pv_rhino_list_hardware_devices
+    list_hardware_devices_func.argtypes = [POINTER(POINTER(c_char_p)), POINTER(c_int32)]
+    list_hardware_devices_func.restype = Rhino.PicovoiceStatuses
+    c_hardware_devices = POINTER(c_char_p)()
+    c_num_hardware_devices = c_int32()
+    status = list_hardware_devices_func(byref(c_hardware_devices), byref(c_num_hardware_devices))
+    if status is not Rhino.PicovoiceStatuses.SUCCESS:
+        raise _PICOVOICE_STATUS_TO_EXCEPTION[status](message='`pv_rhino_list_hardware_devices` failed.')
+    res = [c_hardware_devices[i].decode() for i in range(c_num_hardware_devices.value)]
+
+    free_hardware_devices_func = library.pv_rhino_free_hardware_devices
+    free_hardware_devices_func.argtypes = [POINTER(c_char_p), c_int32]
+    free_hardware_devices_func.restype = None
+    free_hardware_devices_func(c_hardware_devices, c_num_hardware_devices.value)
+
+    return res
+
+
 __all__ = [
     'Rhino',
     'Inference',
@@ -426,4 +467,5 @@ __all__ = [
     'RhinoActivationLimitError',
     'RhinoActivationThrottledError',
     'RhinoActivationRefusedError',
+    'list_hardware_devices',
 ]

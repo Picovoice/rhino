@@ -1,5 +1,5 @@
 #
-# Copyright 2023 Picovoice Inc.
+# Copyright 2023-2025 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -8,9 +8,10 @@
 # an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 #
-from typing import Optional
 
-from ._rhino import Rhino
+from typing import Optional, Sequence
+
+from ._rhino import Rhino, list_hardware_devices
 from ._util import *
 
 
@@ -19,6 +20,7 @@ def create(
         context_path: str,
         library_path: Optional[str] = None,
         model_path: Optional[str] = None,
+        device: str = "best",
         sensitivity: float = 0.5,
         endpoint_duration_sec: float = 1.,
         require_endpoint: bool = True) -> Rhino:
@@ -33,6 +35,12 @@ def create(
     location.
     :param model_path: Absolute path to the file containing model parameters. If not set it will be set to the default
     location.
+    :param device: String representation of the device (e.g., CPU or GPU) to use. If set to `best`, the most
+    suitable device is selected automatically. If set to `gpu`, the engine uses the first available GPU device.
+    To select a specific GPU device, set this argument to `gpu:${GPU_INDEX}`, where `${GPU_INDEX}` is the index
+    of the target GPU. If set to`cpu`, the engine will run on the CPU with the default number of threads. To
+    specify the number of threads, set this argument to `cpu:${NUM_THREADS}`, where `${NUM_THREADS}` is the
+    desired number of threads.
     :param sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value
     results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
     :param endpoint_duration_sec: Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
@@ -56,12 +64,28 @@ def create(
         access_key=access_key,
         library_path=library_path,
         model_path=model_path,
+        device=device,
         context_path=context_path,
         sensitivity=sensitivity,
         endpoint_duration_sec=endpoint_duration_sec,
         require_endpoint=require_endpoint)
 
 
+def available_devices(library_path: Optional[str] = None) -> Sequence[str]:
+    """
+    Lists all available devices that Rhino can use for inference. Each entry in the list can be the `device` argument
+    of `.create` factory method or `Rhino` constructor.
+    :param library_path: Absolute path to Rhino's dynamic library. If not set it will be set to the default location.
+    :return: List of all available devices that Rhino can use for inference.
+    """
+
+    if library_path is None:
+        library_path = pv_library_path('')
+
+    return list_hardware_devices(library_path=library_path)
+
+
 __all__ = [
+    'available_devices',
     'create',
 ]

@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2023 Picovoice Inc.
+# Copyright 2018-2025 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -37,6 +37,11 @@ def main():
         help='Absolute path to the file containing model parameters. Default: using the library provided by `pvrhino`')
 
     parser.add_argument(
+        '--device',
+        help='Device to run inference on (`best`, `cpu:{num_threads}`, `gpu:{gpu_index}`). '
+             'Default: automatically selects best device for `pvrhino`')
+
+    parser.add_argument(
         '--sensitivity',
         help="Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in "
              "fewer misses at the cost of (potentially) increasing the erroneous inference rate.",
@@ -61,6 +66,11 @@ def main():
         default='True',
         choices=['True', 'False'])
 
+    parser.add_argument(
+        '--show_inference_devices',
+        action='store_true',
+        help='Show the list of available devices for Rhino inference and exit')
+
     parser.add_argument('--audio_device_index', help='Index of input audio device.', type=int, default=-1)
 
     parser.add_argument('--output_path', help='Absolute path to recorded audio for debugging.', default=None)
@@ -73,6 +83,10 @@ def main():
         require_endpoint = False
     else:
         require_endpoint = True
+
+    if args.show_inference_devices:
+        print('\n'.join(pvrhino.available_devices(library_path=args.library_path)))
+        return
 
     if args.show_audio_devices:
         for i, device in enumerate(PvRecorder.get_available_devices()):
