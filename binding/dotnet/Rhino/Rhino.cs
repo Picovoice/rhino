@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2020-2023 Picovoice Inc.
+    Copyright 2020-2025 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -68,7 +68,7 @@ namespace Pv
         static Rhino()
         {
 
-#if NETCOREAPP3_0_OR_GREATER
+#if NET6_0_OR_GREATER
 
             NativeLibrary.SetDllImportResolver(typeof(Rhino).Assembly, ImportResolver);
 
@@ -77,7 +77,7 @@ namespace Pv
             DEFAULT_MODEL_PATH = Utils.PvModelPath();
         }
 
-#if NETCOREAPP3_0_OR_GREATER
+#if NET6_0_OR_GREATER
 
         private static IntPtr ImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
         {
@@ -92,6 +92,7 @@ namespace Pv
         private static extern RhinoStatus pv_rhino_init(
             IntPtr accessKey,
             IntPtr modelPath,
+            IntPtr device,
             IntPtr contextPath,
             float sensitivity,
             float endpointDurationSec,
@@ -144,6 +145,16 @@ namespace Pv
         private static extern int pv_rhino_frame_length();
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
+        private static extern RhinoStatus pv_rhino_list_hardware_devices(
+            out IntPtr hardwareDevices,
+            out int numHardwareDevices);
+
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void pv_rhino_free_hardware_devices(
+            IntPtr hardwareDevices,
+            int numHardwareDevices);
+
+        [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
         private static extern void pv_set_sdk(string sdk);
 
         [DllImport(LIBRARY, CallingConvention = CallingConvention.Cdecl)]
@@ -167,6 +178,13 @@ namespace Pv
         /// Absolute path to the file containing model parameters. If not set it will be set to the
         /// default location.
         /// </param>
+        /// <param name="device">
+        /// String representation of the device (e.g., CPU or GPU) to use. If set to `best`, the most
+        /// suitable device is selected automatically. If set to `gpu`, the engine uses the first available GPU device. To select a specific
+        /// GPU device, set this argument to `gpu:${GPU_INDEX}`, where `${GPU_INDEX}` is the index of the target GPU. If set to
+        /// `cpu`, the engine will run on the CPU with the default number of threads. To specify the number of threads, set this
+        /// argument to `cpu:${NUM_THREADS}`, where `${NUM_THREADS}` is the desired number of threads.
+        /// </param>
         /// <param name="sensitivity">
         /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses
         /// at the cost of (potentially) increasing the erroneous inference rate.
@@ -187,11 +205,12 @@ namespace Pv
             string accessKey,
             string contextPath,
             string modelPath = null,
+            string device = null,
             float sensitivity = 0.5f,
             float endpointDurationSec = 1.0f,
             bool requireEndpoint = true)
         {
-            return new Rhino(accessKey, modelPath ?? DEFAULT_MODEL_PATH, contextPath, sensitivity, endpointDurationSec, requireEndpoint);
+            return new Rhino(accessKey, modelPath ?? DEFAULT_MODEL_PATH, contextPath, device, sensitivity, endpointDurationSec, requireEndpoint);
         }
 
         /// <summary>
@@ -205,6 +224,13 @@ namespace Pv
         /// <param name="modelPath">
         /// Absolute path to the file containing model parameters. If not set it will be set to the
         /// default location.
+        /// </param>
+        /// <param name="device">
+        /// String representation of the device (e.g., CPU or GPU) to use. If set to `best`, the most
+        /// suitable device is selected automatically. If set to `gpu`, the engine uses the first available GPU device. To select a specific
+        /// GPU device, set this argument to `gpu:${GPU_INDEX}`, where `${GPU_INDEX}` is the index of the target GPU. If set to
+        /// `cpu`, the engine will run on the CPU with the default number of threads. To specify the number of threads, set this
+        /// argument to `cpu:${NUM_THREADS}`, where `${NUM_THREADS}` is the desired number of threads.
         /// </param>
         /// <param name="sensitivity">
         /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses
@@ -225,6 +251,7 @@ namespace Pv
             string accessKey,
             string modelPath,
             string contextPath,
+            string device = null,
             float sensitivity = 0.5f,
             float endpointDurationSec = 1.0f,
             bool requireEndpoint = true)
@@ -244,6 +271,8 @@ namespace Pv
                 throw new RhinoIOException($"Couldn't find context file at '{contextPath}'");
             }
 
+            device = device ?? "best";
+
             if (sensitivity < 0 || sensitivity > 1)
             {
                 throw new RhinoInvalidArgumentException("Sensitivity value should be within [0, 1].");
@@ -257,12 +286,14 @@ namespace Pv
             IntPtr accessKeyPtr = Utils.GetPtrFromUtf8String(accessKey);
             IntPtr modelPathPtr = Utils.GetPtrFromUtf8String(modelPath);
             IntPtr contextPathPtr = Utils.GetPtrFromUtf8String(contextPath);
+            IntPtr devicePtr = Utils.GetPtrFromUtf8String(device);
 
             pv_set_sdk("dotnet");
 
             RhinoStatus status = pv_rhino_init(
                 accessKeyPtr,
                 modelPathPtr,
+                devicePtr,
                 contextPathPtr,
                 sensitivity,
                 endpointDurationSec,
@@ -271,6 +302,7 @@ namespace Pv
 
             Marshal.FreeHGlobal(accessKeyPtr);
             Marshal.FreeHGlobal(modelPathPtr);
+            Marshal.FreeHGlobal(devicePtr);
             Marshal.FreeHGlobal(contextPathPtr);
 
             if (status != RhinoStatus.SUCCESS)
@@ -404,7 +436,7 @@ namespace Pv
             if (status != RhinoStatus.SUCCESS)
             {
                 string[] messageStack = GetMessageStack();
-                throw RhinoStatusToException(status, "Failed to reset");
+                throw RhinoStatusToException(status, "Failed to reset", messageStack);
             }
 
             return new Inference(isUnderstood, intent, slots);
@@ -415,7 +447,6 @@ namespace Pv
         /// </summary>
         /// <returns>Context information</returns>
         public string ContextInfo { get; private set; }
-
 
         /// <summary>
         /// Gets the version number of the Rhino library.
@@ -434,6 +465,36 @@ namespace Pv
         /// </summary>
         /// <returns>Required sample rate.</returns>
         public int SampleRate { get; private set; }
+
+        /// <summary>
+        /// Retrieves a list of hardware devices that can be specified when constructing the model.
+        /// </summary>
+        /// <returns>An array of available hardware devices.</returns>
+        /// <exception cref="RhinoException">Thrown when an error occurs while retrieving the hardware devices.</exception>
+        public static string[] GetAvailableDevices()
+        {
+            IntPtr hardwareDevicesPtr;
+            int numDevices;
+            RhinoStatus status = pv_rhino_list_hardware_devices(
+                out hardwareDevicesPtr,
+                out numDevices);
+            if (status != RhinoStatus.SUCCESS)
+            {
+                throw RhinoStatusToException(
+                    status,
+                    "Get available devices failed");
+            }
+
+            string[] devices = new string[numDevices];
+            int elementSize = Marshal.SizeOf(typeof(IntPtr));
+            for (int i = 0; i < numDevices; i++)
+            {
+                devices[i] = Utils.GetUtf8StringFromPtr(Marshal.ReadIntPtr(hardwareDevicesPtr, i * elementSize));
+            }
+
+            pv_rhino_free_hardware_devices(hardwareDevicesPtr, numDevices);
+            return devices;
+        }
 
         /// <summary>
         /// Coverts status codes to relevant .NET exceptions
