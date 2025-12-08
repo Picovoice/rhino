@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net6.0;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net6.0;netstandard2.0</TargetFrameworks>
         <Version>4.0.0</Version>
         <Authors>Picovoice</Authors>
         <Company />
@@ -43,7 +43,6 @@
         <Content Include="Rhino.targets">
             <PackagePath>
                 buildTransitive/net6.0/Rhino.targets;
-                buildTransitive/net8.0/Rhino.targets;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
@@ -51,31 +50,19 @@
 
     <!--.NET Standard 2.0+ Libs-->
     <ItemGroup>
-        <Content Include="..\..\..\lib\windows\amd64\libpv_rhino.dll">
+        <Content Include="..\..\..\lib\windows\amd64\*">
             <PackagePath>
-                buildTransitive/netstandard2.0/libpv_rhino.dll;
-                buildTransitive/net6.0/lib/windows/amd64/libpv_rhino.dll;
-                buildTransitive/net8.0/lib/windows/amd64/libpv_rhino.dll;
+                buildTransitive/netstandard2.0;
+                buildTransitive/net6.0/lib/windows/amd64;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>lib\windows\amd64\libpv_rhino.dll</Link>
-            <Visible>false</Visible>
-        </Content>
-        <Content Include="..\..\..\lib\windows\amd64\pv_ypu_impl_cuda.dll">
-            <PackagePath>
-                buildTransitive/netstandard2.0/pv_ypu_impl_cuda.dll;
-                buildTransitive/net6.0/lib/windows/amd64/pv_ypu_impl_cuda.dll;
-                buildTransitive/net8.0/lib/windows/amd64/pv_ypu_impl_cuda.dll;
-            </PackagePath>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <Link>lib\windows\amd64\libpv_rhino.dll</Link>
+            <Link>lib\windows\amd64\%(Filename)%(Extension)</Link>
             <Visible>false</Visible>
         </Content>
         <Content Include="..\..\..\lib\mac\x86_64\libpv_rhino.dylib">
             <PackagePath>
                 buildTransitive/netstandard2.0/libpv_rhino.dylib;
                 buildTransitive/net6.0/lib/mac/x86_64/libpv_rhino.dylib;
-                buildTransitive/net8.0/lib/mac/x86_64/libpv_rhino.dylib;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\mac\x86_64\libpv_rhino.dylib</Link>
@@ -88,7 +75,6 @@
         <Content Include="..\..\..\lib\mac\arm64\libpv_rhino.dylib">
             <PackagePath>
                 buildTransitive/net6.0/lib/mac/arm64/libpv_rhino.dylib;
-                buildTransitive/net8.0/lib/mac/arm64/libpv_rhino.dylib;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\mac\arm64\libpv_rhino.dylib</Link>
@@ -97,7 +83,6 @@
         <Content Include="..\..\..\lib\windows\arm64\libpv_rhino.dll">
             <PackagePath>
                 buildTransitive/net6.0/lib/windows/arm64/libpv_rhino.dll;
-                buildTransitive/net8.0/lib/windows/arm64/libpv_rhino.dll;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\windows\arm64\libpv_rhino.dll</Link>
@@ -106,7 +91,6 @@
         <Content Include="..\..\..\lib\linux\x86_64\libpv_rhino.so">
             <PackagePath>
                 buildTransitive/net6.0/lib/linux/x86_64/libpv_rhino.so;
-                buildTransitive/net8.0/lib/linux/x86_64/libpv_rhino.so;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\linux\x86_64\libpv_rhino.so</Link>
@@ -115,7 +99,6 @@
         <Content Include="..\..\..\lib\raspberry-pi\**\*" Exclude="..\..\..\lib\raspberry-pi\arm11\*">
             <PackagePath>
                 buildTransitive/net6.0/lib/raspberry-pi;
-                buildTransitive/net8.0/lib/raspberry-pi;
             </PackagePath>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Link>lib\raspberry-pi\%(RecursiveDir)%(Filename)%(Extension)</Link>
