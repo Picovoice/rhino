@@ -42,7 +42,7 @@ jobs:
         - java-version: 21
           gradle-version: 8.5
         - java-version: 25
-          gradle-version: 9.2
+          gradle-version: 9.2.1
 
     steps:
     - uses: actions/checkout@v3

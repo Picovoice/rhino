@@ -29,8 +29,16 @@ import java.util.Map;
 
 public class FileDemo {
 
-    public static void runDemo(String accessKey, File inputAudioFile, String libraryPath, String modelPath, String device,
-                               String contextPath, float sensitivity, float endpointDuration, boolean requireEndpoint) {
+    public static void runDemo(
+                String accessKey,
+                File inputAudioFile,
+                String libraryPath,
+                String modelPath,
+                String device,
+                String contextPath,
+                float sensitivity,
+                float endpointDuration,
+                boolean requireEndpoint) {
 
         AudioInputStream audioInputStream;
         try {
