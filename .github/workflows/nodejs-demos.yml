@@ -85,8 +85,8 @@ jobs:
           machine: pv-windows
           platform: windows
         - device: gpu
-          machine: pv-macos
-          platform: macos
+          machine: pv-ios
+          platform: mac
 
     steps:
     - uses: actions/checkout@v3

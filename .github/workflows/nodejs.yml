@@ -72,7 +72,7 @@ jobs:
           - device: gpu
             machine: pv-windows
           - device: gpu
-            machine: pv-macos
+            machine: pv-ios
 
     steps:
     - uses: actions/checkout@v3
