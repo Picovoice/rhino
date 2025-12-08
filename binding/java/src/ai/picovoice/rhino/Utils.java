@@ -180,7 +180,7 @@ class Utils {
                     return "cortex-a76" + archInfo;
                 default:
                     throw new RuntimeException(
-                            String.format("Environment (%s) with CPU Part (%s) is not supported by Porcupine.",
+                            String.format("Environment (%s) with CPU Part (%s) is not supported by Rhino.",
                                           ENVIRONMENT_NAME,
                                           cpuPart)
                     );
@@ -188,7 +188,7 @@ class Utils {
         }
 
         throw new RuntimeException(
-                String.format("Environment (%s) with architecture (%s) is not supported by Porcupine.",
+                String.format("Environment (%s) with architecture (%s) is not supported by Rhino.",
                               ENVIRONMENT_NAME,
                               arch)
         );

@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2023 Picovoice Inc.
+    Copyright 2018-2025 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -50,6 +50,13 @@ public class Rhino {
      * @param accessKey   AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
      * @param libraryPath Absolute path to the native Rhino library.
      * @param modelPath   Absolute path to the file containing model parameters.
+     * @param device      String representation of the device (e.g., CPU or GPU) to use. If set to `best`, the most
+     *                    suitable device is selected automatically. If set to `gpu`, the engine uses the first
+     *                    available GPU device. To select a specific GPU device, set this argument to
+     *                    `gpu:${GPU_INDEX}`, where `${GPU_INDEX}` is the index of the target GPU. If set to `cpu`,
+     *                    the engine will run on the CPU with the default number of threads. To specify the number
+     *                    of threads, set this argument to `cpu:${NUM_THREADS}`, where `${NUM_THREADS}`
+     *                    is the desired number of threads.
      * @param contextPath Absolute path to file containing context parameters. A context represents
      *                    the set of expressions (spoken commands), intents, and intent arguments
      *                    (slots) within a domain of interest.
@@ -72,6 +79,7 @@ public class Rhino {
             String accessKey,
             String libraryPath,
             String modelPath,
+            String device,
             String contextPath,
             float sensitivity,
             float endpointDurationSec,
@@ -87,6 +95,7 @@ public class Rhino {
         handle = RhinoNative.init(
                 accessKey,
                 modelPath,
+                device,
                 contextPath,
                 sensitivity,
                 endpointDurationSec,
@@ -199,6 +208,38 @@ public class Rhino {
     }
 
     /**
+     * Retrieves a list of available hardware devices that Rhino can use to run inference.
+     *
+     * @param libraryPath Path to a native Rhino library. Set to `null` to use default library.
+     *
+     * @return List of available hardware devices that Rhino can use to run inference.
+     * @throws RhinoException if the library file cannot be loaded.
+     */
+    public static String[] getAvailableDevices(String libraryPath) throws RhinoException {
+        try {
+            System.load(libraryPath);
+        } catch (Exception exception) {
+            throw new RhinoException(exception);
+        }
+        return RhinoNative.listHardwareDevices();
+    }
+
+    /**
+     * Retrieves a list of available hardware devices that Rhino can use to run inference.
+     *
+     * @return List of available hardware devices that Rhino can use to run inference.
+     * @throws RhinoException if the default library file cannot be loaded.
+     */
+    public static String[] getAvailableDevices() throws RhinoException {
+        if (Utils.isResourcesAvailable()) {
+            return Rhino.getAvailableDevices(LIBRARY_PATH);
+        } else {
+            throw new RhinoInvalidArgumentException("Default library unavailable. " +
+                    "Please provide a valid native Rhino library path.");
+        }
+    }
+
+    /**
      * Getter for version.
      *
      * @return Version.
@@ -215,6 +256,7 @@ public class Rhino {
         private String accessKey = null;
         private String libraryPath = null;
         private String modelPath = null;
+        private String device = null;
         private String contextPath = null;
         private float sensitivity = 0.5f;
         private float endpointDuration = 1.0f;
@@ -232,6 +274,11 @@ public class Rhino {
 
         public Builder setModelPath(String modelPath) {
             this.modelPath = modelPath;
+            return this;
+        }
+
+        public Builder setDevice(String device) {
+            this.device = device;
             return this;
         }
 
@@ -298,6 +345,10 @@ public class Rhino {
                 }
             }
 
+            if (device == null) {
+                device = "best";
+            }
+
             if (contextPath == null) {
                 throw new RhinoInvalidArgumentException("No context file provided");
             }
@@ -319,6 +370,7 @@ public class Rhino {
                     accessKey,
                     libraryPath,
                     modelPath,
+                    device,
                     contextPath,
                     sensitivity,
                     endpointDuration,

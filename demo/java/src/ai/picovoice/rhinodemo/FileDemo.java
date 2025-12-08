@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2023 Picovoice Inc.
+    Copyright 2018-2025 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -13,6 +13,7 @@
 package ai.picovoice.rhinodemo;
 
 import ai.picovoice.rhino.Rhino;
+import ai.picovoice.rhino.RhinoException;
 import ai.picovoice.rhino.RhinoInference;
 import org.apache.commons.cli.*;
 
@@ -28,7 +29,7 @@ import java.util.Map;
 
 public class FileDemo {
 
-    public static void runDemo(String accessKey, File inputAudioFile, String libraryPath, String modelPath,
+    public static void runDemo(String accessKey, File inputAudioFile, String libraryPath, String modelPath, String device,
                                String contextPath, float sensitivity, float endpointDuration, boolean requireEndpoint) {
 
         AudioInputStream audioInputStream;
@@ -48,6 +49,7 @@ public class FileDemo {
                     .setAccessKey(accessKey)
                     .setLibraryPath(libraryPath)
                     .setModelPath(modelPath)
+                    .setDevice(device)
                     .setContextPath(contextPath)
                     .setSensitivity(sensitivity)
                     .setEndpointDuration(endpointDuration)
@@ -135,10 +137,24 @@ public class FileDemo {
             return;
         }
 
+        if (cmd.hasOption("show_inference_devices")) {
+            try {
+                String[] devices = Rhino.getAvailableDevices();
+                for (int i = 0; i < devices.length; i++) {
+                    System.out.println(devices[i]);
+                }
+                return;
+            } catch (RhinoException e) {
+                System.out.println(e.getMessage());
+                System.exit(1);
+            }
+        }
+
         String accessKey = cmd.getOptionValue("access_key");
         String inputAudioPath = cmd.getOptionValue("input_audio_path");
         String libraryPath = cmd.getOptionValue("library_path");
         String modelPath = cmd.getOptionValue("model_path");
+        String device = cmd.getOptionValue("device");
         String contextPath = cmd.getOptionValue("context_path");
         String sensitivityStr = cmd.getOptionValue("sensitivity");
         String endpointDurationStr = cmd.getOptionValue("endpoint_duration");
@@ -204,6 +220,10 @@ public class FileDemo {
             modelPath = Rhino.MODEL_PATH;
         }
 
+        if (device == null) {
+            device = "best";
+        }
+
         boolean requireEndpoint = true;
         if (requireEndpointValue != null && requireEndpointValue.toLowerCase().equals("false")) {
             requireEndpoint = false;
@@ -213,6 +233,7 @@ public class FileDemo {
                 inputAudioFile,
                 libraryPath,
                 modelPath,
+                device,
                 contextPath,
                 sensitivity,
                 endpointDuration,
@@ -252,6 +273,13 @@ public class FileDemo {
                 .desc("Absolute path to the file containing model parameters.")
                 .build());
 
+        options.addOption(Option.builder("y")
+                .longOpt("device")
+                .hasArg(true)
+                .desc("Device to run inference on (`best`, `cpu:{num_threads}` or `gpu:{gpu_index}`). " +
+                        "Default: automatically selects best device.")
+                .build());
+
         options.addOption(Option.builder("s")
                 .longOpt("sensitivity")
                 .hasArgs()
@@ -281,6 +309,10 @@ public class FileDemo {
                         "speech (e.g. people talking in the background).")
                 .build());
 
+        options.addOption(new Option("sy",
+                "show_inference_devices",
+                false,
+                "Print devices that are available to run Rhino inference."));
         options.addOption(new Option("h", "help", false, ""));
 
         return options;

@@ -42,6 +42,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        device: [cpu, cpu:1]
 
     steps:
     - uses: actions/checkout@v3
@@ -56,7 +57,7 @@ jobs:
       run: ./gradlew assemble
 
     - name: Test
-      run: ./gradlew test --info --tests RhinoTest -DpvTestingAccessKey="${{secrets.PV_VALID_ACCESS_KEY}}"
+      run: ./gradlew test --info --tests RhinoTest -DpvTestingAccessKey="${{secrets.PV_VALID_ACCESS_KEY}}" -DpvTestingDevice="${{ matrix.device }}"
 
   build-self-hosted:
     runs-on: ${{ matrix.machine }}
@@ -72,4 +73,4 @@ jobs:
       run: ./gradlew assemble
 
     - name: Test
-      run: ./gradlew test --info --tests RhinoTest -DpvTestingAccessKey="${{secrets.PV_VALID_ACCESS_KEY}}"
+      run: ./gradlew test --info --tests RhinoTest -DpvTestingAccessKey="${{secrets.PV_VALID_ACCESS_KEY}}" -DpvTestingDevice="${{ matrix.device }}"

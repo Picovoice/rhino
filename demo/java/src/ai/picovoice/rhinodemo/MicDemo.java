@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2023 Picovoice Inc.
+    Copyright 2018-2025 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -30,6 +30,7 @@ public class MicDemo {
             String contextPath,
             String libraryPath,
             String modelPath,
+            String device,
             float sensitivity,
             float endpointDuration,
             int audioDeviceIndex,
@@ -63,6 +64,7 @@ public class MicDemo {
                     .setContextPath(contextPath)
                     .setLibraryPath(libraryPath)
                     .setModelPath(modelPath)
+                    .setDevice(device)
                     .setSensitivity(sensitivity)
                     .setEndpointDuration(endpointDuration)
                     .setRequireEndpoint(requireEndpoint)
@@ -229,9 +231,23 @@ public class MicDemo {
             return;
         }
 
+        if (cmd.hasOption("show_inference_devices")) {
+            try {
+                String[] devices = Rhino.getAvailableDevices();
+                for (int i = 0; i < devices.length; i++) {
+                    System.out.println(devices[i]);
+                }
+                return;
+            } catch (RhinoException e) {
+                System.out.println(e.getMessage());
+                System.exit(1);
+            }
+        }
+
         String accessKey = cmd.getOptionValue("access_key");
         String libraryPath = cmd.getOptionValue("library_path");
         String modelPath = cmd.getOptionValue("model_path");
+        String device = cmd.getOptionValue("device");
         String contextPath = cmd.getOptionValue("context_path");
         String sensitivityStr = cmd.getOptionValue("sensitivity");
         String endpointDurationStr = cmd.getOptionValue("endpoint_duration");
@@ -291,6 +307,10 @@ public class MicDemo {
             modelPath = Rhino.MODEL_PATH;
         }
 
+        if (device == null) {
+            device = "best";
+        }
+
         int audioDeviceIndex = -1;
         if (audioDeviceIndexStr != null) {
             try {
@@ -314,6 +334,7 @@ public class MicDemo {
                 contextPath,
                 libraryPath,
                 modelPath,
+                device,
                 sensitivity,
                 endpointDuration,
                 audioDeviceIndex,
@@ -346,6 +367,13 @@ public class MicDemo {
                 .longOpt("model_path")
                 .hasArg(true)
                 .desc("Absolute path to the file containing model parameters.")
+                .build());
+
+        options.addOption(Option.builder("y")
+                .longOpt("device")
+                .hasArg(true)
+                .desc("Device to run inference on (`best`, `cpu:{num_threads}` or `gpu:{gpu_index}`). " +
+                        "Default: automatically selects best device.")
                 .build());
 
         options.addOption(Option.builder("s")
@@ -391,6 +419,10 @@ public class MicDemo {
                 .build());
 
         options.addOption(new Option("sd", "show_audio_devices", false, "Print available recording devices."));
+        options.addOption(new Option("sy",
+                "show_inference_devices",
+                false,
+                "Print devices that are available to run Rhino inference."));
         options.addOption(new Option("h", "help", false, ""));
 
         return options;
