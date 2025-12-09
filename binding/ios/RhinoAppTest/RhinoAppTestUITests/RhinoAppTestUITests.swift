@@ -1,5 +1,5 @@
 //
-//  Copyright 2022-2023 Picovoice Inc.
+//  Copyright 2022-2025 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -22,7 +22,8 @@ class RhinoAppTestUITests: BaseTest {
             inDirectory: "test_resources/context_files/en")!
         let r = try Rhino.init(
             accessKey: accessKey,
-            contextPath: contextPath)
+            contextPath: contextPath,
+            device: device)
 
         XCTAssert(Rhino.version != "")
         XCTAssert(Rhino.frameLength > 0)
@@ -45,7 +46,8 @@ class RhinoAppTestUITests: BaseTest {
         let r = try Rhino.init(
             accessKey: accessKey,
             contextPath: contextPath,
-            modelPath: modelPath)
+            modelPath: modelPath,
+            device: device)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
@@ -60,6 +62,7 @@ class RhinoAppTestUITests: BaseTest {
         let r = try Rhino.init(
             accessKey: accessKey,
             contextPath: contextPath,
+            device: device,
             sensitivity: 0.7)
         XCTAssert(r.contextInfo != "")
         r.delete()
@@ -75,6 +78,7 @@ class RhinoAppTestUITests: BaseTest {
         let r = try Rhino.init(
             accessKey: accessKey,
             contextPath: contextPath,
+            device: device,
             endpointDurationSec: 3.0)
         XCTAssert(r.contextInfo != "")
         r.delete()
@@ -90,6 +94,7 @@ class RhinoAppTestUITests: BaseTest {
         let r = try Rhino.init(
             accessKey: accessKey,
             contextPath: contextPath,
+            device: device,
             requireEndpoint: false)
         XCTAssert(r.contextInfo != "")
         r.delete()
@@ -111,7 +116,8 @@ class RhinoAppTestUITests: BaseTest {
             _ = try Rhino.init(
                 accessKey: accessKey,
                 contextPath: contextPath,
-                modelPath: modelPath)
+                modelPath: modelPath,
+                device: device)
         } catch {
             didFail = true
         }
@@ -126,7 +132,8 @@ class RhinoAppTestUITests: BaseTest {
         do {
             _ = try Rhino.init(
                 accessKey: accessKey,
-                contextPath: contextPath)
+                contextPath: contextPath,
+                device: device)
         } catch {
             didFail = true
         }
@@ -147,7 +154,8 @@ class RhinoAppTestUITests: BaseTest {
             _ = try Rhino.init(
                 accessKey: accessKey,
                 contextPath: contextPath,
-                modelPath: modelPath)
+                modelPath: modelPath,
+                device: device)
         } catch {
             didFail = true
         }
@@ -167,6 +175,7 @@ class RhinoAppTestUITests: BaseTest {
             _ = try Rhino.init(
                 accessKey: accessKey,
                 contextPath: contextPath,
+                device: device,
                 sensitivity: 10)
         } catch {
             didFail = true
@@ -187,6 +196,7 @@ class RhinoAppTestUITests: BaseTest {
             _ = try Rhino.init(
                 accessKey: accessKey,
                 contextPath: contextPath,
+                device: device,
                 endpointDurationSec: 10.0)
         } catch {
             didFail = true
@@ -206,7 +216,8 @@ class RhinoAppTestUITests: BaseTest {
         do {
             _ = try Rhino.init(
                 accessKey: accessKey,
-                contextPath: contextPath)
+                contextPath: contextPath,
+                device: device)
         } catch {
             didFail = true
         }
@@ -228,7 +239,8 @@ class RhinoAppTestUITests: BaseTest {
         let r = try Rhino.init(
             accessKey: accessKey,
             contextPath: contextPath,
-            modelPath: modelPath)
+            modelPath: modelPath,
+            device: device)
         XCTAssert(r.contextInfo != "")
         r.delete()
     }
@@ -241,7 +253,8 @@ class RhinoAppTestUITests: BaseTest {
             inDirectory: "test_resources/context_files/en")!
         let r = try Rhino.init(
             accessKey: accessKey,
-            contextPath: contextPath)
+            contextPath: contextPath,
+            device: device)
 
         let fileURL: URL = bundle.url(
             forResource: "test_within_context",
@@ -271,7 +284,8 @@ class RhinoAppTestUITests: BaseTest {
             inDirectory: "test_resources/context_files/en")!
         let r = try Rhino.init(
             accessKey: accessKey,
-            contextPath: contextPath)
+            contextPath: contextPath,
+            device: device)
 
         let fileURL: URL = bundle.url(
             forResource: "test_out_of_context",
@@ -294,7 +308,10 @@ class RhinoAppTestUITests: BaseTest {
             withExtension: "wav",
             subdirectory: "test_resources/audio_samples")!
 
-        let r = try Rhino.init(accessKey: accessKey, contextPath: contextPath)
+        let r = try Rhino.init(
+            accessKey: accessKey, 
+            contextPath: contextPath,
+            device: device)
         var isFinalized = try processFileHelper(r, fileURL, 15)
         XCTAssert(!isFinalized)
 
@@ -317,7 +334,10 @@ class RhinoAppTestUITests: BaseTest {
 
         var first_error: String = ""
         do {
-            let r = try Rhino.init(accessKey: "invalid", contextPath: contextPath)
+            let r = try Rhino.init(
+                accessKey: "invalid", 
+                contextPath: contextPath,
+                device: device)
             XCTAssertNil(r)
         } catch {
             first_error = "\(error.localizedDescription)"
@@ -325,7 +345,10 @@ class RhinoAppTestUITests: BaseTest {
         }
 
         do {
-            let r = try Rhino.init(accessKey: "invalid", contextPath: contextPath)
+            let r = try Rhino.init(
+                accessKey: "invalid", 
+                contextPath: contextPath,
+                device: device)
             XCTAssertNil(r)
         } catch {
             XCTAssert("\(error.localizedDescription)".count == first_error.count)
@@ -339,7 +362,10 @@ class RhinoAppTestUITests: BaseTest {
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
 
-        let r = try Rhino.init(accessKey: accessKey, contextPath: contextPath)
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath,
+            device: device)
         r.delete()
 
         var testPcm: [Int16] = []

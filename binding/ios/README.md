@@ -21,6 +21,10 @@ Rhino is:
 * compact and computationally-efficient, making it perfect for IoT.
 * self-service. Developers and designers can train custom models using [Picovoice Console](https://console.picovoice.ai/).
 
+## Compatibility
+
+- iOS 16.0+
+
 ## Installation
 
 <!-- markdown-link-check-disable -->

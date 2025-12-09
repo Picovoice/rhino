@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -242,7 +242,7 @@
 			mainGroup = 1E1A57C527CEC84000A05F37;
 			packageReferences = (
 				E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */,
-				E15A37802CF7CA7900A96F85 /* XCRemoteSwiftPackageReference "rhino" */,
+				07CA0B7E2EE8B6230023250D /* XCLocalSwiftPackageReference "../../../../rhino" */,
 			);
 			productRefGroup = 1E1A57CF27CEC84000A05F37 /* Products */;
 			projectDirPath = "";
@@ -480,7 +480,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -509,7 +509,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -653,6 +653,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		07CA0B7E2EE8B6230023250D /* XCLocalSwiftPackageReference "../../../../rhino" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../../rhino;
+		};
 		E1C945042CE7E53F006F758D /* XCLocalSwiftPackageReference "../../../../rhino" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../../../rhino;
@@ -666,14 +670,6 @@
 			requirement = {
 				kind = exactVersion;
 				version = 1.2.0;
-			};
-		};
-		E15A37802CF7CA7900A96F85 /* XCRemoteSwiftPackageReference "rhino" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Picovoice/rhino";
-			requirement = {
-				kind = exactVersion;
-				version = 3.0.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
