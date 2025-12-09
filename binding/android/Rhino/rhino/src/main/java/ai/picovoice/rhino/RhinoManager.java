@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2023 Picovoice Inc.
+    Copyright 2018-2025 Picovoice Inc.
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
     Unless required by applicable law or agreed to in writing, software distributed under the
@@ -146,6 +146,7 @@ public class RhinoManager {
 
         private String accessKey = null;
         private String modelPath = null;
+        private String device = null;
         private String contextPath = null;
         private float sensitivity = 0.5f;
         private float endpointDurationSec = 1.0f;
@@ -159,6 +160,11 @@ public class RhinoManager {
 
         public RhinoManager.Builder setModelPath(String modelPath) {
             this.modelPath = modelPath;
+            return this;
+        }
+
+        public RhinoManager.Builder setDevice(String device) {
+            this.device = device;
             return this;
         }
 
@@ -201,6 +207,7 @@ public class RhinoManager {
             Rhino rhino = new Rhino.Builder()
                     .setAccessKey(accessKey)
                     .setModelPath(modelPath)
+                    .setDevice(device)
                     .setContextPath(contextPath)
                     .setSensitivity(sensitivity)
                     .setEndpointDurationSec(endpointDurationSec)

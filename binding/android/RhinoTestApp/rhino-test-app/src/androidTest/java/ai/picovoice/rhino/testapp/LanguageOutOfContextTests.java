@@ -85,6 +85,7 @@ public class LanguageOutOfContextTests extends BaseTest {
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setModelPath(modelPath)
+                .setDevice(device)
                 .setContextPath(contextPath)
                 .build(appContext);
 
