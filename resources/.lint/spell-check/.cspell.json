@@ -27,14 +27,10 @@
       "**/*.so",
       "**/*.wasm",
       "**/*.wav",
-      "**/*.unitypackage",
       "../../../lib/ios/**/*",
 
-      "**/*.unity",
       "**/*.mixer",
       "**/*.meta",
-      "../../../binding/unity/Packages/**/*",
-      "../../../binding/unity/ProjectSettings/**/*",
       
       "**/*.csproj",
       "**/*.targets",
