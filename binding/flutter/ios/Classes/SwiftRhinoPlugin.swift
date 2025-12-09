@@ -1,5 +1,5 @@
 //
-// Copyright 2021-2024 Picovoice Inc.
+// Copyright 2021-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -14,6 +14,7 @@ import UIKit
 import Rhino
 
 enum Method: String {
+    case GET_AVAILABLE_DEVICES
     case CREATE
     case PROCESS
     case RESET
@@ -40,11 +41,21 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
         let args = call.arguments as! [String: Any]
 
         switch method {
+        case .GET_AVAILABLE_DEVICES:
+            do {
+                var result: [String] = Rhino.getAvailableDevices()
+                result(result)
+            } catch let error as RhinoError {
+                result(errorToFlutterError(error))
+            } catch {
+                result(errorToFlutterError(RhinoError(error.localizedDescription)))
+            }
         case .CREATE:
             do {
                 if let accessKey = args["accessKey"] as? String,
                    let contextPath = args["contextPath"] as? String {
                     let modelPath = args["modelPath"] as? String
+                    let device = args["device"] as? String
                     let sensitivity = args["sensitivity"] as? Float
                     let endpointDurationSec = args["endpointDurationSec"] as? Float
                     let requireEndpoint = args["requireEndpoint"] as? Bool
@@ -53,6 +64,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
                         accessKey: accessKey,
                         contextPath: contextPath,
                         modelPath: modelPath,
+                        device: device,
                         sensitivity: sensitivity ?? 0.5,
                         endpointDurationSec: endpointDurationSec ?? 1.0,
                         requireEndpoint: requireEndpoint ?? true

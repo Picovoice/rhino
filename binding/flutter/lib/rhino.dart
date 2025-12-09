@@ -1,5 +1,5 @@
 //
-// Copyright 2021-2024 Picovoice Inc.
+// Copyright 2021-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -17,6 +17,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:rhino_flutter/rhino_error.dart';
 
 enum _NativeFunctions {
+  // ignore:constant_identifier_names
+  GET_AVAILABLE_DEVICES,
   // ignore:constant_identifier_names
   CREATE,
   // ignore:constant_identifier_names
@@ -86,6 +88,24 @@ class Rhino {
   /// which expressions map to those intents, as well as slots and their possible values.
   String get contextInfo => _contextInfo;
 
+  /// Lists all available devices that Rhino can use for inference.
+  /// Entries in the list can be used as the `device` argument when initializing Rhino.
+  ///
+  /// Throws a `RhinoException` if unable to get devices
+  ///
+  /// returns a list of devices Rhino can run inference on
+  static Future<List<String>> getAvailableDevices() async {
+    try {
+      List<String> devices = await _channel
+          .invokeMethod(_NativeFunctions.GET_AVAILABLE_DEVICES.name, {});
+      return devices;
+    } on PlatformException catch (error) {
+      throw rhinoStatusToException(error.code, error.message);
+    } on Exception catch (error) {
+      throw rhinoStatusToException("RhinoException", error.toString());
+    }
+  }
+
   /// Static creator for initializing Rhino
   ///
   /// [accessKey] AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
@@ -94,6 +114,13 @@ class Rhino {
   ///
   /// [modelPath] (Optional) Path to the file containing model parameters.
   /// If not set it will be set to the default location.
+  ///
+  /// [device] is the string representation of the device (e.g., CPU or GPU) to use. If set to `best`, the most
+  /// suitable device is selected automatically. If set to `gpu`, the engine uses the first available GPU
+  /// device. To select a specific GPU device, set this argument to `gpu:${GPU_INDEX}`, where `${GPU_INDEX}`
+  /// is the index of the target GPU. If set to `cpu`, the engine will run on the CPU with the default
+  /// number of threads. To specify the number of threads, set this argument to `cpu:${NUM_THREADS}`,
+  /// where `${NUM_THREADS}` is the desired number of threads.
   ///
   /// [sensitivity] (Optional) Inference sensitivity. A higher sensitivity value results in
   /// fewer misses at the cost of (potentially) increasing the erroneous inference rate.
@@ -113,6 +140,7 @@ class Rhino {
   /// returns an instance of the speech-to-intent engine
   static Future<Rhino> create(String accessKey, String contextPath,
       {String? modelPath,
+      String? device,
       double sensitivity = 0.5,
       double endpointDurationSec = 1.0,
       bool requireEndpoint = true}) async {
@@ -128,13 +156,18 @@ class Rhino {
         'accessKey': accessKey,
         'contextPath': contextPath,
         'modelPath': modelPath,
+        'device': device,
         'sensitivity': sensitivity,
         'endpointDurationSec': endpointDurationSec,
         'requireEndpoint': requireEndpoint
       }));
 
-      return Rhino._(result['handle'], result['contextInfo'],
-          result['frameLength'], result['sampleRate'], result['version']);
+      return Rhino._(
+          result['handle'],
+          result['contextInfo'],
+          result['frameLength'],
+          result['sampleRate'],
+          result['version']);
     } on PlatformException catch (error) {
       throw rhinoStatusToException(error.code, error.message);
     } on Exception catch (error) {
