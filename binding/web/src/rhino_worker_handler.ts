@@ -70,7 +70,7 @@ self.onmessage = async function (
           sampleRate: rhino.sampleRate,
           contextInfo: rhino.contextInfo,
         });
-      } catch (e: any) {        
+      } catch (e: any) {
         if (e instanceof RhinoError) {
           self.postMessage({
             command: 'error',

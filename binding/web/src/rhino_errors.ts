@@ -1,5 +1,5 @@
 //
-// Copyright 2023 Picovoice Inc.
+// Copyright 2023-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -153,37 +153,37 @@ export {
 };
 
 export function pvStatusToException(
-    pvStatus: PvStatus,
-    errorMessage: string,
-    messageStack: string[] = [],
-    pvError: PvError | null = null
-  ): RhinoError {
-    switch (pvStatus) {
-      case PvStatus.OUT_OF_MEMORY:
-        return new RhinoOutOfMemoryError(errorMessage, messageStack, pvError);
-      case PvStatus.IO_ERROR:
-        return new RhinoIOError(errorMessage, messageStack, pvError);
-      case PvStatus.INVALID_ARGUMENT:
-        return new RhinoInvalidArgumentError(errorMessage, messageStack, pvError);
-      case PvStatus.STOP_ITERATION:
-        return new RhinoStopIterationError(errorMessage, messageStack, pvError);
-      case PvStatus.KEY_ERROR:
-        return new RhinoKeyError(errorMessage, messageStack, pvError);
-      case PvStatus.INVALID_STATE:
-        return new RhinoInvalidStateError(errorMessage, messageStack, pvError);
-      case PvStatus.RUNTIME_ERROR:
-        return new RhinoRuntimeError(errorMessage, messageStack, pvError);
-      case PvStatus.ACTIVATION_ERROR:
-        return new RhinoActivationError(errorMessage, messageStack, pvError);
-      case PvStatus.ACTIVATION_LIMIT_REACHED:
-        return new RhinoActivationLimitReachedError(errorMessage, messageStack, pvError);
-      case PvStatus.ACTIVATION_THROTTLED:
-        return new RhinoActivationThrottledError(errorMessage, messageStack, pvError);
-      case PvStatus.ACTIVATION_REFUSED:
-        return new RhinoActivationRefusedError(errorMessage, messageStack, pvError);
-      default:
-        // eslint-disable-next-line no-console
-        console.warn(`Unmapped error code: ${pvStatus}`);
-        return new RhinoError(pvStatus, errorMessage);
-    }
+  pvStatus: PvStatus,
+  errorMessage: string,
+  messageStack: string[] = [],
+  pvError: PvError | null = null
+): RhinoError {
+  switch (pvStatus) {
+    case PvStatus.OUT_OF_MEMORY:
+      return new RhinoOutOfMemoryError(errorMessage, messageStack, pvError);
+    case PvStatus.IO_ERROR:
+      return new RhinoIOError(errorMessage, messageStack, pvError);
+    case PvStatus.INVALID_ARGUMENT:
+      return new RhinoInvalidArgumentError(errorMessage, messageStack, pvError);
+    case PvStatus.STOP_ITERATION:
+      return new RhinoStopIterationError(errorMessage, messageStack, pvError);
+    case PvStatus.KEY_ERROR:
+      return new RhinoKeyError(errorMessage, messageStack, pvError);
+    case PvStatus.INVALID_STATE:
+      return new RhinoInvalidStateError(errorMessage, messageStack, pvError);
+    case PvStatus.RUNTIME_ERROR:
+      return new RhinoRuntimeError(errorMessage, messageStack, pvError);
+    case PvStatus.ACTIVATION_ERROR:
+      return new RhinoActivationError(errorMessage, messageStack, pvError);
+    case PvStatus.ACTIVATION_LIMIT_REACHED:
+      return new RhinoActivationLimitReachedError(errorMessage, messageStack, pvError);
+    case PvStatus.ACTIVATION_THROTTLED:
+      return new RhinoActivationThrottledError(errorMessage, messageStack, pvError);
+    case PvStatus.ACTIVATION_REFUSED:
+      return new RhinoActivationRefusedError(errorMessage, messageStack, pvError);
+    default:
+      // eslint-disable-next-line no-console
+      console.warn(`Unmapped error code: ${pvStatus}`);
+      return new RhinoError(pvStatus, errorMessage);
   }
+}

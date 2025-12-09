@@ -1,4 +1,4 @@
-import {Rhino, RhinoWorker, RhinoContext, RhinoInference} from "../";
+import { Rhino, RhinoWorker, RhinoContext, RhinoInference } from "../";
 import testData from "./test_data.json";
 
 // @ts-ignore

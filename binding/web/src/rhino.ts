@@ -81,7 +81,6 @@ type pv_rhino_is_understood_type = (
 ) => number;
 type pv_rhino_version_type = () => number;
 type pv_sample_rate_type = () => number;
-type pv_status_to_string_type = (status: number) => number;
 type pv_rhino_list_hardware_devices_type = (
   hardwareDevices: number,
   numHardwareDevices: number
@@ -241,7 +240,7 @@ export class Rhino {
     return this._contextInfo;
   }
 
-/**
+  /**
    * Set base64 wasm file with SIMD feature.
    * @param wasmSimd Base64'd wasm file to use to initialize wasm.
    */
