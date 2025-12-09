@@ -64,7 +64,6 @@ export type RhinoWorkerInitRequest = {
   contextPath: string;
   sensitivity: number;
   modelPath: string;
-  device: string;
   wasmSimd: string;
   wasmSimdLib: string;
   wasmPThread: string;

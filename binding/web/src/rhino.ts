@@ -50,7 +50,7 @@ type pv_rhino_init_type = (
   endpointDurationSec: number,
   requireEndpoint: number,
   object: number
-) => number;
+) => Promise<number>;
 type pv_rhino_process_type = (
   object: number,
   pcm: number,

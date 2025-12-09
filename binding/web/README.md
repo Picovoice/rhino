@@ -37,7 +37,7 @@ Rhino is:
 
 ## Requirements
 
-The Eagle Web Binding uses [SharedArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer).
+The Rhino Web Binding uses [SharedArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer).
 
 Include the following headers in the response to enable the use of `SharedArrayBuffers`:
 
