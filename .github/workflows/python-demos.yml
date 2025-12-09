@@ -25,8 +25,9 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        device: [ cpu:1, cpu ]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13', '3.14' ]
         include:
         - os: ubuntu-latest
           platform: linux
@@ -46,19 +47,40 @@ jobs:
     - name: Pre-build dependencies
       run: python -m pip install --upgrade pip
 
+    # ************** REMOVE AFTER RELEASE ********************
+    - name: Build binding
+      run: |
+        pip install wheel setuptools && cd ../../binding/python && python3 setup.py sdist bdist_wheel && pip install --force-reinstall dist/pvrhino-4.0.0-py3-none-any.whl
+    # ********************************************************
+
     - name: Install dependencies
       run: pip install -r requirements.txt
 
     - name: Test
-      run: python rhino_demo_file.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --wav_path ../../resources/audio_samples/test_within_context.wav --context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      run: >
+        python rhino_demo_file.py 
+        --access_key ${{secrets.PV_VALID_ACCESS_KEY}}
+        --device ${{ matrix.device }}
+        --wav_path ../../resources/audio_samples/test_within_context.wav 
+        --context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
 
   build-self-hosted:
     runs-on: ${{ matrix.machine }}
 
     strategy:
       matrix:
-        machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, pv-windows-arm64]
+        machine: [ rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, pv-windows-arm64 ]
+        device: [ best ]
         include:
+        - device: gpu
+          machine: pv-linux
+          platform: linux
+        - device: gpu
+          machine: pv-windows
+          platform: windows
+        - device: gpu
+          machine: pv-ios
+          platform: mac
         - machine: rpi3-32
           platform: raspberry-pi
         - machine: rpi3-64
@@ -75,8 +97,19 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    # ************** REMOVE AFTER RELEASE ********************
+    - name: Build binding
+      run: |
+        pip install wheel setuptools && cd ../../binding/python && python3 setup.py sdist bdist_wheel && pip install --force-reinstall dist/pvrhino-4.0.0-py3-none-any.whl
+    # ********************************************************
+
     - name: Install dependencies
       run: pip3 install -r requirements.txt
 
     - name: Test
-      run: python3 rhino_demo_file.py --access_key ${{secrets.PV_VALID_ACCESS_KEY}} --wav_path ../../resources/audio_samples/test_within_context.wav --context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      run: >
+        python3 rhino_demo_file.py 
+        --access_key ${{secrets.PV_VALID_ACCESS_KEY}} 
+        --device ${{ matrix.device }}
+        --wav_path ../../resources/audio_samples/test_within_context.wav 
+        --context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
