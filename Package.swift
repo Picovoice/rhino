@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.7
 import PackageDescription
 let package = Package(
     name: "Rhino-iOS",
@@ -33,7 +33,6 @@ let package = Package(
                 "binding/ios/RhinoAppTest",
                 "binding/flutter",
                 "binding/react-native",
-                "binding/unity",
                 "demo"
             ],
             sources: [

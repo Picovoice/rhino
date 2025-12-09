@@ -309,7 +309,7 @@ class RhinoAppTestUITests: BaseTest {
             subdirectory: "test_resources/audio_samples")!
 
         let r = try Rhino.init(
-            accessKey: accessKey, 
+            accessKey: accessKey,
             contextPath: contextPath,
             device: device)
         var isFinalized = try processFileHelper(r, fileURL, 15)
@@ -335,7 +335,7 @@ class RhinoAppTestUITests: BaseTest {
         var first_error: String = ""
         do {
             let r = try Rhino.init(
-                accessKey: "invalid", 
+                accessKey: "invalid",
                 contextPath: contextPath,
                 device: device)
             XCTAssertNil(r)
@@ -346,7 +346,7 @@ class RhinoAppTestUITests: BaseTest {
 
         do {
             let r = try Rhino.init(
-                accessKey: "invalid", 
+                accessKey: "invalid",
                 contextPath: contextPath,
                 device: device)
             XCTAssertNil(r)
