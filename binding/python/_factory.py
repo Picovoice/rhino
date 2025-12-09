@@ -20,7 +20,7 @@ def create(
         context_path: str,
         library_path: Optional[str] = None,
         model_path: Optional[str] = None,
-        device: str = "best",
+        device: Optional[str] = None,
         sensitivity: float = 0.5,
         endpoint_duration_sec: float = 1.,
         require_endpoint: bool = True) -> Rhino:
@@ -59,6 +59,9 @@ def create(
 
     if model_path is None:
         model_path = pv_model_path('')
+
+    if device is None:
+        device = "best"
 
     return Rhino(
         access_key=access_key,

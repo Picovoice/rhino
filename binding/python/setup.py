@@ -45,8 +45,7 @@ include pvrhino/lib/linux/x86_64/libpv_rhino.so
 include pvrhino/lib/mac/x86_64/libpv_rhino.dylib
 include pvrhino/lib/mac/arm64/libpv_rhino.dylib
 recursive-include pvrhino/lib/raspberry-pi *
-include pvrhino/lib/windows/amd64/libpv_rhino.dll
-include pvrhino/lib/windows/amd64/pv_ypu_impl_cuda.dll
+recursive-include pvrhino/lib/windows/amd64 *
 include pvrhino/lib/windows/arm64/libpv_rhino.dll
 """
 

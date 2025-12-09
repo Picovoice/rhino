@@ -94,7 +94,7 @@ def main():
         return
 
     if not args.access_key or not args.context_path:
-        print('--access_key and --context_path are required.')
+        print('Arguments --access_key and --context_path are required.')
         return
 
     try:

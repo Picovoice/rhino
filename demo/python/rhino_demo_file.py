@@ -42,18 +42,15 @@ def main():
 
     parser.add_argument(
         '--access_key',
-        help='AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)',
-        required=True)
+        help='AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)')
 
     parser.add_argument(
         '--wav_path',
-        help='Absolute path to input audio file.',
-        required=True)
+        help='Absolute path to input audio file.')
 
     parser.add_argument(
         '--context_path',
-        help="Absolute path to context file.",
-        required=True)
+        help="Absolute path to context file.")
 
     parser.add_argument(
         '--library_path',
@@ -108,6 +105,9 @@ def main():
     if args.show_inference_devices:
         print('\n'.join(pvrhino.available_devices(library_path=args.library_path)))
         return
+
+    if not args.access_key or not args.wav_path or not args.context_path:
+        raise ValueError("Arguments --access_key, --wav_path and --context_path are required.")
 
     try:
         rhino = pvrhino.create(
