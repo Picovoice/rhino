@@ -18,15 +18,21 @@ import {
   RhinoWorkerResponse,
 } from './types';
 
-import rhinoWasm from '../lib/pv_rhino.wasm';
-import rhinoWasmSimd from '../lib/pv_rhino_simd.wasm';
+import rhinoWasmSimd from './lib/pv_rhino_simd.wasm';
+import rhinoWasmSimdLib from './lib/pv_rhino_simd.txt';
+import rhinoWasmPThread from './lib/pv_rhino_pthread.wasm';
+import rhinoWasmPThreadLib from './lib/pv_rhino_pthread.txt';
 
 import * as RhinoErrors from './rhino_errors';
 
-Rhino.setWasm(rhinoWasm);
 Rhino.setWasmSimd(rhinoWasmSimd);
-RhinoWorker.setWasm(rhinoWasm);
+Rhino.setWasmSimdLib(rhinoWasmSimdLib);
+Rhino.setWasmPThread(rhinoWasmPThread);
+Rhino.setWasmPThreadLib(rhinoWasmPThreadLib);
 RhinoWorker.setWasmSimd(rhinoWasmSimd);
+RhinoWorker.setWasmSimdLib(rhinoWasmSimdLib);
+RhinoWorker.setWasmPThread(rhinoWasmPThread);
+RhinoWorker.setWasmPThreadLib(rhinoWasmPThreadLib);
 
 export {
   InferenceCallback,

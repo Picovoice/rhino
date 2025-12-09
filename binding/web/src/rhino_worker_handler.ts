@@ -1,5 +1,5 @@
 /*
-  Copyright 2022-2023 Picovoice Inc.
+  Copyright 2022-2025 Picovoice Inc.
 
   You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
   file accompanying this source.
@@ -50,8 +50,10 @@ self.onmessage = async function (
         return;
       }
       try {
-        Rhino.setWasm(event.data.wasm);
         Rhino.setWasmSimd(event.data.wasmSimd);
+        Rhino.setWasmSimdLib(event.data.wasmSimdLib);
+        Rhino.setWasmPThread(event.data.wasmPThread);
+        Rhino.setWasmPThreadLib(event.data.wasmPThreadLib);
         Rhino.setSdk(event.data.sdk);
         rhino = await Rhino._init(
           event.data.accessKey,
@@ -68,7 +70,7 @@ self.onmessage = async function (
           sampleRate: rhino.sampleRate,
           contextInfo: rhino.contextInfo,
         });
-      } catch (e: any) {        
+      } catch (e: any) {
         if (e instanceof RhinoError) {
           self.postMessage({
             command: 'error',

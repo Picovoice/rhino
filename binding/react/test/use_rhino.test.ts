@@ -7,6 +7,7 @@ import rhinoParams from '@/rhino_params.js';
 import testData from './test_data.json';
 
 const ACCESS_KEY = Cypress.env('ACCESS_KEY');
+const DEVICE = Cypress.env('DEVICE');
 
 describe('Rhino binding', () => {
   it('should be able to init via public path', () => {
@@ -16,7 +17,8 @@ describe('Rhino binding', () => {
       () => result.current.init(
         ACCESS_KEY,
         { publicPath: "/test/contexts/coffee_maker_wasm.rhn", forceWrite: true },
-        { publicPath: "/test/rhino_params.pv", forceWrite: true }
+        { publicPath: "/test/rhino_params.pv", forceWrite: true },
+        { device: DEVICE }
       )
     ).then(() => {
       expect(result.current.isLoaded).to.be.true;
@@ -36,7 +38,8 @@ describe('Rhino binding', () => {
       () => result.current.init(
         ACCESS_KEY,
         { publicPath: "/test/contexts/coffee_maker_wasm.rhn", forceWrite: true },
-        { base64: rhinoParams, forceWrite: true }
+        { base64: rhinoParams, forceWrite: true },
+        { device: DEVICE }
       )
     ).then(() => {
       expect(result.current.isLoaded).to.be.true;
@@ -50,7 +53,8 @@ describe('Rhino binding', () => {
       () => result.current.init(
         ACCESS_KEY,
         { publicPath: "/test/contexts/coffee_maker_wasm.rhn", forceWrite: true },
-        { publicPath: "/rhino_params_failed.pv", forceWrite: true }
+        { publicPath: "/rhino_params_failed.pv", forceWrite: true },
+        { device: DEVICE }
       )
     ).then(() => {
       expect(result.current.isLoaded).to.be.false;
@@ -65,7 +69,8 @@ describe('Rhino binding', () => {
       () => result.current.init(
         '',
         { publicPath: "/test/contexts/coffee_maker_wasm.rhn", forceWrite: true },
-        { publicPath: "/test/rhino_params.pv", forceWrite: true }
+        { publicPath: "/test/rhino_params.pv", forceWrite: true },
+        { device: DEVICE }
       )
     ).then(() => {
       expect(result.current.isLoaded).to.be.false;
@@ -87,7 +92,8 @@ describe('Rhino binding', () => {
           {
             publicPath: testInfo.language === 'en' ? "/test/rhino_params.pv" : `/test/rhino_params_${testInfo.language}.pv`,
             forceWrite: true,
-          }
+          },
+          { device: DEVICE }
         )
       ).then(() => {
         expect(result.current.isLoaded).to.be.true;
@@ -124,7 +130,8 @@ describe('Rhino binding', () => {
           {
             publicPath: testInfo.language === 'en' ? "/test/rhino_params.pv" : `/test/rhino_params_${testInfo.language}.pv`,
             forceWrite: true,
-          }
+          },
+          { device: DEVICE }
         )
       ).then(() => {
         expect(result.current.isLoaded).to.be.true;
