@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.jar.JarEntry;
@@ -180,7 +181,7 @@ class Utils {
                     return "cortex-a76" + archInfo;
                 default:
                     throw new RuntimeException(
-                            String.format("Environment (%s) with CPU Part (%s) is not supported by Porcupine.",
+                            String.format("Environment (%s) with CPU Part (%s) is not supported by Rhino.",
                                           ENVIRONMENT_NAME,
                                           cpuPart)
                     );
@@ -188,7 +189,7 @@ class Utils {
         }
 
         throw new RuntimeException(
-                String.format("Environment (%s) with architecture (%s) is not supported by Porcupine.",
+                String.format("Environment (%s) with architecture (%s) is not supported by Rhino.",
                               ENVIRONMENT_NAME,
                               arch)
         );
@@ -228,6 +229,28 @@ class Utils {
                         .resolve("libpv_rhino_jni.so").toString();
             default:
                 return null;
+        }
+    }
+
+    public static ArrayList<String> getLibraryDependencyPaths(String libraryPath) {
+        Path libraryDirpath = Paths.get(libraryPath).getParent();
+        
+        ArrayList<String> libraryDependencies = new ArrayList();
+
+        switch (ENVIRONMENT_NAME) {
+            case "windows":
+                if (ARCHITECTURE == "amd64") {
+                    String[] dependencies = { "pv_ypu_impl_cuda.dll" };
+                    for (int i = 0; i < dependencies.length; i++) {
+                        Path depPath = libraryDirpath.resolve(dependencies[i]);
+                        if (Files.exists(depPath)) {
+                            libraryDependencies.add(depPath.toString());
+                        }
+                    }
+                }
+                return libraryDependencies;
+            default:
+                return libraryDependencies;
         }
     }
 }

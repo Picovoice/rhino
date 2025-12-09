@@ -1,5 +1,5 @@
 /*
-    Copyright 2022 Picovoice Inc.
+    Copyright 2022-2025 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RhinoPerformanceTest {
 
     private final String accessKey = System.getProperty("pvTestingAccessKey");
+    private final String device = System.getProperty("pvTestingDevice");
     private final int numTestIterations = Integer.parseInt(System.getProperty("numTestIterations"));
     private final double performanceThresholdSec = Double.parseDouble(System.getProperty("performanceThresholdSec"));
 
@@ -34,6 +35,7 @@ public class RhinoPerformanceTest {
     void testPerformance() throws Exception {
         Rhino rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                 .build();
 

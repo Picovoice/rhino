@@ -24,6 +24,7 @@ constraintlayout
 cozinha
 crhino
 cstring
+cuda
 devkit
 dlfcn
 dlopen

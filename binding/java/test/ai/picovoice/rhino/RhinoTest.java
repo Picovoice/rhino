@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2023 Picovoice Inc.
+    Copyright 2018-2025 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
@@ -40,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class RhinoTest {
 
     private final String accessKey = System.getProperty("pvTestingAccessKey");
+    private final String device = System.getProperty("pvTestingDevice");
     private Rhino rhino;
 
     private static Stream<Arguments> withinContextProvider() throws IOException {
@@ -105,6 +106,7 @@ public class RhinoTest {
     void getVersion() throws RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                 .build();
         assertTrue(rhino.getVersion() != null && !rhino.getVersion().equals(""));
@@ -114,6 +116,7 @@ public class RhinoTest {
     void getFrameLength() throws RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                 .build();
         assertTrue(rhino.getFrameLength() > 0);
@@ -123,6 +126,7 @@ public class RhinoTest {
     void getSampleRate() throws RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                 .build();
         assertTrue(rhino.getSampleRate() > 0);
@@ -132,6 +136,7 @@ public class RhinoTest {
     void reset() throws Exception {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                 .build();
 
@@ -153,6 +158,7 @@ public class RhinoTest {
         try {
             rhino = new Rhino.Builder()
                     .setAccessKey("invalid")
+                    .setDevice(device)
                     .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                     .build();
         } catch (RhinoException e) {
@@ -165,6 +171,7 @@ public class RhinoTest {
         try {
             rhino = new Rhino.Builder()
                     .setAccessKey("invalid")
+                    .setDevice(device)
                     .setContextPath(RhinoTestUtils.getTestContextPath("en", "coffee_maker"))
                     .build();
         } catch (RhinoException e) {
@@ -237,6 +244,7 @@ public class RhinoTest {
                            throws IOException, UnsupportedAudioFileException, RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(RhinoTestUtils.getTestContextPath(language, context))
                 .setModelPath(RhinoTestUtils.getTestModelPath(language))
                 .setRequireEndpoint(true)
@@ -258,6 +266,7 @@ public class RhinoTest {
                           throws IOException, UnsupportedAudioFileException, RhinoException {
         rhino = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(RhinoTestUtils.getTestContextPath(language, context))
                 .setModelPath(RhinoTestUtils.getTestModelPath(language))
                 .setRequireEndpoint(true)

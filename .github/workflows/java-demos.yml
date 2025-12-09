@@ -26,7 +26,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        java-version: [11, 17, 21]
+        device: [cpu, cpu:1]
+        java-version: [11, 17, 21, 25]
         include:
         - os: ubuntu-latest
           platform: linux
@@ -40,6 +41,8 @@ jobs:
           gradle-version: 7.3
         - java-version: 21
           gradle-version: 8.5
+        - java-version: 25
+          gradle-version: 9.2.1
 
     steps:
     - uses: actions/checkout@v3
@@ -55,11 +58,17 @@ jobs:
       with:
         gradle-version: ${{ matrix.gradle-version }}
 
+# REMOVE AFTER RELEASE
+    - name: Build binding
+      run: gradle assemble
+      working-directory: binding/java
+# REMOVE AFTER RELEASE
+
     - name: Build
       run: gradle build
 
     - name: Run filedemo
-      run: java -jar build/libs/rhino-file-demo.jar -a  ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      run: java -jar build/libs/rhino-file-demo.jar -a  ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn -y ${{ matrix.device }}
 
   build-self-hosted:
     runs-on: ${{ matrix.machine }}
@@ -67,7 +76,17 @@ jobs:
     strategy:
       matrix:
         machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, pv-windows-arm64]
+        device: [best]
         include:
+        - device: gpu
+          machine: pv-linux
+          platform: linux
+        - device: gpu
+          machine: pv-windows
+          platform: windows
+        - device: gpu
+          machine: pv-ios
+          platform: mac
         - machine: rpi3-32
           platform: raspberry-pi
         - machine: rpi3-64
@@ -84,8 +103,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+# REMOVE AFTER RELEASE
+    - name: Build binding
+      run: ./gradlew assemble
+      working-directory: binding/java
+# REMOVE AFTER RELEASE
+
     - name: Build
       run: ./gradlew build
 
     - name: Run filedemo
-      run: java -jar build/libs/rhino-file-demo.jar -a  ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      run: java -jar build/libs/rhino-file-demo.jar -a  ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn -y ${{ matrix.device }}
