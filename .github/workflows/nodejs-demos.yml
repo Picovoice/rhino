@@ -29,7 +29,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x, 24.x]
         include:
         - os: ubuntu-latest
           platform: linux
@@ -46,11 +46,17 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    # ************** REMOVE AFTER RELEASE ********************
+    - name: Build Local Packages
+      run: yarn && yarn build
+      working-directory: binding/nodejs
+    # ********************************************************
+
     - name: Install dependencies
       run: yarn install
 
     - name: Test
-      run: yarn file -a ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      run: yarn file -a ${{secrets.PV_VALID_ACCESS_KEY}} -y ${{ matrix.device }} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
 
   build-self-hosted:
     runs-on: ${{ matrix.machine }}
@@ -58,7 +64,17 @@ jobs:
     strategy:
       matrix:
         machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, pv-windows-arm64]
+        device: [best]
         include:
+        - device: gpu
+          machine: pv-linux
+          platform: linux
+        - device: gpu
+          machine: pv-windows
+          platform: windows
+        - device: gpu
+          machine: pv-ios
+          platform: mac
         - machine: rpi3-32
           platform: raspberry-pi
         - machine: rpi3-64
@@ -75,8 +91,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    # ************** REMOVE AFTER RELEASE ********************
+    - name: Build Local Packages
+      run: yarn && yarn build
+      working-directory: binding/nodejs
+    # ********************************************************
+
     - name: Install dependencies
       run: yarn install
 
     - name: Test
-      run: yarn file -a ${{secrets.PV_VALID_ACCESS_KEY}} -i ../../resources/audio_samples/multiple_keywords.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
+      run: yarn file -a ${{secrets.PV_VALID_ACCESS_KEY}} -y ${{ matrix.device }} -i ../../resources/audio_samples/test_within_context.wav -c ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
