@@ -13,6 +13,7 @@
 package ai.picovoice.rhino;
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 /**
@@ -86,6 +87,10 @@ public class Rhino {
             boolean requireEndpoint) throws RhinoException {
 
         try {
+            ArrayList<String> libraryDependencies = Utils.getLibraryDependencyPaths(libraryPath);
+            for (String dependency : libraryDependencies) {
+                System.load(dependency);
+            }
             System.load(libraryPath);
         } catch (Exception exception) {
             throw new RhinoException(exception);
