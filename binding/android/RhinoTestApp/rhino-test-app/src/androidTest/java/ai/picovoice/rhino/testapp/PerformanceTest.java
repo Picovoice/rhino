@@ -35,6 +35,7 @@ public class PerformanceTest extends BaseTest {
         File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(contextPath.getAbsolutePath())
                 .build(appContext);
 

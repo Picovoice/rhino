@@ -34,7 +34,9 @@ public class BaseTest {
     Context appContext;
     AssetManager assetManager;
     String testResourcesPath;
+
     String accessKey;
+    String device;
 
     @Before
     public void Setup() throws IOException {
@@ -44,6 +46,7 @@ public class BaseTest {
         testResourcesPath = new File(appContext.getFilesDir(), "test_resources").getAbsolutePath();
 
         accessKey = appContext.getString(R.string.pvTestingAccessKey);
+        device = appContext.getString(R.string.pvTestingDevice);
     }
 
     public static String getTestDataString() throws IOException {

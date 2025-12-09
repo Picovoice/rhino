@@ -36,6 +36,7 @@ public class StandardTests extends BaseTest {
         File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(contextPath.getAbsolutePath())
                 .build(appContext);
 
@@ -53,6 +54,7 @@ public class StandardTests extends BaseTest {
         File modelPath = new File(getModelFilepath("rhino_params.pv"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(contextPath.getAbsolutePath())
                 .setModelPath(modelPath.getAbsolutePath())
                 .build(appContext);
@@ -66,6 +68,7 @@ public class StandardTests extends BaseTest {
         File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(contextPath.getAbsolutePath())
                 .setSensitivity(0.7f)
                 .build(appContext);
@@ -79,6 +82,7 @@ public class StandardTests extends BaseTest {
         File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(contextPath.getAbsolutePath())
                 .setEndpointDurationSec(3.0f)
                 .build(appContext);
@@ -92,6 +96,7 @@ public class StandardTests extends BaseTest {
         File contextPath = new File(getContextFilepath("en/coffee_maker_android.rhn"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(contextPath.getAbsolutePath())
                 .setRequireEndpoint(false)
                 .build(appContext);
@@ -108,6 +113,7 @@ public class StandardTests extends BaseTest {
         try {
             new Rhino.Builder()
                     .setAccessKey(accessKey)
+                    .setDevice(device)
                     .setContextPath(contextPath.getAbsolutePath())
                     .setModelPath(modelPath.getAbsolutePath())
                     .build(appContext);
@@ -124,6 +130,7 @@ public class StandardTests extends BaseTest {
         File contextPath = new File(getContextFilepath("fr/éclairage_intelligent_android.rhn"));
         try {
             new Rhino.Builder()
+                    .setDevice(device)
                     .setContextPath(contextPath.getAbsolutePath())
                     .build(appContext);
         } catch (RhinoException e) {
@@ -139,6 +146,7 @@ public class StandardTests extends BaseTest {
         try {
             new Rhino.Builder()
                     .setAccessKey(accessKey)
+                    .setDevice(device)
                     .build(appContext);
         } catch (RhinoException e) {
             didFail = true;
@@ -154,6 +162,7 @@ public class StandardTests extends BaseTest {
         try {
             new Rhino.Builder()
                     .setAccessKey(accessKey)
+                    .setDevice(device)
                     .setContextPath(contextPath.getAbsolutePath())
                     .build(appContext);
         } catch (RhinoException e) {
@@ -171,6 +180,7 @@ public class StandardTests extends BaseTest {
         try {
             new Rhino.Builder()
                     .setAccessKey(accessKey)
+                    .setDevice(device)
                     .setContextPath(contextPath.getAbsolutePath())
                     .setModelPath(modelPath.getAbsolutePath())
                     .build(appContext);
@@ -188,6 +198,7 @@ public class StandardTests extends BaseTest {
         try {
             new Rhino.Builder()
                     .setAccessKey(accessKey)
+                    .setDevice(device)
                     .setContextPath(contextPath.getAbsolutePath())
                     .setSensitivity(10)
                     .build(appContext);
@@ -205,6 +216,7 @@ public class StandardTests extends BaseTest {
         try {
             new Rhino.Builder()
                     .setAccessKey(accessKey)
+                    .setDevice(device)
                     .setContextPath(contextPath.getAbsolutePath())
                     .setEndpointDurationSec(10.0f)
                     .build(appContext);
@@ -222,6 +234,7 @@ public class StandardTests extends BaseTest {
         try {
             new Rhino.Builder()
                     .setAccessKey(accessKey)
+                    .setDevice(device)
                     .setContextPath(contextPath.getAbsolutePath())
                     .build(appContext);
         } catch (RhinoException e) {
@@ -238,6 +251,7 @@ public class StandardTests extends BaseTest {
         File modelPath = new File(getModelFilepath("rhino_params_es.pv"));
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(contextPath.getAbsolutePath())
                 .setModelPath(modelPath.getAbsolutePath())
                 .build(appContext);
@@ -252,6 +266,7 @@ public class StandardTests extends BaseTest {
 
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
+                .setDevice(device)
                 .setContextPath(contextPath.getAbsolutePath())
                 .build(appContext);
 
@@ -276,6 +291,7 @@ public class StandardTests extends BaseTest {
         try {
             new Rhino.Builder()
                     .setAccessKey("invalid")
+                    .setDevice(device)
                     .setContextPath(contextPath.getAbsolutePath())
                     .build(appContext);
         } catch (RhinoException e) {
@@ -288,6 +304,7 @@ public class StandardTests extends BaseTest {
         try {
             new Rhino.Builder()
                     .setAccessKey("invalid")
+                    .setDevice(device)
                     .setContextPath(contextPath.getAbsolutePath())
                     .build(appContext);
         } catch (RhinoException e) {
