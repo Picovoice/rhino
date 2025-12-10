@@ -6,6 +6,21 @@ ext {
     PUBLISH_ARTIFACT_ID = 'rhino-android'
 }
 
+apply plugin: 'maven-publish'
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = "ai.picovoice"
+            artifactId = "rhino-android"
+            version = "4.0.0"
+            artifact("$buildDir/outputs/aar/rhino-release.aar")
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+
 android {
     compileSdkVersion defaultTargetSdkVersion
 
