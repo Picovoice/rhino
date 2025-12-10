@@ -69,3 +69,7 @@
 
 ## [3.0.6] - 2025-10-17
 * Replaced JCenter with Maven Central in Gradle repository sources
+
+## [4.0.0] - 2025-12-10
+* Added support for running on GPU or multiple CPU cores
+* Version bumped to Flutter 3.10+ and Dart 3.0.0+
