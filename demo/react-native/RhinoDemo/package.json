@@ -1,6 +1,6 @@
 {
   "name": "rhino-react-native-demo",
-  "version": "3.0.4",
+  "version": "4.0.0",
   "private": true,
   "scripts": {
     "lint": "eslint .",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@picovoice/react-native-voice-processor": "1.2.3",
-    "@picovoice/rhino-react-native": "3.0.5",
+    "@picovoice/rhino-react-native": "../../../binding/react-native/pkg/picovoice-rhino-react-native-4.0.0.tgz",
     "@react-native/new-app-screen": "0.82.0",
     "react": "19.1.1",
     "react-native": "0.82.0",
