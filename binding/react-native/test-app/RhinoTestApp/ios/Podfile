@@ -17,7 +17,7 @@ end
 target 'RhinoTestApp' do
   config = use_native_modules!
 
-  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/v4.0/binding/ios/Rhino-iOS.podspec'
+  pod 'Rhino-iOS', :podspec => 'https://raw.githubusercontent.com/Picovoice/rhino/v4-ios/binding/ios/Rhino-iOS.podspec'
 
   use_react_native!(
     :path => config[:reactNativePath],
