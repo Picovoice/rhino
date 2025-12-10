@@ -1,5 +1,5 @@
 //
-// Copyright 2021-2024 Picovoice Inc.
+// Copyright 2021-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -16,7 +16,9 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ai.picovoice.rhino.*;
@@ -29,6 +31,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
 
     private enum Method {
+        GET_AVAILABLE_DEVICES,
         CREATE,
         PROCESS,
         RESET,
@@ -62,10 +65,22 @@ public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
         }
 
         switch (method) {
+            case GET_AVAILABLE_DEVICES:
+                try {
+                    List<String> devices = Arrays.asList(Rhino.getAvailableDevices());
+                    result.success(devices);
+                } catch (RhinoException e) {
+                    result.error(
+                            e.getClass().getSimpleName(),
+                            e.getMessage(),
+                            null);
+                }
+                break;
             case CREATE:
                 try {
                     String accessKey = call.argument("accessKey");
                     String modelPath = call.argument("modelPath");
+                    String device = call.argument("device");
                     String contextPath = call.argument("contextPath");
                     Double sensitivity = call.argument("sensitivity");
                     Double endpointDurationSec = call.argument("endpointDurationSec");
@@ -75,6 +90,10 @@ public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
                             .setAccessKey(accessKey)
                             .setModelPath(modelPath)
                             .setContextPath(contextPath);
+
+                    if (device != null) {
+                        rhinoBuilder.setDevice(device);
+                    }
 
                     if (sensitivity != null) {
                         rhinoBuilder.setSensitivity(sensitivity.floatValue());
