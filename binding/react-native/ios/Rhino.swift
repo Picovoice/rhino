@@ -1,5 +1,5 @@
 //
-// Copyright 2020-2023 Picovoice Inc.
+// Copyright 2020-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -21,10 +21,28 @@ class PvRhino: NSObject {
         Rhino.setSdk(sdk: "react-native")
     }
 
-    @objc(create:modelPath:contextPath:sensitivity:endpointDurationSec:requireEndpoint:resolver:rejecter:)
+    @objc(getAvailableDevices:rejecter:)
+    func fromBuiltInKeywords(
+        resolver resolve: RCTPromiseResolveBlock,
+        rejecter reject: RCTPromiseRejectBlock
+    ) {
+        do {
+            var result: [String] = try Rhino.getAvailableDevices()
+            resolve(result)
+        } catch let error as RhinoError {
+            let (code, message) = errorToCodeAndMessage(error)
+            reject(code, message, nil)
+        } catch {
+            let (code, message) = errorToCodeAndMessage(RhinoError(error.localizedDescription))
+            reject(code, message, nil)
+        }
+    }
+
+    @objc(create:modelPath:device:contextPath:sensitivity:endpointDurationSec:requireEndpoint:resolver:rejecter:)
     func create(
         accessKey: String,
         modelPath: String,
+        device: String,
         contextPath: String,
         sensitivity: Float32,
         endpointDurationSec: Float32,
@@ -37,6 +55,7 @@ class PvRhino: NSObject {
                 accessKey: accessKey,
                 contextPath: contextPath,
                 modelPath: modelPath.isEmpty ? nil : modelPath,
+                device: device.isEmpty ? nil : device,
                 sensitivity: sensitivity,
                 requireEndpoint: requireEndpoint
             )

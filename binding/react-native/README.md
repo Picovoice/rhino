@@ -23,10 +23,10 @@ Rhino is:
 
 ## Compatibility
 
-This binding is for running Rhino on **React Native 0.62.2+** on the following platforms:
+This binding is for running Rhino on **React Native 0.73+** on the following platforms:
 
 - Android 5.0+ (API 21+)
-- iOS 13.0+
+- iOS 16.0+
 
 ## Installation
 

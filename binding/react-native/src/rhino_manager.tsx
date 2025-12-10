@@ -1,5 +1,5 @@
 //
-// Copyright 2020-2023 Picovoice Inc.
+// Copyright 2020-2025 Picovoice Inc.
 //
 // You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 // file accompanying this source.
@@ -37,6 +37,12 @@ class RhinoManager {
    * @param inferenceCallback A callback for when Rhino has made an intent inference
    * @param processErrorCallback Reports errors that are encountered while the engine is processing audio.
    * @param modelPath Path to the file containing model parameters. If not set it will be set to the default location.
+   * @param device String representation of the device (e.g., CPU or GPU) to use for inference.
+   * If set to `best`, the most suitable device is selected automatically. If set to `gpu`, the engine uses the
+   * first available GPU device. To select a specific GPU device, set this argument to `gpu:${GPU_INDEX}`, where
+   * `${GPU_INDEX}` is the index of the target GPU. If set to `cpu`, the engine will run on the CPU with the
+   * default number of threads. To specify the number of threads, set this argument to `cpu:${NUM_THREADS}`,
+   * where `${NUM_THREADS}` is the desired number of threads.
    * @param sensitivity Inference sensitivity. A higher sensitivity value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
    * Sensitivity should be a floating-point number within [0, 1].
    * @param endpointDurationSec Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
@@ -55,6 +61,7 @@ class RhinoManager {
     inferenceCallback: InferenceCallback,
     processErrorCallback?: ProcessErrorCallback,
     modelPath?: string,
+    device?: string,
     sensitivity: number = 0.5,
     endpointDurationSec: number = 1.0,
     requireEndpoint: boolean = true
@@ -63,6 +70,7 @@ class RhinoManager {
       accessKey,
       contextPath,
       modelPath,
+      device,
       sensitivity,
       endpointDurationSec,
       requireEndpoint

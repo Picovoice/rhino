@@ -9,6 +9,7 @@ const testData = require('./test_data.json');
 const platform = Platform.OS;
 
 const accessKey: string = '{TESTING_ACCESS_KEY_HERE}';
+const device: string = '{TESTING_DEVICE_HERE}';
 
 export type Result = {
   testName: string;
@@ -120,7 +121,13 @@ async function runTestcase(
       language === 'en'
         ? getPath('model_files/rhino_params.pv')
         : getPath(`model_files/rhino_params_${language}.pv`);
-    rhino = await Rhino.create(accessKey, contextPath, modelPath);
+    let availableDevices = await Rhino.getAvailableDevices();
+    if (availableDevices === undefined || availableDevices.length <= 0) {
+      result.success = false;
+      result.errorString = `Devices ${JSON.stringify(availableDevices)} are not valid`;
+      return result;
+    }
+    rhino = await Rhino.create(accessKey, contextPath, modelPath, device);
     const inference = await getInference(rhino, audioFilePath);
     if (inferencesEqual(inference, groundTruth)) {
       result.success = true;
@@ -186,7 +193,7 @@ async function resetTest(): Promise<Result> {
   const result: Result = {testName: 'Reset test', success: false};
   let rhino = null;
   try {
-    rhino = await Rhino.create(accessKey, contextPath, modelPath);
+    rhino = await Rhino.create(accessKey, contextPath, modelPath, device);
 
     const pcm = await getPcmFromFile(audioFilePath, rhino.sampleRate);
     const frameLength = rhino.frameLength;
