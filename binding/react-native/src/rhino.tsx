@@ -84,7 +84,7 @@ class Rhino {
     try {
       return await RCTRhino.getAvailableDevices();
     } catch (err) {
-      if (err instanceof RhinoErrors.PorcupineError) {
+      if (err instanceof RhinoErrors.RhinoError) {
         throw err;
       } else {
         const nativeError = err as NativeError;
