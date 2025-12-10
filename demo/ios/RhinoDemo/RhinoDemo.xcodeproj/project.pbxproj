@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -150,7 +150,7 @@
 			mainGroup = BB193E852370C4EC00556136;
 			packageReferences = (
 				E1290E582CE7E02A001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */,
-				E15A37812CF7CC6F00A96F85 /* XCRemoteSwiftPackageReference "rhino" */,
+				07CA0B7F2EE8B7E70023250D /* XCLocalSwiftPackageReference "../../../../rhino" */,
 			);
 			productRefGroup = BB193E8F2370C4EC00556136 /* Products */;
 			projectDirPath = "";
@@ -331,6 +331,7 @@
 				DEVELOPMENT_TEAM = 65723695GD;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = RhinoDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -351,6 +352,7 @@
 				DEVELOPMENT_TEAM = 65723695GD;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = RhinoDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -384,6 +386,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		07CA0B7F2EE8B7E70023250D /* XCLocalSwiftPackageReference "../../../../rhino" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../../rhino;
+		};
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		E1290E582CE7E02A001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */ = {

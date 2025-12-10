@@ -1,5 +1,5 @@
 //
-//  Copyright 2022 Picovoice Inc.
+//  Copyright 2022-2025 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -14,6 +14,7 @@ import Rhino
 
 class PerformanceTest: XCTestCase {
     let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
+    let device: String = "{TESTING_DEVICE_HERE}"
     let iterationString: String = "{NUM_TEST_ITERATIONS}"
     let thresholdString: String = "{PERFORMANCE_THRESHOLD_SEC}"
 
@@ -31,7 +32,10 @@ class PerformanceTest: XCTestCase {
 
         let bundle = Bundle(for: type(of: self))
         let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
-        let r = try Rhino.init(accessKey: accessKey, contextPath: contextPath)
+        let r = try Rhino.init(
+            accessKey: accessKey,
+            contextPath: contextPath,
+            device: device)
 
         let fileURL: URL = bundle.url(forResource: "test_within_context", withExtension: "wav")!
 

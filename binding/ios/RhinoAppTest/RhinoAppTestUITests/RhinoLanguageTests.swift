@@ -71,7 +71,8 @@ class RhinoWithinContextTests: BaseTest {
                 let r = try Rhino.init(
                     accessKey: accessKey,
                     contextPath: contextPath,
-                    modelPath: modelPath)
+                    modelPath: modelPath,
+                    device: device)
                 XCTAssert(Rhino.version != "")
                 XCTAssert(Rhino.frameLength > 0)
                 XCTAssert(Rhino.sampleRate > 0)
@@ -120,7 +121,8 @@ class RhinoOutOfContextTests: BaseTest {
                 let r = try Rhino.init(
                     accessKey: accessKey,
                     contextPath: contextPath,
-                    modelPath: modelPath)
+                    modelPath: modelPath,
+                    device: device)
                 XCTAssert(Rhino.version != "")
                 XCTAssert(Rhino.frameLength > 0)
                 XCTAssert(Rhino.sampleRate > 0)
