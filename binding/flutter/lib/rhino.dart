@@ -96,8 +96,9 @@ class Rhino {
   /// returns a list of devices Rhino can run inference on
   static Future<List<String>> getAvailableDevices() async {
     try {
-      List<String> devices = await _channel
-          .invokeMethod(_NativeFunctions.GET_AVAILABLE_DEVICES.name, {});
+      List<String> devices = (await _channel
+          .invokeMethod(_NativeFunctions.GET_AVAILABLE_DEVICES.name, {}))
+          .cast<String>();
       return devices;
     } on PlatformException catch (error) {
       throw rhinoStatusToException(error.code, error.message);
