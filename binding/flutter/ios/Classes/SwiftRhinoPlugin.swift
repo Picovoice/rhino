@@ -43,7 +43,7 @@ public class SwiftRhinoPlugin: NSObject, FlutterPlugin {
         switch method {
         case .GET_AVAILABLE_DEVICES:
             do {
-                var result: [String] = Rhino.getAvailableDevices()
+                var result: [String] = try Rhino.getAvailableDevices()
                 result(result)
             } catch let error as RhinoError {
                 result(errorToFlutterError(error))

@@ -66,9 +66,8 @@ public class RhinoPlugin implements FlutterPlugin, MethodCallHandler {
         switch (method) {
             case GET_AVAILABLE_DEVICES:
                 try {
-                    String[] devices = Rhino.getAvailableDevices();
-                    List<String> result = Arrays.asList(devices);
-                    result.success(result);
+                    List<String> devices = Arrays.asList(Rhino.getAvailableDevices());
+                    result.success(devices);
                 } catch (RhinoException e) {
                     result.error(
                             e.getClass().getSimpleName(),
