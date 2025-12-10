@@ -1291,6 +1291,17 @@ pv_rhino_delete(rhino);
 
 ## Releases
 
+### v4.0.0 - December 10th, 2025
+
+- Added support for running on GPU or multiple CPU cores
+- Node.js min version bumped to Node 18
+- iOS min version bumped to iOS 16
+- Patches to .NET support
+- Deprecated support for Unity
+- React Native version bumped to 0.73
+- Flutter version bumped to Flutter 3.10+ and Dart 3.0.0+
+- Added MCU library support and associated demo
+
 ### v3.0.0 - October 26th, 2023
 
 - Improvements to error reporting
