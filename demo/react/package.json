@@ -4,7 +4,7 @@
   "private": true,
   "description": "Rhino React demo (made with Create React App)",
   "dependencies": {
-    "@picovoice/rhino-react": "file:../../binding/react",
+    "@picovoice/rhino-react": "=4.0.0",
     "@picovoice/web-voice-processor": "~4.0.8",
     "@types/node": "^18.11.9",
     "@types/react": "^19.0.0",
