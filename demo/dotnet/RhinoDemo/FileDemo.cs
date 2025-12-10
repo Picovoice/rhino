@@ -312,6 +312,6 @@ namespace RhinoDemo
             "fewer misses at the cost of (potentially) increasing the erroneous inference rate.\n" +
             "\t--endpoint_duration: Endpoint duration in seconds. It should be a positive number within [0.5, 5].\n" +
             "\t--require_endpoint: ['true'|'false'] If set to 'false', Rhino does not require an endpoint (chunk of silence) before finishing inference.\n" +
-            "\t--show_inference_devices: Print devices that are available to run Porcupine inference.\n";
+            "\t--show_inference_devices: Print devices that are available to run Rhino inference.\n";
     }
 }
