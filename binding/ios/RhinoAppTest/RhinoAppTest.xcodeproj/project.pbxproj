@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07580D562EEA2DAF009F261E /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 07580D552EEA2DAF009F261E /* Rhino */; };
 		1E1A57D227CEC84000A05F37 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57D127CEC84000A05F37 /* AppDelegate.swift */; };
 		1E1A57D627CEC84000A05F37 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57D527CEC84000A05F37 /* ViewController.swift */; };
 		1E1A57D927CEC84000A05F37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A57D727CEC84000A05F37 /* Main.storyboard */; };
@@ -71,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07580D562EEA2DAF009F261E /* Rhino in Frameworks */,
 				E1C944FB2CE7E22C006F758D /* ios_voice_processor in Frameworks */,
 				E1C945062CE7E54B006F758D /* Rhino in Frameworks */,
 			);
@@ -242,7 +244,7 @@
 			mainGroup = 1E1A57C527CEC84000A05F37;
 			packageReferences = (
 				E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */,
-				07CA0B7E2EE8B6230023250D /* XCLocalSwiftPackageReference "../../../../rhino" */,
+				07580D542EEA2DAF009F261E /* XCRemoteSwiftPackageReference "rhino" */,
 			);
 			productRefGroup = 1E1A57CF27CEC84000A05F37 /* Products */;
 			projectDirPath = "";
@@ -661,10 +663,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		07CA0B7E2EE8B6230023250D /* XCLocalSwiftPackageReference "../../../../rhino" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../../../rhino;
-		};
 		E1C945042CE7E53F006F758D /* XCLocalSwiftPackageReference "../../../../rhino" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../../../rhino;
@@ -672,6 +670,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		07580D542EEA2DAF009F261E /* XCRemoteSwiftPackageReference "rhino" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Picovoice/rhino";
+			requirement = {
+				kind = exactVersion;
+				version = 4.0.0;
+			};
+		};
 		E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Picovoice/ios-voice-processor";
@@ -683,6 +689,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		07580D552EEA2DAF009F261E /* Rhino */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 07580D542EEA2DAF009F261E /* XCRemoteSwiftPackageReference "rhino" */;
+			productName = Rhino;
+		};
 		E1C944FA2CE7E22C006F758D /* ios_voice_processor */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */;
