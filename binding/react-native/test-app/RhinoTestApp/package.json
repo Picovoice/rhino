@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@picovoice/react-native-voice-processor": "1.2.3",
-    "@picovoice/rhino-react-native": "../../pkg/picovoice-rhino-react-native-4.0.0.tgz",
+    "@picovoice/rhino-react-native": "file:../..",
     "base-64": "^1.0.0",
     "react": "19.0.0",
     "react-native": "0.78.0",
