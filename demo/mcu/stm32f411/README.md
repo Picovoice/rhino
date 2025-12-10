@@ -1,6 +1,6 @@
 # Rhino Speech-To-Intent Engine Demo for STM32F411 (Multiple languages)
 
-This package contains a demo project for the STM32F411 Discovery kit using Porcupine wake word engine.
+This package contains a demo project for the STM32F411 Discovery kit using Rhino speech to intent engine.
 
 ## Supported Languages
 
