@@ -1724,19 +1724,19 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@picovoice/rhino-react@~3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-3.0.3.tgz#8634d6ae591e86a746ba0cfc83b5c773d8974b32"
-  integrity sha512-6U04zmCbB3Il+mu6pT/eeC5/+CHZ4w6bKmQKLZROaa7UpAqW5Wd08pzNGOhDQhHKYxEv+1dbmL4K3QuNB3szDw==
+"@picovoice/rhino-react@=4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-react/-/rhino-react-4.0.0.tgz#8cc3595a89415c3965de3621d249c56e59a727fd"
+  integrity sha512-5dC6H+ZOIsQRiH63DC4EuN/izc3I9DebM9d0Ue3Qp6YrW0aBAf/qqjv+Q6mFUc+/RhbxJ3PIxyCDBhRD2Zb/pg==
   dependencies:
-    "@picovoice/rhino-web" "=3.0.3"
+    "@picovoice/rhino-web" "=4.0.0"
 
-"@picovoice/rhino-web@=3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-3.0.3.tgz#e0a3f21e31b3689660654d1e08b83ca2e08b6c4a"
-  integrity sha512-OB4/BFX8GtwHXUJuNucAX5nxkQnNUbIYiqO1nDt7GYWVOvXvgLp/H7xYi4EuqckgNjYKSp+9RQVcnhnfix355w==
+"@picovoice/rhino-web@=4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@picovoice/rhino-web/-/rhino-web-4.0.0.tgz#ca2a69dd968427359045506a9d840f99bfb2b2b8"
+  integrity sha512-wI8cFj6dTCDYm5SOjyQI94MKlIFFWQ5MIJ/UbJVi4tuEi0MGCXTpbKMpuxbnqpG/hskKqQzOtjs7jy/7DWQhwQ==
   dependencies:
-    "@picovoice/web-utils" "=1.3.1"
+    "@picovoice/web-utils" "=1.4.3"
 
 "@picovoice/web-utils@=1.3.1":
   version "1.3.1"
@@ -1744,6 +1744,13 @@
   integrity sha512-jcDqdULtTm+yJrnHDjg64hARup+Z4wNkYuXHNx6EM8+qZkweBq9UA6XJrHAlUkPnlkso4JWjaIKhz3x8vZcd3g==
   dependencies:
     commander "^9.2.0"
+
+"@picovoice/web-utils@=1.4.3":
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/@picovoice/web-utils/-/web-utils-1.4.3.tgz#1de0b20d6080c18d295c6df37c09d88bf7c4f555"
+  integrity sha512-7JN3YYsSD9Gtce6YKG3XqpX49dkeu7jTdbox7rHQA/X/Q3zxopXA9zlCKSq6EIjFbiX2iuzDKUx1XrFa3d8c0w==
+  dependencies:
+    commander "^10.0.1"
 
 "@picovoice/web-voice-processor@~4.0.8":
   version "4.0.8"
@@ -3273,6 +3280,11 @@ combined-stream@^1.0.8:
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
+
+commander@^10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-10.0.1.tgz#881ee46b4f77d1c1dccc5823433aa39b022cbe06"
+  integrity sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==
 
 commander@^2.20.0:
   version "2.20.3"
