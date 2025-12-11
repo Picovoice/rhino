@@ -1,3 +1,2 @@
-../../binding/python/dist/pvrhino-4.0.0-py3-none-any.whl
-# pvrhino==4.0.0
+pvrhino==4.0.0
 pvrecorder==1.2.7
