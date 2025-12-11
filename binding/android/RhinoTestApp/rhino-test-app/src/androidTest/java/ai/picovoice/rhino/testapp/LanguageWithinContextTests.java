@@ -107,6 +107,7 @@ public class LanguageWithinContextTests extends BaseTest {
         Rhino r = new Rhino.Builder()
                 .setAccessKey(accessKey)
                 .setModelPath(modelPath)
+                .setDevice(device)
                 .setContextPath(contextPath)
                 .build(appContext);
 

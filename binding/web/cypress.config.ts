@@ -7,10 +7,18 @@ export default defineConfig({
     "PROC_PERFORMANCE_THRESHOLD_SEC": 1.2
   },
   e2e: {
-    defaultCommandTimeout: 30000,
     supportFile: "cypress/support/index.ts",
     specPattern: "test/*.test.{js,jsx,ts,tsx}",
     video: false,
     screenshotOnRunFailure: false,
+    defaultCommandTimeout: 30000,
+    setupNodeEvents(on) {
+      on('before:browser:launch', (browser, launchOptions) => {
+        if (browser.name === 'chrome') {
+          launchOptions.args.push('--enable-features=SharedArrayBuffer');
+        }
+        return launchOptions;
+      });
+    },
   },
 });

@@ -1,3 +1,14 @@
+#
+# Copyright 2025 Picovoice Inc.
+#
+# You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
+# file accompanying this source.
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+
 import os
 import shutil
 
@@ -34,7 +45,7 @@ include pvrhino/lib/linux/x86_64/libpv_rhino.so
 include pvrhino/lib/mac/x86_64/libpv_rhino.dylib
 include pvrhino/lib/mac/arm64/libpv_rhino.dylib
 recursive-include pvrhino/lib/raspberry-pi *
-include pvrhino/lib/windows/amd64/libpv_rhino.dll
+recursive-include pvrhino/lib/windows/amd64 *
 include pvrhino/lib/windows/arm64/libpv_rhino.dll
 """
 
@@ -46,7 +57,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
 
 setuptools.setup(
     name="pvrhino",
-    version="3.0.5",
+    version="4.0.0",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Rhino Speech-to-Intent engine.",

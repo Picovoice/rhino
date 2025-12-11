@@ -38,7 +38,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Override gradle settings
       run: sed -i "s/com.android.tools.build:gradle:[0-9]*\.[0-9]*\.[0-9]*/com.android.tools.build:gradle:${{ matrix.agp-version }}/g" build.gradle
 

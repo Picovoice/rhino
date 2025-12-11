@@ -33,9 +33,15 @@ public class RhinoManager {
     ///
     /// - Parameters:
     ///   - accessKey: AccessKey obtained from Picovoice Console (https://console.picovoice.ai).
-    ///   - modelPath: Absolute path to file containing model parameters.
     ///   - contextPath: Absolute path to file containing context parameters. A context represents the
     ///   set of expressions (spoken commands), intents, and intent arguments (slots) within a domain of interest.
+    ///   - modelPath: Absolute path to file containing model parameters.
+    ///   - device: String representation of the device (e.g., CPU or GPU) to use. If set to `best`, the most
+    ///   suitable device is selected automatically. If set to `gpu`, the engine uses the first available GPU
+    ///   device. To select a specific GPU device, set this argument to `gpu:${GPU_INDEX}`, where `${GPU_INDEX}`
+    ///   is the index of the target GPU. If set to `cpu`, the engine will run on the CPU with the default
+    ///   number of threads. To specify the number of threads, set this argument to `cpu:${NUM_THREADS}`,
+    ///   where `${NUM_THREADS}` is the desired number of threads.
     ///   - sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity
     ///   value results in fewer misses at the cost of (potentially) increasing the erroneous inference rate.
     ///   - endpointDurationSec: Endpoint duration in seconds. An endpoint is a chunk of silence at the end of an
@@ -56,6 +62,7 @@ public class RhinoManager {
         accessKey: String,
         contextPath: String,
         modelPath: String? = nil,
+        device: String? = nil,
         sensitivity: Float32 = 0.5,
         endpointDurationSec: Float32 = 1.0,
         requireEndpoint: Bool = true,
@@ -94,6 +101,7 @@ public class RhinoManager {
             accessKey: accessKey,
             contextPath: contextPath,
             modelPath: modelPath,
+            device: device,
             sensitivity: sensitivity,
             requireEndpoint: requireEndpoint)
     }

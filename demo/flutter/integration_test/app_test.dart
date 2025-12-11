@@ -13,6 +13,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   final String accessKey = "{TESTING_ACCESS_KEY_HERE}";
+  final String device = "{TESTING_DEVICE_HERE}";
   final String platform = Platform.isAndroid
       ? "android"
       : Platform.isIOS
@@ -50,7 +51,7 @@ void main() {
       Rhino rhino;
       try {
         rhino =
-            await Rhino.create(accessKey, contextPath, modelPath: modelPath);
+            await Rhino.create(accessKey, contextPath, modelPath: modelPath, device: device);
       } on RhinoException catch (ex) {
         expect(ex, equals(null),
             reason: "Failed to initialize Rhino for $language: $ex");
@@ -91,10 +92,14 @@ void main() {
         String modelPath =
             "assets/test_resources/model_files/rhino_params${language != "en" ? "_$language" : ""}.pv";
 
+        List<String> devices = await Rhino.getAvailableDevices();
+        expect(devices.length, greaterThan(0),
+            reason: "No devices returns from getAvailableDevices");
+
         Rhino rhino;
         try {
           rhino =
-              await Rhino.create(accessKey, contextPath, modelPath: modelPath);
+              await Rhino.create(accessKey, contextPath, modelPath: modelPath, device: device);
         } on RhinoException catch (ex) {
           expect(ex, equals(null),
               reason: "Failed to initialize Rhino for $language: $ex");
@@ -144,7 +149,7 @@ void main() {
         Rhino rhino;
         try {
           rhino =
-              await Rhino.create(accessKey, contextPath, modelPath: modelPath);
+              await Rhino.create(accessKey, contextPath, modelPath: modelPath, device: device);
         } on RhinoException catch (ex) {
           expect(ex, equals(null),
               reason: "Failed to initialize Rhino for $language: $ex");

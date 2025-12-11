@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2020-2023 Picovoice Inc.
+    Copyright 2020-2025 Picovoice Inc.
 
     You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
     file accompanying this source.
@@ -38,6 +38,13 @@ namespace RhinoDemo
         /// Absolute path to the file containing model parameters. If not set it will be set to the
         /// default location.
         /// </param>
+        /// <param name="device">
+        /// String representation of the device (e.g., CPU or GPU) to use. If set to `best`, the most
+        /// suitable device is selected automatically. If set to `gpu`, the engine uses the first available GPU device. To select a specific
+        /// GPU device, set this argument to `gpu:${GPU_INDEX}`, where `${GPU_INDEX}` is the index of the target GPU. If set to
+        /// `cpu`, the engine will run on the CPU with the default number of threads. To specify the number of threads, set this
+        /// argument to `cpu:${NUM_THREADS}`, where `${NUM_THREADS}` is the desired number of threads.
+        /// </param>
         /// <param name="sensitivity">
         /// Inference sensitivity expressed as floating point value within [0,1]. A higher sensitivity value results in fewer misses
         /// at the cost of (potentially) increasing the erroneous inference rate.
@@ -59,6 +66,7 @@ namespace RhinoDemo
             string accessKey,
             string contextPath,
             string modelPath,
+            string device,
             float sensitivity,
             float endpointDurationSec,
             bool requireEndpoint,
@@ -70,6 +78,7 @@ namespace RhinoDemo
                 accessKey,
                 contextPath,
                 modelPath,
+                device,
                 sensitivity,
                 endpointDurationSec,
                 requireEndpoint))
@@ -202,12 +211,14 @@ namespace RhinoDemo
             string accessKey = null;
             string contextPath = null;
             string modelPath = null;
+            string device = null;
             int audioDeviceIndex = -1;
             float sensitivity = 0.5f;
             float endpointDurationSec = 1.0f;
             bool requireEndpoint = true;
             string outputPath = null;
             bool showAudioDevices = false;
+            bool showInferenceDevices = false;
             bool showHelp = false;
 
             // parse command line arguments
@@ -233,6 +244,13 @@ namespace RhinoDemo
                     if (++argIndex < args.Length)
                     {
                         modelPath = args[argIndex++];
+                    }
+                }
+                else if (args[argIndex] == "--device")
+                {
+                    if (++argIndex < args.Length)
+                    {
+                        device = args[argIndex++];
                     }
                 }
                 else if (args[argIndex] == "--sensitivity")
@@ -281,6 +299,11 @@ namespace RhinoDemo
                         outputPath = args[argIndex++];
                     }
                 }
+                else if (args[argIndex] == "--show_inference_devices")
+                {
+                    showInferenceDevices = true;
+                    argIndex++;
+                }
                 else if (args[argIndex] == "-h" || args[argIndex] == "--help")
                 {
                     showHelp = true;
@@ -300,6 +323,12 @@ namespace RhinoDemo
                 return;
             }
 
+            if (showInferenceDevices)
+            {
+                Console.WriteLine(string.Join(Environment.NewLine, Rhino.GetAvailableDevices()));
+                return;
+            }
+
             // print audio device info and exit
             if (showAudioDevices)
             {
@@ -313,6 +342,7 @@ namespace RhinoDemo
                 accessKey,
                 contextPath,
                 modelPath,
+                device,
                 sensitivity,
                 endpointDurationSec,
                 requireEndpoint,
@@ -331,12 +361,14 @@ namespace RhinoDemo
             "\t--access_key (required): AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)\n" +
             "\t--context_path (required): Absolute path to context file.\n" +
             "\t--model_path: Absolute path to the file containing model parameters.\n" +
+            "\t--device: Device to run inference on (`best`, `cpu:{num_threads}` or `gpu:{gpu_index}`). Default: automatically selects best device.\n" +
             "\t--sensitivity: Inference sensitivity. It should be a number within [0, 1]. A higher sensitivity value results in " +
             "fewer misses at the cost of (potentially) increasing the erroneous inference rate.\n" +
             "\t--endpoint_duration: Endpoint duration in seconds. It should be a positive number within [0.5, 5].\n" +
             "\t--require_endpoint: ['true'|'false'] If set to 'false', Rhino does not require an endpoint (chunk of silence) before finishing inference.\n" +
             "\t--audio_device_index: Index of input audio device.\n" +
             "\t--output_path: Absolute path to recorded audio for debugging.\n" +
-            "\t--show_audio_devices: Print available recording devices.\n";
+            "\t--show_audio_devices: Print available recording devices.\n" +
+            "\t--show_inference_devices: Print devices that are available to run Rhino inference.\n";
     }
 }

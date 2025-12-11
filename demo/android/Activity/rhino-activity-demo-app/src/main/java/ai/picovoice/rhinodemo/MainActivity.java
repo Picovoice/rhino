@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (RhinoActivationThrottledException e) {
             onRhinoError("AccessKey has been throttled");
         } catch (RhinoException e) {
-            onRhinoError("Failed to initialize Porcupine " + e.getMessage());
+            onRhinoError("Failed to initialize Rhino " + e.getMessage());
         }
     }
 

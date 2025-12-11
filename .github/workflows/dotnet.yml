@@ -49,48 +49,29 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, macos-13, windows-latest]
-        dotnet-version: [2.1.x, 3.0.x, 3.1.x, 5.0.x, 6.0.x, 8.0.x]
+        device: [cpu, cpu:1]
+        os: [ubuntu-latest, macos-latest, macos-15-intel, windows-latest]
+        dotnet-version: [2.1.x, 3.1.x, 6.0.x, 8.0.x, 10.0.x]
         include:
           - dotnet-version: 2.1.x
-            binding-framework: netstandard2.0
             test-framework: netcoreapp2.1
-          - dotnet-version: 3.0.x
-            binding-framework: netcoreapp3.0
-            test-framework: netcoreapp3.0
           - dotnet-version: 3.1.x
-            binding-framework: netcoreapp3.0
             test-framework: netcoreapp3.1
-          - dotnet-version: 5.0.x
-            binding-framework: netcoreapp3.0
-            test-framework: net5.0
           - dotnet-version: 6.0.x
-            binding-framework: net6.0
             test-framework: net6.0
           - dotnet-version: 8.0.x
-            binding-framework: net8.0
             test-framework: net8.0
+          - dotnet-version: 10.0.x
+            test-framework: net10.0
         exclude:
           - os: ubuntu-latest
             dotnet-version: 2.1.x
           - os: ubuntu-latest
-            dotnet-version: 3.0.x
-          - os: ubuntu-latest
             dotnet-version: 3.1.x
-          - os: ubuntu-latest
-            dotnet-version: 5.0.x
           - os: macos-latest
             dotnet-version: 2.1.x
           - os: macos-latest
-            dotnet-version: 3.0.x
-          - os: macos-latest
             dotnet-version: 3.1.x
-          - os: macos-latest
-            dotnet-version: 5.0.x
-          - os: macos-latest
-            dotnet-version: 6.0.x
-          - os: macos-13
-            dotnet-version: 8.0.x
 
     steps:
     - uses: actions/checkout@v3
@@ -100,17 +81,25 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
 
-    - name: Set up .NET (8)
-      if: ${{ matrix.os == 'ubuntu-latest' && matrix.dotnet-version == '6.0.x' }}
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 8.0.x
-
     - name: Build binding
-      run: dotnet build Rhino/Rhino.csproj --framework ${{ matrix.binding-framework }}
+      run: dotnet build Rhino/Rhino.csproj
+
+    - name: Set test framework version (linux)
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: sed -i 's/net6.0/${{matrix.test-framework}}/g' RhinoTest/RhinoTest.csproj
+
+    - name: Set test framework version (macos)
+      if: ${{ matrix.os == 'macos-latest' || matrix.os == 'macos-15-intel' }}
+      run: sed -i '.bak' 's/net6.0/${{matrix.test-framework}}/g' RhinoTest/RhinoTest.csproj
+
+    - name: Set test framework version (windows)
+      if: ${{ matrix.os == 'windows-latest' }}
+      run: (Get-Content -Path "RhinoTest/RhinoTest.csproj") -replace "net6.0", "${{matrix.test-framework}}" | Set-Content -Path "RhinoTest/RhinoTest.csproj"
 
     - name: Test
-      run: dotnet test --framework ${{ matrix.test-framework }} -v n
+      run: dotnet test -v n
+      env:
+        DEVICE: ${{ matrix.device }}
 
   build-self-hosted:
     runs-on: ${{ matrix.machine }}
@@ -120,12 +109,23 @@ jobs:
     strategy:
       matrix:
         machine: [rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, pv-windows-arm64]
+        device: [best]
+        include:
+        - device: gpu
+          machine: pv-linux
+        - device: gpu
+          machine: pv-windows
+        - device: gpu
+          machine: pv-ios
 
     steps:
     - uses: actions/checkout@v3
 
     - name: Build binding
-      run: dotnet build Rhino/Rhino.csproj --framework net8.0
+      run: dotnet build Rhino/Rhino.csproj
 
     - name: Test
-      run: dotnet test --framework net8.0 -v n
+      run: dotnet test -v n
+      env:
+        DEVICE: ${{ matrix.device }}
+        DOTNET_ROLL_FORWARD: LatestMajor

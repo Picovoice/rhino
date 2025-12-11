@@ -3,7 +3,6 @@
   <head>
     <script src="node_modules/@picovoice/rhino-web/dist/iife/index.js"></script>
     <script src="node_modules/@picovoice/web-voice-processor/dist/iife/index.js"></script>
-    <script type="application/javascript" src="scripts/rhino.js"></script>
     <script>
       const contextsScript = document.createElement('script');
       contextsScript.src = 'contexts/rhinoContext.js?t=' + Date.now();
@@ -14,6 +13,7 @@
       modelScript.src = 'models/rhinoModel.js?t=' + Date.now();
       document.head.appendChild(modelScript);
     </script>
+    <script type="application/javascript" src="scripts/rhino.js"></script>
   </head>
   <body>
     <h1>Rhino Web Demo</h1>

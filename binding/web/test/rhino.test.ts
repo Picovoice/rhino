@@ -1,4 +1,4 @@
-import {Rhino, RhinoWorker, RhinoContext, RhinoInference} from "../";
+import { Rhino, RhinoWorker, RhinoContext, RhinoInference } from "../";
 import testData from "./test_data.json";
 
 // @ts-ignore
@@ -7,6 +7,7 @@ import { PvModel } from '@picovoice/web-utils';
 import { RhinoError } from "../dist/types/rhino_errors";
 
 const ACCESS_KEY: string = Cypress.env("ACCESS_KEY");
+const DEVICE = Cypress.env('DEVICE');
 
 function delay(time: number) {
   return new Promise(resolve => setTimeout(resolve, time));
@@ -18,6 +19,7 @@ const runInitTest = async (
     accessKey?: string,
     context?: RhinoContext,
     model?: PvModel,
+    device?: string,
     expectFailure?: boolean,
   } = {}
 ) => {
@@ -25,6 +27,7 @@ const runInitTest = async (
     accessKey = ACCESS_KEY,
     context = { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
     model = { publicPath: '/test/rhino_params.pv', forceWrite: true },
+    device = DEVICE,
     expectFailure = false,
   } = params;
 
@@ -35,7 +38,8 @@ const runInitTest = async (
       accessKey,
       context,
       () => {},
-      model
+      model,
+      { device }
     );
     expect(rhino.sampleRate).to.be.eq(16000);
     expect(typeof rhino.version).to.eq('string');
@@ -66,6 +70,7 @@ const runProcTest = async (
     accessKey?: string,
     context?: RhinoContext,
     model?: PvModel,
+    device?: string,
   } = {},
   expectedContext?: any
 ) => {
@@ -73,6 +78,7 @@ const runProcTest = async (
     accessKey = ACCESS_KEY,
     context = { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
     model = { publicPath: '/test/rhino_params.pv', forceWrite: true },
+    device = DEVICE,
   } = params;
 
   let inference: RhinoInference | null = null;
@@ -89,6 +95,7 @@ const runProcTest = async (
       },
       model,
       {
+        device,
         processErrorCallback: (error: RhinoError) => {
           reject(error);
         }
@@ -124,6 +131,7 @@ describe("Rhino Binding", function () {
         () => { },
         { publicPath: '/test/rhino_params.pv', forceWrite: true },
         {
+          device: DEVICE,
           processErrorCallback: (e: RhinoError) => {
             error = e;
             resolve();
@@ -271,7 +279,8 @@ describe("Rhino Binding", function () {
               numFinalized++;
             }
           },
-          { publicPath: `/test/rhino_params.pv`, forceWrite: true }
+          { publicPath: `/test/rhino_params.pv`, forceWrite: true },
+          { device: DEVICE }
         );
 
         for (let i = 0; i < ((pcm.length / 2) - rhino.frameLength + 1); i += rhino.frameLength) {
@@ -299,7 +308,8 @@ describe("Rhino Binding", function () {
           "invalidAccessKey",
           { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
           () => { },
-          { publicPath: '/test/rhino_params.pv', forceWrite: true }
+          { publicPath: '/test/rhino_params.pv', forceWrite: true },
+          { device: DEVICE }
         );
         expect(rhino).to.be.undefined;
       } catch (e: any) {
@@ -314,7 +324,8 @@ describe("Rhino Binding", function () {
           "invalidAccessKey",
           { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
           () => { },
-          { publicPath: '/test/rhino_params.pv', forceWrite: true }
+          { publicPath: '/test/rhino_params.pv', forceWrite: true },
+          { device: DEVICE }
         );
         expect(rhino).to.be.undefined;
       } catch (e: any) {
