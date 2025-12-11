@@ -3,7 +3,6 @@ version '4.0.0'
 
 buildscript {
     repositories {
-        mavenLocal()
         google()
         mavenCentral()
     }
@@ -15,7 +14,6 @@ buildscript {
 
 rootProject.allprojects {
     repositories {
-        mavenLocal()
         google()
         mavenCentral()
     }
@@ -46,5 +44,5 @@ android {
 }
 
 dependencies {
-    implementation 'ai.picovoice:rhino-android:4.0.0'
+    implementation 'ai.picovoice:rhino-android:4.0.1'
 }
