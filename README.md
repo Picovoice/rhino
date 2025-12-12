@@ -1222,7 +1222,8 @@ const char *model_path = ... // Available at lib/common/rhino_params.pv
 const char *device = "best";
 const char *context_path = ... // absolute path to context file for the domain of interest
 const float sensitivity = 0.5f;
-bool require_endpoint = false;
+const float endpoint_duration_sec = 1.0f;
+const bool require_endpoint = false;
 
 pv_rhino_t *handle = NULL;
 const pv_status_t status = pv_rhino_init(
@@ -1231,6 +1232,7 @@ const pv_status_t status = pv_rhino_init(
         device,
         context_path,
         sensitivity,
+        endpoint_duration_sec,
         require_endpoint,
         &handle);
 if (status != PV_STATUS_SUCCESS) {
