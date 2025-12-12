@@ -85,16 +85,17 @@ handle.release();
 
 ### Override model and library paths
 
-The Rhino constructor accepts three optional positional parameters for the sensitivity and the absolute paths to the model and dynamic library, should you need to override them (typically, you will not).
+The Rhino constructor accepts optional parameters for the absolute paths to the model and dynamic library, should you need to override them (typically, you will not).
 
 ```javascript
 const accessKey = "${ACCESS_KEY}" // Obtained from the Picovoice Console (https://console.picovoice.ai/)
 const handle = new Rhino(
   accessKey,
   contextPath,
-  sensitivity,
-  modelFilePath,
-  libraryFilePath
+  {
+    modelPath: modelFilePath,
+    libraryPath: libraryFilePath
+  }
 );
 ```
 
