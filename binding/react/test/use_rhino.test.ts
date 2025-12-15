@@ -9,6 +9,8 @@ import testData from './test_data.json';
 const ACCESS_KEY = Cypress.env('ACCESS_KEY');
 const DEVICE = Cypress.env('DEVICE');
 
+const CYPRESS_BASE_URI = "/__cypress/src";
+
 describe('Rhino binding', () => {
   it('should be able to init via public path', () => {
     const { result } = renderHook(() => useRhino());
@@ -16,8 +18,8 @@ describe('Rhino binding', () => {
     cy.wrapHook(
       () => result.current.init(
         ACCESS_KEY,
-        { publicPath: "/test/contexts/coffee_maker_wasm.rhn", forceWrite: true },
-        { publicPath: "/test/rhino_params.pv", forceWrite: true },
+        { publicPath: `${CYPRESS_BASE_URI}/test/contexts/coffee_maker_wasm.rhn`, forceWrite: true },
+        { publicPath: `${CYPRESS_BASE_URI}/test/rhino_params.pv`, forceWrite: true },
         { device: DEVICE }
       )
     ).then(() => {
@@ -37,7 +39,7 @@ describe('Rhino binding', () => {
     cy.wrapHook(
       () => result.current.init(
         ACCESS_KEY,
-        { publicPath: "/test/contexts/coffee_maker_wasm.rhn", forceWrite: true },
+        { publicPath: `${CYPRESS_BASE_URI}/test/contexts/coffee_maker_wasm.rhn`, forceWrite: true },
         { base64: rhinoParams, forceWrite: true },
         { device: DEVICE }
       )
@@ -52,13 +54,13 @@ describe('Rhino binding', () => {
     cy.wrapHook(
       () => result.current.init(
         ACCESS_KEY,
-        { publicPath: "/test/contexts/coffee_maker_wasm.rhn", forceWrite: true },
-        { publicPath: "/rhino_params_failed.pv", forceWrite: true },
+        { publicPath: `${CYPRESS_BASE_URI}/test/contexts/coffee_maker_wasm.rhn`, forceWrite: true },
+        { publicPath: `${CYPRESS_BASE_URI}/rhino_params_failed.pv`, forceWrite: true },
         { device: DEVICE }
       )
     ).then(() => {
       expect(result.current.isLoaded).to.be.false;
-      expect(result.current.error?.toString()).to.contain("Error response returned while fetching model from '/rhino_params_failed.pv'");
+      expect(result.current.error?.toString()).to.contain(`Error response returned while fetching model from '${CYPRESS_BASE_URI}/rhino_params_failed.pv'`);
     });
   });
 
@@ -68,8 +70,8 @@ describe('Rhino binding', () => {
     cy.wrapHook(
       () => result.current.init(
         '',
-        { publicPath: "/test/contexts/coffee_maker_wasm.rhn", forceWrite: true },
-        { publicPath: "/test/rhino_params.pv", forceWrite: true },
+        { publicPath: `${CYPRESS_BASE_URI}/test/contexts/coffee_maker_wasm.rhn`, forceWrite: true },
+        { publicPath: `${CYPRESS_BASE_URI}/test/rhino_params.pv`, forceWrite: true },
         { device: DEVICE }
       )
     ).then(() => {
@@ -86,11 +88,11 @@ describe('Rhino binding', () => {
         () => result.current.init(
           ACCESS_KEY,
           {
-            publicPath: `/test/contexts/${testInfo.context_name}_wasm.rhn`,
+            publicPath: `${CYPRESS_BASE_URI}/test/contexts/${testInfo.context_name}_wasm.rhn`,
             forceWrite: true,
           },
           {
-            publicPath: testInfo.language === 'en' ? "/test/rhino_params.pv" : `/test/rhino_params_${testInfo.language}.pv`,
+            publicPath: testInfo.language === 'en' ? `${CYPRESS_BASE_URI}/test/rhino_params.pv` : `${CYPRESS_BASE_URI}/test/rhino_params_${testInfo.language}.pv`,
             forceWrite: true,
           },
           { device: DEVICE }
@@ -124,11 +126,11 @@ describe('Rhino binding', () => {
         () => result.current.init(
           ACCESS_KEY,
           {
-            publicPath: `/test/contexts/${testInfo.context_name}_wasm.rhn`,
+            publicPath: `${CYPRESS_BASE_URI}/test/contexts/${testInfo.context_name}_wasm.rhn`,
             forceWrite: true,
           },
           {
-            publicPath: testInfo.language === 'en' ? "/test/rhino_params.pv" : `/test/rhino_params_${testInfo.language}.pv`,
+            publicPath: testInfo.language === 'en' ? `${CYPRESS_BASE_URI}/test/rhino_params.pv` : `${CYPRESS_BASE_URI}/test/rhino_params_${testInfo.language}.pv`,
             forceWrite: true,
           },
           { device: DEVICE }
