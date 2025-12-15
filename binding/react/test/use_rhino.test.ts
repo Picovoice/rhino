@@ -9,7 +9,7 @@ import testData from './test_data.json';
 const ACCESS_KEY = Cypress.env('ACCESS_KEY');
 const DEVICE = Cypress.env('DEVICE');
 
-const CYPRESS_BASE_URI = "/__cypress/src"
+const CYPRESS_BASE_URI = "/__cypress/src";
 
 describe('Rhino binding', () => {
   it('should be able to init via public path', () => {
