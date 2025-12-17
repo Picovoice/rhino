@@ -42,7 +42,7 @@ with open(os.path.join(os.path.dirname(__file__), "requirements.txt"), "r") as f
 
 setuptools.setup(
     name="pvrhinodemo",
-    version="4.0.0",
+    version="4.0.1",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Rhino Speech-to-Intent engine demos.",
