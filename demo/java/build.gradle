@@ -4,9 +4,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    flatDir {
-        dirs '../../binding/java/build/libs'
-    }
 }
 
 sourceSets {
@@ -18,8 +15,7 @@ sourceSets {
 }
 
 dependencies {
-    implementation name: 'Rhino'
-    // implementation 'ai.picovoice:rhino-java:4.0.1'
+    implementation 'ai.picovoice:rhino-java:4.0.1'
     implementation 'commons-cli:commons-cli:1.4'
 }
 
