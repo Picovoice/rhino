@@ -18,6 +18,7 @@ sourceSets {
 }
 
 dependencies {
+    implementation name: 'Rhino'
     // implementation 'ai.picovoice:rhino-java:4.0.1'
     implementation 'commons-cli:commons-cli:1.4'
 }
