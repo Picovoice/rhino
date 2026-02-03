@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "eslint": "^8.13.0"
+    "eslint": "^9.26.0"
   },
   "scripts": {
     "start": "node scripts/run_demo.js start",
