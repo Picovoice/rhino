@@ -97,14 +97,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: pip3 install -r requirements.txt
-
 # ************** REMOVE AFTER RELEASE ********************
     - name: Build binding
       run: |
         pip3 install setuptools && pip3 install wheel && cd ../../binding/python && python3 setup.py sdist bdist_wheel && pip3 install dist/pvrhino-4.0.2-py3-none-any.whl
 # ********************************************************
+
+    - name: Install dependencies
+      run: pip3 install -r requirements.txt
 
     - name: Test
       run: >
