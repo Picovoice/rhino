@@ -17,7 +17,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@picovoice/pvrecorder-node": "~1.2.6",
-    "@picovoice/rhino-node": "../../binding/nodejs",
+    "@picovoice/rhino-node": "4.0.2",
     "commander": "^6.1.0",
     "wavefile": "^11.0.0"
   },
