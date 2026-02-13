@@ -52,10 +52,10 @@ jobs:
 
     - name: Test
       run: >
-        python rhino_demo_file.py 
+        python rhino_demo_file.py
         --access_key ${{secrets.PV_VALID_ACCESS_KEY}}
         --device ${{ matrix.device }}
-        --wav_path ../../resources/audio_samples/test_within_context.wav 
+        --wav_path ../../resources/audio_samples/test_within_context.wav
         --context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn
 
   build-self-hosted:
@@ -96,8 +96,8 @@ jobs:
 
     - name: Test
       run: >
-        python3 rhino_demo_file.py 
-        --access_key ${{secrets.PV_VALID_ACCESS_KEY}} 
+        python3 rhino_demo_file.py
+        --access_key ${{secrets.PV_VALID_ACCESS_KEY}}
         --device ${{ matrix.device }}
-        --wav_path ../../resources/audio_samples/test_within_context.wav 
+        --wav_path ../../resources/audio_samples/test_within_context.wav
         --context_path ../../resources/contexts/${{ matrix.platform }}/coffee_maker_${{ matrix.platform }}.rhn

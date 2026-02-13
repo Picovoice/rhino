@@ -234,13 +234,13 @@ class Utils {
 
     public static ArrayList<String> getLibraryDependencyPaths(String libraryPath) {
         Path libraryDirpath = Paths.get(libraryPath).getParent();
-        
+
         ArrayList<String> libraryDependencies = new ArrayList();
 
         switch (ENVIRONMENT_NAME) {
             case "windows":
                 if (ARCHITECTURE == "amd64") {
-                    String[] dependencies = { "pv_ypu_impl_cuda.dll" };
+                    String[] dependencies = { "pv_ypu_impl_cuda_rhino.dll" };
                     for (int i = 0; i < dependencies.length; i++) {
                         Path depPath = libraryDirpath.resolve(dependencies[i]);
                         if (Files.exists(depPath)) {
