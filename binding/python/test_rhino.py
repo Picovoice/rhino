@@ -11,9 +11,11 @@
 
 import sys
 import unittest
+import uuid
 
 from parameterized import parameterized
 
+from _factory import train_with_yaml, train_with_context
 from _rhino import Rhino, RhinoError, list_hardware_devices
 from test_util import *
 
@@ -21,6 +23,14 @@ within_context_parameters, out_of_context_parameters = load_test_data()
 
 
 class RhinoTestCase(unittest.TestCase):
+
+    @classmethod
+    def setUp(cls):
+        cls.model_path = f'{str(uuid.uuid4())}.rhn'
+
+    def tearDown(self):
+        if os.path.exists(self.model_path):
+          os.remove(self.model_path)
 
     @staticmethod
     def _process_file_helper(rhino: Rhino, audio_file: str, max_process_count: int = -1) -> bool:
@@ -167,6 +177,30 @@ class RhinoTestCase(unittest.TestCase):
             self.assertLess(len(e.message_stack), 8)
 
         r._handle = address
+
+    def test_train_with_context(self):
+        train_with_context(
+            sys.argv[1],
+            self.model_path,
+            'es',
+            os.path.join(os.path.dirname(__file__), '..', '..', 'resources', 'contexts_es', 'linux', 'iluminación_inteligente_linux.rhn'),
+            slots={
+                "beverage": ["macchiato", "cortado"]
+            },
+        )
+        self.assertTrue(os.path.exists(self.model_path))
+
+    def test_train_other_platform(self):
+        train_with_context(
+            sys.argv[1],
+            self.model_path,
+            'de',
+            os.path.join(os.path.dirname(__file__), '..', '..', 'resources', 'contexts_de', 'linux', 'beleuchtung_linux.rhn'),
+            slots={
+                "beverage": ["macchiato", "cortado"]
+            },
+            platform='windows')
+        self.assertTrue(os.path.exists(self.model_path))
 
 
 if __name__ == '__main__':
