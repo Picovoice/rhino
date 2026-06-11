@@ -180,22 +180,21 @@ class RhinoTestCase(unittest.TestCase):
         yaml_content = rhino.context_info
         rhino.delete()
 
-        output_path = f'/tmp/{str(uuid.uuid4())}.rhn'
+        for platform in ['mac', None]:
+            output_path = f'/tmp/{str(uuid.uuid4())}.rhn'
+            pv_train_model(
+                sys.argv[1],
+                output_path,
+                'es',
+                yaml_content,
+                slots={
+                    "beverage": ["macchiato", "cortado"]
+                },
+                platform=platform)
 
-        pv_train_model(
-            sys.argv[1],
-            output_path,
-            'es',
-            yaml_content,
-            slots={
-                "beverage": ["macchiato", "cortado"]
-            },
-            platform='mac')
-
-        self.assertTrue(os.path.exists(output_path))
-
-        if os.path.exists(output_path):
-            os.remove(output_path)
+            self.assertTrue(os.path.exists(output_path))
+            if os.path.exists(output_path):
+                os.remove(output_path)
 
 
 if __name__ == '__main__':
