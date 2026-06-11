@@ -11,8 +11,8 @@
 
 from typing import Sequence
 
-from _rhino import Rhino, list_hardware_devices
-from _util import *
+from ._rhino import Rhino, list_hardware_devices
+from ._util import *
 
 
 def create(

@@ -15,7 +15,6 @@ import uuid
 
 from parameterized import parameterized
 
-from _factory import train_with_context
 from _rhino import Rhino, RhinoError, list_hardware_devices
 from test_util import *
 
@@ -23,15 +22,6 @@ within_context_parameters, out_of_context_parameters = load_test_data()
 
 
 class RhinoTestCase(unittest.TestCase):
-
-    @classmethod
-    def setUp(cls):
-        cls.model_path = f'{str(uuid.uuid4())}.rhn'
-
-    def tearDown(self):
-        if os.path.exists(self.model_path):
-          os.remove(self.model_path)
-
     @staticmethod
     def _process_file_helper(rhino: Rhino, audio_file: str, max_process_count: int = -1) -> bool:
         processed = 0
@@ -178,29 +168,34 @@ class RhinoTestCase(unittest.TestCase):
 
         r._handle = address
 
-    def test_train_with_context(self):
-        train_with_context(
-            sys.argv[1],
-            self.model_path,
-            'es',
-            os.path.join(os.path.dirname(__file__), '..', '..', 'resources', 'contexts_es', 'linux', 'iluminación_inteligente_linux.rhn'),
-            slots={
-                "beverage": ["macchiato", "cortado"]
-            },
-        )
-        self.assertTrue(os.path.exists(self.model_path))
+    def test_train_model(self):
+        relative_path = '../..'
 
-    def test_train_other_platform(self):
-        train_with_context(
+        rhino = Rhino(
+            access_key=sys.argv[1],
+            library_path=pv_library_path(relative_path),
+            model_path=get_model_path_by_language(relative_path, 'es'),
+            device=sys.argv[2],
+            context_path=get_context_path_by_language(relative_path, 'iluminación_inteligente_linux', 'es'))
+        yaml_content = rhino.context_info
+        rhino.delete()
+
+        output_path = f'/tmp/{str(uuid.uuid4())}.rhn'
+
+        pv_train_model(
             sys.argv[1],
-            self.model_path,
-            'de',
-            os.path.join(os.path.dirname(__file__), '..', '..', 'resources', 'contexts_de', 'linux', 'beleuchtung_linux.rhn'),
+            output_path,
+            'es',
+            yaml_content,
             slots={
                 "beverage": ["macchiato", "cortado"]
             },
-            platform='windows')
-        self.assertTrue(os.path.exists(self.model_path))
+            platform='mac')
+
+        self.assertTrue(os.path.exists(output_path))
+
+        if os.path.exists(output_path):
+            os.remove(output_path)
 
 
 if __name__ == '__main__':
