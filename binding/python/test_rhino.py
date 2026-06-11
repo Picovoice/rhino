@@ -15,7 +15,7 @@ import uuid
 
 from parameterized import parameterized
 
-from _factory import train_with_yaml, train_with_context
+from _factory import train_with_context
 from _rhino import Rhino, RhinoError, list_hardware_devices
 from test_util import *
 
