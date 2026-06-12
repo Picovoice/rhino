@@ -112,7 +112,9 @@ def pv_model_path(relative_path):
     return os.path.join(os.path.dirname(__file__), relative_path, 'lib/common/rhino_params.pv')
 
 
-PV_API_URL = "https://dev.api.console.pv-beta.net/"
+VALID_LANGUAGES = ('de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pt')
+VALID_PLATFORMS = ('linux', 'mac', 'windows', 'raspberry-pi', 'wasm', 'android', 'ios')
+PV_API_URL = "https://rest.picovoice.ai/"
 
 
 def pv_get_platform():
@@ -136,6 +138,9 @@ def pv_train_model(
         yaml_content: str,
         slots: Optional[Dict[str, List[str]]] = None,
         platform: Optional[str] = None):
+
+    if language not in VALID_LANGUAGES:
+        raise ValueError("Invalid language ('%s')" % language)
 
     if slots is not None:
         yaml = YAML()

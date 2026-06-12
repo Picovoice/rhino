@@ -176,7 +176,7 @@ class RhinoTestCase(unittest.TestCase):
             library_path=pv_library_path(relative_path),
             model_path=get_model_path_by_language(relative_path, 'es'),
             device=sys.argv[2],
-            context_path=get_context_path_by_language(relative_path, 'iluminación_inteligente_linux', 'es'))
+            context_path=get_context_path_by_language(relative_path, 'iluminación_inteligente', 'es'))
         yaml_content = rhino.context_info
         rhino.delete()
 
@@ -193,6 +193,16 @@ class RhinoTestCase(unittest.TestCase):
                 platform=platform)
 
             self.assertTrue(os.path.exists(output_path))
+
+            if platform is None:
+                rhino = Rhino(
+                    access_key=sys.argv[1],
+                    library_path=pv_library_path(relative_path),
+                    model_path=get_model_path_by_language(relative_path, 'es'),
+                    device=sys.argv[2],
+                    context_path=output_path)
+                rhino.delete()
+
             if os.path.exists(output_path):
                 os.remove(output_path)
 
