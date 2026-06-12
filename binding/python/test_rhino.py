@@ -181,7 +181,7 @@ class RhinoTestCase(unittest.TestCase):
         rhino.delete()
 
         for platform in ['mac', None]:
-            output_path = f'/tmp/{str(uuid.uuid4())}.rhn'
+            output_path = f'{str(uuid.uuid4())}.rhn'
             pv_train_model(
                 sys.argv[1],
                 output_path,
