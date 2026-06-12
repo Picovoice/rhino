@@ -66,7 +66,8 @@ setuptools.setup(
     url="https://github.com/Picovoice/rhino",
     packages=["pvrhino"],
     install_requires=[
-        "ruamel.yaml"
+        "requests",
+        "ruamel.yaml",
     ],
     include_package_data=True,
     classifiers=[
