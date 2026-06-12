@@ -1,5 +1,5 @@
 #
-# Copyright 2025 Picovoice Inc.
+# Copyright 2025-2026 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -57,7 +57,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as f:
 
 setuptools.setup(
     name="pvrhino",
-    version="4.0.2",
+    version="4.0.3",
     author="Picovoice",
     author_email="hello@picovoice.ai",
     description="Rhino Speech-to-Intent engine.",
@@ -65,6 +65,10 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Picovoice/rhino",
     packages=["pvrhino"],
+    install_requires=[
+        "requests",
+        "ruamel.yaml",
+    ],
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",

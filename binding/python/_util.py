@@ -1,5 +1,5 @@
 #
-# Copyright 2018-2023 Picovoice Inc.
+# Copyright 2018-2026 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -11,15 +11,20 @@
 
 import logging
 import os
-import platform
+import platform as pf
+import requests
 import subprocess
+from io import StringIO
+from ruamel.yaml import YAML
+from ruamel.yaml.error import YAMLError
+from typing import Dict, List, Optional
 
 log = logging.getLogger('RHN')
 log.setLevel(logging.WARNING)
 
 
 def _is_64bit():
-    return '64bit' in platform.architecture()[0]
+    return '64bit' in pf.architecture()[0]
 
 
 def _pv_linux_machine(machine):
@@ -56,14 +61,14 @@ def _pv_linux_machine(machine):
 
 
 def _pv_platform():
-    pv_system = platform.system()
+    pv_system = pf.system()
     if pv_system not in {'Darwin', 'Linux', 'Windows'}:
         raise ValueError("Unsupported system '%s'." % pv_system)
 
     if pv_system == 'Linux':
-        pv_machine = _pv_linux_machine(platform.machine())
+        pv_machine = _pv_linux_machine(pf.machine())
     else:
-        pv_machine = platform.machine()
+        pv_machine = pf.machine()
 
     return pv_system, pv_machine
 
@@ -95,9 +100,9 @@ def pv_library_path(relative_path):
                 relative_path,
                 'lib/raspberry-pi/%s/libpv_rhino.so' % PV_MACHINE)
     elif PV_SYSTEM == 'Windows':
-        if platform.machine().lower() == 'amd64':
+        if pf.machine().lower() == 'amd64':
             return os.path.join(os.path.dirname(__file__), relative_path, 'lib/windows/amd64/libpv_rhino.dll')
-        elif platform.machine().lower() == 'arm64':
+        elif pf.machine().lower() == 'arm64':
             return os.path.join(os.path.dirname(__file__), relative_path, 'lib/windows/arm64/libpv_rhino.dll')
 
     raise NotImplementedError("Unsupported platform ('%s', '%s').", PV_SYSTEM, PV_MACHINE)
@@ -105,3 +110,86 @@ def pv_library_path(relative_path):
 
 def pv_model_path(relative_path):
     return os.path.join(os.path.dirname(__file__), relative_path, 'lib/common/rhino_params.pv')
+
+
+VALID_LANGUAGES = ('de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pt')
+VALID_PLATFORMS = ('linux', 'mac', 'windows', 'raspberry-pi', 'wasm', 'android', 'ios')
+PV_API_URL = "https://rest.picovoice.ai/"
+
+
+def pv_get_platform():
+    if PV_SYSTEM == 'Darwin':
+        return 'mac'
+    elif PV_SYSTEM == 'Linux':
+        if PV_MACHINE == 'x86_64':
+            return 'linux'
+        elif PV_MACHINE in RASPBERRY_PI_MACHINES:
+            return 'raspberry-pi'
+    elif PV_SYSTEM == 'Windows':
+        return 'windows'
+
+    raise NotImplementedError("Unsupported platform ('%s', '%s').", PV_SYSTEM, PV_MACHINE)
+
+
+def pv_train_model(
+        access_key: str,
+        output_path: str,
+        language: str,
+        yaml_content: str,
+        slots: Optional[Dict[str, List[str]]] = None,
+        platform: Optional[str] = None):
+
+    if language not in VALID_LANGUAGES:
+        raise ValueError("Invalid language ('%s')" % language)
+
+    if slots is not None:
+        yaml = YAML()
+        stream = StringIO()
+
+        try:
+            content = yaml.load(yaml_content)
+        except YAMLError as e:
+            if hasattr(e, "problem_mark"):
+                raise ValueError(f"YAML error at line {e.problem_mark.line + 1}: {e.problem}") from e
+            else:
+                raise ValueError("Failed to parse yaml content.") from e
+
+        if 'context' not in content and 'slots' not in content['context']:
+            raise ValueError("Invalid value in slots field.")
+
+        merged = dict()
+        for s in (content['context']['slots'], slots):
+            for key, value in s.items():
+                merged[key] = merged.get(key, []) + value
+
+        content['context']['slots'] = merged
+        yaml.dump(content, stream)
+
+        yaml_content = stream.getvalue()
+        stream.close()
+
+    if platform is None:
+        platform = pv_get_platform()
+
+    payload = {
+        "platform": platform,
+        "yaml_content": yaml_content
+    }
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "x-api-key": access_key
+    }
+
+    url = f"{PV_API_URL}{language}/api/rhn"
+
+    try:
+        response = requests.post(url, json=payload, headers=headers, allow_redirects=True)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        raise RuntimeError(f"HTTP {e.response.status_code}: {e.response.text}") from e
+    except requests.exceptions.RequestException as e:
+        raise RuntimeError(f"Request failed: {e}") from e
+
+    with open(output_path, 'wb') as f:
+        f.write(response.content)

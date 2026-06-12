@@ -11,6 +11,7 @@
 
 import sys
 import unittest
+import uuid
 
 from parameterized import parameterized
 
@@ -21,7 +22,6 @@ within_context_parameters, out_of_context_parameters = load_test_data()
 
 
 class RhinoTestCase(unittest.TestCase):
-
     @staticmethod
     def _process_file_helper(rhino: Rhino, audio_file: str, max_process_count: int = -1) -> bool:
         processed = 0
@@ -167,6 +167,44 @@ class RhinoTestCase(unittest.TestCase):
             self.assertLess(len(e.message_stack), 8)
 
         r._handle = address
+
+    def test_train_model(self):
+        relative_path = '../..'
+
+        rhino = Rhino(
+            access_key=sys.argv[1],
+            library_path=pv_library_path(relative_path),
+            model_path=get_model_path_by_language(relative_path, 'es'),
+            device=sys.argv[2],
+            context_path=get_context_path_by_language(relative_path, 'iluminación_inteligente', 'es'))
+        yaml_content = rhino.context_info
+        rhino.delete()
+
+        for platform in ['mac', None]:
+            output_path = f'{str(uuid.uuid4())}.rhn'
+            pv_train_model(
+                sys.argv[1],
+                output_path,
+                'es',
+                yaml_content,
+                slots={
+                    "beverage": ["macchiato", "cortado"]
+                },
+                platform=platform)
+
+            self.assertTrue(os.path.exists(output_path))
+
+            if platform is None:
+                rhino = Rhino(
+                    access_key=sys.argv[1],
+                    library_path=pv_library_path(relative_path),
+                    model_path=get_model_path_by_language(relative_path, 'es'),
+                    device=sys.argv[2],
+                    context_path=output_path)
+                rhino.delete()
+
+            if os.path.exists(output_path):
+                os.remove(output_path)
 
 
 if __name__ == '__main__':
