@@ -1,8 +1,9 @@
-import { Rhino, RhinoWorker, RhinoContext, RhinoInference } from "../";
+import { Rhino, RhinoWorker, RhinoContext, RhinoInference, RhinoModel } from "../";
 import testData from "./test_data.json";
 
 // @ts-ignore
 import rhinoParams from "./rhino_params";
+
 import { PvModel } from '@picovoice/web-utils';
 import { RhinoError } from "../dist/types/rhino_errors";
 
@@ -159,6 +160,40 @@ describe("Rhino Binding", function () {
       expect((error as RhinoError).messageStack.length).to.be.gt(0);
       expect((error as RhinoError).messageStack.length).to.be.lte(8);
     }
+  });
+
+  it(`should be able to train context`, () => {
+    const writePath = "custom_éclairage_intelligent_wasm.rhn";
+
+    const original: RhinoContext = {
+      publicPath: "/test/contexts/éclairage_intelligent_wasm.rhn"
+    };
+
+    const context: RhinoContext = {
+      publicPath: writePath,
+    };
+
+    const model: RhinoModel = {
+      publicPath: "/test/rhino_params_fr.pv"
+    };
+
+    cy.wrap(null).then(async () => {
+      await Rhino.trainWithContext(
+        ACCESS_KEY,
+        writePath,
+        "fr",
+        original,
+        model,
+        {
+          "beverage": ["macchiato", "cortado"]
+        }
+      );
+
+      await runInitTest(Rhino, {
+        context,
+        model,
+      });
+    });
   });
 
   for (const instance of [Rhino, RhinoWorker]) {

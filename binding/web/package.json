@@ -3,7 +3,7 @@
   "description": "Rhino Speech-to-Intent engine for web browsers (via WebAssembly)",
   "author": "Picovoice Inc",
   "license": "Apache-2.0",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "keywords": [
     "rhino",
     "web",
@@ -33,7 +33,8 @@
     "test-perf": "cypress run --spec test/rhino_perf.test.ts --browser chrome"
   },
   "dependencies": {
-    "@picovoice/web-utils": "=1.4.3"
+    "@picovoice/web-utils": "=1.4.3",
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
