@@ -346,7 +346,7 @@ export class Rhino {
       const merged = {};
       for (const s of [content.context.slots, slots]) {
         for (const [key, value] of Object.entries(s)) {
-          merged[key] = (merged[key] ?? []) + value;
+          merged[key] = (merged[key] !== undefined) ? [...merged[key], ...(value as Array<string>)] : value;
         }
       }
       content.context.slots = merged;
