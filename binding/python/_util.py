@@ -17,7 +17,7 @@ import subprocess
 from io import StringIO
 from ruamel.yaml import YAML
 from ruamel.yaml.error import YAMLError
-from typing import Dict, List, Optional
+from typing import Dict, Optional, Sequence
 
 log = logging.getLogger('RHN')
 log.setLevel(logging.WARNING)
@@ -136,13 +136,18 @@ def pv_train_model(
         output_path: str,
         language: str,
         yaml_content: str,
-        slots: Optional[Dict[str, List[str]]] = None,
-        platform: Optional[str] = None):
+        slots: Optional[Dict[str, Sequence[str]]] = None,
+        platform: Optional[str] = None) -> None:
 
     if language not in VALID_LANGUAGES:
-        raise ValueError("Invalid language ('%s')" % language)
+        raise ValueError("Invalid language '%s'" % language)
 
     if slots is not None:
+        if not isinstance(slots, dict):
+            raise ValueError("Slots must be a dictionary mapping slot names to sequences of string value")
+        if len(slots) == 0:
+            raise ValueError("Slots cannot be empty")
+
         yaml = YAML()
         stream = StringIO()
 
@@ -152,15 +157,25 @@ def pv_train_model(
             if hasattr(e, "problem_mark"):
                 raise ValueError(f"YAML error at line {e.problem_mark.line + 1}: {e.problem}") from e
             else:
-                raise ValueError("Failed to parse yaml content.") from e
+                raise ValueError("Failed to parse yaml content") from e
 
         if 'context' not in content and 'slots' not in content['context']:
-            raise ValueError("Invalid value in slots field.")
+            raise ValueError("Invalid value in slots field")
 
         merged = dict()
-        for s in (content['context']['slots'], slots):
-            for key, value in s.items():
-                merged[key] = merged.get(key, []) + value
+        for key, values in slots.items():
+            if not isinstance(slots, Sequence):
+                raise ValueError(f"Slot '{key}' must be a non-empty sequence of string values")
+            if key not in content['context']['slots']:
+                raise ValueError(f"Missing slot '{key}' does not exist")
+            merged[key] = content['context']['slots'][key] + values
+
+        for key, values in merged.items():
+            seen = set()
+            for value in values:
+                if value in seen:
+                    raise ValueError(f"Duplicate slot value '{value}' in '{key}'")
+                seen.add(value)
 
         content['context']['slots'] = merged
         yaml.dump(content, stream)

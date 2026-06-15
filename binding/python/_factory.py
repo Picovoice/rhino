@@ -9,9 +9,7 @@
 # specific language governing permissions and limitations under the License.
 #
 
-from typing import Sequence
-
-from ._rhino import Rhino, list_hardware_devices
+from ._rhino import Rhino, RhinoError, list_hardware_devices
 from ._util import *
 
 
@@ -88,48 +86,58 @@ def available_devices(library_path: Optional[str] = None) -> Sequence[str]:
     return list_hardware_devices(library_path=library_path)
 
 
-def train_with_context(
+def train_context_from_dynamic_slots(
         access_key: str,
         output_path: str,
         language: str,
         context_path: str,
-        slots: Optional[Dict[str, List[str]]],
-        platform: Optional[str] = None):
+        slots: Dict[str, Sequence[str]],
+        platform: Optional[str] = None) -> None:
     """
     Trains a model using a Rhino content (.rhn) file, optionally overriding slot values.
 
     :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
     :param output_path: Absolute path to file where the trained model will be saved.
-    :param language: Two character language code for the model (one of 'de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pt').
-    :param context_path: Absolute path to the file containing context parameters.
-    :param slots: Additional slot key-value pairs to merge into the YAML's `context.slots` section.
+    :param language: Two character language code for the model (i.e 'en', 'fr'). Check https://picovoice.ai/docs/rhino/
+    for supported languages.
+    :param context_path: Absolute path to file containing context model (file with `.rhn` extension).
+    :param slots: Dictionary mapping existing slot names to additional slot values to merge into the YAML's
+    `context.slots` section. Each slot value must be a non-empty sequence of strings that are unique and do
+    not already exist in the corresponding slot of the original context.
     :param platform: Target platform for the trained model (one of 'linux', 'mac', 'windows',
     'raspberry-pi', 'wasm', 'android', 'ios'). If None, the default(current) platform is used.
     """
 
-    rhino = create(access_key, context_path)
-    yaml_content = rhino.context_info
-    rhino.delete()
+    try:
+        rhino = create(access_key, context_path)
+        yaml_content = rhino.context_info
+        rhino.delete()
+    except RhinoError as e:
+        raise RuntimeError(f"Failed to initialize Rhino for context info with: {str(e)}")
 
     pv_train_model(access_key, output_path, language, yaml_content, slots, platform)
 
 
-def train_with_yaml(
+def train_context_from_yaml(
         access_key: str,
         output_path: str,
         language: str,
         yaml_path: str,
-        slots: Optional[Dict[str, List[str]]] = None,
-        platform: Optional[str] = None):
+        slots: Optional[Dict[str, Sequence[str]]] = None,
+        platform: Optional[str] = None) -> None:
     """
     Trains a model using a YAML configuration file, optionally overriding slot values.
 
     :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
     :param output_path: Absolute path to file where the trained model will be saved.
-    :param language: Two character language code for the model (one of 'de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pt').
+    :param language: Two character language code for the model (i.e 'en', 'fr'). Check https://picovoice.ai/docs/rhino/
+    for supported languages.
     :param yaml_path: Absolute path to the YAML configuration file.
-    :param slots: Additional slot key-value pairs to merge into the YAML's `context.slots` section.
-    :param platform: Target platform for the trained model. If None, the default(current) platform is used.
+    :param slots: Dictionary mapping existing slot names to additional slot values to merge into the YAML's
+    `context.slots` section. Each slot value must be a non-empty sequence of strings that are unique and do
+    not already exist in the corresponding slot of the original context.
+    :param platform: Target platform for the trained model (one of 'linux', 'mac', 'windows',
+    'raspberry-pi', 'wasm', 'android', 'ios'). If None, the default(current) platform is used.
     """
 
     if not os.path.exists(yaml_path):
@@ -144,6 +152,6 @@ def train_with_yaml(
 __all__ = [
     'available_devices',
     'create',
-    'train_with_context',
-    'train_with_yaml',
+    'train_context_from_dynamic_slots',
+    'train_context_from_yaml',
 ]
