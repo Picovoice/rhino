@@ -173,8 +173,8 @@ def pv_train_model(
             if not isinstance(values, Set):
                 raise ValueError(f"Slot '{key}' must be a non-empty set of string values")
             if key not in content['context']['slots']:
-                raise ValueError(f"Missing slot '{key}' does not exist")
-            merged[key] = content['context']['slots'][key] + list(values)
+                raise ValueError(f"Slot '{key}' does not exist")
+            merged[key] = list(values)
 
         for key, values in merged.items():
             seen: Set[str] = set()

@@ -218,20 +218,17 @@ class RhinoTestCase(unittest.TestCase):
         yaml_content = rhino.context_info
         rhino.delete()
 
-        slot_value = "Azul"
         output_path = f'{str(uuid.uuid4())}.rhn'
 
-        with self.assertRaises(ValueError) as context:
+        with self.assertRaises(ValueError):
             pv_train_model(
                 sys.argv[1],
                 output_path,
                 'es',
                 yaml_content,
                 slots={
-                    "color": {slot_value, "cortado"}
+                    "color": {"Azul", "azul"}
                 })
-
-        self.assertTrue(slot_value in str(context.exception))
 
 
 if __name__ == '__main__':

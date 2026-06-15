@@ -94,17 +94,17 @@ def train_context_from_dynamic_slots(
         slots: Dict[str, Set[str]],
         platform: Optional[str] = None) -> None:
     """
-    Trains a model using a Rhino content (.rhn) file with additional slot values.
+    Trains a model from an existing Rhino content (.rhn) file and new sets of slot values.
 
     :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
     :param output_path: Absolute path to file where the trained model will be saved.
-    :param language: Two character language code for the model (i.e 'en', 'fr').
+    :param language: Two character language code for the model (e.g. 'en', 'fr').
     Check https://picovoice.ai/docs/model-api/rhino/ for supported languages.
-    :param context_path: Absolute path to file containing context model (file with `.rhn` extension).
-    :param slots: Dictionary mapping existing slot names to additional slot values to merge into the YAML's
-    `context.slots` section. Each value must be a non-empty set of strings, and none of the
-    provided values may already exist in the corresponding slot of the original context.
-    :param platform: Target platform for the trained model. If None, the default(current) platform is used.
+    :param context_path: Absolute path to the existing context model (file with .rhn extension).
+    :param slots: Dictionary mapping existing slot names to the set of values that will replace
+    the corresponding entries in the YAML's `context.slots` section. Each value must be a non-empty
+    set of strings.
+    :param platform: The platform running this code will be used. If None, the default(current) platform is used.
     Check https://picovoice.ai/docs/model-api/rhino/ for supported platforms.
     """
 
@@ -135,10 +135,10 @@ def train_context_from_yaml(
 
     :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
     :param output_path: Absolute path to file where the trained model will be saved.
-    :param language: Two character language code for the model (i.e 'en', 'fr').
+    :param language: Two character language code for the model (e.g. 'en', 'fr').
     Check https://picovoice.ai/docs/model-api/rhino/ for supported languages.
     :param yaml_path: Absolute path to the YAML configuration file.
-    :param platform: Target platform for the trained model. If None, the default(current) platform is used.
+    :param platform: The platform running this code will be used. If None, the default(current) platform is used.
     Check https://picovoice.ai/docs/model-api/rhino/ for supported platforms.
     """
 
