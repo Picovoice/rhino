@@ -360,7 +360,7 @@ export class Rhino {
         }
 
         if (!(key in content.context.slots)) {
-          throw new Error(`Missing slot '${key}' does not exist`);
+          throw new Error(`Slot '${key}' (${content.context.slots}) does not exist`);
         }
 
         merged[key] = content.context.slots[key].concat(Array.from(values));
