@@ -4,6 +4,7 @@ androidx
 armeabi
 armv
 armv7l
+Azul
 bagno
 behaviour
 beleuchtung
