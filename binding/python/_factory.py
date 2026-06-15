@@ -115,7 +115,13 @@ def train_context_from_dynamic_slots(
     except RhinoError as e:
         raise RuntimeError(f"Failed to initialize Rhino for context info with: {str(e)}")
 
-    pv_train_model(access_key, output_path, language, yaml_content, slots, platform)
+    pv_train_model(
+        access_key=access_key,
+        output_path=output_path,
+        language=language,
+        yaml_content=yaml_content,
+        slots=slots,
+        platform=platform)
 
 
 def train_context_from_yaml(
@@ -146,7 +152,13 @@ def train_context_from_yaml(
     with open(yaml_path) as f:
         yaml_content = f.read()
 
-    pv_train_model(access_key, output_path, language, yaml_content, slots, platform)
+    pv_train_model(
+        access_key=access_key,
+        output_path=output_path,
+        language=language,
+        yaml_content=yaml_content,
+        slots=slots,
+        platform=platform)
 
 
 __all__ = [
