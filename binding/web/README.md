@@ -274,32 +274,32 @@ The model files for all supported languages are available [here](https://github.
 You can train models over API without going to the console:
 
 ```javascript
-Rhino.trainWithYaml(
+Rhino.trainContextFromDynamicSlots(
   "${ACCESS_KEY}",   // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
   "${WRITE_PATH}",   // Custom path/key used to store the trained model in IndexedDB
-  "${LANGUAGE}",     // Two-character language code (e.g., 'en', 'de', 'es')
-  "${YAML_CONTEXT}", // YAML configuration in string to be used for training
+  "${LANGUAGE}",     // Two-character language code
+  "${YAML_CONTEXT}", // RhinoContext object containing a base64 representation of or path to a public binary Rhino context model
+  "${MODEL}",        // RhinoModel configuration to be used for training
   {
-    "${SLOT_NAME}": ["${SLOT1}", "${SLOT2}"]
-  }                  // Optional: additional slot values merged into `context.slots`
+    "${SLOT_NAME}": new Set(["${SLOT1}", "${SLOT2}"])
+  }                 // Additional slot values
 );
 ```
 
 (or)
 
 ```javascript
-Rhino.trainWithContext(
+Rhino.trainContextFromYaml(
   "${ACCESS_KEY}",     // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
   "${WRITE_PATH}",     // Custom path/key used to store the trained model in IndexedDB
-  "${LANGUAGE}",       // Two-character language code (e.g., 'en', 'de', 'es')
-  "${RHINO_CONTEXT}",  // RhinoModel configuration used for training
-  {
-    "${SLOT_NAME}": ["${SLOT1}", "${SLOT2}"]
-  }                    // Additional slot values merged into `context.slots`
+  "${LANGUAGE}",       // Two-character language code
+  "${YAML_CONTENT}",   // YAML configuration in string
 );
 ```
 
-`trainWithContext` is better suited if you would like the add additional slot values to your current Rhino context.
+`trainContextFromDynamicSlots` is better suited if you would like the add additional slot values to your current Rhino context.
+
+Check [Rhino Model API](https://picovoice.ai/docs/model-api/rhino/) docs for a list of supported languages.
 
 ## Demo
 

@@ -162,7 +162,7 @@ describe("Rhino Binding", function () {
     }
   });
 
-  it(`should be able to train context`, () => {
+  it(`should be able to train model`, () => {
     const writePath = "custom_éclairage_intelligent_wasm.rhn";
 
     const original: RhinoContext = {
@@ -178,14 +178,14 @@ describe("Rhino Binding", function () {
     };
 
     cy.wrap(null).then(async () => {
-      await Rhino.trainWithContext(
+      await Rhino.trainContextFromDynamicSlots(
         ACCESS_KEY,
         writePath,
         "fr",
         original,
         model,
         {
-          "beverage": ["macchiato", "cortado"]
+          "color": new Set(["macchiato", "cortado"])
         }
       );
 
@@ -193,6 +193,38 @@ describe("Rhino Binding", function () {
         context,
         model,
       });
+    });
+  });
+
+  it(`should be able to handle invalid slots`, () => {
+    const writePath = "custom_éclairage_intelligent_wasm.rhn";
+
+    const original: RhinoContext = {
+      publicPath: "/test/contexts/éclairage_intelligent_wasm.rhn"
+    };
+
+    const model: RhinoModel = {
+      publicPath: "/test/rhino_params_fr.pv"
+    };
+
+    cy.wrap(null).then(async () => {
+      let failed = false;
+      try {
+        await Rhino.trainContextFromDynamicSlots(
+          ACCESS_KEY,
+          writePath,
+          "fr",
+          original,
+          model,
+          {
+            "color": new Set(["bleu", "cortado"])
+          }
+        );
+      } catch (e) {
+        expect(e).to.not.be.null;
+        failed = true;
+      }
+      expect(failed).to.be.true;
     });
   });
 
