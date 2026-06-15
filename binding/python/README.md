@@ -108,28 +108,29 @@ In order to run inference on non-English contexts you need to use the correspond
 You can train models over API without going to the console:
 
 ```python
-train_with_yaml(
+train_context_from_dynamic_slots(
         "${ACCESS_KEY}",                             # AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
         "${OUTPUT_PATH}",                            # Path to save the newly trained model
         "${LANGUAGE}",                               # Two-character language code
-        "${YAML_PATH}",                              # Path to YAML configuration file
-        {"${SLOT_NAME}": ["${SLOT1}", "${SLOT2}"]},  # Additional slot key-value pairs to merge into the YAML's `context.slots` section.
+        "${CONTEXT_PATH}",                           # Path to Rhino's context (.rhn) file
+        {"${SLOT_NAME}": {"${SLOT1}", "${SLOT2}"}},  # Dynamic slot key-value pairs to merge into the YAML's `context.slots` section.
         "${PLATFORM}"                                # Optional platform for the trained model. If None, the default(current) platform is used.
 ```
 
 (or)
 
 ```python
-train_with_context(
+train_context_from_yaml(
         "${ACCESS_KEY}",                             # AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
         "${OUTPUT_PATH}",                            # Path to save the newly trained model
         "${LANGUAGE}",                               # Two-character language code
-        "${CONTEXT_PATH}",                           # Path to Rhino's context (.rhn) file
-        {"${SLOT_NAME}": ["${SLOT1}", "${SLOT2}"]},  # Additional slot key-value pairs to merge into the YAML's `context.slots` section.
+        "${YAML_PATH}",                              # Path to YAML configuration file
         "${PLATFORM}"                                # Optional platform for the trained model. If None, the default(current) platform is used.
 ```
 
 `train_with_context` is better suited if you would like the add additional slot values to your current Rhino model.
+
+Check [Rhino Model API](https://picovoice.ai/docs/model-api/rhino/) docs for a list of supported languages and platforms.
 
 ## Demos
 
