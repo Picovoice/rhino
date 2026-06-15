@@ -131,7 +131,7 @@ def train_context_from_yaml(
         yaml_path: str,
         platform: Optional[str] = None) -> None:
     """
-    Trains a model using a YAML configuration file, optionally overriding slot values.
+    Trains a model using a YAML configuration file.
 
     :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
     :param output_path: Absolute path to file where the trained model will be saved.

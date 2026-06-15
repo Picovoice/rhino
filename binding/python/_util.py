@@ -195,7 +195,6 @@ def pv_train_model(
     }
 
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
         "x-api-key": access_key
     }
 
