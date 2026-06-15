@@ -322,7 +322,7 @@ export class Rhino {
       yamlContent = rhino.contextInfo;
       await rhino.release();
     } catch (e) {
-      throw new Error(`Failed to initialize Rhino for context info with: '${e}'`)
+      throw new Error(`Failed to initialize Rhino for context info with: '${e}'`);
     }
 
     if (slots) {
