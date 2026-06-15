@@ -17,7 +17,7 @@ import subprocess
 from io import StringIO
 from ruamel.yaml import YAML
 from ruamel.yaml.error import YAMLError
-from typing import Dict, Optional, Sequence
+from typing import Dict, Optional, Sequence, Set
 
 log = logging.getLogger('RHN')
 log.setLevel(logging.WARNING)
@@ -136,11 +136,17 @@ def pv_train_model(
         output_path: str,
         language: str,
         yaml_content: str,
-        slots: Optional[Dict[str, Sequence[str]]] = None,
+        slots: Optional[Dict[str, Set[str]]] = None,
         platform: Optional[str] = None) -> None:
 
     if language not in VALID_LANGUAGES:
-        raise ValueError("Invalid language '%s'" % language)
+        raise ValueError(f"Invalid language '{language}'")
+
+    if platform is None:
+        platform = pv_get_platform()
+
+    if platform not in VALID_PLATFORMS:
+        raise ValueError(f"Invalid platform '{platform}'")
 
     if slots is not None:
         if not isinstance(slots, dict):
@@ -162,29 +168,26 @@ def pv_train_model(
         if 'context' not in content and 'slots' not in content['context']:
             raise ValueError("Invalid value in slots field")
 
-        merged = dict()
+        merged: Dict[str, Sequence[str]] = {x: y for x, y in content['context']['slots'].items() if x not in slots}
         for key, values in slots.items():
-            if not isinstance(slots, Sequence):
-                raise ValueError(f"Slot '{key}' must be a non-empty sequence of string values")
+            if not isinstance(values, Set):
+                raise ValueError(f"Slot '{key}' must be a non-empty set of string values")
             if key not in content['context']['slots']:
                 raise ValueError(f"Missing slot '{key}' does not exist")
-            merged[key] = content['context']['slots'][key] + values
+            merged[key] = content['context']['slots'][key] + list(values)
 
         for key, values in merged.items():
-            seen = set()
+            seen: Set[str] = set()
             for value in values:
-                if value in seen:
+                if value.lower() in seen:
                     raise ValueError(f"Duplicate slot value '{value}' in '{key}'")
-                seen.add(value)
+                seen.add(value.lower())
 
         content['context']['slots'] = merged
         yaml.dump(content, stream)
 
         yaml_content = stream.getvalue()
         stream.close()
-
-    if platform is None:
-        platform = pv_get_platform()
 
     payload = {
         "platform": platform,

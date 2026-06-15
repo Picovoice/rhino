@@ -188,7 +188,7 @@ class RhinoTestCase(unittest.TestCase):
                 'es',
                 yaml_content,
                 slots={
-                    "beverage": ["macchiato", "cortado"]
+                    "color": {"macchiato", "cortado"}
                 },
                 platform=platform)
 
@@ -205,6 +205,33 @@ class RhinoTestCase(unittest.TestCase):
 
             if os.path.exists(output_path):
                 os.remove(output_path)
+
+    def test_train_model_invalid_slots(self):
+        relative_path = '../..'
+
+        rhino = Rhino(
+            access_key=sys.argv[1],
+            library_path=pv_library_path(relative_path),
+            model_path=get_model_path_by_language(relative_path, 'es'),
+            device=sys.argv[2],
+            context_path=get_context_path_by_language(relative_path, 'iluminación_inteligente', 'es'))
+        yaml_content = rhino.context_info
+        rhino.delete()
+
+        slot_value = "Azul"
+        output_path = f'{str(uuid.uuid4())}.rhn'
+
+        with self.assertRaises(ValueError) as context:
+            pv_train_model(
+                sys.argv[1],
+                output_path,
+                'es',
+                yaml_content,
+                slots={
+                    "color": {slot_value, "cortado"}
+                })
+
+        self.assertTrue(slot_value in str(context.exception))
 
 
 if __name__ == '__main__':
