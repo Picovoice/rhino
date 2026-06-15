@@ -94,7 +94,7 @@ def train_context_from_dynamic_slots(
         slots: Dict[str, Set[str]],
         platform: Optional[str] = None) -> None:
     """
-    Trains a model using a Rhino content (.rhn) file, optionally overriding slot values.
+    Trains a model using a Rhino content (.rhn) file with additional slot values.
 
     :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
     :param output_path: Absolute path to file where the trained model will be saved.
