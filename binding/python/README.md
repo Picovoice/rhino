@@ -128,7 +128,7 @@ train_context_from_yaml(
         "${PLATFORM}"                                # Optional platform for the trained model. If None, the default(current) platform is used.
 ```
 
-`train_with_context` is better suited if you would like the add additional slot values to your current Rhino model.
+`train_context_from_dynamic_slots` is better suited if you would like the add additional slot values to your current Rhino model.
 
 Check [Rhino Model API](https://picovoice.ai/docs/model-api/rhino/) docs for a list of supported languages and platforms.
 
