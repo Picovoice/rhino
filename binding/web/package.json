@@ -30,10 +30,11 @@
     "copywasm": "node scripts/copy_wasm.js",
     "setup-test": "node scripts/setup_test.js && npx pvbase64 -i ./test/rhino_params.pv -o ./test/rhino_params.js",
     "test": "cypress run --spec test/rhino.test.ts --browser chrome",
-    "test-perf": "cypress run --spec test/rhino_perf.test.ts --browser chrome"
+    "test-perf": "cypress run --spec test/rhino_perf.test.ts --browser chrome",
+    "test-train": "cypress run --spec test/rhino_train.test.ts --browser chrome"
   },
   "dependencies": {
-    "@picovoice/web-utils": "=1.4.3",
+    "@picovoice/web-utils": "=1.4.4",
     "yaml": "^2.9.0"
   },
   "devDependencies": {
