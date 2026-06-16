@@ -14,19 +14,21 @@ package ai.picovoice.rhino;
 import android.content.Context;
 import android.content.res.Resources;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,9 +48,9 @@ import okhttp3.*;
  */
 public class Rhino {
     private static final Set<String> VALID_LANGUAGES =
-            Set.of("en", "fr", "de");
+            new HashSet<>(Arrays.asList("de", "en", "es", "fr", "it", "ja", "ko", "pt"));
 
-    private static final String PV_API_URL = "";
+    private static final String PV_API_URL = "https://rest.picovoice.ai/";
 
     private static final OkHttpClient client = new OkHttpClient();
 
@@ -67,82 +69,23 @@ public class Rhino {
         Rhino._sdk = sdk;
     }
 
-    private static void pvTrainContext(
-            Context context,
-            String accessKey,
-            String outputPath,
-            String language,
-            String yamlContent) throws RhinoException {
-
-        if (!VALID_LANGUAGES.contains(language)) {
-            throw new RhinoInvalidArgumentException(
-                    "Invalid language ('" + language + "')"
-            );
-        }
-
-        String payload = "{"
-                + "\"platform\": \"wasm\", "
-                + "\"yaml_content\": \"" + yamlContent + "\""
-                + "}";
-
-        Request request = new Request.Builder()
-                .url(PV_API_URL + language + "/api/rhn")
-                .post(RequestBody.create(
-                        payload,
-                        MediaType.parse("application/json")
-                ))
-                .addHeader("x-api-key", accessKey)
-                .build();
-
-        try (Response res = client.newCall(request).execute()) {
-            if (!res.isSuccessful()) {
-                String errorBody = res.body() != null ? res.body().string() : "";
-                throw new RhinoRuntimeException(
-                        "Failed to train model: " + errorBody
-                );
-            }
-
-            if (res.body() == null) {
-                throw new RhinoRuntimeException("Empty response body");
-            }
-
-            byte[] data = res.body().bytes();
-
-            if (data.length == 0) {
-                throw new RhinoRuntimeException("Empty response body");
-            }
-
-            try (FileOutputStream fos = context.openFileOutput(outputPath, Context.MODE_PRIVATE)) {
-                fos.write(data);
-            } catch (IOException e) {
-                throw new RhinoRuntimeException(
-                        "Failed to save Rhino context file: " + e.getMessage(),
-                        e
-                );
-            }
-        } catch (IOException e) {
-            throw new RhinoRuntimeException(
-                    "Request failed: " + e.getMessage(),
-                    e
-            );
-        }
-    }
-
     /**
      * Trains a model from an existing Rhino context (.rhn) file and new sets of slot values.
      *
+     * @param appContext Android app context (for extracting Rhino resources)
      * @param accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
      * @param outputPath Absolute path to file where the trained model will be saved.
      * @param language Two character language code for the model (e.g. "en", "fr").
      *                 See https://picovoice.ai/docs/model-api/rhino/ for supported languages.
      * @param contextPath Absolute path to the existing context model (.rhn file).
+     * @param modelPath Absolute path to the file containing model parameters.
      * @param slots Map of existing slot names to the set of values that will replace the
      *              corresponding entries in the YAML's {@code context.slots} section.
      *              Each value must be a non-empty set of strings.
      * @throws RhinoException if model training fails.
      */
     public static void trainContextFromDynamicSlots(
-            Context ctx,
+            Context appContext,
             String accessKey,
             String outputPath,
             String language,
@@ -159,7 +102,7 @@ public class Rhino {
                     .setContextPath(contextPath)
                     .setModelPath(modelPath)
                     .setDevice("cpu:1")
-                    .build(ctx);
+                    .build(appContext);
             yamlContent = rhino.getContextInformation();
             rhino.delete();
         } catch (Exception e) {
@@ -230,55 +173,81 @@ public class Rhino {
         context.put("slots", merged);
         yamlContent = new Yaml().dump(content);
 
-        pvTrainContext(ctx, accessKey, outputPath, language, yamlContent);
+        trainContextFromYaml(accessKey, outputPath, language, yamlContent);
     }
 
     /**
-     * Trains a model using a YAML configuration file.
+     * Trains a model using a YAML configuration string.
      *
      * @param accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
      * @param outputPath Absolute path to file where the trained model will be saved.
      * @param language Two character language code for the model (e.g. "en", "fr").
      *                 See https://picovoice.ai/docs/model-api/rhino/ for supported languages.
-     * @param yamlPath Absolute path to the YAML configuration file.
+     * @param yamlContent YAML configuration in string to be used for training.
      * @throws RhinoException if model training fails.
      */
     public static void trainContextFromYaml(
-            Context context,
             String accessKey,
             String outputPath,
             String language,
-            String yamlPath) throws RhinoException {
-        File yamlFile = new File(yamlPath);
-        String yamlFileName = yamlFile.getName();
-        if (!yamlFile.exists() && !yamlFileName.isEmpty()) {
-            try {
-                yamlPath = extractResource(context,
-                        context.getAssets().open(yamlPath),
-                        yamlFileName);
-            } catch (IOException ex) {
-                throw new RhinoIOException(ex);
-            }
+            String yamlContent) throws RhinoException {
+
+        if (!VALID_LANGUAGES.contains(language)) {
+            throw new RhinoInvalidArgumentException(
+                    "Invalid language ('" + language + "')"
+            );
         }
 
-        try {
-            StringBuilder sb = new StringBuilder();
-            try (BufferedReader br = new BufferedReader(new FileReader(yamlPath))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line).append('\n');
-                }
-            }
-            String yamlContent = sb.toString();
+        String payload;
 
-            pvTrainContext(
-                    context,
-                    accessKey,
-                    outputPath,
-                    language,
-                    yamlContent);
-        } catch (IOException ex) {
-            throw new RhinoIOException(ex);
+        try {
+            payload = new JSONObject()
+                    .put("platform", "android")
+                    .put("yaml_content", yamlContent)
+                    .toString();
+        } catch (JSONException e) {
+            throw new RhinoRuntimeException(
+                    "Failed to create request payload " + e.getMessage()
+            );
+        }
+
+        Request request = new Request.Builder()
+                .url(PV_API_URL + language + "/api/rhn")
+                .post(RequestBody.create(
+                        payload,
+                        MediaType.parse("application/json")
+                ))
+                .addHeader("x-api-key", accessKey)
+                .build();
+
+        try (Response res = client.newCall(request).execute()) {
+            if (!res.isSuccessful()) {
+                String errorBody = res.body() != null ? res.body().string() : "";
+                throw new RhinoRuntimeException("Failed to train model: " + errorBody);
+            }
+
+            if (res.body() == null) {
+                throw new RhinoRuntimeException("Empty response body");
+            }
+
+            byte[] data = res.body().bytes();
+
+            if (data.length == 0) {
+                throw new RhinoRuntimeException("Empty response body");
+            }
+
+            File file = new File(outputPath);
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                fos.write(data);
+            } catch (IOException e) {
+                throw new RhinoRuntimeException(
+                        "Failed to save Rhino context file: " + e.getMessage()
+                );
+            }
+        } catch (IOException e) {
+            throw new RhinoRuntimeException(
+                    "Request failed: " + e.getMessage()
+            );
         }
     }
 
