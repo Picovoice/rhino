@@ -65,7 +65,6 @@ describe("Rhino Train", function () {
 
     const context: RhinoContext = {
       publicPath: writePath,
-      forceWrite: true,
     };
 
     const model: RhinoModel = {
