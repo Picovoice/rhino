@@ -86,7 +86,7 @@ class RhinoTrainTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 5:
+    if len(sys.argv) != 2:
         print("usage: test_rhino_train.py ${ACCESS_KEY}")
         exit(1)
 
