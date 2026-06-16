@@ -1,4 +1,4 @@
-name: Python
+name: Python Train
 
 on:
   workflow_dispatch:
@@ -63,3 +63,34 @@ jobs:
 
     - name: Test
       run: python test_rhino_train.py ${{secrets.PV_VALID_ACCESS_KEY}}
+
+
+  build-self-hosted:
+    runs-on: ${{ matrix.machine }}
+
+    strategy:
+      matrix:
+        machine: [ rpi4-64, pv-windows-arm64 ]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Python virtualenv (*nix)
+      if: ${{ matrix.machine != 'pv-windows' && matrix.machine != 'pv-windows-igpu' && matrix.machine != 'pv-windows-arm64' }}
+      run: |
+        python3 -m venv binding/python/.venv
+        . binding/python/.venv/bin/activate
+        echo PATH=$PATH >> $GITHUB_ENV
+
+    - name: Setup Python virtualenv (windows)
+      if: ${{ matrix.machine == 'pv-windows' || matrix.machine == 'pv-windows-igpu' || matrix.machine == 'pv-windows-arm64' }}
+      run: |
+        python3 -m venv binding\python\.venv --symlinks
+        binding\python\.venv\Scripts\activate
+        echo PATH=$PATH >> $GITHUB_ENV
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Test
+      run: python3 test_rhino_train.py ${{secrets.PV_VALID_ACCESS_KEY}}
