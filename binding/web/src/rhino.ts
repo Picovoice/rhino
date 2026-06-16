@@ -305,6 +305,7 @@ export class Rhino {
    * the corresponding entries in the YAML's `context.slots` section. Each value must be a non-empty
    * set of strings.
    * @returns A new RhinoContext object containing the trained context. Pass this to `.create()`.
+   * Object must have 'forceWrite: false' or be empty for Rhino to initialize.
    */
   public static async trainContextFromDynamicSlots(
     accessKey: string,
@@ -413,6 +414,7 @@ export class Rhino {
    * Check https://picovoice.ai/docs/model-api/rhino/ for supported languages.
    * @param yamlContent YAML configuration in string to be used for training.
    * @returns A new RhinoContext object containing the trained context. Pass this to `.create()`.
+   * Object must have 'forceWrite: false' or be empty for Rhino to initialize.
    */
   public static async trainContextFromYaml(
     accessKey: string,
