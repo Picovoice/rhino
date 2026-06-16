@@ -1,5 +1,5 @@
 /*
-    Copyright 2018-2025 Picovoice Inc.
+    Copyright 2018-2026 Picovoice Inc.
     You may not use this file except in compliance with the license. A copy of the license is
     located in the "LICENSE" file accompanying this source.
     Unless required by applicable law or agreed to in writing, software distributed under the
@@ -14,12 +14,26 @@ package ai.picovoice.rhino;
 import android.content.Context;
 import android.content.res.Resources;
 
+import org.yaml.snakeyaml.Yaml;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import okhttp3.*;
 
 /**
  * Android binding for Rhino Speech-to-Intent engine. It directly infers the user's intent from
@@ -31,6 +45,12 @@ import java.io.OutputStream;
  * single-channel audio.
  */
 public class Rhino {
+    private static final Set<String> VALID_LANGUAGES =
+            Set.of("en", "fr", "de");
+
+    private static final String PV_API_URL = "";
+
+    private static final OkHttpClient client = new OkHttpClient();
 
     private static String DEFAULT_MODEL_PATH;
     private static boolean isExtracted;
@@ -45,6 +65,221 @@ public class Rhino {
 
     public static void setSdk(String sdk) {
         Rhino._sdk = sdk;
+    }
+
+    private static void pvTrainContext(
+            Context context,
+            String accessKey,
+            String outputPath,
+            String language,
+            String yamlContent) throws RhinoException {
+
+        if (!VALID_LANGUAGES.contains(language)) {
+            throw new RhinoInvalidArgumentException(
+                    "Invalid language ('" + language + "')"
+            );
+        }
+
+        String payload = "{"
+                + "\"platform\": \"wasm\", "
+                + "\"yaml_content\": \"" + yamlContent + "\""
+                + "}";
+
+        Request request = new Request.Builder()
+                .url(PV_API_URL + language + "/api/rhn")
+                .post(RequestBody.create(
+                        payload,
+                        MediaType.parse("application/json")
+                ))
+                .addHeader("x-api-key", accessKey)
+                .build();
+
+        try (Response res = client.newCall(request).execute()) {
+            if (!res.isSuccessful()) {
+                String errorBody = res.body() != null ? res.body().string() : "";
+                throw new RhinoRuntimeException(
+                        "Failed to train model: " + errorBody
+                );
+            }
+
+            if (res.body() == null) {
+                throw new RhinoRuntimeException("Empty response body");
+            }
+
+            byte[] data = res.body().bytes();
+
+            if (data.length == 0) {
+                throw new RhinoRuntimeException("Empty response body");
+            }
+
+            try (FileOutputStream fos = context.openFileOutput(outputPath, Context.MODE_PRIVATE)) {
+                fos.write(data);
+            } catch (IOException e) {
+                throw new RhinoRuntimeException(
+                        "Failed to save Rhino context file: " + e.getMessage(),
+                        e
+                );
+            }
+        } catch (IOException e) {
+            throw new RhinoRuntimeException(
+                    "Request failed: " + e.getMessage(),
+                    e
+            );
+        }
+    }
+
+    /**
+     * Trains a model from an existing Rhino context (.rhn) file and new sets of slot values.
+     *
+     * @param accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
+     * @param outputPath Absolute path to file where the trained model will be saved.
+     * @param language Two character language code for the model (e.g. "en", "fr").
+     *                 See https://picovoice.ai/docs/model-api/rhino/ for supported languages.
+     * @param contextPath Absolute path to the existing context model (.rhn file).
+     * @param slots Map of existing slot names to the set of values that will replace the
+     *              corresponding entries in the YAML's {@code context.slots} section.
+     *              Each value must be a non-empty set of strings.
+     * @throws RhinoException if model training fails.
+     */
+    public static void trainContextFromDynamicSlots(
+            Context ctx,
+            String accessKey,
+            String outputPath,
+            String language,
+            String contextPath,
+            String modelPath,
+            Map<String, Set<String>> slots) throws RhinoException {
+
+
+        String yamlContent;
+
+        try {
+            Rhino rhino = new Rhino.Builder()
+                    .setAccessKey(accessKey)
+                    .setContextPath(contextPath)
+                    .setModelPath(modelPath)
+                    .setDevice("cpu:1")
+                    .build(ctx);
+            yamlContent = rhino.getContextInformation();
+            rhino.delete();
+        } catch (Exception e) {
+            throw new RhinoException(
+                    "Failed to initialize Rhino for context info with: '" + e + "'");
+        }
+
+        if (slots == null || slots.isEmpty()) {
+            throw new RhinoException("Slots cannot be empty");
+        }
+
+        Map<String, Object> content;
+        try {
+            content = new Yaml().load(yamlContent);
+        } catch (Exception e) {
+            throw new RhinoException("Failed to parse yaml content");
+        }
+
+        Object contextObj = (content == null) ? null : content.get("context");
+        if (!(contextObj instanceof Map)) {
+            throw new RhinoException("Invalid value in slots field");
+        }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> context = (Map<String, Object>) contextObj;
+
+        Object existingSlotsObj = context.get("slots");
+        if (!(existingSlotsObj instanceof Map)) {
+            throw new RhinoException("Invalid value in slots field");
+        }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> existingSlots = (Map<String, Object>) existingSlotsObj;
+
+        Map<String, List<String>> merged = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> e : existingSlots.entrySet()) {
+            if (!slots.containsKey(e.getKey())) {
+                @SuppressWarnings("unchecked")
+                List<String> v = (List<String>) e.getValue();
+                merged.put(e.getKey(), v);
+            }
+        }
+
+        for (Map.Entry<String, Set<String>> e : slots.entrySet()) {
+            String key = e.getKey();
+            Set<String> values = e.getValue();
+
+            if (values == null || values.isEmpty()) {
+                throw new RhinoException(
+                        "Slot '" + key + "' must be a non-empty set of string values");
+            }
+            if (!existingSlots.containsKey(key)) {
+                throw new RhinoException("Slot '" + key + "' does not exist");
+            }
+            merged.put(key, new ArrayList<>(values));
+        }
+
+        for (Map.Entry<String, List<String>> e : merged.entrySet()) {
+            String key = e.getKey();
+            Set<String> seen = new HashSet<>();
+            for (String v : e.getValue()) {
+                String value = v.toLowerCase();
+                if (seen.contains(value)) {
+                    throw new RhinoException("Duplicate slot value '" + v + "' in '" + key + "'");
+                }
+                seen.add(value);
+            }
+        }
+
+        context.put("slots", merged);
+        yamlContent = new Yaml().dump(content);
+
+        pvTrainContext(ctx, accessKey, outputPath, language, yamlContent);
+    }
+
+    /**
+     * Trains a model using a YAML configuration file.
+     *
+     * @param accessKey AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
+     * @param outputPath Absolute path to file where the trained model will be saved.
+     * @param language Two character language code for the model (e.g. "en", "fr").
+     *                 See https://picovoice.ai/docs/model-api/rhino/ for supported languages.
+     * @param yamlPath Absolute path to the YAML configuration file.
+     * @throws RhinoException if model training fails.
+     */
+    public static void trainContextFromYaml(
+            Context context,
+            String accessKey,
+            String outputPath,
+            String language,
+            String yamlPath) throws RhinoException {
+        File yamlFile = new File(yamlPath);
+        String yamlFileName = yamlFile.getName();
+        if (!yamlFile.exists() && !yamlFileName.isEmpty()) {
+            try {
+                yamlPath = extractResource(context,
+                        context.getAssets().open(yamlPath),
+                        yamlFileName);
+            } catch (IOException ex) {
+                throw new RhinoIOException(ex);
+            }
+        }
+
+        try {
+            StringBuilder sb = new StringBuilder();
+            try (BufferedReader br = new BufferedReader(new FileReader(yamlPath))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line).append('\n');
+                }
+            }
+            String yamlContent = sb.toString();
+
+            pvTrainContext(
+                    context,
+                    accessKey,
+                    outputPath,
+                    language,
+                    yamlContent);
+        } catch (IOException ex) {
+            throw new RhinoIOException(ex);
+        }
     }
 
     /**
@@ -223,6 +458,22 @@ public class Rhino {
         return RhinoNative.getVersion();
     }
 
+    private static String extractResource(Context context,
+                                   InputStream srcFileStream,
+                                   String dstFilename) throws IOException {
+        InputStream is = new BufferedInputStream(srcFileStream, 256);
+        OutputStream os = new BufferedOutputStream(context.openFileOutput(dstFilename, Context.MODE_PRIVATE), 256);
+        int r;
+        while ((r = is.read()) != -1) {
+            os.write(r);
+        }
+        os.flush();
+
+        is.close();
+        os.close();
+        return new File(context.getFilesDir(), dstFilename).getAbsolutePath();
+    }
+
     /**
      * Builder for creating an instance of Rhino with a mixture of default arguments.
      */
@@ -282,22 +533,6 @@ public class Rhino {
             } catch (IOException ex) {
                 throw new RhinoIOException(ex);
             }
-        }
-
-        private String extractResource(Context context,
-                                       InputStream srcFileStream,
-                                       String dstFilename) throws IOException {
-            InputStream is = new BufferedInputStream(srcFileStream, 256);
-            OutputStream os = new BufferedOutputStream(context.openFileOutput(dstFilename, Context.MODE_PRIVATE), 256);
-            int r;
-            while ((r = is.read()) != -1) {
-                os.write(r);
-            }
-            os.flush();
-
-            is.close();
-            os.close();
-            return new File(context.getFilesDir(), dstFilename).getAbsolutePath();
         }
 
         /**

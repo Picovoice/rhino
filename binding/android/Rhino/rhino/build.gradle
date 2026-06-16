@@ -36,6 +36,8 @@ if (file("${rootDir}/publish-mavencentral.gradle").exists()) {
 
 dependencies {
     implementation "ai.picovoice:android-voice-processor:1.0.2"
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'org.yaml:snakeyaml:2.2'
 }
 
 task copyLibs(type: Copy) {
