@@ -63,17 +63,13 @@ describe("Rhino Train", function () {
       forceWrite: true,
     };
 
-    const context: RhinoContext = {
-      publicPath: writePath,
-    };
-
     const model: RhinoModel = {
       publicPath: "/test/rhino_params_fr.pv",
       forceWrite: true,
     };
 
     cy.wrap(null).then(async () => {
-      await Rhino.trainContextFromDynamicSlots(
+      const rhinoContext = await Rhino.trainContextFromDynamicSlots(
         ACCESS_KEY,
         writePath,
         "fr",
@@ -85,7 +81,7 @@ describe("Rhino Train", function () {
       );
 
       await runInitTest(Rhino, {
-        context,
+        context: rhinoContext,
         model,
       });
     });
@@ -107,7 +103,7 @@ describe("Rhino Train", function () {
     cy.wrap(null).then(async () => {
       let failed = false;
       try {
-        await Rhino.trainContextFromDynamicSlots(
+        const rhinoContext = await Rhino.trainContextFromDynamicSlots(
           ACCESS_KEY,
           writePath,
           "fr",
@@ -117,6 +113,7 @@ describe("Rhino Train", function () {
             "color": new Set(["bleu", "Bleu"])
           }
         );
+        expect(rhinoContext).to.be.null;
       } catch (e) {
         expect(e).to.not.be.null;
         failed = true;
