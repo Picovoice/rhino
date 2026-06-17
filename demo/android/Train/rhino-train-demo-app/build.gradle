@@ -1,0 +1,71 @@
+import groovy.json.JsonSlurper
+
+apply plugin: 'com.android.application'
+
+Properties properties = new Properties()
+if (rootProject.file("local.properties").exists()) {
+    properties.load(rootProject.file("local.properties").newDataInputStream())
+    if (project.hasProperty("storePassword")) {
+        properties.put("storePassword", project.getProperty("storePassword"))
+    }
+    if (project.hasProperty("storeFile")) {
+        properties.put("storeFile", project.getProperty("storeFile"))
+    }
+    if (project.hasProperty("keyAlias")) {
+        properties.put("keyAlias", project.getProperty("keyAlias"))
+    }
+    if (project.hasProperty("keyPassword")) {
+        properties.put("keyPassword", project.getProperty("keyPassword"))
+    }
+}
+
+android {
+    def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION
+    compileSdk defaultTargetSdkVersion
+
+    defaultConfig {
+        applicationId "ai.picovoice.rhinotraindemo"
+        minSdkVersion 21
+        targetSdkVersion defaultTargetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        release {
+            storePassword properties.getProperty("storePassword")
+            storeFile file(properties.getProperty("storeFile", ".dummy.jks"))
+            keyAlias properties.getProperty("keyAlias")
+            keyPassword properties.getProperty("keyPassword")
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    buildFeatures {
+        buildConfig true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lintOptions {
+        abortOnError false
+    }
+    if (agpVersion.tokenize('.')[0].toInteger() >= 7) {
+        namespace 'ai.picovoice.rhinotraindemo'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.code.gson:gson:2.10'
+    implementation 'ai.picovoice:rhino-android:4.0.2'
+}
