@@ -208,9 +208,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String readAssetAsString(Context context, String fileName) throws IOException {
         StringBuilder sb = new StringBuilder();
-        try (InputStream is = context.getAssets().open(fileName);
-             BufferedReader reader = new BufferedReader(
-                     new InputStreamReader(is, StandardCharsets.UTF_8))) {
+        InputStream is = context.getAssets().open(fileName);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append('\n');
