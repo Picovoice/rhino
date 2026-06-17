@@ -199,7 +199,8 @@ public class MainActivity extends AppCompatActivity {
             errorTextView.setText(errorMessage);
             errorTextView.setVisibility(View.VISIBLE);
 
-            ConstraintLayout.LayoutParams intentParam = (ConstraintLayout.LayoutParams) intentTextView.getLayoutParams();
+            ConstraintLayout.LayoutParams intentParam =
+                    (ConstraintLayout.LayoutParams) intentTextView.getLayoutParams();
             intentParam.bottomToTop = errorGuideline.getId();
             intentTextView.requestLayout();
         });
