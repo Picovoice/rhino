@@ -12,12 +12,16 @@
 
 package ai.picovoice.rhino.testapp;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -60,6 +64,19 @@ public class TrainTests extends BaseTest {
         assertTrue(r.getFrameLength() > 0);
         assertTrue(r.getSampleRate() > 0);
         assertTrue(r.getContextInformation() != null && !r.getContextInformation().equals(""));
+
+        Map<String, Object> content = new Yaml().load(r.getContextInformation());
+        Object contextObj = (content == null) ? null : content.get("context");
+        assertNotNull(contextObj);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> context = (Map<String, Object>) contextObj;
+
+        Object contextSlotsObj = context.get("slots");
+        assertNotNull(contextSlotsObj);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> contextSlots = (Map<String, Object>) contextSlotsObj;
+
+        assertEquals(new ArrayList<>(slots.get("size")), contextSlots.get("size"));
 
         r.delete();
     }

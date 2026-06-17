@@ -20,10 +20,8 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -92,7 +90,6 @@ public class Rhino {
             String contextPath,
             String modelPath,
             Map<String, Set<String>> slots) throws RhinoException {
-
 
         String yamlContent;
 
