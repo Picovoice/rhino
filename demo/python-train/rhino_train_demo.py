@@ -101,7 +101,7 @@ def main():
         print(e)
         raise e
 
-    print('Enter additional contacts seperated by spaces:')
+    print('Enter additional contacts separated by spaces:')
     contacts = input()
 
     if contacts:

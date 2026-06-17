@@ -31,10 +31,10 @@ rhino_train_demo --access_key ${ACCESS_KEY}
 
 This demo trains the yaml file via API (`contacts.yaml` which is a simple call someone in contacts list).
 
-Additional contacts can be added by inputting contacts seperated by spaces after the following prompt:
+Additional contacts can be added by inputting contacts separated by spaces after the following prompt:
 
 ```console
-Enter additional contacts seperated by spaces:
+Enter additional contacts separated by spaces:
 ```
 
 It is possible that the default audio input device recognized by the demo is not the one being used. There are a couple 
