@@ -3,6 +3,7 @@ import testData from "./test_data.json";
 
 // @ts-ignore
 import rhinoParams from "./rhino_params";
+
 import { PvModel } from '@picovoice/web-utils';
 import { RhinoError } from "../dist/types/rhino_errors";
 

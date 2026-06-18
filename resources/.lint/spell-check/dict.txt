@@ -8,6 +8,7 @@ Azul
 bagno
 behaviour
 beleuchtung
+bleu
 calcsize
 camelcase
 ccall

@@ -269,6 +269,38 @@ const contextModel = {
 In order to make inferences in different language you need to use the corresponding model file (`.pv`).
 The model files for all supported languages are available [here](https://github.com/Picovoice/rhino/tree/master/lib/common).
 
+## Train Models over API
+
+You can train models over API without going to the console:
+
+```javascript
+Rhino.trainContextFromDynamicSlots(
+  "${ACCESS_KEY}",   // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+  "${WRITE_PATH}",   // Custom path/key used to store the trained model in IndexedDB
+  "${LANGUAGE}",     // Two-character language code
+  "${YAML_CONTEXT}", // RhinoContext object containing a base64 representation of or path to a public binary Rhino context model
+  "${MODEL}",        // RhinoModel configuration to be used for training
+  {
+    "${SLOT_NAME}": new Set(["${SLOT1}", "${SLOT2}"])
+  }                 // Additional slot values
+);
+```
+
+(or)
+
+```javascript
+Rhino.trainContextFromYaml(
+  "${ACCESS_KEY}",     // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+  "${WRITE_PATH}",     // Custom path/key used to store the trained model in IndexedDB
+  "${LANGUAGE}",       // Two-character language code
+  "${YAML_CONTENT}",   // YAML configuration in string
+);
+```
+
+`trainContextFromDynamicSlots` is better suited if you would like the add additional slot values to your current Rhino context.
+
+Check [Rhino Model API](https://picovoice.ai/docs/model-api/rhino/) docs for a list of supported languages.
+
 ## Demo
 
 For example usage refer to our [Web demo application](https://github.com/Picovoice/rhino/tree/master/demo/web).
