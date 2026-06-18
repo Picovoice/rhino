@@ -132,11 +132,13 @@ android {
                     exclude "**/LanguageOutOfContextTests.java"
                     exclude "**/LanguageWithinContextTests.java"
                     exclude "**/IntegrationTest.java"
+                    exclude "**/TrainTests.java"
                 } else if (System.getProperty("testBuildType", "debug") == "integ") {
                     exclude "**/StandardTests.java"
                     exclude "**/LanguageOutOfContextTests.java"
                     exclude "**/LanguageWithinContextTests.java"
                     exclude "**/PerformanceTest.java"
+                    exclude "**/TrainTests.java"
                 } else {
                     exclude "**/IntegrationTest.java"
                     exclude "**/PerformanceTest.java"
@@ -156,7 +158,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.code.gson:gson:2.10'
     implementation 'com.google.errorprone:error_prone_annotations:2.36.0'
-    implementation 'ai.picovoice:rhino-android:4.0.1'
+    implementation 'ai.picovoice:rhino-android:4.0.2'
 
     // Espresso UI Testing
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

@@ -19,12 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class com.google.** { *; }
--keep class com.microsoft.** { *; }
--keep class kotlin.** { *; }
-
--dontwarn com.google.errorprone.annotations.CheckReturnValue
--dontwarn com.google.errorprone.annotations.MustBeClosed
--dontwarn javax.lang.model.element.Modifier
--dontwarn androidx.annotation.RequiresOptIn
--dontwarn kotlin.**

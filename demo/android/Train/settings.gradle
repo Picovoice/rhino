@@ -1,0 +1,2 @@
+include ':rhino'
+include ':rhino-train-demo-app'

@@ -1,0 +1,15 @@
+context:
+  expressions:
+    callContact:
+      - "@call $contacts:contact"
+  slots:
+    contacts:
+      - Mom
+      - Dad
+      - John
+      - Jane
+  macros:
+    call:
+      - ring
+      - dial
+      - call

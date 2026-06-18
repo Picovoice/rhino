@@ -225,6 +225,40 @@ Alternatively, if the context file is deployed to the device with a different me
 
 In order to run inference on non-English contexts you need to use the corresponding model file. The model files for all supported languages are available [here](../../lib/common).
 
+## Train Models over API
+
+You can train models over API without going to the console:
+
+```java
+Map<String, Set<String>> slots = new HashMap<>();
+slots.put("${SLOT_NAME}", new HashSet<>(Arrays.asList("${SLOT1}", "${SLOT2}")));
+
+Rhino.trainContextFromDynamicSlots(
+    appContext,        // Android app context (for extracting Rhino resources)
+    "${ACCESS_KEY}",   // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+    "${OUTPUT_PATH}",  // Absolute path to file where the trained model will be saved
+    "${LANGUAGE}",     // Two character language code for the model (e.g. "en", "fr")
+    ${CONTENT_PATH},   // Absolute path to the existing context model (.rhn file)
+    ${MODEL_PATH},     // Absolute path to the file containing model parameters
+    slots              // Map of existing slot names to the set of values that replace entries in the YAML's context.slots section
+);
+```
+
+(or)
+
+```java
+Rhino.trainContextFromYaml(
+    "${ACCESS_KEY}",   // AccessKey obtained from Picovoice Console (https://console.picovoice.ai/)
+    "${OUTPUT_PATH}",  // Absolute path to file where the trained model will be saved
+    "${LANGUAGE}",     // Two character language code for the model (e.g. "en", "fr")
+    "${YAML_CONTENT}"  // YAML configuration as a string
+);
+```
+
+`trainContextFromDynamicSlots` is better suited if you would like the add additional slot values to your current Rhino context.
+
+Check [Rhino Model API](https://picovoice.ai/docs/model-api/rhino/) docs for a list of supported languages.
+
 ## Demo App
 
 For example usage refer to the [Rhino Activity demo](../../demo/android/Activity).
