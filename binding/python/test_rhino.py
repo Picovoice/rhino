@@ -21,7 +21,6 @@ within_context_parameters, out_of_context_parameters = load_test_data()
 
 
 class RhinoTestCase(unittest.TestCase):
-
     @staticmethod
     def _process_file_helper(rhino: Rhino, audio_file: str, max_process_count: int = -1) -> bool:
         processed = 0

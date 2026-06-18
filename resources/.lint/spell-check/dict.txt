@@ -4,6 +4,7 @@ androidx
 armeabi
 armv
 armv7l
+Azul
 bagno
 behaviour
 beleuchtung
@@ -22,6 +23,7 @@ Colour
 commandline
 Compat
 constraintlayout
+cortado
 cozinha
 crhino
 cstring
@@ -71,6 +73,7 @@ LPCSTR
 LPWSTR
 lugar
 luogo
+macchiato
 Makefiles
 Mathf
 micdemo
@@ -110,6 +113,7 @@ rhinotestapp
 rodio
 rosado
 RTLD
+ruamel
 Rustonomicon
 seumateu
 shōmei

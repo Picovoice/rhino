@@ -1,5 +1,5 @@
 #
-# Copyright 2023-2025 Picovoice Inc.
+# Copyright 2023-2026 Picovoice Inc.
 #
 # You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 # file accompanying this source.
@@ -9,9 +9,7 @@
 # specific language governing permissions and limitations under the License.
 #
 
-from typing import Optional, Sequence
-
-from ._rhino import Rhino, list_hardware_devices
+from ._rhino import Rhino, RhinoError, list_hardware_devices
 from ._util import *
 
 
@@ -88,7 +86,79 @@ def available_devices(library_path: Optional[str] = None) -> Sequence[str]:
     return list_hardware_devices(library_path=library_path)
 
 
+def train_context_from_dynamic_slots(
+        access_key: str,
+        output_path: str,
+        language: str,
+        context_path: str,
+        slots: Dict[str, Set[str]],
+        platform: Optional[str] = None) -> None:
+    """
+    Trains a model from an existing Rhino content (.rhn) file and new sets of slot values.
+
+    :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
+    :param output_path: Absolute path to file where the trained model will be saved.
+    :param language: Two character language code for the model (e.g. 'en', 'fr').
+    Check https://picovoice.ai/docs/model-api/rhino/ for supported languages.
+    :param context_path: Absolute path to the existing context model (file with .rhn extension).
+    :param slots: Dictionary mapping existing slot names to the set of values that will replace
+    the corresponding entries in the YAML's `context.slots` section. Each value must be a non-empty
+    set of strings.
+    :param platform: The platform running this code will be used. If None, the default(current) platform is used.
+    Check https://picovoice.ai/docs/model-api/rhino/ for supported platforms.
+    """
+
+    try:
+        rhino = create(access_key, context_path)
+        yaml_content = rhino.context_info
+        rhino.delete()
+    except RhinoError as e:
+        raise RuntimeError(f"Failed to initialize Rhino for context info with: {str(e)}")
+
+    pv_train_model(
+        access_key=access_key,
+        output_path=output_path,
+        language=language,
+        yaml_content=yaml_content,
+        slots=slots,
+        platform=platform)
+
+
+def train_context_from_yaml(
+        access_key: str,
+        output_path: str,
+        language: str,
+        yaml_path: str,
+        platform: Optional[str] = None) -> None:
+    """
+    Trains a model using a YAML configuration file.
+
+    :param access_key: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
+    :param output_path: Absolute path to file where the trained model will be saved.
+    :param language: Two character language code for the model (e.g. 'en', 'fr').
+    Check https://picovoice.ai/docs/model-api/rhino/ for supported languages.
+    :param yaml_path: Absolute path to the YAML configuration file.
+    :param platform: The platform running this code will be used. If None, the default(current) platform is used.
+    Check https://picovoice.ai/docs/model-api/rhino/ for supported platforms.
+    """
+
+    if not os.path.exists(yaml_path):
+        raise IOError("Couldn't find yaml file at '%s'." % yaml_path)
+
+    with open(yaml_path) as f:
+        yaml_content = f.read()
+
+    pv_train_model(
+        access_key=access_key,
+        output_path=output_path,
+        language=language,
+        yaml_content=yaml_content,
+        platform=platform)
+
+
 __all__ = [
     'available_devices',
     'create',
+    'train_context_from_dynamic_slots',
+    'train_context_from_yaml',
 ]

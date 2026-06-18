@@ -1,4 +1,4 @@
-name: Python
+name: Python Train
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ on:
       - 'resources/contexts*/raspberry-pi/**'
       - 'resources/contexts*/windows/**'
       - 'resources/.test/**'
-      - '.github/workflows/python.yml'
+      - '.github/workflows/python-train.yml'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+' ]
     paths:
@@ -35,7 +35,7 @@ on:
       - 'resources/contexts*/raspberry-pi/**'
       - 'resources/contexts*/windows/**'
       - 'resources/.test/**'
-      - '.github/workflows/python.yml'
+      - '.github/workflows/python-train.yml'
 
 defaults:
   run:
@@ -48,8 +48,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        device: [ cpu:1, cpu ]
-        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13', '3.14' ]
+        python-version: [ '3.12' ]
 
     steps:
     - uses: actions/checkout@v3
@@ -63,7 +62,7 @@ jobs:
       run: pip install -r requirements.txt
 
     - name: Test
-      run: python test_rhino.py ${{secrets.PV_VALID_ACCESS_KEY}} ${{ matrix.device }}
+      run: python test_rhino_train.py ${{secrets.PV_VALID_ACCESS_KEY}}
 
 
   build-self-hosted:
@@ -71,15 +70,7 @@ jobs:
 
     strategy:
       matrix:
-        machine: [ rpi3-32, rpi3-64, rpi4-32, rpi4-64, rpi5-64, pv-windows-arm64 ]
-        device: [ best ]
-        include:
-        - device: gpu
-          machine: pv-linux
-        - device: gpu
-          machine: pv-windows
-        - device: gpu
-          machine: pv-ios
+        machine: [ rpi4-64, pv-windows-arm64 ]
 
     steps:
     - uses: actions/checkout@v3
@@ -102,4 +93,4 @@ jobs:
       run: pip install -r requirements.txt
 
     - name: Test
-      run: python3 test_rhino.py ${{secrets.PV_VALID_ACCESS_KEY}} ${{ matrix.device }}
+      run: python3 test_rhino_train.py ${{secrets.PV_VALID_ACCESS_KEY}}
