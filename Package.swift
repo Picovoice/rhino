@@ -18,7 +18,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/jpsim/yams",
-            .upToNextMajor(from: "6.2.2")
+            .upToNextMajor(from: "5.0.6")
         )
     ],
     targets: [
