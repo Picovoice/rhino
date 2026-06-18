@@ -178,7 +178,7 @@ public class Rhino {
         yamlContent: String
     ) throws {
 
-        guard validLanguages.contains(language) else {
+        guard VALID_LANGUAGES.contains(language) else {
             throw RhinoInvalidArgumentError("Invalid language ('\(language)')")
         }
 
@@ -192,7 +192,7 @@ public class Rhino {
             throw RhinoRuntimeError("Failed to create request payload \(error.localizedDescription)")
         }
 
-        guard let url = URL(string: pvApiUrl + language + "/api/rhn") else {
+        guard let url = URL(string: PV_API_URL + language + "/api/rhn") else {
             throw RhinoRuntimeError("Invalid request URL")
         }
 

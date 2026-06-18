@@ -30,7 +30,7 @@ let package = Package(
             name: "Rhino",
             dependencies: [
                 "PvRhino",
-                .product(name: "ios_voice_processor", package: "ios-voice-processor")
+                .product(name: "ios_voice_processor", package: "ios-voice-processor"),
                 .product(name: "Yams", package: "Yams")
             ],
             path: ".",
