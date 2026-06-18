@@ -14,13 +14,12 @@ import Yams
 import Rhino
 
 class RhinoTrainTests: XCTestCase {
-    
     let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
-    
+
     func testTrainModel() throws {
-        let bundle = Bundle(for: type(of: self))	
+        let bundle = Bundle(for: type(of: self))
         let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
-            
+
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
         guard let documentsDirectory = urls.first else {
@@ -62,7 +61,7 @@ class RhinoTrainTests: XCTestCase {
     func testTrainModelInvalidSlots() throws {
         let bundle = Bundle(for: type(of: self))
         let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
-        
+
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
         let outputPath = urls.first!.appendingPathComponent("custom_coffee_maker_android.rhn").path

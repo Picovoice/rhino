@@ -6,6 +6,7 @@ disabled_rules:
   - cyclomatic_complexity
   - function_parameter_count
   - type_body_length
+  - file_length
 excluded:
   - ${PWD}/**/Pods
   - ${PWD}/**/node_modules
