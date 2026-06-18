@@ -13,9 +13,7 @@ import Yams
 
 import Rhino
 
-class RhinoTrainTests: XCTestCase {
-    let accessKey: String = "{TESTING_ACCESS_KEY_HERE}"
-
+class RhinoTrainTests: BaseTest {
     func testTrainModel() throws {
         let bundle = Bundle(for: type(of: self))
         let contextPath = bundle.path(forResource: "coffee_maker_ios", ofType: "rhn")!
