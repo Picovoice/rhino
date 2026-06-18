@@ -15,6 +15,10 @@ let package = Package(
         .package(
             url: "https://github.com/Picovoice/ios-voice-processor.git",
             .upToNextMajor(from: "1.2.0")
+        ),
+        .package(
+            url: "https://github.com/jpsim/yams",
+            .upToNextMajor(from: "6.2.2")
         )
     ],
     targets: [
@@ -27,6 +31,7 @@ let package = Package(
             dependencies: [
                 "PvRhino",
                 .product(name: "ios_voice_processor", package: "ios-voice-processor")
+                .product(name: "Yams", package: "Yams")
             ],
             path: ".",
             exclude: [
