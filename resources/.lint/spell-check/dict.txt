@@ -103,6 +103,7 @@ pvrhinodemo
 reactnative
 Readables
 Realtek
+recyclerview
 Renderless
 repr
 RGBO
@@ -110,6 +111,7 @@ rhinodemo
 rhinofiledemo
 rhinomicdemo
 rhinotestapp
+rhinotraindemo
 rodio
 rosado
 RTLD
