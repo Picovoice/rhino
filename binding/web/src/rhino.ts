@@ -459,6 +459,7 @@ export class Rhino {
 
     return {
       publicPath: writePath,
+      customWritePath: writePath,
     };
   }
 

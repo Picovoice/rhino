@@ -16,7 +16,7 @@ const runInitTest = async (
 ) => {
   const {
     accessKey = ACCESS_KEY,
-    context = { publicPath: '/test/contexts/coffee_maker_wasm.rhn', forceWrite: true },
+    context = { publicPath: '/test/contexts/coffee_maker_wasm.rhn' },
     model = { publicPath: '/test/rhino_params.pv', forceWrite: true },
     device = "cpu:1",
     expectFailure = false,
@@ -60,6 +60,7 @@ describe("Rhino Train", function () {
 
     const original: RhinoContext = {
       publicPath: "/test/contexts/éclairage_intelligent_wasm.rhn",
+      customWritePath: "original_custom_éclairage_intelligent_wasm.rhn",
       forceWrite: true,
     };
 
@@ -92,6 +93,7 @@ describe("Rhino Train", function () {
 
     const original: RhinoContext = {
       publicPath: "/test/contexts/éclairage_intelligent_wasm.rhn",
+      customWritePath: "original_custom_éclairage_intelligent_wasm.rhn",
       forceWrite: true,
     };
 
