@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name = 'Rhino-iOS'
     s.module_name = 'Rhino'
-    s.version = '4.0.0'
+    s.version = '4.0.1'
     s.license = {:type => 'Apache 2.0'}
     s.summary = 'iOS SDK for Picovoice\'s Rhino Speech-to-Intent engine'
     s.description =
@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
     s.author = { 'Picovoice' => 'hello@picovoice.ai' }
     s.source = { :git => "https://github.com/Picovoice/rhino.git", :tag => s.version.to_s }
     s.ios.deployment_target = '16.0'
-    s.swift_version = '5.0'
+    s.swift_version = '5.7'
     s.vendored_frameworks = 'lib/ios/PvRhino.xcframework'
     s.resource_bundles = {
       'RhinoResources' => [
@@ -37,4 +37,5 @@ Pod::Spec.new do |s|
     s.exclude_files = 'binding/ios/RhinoAppTest/**'
 
     s.dependency 'ios-voice-processor', '~> 1.2.0'
+    s.dependency 'Yams', '~> 5.0.6'
   end

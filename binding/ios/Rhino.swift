@@ -1,5 +1,5 @@
 //
-//  Copyright 2021-2025 Picovoice Inc.
+//  Copyright 2021-2026 Picovoice Inc.
 //  You may not use this file except in compliance with the license. A copy of the license is located in the "LICENSE"
 //  file accompanying this source.
 //  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
@@ -8,6 +8,7 @@
 //
 
 import Foundation
+import Yams
 
 import PvRhino
 
@@ -51,6 +52,9 @@ public class Rhino {
 
 #endif
 
+    private static let PV_API_URL = "https://rest.picovoice.ai/"
+    private static let VALID_LANGUAGES: Set<String> = ["en", "fr", "de", "es", "it", "ja", "ko", "pt"]
+
     private var handle: OpaquePointer?
     public static let frameLength = UInt32(pv_rhino_frame_length())
     public static let sampleRate = UInt32(pv_sample_rate())
@@ -62,6 +66,177 @@ public class Rhino {
 
     public static func setSdk(sdk: String) {
         self.sdk = sdk
+    }
+
+    /// Trains a model from an existing Rhino context (.rhn) file and new sets of slot values.
+    ///
+    /// - Parameters:
+    ///   - accessKey: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
+    ///   - outputPath: Absolute path to file where the trained model will be saved.
+    ///   - language: Two character language code for the model (e.g. "en", "fr").
+    ///               See https://picovoice.ai/docs/model-api/rhino/ for supported languages.
+    ///   - contextPath: Absolute path to the existing context model (.rhn file).
+    ///   - modelPath: Absolute path to the file containing model parameters.
+    ///   - slots: Map of existing slot names to the set of values that will replace the
+    ///            corresponding entries in the YAML's `context.slots` section.
+    ///            Each value must be a non-empty set of strings.
+    /// - Throws: `RhinoError` if model training fails.
+    public static func trainContextFromDynamicSlots(
+        accessKey: String,
+        outputPath: String,
+        language: String,
+        contextPath: String,
+        modelPath: String? = nil,
+        slots: [String: Set<String>]
+    ) throws {
+
+        let yamlContent: String
+        do {
+            let rhino = try Rhino(
+                accessKey: accessKey,
+                contextPath: contextPath,
+                modelPath: modelPath)
+            yamlContent = rhino.contextInfo
+            rhino.delete()
+        } catch {
+            throw RhinoRuntimeError("Failed to initialize Rhino for context info with: '\(error)'")
+        }
+
+        guard !slots.isEmpty else {
+            throw RhinoInvalidArgumentError("Slots cannot be empty")
+        }
+
+        guard let root = try? Yams.load(yaml: yamlContent) as? [String: Any] else {
+            throw RhinoInvalidArgumentError("Failed to parse yaml content")
+        }
+
+        guard var context = root["context"] as? [String: Any] else {
+            throw RhinoInvalidArgumentError("Invalid value in slots field")
+        }
+
+        guard let existingSlots = context["slots"] as? [String: Any] else {
+            throw RhinoInvalidArgumentError("Invalid value in slots field")
+        }
+
+        var merged: [String: [String]] = [:]
+
+        for (key, value) in existingSlots where slots[key] == nil {
+            merged[key] = (value as? [String]) ?? []
+        }
+
+        for (key, values) in slots {
+            guard !values.isEmpty else {
+                throw RhinoInvalidArgumentError("Slot '\(key)' must be a non-empty set of string values")
+            }
+            guard existingSlots[key] != nil else {
+                throw RhinoInvalidArgumentError("Slot '\(key)' does not exist")
+            }
+            merged[key] = Array(values)
+        }
+
+        for (key, values) in merged {
+            var seen = Set<String>()
+            for v in values {
+                let value = v.lowercased()
+                if seen.contains(value) {
+                    throw RhinoInvalidArgumentError("Duplicate slot value '\(v)' in '\(key)'")
+                }
+                seen.insert(value)
+            }
+        }
+
+        context["slots"] = merged
+        var newRoot = root
+        newRoot["context"] = context
+
+        let newYaml: String
+        do {
+            newYaml = try Yams.dump(object: newRoot)
+        } catch {
+            throw RhinoRuntimeError("Failed to serialize yaml content")
+        }
+
+        try trainContextFromYaml(
+            accessKey: accessKey,
+            outputPath: outputPath,
+            language: language,
+            yamlContent: newYaml)
+    }
+
+    /// Trains a model using a YAML configuration string.
+    ///
+    /// - Parameters:
+    ///   - accessKey: AccessKey obtained from Picovoice Console (https://console.picovoice.ai/).
+    ///   - outputPath: Absolute path to file where the trained model will be saved.
+    ///   - language: Two character language code for the model (e.g. "en", "fr").
+    ///   - yamlContent: YAML configuration string to be used for training.
+    /// - Throws: `RhinoError` if model training fails.
+    public static func trainContextFromYaml(
+        accessKey: String,
+        outputPath: String,
+        language: String,
+        yamlContent: String
+    ) throws {
+
+        guard VALID_LANGUAGES.contains(language) else {
+            throw RhinoInvalidArgumentError("Invalid language ('\(language)')")
+        }
+
+        let payload: Data
+        do {
+            payload = try JSONSerialization.data(withJSONObject: [
+                "platform": "ios",
+                "yaml_content": yamlContent
+            ])
+        } catch {
+            throw RhinoRuntimeError("Failed to create request payload \(error.localizedDescription)")
+        }
+
+        guard let url = URL(string: PV_API_URL + language + "/api/rhn") else {
+            throw RhinoRuntimeError("Invalid request URL")
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = payload
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(accessKey, forHTTPHeaderField: "x-api-key")
+
+        var resultData: Data?
+        var resultResponse: URLResponse?
+        var resultError: Error?
+        let semaphore = DispatchSemaphore(value: 0)
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            resultData = data
+            resultResponse = response
+            resultError = error
+            semaphore.signal()
+        }.resume()
+        semaphore.wait()
+
+        if let error = resultError {
+            throw RhinoRuntimeError("Request failed: \(error.localizedDescription)")
+        }
+
+        guard let http = resultResponse as? HTTPURLResponse else {
+            throw RhinoRuntimeError("Invalid response")
+        }
+
+        guard (200...299).contains(http.statusCode) else {
+            let errorBody = resultData.flatMap { String(data: $0, encoding: .utf8) } ?? ""
+            throw RhinoRuntimeError("Failed to train model: \(errorBody)")
+        }
+
+        guard let data = resultData, !data.isEmpty else {
+            throw RhinoRuntimeError("Empty response body")
+        }
+
+        do {
+            try data.write(to: URL(fileURLWithPath: outputPath))
+        } catch {
+            throw RhinoRuntimeError("Failed to save Rhino context file: \(error.localizedDescription)")
+        }
     }
 
     /// Lists all available devices that Rhino can use for inference.
