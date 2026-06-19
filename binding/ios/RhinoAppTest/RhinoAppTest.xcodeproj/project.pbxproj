@@ -3,16 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1E0A9C8B2FE47DD30007AC86 /* ios_voice_processor in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C8A2FE47DD30007AC86 /* ios_voice_processor */; };
-		1E0A9C8D2FE47DD30007AC86 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C8C2FE47DD30007AC86 /* Rhino */; };
-		1E0A9C8F2FE47DD80007AC86 /* ios_voice_processor in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C8E2FE47DD80007AC86 /* ios_voice_processor */; };
-		1E0A9C912FE47DD80007AC86 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C902FE47DD80007AC86 /* Rhino */; };
-		1E0A9C932FE47DDC0007AC86 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C922FE47DDC0007AC86 /* Rhino */; };
-		1E0A9C962FE491960007AC86 /* RhinoTrainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0A9C1A2FE46C8F0007AC86 /* RhinoTrainTests.swift */; };
+		1E0A9C9B2FE4C2BB0007AC86 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C9A2FE4C2BB0007AC86 /* Rhino */; };
+		1E0A9C9E2FE4C2C60007AC86 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C9D2FE4C2C60007AC86 /* Rhino */; };
+		1E0A9CA02FE4C2CB0007AC86 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C9F2FE4C2CB0007AC86 /* Rhino */; };
 		1E1A57D227CEC84000A05F37 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57D127CEC84000A05F37 /* AppDelegate.swift */; };
 		1E1A57D627CEC84000A05F37 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1A57D527CEC84000A05F37 /* ViewController.swift */; };
 		1E1A57D927CEC84000A05F37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A57D727CEC84000A05F37 /* Main.storyboard */; };
@@ -26,6 +23,8 @@
 		A52A7DC1A64A0142FFC6AAC3 /* BaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52A723849AED2DCDE7E4FF2 /* BaseTest.swift */; };
 		A52A7E3274619AAB464D5811 /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E5B7AD92800ADCD00F8BDDB /* coffee_maker_ios.rhn */; };
 		C71D40F6297A12EC00489C75 /* test_resources in Resources */ = {isa = PBXBuildFile; fileRef = C71D40F5297A12EC00489C75 /* test_resources */; };
+		E1C944FB2CE7E22C006F758D /* ios_voice_processor in Frameworks */ = {isa = PBXBuildFile; productRef = E1C944FA2CE7E22C006F758D /* ios_voice_processor */; };
+		E1C944FF2CE7E233006F758D /* ios_voice_processor in Frameworks */ = {isa = PBXBuildFile; productRef = E1C944FE2CE7E233006F758D /* ios_voice_processor */; };
 		E1C945032CE7E238006F758D /* ios_voice_processor in Frameworks */ = {isa = PBXBuildFile; productRef = E1C945022CE7E238006F758D /* ios_voice_processor */; };
 /* End PBXBuildFile section */
 
@@ -47,18 +46,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1E0A9C1A2FE46C8F0007AC86 /* RhinoTrainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RhinoTrainTests.swift; path = ../RhinoTrainTest/RhinoTrainTests.swift; sourceTree = "<group>"; };
-		1E0A9C592FE479E40007AC86 /* RhinoAppTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoAppTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1E0A9C872FE47DC30007AC86 /* RhinoAppTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RhinoAppTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1E0A9C882FE47DC30007AC86 /* PerformanceTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PerformanceTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoAppTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E1A57D127CEC84000A05F37 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E1A57D527CEC84000A05F37 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1E1A57D827CEC84000A05F37 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1E1A57DA27CEC84000A05F37 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1E1A57DD27CEC84000A05F37 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1E1A57DF27CEC84000A05F37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E1A57EE27CEC84000A05F37 /* RhinoAppTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RhinoAppTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E1A57F227CEC84000A05F37 /* RhinoAppTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RhinoAppTestUITests.swift; sourceTree = "<group>"; };
 		1E1A580127CEC99400A05F37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E5B7AD52800ABDE00F8BDDB /* PerformanceTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PerformanceTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E5B7AD62800AC2700F8BDDB /* PerformanceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTest.swift; sourceTree = "<group>"; };
 		1E5B7AD82800AC8F00F8BDDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1E5B7AD92800ADCD00F8BDDB /* coffee_maker_ios.rhn */ = {isa = PBXFileReference; lastKnownFileType = file; name = coffee_maker_ios.rhn; path = ../../../../resources/contexts/ios/coffee_maker_ios.rhn; sourceTree = "<group>"; };
@@ -73,8 +71,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E0A9C8D2FE47DD30007AC86 /* Rhino in Frameworks */,
-				1E0A9C8B2FE47DD30007AC86 /* ios_voice_processor in Frameworks */,
+				E1C944FB2CE7E22C006F758D /* ios_voice_processor in Frameworks */,
+				1E0A9C9B2FE4C2BB0007AC86 /* Rhino in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,8 +80,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E0A9C912FE47DD80007AC86 /* Rhino in Frameworks */,
-				1E0A9C8F2FE47DD80007AC86 /* ios_voice_processor in Frameworks */,
+				E1C944FF2CE7E233006F758D /* ios_voice_processor in Frameworks */,
+				1E0A9C9E2FE4C2C60007AC86 /* Rhino in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,15 +89,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E0A9C932FE47DDC0007AC86 /* Rhino in Frameworks */,
 				E1C945032CE7E238006F758D /* ios_voice_processor in Frameworks */,
+				1E0A9CA02FE4C2CB0007AC86 /* Rhino in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1E0A9C312FE46EE90007AC86 /* Frameworks */ = {
+		1E0A9C9C2FE4C2C60007AC86 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -112,11 +110,19 @@
 				1E5B7ABB2800ABC600F8BDDB /* PerformanceTest */,
 				1E1A57D027CEC84000A05F37 /* RhinoAppTest */,
 				1E1A57F127CEC84000A05F37 /* RhinoAppTestUITests */,
-				1E0A9C312FE46EE90007AC86 /* Frameworks */,
-				1E0A9C592FE479E40007AC86 /* RhinoAppTest.app */,
-				1E0A9C872FE47DC30007AC86 /* RhinoAppTestUITests.xctest */,
-				1E0A9C882FE47DC30007AC86 /* PerformanceTest.xctest */,
+				1E0A9C9C2FE4C2C60007AC86 /* Frameworks */,
+				1E1A57CF27CEC84000A05F37 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		1E1A57CF27CEC84000A05F37 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */,
+				1E1A57EE27CEC84000A05F37 /* RhinoAppTestUITests.xctest */,
+				1E5B7AD52800ABDE00F8BDDB /* PerformanceTest.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		1E1A57D027CEC84000A05F37 /* RhinoAppTest */ = {
@@ -135,13 +141,11 @@
 		1E1A57F127CEC84000A05F37 /* RhinoAppTestUITests */ = {
 			isa = PBXGroup;
 			children = (
-				1E5B7AD92800ADCD00F8BDDB /* coffee_maker_ios.rhn */,
 				C71D40F5297A12EC00489C75 /* test_resources */,
 				1E1A580127CEC99400A05F37 /* Info.plist */,
 				1E1A57F227CEC84000A05F37 /* RhinoAppTestUITests.swift */,
 				A52A723849AED2DCDE7E4FF2 /* BaseTest.swift */,
 				A52A7ACF80691513299515C9 /* RhinoLanguageTests.swift */,
-				1E0A9C1A2FE46C8F0007AC86 /* RhinoTrainTests.swift */,
 			);
 			path = RhinoAppTestUITests;
 			sourceTree = "<group>";
@@ -151,6 +155,7 @@
 			children = (
 				1E5B7AD62800AC2700F8BDDB /* PerformanceTest.swift */,
 				1E5B7AD82800AC8F00F8BDDB /* Info.plist */,
+				1E5B7AD92800ADCD00F8BDDB /* coffee_maker_ios.rhn */,
 				1E5B7ADB2800ADD800F8BDDB /* test_within_context.wav */,
 			);
 			path = PerformanceTest;
@@ -173,7 +178,7 @@
 			);
 			name = RhinoAppTest;
 			productName = RhinoAppTest;
-			productReference = 1E0A9C592FE479E40007AC86 /* RhinoAppTest.app */;
+			productReference = 1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */;
 			productType = "com.apple.product-type.application";
 		};
 		1E1A57ED27CEC84000A05F37 /* RhinoAppTestUITests */ = {
@@ -191,7 +196,7 @@
 			);
 			name = RhinoAppTestUITests;
 			productName = RhinoAppTestUITests;
-			productReference = 1E0A9C872FE47DC30007AC86 /* RhinoAppTestUITests.xctest */;
+			productReference = 1E1A57EE27CEC84000A05F37 /* RhinoAppTestUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 		1E5B7ABC2800ABDE00F8BDDB /* PerformanceTest */ = {
@@ -209,7 +214,7 @@
 			);
 			name = PerformanceTest;
 			productName = RhinoAppTestUITests;
-			productReference = 1E0A9C882FE47DC30007AC86 /* PerformanceTest.xctest */;
+			productReference = 1E5B7AD52800ABDE00F8BDDB /* PerformanceTest.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -245,9 +250,9 @@
 			mainGroup = 1E1A57C527CEC84000A05F37;
 			packageReferences = (
 				E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */,
-				1E0A9C4A2FE4723A0007AC86 /* XCLocalSwiftPackageReference "../../../../rhino" */,
+				1E0A9C992FE4C2BB0007AC86 /* XCRemoteSwiftPackageReference "rhino" */,
 			);
-			productRefGroup = 1E1A57C527CEC84000A05F37;
+			productRefGroup = 1E1A57CF27CEC84000A05F37 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -304,7 +309,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E1A57F327CEC84000A05F37 /* RhinoAppTestUITests.swift in Sources */,
-				1E0A9C962FE491960007AC86 /* RhinoTrainTests.swift in Sources */,
 				A52A7DC1A64A0142FFC6AAC3 /* BaseTest.swift in Sources */,
 				A52A74ECE4A9A3064CA97CB0 /* RhinoLanguageTests.swift in Sources */,
 			);
@@ -664,14 +668,15 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		1E0A9C4A2FE4723A0007AC86 /* XCLocalSwiftPackageReference "../../../../rhino" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../../../rhino;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
+		1E0A9C992FE4C2BB0007AC86 /* XCRemoteSwiftPackageReference "rhino" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Picovoice/rhino";
+			requirement = {
+				kind = exactVersion;
+				version = 4.0.1;
+			};
+		};
 		E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Picovoice/ios-voice-processor";
@@ -683,30 +688,30 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1E0A9C8A2FE47DD30007AC86 /* ios_voice_processor */ = {
+		1E0A9C9A2FE4C2BB0007AC86 /* Rhino */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E0A9C992FE4C2BB0007AC86 /* XCRemoteSwiftPackageReference "rhino" */;
+			productName = Rhino;
+		};
+		1E0A9C9D2FE4C2C60007AC86 /* Rhino */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E0A9C992FE4C2BB0007AC86 /* XCRemoteSwiftPackageReference "rhino" */;
+			productName = Rhino;
+		};
+		1E0A9C9F2FE4C2CB0007AC86 /* Rhino */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E0A9C992FE4C2BB0007AC86 /* XCRemoteSwiftPackageReference "rhino" */;
+			productName = Rhino;
+		};
+		E1C944FA2CE7E22C006F758D /* ios_voice_processor */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */;
 			productName = ios_voice_processor;
 		};
-		1E0A9C8C2FE47DD30007AC86 /* Rhino */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A9C4A2FE4723A0007AC86 /* XCLocalSwiftPackageReference "../../../../rhino" */;
-			productName = Rhino;
-		};
-		1E0A9C8E2FE47DD80007AC86 /* ios_voice_processor */ = {
+		E1C944FE2CE7E233006F758D /* ios_voice_processor */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */;
 			productName = ios_voice_processor;
-		};
-		1E0A9C902FE47DD80007AC86 /* Rhino */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A9C4A2FE4723A0007AC86 /* XCLocalSwiftPackageReference "../../../../rhino" */;
-			productName = Rhino;
-		};
-		1E0A9C922FE47DDC0007AC86 /* Rhino */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A9C4A2FE4723A0007AC86 /* XCLocalSwiftPackageReference "../../../../rhino" */;
-			productName = Rhino;
 		};
 		E1C945022CE7E238006F758D /* ios_voice_processor */ = {
 			isa = XCSwiftPackageProductDependency;
