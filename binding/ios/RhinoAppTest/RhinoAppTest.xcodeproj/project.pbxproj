@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -66,6 +66,10 @@
 		C71D40F5297A12EC00489C75 /* test_resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test_resources; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		1E0A9CA32FEDADDF0007AC86 /* RhinoTrainTest */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = RhinoTrainTest; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		1E1A57CB27CEC84000A05F37 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -107,6 +111,7 @@
 		1E1A57C527CEC84000A05F37 = {
 			isa = PBXGroup;
 			children = (
+				1E0A9CA32FEDADDF0007AC86 /* RhinoTrainTest */,
 				1E5B7ABB2800ABC600F8BDDB /* PerformanceTest */,
 				1E1A57D027CEC84000A05F37 /* RhinoAppTest */,
 				1E1A57F127CEC84000A05F37 /* RhinoAppTestUITests */,
@@ -193,6 +198,9 @@
 			);
 			dependencies = (
 				1E1A57F027CEC84000A05F37 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				1E0A9CA32FEDADDF0007AC86 /* RhinoTrainTest */,
 			);
 			name = RhinoAppTestUITests;
 			productName = RhinoAppTestUITests;
