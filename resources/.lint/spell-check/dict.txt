@@ -153,3 +153,4 @@ xcshareddata
 xcuitest
 xcworkspace
 éclairage
+XCTEST
