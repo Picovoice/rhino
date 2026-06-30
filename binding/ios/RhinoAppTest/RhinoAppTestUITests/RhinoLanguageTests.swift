@@ -40,7 +40,8 @@ struct TestDataOutOfContextTest: Decodable {
 class RhinoWithinContextTests: BaseTest {
     func testWrapper() throws {
         let bundle = Bundle(for: type(of: self))
-        let testDataJsonUrl = bundle.url(
+        let testDataJsonUrl = getFileURL(
+            bundle: bundle,
             forResource: "test_data",
             withExtension: "json",
             subdirectory: "test_resources")!
@@ -52,15 +53,18 @@ class RhinoWithinContextTests: BaseTest {
             let suffix = testCase.language == "en" ? "" : "_\(testCase.language)"
 
             let language: String = testCase.language
-            let modelPath: String = bundle.path(
+            let modelPath: String = getFilePath(
+                bundle: bundle,
                 forResource: "rhino_params\(suffix)",
                 ofType: "pv",
                 inDirectory: "test_resources/model_files")!
-            let contextPath: String = bundle.path(
+            let contextPath: String = getFilePath(
+                bundle: bundle,
                 forResource: "\(testCase.context_name)_ios",
                 ofType: "rhn",
                 inDirectory: "test_resources/context_files/\(testCase.language)")!
-            let testAudioPath: URL = bundle.url(
+            let testAudioPath: URL = getFileURL(
+                bundle: bundle,
                 forResource: "test_within_context\(suffix)",
                 withExtension: "wav",
                 subdirectory: "test_resources/audio_samples")!
@@ -93,7 +97,8 @@ class RhinoOutOfContextTests: BaseTest {
     func testWrapper() throws {
         let bundle = Bundle(for: type(of: self))
 
-        let testDataJsonUrl = bundle.url(
+        let testDataJsonUrl = getFileURL(
+            bundle: bundle,
             forResource: "test_data",
             withExtension: "json",
             subdirectory: "test_resources")!
@@ -104,15 +109,18 @@ class RhinoOutOfContextTests: BaseTest {
             let suffix = testCase.language == "en" ? "" : "_\(testCase.language)"
 
             let language: String = testCase.language
-            let modelPath: String = bundle.path(
+            let modelPath: String = getFilePath(
+                bundle: bundle,
                 forResource: "rhino_params\(suffix)",
                 ofType: "pv",
                 inDirectory: "test_resources/model_files")!
-            let contextPath: String = bundle.path(
+            let contextPath: String = getFilePath(
+                bundle: bundle,
                 forResource: "\(testCase.context_name)_ios",
                 ofType: "rhn",
                 inDirectory: "test_resources/context_files/\(testCase.language)")!
-            let testAudioPath: URL = bundle.url(
+            let testAudioPath: URL = getFileURL(
+                bundle: bundle,
                 forResource: "test_out_of_context\(suffix)",
                 withExtension: "wav",
                 subdirectory: "test_resources/audio_samples")!
