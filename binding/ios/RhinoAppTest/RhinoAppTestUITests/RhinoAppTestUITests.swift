@@ -16,7 +16,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitSuccessSimple() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
@@ -34,11 +35,13 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitSuccessWithCustomModelPath() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
-        let modelPath = bundle.path(
+        let modelPath = getFilePath(
+            bundle: bundle,
             forResource: "rhino_params",
             ofType: "pv",
             inDirectory: "test_resources/model_files")!
@@ -54,7 +57,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitSuccessWithCustomSensitivity() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
@@ -70,7 +74,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitSuccessWithCustomEndpointDuration() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
@@ -86,7 +91,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitSuccessWithRequireEndpointOff() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
@@ -102,11 +108,13 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithMismatchedLanguage() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "beleuchtung_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/de")!
-        let modelPath = bundle.path(
+        let modelPath = getFilePath(
+            bundle: bundle,
             forResource: "rhino_params",
             ofType: "pv",
             inDirectory: "test_resources/model_files")!
@@ -143,7 +151,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithInvalidModelPath() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
@@ -165,7 +174,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithInvalidSensitivity() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
@@ -186,7 +196,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithInvalidEndpointDuration() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
@@ -207,7 +218,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitFailWithWrongPlatform() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_linux",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
@@ -227,11 +239,13 @@ class RhinoAppTestUITests: BaseTest {
 
     func testInitWithNonAsciiModelName() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "iluminación_inteligente_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/es")!
-        let modelPath = bundle.path(
+        let modelPath = getFilePath(
+            bundle: bundle,
             forResource: "rhino_params_es",
             ofType: "pv",
             inDirectory: "test_resources/model_files")!
@@ -247,7 +261,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testProcWithinContext() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
@@ -256,7 +271,8 @@ class RhinoAppTestUITests: BaseTest {
             contextPath: contextPath,
             device: device)
 
-        let fileURL: URL = bundle.url(
+        let fileURL: URL = getFileURL(
+            bundle: bundle,
             forResource: "test_within_context",
             withExtension: "wav",
             subdirectory: "test_resources/audio_samples")!
@@ -278,7 +294,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testProcOutOfContext() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
@@ -287,7 +304,8 @@ class RhinoAppTestUITests: BaseTest {
             contextPath: contextPath,
             device: device)
 
-        let fileURL: URL = bundle.url(
+        let fileURL: URL = getFileURL(
+            bundle: bundle,
             forResource: "test_out_of_context",
             withExtension: "wav",
             subdirectory: "test_resources/audio_samples")!
@@ -299,11 +317,13 @@ class RhinoAppTestUITests: BaseTest {
 
     func testReset() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
-        let fileURL: URL = bundle.url(
+        let fileURL: URL = getFileURL(
+            bundle: bundle,
             forResource: "test_within_context",
             withExtension: "wav",
             subdirectory: "test_resources/audio_samples")!
@@ -327,7 +347,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testMessageStack() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!
@@ -357,7 +378,8 @@ class RhinoAppTestUITests: BaseTest {
 
     func testProcessMessageStack() throws {
         let bundle = Bundle(for: type(of: self))
-        let contextPath = bundle.path(
+        let contextPath = getFilePath(
+            bundle: bundle,
             forResource: "coffee_maker_ios",
             ofType: "rhn",
             inDirectory: "test_resources/context_files/en")!

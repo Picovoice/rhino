@@ -59,4 +59,26 @@ class BaseTest: XCTestCase {
 
         return try rhino.getInference()
     }
+
+    func getFilePath(bundle: Bundle, forResource: String, ofType: String, inDirectory: String) -> String? {
+        if ofType == "rhn" || ofType == "wav" || ofType == "pv" {
+            let encoded = forResource.data(using: .utf8)?.base64EncodedString()
+                .replacingOccurrences(of: "+", with: "-")
+                .replacingOccurrences(of: "/", with: "_")
+            return bundle.path(forResource: encoded, ofType: ofType, inDirectory: inDirectory)
+        }
+
+        return bundle.path(forResource: forResource, ofType: ofType, inDirectory: inDirectory)
+    }
+
+    func getFileURL(bundle: Bundle, forResource: String, withExtension: String, subdirectory: String) -> URL? {
+        if withExtension == "rhn" || withExtension == "wav" || withExtension == "pv" {
+            let encoded = forResource.data(using: .utf8)?.base64EncodedString()
+                .replacingOccurrences(of: "+", with: "-")
+                .replacingOccurrences(of: "/", with: "_")
+            return bundle.url(forResource: encoded, withExtension: withExtension, subdirectory: subdirectory)
+        }
+
+        return bundle.url(forResource: forResource, withExtension: withExtension, subdirectory: subdirectory)
+    }
 }
