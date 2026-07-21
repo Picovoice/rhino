@@ -24,6 +24,15 @@ target 'RhinoDemo' do
   )
 
   post_install do |installer|
+    # Remove this fmt fix when react-native is updated past 0.85
+    installer.pods_project.targets.each do |target|
+      if target.name == 'fmt'
+        target.build_configurations.each do |config|
+          config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+        end
+      end
+    end
+
     react_native_post_install(
       installer,
       config[:reactNativePath],
