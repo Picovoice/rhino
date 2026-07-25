@@ -36,11 +36,15 @@ target 'RhinoDemo' do
     fmt_base = File.join(installer.sandbox.root, 'fmt', 'include', 'fmt', 'base.h')
     if File.exist?(fmt_base)
       contents = File.read(fmt_base)
-      patched = contents.gsub(
-        '#elif defined(__cpp_consteval)',
-        '#elif defined(__cpp_consteval) && !defined(__apple_build_version__)'
+      patched = contents.sub(
+        'defined(__apple_build_version__) && __apple_build_version__ < 14000029L',
+        'defined(__apple_build_version__)'
       )
-      File.write(fmt_base, patched) if patched != contents
+      if patched == contents
+        Pod::UI.warn 'fmt consteval patch did nothing'
+      else
+        File.write(fmt_base, patched)
+      end
     end
   end
 end
