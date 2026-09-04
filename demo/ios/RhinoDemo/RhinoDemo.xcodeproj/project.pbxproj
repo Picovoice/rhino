@@ -3,11 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		07580D592EEA2F31009F261E /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 07580D582EEA2F31009F261E /* Rhino */; };
+		07C34246304B80BD007EC052 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 07C34245304B80BD007EC052 /* Rhino */; };
 		1E6041B52A0C30CB00A10522 /* models in Resources */ = {isa = PBXBuildFile; fileRef = 1E6041B22A0C30CB00A10522 /* models */; };
 		1E6041B62A0C30CB00A10522 /* pre-build.sh in Resources */ = {isa = PBXBuildFile; fileRef = 1E6041B32A0C30CB00A10522 /* pre-build.sh */; };
 		1E6041B72A0C30CB00A10522 /* contexts in Resources */ = {isa = PBXBuildFile; fileRef = 1E6041B42A0C30CB00A10522 /* contexts */; };
@@ -54,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07C34246304B80BD007EC052 /* Rhino in Frameworks */,
 				E15A37832CF7CC6F00A96F85 /* Rhino in Frameworks */,
 				07580D592EEA2F31009F261E /* Rhino in Frameworks */,
 				E1290E5A2CE7E02A001D55B6 /* ios_voice_processor in Frameworks */,
@@ -152,7 +154,7 @@
 			mainGroup = BB193E852370C4EC00556136;
 			packageReferences = (
 				E1290E582CE7E02A001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */,
-				07580D572EEA2F31009F261E /* XCRemoteSwiftPackageReference "rhino" */,
+				07C34244304B80BD007EC052 /* XCLocalSwiftPackageReference "../../../../rhino" */,
 			);
 			productRefGroup = BB193E8F2370C4EC00556136 /* Products */;
 			projectDirPath = "";
@@ -389,6 +391,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		07C34244304B80BD007EC052 /* XCLocalSwiftPackageReference "../../../../rhino" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../../rhino;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		07580D572EEA2F31009F261E /* XCRemoteSwiftPackageReference "rhino" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -420,6 +429,10 @@
 		07580D582EEA2F31009F261E /* Rhino */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 07580D572EEA2F31009F261E /* XCRemoteSwiftPackageReference "rhino" */;
+			productName = Rhino;
+		};
+		07C34245304B80BD007EC052 /* Rhino */ = {
+			isa = XCSwiftPackageProductDependency;
 			productName = Rhino;
 		};
 		E1290E562CE7E021001D55B6 /* Rhino */ = {
