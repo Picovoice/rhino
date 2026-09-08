@@ -12,6 +12,7 @@
 		0735CF923050B229001FF8CA /* ios_voice_processor in Frameworks */ = {isa = PBXBuildFile; productRef = 0735CF913050B229001FF8CA /* ios_voice_processor */; };
 		0735CF943050B22C001FF8CA /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 0735CF933050B22C001FF8CA /* Rhino */; };
 		0735CF953050B23D001FF8CA /* test_resources in Resources */ = {isa = PBXBuildFile; fileRef = C71D40F5297A12EC00489C75 /* test_resources */; };
+		078A0D5F3050CA3600433898 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 078A0D5E3050CA3600433898 /* Rhino */; };
 		07C34243304B8065007EC052 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 07C34242304B8065007EC052 /* Rhino */; };
 		1E0A9C9B2FE4C2BB0007AC86 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C9A2FE4C2BB0007AC86 /* Rhino */; };
 		1E0A9C9E2FE4C2C60007AC86 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C9D2FE4C2C60007AC86 /* Rhino */; };
@@ -116,6 +117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				07C34243304B8065007EC052 /* Rhino in Frameworks */,
+				078A0D5F3050CA3600433898 /* Rhino in Frameworks */,
 				E1C944FB2CE7E22C006F758D /* ios_voice_processor in Frameworks */,
 				1E0A9C9B2FE4C2BB0007AC86 /* Rhino in Frameworks */,
 			);
@@ -318,7 +320,7 @@
 			mainGroup = 1E1A57C527CEC84000A05F37;
 			packageReferences = (
 				E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */,
-				07C34241304B8065007EC052 /* XCLocalSwiftPackageReference "../../../../rhino" */,
+				078A0D5D3050CA3600433898 /* XCRemoteSwiftPackageReference "rhino" */,
 			);
 			productRefGroup = 1E1A57CF27CEC84000A05F37 /* Products */;
 			projectDirPath = "";
@@ -822,6 +824,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		078A0D5D3050CA3600433898 /* XCRemoteSwiftPackageReference "rhino" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Picovoice/rhino";
+			requirement = {
+				kind = exactVersion;
+				version = 4.1.0;
+			};
+		};
 		1E0A9C992FE4C2BB0007AC86 /* XCRemoteSwiftPackageReference "rhino" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Picovoice/rhino";
@@ -849,6 +859,11 @@
 		0735CF933050B22C001FF8CA /* Rhino */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 07C34241304B8065007EC052 /* XCLocalSwiftPackageReference "../../../../rhino" */;
+			productName = Rhino;
+		};
+		078A0D5E3050CA3600433898 /* Rhino */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 078A0D5D3050CA3600433898 /* XCRemoteSwiftPackageReference "rhino" */;
 			productName = Rhino;
 		};
 		07C34242304B8065007EC052 /* Rhino */ = {
