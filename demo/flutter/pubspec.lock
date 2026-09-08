@@ -245,10 +245,11 @@ packages:
   rhino_flutter:
     dependency: "direct main"
     description:
-      path: "../../binding/flutter"
-      relative: true
-    source: path
-    version: "4.0.0"
+      name: rhino_flutter
+      sha256: "3180966cc9365b347c1d69e926a7b27911d651d6cdfc58b374cef1412ee19317"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   sky_engine:
     dependency: transitive
     description: flutter
