@@ -8,7 +8,7 @@ on:
       - '.github/workflows/android-upload.yml'
       - 'demo/android/**/build.gradle'
   pull_request:
-    branches: [ master, 'v[0-9]+.[0-9]+' ]
+    branches: [ master, 'v[0-9]+.[0-9]+*' ]
     paths:
       - '.github/workflows/android-upload.yml'
       - 'demo/android/**/build.gradle'

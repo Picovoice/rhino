@@ -9,7 +9,7 @@ on:
       - 'demo/python/**'
       - '!demo/python/README.md'
   pull_request:
-    branches: [ master, 'v[0-9]+.[0-9]+' ]
+    branches: [ master, 'v[0-9]+.[0-9]+*' ]
     paths:
       - '.github/workflows/python-demos.yml'
       - 'demo/python/**'

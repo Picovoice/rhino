@@ -14,7 +14,7 @@ on:
       - 'resources/contexts/raspberry-pi/**'
       - 'resources/contexts/windows/**'
   pull_request:
-    branches: [ master, 'v[0-9]+.[0-9]+' ]
+    branches: [ master, 'v[0-9]+.[0-9]+*' ]
     paths:
       - '.github/workflows/java-perf.yml'
       - 'binding/java/**/RhinoPerformanceTest.java'

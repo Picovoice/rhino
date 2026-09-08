@@ -16,7 +16,7 @@ on:
       - 'resources/contexts*/ios/**'
 
   pull_request:
-    branches: [ master, 'v[0-9]+.[0-9]+' ]
+    branches: [ master, 'v[0-9]+.[0-9]+*' ]
     paths:
       - '.github/workflows/react-native-tests.yml'
       - 'binding/react-native/**'
