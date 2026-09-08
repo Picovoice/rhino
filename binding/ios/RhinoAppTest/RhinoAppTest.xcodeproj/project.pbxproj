@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0735CF843050AF2F001FF8CA /* coffee_maker_ios.rhn in Resources */ = {isa = PBXBuildFile; fileRef = 1E5B7AD92800ADCD00F8BDDB /* coffee_maker_ios.rhn */; };
+		0735CF8C3050AF51001FF8CA /* BaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52A723849AED2DCDE7E4FF2 /* BaseTest.swift */; };
+		0735CF923050B229001FF8CA /* ios_voice_processor in Frameworks */ = {isa = PBXBuildFile; productRef = 0735CF913050B229001FF8CA /* ios_voice_processor */; };
+		0735CF943050B22C001FF8CA /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 0735CF933050B22C001FF8CA /* Rhino */; };
+		0735CF953050B23D001FF8CA /* test_resources in Resources */ = {isa = PBXBuildFile; fileRef = C71D40F5297A12EC00489C75 /* test_resources */; };
 		07C34243304B8065007EC052 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 07C34242304B8065007EC052 /* Rhino */; };
 		1E0A9C9B2FE4C2BB0007AC86 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C9A2FE4C2BB0007AC86 /* Rhino */; };
 		1E0A9C9E2FE4C2C60007AC86 /* Rhino in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A9C9D2FE4C2C60007AC86 /* Rhino */; };
@@ -30,6 +35,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0735CF7D3050AF2F001FF8CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E1A57C627CEC84000A05F37 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E1A57CD27CEC84000A05F37;
+			remoteInfo = RhinoAppTest;
+		};
 		1E1A57EF27CEC84000A05F37 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1E1A57C627CEC84000A05F37 /* Project object */;
@@ -47,6 +59,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0735CF893050AF2F001FF8CA /* RhinoTrainTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RhinoTrainTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RhinoAppTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E1A57D127CEC84000A05F37 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E1A57D527CEC84000A05F37 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -67,11 +80,37 @@
 		C71D40F5297A12EC00489C75 /* test_resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test_resources; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0735CF8A3050AF47001FF8CA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				RhinoTrainTests.swift,
+			);
+			target = 1E1A57ED27CEC84000A05F37 /* RhinoAppTestUITests */;
+		};
+		0735CF8D3050AF51001FF8CA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				RhinoTrainTests.swift,
+			);
+			target = 0735CF7B3050AF2F001FF8CA /* RhinoTrainTest */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		1E0A9CA32FEDADDF0007AC86 /* RhinoTrainTest */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = RhinoTrainTest; sourceTree = "<group>"; };
+		1E0A9CA32FEDADDF0007AC86 /* RhinoTrainTest */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (0735CF8A3050AF47001FF8CA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 0735CF8D3050AF51001FF8CA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = RhinoTrainTest; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0735CF803050AF2F001FF8CA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0735CF923050B229001FF8CA /* ios_voice_processor in Frameworks */,
+				0735CF943050B22C001FF8CA /* Rhino in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1E1A57CB27CEC84000A05F37 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -128,6 +167,7 @@
 				1E1A57CE27CEC84000A05F37 /* RhinoAppTest.app */,
 				1E1A57EE27CEC84000A05F37 /* RhinoAppTestUITests.xctest */,
 				1E5B7AD52800ABDE00F8BDDB /* PerformanceTest.xctest */,
+				0735CF893050AF2F001FF8CA /* RhinoTrainTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -171,6 +211,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0735CF7B3050AF2F001FF8CA /* RhinoTrainTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0735CF863050AF2F001FF8CA /* Build configuration list for PBXNativeTarget "RhinoTrainTest" */;
+			buildPhases = (
+				0735CF7E3050AF2F001FF8CA /* Sources */,
+				0735CF803050AF2F001FF8CA /* Frameworks */,
+				0735CF833050AF2F001FF8CA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0735CF7C3050AF2F001FF8CA /* PBXTargetDependency */,
+			);
+			name = RhinoTrainTest;
+			productName = RhinoAppTestUITests;
+			productReference = 0735CF893050AF2F001FF8CA /* RhinoTrainTest.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		1E1A57CD27CEC84000A05F37 /* RhinoAppTest */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E1A57F827CEC84000A05F37 /* Build configuration list for PBXNativeTarget "RhinoAppTest" */;
@@ -269,11 +327,21 @@
 				1E1A57CD27CEC84000A05F37 /* RhinoAppTest */,
 				1E1A57ED27CEC84000A05F37 /* RhinoAppTestUITests */,
 				1E5B7ABC2800ABDE00F8BDDB /* PerformanceTest */,
+				0735CF7B3050AF2F001FF8CA /* RhinoTrainTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0735CF833050AF2F001FF8CA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0735CF953050B23D001FF8CA /* test_resources in Resources */,
+				0735CF843050AF2F001FF8CA /* coffee_maker_ios.rhn in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1E1A57CC27CEC84000A05F37 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -305,6 +373,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0735CF7E3050AF2F001FF8CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0735CF8C3050AF51001FF8CA /* BaseTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1E1A57CA27CEC84000A05F37 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -335,6 +411,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0735CF7C3050AF2F001FF8CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E1A57CD27CEC84000A05F37 /* RhinoAppTest */;
+			targetProxy = 0735CF7D3050AF2F001FF8CA /* PBXContainerItemProxy */;
+		};
 		1E1A57F027CEC84000A05F37 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1E1A57CD27CEC84000A05F37 /* RhinoAppTest */;
@@ -367,6 +448,52 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0735CF873050AF2F001FF8CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.RhinoAppTestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RhinoAppTest;
+			};
+			name = Debug;
+		};
+		0735CF883050AF2F001FF8CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65723695GD;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.picovoice.RhinoAppTestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RhinoAppTest;
+			};
+			name = Release;
+		};
 		1E1A57F627CEC84000A05F37 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -640,6 +767,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0735CF863050AF2F001FF8CA /* Build configuration list for PBXNativeTarget "RhinoTrainTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0735CF873050AF2F001FF8CA /* Debug */,
+				0735CF883050AF2F001FF8CA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1E1A57C927CEC84000A05F37 /* Build configuration list for PBXProject "RhinoAppTest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -705,6 +841,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0735CF913050B229001FF8CA /* ios_voice_processor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1290E5C2CE7E180001D55B6 /* XCRemoteSwiftPackageReference "ios-voice-processor" */;
+			productName = ios_voice_processor;
+		};
+		0735CF933050B22C001FF8CA /* Rhino */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 07C34241304B8065007EC052 /* XCLocalSwiftPackageReference "../../../../rhino" */;
+			productName = Rhino;
+		};
 		07C34242304B8065007EC052 /* Rhino */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Rhino;
