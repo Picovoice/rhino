@@ -73,3 +73,6 @@
 ## [4.0.0] - 2025-12-10
 * Added support for running on GPU or multiple CPU cores
 * Version bumped to Flutter 3.10+ and Dart 3.0.0+
+
+## [4.1.0] - 2026-09-08
+* Added support for context wildcard feature

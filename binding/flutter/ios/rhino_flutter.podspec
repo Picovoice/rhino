@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'rhino_flutter'
-  s.version          = '4.0.0'
+  s.version          = '4.1.0'
   s.summary          = 'A Flutter package plugin for Picovoice\'s Rhino Speech-to-Intent engine'
   s.description      = <<-DESC
   A Flutter package plugin for Picovoice\'s Rhino Speech-to-Intent engine
@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.platform = :ios, '16.0'
   s.dependency 'Flutter'
-  s.dependency 'Rhino-iOS', '~> 4.0.0'
+  s.dependency 'Rhino-iOS', '~> 4.1.0'
 
   s.swift_version = '5.0'
 end
