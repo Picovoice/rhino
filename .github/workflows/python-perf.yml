@@ -59,6 +59,10 @@ jobs:
       with:
         python-version: '3.10'
 
+    - name: Install dependencies
+      run: pip3 install -r requirements.txt
+
+
     - name: Test
       run: >
         python test_rhino_perf.py 
@@ -94,6 +98,16 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Setup Python virtualenv (*nix)
+      if: ${{ matrix.machine != 'pv-windows' && matrix.machine != 'pv-windows-igpu' && matrix.machine != 'pv-windows-arm64' }}
+      run: |
+        python3 -m venv .venv
+        . .venv/bin/activate
+        echo PATH=$PATH >> $GITHUB_ENV
+
+    - name: Install dependencies
+      run: pip3 install -r requirements.txt
+
     - name: Machine state before
       working-directory: resources/scripts
       run: bash machine-state.sh
@@ -124,6 +138,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Setup Python virtualenv (windows)
+      if: ${{ matrix.machine == 'pv-windows' || matrix.machine == 'pv-windows-igpu' || matrix.machine == 'pv-windows-arm64' }}
+      run: |
+        python3 -m venv .venv --symlinks
+        .venv\Scripts\activate
+        echo PATH=$PATH >> $GITHUB_ENV
+
+    - name: Install dependencies
+      run: pip3 install -r requirements.txt
 
     - name: Test
       run: >
