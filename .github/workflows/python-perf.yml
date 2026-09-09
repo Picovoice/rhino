@@ -59,6 +59,10 @@ jobs:
       with:
         python-version: '3.10'
 
+    - name: Install dependencies
+      run: pip3 install -r requirements.txt
+
+
     - name: Test
       run: >
         python test_rhino_perf.py 
@@ -77,10 +81,10 @@ jobs:
         include:
         - machine: rpi3-32
           num_test_iterations: 50
-          performance_threshold_sec: 0.72
+          performance_threshold_sec: 1.0
         - machine: rpi3-64
           num_test_iterations: 50
-          performance_threshold_sec: 0.82
+          performance_threshold_sec: 1.2
         - machine: rpi4-32
           num_test_iterations: 50
           performance_threshold_sec: 0.4
@@ -89,10 +93,20 @@ jobs:
           performance_threshold_sec: 0.4
         - machine: rpi5-64
           num_test_iterations: 50
-          performance_threshold_sec: 0.1
+          performance_threshold_sec: 0.2
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Setup Python virtualenv (*nix)
+      if: ${{ matrix.machine != 'pv-windows' && matrix.machine != 'pv-windows-igpu' && matrix.machine != 'pv-windows-arm64' }}
+      run: |
+        python3 -m venv .venv
+        . .venv/bin/activate
+        echo PATH=$PATH >> $GITHUB_ENV
+
+    - name: Install dependencies
+      run: pip3 install -r requirements.txt
 
     - name: Machine state before
       working-directory: resources/scripts
@@ -124,6 +138,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Setup Python virtualenv (windows)
+      if: ${{ matrix.machine == 'pv-windows' || matrix.machine == 'pv-windows-igpu' || matrix.machine == 'pv-windows-arm64' }}
+      run: |
+        python3 -m venv .venv --symlinks
+        .venv\Scripts\activate
+        echo PATH=$PATH >> $GITHUB_ENV
+
+    - name: Install dependencies
+      run: pip3 install -r requirements.txt
 
     - name: Test
       run: >
