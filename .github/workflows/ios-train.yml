@@ -1,18 +1,18 @@
-name: iOS AWS Device Farm Tests
+name: iOS AWS Device Farm Train Tests
 
 on:
   workflow_dispatch:
   push:
     branches: [ master ]
     paths:
-      - '.github/workflows/ios-devicefarm.yml'
+      - '.github/workflows/ios-train.yml'
       - 'binding/ios/RhinoAppTest/**'
       - 'resources/.test/**'
       - 'resources/audio_samples/**'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+*' ]
     paths:
-      - '.github/workflows/ios-devicefarm.yml'
+      - '.github/workflows/ios-train.yml'
       - 'binding/ios/RhinoAppTest/**'
       - 'resources/.test/**'
       - 'resources/audio_samples/**'
@@ -23,7 +23,7 @@ defaults:
 
 jobs:
   build:
-    name: Run iOS Tests on AWS Device Farm
+    name: Run iOS Train Tests on AWS Device Farm
     runs-on: macos-latest
 
     steps:
@@ -56,7 +56,7 @@ jobs:
           -configuration Debug
           -project RhinoAppTest.xcodeproj
           -sdk iphoneos
-          -scheme RhinoAppTest
+          -scheme RhinoTrainTest
           -derivedDataPath ddp
           CODE_SIGNING_ALLOWED=NO
 
@@ -69,14 +69,14 @@ jobs:
 
       - name: Zipping Tests
         run: cd ddp/Build/Products/Debug-iphoneos/ &&
-          zip --symlinks -r RhinoAppTestUITests.zip RhinoAppTestUITests-Runner.app
+          zip --symlinks -r RhinoTrainTest.zip RhinoTrainTest-Runner.app
 
       - name: Run tests on AWS Device Farm
         run: python3 ../../../script/automation/devicefarm.py
           --type ios
-          --run_name rhino-ios-unit
+          --run_name rhino-ios-train
           --app_path "ddp/Build/Products/Debug-iphoneos/RhinoAppTest.ipa"
-          --test_path "ddp/Build/Products/Debug-iphoneos/RhinoAppTestUITests.zip"
+          --test_path "ddp/Build/Products/Debug-iphoneos/RhinoTrainTest.zip"
           --aws_id "${{secrets.AWS_DEVICE_FARM_ACCESS_KEY_ID}}"
           --aws_secret "${{secrets.AWS_DEVICE_FARM_ACCESS_KEY_SECRET}}"
           --project_arn "${{secrets.AWS_DEVICE_FARM_PROJECT_ARN}}"

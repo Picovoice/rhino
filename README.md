@@ -1293,6 +1293,10 @@ pv_rhino_delete(rhino);
 
 ## Releases
 
+### v4.1.0 - September 8th, 2026
+
+- Added support for context wildcard feature
+
 ### v4.0.0 - December 10th, 2025
 
 - Added support for running on GPU or multiple CPU cores

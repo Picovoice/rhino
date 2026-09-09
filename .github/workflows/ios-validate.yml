@@ -7,7 +7,7 @@ on:
       - '.github/workflows/ios-validate.yml'
       - 'demo/ios/RhinoDemo/**'
   pull_request:
-    branches: [ master, 'v[0-9]+.[0-9]+' ]
+    branches: [ master, 'v[0-9]+.[0-9]+*' ]
     paths:
       - '.github/workflows/ios-validate.yml'
       - 'demo/ios/RhinoDemo/**'
@@ -27,7 +27,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16'
+          xcode-version: '26'
 
       - name: Install the Apple certificate and provisioning profile
         env:
