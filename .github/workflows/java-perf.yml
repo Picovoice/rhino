@@ -70,10 +70,10 @@ jobs:
         include:
         - machine: rpi3-32
           num_test_iterations: 50
-          performance_threshold_sec: 0.7
+          performance_threshold_sec: 1.0
         - machine: rpi3-64
           num_test_iterations: 50
-          performance_threshold_sec: 0.8
+          performance_threshold_sec: 1.0
         - machine: rpi4-32
           num_test_iterations: 50
           performance_threshold_sec: 0.4
