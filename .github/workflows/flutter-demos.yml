@@ -5,13 +5,13 @@ on:
   push:
     branches: [ master ]
     paths:
-      - '.github/workflows/flutter.yml'
+      - '.github/workflows/flutter-demos.yml'
       - 'demo/flutter/**'
       - '!demo/flutter/README.md'
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+*' ]
     paths:
-      - '.github/workflows/flutter.yml'
+      - '.github/workflows/flutter-demos.yml'
       - 'demo/flutter/**'
       - '!demo/flutter/README.md'
 
@@ -52,7 +52,7 @@ jobs:
 
   build-ios:
     name: Build iOS demo
-    runs-on: macos-14
+    runs-on: macos-15
     strategy:
       matrix:
         flutter-version: ['3.35.0']
