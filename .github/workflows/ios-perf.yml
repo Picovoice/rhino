@@ -5,6 +5,7 @@ on:
   push:
     branches: [ master ]
     paths:
+      - 'binding/ios/RhinoAppTest/**'
       - 'lib/ios/**'
       - 'lib/common/**'
       - 'resources/contexts/ios/**'
@@ -12,6 +13,7 @@ on:
   pull_request:
     branches: [ master, 'v[0-9]+.[0-9]+*' ]
     paths:
+      - 'binding/ios/RhinoAppTest/**'
       - 'lib/ios/**'
       - 'lib/common/**'
       - 'resources/contexts/ios/**'
